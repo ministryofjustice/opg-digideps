@@ -4,6 +4,8 @@ RUN apt -yq install bash-completion bash
 
 COPY ./client/app/tests/csv/paProDeputyReport.csv /tmp/paProDeputyReport.csv
 COPY ./client/app/tests/csv/layDeputyReport.csv /tmp/layDeputyReport.csv
+COPY ./api/app/tests/Behat/fixtures/sirius-csvs/ /tmp/
+
 COPY ./local-resources/localstack/localstack-init.sh /docker-entrypoint-initaws.d/init.sh
 RUN chmod 544 /docker-entrypoint-initaws.d/init.sh
 RUN apt-get -y install jq

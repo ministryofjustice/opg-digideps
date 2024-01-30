@@ -15,6 +15,8 @@ use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class BaseFeatureContext extends MinkContext
@@ -111,13 +113,23 @@ class BaseFeatureContext extends MinkContext
 
     public Generator $faker;
 
+    protected Application $application;
+    public BufferedOutput $output;
+
     public function __construct(
         protected FixtureHelper $fixtureHelper,
         protected KernelInterface $symfonyKernel,
         protected EntityManagerInterface $em,
         protected ReportTestHelper $reportTestHelper,
-        protected ParameterStoreService $parameterStoreService
+        protected ParameterStoreService $parameterStoreService,
+        protected readonly KernelInterface $kernel
     ) {
+        // Required so we can run tests against commands
+        $this->application = new Application($kernel);
+        $this->application->setCatchExceptions(true);
+        $this->application->setAutoExit(true);
+        $this->output = new BufferedOutput();
+        
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {

@@ -12,6 +12,7 @@ use Aws\S3\S3Client;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -61,7 +62,10 @@ class ProcessOrgCSVCommand extends Command
     ];
     
     private array $processingOutput = [
-        'errors' => [],
+        'errors' => [
+            'count' => 0, 
+            'messages' => []
+        ],
         'added' => [
             'clients' => 0,
             'named_deputies' => 0,
@@ -91,14 +95,16 @@ class ProcessOrgCSVCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.');
+        $this
+            ->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.')
+            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
-        $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
+        $paProReportFile = $input->getArgument('csv-filename');
         $fileLocation = sprintf('/tmp/%s', $paProReportFile);
 
         try {
@@ -122,7 +128,7 @@ class ProcessOrgCSVCommand extends Command
         }
 
         $data = $this->csvToArray($fileLocation);
-        if (count($data) >= 1 && $this->process($data) && empty($this->processingOutput['errors'])) {
+        if (count($data) >= 1 && $this->process($data)) {
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s', $fileLocation);
 
@@ -141,7 +147,7 @@ class ProcessOrgCSVCommand extends Command
 
             $this->cliOutput->writeln(
                 sprintf(
-                    '%s - success - Finished processing OrgCSV. Output: %s', 
+                    '%s - success - Finished processing OrgCSV, Output - %s', 
                     self::JOB_NAME, 
                     $this->processedStringOutput()
                 )
@@ -193,13 +199,9 @@ class ProcessOrgCSVCommand extends Command
     }
 
     private function storeOutput(array $processingOutput)
-    {
-        if (!empty($processingOutput['errors'])) {
-            $this->processingOutput['errors'] = array_merge(
-                $this->processingOutput['errors'], 
-                $processingOutput['errors']
-            );
-        }
+    {        
+        $this->processingOutput['errors']['count'] += $processingOutput['errors']['count'];
+        $this->processingOutput['errors']['messages'] = implode(', ', $processingOutput['errors']['messages']);
 
         if (!empty($processingOutput['added'])) {
             foreach ($processingOutput['added'] as $group => $items) {
@@ -224,9 +226,25 @@ class ProcessOrgCSVCommand extends Command
         foreach ($this->processingOutput as $reportedHeader => $stats ) {
             if (is_array($stats) && count($stats) >= 1) {
                 foreach ($stats as $statHeader => $statValue ) {
-                    $processed .= sprintf("%s %s: %s. ", ucfirst($statHeader), $reportedHeader, $statValue);
+                    if (!is_array($statValue)) {
+                        if ($statHeader === 'count') {
+                            $processed .= sprintf("%s: %s. ", $reportedHeader, $statValue);
+                        } else {
+                            $processed .= sprintf("%s %s: %s. ", ucfirst($statHeader), $reportedHeader, $statValue);
+                        }
+                    } else {
+                        if (count($statValue) >= 1) {
+                            foreach ($statValue as $i => $message) {
+                                if ($i === 0) {
+                                    $processed .= sprintf("%s %s: ", ucfirst($statHeader), $reportedHeader);
+                                }
+
+                                $processed .= sprintf("%s; ", $message);
+                            }
+                        }
+                    }
                 }
-            } else {
+            } else {                
                 $processed .= sprintf("%s %s. ", $stats, $reportedHeader);
             }
         }

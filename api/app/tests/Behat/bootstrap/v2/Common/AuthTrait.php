@@ -134,7 +134,12 @@ trait AuthTrait
 
         // We didn't filter the list - the user wasn't found
         if (!$filteredUser) {
-            throw new BehatException(sprintf('User details for email %s not found in $this->fixturesUsers', $email));
+            throw new BehatException(
+                 sprintf(
+                     'User details for email %s not found in $this->fixturesUsers',
+                     $email
+                 )
+            );
         }
 
         return $filteredUser;
@@ -155,7 +160,12 @@ trait AuthTrait
      */
     public function theUserClicksOnTheRegistrationLinkSentToTheirEmailWhichHasAnToken($arg1)
     {
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'password reset', $this->interactingWithUserDetails->getUserEmail(), $arg1);
+        $this->clickActivationOrPasswordResetLinkInEmail(
+            false, 
+            'password reset', 
+            $this->interactingWithUserDetails->getUserEmail(), 
+            $arg1
+        );
     }
 
     /**
@@ -206,7 +216,13 @@ trait AuthTrait
         $isExpectedRole = $actualRole === $expectedRole;
 
         if (!$isExpectedRole) {
-            throw new BehatException(sprintf('Logged in user role is "%s", should be %s', $expectedRole, $actualRole));
+            throw new BehatException(
+                sprintf(
+                    'Logged in user role is "%s", should be %s', 
+                    $expectedRole, 
+                    $actualRole
+                )
+            );
         }
     }
 
@@ -221,7 +237,11 @@ trait AuthTrait
 
         $this->em->refresh($user);
 
-        $this->assertStringDoesNotEqualString($this->fixtureHelper->getLegacyPasswordHash(), $user->getPassword(), 'Asserting current password hash does not match legacy password hash');
+        $this->assertStringDoesNotEqualString(
+            $this->fixtureHelper->getLegacyPasswordHash(), 
+            $user->getPassword(), 
+            'Asserting current password hash does not match legacy password hash'
+        );
     }
 
     /**
@@ -232,7 +252,10 @@ trait AuthTrait
         $this->fillInField('password_forgotten[email]', $this->interactingWithUserDetails->getUserEmail());
         $this->pressButton('Reset your password');
 
-        $this->assertElementContainsText('body', 'We have sent a new registration link to your email. Use the link to reset your password.');
+        $this->assertElementContainsText(
+            'body', 
+            'We have sent a new registration link to your email. Use the link to reset your password.'
+        );
     }
 
     /**

@@ -16,6 +16,7 @@ use App\v2\Assembler\NamedDeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class OrgDeputyshipUploader
 {
@@ -27,21 +28,14 @@ class OrgDeputyshipUploader
     private ?NamedDeputy $namedDeputy = null;
     private ?Client $client = null;
 
-    private EntityManagerInterface $em;
-    private OrganisationFactory $orgFactory;
-    private NamedDeputyAssembler $namedDeputyAssembler;
-    private ClientAssembler $clientAssembler;
 
     public function __construct(
-        EntityManagerInterface $em,
-        OrganisationFactory $orgFactory,
-        ClientAssembler $clientAssembler,
-        NamedDeputyAssembler $namedDeputyAssembler
+        private readonly EntityManagerInterface $em,
+        private readonly OrganisationFactory $orgFactory,
+        private readonly ClientAssembler $clientAssembler,
+        private readonly NamedDeputyAssembler $namedDeputyAssembler,
+        private readonly LoggerInterface $logger
     ) {
-        $this->em = $em;
-        $this->orgFactory = $orgFactory;
-        $this->clientAssembler = $clientAssembler;
-        $this->namedDeputyAssembler = $namedDeputyAssembler;
     }
 
     /**
@@ -56,7 +50,16 @@ class OrgDeputyshipUploader
         $this->resetAdded();
         $this->resetUpdated();
 
-        $uploadResults = ['errors' => [], 'skipped' => 0];
+        $uploadResults = [
+            'errors' => [
+                'count' => 0, 
+                'messages' => []
+            ],
+            'added' => [],
+            'updated' => [],
+            'changeOrg' => [],
+            'skipped' => 0
+        ];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
             try {
@@ -70,11 +73,15 @@ class OrgDeputyshipUploader
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException $e) {
-                ++$uploadResults['skipped'];
+                $uploadResults['skipped']++;
                 continue;
             } catch (\Throwable $e) {
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
-                $uploadResults['errors'][] = $message;
+
+                $this->logger->notice($message);
+                $uploadResults['errors']['messages'][] = $message;
+
+                $uploadResults['errors']['count']++;
                 continue;
             }
         }
@@ -100,13 +107,7 @@ class OrgDeputyshipUploader
         if (is_null($namedDeputy)) {
             $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
 
-            $this->em->persist($namedDeputy);
-            $this->em->flush();
-
-            $this->added['named_deputies'][] = $namedDeputy->getId();
-        }
-
-        if ($namedDeputy->getDeputyUid() === $dto->getDeputyUid()) {
+        } elseif ($namedDeputy->getDeputyUid() === $dto->getDeputyUid()) {
             if ($namedDeputy->addressHasChanged($dto)) {
                 $namedDeputy
                     ->setAddress1($dto->getDeputyAddress1())
@@ -115,11 +116,6 @@ class OrgDeputyshipUploader
                     ->setAddress4($dto->getDeputyAddress4())
                     ->setAddress5($dto->getDeputyAddress5())
                     ->setAddressPostcode($dto->getDeputyPostcode());
-
-                $this->em->persist($namedDeputy);
-                $this->em->flush();
-
-                $this->updated['named_deputies'][] = $namedDeputy->getId();
             }
 
             if ($namedDeputy->nameHasChanged($dto)) {
@@ -130,21 +126,18 @@ class OrgDeputyshipUploader
                     $namedDeputy->setFirstname($dto->getDeputyFirstname());
                     $namedDeputy->setLastname($dto->getDeputyLastname());
                 }
-
-                $this->em->persist($namedDeputy);
-                $this->em->flush();
-
-                $this->updated['named_deputies'][] = $namedDeputy->getId();
             }
 
             if ($namedDeputy->emailHasChanged($dto)) {
                 $namedDeputy->setEmail1($dto->getDeputyEmail());
-
-                $this->em->persist($namedDeputy);
-                $this->em->flush();
-
-                $this->updated['named_deputies'][] = $namedDeputy->getId();
             }
+        }
+        
+        if (!is_null($namedDeputy)) {
+            $this->em->persist($namedDeputy);
+            $this->em->flush();
+
+            $this->added['named_deputies'][] = $namedDeputy->getId();
         }
 
         $this->namedDeputy = $namedDeputy;
@@ -358,26 +351,22 @@ class OrgDeputyshipUploader
 
     private function handleDtoErrors(OrgDeputyshipDto $dto)
     {
-        $missingDataTypes = [];
-
-        if (empty($dto->getReportStartDate())) {
-            $missingDataTypes[] = 'Report Start Date';
-        }
+        $missingData = [];
 
         if (empty($dto->getReportEndDate())) {
-            $missingDataTypes[] = 'Report End Date';
+            $missingData[] = 'LastReportDay';
         }
 
         if (empty($dto->getCourtDate())) {
-            $missingDataTypes[] = 'Court Date';
+            $missingData[] = 'MadeDate';
         }
 
         if (empty($dto->getDeputyEmail())) {
-            $missingDataTypes[] = 'Deputy Email';
+            $missingData[] = 'DeputyEmail';
         }
 
-        if (!empty($missingDataTypes)) {
-            $errorMessage = sprintf('Missing data to upload row: %s', implode(', ', $missingDataTypes));
+        if (!empty($missingData)) {
+            $errorMessage = sprintf('Missing data to upload row: %s', implode(', ', $missingData));
             throw new \RuntimeException($errorMessage);
         }
     }

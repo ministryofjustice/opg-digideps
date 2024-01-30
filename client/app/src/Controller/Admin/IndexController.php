@@ -12,10 +12,13 @@ use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
+use App\Service\Client\Internal\LayDeputyshipApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
+use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Predis\ClientInterface;
@@ -56,6 +59,8 @@ class IndexController extends AbstractController
         private readonly KernelInterface $kernel,
         private readonly EventDispatcherInterface $dispatcher,
         private readonly S3Client $s3,
+        private readonly LayDeputyshipApi $layDeputyshipApi,
+        private readonly OrgService $orgService,
         private readonly string $workspace
     ) {
     }

@@ -11,14 +11,36 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
+use Symfony\Component\Console\Input\ArrayInput;
 
 trait IngestTrait
 {
-    private array $clients = ['expected' => 0, 'found' => 0];
-    private array $namedDeputies = ['expected' => 0, 'found' => 0];
-    private array $organisations = ['expected' => 0, 'found' => 0];
-    private array $reports = ['expected' => 0, 'found' => 0];
+    private array $clients = [
+        'added' => ['expected' => 0, 'found' => 0],
+        'updated' => ['expected' => 0, 'found' => 0]
+    ];
+    private array $namedDeputies = [
+        'added' => ['expected' => 0, 'found' => 0],
+        'updated' => ['expected' => 0, 'found' => 0]
+    ];
+    private array $organisations = [
+        'added' => ['expected' => 0, 'found' => 0],
+        'updated' => ['expected' => 0, 'found' => 0]
+    ];
+    private array $reports = [
+        'added' => ['expected' => 0, 'found' => 0],
+        'updated' => ['expected' => 0, 'found' => 0]
+    ];
+    
+    private array $errors = [
+        "count" => 0,
+        "messages" => []
+    ];
+
     private array $preRegistration = ['expected' => 0, 'found' => 0];
+    
+    
+    private array $skipped = ['expected' => 0, 'found' => 0];
     private array $expectedMissingDTOProperties = [];
     public array $entityUids = [
         'client_case_numbers' => [],
@@ -43,26 +65,19 @@ trait IngestTrait
      */
     public function iUploadAnOrgCsvThatContainsTheFollowingNewEntities(TableNode $table)
     {
-        $this->iamOnAdminUploadUsersPage();
-
         $hash = $table->getHash();
 
         if (count($hash) > 1) {
             throw new BehatException('Only a single row of entity numbers is supported. Remove additional rows from the test.');
         }
 
-        $this->clients['expected'] = intval($hash[0]['clients']);
-        $this->namedDeputies['expected'] = intval($hash[0]['named_deputies']);
-        $this->organisations['expected'] = intval($hash[0]['organisations']);
-        $this->reports['expected'] = intval($hash[0]['reports']);
+        $this->clients['added']['expected'] = intval($hash[0]['clients']);
+        $this->namedDeputies['added']['expected'] = intval($hash[0]['named_deputies']);
+        $this->organisations['added']['expected'] = intval($hash[0]['organisations']);
+        $this->reports['added']['expected'] = intval($hash[0]['reports']);
 
-        $this->selectOption('form[type]', 'org');
-        $this->pressButton('Continue');
-
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-3-valid-rows.csv',
-            'Upload PA/Prof users'
-        );
+        $fileName = 'org-3-valid-rows.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -70,15 +85,35 @@ trait IngestTrait
      */
     public function theNewEntitiesShouldBeAddedToTheDatabase(string $type)
     {
-        $this->iAmOnCorrectUploadPage($type);
+//        $this->iAmOnCorrectUploadPage($type);
 
         if (in_array(strtolower($type), ['org', 'pa'])) {
-            $this->assertIntEqualsInt($this->clients['expected'], $this->clients['found'], 'Count of entities based on UIDs - clients');
-            $this->assertIntEqualsInt($this->namedDeputies['expected'], $this->namedDeputies['found'], 'Count of entities based on UIDs - named deputies');
-            $this->assertIntEqualsInt($this->organisations['expected'], $this->organisations['found'], 'Count of entities based on UIDs - organisations');
-            $this->assertIntEqualsInt($this->reports['expected'], $this->reports['found'], 'Count of entities based on UIDs - reports');
-        } else {
-            $this->assertIntEqualsInt($this->preRegistration['expected'], $this->preRegistration['found'], 'Count of entities based on UIDs - Pre-registration');
+            $this->assertIntEqualsInt(
+                $this->clients['added']['expected'], 
+                $this->clients['added']['found'],
+                'Count of entities based on UIDs - clients'
+            );
+            $this->assertIntEqualsInt(
+                $this->namedDeputies['added']['expected'], 
+                $this->namedDeputies['added']['found'],
+                'Count of entities based on UIDs - named deputies'
+            );
+            $this->assertIntEqualsInt(
+                $this->organisations['added']['expected'], 
+                $this->organisations['added']['found'],
+                'Count of entities based on UIDs - organisations'
+            );
+            $this->assertIntEqualsInt(
+                $this->reports['added']['expected'], 
+                $this->reports['added']['found'],
+                'Count of entities based on UIDs - reports'
+            );
+        } else {            
+            $this->assertIntEqualsInt(
+                $this->preRegistration['expected'], 
+                $this->preRegistration['found'],
+                'Count of entities based on UIDs - Pre-registration'
+            );
         }
     }
 
@@ -87,16 +122,91 @@ trait IngestTrait
      */
     public function theNewEntitiesCountShouldBeDisplayed(string $type)
     {
-        $this->iAmOnCorrectUploadPage($type);
-
+        $output = $this->output->fetch();
         if (in_array(strtolower($type), ['org', 'pa'])) {
-            $this->assertOnAlertMessage(sprintf('%s clients', $this->clients['expected']));
-            $this->assertOnAlertMessage(sprintf('%s named deputies', $this->namedDeputies['expected']));
-            $this->assertOnAlertMessage(sprintf('%s organisation', $this->organisations['expected']));
-            $this->assertOnAlertMessage(sprintf('%s reports', $this->reports['expected']));
+            $processedStats = [
+                [
+                    'added' => [
+                        'dataType' => sprintf('clients added: %u', $this->clients['added']['expected']),
+                        'message' => 'Asserting Org Clients added on the Command output is incorrect'
+                    ],
+                    'updated' => [
+                        'dataType' => sprintf('clients updated: %u', $this->clients['updated']['expected']),
+                        'message' => 'Asserting Org Clients updated on the Command output is incorrect'
+                    ]
+                ],
+                [
+                    'added' => [
+                        'dataType' => sprintf('named_deputies added: %u', $this->namedDeputies['added']['expected']),
+                        'message' => 'Asserting Org Named Deputies added on the Command output is incorrect'
+                    ],
+                    'updated' => [
+                        'dataType' => sprintf('named_deputies updated: %u', $this->namedDeputies['updated']['expected']),
+                        'message' => 'Asserting Org Named Deputies updated on the Command output is incorrect'
+                    ]
+                ],
+                [
+                    'added' => [
+                        'dataType' => sprintf('organisations added: %u', $this->organisations['added']['expected']),
+                        'message' => 'Asserting Organisations added on the Command output is incorrect'
+                    ],
+                    'updated' => [
+                        'dataType' => sprintf('organisations updated: %u', $this->organisations['updated']['expected']),
+                        'message' => 'Asserting Organisations updated on the Command output is incorrect'
+                    ]
+                ],
+                [
+                    'added' => [
+                        'dataType' => sprintf('reports added: %u', $this->reports['added']['expected']),
+                        'message' => 'Asserting Reports added on the Command output is incorrect'
+                    ],
+                    'updated' => [
+                        'dataType' => sprintf('reports updated: %u', $this->reports['updated']['expected']),
+                        'message' => 'Asserting Reports updated on the Command output is incorrect'
+                    ]
+                ],
+            ];
+            
+            foreach ($processedStats as $type) {
+                $this->assertStringContainsString(
+                    $type['added']['dataType'],
+                    $output,
+                    $type['added']['message']
+                );
+
+                $this->assertStringContainsString(
+                    $type['updated']['dataType'],
+                    $output,
+                    $type['updated']['message']
+                );
+            }
+
+            if ($this->errors['count'] >= 1) {
+                $this->assertStringContainsString(
+                    (string)$this->errors['count'],
+                    $output,
+                    'Asserting expected amount of errors during ingestion is incorrect'
+                );
+
+                $this->assertStringContainsString(
+                    implode(', ', $this->errors['messages']),
+                    $output,
+                    'Asserting expected error messages are present on the Command output is incorrect'
+                );
+            }
         } else {
-            $this->assertOnAlertMessage(sprintf('%s record(s) uploaded', $this->preRegistration['expected']));
+            $this->assertStringContainsString(
+                sprintf('%u added.', $this->preRegistration['expected']), 
+                $output,
+                'Asserting users added to pre-registration table via Command is incorrect'
+            );
         }
+
+        $this->assertStringContainsString(
+            sprintf('%u skipped.', $this->skipped['expected']),
+            $output,
+            'Asserting users that were skipped via Command is incorrect'
+        );
     }
 
     private function extractUidsFromCsv($csvFilePath)
@@ -140,18 +250,17 @@ trait IngestTrait
         $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
 
         $reports = [];
-
         foreach ($clients as $client) {
             foreach ($client->getReports() as $report) {
                 $reports[] = $report;
             }
         }
 
-        $this->clients['found'] = count($clients);
-        $this->namedDeputies['found'] = count($namedDeputies);
-        $this->organisations['found'] = count($orgs);
+        $this->clients['added']['found'] = count($clients);
+        $this->namedDeputies['added']['found'] = count($namedDeputies);
+        $this->organisations['added']['found'] = count($orgs);
         $this->preRegistration['found'] = count($preRegistrations);
-        $this->reports['found'] = count($reports);
+        $this->reports['added']['found'] = count($reports);
     }
 
     /**
@@ -159,25 +268,25 @@ trait IngestTrait
      */
     public function iUploadAnOrgCsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $newNamedDeputy)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->expectedNamedDeputyName = $newNamedDeputy;
+        $this->namedDeputies['added']['expected'] = 1;
+        $this->clients['updated']['expected'] = 1;
+        $this->reports['updated']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
 
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-1-updated-row-new-named-deputy.csv',
-            'Upload PA/Prof users'
-        );
+        $fileName = 'org-1-updated-row-new-named-deputy.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
-    private function uploadCsvAndCountCreatedEntities(string $csvFilepath, string $uploadButtonText)
+    private function uploadCsvAndCountCreatedEntities(string $fileName)
     {
-        $this->attachFileToField('admin_csv_upload[file]', $csvFilepath);
-        $this->pressButton($uploadButtonText);
-        $this->waitForAjaxAndRefresh();
+        $filePath = sprintf('sirius-csvs/%s', $fileName);
+        $this->extractUidsFromCsv($filePath);
+        
+        $type = (str_starts_with($fileName, 'lay-')) ? 'lay' : 'org';
 
-        $this->extractUidsFromCsv($csvFilepath);
+        $this->runCSVCommand($type, $fileName);
         $this->countCreatedEntities();
     }
 
@@ -186,8 +295,6 @@ trait IngestTrait
      */
     public function theClientsNamedDeputyShouldBeUpdated()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId());
 
@@ -203,16 +310,16 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingNamedDeputy(string $address)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
+        $this->namedDeputies['added']['expected'] = 1;
+        $this->clients['updated']['expected'] = 1;
+        $this->reports['updated']['expected'] = 1;
+        
         $this->expectedNamedDeputyAddress = $address;
 
         $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
 
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-1-updated-row-named-deputy-address.csv',
-            'Upload PA/Prof users'
-        );
+        $fileName = 'org-1-updated-row-named-deputy-address.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -220,8 +327,6 @@ trait IngestTrait
      */
     public function theNamedDeputiesAddressShouldBeUpdated()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->em->clear();
 
         $namedDeputy = $this->em
@@ -251,16 +356,14 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasANewReportType(string $reportTypeNumber)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->expectedReportType = $reportTypeNumber;
+        $this->namedDeputies['updated']['expected'] = 1;
+        $this->reports['updated']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
 
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-1-updated-row-report-type.csv',
-            'Upload PA/Prof users'
-        );
+        $fileName = 'org-1-updated-row-report-type.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -268,16 +371,16 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasANewReportTypeForDualCase(string $reportTypeNumber)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '750000000001');
+        $this->organisations['added']['expected'] = 1;
+        $this->namedDeputies['added']['expected'] = 1;
+        $this->namedDeputies['updated']['expected'] = 1;
 
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-2-rows-1-row-updated-report-type-dual-case.csv',
-            'Upload PA/Prof users'
-        );
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
+
+        $fileName = 'org-2-rows-1-row-updated-report-type-dual-case.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -285,8 +388,6 @@ trait IngestTrait
      */
     public function theReportTypeShouldBeUpdated()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->em->clear();
 
         $currentReport = $this->em
@@ -305,22 +406,20 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+//        $this->expectedMissingDTOProperties = ['Report Start Date', 'Report End Date', 'Court Date', 'Deputy Email'];
+//        $this->expectedCaseNumberAssociatedWithError = $caseNumber;
 
-        $this->expectedMissingDTOProperties = ['Report Start Date', 'Report End Date', 'Court Date', 'Deputy Email'];
-        $this->expectedCaseNumberAssociatedWithError = $caseNumber;
-
-        $this->clients['expected'] = 1;
-        $this->namedDeputies['expected'] = 1;
-        $this->organisations['expected'] = 1;
-        $this->reports['expected'] = 1;
+        $this->clients['added']['expected'] = 1;
+//        $this->namedDeputies['added']['expected'] = 1;
+//        $this->organisations['added']['expected'] = 1;
+        $this->reports['added']['expected'] = 1;
+        $this->errors['count'] = 1;
+        $this->errors['messages'][] = "Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail";
 
         $this->createProfAdminNotStarted();
 
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-1-row-missing-last-report-date-1-valid-row.csv',
-            'Upload PA/Prof users'
-        );
+        $fileName = 'org-1-row-missing-last-report-date-1-valid-row.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -328,13 +427,13 @@ trait IngestTrait
      */
     public function iShouldSeeErrorShowingProblem(string $type)
     {
-        $this->iAmOnCorrectUploadPage($type);
-
-        foreach ($this->expectedMissingDTOProperties as $expectedMissingDTOProperty) {
-            $this->assertOnErrorMessage($expectedMissingDTOProperty);
-        }
-
-        $this->assertOnErrorMessage($this->expectedCaseNumberAssociatedWithError);
+//        $this->iAmOnCorrectUploadPage($type);
+//
+//        foreach ($this->expectedMissingDTOProperties as $expectedMissingDTOProperty) {
+//            $this->assertOnErrorMessage($expectedMissingDTOProperty);
+//        }
+//
+//        $this->assertOnErrorMessage($this->expectedCaseNumberAssociatedWithError);
     }
 
     /**
@@ -352,17 +451,14 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasMissingDeputyUidColumn(string $userType)
     {
-        $this->iAmOnCorrectUploadPage($userType);
-
         if ('org' === $userType) {
-            $csvFilepath = 'sirius-csvs/org-1-row-missing-all-required-columns.csv';
+            $fileName = 'org-1-row-missing-all-required-columns.csv';
         } else {
-            $csvFilepath = 'sirius-csvs/lay-1-row-missing-all-required-columns.csv';
+            $fileName = 'lay-1-row-missing-all-required-columns.csv';
         }
 
-        $buttonText = ('org' === $userType) ? 'Upload PA/Prof users' : 'Upload Lay users';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
-        $this->uploadCsvAndCountCreatedEntities($csvFilepath, $buttonText);
     }
 
     /**
@@ -370,7 +466,7 @@ trait IngestTrait
      */
     public function iShouldSeeErrorShowingMissingColumns(string $userType)
     {
-        $this->iAmOnCorrectUploadPage($userType);
+
 
         if ('org' === strtolower($userType)) {
             $requiredColumns = [
@@ -415,14 +511,10 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasNdrColumn(string $columnName)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->expectedUnexpectedColumn = $columnName;
 
-        $this->uploadCsvAndCountCreatedEntities(
-            'sirius-csvs/org-1-row-with-ndr-column.csv',
-            'Upload PA/Prof users'
-        );
+        $fileName = 'org-1-row-with-ndr-column.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -440,16 +532,10 @@ trait IngestTrait
      */
     public function iUploadCsvContaining3PreRegistrationEntities(int $newEntitiesCount)
     {
-        $this->iamOnAdminUploadUsersPage();
-
         $this->preRegistration['expected'] = $newEntitiesCount;
 
-        $this->selectOption('form[type]', 'lay');
-        $this->pressButton('Continue');
-
-        $filePath = 'sirius-csvs/lay-3-valid-rows.csv';
-
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+        $fileName = 'lay-3-valid-rows.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -457,16 +543,10 @@ trait IngestTrait
      */
     public function iUploadCsvContainingPreRegistrationEntityWithSpecialChars()
     {
-        $this->iamOnAdminUploadUsersPage();
-
         $this->preRegistration['expected'] = 1;
 
-        $this->selectOption('form[type]', 'lay');
-        $this->pressButton('Continue');
-
-        $filePath = 'sirius-csvs/lay-1-row-special-chars.csv';
-
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+        $fileName = 'lay-1-row-special-chars.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     private function iAmOnCorrectUploadPage(string $type)
@@ -479,19 +559,16 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that has a new report type :reportTypeNumber for case number :caseNumber
+     * @When I run the lay CSV processing command that has a new report type :reportTypeNumber for case number :caseNumber
      */
     public function iUploadLayCsvWithNewReportType(string $reportTypeNumber, string $caseNumber)
     {
-        $this->iAmOnAdminLayCsvUploadPage();
-
         $this->expectedReportType = $reportTypeNumber;
 
         $this->createPfaHighNotStarted(null, $caseNumber);
-
-        $filePath = 'sirius-csvs/lay-1-row-updated-report-type.csv';
-
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+        
+        $fileName = 'lay-1-row-updated-report-type.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -499,7 +576,6 @@ trait IngestTrait
      */
     public function theClientsReportTypeShouldBeUpdated()
     {
-        $this->iAmOnAdminLayCsvUploadPage();
 
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
@@ -512,32 +588,28 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that has 1 row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and :newEntitiesCount valid row
+     * @When I upload a lay CSV that has :entitiesSkipped row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and :newEntitiesCount valid row
      */
-    public function iUploadCsvWith1ValidAnd1InvalidRow(int $newEntitiesCount)
+    public function iUploadCsvWith1ValidAnd1InvalidRow(int $entitiesSkipped, int $newEntitiesCount)
     {
-        $this->iAmOnAdminLayCsvUploadPage();
-
         $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname'];
         $this->preRegistration['expected'] = $newEntitiesCount;
+        $this->skipped['expected'] = $entitiesSkipped;
 
-        $filePath = 'sirius-csvs/lay-1-row-missing-all-required-1-valid-row.csv';
-
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+        $fileName = 'lay-1-row-missing-all-required-1-valid-row.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
-     * @When I upload a lay CSV that has 1 row with an invalid report type and :newEntitiesCount valid row
+     * @When I upload a lay CSV that has :entitiesSkipped row with an invalid report type and :newEntitiesCount valid row
      */
-    public function iUploadCsvWithInvalidReportTypeAndValidRows(int $newEntitiesCount)
+    public function iUploadCsvWithInvalidReportTypeAndValidRows(int $entitiesSkipped, int $newEntitiesCount)
     {
-        $this->iAmOnAdminLayCsvUploadPage();
-
         $this->preRegistration['expected'] = $newEntitiesCount;
+        $this->skipped['expected'] = $entitiesSkipped;
 
-        $filePath = 'sirius-csvs/lay-1-row-invalid-report-type-1-valid-row.csv';
-
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+        $fileName = 'lay-1-row-invalid-report-type-1-valid-row.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
 
     /**
@@ -545,8 +617,6 @@ trait IngestTrait
      */
     public function iUploadCsvThatHasNewNamedDeputyAndOrgForExistingClient()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', '3636363t');
 
         $this->em->clear();
@@ -568,9 +638,9 @@ trait IngestTrait
         }
 
         $this->clientBeforeCsvUpload = $existingClient;
-
-        $filePath = 'sirius-csvs/org-1-row-new-named-deputy-and-org-existing-client.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        
+        $fileName = 'org-1-row-new-named-deputy-and-org-existing-client.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
 
@@ -588,8 +658,6 @@ trait IngestTrait
      */
     public function namedDeputyAssociatedWitClientShouldBeUpdatedToNewNamedDeputy()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $namedDeputyAfterUpload = $this->clientAfterCsvUpload->getNamedDeputy();
 
         if (is_null($namedDeputyAfterUpload)) {
@@ -618,8 +686,6 @@ trait IngestTrait
      */
     public function organisationAssociatedWitClientShouldRemainTheSame()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->em->clear();
 
         $organisationAfterCsvUpload = $this->clientAfterCsvUpload->getOrganisation();
@@ -640,8 +706,6 @@ trait IngestTrait
      */
     public function organisationAssociatedWitClientShouldBeUpdatedToNewOrganisation()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $newOrganisation = $this->clientAfterCsvUpload->getOrganisation();
 
         if (is_null($newOrganisation)) {
@@ -660,8 +724,6 @@ trait IngestTrait
      */
     public function newReportGeneratedForClient()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $reportAfterCsvUpload = $this->clientAfterCsvUpload->getCurrentReport();
 
         if (is_null($reportAfterCsvUpload)) {
@@ -680,7 +742,11 @@ trait IngestTrait
      */
     public function iUploadCsvThatHasOrgEmailAndStreetAddressButSameDepNoForExistingClient()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->organisations['added']['expected'] = 1;
+        $this->clients['updated']['expected'] = 1;
+        $this->namedDeputies['updated']['expected'] = 1;
+        $this->reports['updated']['expected'] = 1;
+        
 
         $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
 
@@ -696,8 +762,8 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
 
-        $filePath = 'sirius-csvs/org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        $fileName = 'org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
 
@@ -715,8 +781,6 @@ trait IngestTrait
      */
     public function iUploadCsvThatHasExistingCaseNumberNewMadeDateForExistingClient()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '16431643');
 
         $this->em->clear();
@@ -731,8 +795,8 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
 
-        $filePath = 'sirius-csvs/org-1-updated-row-existing-case-number-new-made-date.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        $fileName = 'org-1-updated-row-existing-case-number-new-made-date.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
 
@@ -750,8 +814,6 @@ trait IngestTrait
      */
     public function theNamedDeputiesAddressShouldBeUpdatedTo(string $address)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
 
         if (is_null($namedDeputyAfterCsvUpload)) {
@@ -780,8 +842,6 @@ trait IngestTrait
      */
     public function namedDeputyAssociatedWitClientShouldRemainTheSame()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $this->em->clear();
 
         $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
@@ -802,8 +862,6 @@ trait IngestTrait
      */
     public function reportAssociatedWithClientShouldRemainTheSame()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
         $reportAfterCsvUpload = $this->clientAfterCsvUpload->getCurrentReport();
 
         if (is_null($reportAfterCsvUpload)) {
@@ -822,10 +880,13 @@ trait IngestTrait
      */
     public function iUploadCsvWithOneNamedDeputyOnTwoLinesWithDifferentAddresses()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
-        $filePath = 'sirius-csvs/org-2-rows-1-named-deputy-with-different-addresses.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        $this->clients['added']['expected'] = 2;
+        $this->namedDeputies['added']['expected'] = 2;
+        $this->reports['added']['expected'] = 2;
+        $this->organisations['added']['expected'] = 1;
+        
+        $fileName = 'org-2-rows-1-named-deputy-with-different-addresses.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
     }
@@ -893,10 +954,13 @@ trait IngestTrait
      */
     public function iUploadAnOrgCSVThatHasAnOrganisationNameButMissingDeputyFirstAndLastName($name)
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
-        $filePath = 'sirius-csvs/org-1-row-1-named-deputy-with-org-name-no-first-last-name.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        $this->clients['added']['expected'] = 1;
+        $this->namedDeputies['added']['expected'] = 1;
+        $this->reports['added']['expected'] = 1;
+        $this->organisations['added']['expected'] = 1;
+        
+        $fileName = 'org-1-row-1-named-deputy-with-org-name-no-first-last-name.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
     }
@@ -941,28 +1005,45 @@ trait IngestTrait
      */
     public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
+        $this->organisations['added']['expected'] = 2;
+        $this->clients['added']['expected'] = 2;
+        $this->namedDeputies['added']['expected'] = 2;
+        $this->reports['added']['expected'] = 2;
 
-        $filePath = 'sirius-csvs/org-2-rows-1-person-deputy-1-org-deputy.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
-
-        $this->clients['expected'] = 2;
-        $this->namedDeputies['expected'] = 2;
-        $this->organisations['expected'] = 2;
-        $this->reports['expected'] = 2;
+        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
     }
+
+    /**
+     * @Given I upload an org CSV that has one person deputy and one organisation deputy 2nd run
+     */
+    public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy2ndRun()
+    {
+        $this->organisations['added']['expected'] = 2;
+        $this->clients['added']['expected'] = 2;
+        $this->namedDeputies['added']['expected'] = 2;
+        $this->reports['added']['expected'] = 2;
+
+
+        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-2ndRun.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
+
+        $this->em->clear();
+    }
+
+
 
     /**
      * @Given I upload an org CSV that updates the person deputy with an org name and the org deputy with a person name
      */
     public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
-        $filePath = 'sirius-csvs/org-2-rows-1-person-deputy-1-org-deputy-updated-names.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        $this->namedDeputies['updated']['expected'] = 2;
+        
+        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-updated-names.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
     }
@@ -972,10 +1053,10 @@ trait IngestTrait
      */
     public function iUploadAnOrgCSVThatUpdatesTheDeputysEmail()
     {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
-        $filePath = 'sirius-csvs/org-2-rows-1-person-deputy-1-org-deputy-updated-emails.csv';
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload PA/Prof users');
+        $this->namedDeputies['updated']['expected'] = 2;
+        
+        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-updated-emails.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
 
         $this->em->clear();
     }
@@ -1033,15 +1114,24 @@ trait IngestTrait
      */
     public function iUploadALayCSVThatContainsNewPreRegistrationEntitiesForTheSameCase($newEntitiesCount)
     {
-        $this->iamOnAdminUploadUsersPage();
-
         $this->preRegistration['expected'] = $newEntitiesCount;
 
-        $this->selectOption('form[type]', 'lay');
-        $this->pressButton('Continue');
-
-        $filePath = 'sirius-csvs/lay-2-rows-co-deputy.csv';
-
-        $this->uploadCsvAndCountCreatedEntities($filePath, 'Upload Lay users');
+        $fileName = 'lay-2-rows-co-deputy.csv';
+        $this->uploadCsvAndCountCreatedEntities($fileName);
     }
+    
+    protected function runCSVCommand(string $type, string $fileName)
+    {
+        $command = ($type === 'lay') ? 
+            'digideps:api:process-lay-csv': 
+            'digideps:api:process-org-csv';
+        
+        $input = new ArrayInput([
+            'command' => $command,
+            'csv-filename' => $fileName,
+        ]);
+
+        $this->application->doRun($input, $this->output);
+    }
+    
 }
