@@ -40,3 +40,12 @@ Feature: Lay CSV data ingestion - sirius source data
         When I visit the admin upload lay users page
         And I upload a 'lay' CSV that does not have any of the required columns
         Then I should see an error showing which columns are missing on the 'lay' csv upload page
+    
+    @admin-manager
+    Scenario: An admin manager is unable to upload a Lay CSV when logged into the admin app
+        Given an admin manager user accesses the admin app
+        When I visit the admin upload users page
+        And I attempt to upload a 'lay' CSV
+        Then I should be redirected and denied access to continue
+        
+        

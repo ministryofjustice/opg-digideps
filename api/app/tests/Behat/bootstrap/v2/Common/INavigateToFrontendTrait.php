@@ -14,4 +14,13 @@ trait INavigateToFrontendTrait
         $this->clickLink('Attach documents');
         $this->iAmOnFurtherUploadDocumentsPage();
     }
+
+    /**
+     * @When /^I navigate to my user settings page$/
+     */
+    public function iNavigateToMyUserSettingsPage()
+    {
+        $this->clickLink('Settings');
+        $this->iAmOnOrgSettingsPage();
+    }
 }
