@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "replication_policy" {
     #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [
       "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
-      "${data.aws_s3_bucket.replication_bucket.arn}/*"
+      "${local.replication_bucket}/*"
     ]
   }
 

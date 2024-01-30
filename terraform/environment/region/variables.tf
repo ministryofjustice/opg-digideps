@@ -23,9 +23,9 @@ variable "secrets_prefix" {
   description = "The account map"
 }
 
-variable "canonical_user_ids" {
+variable "shared_environment_variables" {
   type        = any
-  description = "The map of canonical user ids"
+  description = "The map of shared environment variables"
 }
 
 variable "r53_hc_front" {
