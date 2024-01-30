@@ -63,6 +63,6 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.resources[] | select(.address == "aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
+          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
           echo "image_tag=$(echo ${IMAGE_TAG})" >> $GITHUB_OUTPUT
         working-directory: terraform/${{ inputs.terraform_path }}
