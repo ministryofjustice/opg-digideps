@@ -8,7 +8,7 @@ Feature: Org - A professional deputy edits the details of other org users
         And I visit the organisation settings user account page for the logged in user
         And I click to edit the other org user
         When I edit the users account details 
-        Then then the user should be updated
+        Then the user should be updated
 
 
     @prof-team-hw-not-started

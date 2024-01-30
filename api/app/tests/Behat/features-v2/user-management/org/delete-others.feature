@@ -1,4 +1,4 @@
-@v2 
+@v2
 Feature: Org - A professional deputy deletes users from org
 
     @prof-admin-combined-high-not-started
@@ -7,7 +7,7 @@ Feature: Org - A professional deputy deletes users from org
         When the user I'm interacting with logs in to the frontend of the app
         And I visit the organisation settings user account page for the logged in user
         And I attempt to remove an org user 
-        Then the the user should be deleted
+        Then the user should be deleted from the organisation
 
     @prof-team-hw-not-started
     Scenario: A professional team deputy without admin permissions cannot delete users from org

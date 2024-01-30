@@ -745,9 +745,9 @@ trait UserManagementTrait
     
     
     /**
-     * @Then /^the the user should be deleted$/
+     * @Then /^the user should be deleted from the organisation$/
      */
-    public function theTheUserShouldBeDeleted()
+    public function theUserShouldBeDeletedFromTheOrganisation()
     {
         $orgUsersArray = $this->getAllOrgUsers()['users'];
         
@@ -855,9 +855,9 @@ trait UserManagementTrait
 
     
     /**
-     * @Then /^then the user should be updated$/
+     * @Then /^the user should be updated$/
      */
-    public function thenTheUserShouldBeUpdated()
+    public function theUserShouldBeUpdated()
     {
         $this->iAmOnOrgUserAccountsPage();
         
