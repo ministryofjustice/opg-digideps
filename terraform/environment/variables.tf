@@ -47,36 +47,37 @@ variable "accounts" {
       s3_backup_kms_arn                      = string
       associate_alb_with_waf_web_acl_enabled = bool
       fargate_spot                           = bool
+      secondary_region_enabled               = bool
     })
   )
-}
-
-data "aws_ip_ranges" "route53_healthchecks_ips" {
-  services = ["route53_healthchecks"]
 }
 
 module "allow_list" {
   source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git"
 }
 
+data "aws_ssm_parameter" "env_vars_development" {
+  provider = aws.management
+  name     = "/digideps/development/environment_variables"
+}
+
+data "aws_ssm_parameter" "env_vars_preproduction" {
+  provider = aws.management
+  name     = "/digideps/preproduction/environment_variables"
+}
+
+data "aws_ssm_parameter" "env_vars_production" {
+  provider = aws.management
+  name     = "/digideps/production/environment_variables"
+}
+
 locals {
-  project = "digideps"
-
-  default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
-  admin_allow_list   = length(local.account["admin_allow_list"]) > 0 ? local.account["admin_allow_list"] : local.default_allow_list
-  front_allow_list   = length(local.account["front_allow_list"]) > 0 ? local.account["front_allow_list"] : local.default_allow_list
-
-  route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
-
+  primary_region = "eu-west-1"
   account        = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
-  environment    = lower(terraform.workspace)
+  subdomain      = local.account["subdomain_enabled"] ? local.environment : ""
 
-  sirius_environment = local.account["sirius_environment"]
-
-  subdomain               = local.account["subdomain_enabled"] ? local.environment : ""
-  backup_account_id       = "238302996107"
-  cross_account_role_name = "cross-acc-db-backup.digideps-production"
+  environment = lower(terraform.workspace)
 
   default_tags = {
     business-unit          = "OPG"
@@ -87,18 +88,10 @@ locals {
     is-production          = local.account.is_production
   }
 
-  openapi_mock_version = "v0.3.3"
-
-  capacity_provider = local.account.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
-}
-
-data "terraform_remote_state" "shared" {
-  backend   = "s3"
-  workspace = local.account.state_source
-  config = {
-    bucket   = "opg.terraform.state"
-    key      = "digideps-infrastructure-shared/terraform.tfstate"
-    region   = "eu-west-1"
-    role_arn = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+  shared_environment_variables = {
+    canonical_id_development   = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_development.value))["canonical_user_id"]
+    canonical_id_preproduction = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_preproduction.value))["canonical_user_id"]
+    canonical_id_production    = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_production.value))["canonical_user_id"]
+    replication_bucket         = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_development.value))["replication_bucket"]
   }
 }
