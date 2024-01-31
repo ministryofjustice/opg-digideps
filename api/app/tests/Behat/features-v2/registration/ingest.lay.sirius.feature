@@ -27,6 +27,7 @@ Feature: Lay CSV data ingestion - sirius source data
         When I upload a lay CSV that has 1 row with an invalid report type and 1 valid row
         Then the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be displayed on the page
+
 # Needs further rewrite so we're gracefully handling missing columns & not just stopping the process. 
 # Currently throws critical error
 #    @super-admin

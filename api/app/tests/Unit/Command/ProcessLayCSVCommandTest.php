@@ -36,10 +36,8 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $this->params->get('s3_sirius_bucket')
             ->shouldBeCalled()
             ->willReturn('bucket');
-
-        $this->params->get('lay_report_csv_filename')
-            ->shouldBeCalled()
-            ->willReturn('layDeputyReport.csv');
+        
+        $this->csvFilename = 'layDeputyReport.csv';
 
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->redis = self::prophesize(ClientInterface::class);
@@ -79,7 +77,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
                 'source' => 'sirius',
             ]);
 
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
@@ -95,7 +93,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willThrow(S3Exception::class);
 
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
@@ -118,7 +116,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn(new Result());
 
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(

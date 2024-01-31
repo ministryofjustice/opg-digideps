@@ -38,9 +38,7 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn('bucket');
 
-        $this->params->get('pa_pro_report_csv_filename')
-            ->shouldBeCalled()
-            ->willReturn('paProDeputyReport.csv');
+        $this->csvFilename = 'paProDeputyReport.csv';
         
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->redis = self::prophesize(ClientInterface::class);
@@ -73,19 +71,37 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $this->csvProcessing->orgProcessing(Argument::any())
             ->shouldBeCalled()
             ->willReturn([
-                'added' => 1,
-                'errors' => 0,
-                'report-update-count' => 0,
-                'cases-with-updated-reports' => 0,
-                'source' => 'sirius',
+                'errors' => [
+                    'count' => 1,
+                    'messages' => ['ERROR']
+                ],
+                'added' => [
+                    'named_deputies' => [1],
+                    'organisations' => [1],
+                    'clients' => [1],
+                    'reports' => [1]
+                ],
+                'updated' => [
+                    'named_deputies' => [0],
+                    'organisations' => [0],
+                    'clients' => [0],
+                    'reports' => [0]
+                ],
+                'changeOrg' => [
+                    'named_deputies' => [0],
+                    'organisations' => [0],
+                    'clients' => [0],
+                    'reports' => [0]
+                ],
+                'skipped' => 1
             ]);
         
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'org_csv_processing - success - Finished processing OrgCSV. Output:', 
+            'org_csv_processing - success - Finished processing OrgCSV, Output -', 
             $output
         );
     }
@@ -96,7 +112,7 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willThrow(S3Exception::class);
 
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
@@ -121,7 +137,7 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn(new Result());
 
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(

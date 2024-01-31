@@ -142,7 +142,7 @@ class ProcessLayCSVCommand extends Command
                 ->setExpectedColumns(self::EXPECTED_COLUMNS)
                 ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->logger->error($logMessage);

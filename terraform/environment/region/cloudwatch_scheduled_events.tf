@@ -3,7 +3,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
   schedule_expression = "cron(0 1 * * ? *)"
-  tags                = local.default_tags
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
@@ -40,7 +40,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
   schedule_expression = "cron(0 2 * * ? *)"
-  tags                = local.default_tags
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
@@ -78,7 +78,7 @@ resource "aws_cloudwatch_event_rule" "delete_inactive_users" {
   name                = "delete-inactive-users-${local.environment}"
   description         = "Delete inactive admin users in ${terraform.workspace}"
   schedule_expression = "cron(0 4 ? * 1 *)"
-  tags                = local.default_tags
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "delete_inactive_users" {
@@ -117,7 +117,7 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
   name                = "delete-zero-activity-users-${local.environment}"
   description         = "Delete zero activity users in ${terraform.workspace}"
   schedule_expression = "cron(10 4 * * ? *)"
-  tags                = local.default_tags
+  tags                = var.default_tags
 }
 
 resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
