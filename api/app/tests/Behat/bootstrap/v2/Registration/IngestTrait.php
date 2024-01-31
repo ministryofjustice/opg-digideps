@@ -269,6 +269,7 @@ trait IngestTrait
     public function iUploadAnOrgCsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $newNamedDeputy)
     {
         $this->expectedNamedDeputyName = $newNamedDeputy;
+
         $this->namedDeputies['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
@@ -357,6 +358,7 @@ trait IngestTrait
     public function iUploadACsvThatHasANewReportType(string $reportTypeNumber)
     {
         $this->expectedReportType = $reportTypeNumber;
+
         $this->namedDeputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
@@ -373,8 +375,8 @@ trait IngestTrait
     {
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->organisations['added']['expected'] = 1;
         $this->namedDeputies['added']['expected'] = 1;
+        $this->organisations['added']['expected'] = 1;
         $this->namedDeputies['updated']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
@@ -406,12 +408,9 @@ trait IngestTrait
      */
     public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
     {
-//        $this->expectedMissingDTOProperties = ['Report Start Date', 'Report End Date', 'Court Date', 'Deputy Email'];
-//        $this->expectedCaseNumberAssociatedWithError = $caseNumber;
-
         $this->clients['added']['expected'] = 1;
-//        $this->namedDeputies['added']['expected'] = 1;
-//        $this->organisations['added']['expected'] = 1;
+        $this->organisations['added']['expected'] = 1;
+        $this->namedDeputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->errors['count'] = 1;
         $this->errors['messages'][] = "Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail";
@@ -420,20 +419,6 @@ trait IngestTrait
 
         $fileName = 'org-1-row-missing-last-report-date-1-valid-row.csv';
         $this->uploadCsvAndCountCreatedEntities($fileName);
-    }
-
-    /**
-     * @Then I should see an error showing the problem on the :type csv upload page
-     */
-    public function iShouldSeeErrorShowingProblem(string $type)
-    {
-//        $this->iAmOnCorrectUploadPage($type);
-//
-//        foreach ($this->expectedMissingDTOProperties as $expectedMissingDTOProperty) {
-//            $this->assertOnErrorMessage($expectedMissingDTOProperty);
-//        }
-//
-//        $this->assertOnErrorMessage($this->expectedCaseNumberAssociatedWithError);
     }
 
     /**
@@ -617,6 +602,11 @@ trait IngestTrait
      */
     public function iUploadCsvThatHasNewNamedDeputyAndOrgForExistingClient()
     {
+        $this->namedDeputies['added']['expected'] = 1;
+        $this->organisations['added']['expected'] = 1;
+        $this->clients['updated']['expected'] = 1;
+        $this->reports['updated']['expected'] = 1;
+
         $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', '3636363t');
 
         $this->em->clear();
@@ -746,7 +736,6 @@ trait IngestTrait
         $this->clients['updated']['expected'] = 1;
         $this->namedDeputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
-        
 
         $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
 
@@ -1026,7 +1015,6 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
 
-
         $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-2ndRun.csv';
         $this->uploadCsvAndCountCreatedEntities($fileName);
 
@@ -1053,7 +1041,9 @@ trait IngestTrait
      */
     public function iUploadAnOrgCSVThatUpdatesTheDeputysEmail()
     {
-        $this->namedDeputies['updated']['expected'] = 2;
+        $this->organisations['added']['expected'] = 3;
+        $this->clients['updated']['expected'] = 1;
+        $this->namedDeputies['updated']['expected'] = 1;
         
         $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-updated-emails.csv';
         $this->uploadCsvAndCountCreatedEntities($fileName);

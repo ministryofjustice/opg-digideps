@@ -80,12 +80,12 @@ Feature: Org CSV data ingestion - sirius source data
         And the named deputy for case number '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
         And the count of the new 'org' entities added should be displayed on the page
 
-#    @super-admin @chris
-#    Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
-#        Given a super admin user accesses the admin app
-#        When I upload an org CSV that has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number '70000000' and 1 valid row
-#        Then the new 'org' entities should be added to the database
-#        And the count of the new 'org' entities added should be displayed on the page
+    @super-admin @chris
+    Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
+        Given a super admin user accesses the admin app
+        When I upload an org CSV that has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number '70000000' and 1 valid row
+        Then the new 'org' entities should be added to the database
+        And the count of the new 'org' entities added should be displayed on the page
 
 # Needs further rewrite so we're gracefully handling missing columns & not just stopping the process. 
 # Currently throws critical error
@@ -129,5 +129,5 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be displayed on the page
         When I upload an org CSV that updates the deputy's email
-        Then the named deputy with deputy UID '19921995' should have the email 'example@example.com'
+        Then the named deputy with deputy UID '19921993' should have the email 'example@example-email.com'
         And the count of the new 'org' entities added should be displayed on the page

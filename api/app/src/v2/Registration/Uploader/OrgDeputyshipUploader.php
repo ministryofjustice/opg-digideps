@@ -107,7 +107,13 @@ class OrgDeputyshipUploader
         if (is_null($namedDeputy)) {
             $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
 
+            $this->em->persist($namedDeputy);
+            $this->em->flush();
+
+            $this->added['named_deputies'][] = $namedDeputy->getId();
         } elseif ($namedDeputy->getDeputyUid() === $dto->getDeputyUid()) {
+            $updated = false;
+
             if ($namedDeputy->addressHasChanged($dto)) {
                 $namedDeputy
                     ->setAddress1($dto->getDeputyAddress1())
@@ -116,6 +122,8 @@ class OrgDeputyshipUploader
                     ->setAddress4($dto->getDeputyAddress4())
                     ->setAddress5($dto->getDeputyAddress5())
                     ->setAddressPostcode($dto->getDeputyPostcode());
+                
+                $updated = true;
             }
 
             if ($namedDeputy->nameHasChanged($dto)) {
@@ -126,18 +134,22 @@ class OrgDeputyshipUploader
                     $namedDeputy->setFirstname($dto->getDeputyFirstname());
                     $namedDeputy->setLastname($dto->getDeputyLastname());
                 }
+                
+                $updated = true;
             }
 
             if ($namedDeputy->emailHasChanged($dto)) {
                 $namedDeputy->setEmail1($dto->getDeputyEmail());
+                
+                $updated = true;
             }
-        }
-        
-        if (!is_null($namedDeputy)) {
-            $this->em->persist($namedDeputy);
-            $this->em->flush();
+            
+            if ($updated) {
+                $this->em->persist($namedDeputy);
+                $this->em->flush();
 
-            $this->added['named_deputies'][] = $namedDeputy->getId();
+                $this->updated['named_deputies'][] = $namedDeputy->getId();
+            }
         }
 
         $this->namedDeputy = $namedDeputy;
