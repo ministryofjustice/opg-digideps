@@ -35,4 +35,28 @@ trait UserExistsTrait
 
         $this->interactingWithUserDetails = $this->layDeputyNotStartedPfaHighAssetsDetails;
     }
+
+    /**
+     * @Given /^a Professional Admin Deputy exists$/
+     */
+    public function aProfessionalAdminDeputyExists()
+    {
+        if (empty($this->profAdminCombinedHighNotStartedDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $profAdminCombinedHighNotStartedDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profAdminCombinedHighNotStartedDetails;
+    }
+
+    /**
+     * @Given /^a Professional Team Deputy exists$/
+     */
+    public function aProfessionalTeamDeputyExists()
+    {
+        if (empty($this->profTeamDeputyNotStartedHealthWelfareDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $profTeamDeputyNotStartedHealthWelfareDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->profTeamDeputyNotStartedHealthWelfareDetails;
+    }
 }

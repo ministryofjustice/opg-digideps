@@ -12,16 +12,19 @@ existPage:
   supportTitle: Money out
   form:
     exist:
-      label: Have you taken money out on %client%'s behalf during this reporting period?
+      label: Has any money been taken out of %client%'s account(s) during this reporting period?
     save:
       label: Save and continue
+    choices:
+      yes: Yes
+      no: No
 
 noMoneyOut:
   htmlTitle: "Money out - Complete the deputy report | GOV.UK"
   supportTitle: Money out
   form:
     explanation:
-      label: No money taken from %client%'s accounts
+      label: Why has no money been taken out of the account?
       hintText: Please provide a reason
     save:
       label: Save and continue

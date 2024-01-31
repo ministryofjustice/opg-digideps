@@ -131,3 +131,10 @@ Feature: Org CSV data ingestion - sirius source data
         When I upload an org CSV that updates the deputy's email
         Then the named deputy with deputy UID '19921993' should have the email 'example@example-email.com'
         And the count of the new 'org' entities added should be displayed on the page
+
+    @admin-manager
+    Scenario: An admin manager is unable to upload an Org CSV when logged into the admin app
+        Given an admin manager user accesses the admin app
+        When I visit the admin upload users page
+        And I attempt to upload a 'org' CSV
+        Then I should be redirected and denied access to continue
