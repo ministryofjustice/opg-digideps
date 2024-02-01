@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\UserManagement;
 
+use App\Entity\Organisation;
+use App\Entity\User;
+
 trait UserManagementTrait
 {
     private ?int $userCount = null;
@@ -666,4 +669,199 @@ trait UserManagementTrait
     {
         $this->visitsTheForgottenYourPasswordPage();
     }
+    
+    /**
+     * @Then /^I can only view my user details$/
+     */
+    public function iCanOnlyViewMyUserDetails()
+    {
+        $orgUserEmail = $this->interactingWithUserDetails->getUserEmail();
+
+        $xpath = '//div[contains(@class, "govuk-summary-list__row")]';
+        
+        $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $formattedDataElements = [];
+
+        foreach ($listSummaryRows as $row) {
+            $formattedDataElements[] = strtolower($row->getText());
+        }
+        
+        $expectedRowCount = 2;
+        $this->assertIntEqualsInt($expectedRowCount, count($formattedDataElements), 'Row count for users email and password data only');
+       
+        $this->assertStringContainsString($orgUserEmail, $formattedDataElements[0], 'Asserting users email address found on page');
+
+    }
+
+    /**
+     * @Then /^I should be able to add a new user to the organisation$/
+     */
+    public function iShouldBeAbleToAddANewUserToTheOrganisation()
+    {
+        $newUser = [
+            'firstName' => $this->faker->firstName(),
+            'lastName' => $this->faker->lastName(),
+            'email' => $this->faker->email()
+            ];
+        
+        $this->fillField('organisation_member_firstname', $newUser['firstName']);
+        $this->fillField('organisation_member_lastname', $newUser['lastName']);
+        $this->fillField('organisation_member_email', $newUser['email']);
+        
+        $this->selectOption('organisation_member[roleName]', 'ROLE_PROF_ADMIN');
+        $this->pressButton('Save');
+        
+        $this->iAmOnOrgSettingsPage();
+        
+        $this->assertElementContainsText('table', $newUser['firstName'] . " " . $newUser['lastName']);
+        $this->assertElementContainsText('table', $newUser['email']);
+    }
+
+    
+    /**
+     * @Then /^I attempt to remove an org user$/
+     */
+    public function iAttemptToRemoveAnOrgUser()
+    {
+        $orgUsersArray = $this->getAllOrgUsers()['users'];
+
+        $orgUserToBeDeletedEmail = '';
+
+        foreach($orgUsersArray as $orgUser)
+        {
+            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
+            {
+                $orgUserToBeDeletedEmail = $this->em->getRepository(User::class)->find($orgUser['id'])->getEmail();
+            }
+        }
+        
+        $this->assertElementContainsText('table', $orgUserToBeDeletedEmail);
+  
+        //user with admin permissions can only remove other users, they can't remove themselves on this page
+        $this->clickLink('Remove');
+        $this->pressButton('Yes, remove user from this organisation');
+    }
+    
+    
+    /**
+     * @Then /^the user should be deleted from the organisation$/
+     */
+    public function theUserShouldBeDeletedFromTheOrganisation()
+    {
+        $orgUsersArray = $this->getAllOrgUsers()['users'];
+        
+        $xpath = '//tr[contains(@class, "govuk-table__row behat")]';
+        
+        $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $formattedDataElements = [];
+
+        foreach ($listSummaryRows as $row) {
+            $formattedDataElements[] = strtolower($row->getText());
+        }
+        
+        $expectedRowCount = 1;
+        $this->assertIntEqualsInt($expectedRowCount, count($formattedDataElements), 'Only one row now exists for the logged in user');
+
+        $expectedOrgUsers = 1;
+        $this->assertIntEqualsInt($expectedOrgUsers, count($orgUsersArray), 'Only one user now exists in the organisation');
+    }
+
+    
+    /**
+     * @Then /^I can view the other org user but I cannot \'([^\']*)\' them$/
+     */
+    public function iCanViewTheOtherOrgUserButICannotThem($arg1)
+    {
+        $orgIdAndUsersArray = $this->getAllOrgUsers();
+
+        $otherOrgUserDetails = [];
+
+        foreach($orgIdAndUsersArray['users'] as $orgUser)
+        {
+            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
+            {
+                $otherOrgUserDetails[] = $orgUser['id'];
+                $otherOrgUserDetails[] = $orgUser['email'];
+            }
+        }
+        
+        $this->assertElementContainsText('table', $otherOrgUserDetails[1]);
+
+        $xpathLocator = sprintf(
+            "//a[contains(@href,'/org/settings/organisation/%s/delete-user/%s')]",
+            $orgIdAndUsersArray['id'],
+            $otherOrgUserDetails[0]
+        );
+
+        !$this->getSession()->getPage()->find('xpath', $xpathLocator);
+        $this->assertElementNotContainsText('table', '$arg1');
+    }
+
+    
+    /**
+     * @Given /^I click to edit the other org user$/
+     */
+    public function iClickToEditTheOtherOrgUser()
+    {
+        // identify the id of the user to be edited
+        $orgIdAndUsersArray = $this->getAllOrgUsers();
+
+        $orgUserIdToBeEdited = '';
+
+        foreach($orgIdAndUsersArray['users'] as $orgUser)
+        {
+            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
+            {
+                $orgUserIdToBeEdited = $orgUser['id'];
+            }
+        }
+        
+        $xpathLocator = sprintf(
+            "//a[contains(@href,'/org/settings/organisation/%s/edit/%s')]",
+            $orgIdAndUsersArray['id'],
+            $orgUserIdToBeEdited
+        );
+        
+        $this->getSession()->getPage()->find('xpath', $xpathLocator)->click();
+    }
+
+    private function getAllOrgUsers()
+    {
+        $orgEmailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
+
+        $orgUsersArray = [];
+
+        $orgId = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($orgEmailIdentifier)->getId();
+
+        $orgUsersArray['id'] = $orgId;
+
+        $orgUsersArray['users'] = $this->em->getRepository(Organisation::class)->findArrayById($orgId)['users'];
+
+        return $orgUsersArray;
+    }
+    
+    
+    /**
+     * @When /^I edit the users account details$/
+     */
+    public function iEditTheUsersAccountDetails()
+    {
+        $this->iAmonOrgSettingsEditAnotherUserPage();
+        $this->fillInField('organisation_member[firstname]', $this->faker->lastName(),'firstname');
+        $this->pressButton('Save');
+    }
+
+    
+    /**
+     * @Then /^the user should be updated$/
+     */
+    public function theUserShouldBeUpdated()
+    {
+        $this->iAmOnOrgUserAccountsPage();
+        
+        $this->assertOnAlertMessage('The user has been edited');
+    }
+
 }
