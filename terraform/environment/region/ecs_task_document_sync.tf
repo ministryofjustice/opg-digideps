@@ -134,11 +134,11 @@ locals {
         },
         {
           name  = "ADMIN_HOST",
-          value = "https://${var.admin_fqdn}"
+          value = "https://${var.admin_fully_qualified_domain_name}"
         },
         {
           name  = "NONADMIN_HOST",
-          value = "https://${var.front_fqdn}"
+          value = "https://${var.front_fully_qualified_domain_name}"
         },
         {
           name  = "SESSION_REDIS_DSN",

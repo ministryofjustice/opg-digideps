@@ -1,6 +1,6 @@
 locals {
   lambda_env_vars = {
-    DIGIDEPS_SYNC_ENDPOINT = "https://${var.front_fqdn}"
+    DIGIDEPS_SYNC_ENDPOINT = "https://${var.front_fully_qualified_domain_name}"
     SECRETS_PREFIX         = var.secrets_prefix
   }
 }
