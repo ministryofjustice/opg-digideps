@@ -18,6 +18,7 @@ use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class OrgDeputyshipUploaderTest extends KernelTestCase
@@ -53,12 +54,13 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->orgRepository = $this->em->getRepository(Organisation::class);
         $this->clientRepository = $this->em->getRepository(Client::class);
         $this->reportRepository = $this->em->getRepository(Report::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $orgFactory = $container->get('App\Factory\OrganisationFactory');
         $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
         $namedDeputyAssembler = $container->get('App\v2\Assembler\NamedDeputyAssembler');
 
-        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $namedDeputyAssembler);
+        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $namedDeputyAssembler, $this->logger);
 
         $this->purgeDatabase();
     }
@@ -92,7 +94,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertCount(0, $actualUploadResults['added']['named_deputies']);
         self::assertCount(0, $actualUploadResults['updated']['named_deputies']);
-        self::assertTrue(empty($actualUploadResults['errors']));
+        self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
     /** @test */
@@ -109,7 +111,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertCount(1, $actualUploadResults['added']['named_deputies']);
         self::assertCount(0, $actualUploadResults['updated']['named_deputies']);
-        self::assertTrue(empty($actualUploadResults['errors']));
+        self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
     /** @test */
@@ -126,7 +128,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertCount(0, $actualUploadResults['added']['named_deputies']);
         self::assertCount(1, $actualUploadResults['updated']['named_deputies']);
-        self::assertTrue(empty($actualUploadResults['errors']));
+        self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
     /** @test */
@@ -155,7 +157,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertCount(0, $actualUploadResults['added']['organisations']);
-        self::assertTrue(empty($actualUploadResults['errors']));
+        self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
     /** @test */
@@ -574,7 +576,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $uploadResults = $this->sut->upload([$dto]);
 
         foreach ($expectedErrorStrings as $expectedErrorString) {
-            foreach ($uploadResults['errors'] as $actualError) {
+            foreach ($uploadResults['errors']['messages'] as $actualError) {
                 self::assertStringContainsString(
                     $expectedErrorString,
                     $actualError,
@@ -589,13 +591,12 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         return [
-            'Missing deputy email' => [(clone $deputyships[0])->setDeputyEmail(''), ['Deputy Email']],
-            'Missing start date' => [(clone $deputyships[0])->setReportStartDate(null), ['Report Start Date']],
-            'Missing end date' => [(clone $deputyships[0])->setReportEndDate(null), ['Report End Date']],
-            'Missing court date' => [(clone $deputyships[0])->setCourtDate(null), ['Court Date']],
+            'Missing deputy email' => [(clone $deputyships[0])->setDeputyEmail(''), ['DeputyEmail']],
+            'Missing end date' => [(clone $deputyships[0])->setReportEndDate(null), ['LastReportDay']],
+            'Missing court date' => [(clone $deputyships[0])->setCourtDate(null), ['MadeDate']],
             'All missing' => [
                 (clone $deputyships[0])->setDeputyEmail('')->setReportStartDate(null)->setReportEndDate(null)->setCourtDate(null),
-                ['Report Start Date', 'Report End Date', 'Court Date', 'Deputy Email'],
+                ['DeputyEmail', 'LastReportDay', 'MadeDate'],
             ],
         ];
     }
@@ -611,7 +612,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $errorMessage = sprintf('Error for case %s: case number already used', $deputyships[0]->getCaseNumber());
 
         self::assertTrue(
-            in_array($errorMessage, $uploadResults['errors']),
+            in_array($errorMessage, $uploadResults['errors']['messages']),
             sprintf('Expected error message "%s" was not in the errors array', $errorMessage)
         );
     }
@@ -693,8 +694,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertCount(
             0,
-            $uploadResults['errors'],
-            sprintf('Expecting 0, got %d', count($uploadResults['errors']))
+            $uploadResults['errors']['messages'],
+            sprintf('Expecting 0, got %d', count($uploadResults['errors']['messages']))
         );
 
         self::assertEquals(

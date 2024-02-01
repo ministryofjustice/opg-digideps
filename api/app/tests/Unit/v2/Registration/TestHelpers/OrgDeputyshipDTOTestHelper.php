@@ -77,7 +77,6 @@ class OrgDeputyshipDTOTestHelper
             'LastReportDay' => $reportPeriodEndDate->format('Y-m-d'),
             'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
             'OrderType' => $faker->randomElement(['pfa', 'hw']),
-            'CoDeputy' => $faker->randomElement(['yes', 'no']),
             'Hybrid' => 'SINGLE',
         ];
     }
@@ -242,7 +241,8 @@ class OrgDeputyshipDTOTestHelper
             ->setRoleName(User::ROLE_LAY_DEPUTY)
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
-            ->setEmail($faker->email());
+            ->setEmail($faker->email())
+            ->setCoDeputyClientConfirmed(false);
 
         $client = (new Client())
             ->setCaseNumber($dto->getCaseNumber())

@@ -73,7 +73,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::assertCount($expectedNamedDeputies, $actualUploadResults['added']['named_deputies'], 'named_deputies count was unexpected');
         self::assertCount($expectedReports, $actualUploadResults['added']['reports'], 'reports count was unexpected');
         self::assertCount($expectedOrganisations, $actualUploadResults['added']['organisations'], 'organisations count was unexpected');
-        self::assertCount($expectedErrors, $actualUploadResults['errors'], 'errors count was unexpected');
+        self::assertCount($expectedErrors, $actualUploadResults['errors']['messages'], 'errors count was unexpected');
     }
 
     public function uploadProvider()
