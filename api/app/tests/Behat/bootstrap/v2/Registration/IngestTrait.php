@@ -10,6 +10,7 @@ use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 trait IngestTrait
@@ -433,6 +434,15 @@ trait IngestTrait
         $this->iAmOnAdminOrgCsvUploadPage();
 
         $this->assertOnErrorMessage($this->expectedUnexpectedColumn);
+    }
+
+    /**
+     * @Given I attempt to upload a :deputyRole CSV
+     */
+    public function iAttemptToUploadACSV(string $deputyRole)
+    {
+        $this->selectOption('form[type]', $deputyRole);
+        $this->pressButton('Continue');
     }
 
     /**
