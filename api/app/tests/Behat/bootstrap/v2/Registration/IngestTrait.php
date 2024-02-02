@@ -62,7 +62,7 @@ trait IngestTrait
     private $clientAfterCsvUpload;
 
     /**
-     * @When I upload an org CSV that contains the following new entities:
+     * @When I run the lay CSV command the file contains the following new entities:
      */
     public function iUploadAnOrgCsvThatContainsTheFollowingNewEntities(TableNode $table)
     {
@@ -119,9 +119,9 @@ trait IngestTrait
     }
 
     /**
-     * @Then the count of the new :type entities added should be displayed on the page
+     * @Then the count of the new :type entities added should be in the command output
      */
-    public function theNewEntitiesCountShouldBeDisplayed(string $type)
+    public function theNewEntitiesCountShouldBeInTheCommandOutput(string $type)
     {
         $output = $this->output->fetch();
         if (in_array(strtolower($type), ['org', 'pa'])) {
@@ -265,7 +265,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that has a new named deputy :newNamedDeputy within the same org as the clients existing name deputy
+     * @When I run the lay CSV command the file has a new named deputy :newNamedDeputy within the same org as the clients existing name deputy
      */
     public function iUploadAnOrgCsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $newNamedDeputy)
     {
@@ -308,7 +308,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that has a new address :address for an existing named deputy
+     * @When I run the lay CSV command the file has a new address :address for an existing named deputy
      */
     public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingNamedDeputy(string $address)
     {
@@ -354,7 +354,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
+     * @When I run the lay CSV command the file has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
      */
     public function iUploadACsvThatHasANewReportType(string $reportTypeNumber)
     {
@@ -370,7 +370,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that has a new report type :reportTypeNumber for a dual case
+     * @When I run the lay CSV command the file has a new report type :reportTypeNumber for a dual case
      */
     public function iUploadACsvThatHasANewReportTypeForDualCase(string $reportTypeNumber)
     {
@@ -405,7 +405,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number :caseNumber and 1 valid row
+     * @When I run the lay CSV command the file has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number :caseNumber and 1 valid row
      */
     public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
     {
@@ -523,9 +523,9 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that contains :newEntitiesCount new pre-registration entities
+     * @When I run the lay CSV command the file contains :newEntitiesCount new pre-registration entities
      */
-    public function iUploadCsvContaining3PreRegistrationEntities(int $newEntitiesCount)
+    public function iRunTheLayCsvCommandTheFileContainsNPreRegistrationEntities(int $newEntitiesCount)
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
 
@@ -534,9 +534,9 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that contains a new pre-registration entity with special characters
+     * @When I run the lay CSV command the file contains a new pre-registration entity with special characters
      */
-    public function iUploadCsvContainingPreRegistrationEntityWithSpecialChars()
+    public function iRunTheLayCsvCommandTheFileContainsANewPreRegistrationEntityWithSpecialCharacters()
     {
         $this->preRegistration['expected'] = 1;
 
@@ -554,9 +554,9 @@ trait IngestTrait
     }
 
     /**
-     * @When I run the lay CSV processing command that has a new report type :reportTypeNumber for case number :caseNumber
+     * @When I run the lay CSV command where a file has a new report type :reportTypeNumber for case number :caseNumber
      */
-    public function iUploadLayCsvWithNewReportType(string $reportTypeNumber, string $caseNumber)
+    public function iRunTheLayCsvCommandWhereAFileHasANewReportTypeForCase(string $reportTypeNumber, string $caseNumber)
     {
         $this->expectedReportType = $reportTypeNumber;
 
@@ -583,7 +583,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that has :entitiesSkipped row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and :newEntitiesCount valid row
+     * @When I run the lay CSV command the file has :entitiesSkipped row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and :newEntitiesCount valid row
      */
     public function iUploadCsvWith1ValidAnd1InvalidRow(int $entitiesSkipped, int $newEntitiesCount)
     {
@@ -596,7 +596,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload a lay CSV that has :entitiesSkipped row with an invalid report type and :newEntitiesCount valid row
+     * @When I run the lay CSV command the file has :entitiesSkipped row with an invalid report type and :newEntitiesCount valid row
      */
     public function iUploadCsvWithInvalidReportTypeAndValidRows(int $entitiesSkipped, int $newEntitiesCount)
     {
@@ -608,7 +608,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that has a new named deputy in a new organisation for an existing client
+     * @When I run the lay CSV command the file has a new named deputy in a new organisation for an existing client
      */
     public function iUploadCsvThatHasNewNamedDeputyAndOrgForExistingClient()
     {
@@ -738,7 +738,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that contains a new org email and street address but the same deputy number for an existing clients named deputy
+     * @When I run the lay CSV command the file contains a new org email and street address but the same deputy number for an existing clients named deputy
      */
     public function iUploadCsvThatHasOrgEmailAndStreetAddressButSameDepNoForExistingClient()
     {
@@ -875,7 +875,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I upload an org CSV that contains two rows with the same named deputy at two different addresses with different deputy uids
+     * @When I run the lay CSV command the file contains two rows with the same named deputy at two different addresses with different deputy uids
      */
     public function iUploadCsvWithOneNamedDeputyOnTwoLinesWithDifferentAddresses()
     {
@@ -949,7 +949,7 @@ trait IngestTrait
     }
 
     /**
-     * @Given I upload an org CSV that has an organisation name :name but missing deputy first and last name
+     * @Given I run the lay CSV command the file has an organisation name :name but missing deputy first and last name
      */
     public function iUploadAnOrgCSVThatHasAnOrganisationNameButMissingDeputyFirstAndLastName($name)
     {
@@ -1000,7 +1000,7 @@ trait IngestTrait
     }
 
     /**
-     * @Given I upload an org CSV that has one person deputy and one organisation deputy
+     * @Given I run the lay CSV command the file has one person deputy and one organisation deputy
      */
     public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy()
     {
@@ -1016,7 +1016,7 @@ trait IngestTrait
     }
 
     /**
-     * @Given I upload an org CSV that has one person deputy and one organisation deputy 2nd run
+     * @Given I run the lay CSV command the file has one person deputy and one organisation deputy 2nd run
      */
     public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy2ndRun()
     {
@@ -1034,7 +1034,7 @@ trait IngestTrait
 
 
     /**
-     * @Given I upload an org CSV that updates the person deputy with an org name and the org deputy with a person name
+     * @Given I run the lay CSV command the file that updates the person deputy with an org name and the org deputy with a person name
      */
     public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName()
     {
@@ -1047,7 +1047,7 @@ trait IngestTrait
     }
 
     /**
-     * @Given I upload an org CSV that updates the deputy's email
+     * @Given I run the lay CSV command the file that updates the deputy's email
      */
     public function iUploadAnOrgCSVThatUpdatesTheDeputysEmail()
     {
@@ -1110,9 +1110,9 @@ trait IngestTrait
     }
 
     /**
-     * @Given I upload a lay CSV that contains :newEntitiesCount new pre-registration entities for the same case
+     * @Given I run the lay CSV command the file contains :newEntitiesCount new pre-registration entities for the same case
      */
-    public function iUploadALayCSVThatContainsNewPreRegistrationEntitiesForTheSameCase($newEntitiesCount)
+    public function iRunTheLayCsvCommandTheFileContainsNewPreRegistrationEntitesForTheSameCase($newEntitiesCount)
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
 

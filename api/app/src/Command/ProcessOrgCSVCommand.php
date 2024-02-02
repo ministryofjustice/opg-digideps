@@ -181,7 +181,6 @@ class ProcessOrgCSVCommand extends Command
         if (is_array($data)) {
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-            $this->redis->set('org-csv-processing', 'processing');
             foreach ($chunks as $index => $chunk) {
                 $upload = $this->csvProcessing->orgProcessing($chunk);
 

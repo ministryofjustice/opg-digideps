@@ -159,8 +159,6 @@ class ProcessLayCSVCommand extends Command
         if (is_array($data)) {
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-            $this->redis->set('lay-csv-processing', 'processing');
-
             foreach ($chunks as $index => $chunk) {
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
