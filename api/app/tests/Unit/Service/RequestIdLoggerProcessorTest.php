@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Tests\Unit\Service;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

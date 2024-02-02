@@ -1,7 +1,7 @@
 @v2 @v2_sequential_3 @registration @ingest
 Feature: Org CSV data ingestion - sirius source data
 
-    @super-admin 
+    @super-admin
     Scenario: Uploading a CSV that contains new clients and named deputies only
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file contains the following new entities:
@@ -10,28 +10,28 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be in the command output
 
-    @super-admin 
+    @super-admin
     Scenario: Uploading a CSV that contains existing clients and named deputies - new named deputy in same firm
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file has a new named deputy 'MAYOR MCCRACKEN' within the same org as the clients existing name deputy
         Then the clients named deputy should be updated
         And the count of the new 'org' entities added should be in the command output
 
-    @super-admin 
+    @super-admin
     Scenario: Uploading a CSV that contains existing clients and named deputies - named deputy address and phone updated
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file has a new address '75 Plutonium Way, Salem, Witchington, Barberaham, Townsville, TW5 V78' for an existing named deputy
         Then the named deputy's address should be updated
         And the count of the new 'org' entities added should be in the command output
 
-    @super-admin 
+    @super-admin
     Scenario: Uploading a CSV that contains existing clients and named deputies - report type updated
         Given a super admin user accesses the admin app
         Then I run the lay CSV command the file has a new report type '103-5' for an existing report that has not been submitted or unsubmitted
         And the report type should be updated
         And the count of the new 'org' entities added should be in the command output
 
-    @super-admin 
+    @super-admin
     Scenario: Uploading a CSV that contains an existing dual case - report type updated only when deputy uid matches
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file has a new report type '103-5' for a dual case
@@ -47,7 +47,7 @@ Feature: Org CSV data ingestion - sirius source data
 #        And the report associated with the client should remain the same
 
     #Temporary test to ensure that we are not updating the client if the organisation has changed
-    @super-admin 
+    @super-admin
     Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file has a new named deputy in a new organisation for an existing client
@@ -80,7 +80,7 @@ Feature: Org CSV data ingestion - sirius source data
         And the named deputy for case number '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
         And the count of the new 'org' entities added should be in the command output
 
-    @super-admin @chris
+    @super-admin
     Scenario: Uploading a CSV that contains deputies with missing required information alongside valid deputy rows
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number '70000000' and 1 valid row
