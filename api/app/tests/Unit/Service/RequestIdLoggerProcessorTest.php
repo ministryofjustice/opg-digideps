@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Service;
 
+use App\Service\RequestIdLoggerProcessor;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
