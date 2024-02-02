@@ -70,7 +70,7 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): array
     {
         $filters = [
             'limit' => 65,
@@ -105,7 +105,7 @@ class IndexController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function addUserAction(Request $request): array
+    public function addUserAction(Request $request): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
@@ -142,7 +142,7 @@ class IndexController extends AbstractController
      *
      * @return User[]|Response
      */
-    public function viewAction($id)
+    public function viewAction($id): array|Response
     {
         try {
             return ['user' => $this->getPopulatedUser($id)];
@@ -160,7 +160,7 @@ class IndexController extends AbstractController
      *
      * @throws \Throwable
      */
-    public function editUserAction(Request $request, TranslatorInterface $translator)
+    public function editUserAction(Request $request, TranslatorInterface $translator): array|Response
     {
         $filter = $request->get('filter');
 
@@ -249,7 +249,7 @@ class IndexController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function editNdrAction(Request $request, $id)
+    public function editNdrAction(Request $request, $id): RedirectResponse
     {
         $ndr = $this->restClient->get('ndr/'.$id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
         $ndrForm = $this->createForm(FormDir\NdrType::class, $ndr);
@@ -278,7 +278,7 @@ class IndexController extends AbstractController
      *
      * @return array
      */
-    public function deleteConfirmAction($id)
+    public function deleteConfirmAction($id): array
     {
         /** @var EntityDir\User $userToDelete */
         $userToDelete = $this->restClient->get("user/{$id}", 'User');
@@ -296,7 +296,7 @@ class IndexController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($id)
+    public function deleteAction($id): RedirectResponse
     {
         $user = $this->userApi->get($id, ['user', 'client', 'client-reports', 'report']);
 
@@ -325,7 +325,7 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/upload.html.twig")
      */
-    public function uploadAction(Request $request, RouterInterface $router)
+    public function uploadAction(Request $request, RouterInterface $router): array|RedirectResponse
     {
         $form = $this->createFormBuilder()
             ->add('type', ChoiceType::class, [
@@ -361,7 +361,7 @@ class IndexController extends AbstractController
      *
      * @throws \Exception
      */
-    public function uploadUsersAction(Request $request, ClientInterface $redisClient)
+    public function uploadUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
         $chunkSize = 2000;
 
@@ -495,7 +495,7 @@ class IndexController extends AbstractController
      *
      * @throws \Exception
      */
-    public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
+    public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
@@ -594,7 +594,7 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
+    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger): Response
     {
         try {
             $this->userApi->activate($email, 'pass-reset');

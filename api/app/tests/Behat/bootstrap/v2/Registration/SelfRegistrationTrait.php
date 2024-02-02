@@ -189,11 +189,11 @@ trait SelfRegistrationTrait
     public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV()
     {
         $this->iVisitAdminAddUserPage();
-        $this->userEmail = 'VANDERQUACKERS@DUCKTAILS.com';
+        $this->userEmail = 'VANDERQUACK@DUCKTAILS.com';
 
         $this->fillInField('admin_email', $this->userEmail);
         $this->fillInField('admin_firstname', $this->faker->firstName);
-        $this->fillInField('admin_lastname', 'Vanderquacker');
+        $this->fillInField('admin_lastname', 'Vanderquack');
         $this->fillInField('admin_addressPostcode', 'SW1');
         $this->selectOption('admin[roleType]', 'deputy');
         $this->selectOption('admin[roleNameDeputy]', 'ROLE_LAY_DEPUTY');

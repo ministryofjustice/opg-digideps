@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @self-register
+@v2 @v2_sequential_1 @registration @self-register @chris
 Feature: Lay Deputy Self Registration
 
     @super-admin
@@ -33,15 +33,15 @@ Feature: Lay Deputy Self Registration
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 
-#    @super-admin 
-#    Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
-#        Given a super admin user accesses the admin app
-#        When I upload a lay CSV that contains 3 new pre-registration entities
-#        And I create a Lay Deputy user account for one of the deputies in the CSV
-#        When a Lay Deputy clicks the activation link in the registration email
-#        And I complete the case manager user registration flow with valid deputyship details
-#        Then my deputy details should be saved to my account
-#        And I should be on the Lay homepage
+    @super-admin 
+    Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
+        Given a super admin user accesses the admin app
+        When I upload a lay CSV that contains 3 new pre-registration entities
+        And I create a Lay Deputy user account for one of the deputies in the CSV
+        When a Lay Deputy clicks the activation link in the registration email
+        And I complete the case manager user registration flow with valid deputyship details
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
 
     @super-admin
     Scenario: A Co-deputy can register for the service
