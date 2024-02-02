@@ -41,7 +41,6 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $this->csvFilename = 'paProDeputyReport.csv';
         
         $this->logger = self::prophesize(LoggerInterface::class);
-        $this->redis = self::prophesize(ClientInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
         

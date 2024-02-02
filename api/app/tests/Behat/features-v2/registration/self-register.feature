@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @self-register @chris
+@v2 @v2_sequential_1 @registration @self-register
 Feature: Lay Deputy Self Registration
 
     @super-admin
@@ -33,7 +33,7 @@ Feature: Lay Deputy Self Registration
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 
-    @super-admin 
+    @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file contains 3 new pre-registration entities
@@ -46,7 +46,7 @@ Feature: Lay Deputy Self Registration
     @super-admin
     Scenario: A Co-deputy can register for the service
         Given a super admin user accesses the admin app
-        When I upload a lay CSV that contains 2 new pre-registration entities for the same case
+        When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
         And one of the Lay Deputies registers to deputise for a client with valid details
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage

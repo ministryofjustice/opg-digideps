@@ -40,7 +40,6 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $this->csvFilename = 'layDeputyReport.csv';
 
         $this->logger = self::prophesize(LoggerInterface::class);
-        $this->redis = self::prophesize(ClientInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
         

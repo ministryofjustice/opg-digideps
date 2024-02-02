@@ -10,7 +10,6 @@ use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -63,7 +62,6 @@ class ProcessLayCSVCommand extends Command
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
         private readonly LoggerInterface $logger,
-        private readonly ClientInterface $redis,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly PreRegistrationRepository $preReg,
     ) {
@@ -172,7 +170,7 @@ class ProcessLayCSVCommand extends Command
         return false;
     }
 
-    private function storeOutput(array $processingOutput) 
+    private function storeOutput(array $processingOutput): void
     {
         if (!empty($processingOutput['errors'])) {
             $this->processingOutput['errors'] = array_merge(
@@ -190,7 +188,7 @@ class ProcessLayCSVCommand extends Command
         }
     }
     
-    private function processedStringOutput()
+    private function processedStringOutput(): string
     {
         $processed = "";
         foreach ($this->processingOutput as $reportedHeader => $stats ) {
