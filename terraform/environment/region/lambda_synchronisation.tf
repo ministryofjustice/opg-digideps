@@ -16,7 +16,7 @@ module "lamdba_synchronisation" {
   tags                  = var.default_tags
   account               = var.account
   environment           = local.environment
-  aws_subnet_ids        = data.aws_subnet.private.*.id
+  aws_subnet_ids        = data.aws_subnet.private[*].id
   memory                = 512
   vpc_id                = data.aws_vpc.vpc.id
   secrets               = [data.aws_secretsmanager_secret.jwt_token_synchronisation.arn]

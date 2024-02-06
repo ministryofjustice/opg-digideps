@@ -16,10 +16,10 @@ resource "aws_acm_certificate" "wildcard" {
 }
 
 resource "aws_route53_record" "wildcard_validation" {
-  name     = tolist(aws_acm_certificate.wildcard.domain_validation_options).0.resource_record_name
-  type     = tolist(aws_acm_certificate.wildcard.domain_validation_options).0.resource_record_type
+  name     = tolist(aws_acm_certificate.wildcard.domain_validation_options)[0].resource_record_name
+  type     = tolist(aws_acm_certificate.wildcard.domain_validation_options)[0].resource_record_type
   zone_id  = data.aws_route53_zone.public.id
-  records  = [tolist(aws_acm_certificate.wildcard.domain_validation_options).0.resource_record_value]
+  records  = [tolist(aws_acm_certificate.wildcard.domain_validation_options)[0].resource_record_value]
   ttl      = 60
   provider = aws.dns
 }
@@ -48,12 +48,12 @@ resource "aws_acm_certificate" "complete_deputy_report_wildcard" {
 }
 
 resource "aws_route53_record" "complete_deputy_report_wildcard_validation" {
-  name     = tolist(aws_acm_certificate.complete_deputy_report_wildcard.domain_validation_options).0.resource_record_name
-  type     = tolist(aws_acm_certificate.complete_deputy_report_wildcard.domain_validation_options).0.resource_record_type
+  name     = tolist(aws_acm_certificate.complete_deputy_report_wildcard.domain_validation_options)[0].resource_record_name
+  type     = tolist(aws_acm_certificate.complete_deputy_report_wildcard.domain_validation_options)[0].resource_record_type
   zone_id  = data.aws_route53_zone.complete_deputy_report.id
-  records  = [tolist(aws_acm_certificate.complete_deputy_report_wildcard.domain_validation_options).0.resource_record_value]
+  records  = [tolist(aws_acm_certificate.complete_deputy_report_wildcard.domain_validation_options)[0].resource_record_value]
   ttl      = 60
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 resource "aws_acm_certificate_validation" "complete_deputy_report_wildcard" {
