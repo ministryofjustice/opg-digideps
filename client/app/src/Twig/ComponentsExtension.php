@@ -113,6 +113,7 @@ class ComponentsExtension extends AbstractExtension
                         return 'govuk-tag--red';
 
                     case 'done':
+                    case 'low-done':
                     case 'submitted':
                     case 'readyToSubmit':
                         return 'govuk-tag--green';

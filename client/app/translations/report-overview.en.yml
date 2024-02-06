@@ -148,7 +148,8 @@ money_in_short:
   subSectionTitle: "Money in"
   subSectionDescription: "Tell us about money paid into %client%'s accounts"
   label:
-    done: "{0} no money in | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} no money in | {1} 1 item over £1,000 | ]1,Inf[ %count% items over £1,000"
+    low-done: "money in"
 money_out_short:
   subSectionTitle: "Money out"
   subSectionDescription: "Tell us about money you have spent on %client%'s living and welfare costs"
