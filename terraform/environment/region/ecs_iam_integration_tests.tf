@@ -33,8 +33,8 @@ data "aws_iam_policy_document" "integration_tests" {
     ]
     #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [
-      "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
-      "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
+      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
+      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
     ]
   }
 }
