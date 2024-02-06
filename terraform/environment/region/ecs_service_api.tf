@@ -73,7 +73,10 @@ locals {
         command : [
           "CMD-SHELL",
           "curl -f http://127.0.0.1:80/health-check || exit 1"
-        ]
+        ],
+        interval = 30,
+        timeout  = 5,
+        retries  = 3
       },
       volumesFrom = [],
       logConfiguration = {
@@ -133,14 +136,14 @@ locals {
       environment = [
         {
           name  = "ADMIN_HOST",
-          value = "https://${var.admin_fqdn}"
+          value = "https://${var.admin_fully_qualified_domain_name}"
         },
         {
           name  = "FRONTEND_HOST",
-          value = "https://${var.front_fqdn}"
+          value = "https://${var.front_fully_qualified_domain_name}"
         },
         { name  = "JWT_HOST",
-          value = "https://${var.front_fqdn}"
+          value = "https://${var.front_fully_qualified_domain_name}"
         },
         {
           name  = "AUDIT_LOG_GROUP_NAME",
