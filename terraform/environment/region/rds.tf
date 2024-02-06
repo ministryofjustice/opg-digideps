@@ -30,10 +30,6 @@ locals {
   }
 }
 
-data "aws_iam_role" "enhanced_monitoring" {
-  name = "rds-enhanced-monitoring"
-}
-
 data "aws_kms_key" "rds" {
   key_id = "alias/aws/rds"
 }

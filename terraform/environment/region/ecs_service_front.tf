@@ -23,7 +23,7 @@ resource "aws_ecs_service" "front" {
 
   network_configuration {
     security_groups  = [module.front_service_security_group.id]
-    subnets          = data.aws_subnet.private.*.id
+    subnets          = data.aws_subnet.private[*].id
     assign_public_ip = false
   }
 
@@ -90,7 +90,7 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
           awslogs-stream-prefix = "${aws_iam_role.front.name}.web"
         }
@@ -117,9 +117,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          awslogs-group         = "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${aws_iam_role.front.name}"
+          awslogs-stream-prefix = aws_iam_role.front.name
         }
       },
       secrets = [

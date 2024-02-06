@@ -1,9 +1,11 @@
 variable "DEFAULT_ROLE" {
   default = "digideps-ci"
+  type    = string
 }
 
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
+  type        = string
 }
 
 variable "accounts" {
@@ -50,10 +52,6 @@ variable "accounts" {
       secondary_region_enabled               = bool
     })
   )
-}
-
-module "allow_list" {
-  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git"
 }
 
 data "aws_ssm_parameter" "env_vars_development" {

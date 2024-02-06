@@ -12,17 +12,6 @@ terraform {
 # Old config - To remove
 provider "aws" {
   region = "eu-west-1"
-  default_tags {
-    tags = local.default_tags
-  }
-  assume_role {
-    role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
-    session_name = "terraform-session"
-  }
-}
-
-provider "aws" {
-  region = "eu-west-1"
   alias  = "management"
   default_tags {
     tags = local.default_tags

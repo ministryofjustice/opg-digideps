@@ -8,7 +8,7 @@ module "disaster_recovery_backup" {
   execution_role_arn      = aws_iam_role.execution_role.arn
   backup_account_id       = local.backup_account_id
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn
-  aws_subnet_ids          = data.aws_subnet.private.*.id
+  aws_subnet_ids          = data.aws_subnet.private[*].id
   account_id              = var.account.account_id
   db                      = local.db
   log_retention           = 30

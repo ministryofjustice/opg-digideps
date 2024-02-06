@@ -53,7 +53,7 @@ resource "aws_route53_record" "www" {
 # New complete-deputy-report DNS in Management Account
 data "aws_route53_zone" "complete_deputy_report" {
   name     = local.complete_deputy_report
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 resource "aws_route53_record" "complete_deputy_report_front" {
@@ -66,7 +66,7 @@ resource "aws_route53_record" "complete_deputy_report_front" {
     name                   = local.front_loadbalancer.dns_name
     zone_id                = local.front_loadbalancer.zone_id
   }
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 resource "aws_route53_record" "complete_deputy_report_admin" {
@@ -79,7 +79,7 @@ resource "aws_route53_record" "complete_deputy_report_admin" {
     name                   = local.admin_loadbalancer.dns_name
     zone_id                = local.admin_loadbalancer.zone_id
   }
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 resource "aws_route53_record" "complete_deputy_report_www" {
@@ -92,14 +92,14 @@ resource "aws_route53_record" "complete_deputy_report_www" {
     name                   = local.front_loadbalancer.dns_name
     zone_id                = local.front_loadbalancer.zone_id
   }
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 # Alternative Service Justice Records
 
 data "aws_route53_zone" "service" {
   name     = local.service_justice_domain
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 resource "aws_route53_record" "service_front" {
@@ -113,7 +113,7 @@ resource "aws_route53_record" "service_front" {
     name                   = local.front_loadbalancer.dns_name
     zone_id                = local.front_loadbalancer.zone_id
   }
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
 
 resource "aws_route53_record" "service_admin" {
@@ -126,5 +126,5 @@ resource "aws_route53_record" "service_admin" {
     name                   = local.admin_loadbalancer.dns_name
     zone_id                = local.admin_loadbalancer.zone_id
   }
-  provider = aws.management
+  provider = aws.management_eu_west_1
 }
