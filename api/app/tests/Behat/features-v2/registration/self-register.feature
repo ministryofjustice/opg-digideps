@@ -36,6 +36,7 @@ Feature: Lay Deputy Self Registration
     @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
         Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows.csv'
+        Given a super admin user accesses the admin app
         When I run the lay CSV command the file contains 3 new pre-registration entities
         And I create a Lay Deputy user account for one of the deputies in the CSV
         When a Lay Deputy clicks the activation link in the registration email
