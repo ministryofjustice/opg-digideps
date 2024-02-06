@@ -20,4 +20,6 @@ keys = [
     "/ssm/localstack",
     "/url",
     "/workspace",
+    "/pa/pro/report/csv/filename",
+    "/lay/report/csv/filename"
 ]
