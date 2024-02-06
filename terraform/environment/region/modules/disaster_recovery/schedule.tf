@@ -2,7 +2,7 @@ resource "aws_cloudwatch_event_rule" "dr_backup" {
   name                = "backup-cross-account-${terraform.workspace}"
   description         = "Execute the cross account DR backup for ${terraform.workspace}"
   schedule_expression = "cron(00 01 * * ? *)"
-  is_enabled          = true
+  state               = "ENABLED"
 }
 
 resource "aws_cloudwatch_event_target" "dr_backup" {
