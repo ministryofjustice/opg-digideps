@@ -4,7 +4,7 @@ resource "aws_iam_role" "integration_tests" {
   tags               = var.default_tags
 }
 
-data "aws_iam_policy_document" "admin_put_parameter_ssm" {
+data "aws_iam_policy_document" "integration_tests" {
   statement {
     sid    = "AllowPutSSMParameters"
     effect = "Allow"
@@ -17,10 +17,30 @@ data "aws_iam_policy_document" "admin_put_parameter_ssm" {
       aws_ssm_parameter.flag_document_sync.arn,
     ]
   }
+
+  statement {
+    sid    = "AllIntegrationActionsCalledOnS3Bucket"
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:DeleteObjectVersion",
+      "s3:ListObjectVersions",
+      "s3:ListBucketVersions",
+      "s3:PutObject",
+      "s3:GetObjectTagging",
+      "s3:PutObjectTagging",
+    ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    resources = [
+      "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
+      "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "admin_put_parameter_ssm_integration_tests" {
   name   = "admin-put-parameter-ssm-integration-tests.${local.environment}"
-  policy = data.aws_iam_policy_document.admin_put_parameter_ssm.json
+  policy = data.aws_iam_policy_document.integration_tests.json
   role   = aws_iam_role.integration_tests.id
 }

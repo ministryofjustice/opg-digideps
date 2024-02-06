@@ -57,9 +57,29 @@ trait IngestTrait
     private string $expectedReportType = '';
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
+    private string $csvFileName = '';
 
     private $clientBeforeCsvUpload;
     private $clientAfterCsvUpload;
+    
+    /**
+     * @Given a csv has been uploaded to the sirius bucket with the file :fileName
+     */
+    public function aCsvHasBeenUploadedTheSiriusBucketWithTheFile(string $fileName)
+    {
+        $this->visitFrontendPath($this->getClientLoginPageUrl());
+
+        $this->csvFileName = $fileName;
+        $filePath = sprintf('%s/fixtures/sirius-csvs/%s', dirname(__DIR__, 3), $this->csvFileName);
+        $bucket = $this->appParams->get('s3_sirius_bucket');
+        
+        $this->s3->putObject([
+            'Bucket'     => $bucket,
+            'SourceFile' => $filePath,
+            'Key'        => $this->csvFileName,
+            
+        ]);
+    }
 
     /**
      * @When I run the lay CSV command the file contains the following new entities:
@@ -77,8 +97,7 @@ trait IngestTrait
         $this->organisations['added']['expected'] = intval($hash[0]['organisations']);
         $this->reports['added']['expected'] = intval($hash[0]['reports']);
 
-        $fileName = 'org-3-valid-rows.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -277,18 +296,17 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'professor@mccracken4.com', '40000000');
 
-        $fileName = 'org-1-updated-row-new-named-deputy.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     private function uploadCsvAndCountCreatedEntities(string $fileName)
     {
-        $filePath = sprintf('sirius-csvs/%s', $fileName);
+        $filePath = sprintf('sirius-csvs/%s', $this->csvFileName);
         $this->extractUidsFromCsv($filePath);
         
-        $type = (str_starts_with($fileName, 'lay-')) ? 'lay' : 'org';
+        $type = (str_starts_with($this->csvFileName, 'lay-')) ? 'lay' : 'org';
 
-        $this->runCSVCommand($type, $fileName);
+        $this->runCSVCommand($type, $this->csvFileName);
         $this->countCreatedEntities();
     }
 
@@ -320,8 +338,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
 
-        $fileName = 'org-1-updated-row-named-deputy-address.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -365,8 +382,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
 
-        $fileName = 'org-1-updated-row-report-type.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -382,8 +398,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
 
-        $fileName = 'org-2-rows-1-row-updated-report-type-dual-case.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -418,8 +433,7 @@ trait IngestTrait
 
         $this->createProfAdminNotStarted();
 
-        $fileName = 'org-1-row-missing-last-report-date-1-valid-row.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -529,8 +543,7 @@ trait IngestTrait
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
 
-        $fileName = 'lay-3-valid-rows.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -540,8 +553,7 @@ trait IngestTrait
     {
         $this->preRegistration['expected'] = 1;
 
-        $fileName = 'lay-1-row-special-chars.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     private function iAmOnCorrectUploadPage(string $type)
@@ -561,9 +573,8 @@ trait IngestTrait
         $this->expectedReportType = $reportTypeNumber;
 
         $this->createPfaHighNotStarted(null, $caseNumber);
-        
-        $fileName = 'lay-1-row-updated-report-type.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -591,8 +602,7 @@ trait IngestTrait
         $this->preRegistration['expected'] = $newEntitiesCount;
         $this->skipped['expected'] = $entitiesSkipped;
 
-        $fileName = 'lay-1-row-missing-all-required-1-valid-row.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -603,8 +613,7 @@ trait IngestTrait
         $this->preRegistration['expected'] = $newEntitiesCount;
         $this->skipped['expected'] = $entitiesSkipped;
 
-        $fileName = 'lay-1-row-invalid-report-type-1-valid-row.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -639,8 +648,7 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
         
-        $fileName = 'org-1-row-new-named-deputy-and-org-existing-client.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
 
@@ -761,8 +769,7 @@ trait IngestTrait
 
         $this->clientBeforeCsvUpload = $existingClient;
 
-        $fileName = 'org-1-row-existing-named-deputy-and-client-new-org-and-street-address.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
 
@@ -884,8 +891,7 @@ trait IngestTrait
         $this->reports['added']['expected'] = 2;
         $this->organisations['added']['expected'] = 1;
         
-        $fileName = 'org-2-rows-1-named-deputy-with-different-addresses.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
     }
@@ -958,8 +964,7 @@ trait IngestTrait
         $this->reports['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
         
-        $fileName = 'org-1-row-1-named-deputy-with-org-name-no-first-last-name.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
     }
@@ -1009,8 +1014,7 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
 
-        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
     }
@@ -1025,8 +1029,7 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
 
-        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-2ndRun.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
     }
@@ -1040,8 +1043,7 @@ trait IngestTrait
     {
         $this->namedDeputies['updated']['expected'] = 2;
         
-        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-updated-names.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
     }
@@ -1055,8 +1057,7 @@ trait IngestTrait
         $this->clients['updated']['expected'] = 1;
         $this->namedDeputies['updated']['expected'] = 1;
         
-        $fileName = 'org-2-rows-1-person-deputy-1-org-deputy-updated-emails.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
     }
@@ -1116,8 +1117,7 @@ trait IngestTrait
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
 
-        $fileName = 'lay-2-rows-co-deputy.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
+        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
     
     protected function runCSVCommand(string $type, string $fileName)
@@ -1133,5 +1133,4 @@ trait IngestTrait
 
         $this->application->doRun($input, $this->output);
     }
-    
 }
