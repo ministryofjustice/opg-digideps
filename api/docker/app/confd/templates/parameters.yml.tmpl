@@ -6,27 +6,27 @@ parameters:
     cloudwatch_logs_client_params:
        version: 'latest'
        region: 'eu-west-1'
-{{ if exists "/cloudwatch/logs/localstack" }}
+    {{ if exists "/cloudwatch/logs/localstack" }}
        endpoint: 'http://localstack:4566'
        validate: false
        credentials:
            key: 'FAKE_ID'
            secret: 'FAKE_KEY'
-{{ else }}
+    {{ else }}
        validate: true
-{{ end }}
+    {{ end }}
     ssm_client_params:
       version: 'latest'
       region: 'eu-west-1'
-{{ if exists "/ssm/localstack" }}
+    {{ if exists "/ssm/localstack" }}
       endpoint: 'http://localstack:4566'
       validate: false
       credentials:
         key: 'FAKE_ID'
         secret: 'FAKE_KEY'
-{{ else }}
+    {{ else }}
       validate: true
-{{ end }}
+    {{ end }}
     session_prefix: {{ getv "/session/prefix" }}
     secrets_manager_client_params:
       version: 'latest'
@@ -68,6 +68,7 @@ parameters:
     {{ else }}
         validate: true
     {{ end }}
-    s3_bucket_name: pa-uploads-local
-    s3_sirius_bucket: sirius-bucket-local
-    pa_pro_report_csv_filename: pa_pro_report.csv
+    s3_bucket_name: {{ if exists "/s3/bucketname" }}{{ getv "/s3/bucketname" }}{{ else }}not_set{{ end }}
+    s3_sirius_bucket: {{ if exists "/s3/sirius/bucket" }}{{ getv "/s3/sirius/bucket" }}{{ else }}not_set{{ end }}
+    pa_pro_report_csv_filename: {{ if exists "/pa/pro/report/csv/filename" }}{{ getv "/pa/pro/report/csv/filename" }}{{ else }}not_set{{ end }}
+    lay_report_csv_filename: {{ if exists "/lay/report/csv/filename" }}{{ getv "/lay/report/csv/filename" }}{{ else }}not_set{{ end }}
