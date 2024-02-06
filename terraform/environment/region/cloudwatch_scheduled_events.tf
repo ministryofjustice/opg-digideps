@@ -165,7 +165,7 @@ resource "aws_cloudwatch_event_target" "db_analyse_command" {
     launch_type         = "FARGATE"
 
     network_configuration {
-      security_groups  = [module.restore_security_group.id]
+      security_groups  = [module.db_access_task_security_group.id]
       subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
