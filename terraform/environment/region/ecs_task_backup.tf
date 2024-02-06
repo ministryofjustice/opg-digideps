@@ -10,35 +10,7 @@ module "backup" {
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
   vpc_id                = data.aws_vpc.vpc.id
-  security_group_id     = module.backup_security_group.id
-}
-
-locals {
-  backup_sg_rules = {
-    ecr     = local.common_sg_rules.ecr
-    logs    = local.common_sg_rules.logs
-    s3      = local.common_sg_rules.s3
-    ssm     = local.common_sg_rules.ssm
-    ecr_api = local.common_sg_rules.ecr_api
-    secrets = local.common_sg_rules.secrets
-    rds = {
-      port        = 5432
-      protocol    = "tcp"
-      type        = "egress"
-      target_type = "security_group_id"
-      target      = module.api_rds_security_group.id
-    }
-  }
-}
-
-module "backup_security_group" {
-  source      = "./modules/security_group"
-  description = "Backup Service"
-  rules       = local.backup_sg_rules
-  name        = "backup"
-  tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
-  environment = local.environment
+  security_group_id     = module.db_access_task_security_group.id
 }
 
 data "aws_kms_alias" "backup" {
