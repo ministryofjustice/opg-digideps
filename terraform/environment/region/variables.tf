@@ -28,11 +28,11 @@ variable "shared_environment_variables" {
   description = "The map of shared environment variables"
 }
 
-variable "r53_hc_front" {
+variable "health_check_front" {
   type = any
 }
 
-variable "r53_hc_admin" {
+variable "health_check_admin" {
   type = any
 }
 
@@ -40,11 +40,11 @@ variable "certificate_arn" {
   type = string
 }
 
-variable "front_fqdn" {
+variable "front_fully_qualified_domain_name" {
   type = string
 }
 
-variable "admin_fqdn" {
+variable "admin_fully_qualified_domain_name" {
   type = string
 }
 

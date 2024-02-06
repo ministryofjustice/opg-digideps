@@ -2,7 +2,7 @@
 
 data "aws_sns_topic" "availability_alert" {
   provider = aws.us-east-1
-  name     = "availability-alert-${local.primary_region}"
+  name     = "availability-alert-${local.primary_region_name}"
 }
 
 resource "aws_route53_health_check" "availability_front" {

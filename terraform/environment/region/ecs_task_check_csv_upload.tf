@@ -105,7 +105,7 @@ locals {
       environment = [
         {
           name  = "ADMIN_HOST",
-          value = "https://${var.admin_fqdn}"
+          value = "https://${var.admin_fully_qualified_domain_name}"
         },
         {
           name  = "API_URL",
@@ -157,7 +157,7 @@ locals {
         },
         {
           name  = "NONADMIN_HOST",
-          value = "https://${var.front_fqdn}"
+          value = "https://${var.front_fully_qualified_domain_name}"
         },
         {
           name  = "OPG_DOCKER_TAG",

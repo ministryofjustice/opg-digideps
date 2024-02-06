@@ -23,7 +23,7 @@ resource "aws_shield_protection" "admin_alb_protection" {
 }
 
 resource "aws_shield_protection_health_check_association" "admin" {
-  health_check_arn     = var.r53_hc_admin.arn
+  health_check_arn     = var.health_check_admin.arn
   shield_protection_id = aws_shield_protection.admin_alb_protection.id
 }
 
@@ -35,6 +35,6 @@ resource "aws_shield_protection" "front_alb_protection" {
 }
 
 resource "aws_shield_protection_health_check_association" "front" {
-  health_check_arn     = var.r53_hc_front.arn
+  health_check_arn     = var.health_check_front.arn
   shield_protection_id = aws_shield_protection.front_alb_protection.id
 }

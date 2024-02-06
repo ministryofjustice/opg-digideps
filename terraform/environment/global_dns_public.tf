@@ -1,6 +1,8 @@
 locals {
   complete_deputy_report = "complete-deputy-report.service.gov.uk"
   service_justice_domain = "digideps.opg.service.justice.gov.uk"
+  front_loadbalancer     = local.primary_region_name == "eu-west-1" ? module.eu_west_1[0].aws_lb_front : module.eu_west_2[0].aws_lb_front
+  admin_loadbalancer     = local.primary_region_name == "eu-west-1" ? module.eu_west_1[0].aws_lb_admin : module.eu_west_2[0].aws_lb_admin
 }
 
 # Main complete-deputy-report DNS in Digideps Production Account
@@ -16,8 +18,8 @@ resource "aws_route53_record" "front" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_front.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_front.zone_id
+    name                   = local.front_loadbalancer.dns_name
+    zone_id                = local.front_loadbalancer.zone_id
   }
   provider = aws.dns
 }
@@ -29,8 +31,8 @@ resource "aws_route53_record" "admin" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_admin.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_admin.zone_id
+    name                   = local.admin_loadbalancer.dns_name
+    zone_id                = local.admin_loadbalancer.zone_id
   }
   provider = aws.dns
 }
@@ -42,8 +44,8 @@ resource "aws_route53_record" "www" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_front.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_front.zone_id
+    name                   = local.front_loadbalancer.dns_name
+    zone_id                = local.front_loadbalancer.zone_id
   }
   provider = aws.dns
 }
@@ -61,8 +63,8 @@ resource "aws_route53_record" "complete_deputy_report_front" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_front.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_front.zone_id
+    name                   = local.front_loadbalancer.dns_name
+    zone_id                = local.front_loadbalancer.zone_id
   }
   provider = aws.management
 }
@@ -74,8 +76,8 @@ resource "aws_route53_record" "complete_deputy_report_admin" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_admin.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_admin.zone_id
+    name                   = local.admin_loadbalancer.dns_name
+    zone_id                = local.admin_loadbalancer.zone_id
   }
   provider = aws.management
 }
@@ -87,8 +89,8 @@ resource "aws_route53_record" "complete_deputy_report_www" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_front.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_front.zone_id
+    name                   = local.front_loadbalancer.dns_name
+    zone_id                = local.front_loadbalancer.zone_id
   }
   provider = aws.management
 }
@@ -108,8 +110,8 @@ resource "aws_route53_record" "service_front" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_front.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_front.zone_id
+    name                   = local.front_loadbalancer.dns_name
+    zone_id                = local.front_loadbalancer.zone_id
   }
   provider = aws.management
 }
@@ -121,8 +123,8 @@ resource "aws_route53_record" "service_admin" {
 
   alias {
     evaluate_target_health = false
-    name                   = module.eu_west_1[0].aws_lb_admin.dns_name
-    zone_id                = module.eu_west_1[0].aws_lb_admin.zone_id
+    name                   = local.admin_loadbalancer.dns_name
+    zone_id                = local.admin_loadbalancer.zone_id
   }
   provider = aws.management
 }

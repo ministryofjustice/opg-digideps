@@ -83,7 +83,10 @@ locals {
         command : [
           "CMD-SHELL",
           "curl -f http://127.0.0.1:80/health-check || exit 1"
-        ]
+        ],
+        interval = 30,
+        timeout  = 5,
+        retries  = 3
       },
       volumesFrom = [],
       logConfiguration = {
@@ -129,8 +132,8 @@ locals {
       ],
       environment = [
         { name = "ROLE", value = "admin" },
-        { name = "ADMIN_HOST", value = "https://${var.admin_fqdn}" },
-        { name = "NONADMIN_HOST", value = "https://${var.front_fqdn}" },
+        { name = "ADMIN_HOST", value = "https://${var.admin_fully_qualified_domain_name}" },
+        { name = "NONADMIN_HOST", value = "https://${var.front_fully_qualified_domain_name}" },
         { name = "API_URL", value = "http://api" },
         { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
         { name = "EMAIL_SEND_INTERNAL", value = var.account.is_production == 1 ? "true" : "false" },
