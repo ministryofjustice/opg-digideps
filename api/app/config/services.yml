@@ -222,6 +222,9 @@ services:
     
     Aws\S3\S3Client:
         arguments: ["%s3_client_params%"]
+        
+    App\Service\File\Storage\S3Storage:
+        arguments: [ '@Aws\S3\S3Client', "%s3_bucket_name%", "@logger" ]
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: "@security.role_hierarchy"
 
