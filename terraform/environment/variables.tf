@@ -55,17 +55,17 @@ variable "accounts" {
 }
 
 data "aws_ssm_parameter" "env_vars_development" {
-  provider = aws.management
+  provider = aws.management_eu_west_1
   name     = "/digideps/development/environment_variables"
 }
 
 data "aws_ssm_parameter" "env_vars_preproduction" {
-  provider = aws.management
+  provider = aws.management_eu_west_1
   name     = "/digideps/preproduction/environment_variables"
 }
 
 data "aws_ssm_parameter" "env_vars_production" {
-  provider = aws.management
+  provider = aws.management_eu_west_1
   name     = "/digideps/production/environment_variables"
 }
 
