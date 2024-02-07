@@ -271,6 +271,10 @@ class ReportStatusService
             return ['state' => self::STATE_INCOMPLETE];
         }
 
+        if ($categoriesCount > 0 && 'no' == $transactionsExist) {
+            return ['state' => self::STATE_LOW_DONE];
+        }
+        
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
         }
