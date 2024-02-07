@@ -16,7 +16,7 @@ module "lamdba_synchronisation" {
   tags                  = var.default_tags
   account               = var.account
   environment           = local.environment
-  aws_subnet_ids        = data.aws_subnet.private.*.id
+  aws_subnet_ids        = data.aws_subnet.private[*].id
   memory                = 512
   vpc_id                = data.aws_vpc.vpc.id
   secrets               = [data.aws_secretsmanager_secret.jwt_token_synchronisation.arn]
@@ -47,7 +47,7 @@ resource "aws_cloudwatch_event_rule" "sync_documents" {
   name                = "synchronise-documents-schedule-${local.environment}"
   description         = "Kicks off document synch to sirius in ${terraform.workspace}"
   schedule_expression = "rate(24 hours)"
-  is_enabled          = false
+  state               = "DISABLED"
   tags                = var.default_tags
 }
 
@@ -55,7 +55,7 @@ resource "aws_cloudwatch_event_rule" "sync_checklists" {
   name                = "synchronise-checklists-schedule-${local.environment}"
   description         = "Kicks off checklist synch to sirius in ${terraform.workspace}"
   schedule_expression = "rate(24 hours)"
-  is_enabled          = false
+  state               = "DISABLED"
   tags                = var.default_tags
 }
 

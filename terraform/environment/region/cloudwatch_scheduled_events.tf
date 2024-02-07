@@ -94,7 +94,7 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -133,7 +133,7 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -171,7 +171,7 @@ resource "aws_cloudwatch_event_target" "resubmit_error_documents" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -239,8 +239,8 @@ resource "aws_cloudwatch_event_target" "db_analyse_command" {
     launch_type         = "FARGATE"
 
     network_configuration {
-      security_groups  = [module.restore_security_group.id]
-      subnets          = data.aws_subnet.private.*.id
+      security_groups  = [module.db_access_task_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -268,7 +268,7 @@ resource "aws_cloudwatch_event_target" "checklist_sync" {
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
     network_configuration {
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
       security_groups  = [module.checklist_sync_service_security_group.id]
     }
@@ -297,7 +297,7 @@ resource "aws_cloudwatch_event_target" "document_sync" {
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
     network_configuration {
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
       security_groups  = [module.document_sync_service_security_group.id]
     }

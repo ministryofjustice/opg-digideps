@@ -9,8 +9,6 @@ resource "aws_ssm_parameter" "sirius_api_base_uri" {
   type  = "String"
   value = local.sirius_api_base_uri_value
 
-  overwrite = true
-
   tags = var.default_tags
 }
 

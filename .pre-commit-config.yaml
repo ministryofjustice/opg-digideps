@@ -18,9 +18,10 @@ repos:
       - id: trailing-whitespace # trims trailing whitespace.
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.85.0
+    rev: v1.86.0
     hooks:
       - id: terraform_fmt
+      - id: terraform_tflint
       - id: terraform_validate
         exclude: terraform/.*/region/[^/]+$
 
@@ -52,7 +53,7 @@ repos:
       - id: no-go-testing
 
   - repo: https://github.com/ambv/black
-    rev: 23.12.0
+    rev: 24.1.1
     hooks:
       - id: black
 

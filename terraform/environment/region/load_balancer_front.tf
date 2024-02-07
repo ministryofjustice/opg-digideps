@@ -2,7 +2,7 @@ resource "aws_lb" "front" {
   name                       = "front-${local.environment}"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is a public LB
   load_balancer_type         = "application"
-  subnets                    = data.aws_subnet.public.*.id
+  subnets                    = data.aws_subnet.public[*].id
   idle_timeout               = 300
   drop_invalid_header_fields = true
 

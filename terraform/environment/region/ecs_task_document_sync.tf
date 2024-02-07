@@ -65,7 +65,7 @@ resource "aws_ecs_service" "document_sync" {
 
   network_configuration {
     security_groups  = [module.document_sync_service_security_group.id]
-    subnets          = data.aws_subnet.private.*.id
+    subnets          = data.aws_subnet.private[*].id
     assign_public_ip = false
   }
 

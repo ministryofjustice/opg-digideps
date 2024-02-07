@@ -49,7 +49,7 @@ variable "admin_fully_qualified_domain_name" {
 }
 
 module "allow_list" {
-  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git"
+  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v2.3.2"
 }
 
 data "aws_ip_ranges" "route53_healthchecks_ips" {
@@ -57,8 +57,6 @@ data "aws_ip_ranges" "route53_healthchecks_ips" {
 }
 
 locals {
-  project = "digideps"
-
   default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
   admin_allow_list   = length(var.account["admin_allow_list"]) > 0 ? var.account["admin_allow_list"] : local.default_allow_list
   front_allow_list   = length(var.account["front_allow_list"]) > 0 ? var.account["front_allow_list"] : local.default_allow_list
@@ -69,8 +67,6 @@ locals {
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 
   environment = lower(terraform.workspace)
-
-  sirius_environment = var.account["sirius_environment"]
 
   openapi_mock_version = "v0.3.3"
 
