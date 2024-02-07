@@ -1,9 +1,11 @@
 variable "account" {
   description = "The account map built from tfvars"
+  type        = any
 }
 
 variable "default_tags" {
   description = "Default tags map"
+  type        = any
 }
 
 data "aws_region" "current" {}
