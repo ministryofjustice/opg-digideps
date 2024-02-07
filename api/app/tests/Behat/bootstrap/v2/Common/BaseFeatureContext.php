@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
-use Aws\S3\S3Client;
 use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -18,7 +18,6 @@ use Faker\Factory;
 use Faker\Generator;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class BaseFeatureContext extends MinkContext
@@ -124,9 +123,8 @@ class BaseFeatureContext extends MinkContext
         protected readonly EntityManagerInterface $em,
         protected readonly ReportTestHelper $reportTestHelper,
         protected readonly ParameterStoreService $parameterStoreService,
-        protected readonly ParameterBagInterface $appParams,
         protected readonly KernelInterface $kernel,
-        protected readonly S3Client $s3
+        protected readonly S3Storage $s3
     ) {
         // Required so we can run tests against commands
         $this->application = new Application($kernel);

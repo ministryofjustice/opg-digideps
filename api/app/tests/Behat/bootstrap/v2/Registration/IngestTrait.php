@@ -71,14 +71,9 @@ trait IngestTrait
 
         $this->csvFileName = $fileName;
         $filePath = sprintf('%s/fixtures/sirius-csvs/%s', dirname(__DIR__, 3), $this->csvFileName);
-        $bucket = $this->appParams->get('s3_sirius_bucket');
+        $fileBody = file_get_contents($filePath);
         
-        $this->s3->putObject([
-            'Bucket'     => $bucket,
-            'SourceFile' => $filePath,
-            'Key'        => $this->csvFileName,
-            
-        ]);
+        $this->s3->store($this->csvFileName, $fileBody);
     }
 
     /**
