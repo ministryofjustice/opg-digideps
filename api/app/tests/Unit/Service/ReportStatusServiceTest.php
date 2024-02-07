@@ -241,7 +241,7 @@ class ReportStatusServiceTest extends TestCase
             [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
             [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_NOT_STARTED],
             [['getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
-            [['getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_DONE],
+            [['getMoneyTransactionsShortInExist' => 'no', 'getMoneyShortCategoriesInPresent' => [$cat]], StatusService::STATE_LOW_DONE],
         ];
     }
 
@@ -264,8 +264,9 @@ class ReportStatusServiceTest extends TestCase
         return [
             [['getMoneyTransactionsShortOutExist' => null], StatusService::STATE_NOT_STARTED],
             [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
+            [['getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_NOT_STARTED],
             [['getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
-            [['getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_DONE],
+            [['getMoneyTransactionsShortOutExist' => 'no', 'getMoneyShortCategoriesOutPresent' => [$cat]], StatusService::STATE_LOW_DONE],
         ];
     }
 
