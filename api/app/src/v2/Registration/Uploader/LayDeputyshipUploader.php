@@ -34,7 +34,7 @@ class LayDeputyshipUploader
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
         private PreRegistrationFactory $preRegistrationFactory,
-        private LoggerInterface $verboseLogger
+        private LoggerInterface $logger
     ) {
     }
 
@@ -52,10 +52,10 @@ class LayDeputyshipUploader
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
-                    ++$added;
+                    $added++;
                 } catch (PreRegistrationCreationException $e) {
                     $message = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
-                    $this->verboseLogger->error($message);
+                    $this->logger->error($message);
                     $errors[] = $message;
                     continue;
                 }
@@ -65,7 +65,7 @@ class LayDeputyshipUploader
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
         } catch (\Throwable $e) {
-            $this->verboseLogger->error($e->getMessage());
+            $this->logger->error($e->getMessage());
 
             return ['added' => $added, 'errors' => [$e->getMessage()]];
         }
@@ -133,7 +133,7 @@ class LayDeputyshipUploader
                 }
             }
         } catch (\Throwable $e) {
-            $this->verboseLogger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
+            $this->logger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
             throw new \Exception($e->getMessage());
         }
 

@@ -198,8 +198,28 @@ locals {
           value = join("", [var.secrets_prefix, "/"])
         },
         {
+          name  = "SESSION_PREFIX",
+          value = "dd_api"
+        },
+        {
           name  = "WORKSPACE",
           value = local.environment
+        },
+        {
+          name  = "S3_BUCKETNAME",
+          value = "pa-uploads-${local.environment}"
+        },
+        {
+          name  = "S3_SIRIUS_BUCKET",
+          value = "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk"
+        },
+        {
+          name  = "PA_PRO_REPORT_CSV_FILENAME",
+          value = "paProDeputyReport.csv"
+        },
+        {
+          name  = "LAY_REPORT_CSV_FILENAME",
+          value = "layDeputyReport.csv"
         },
       ]
     }

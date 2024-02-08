@@ -94,6 +94,10 @@ locals {
           value = "https://${var.front_fully_qualified_domain_name}"
         },
         {
+          name  = "SESSION_PREFIX",
+          value = "dd_api"
+        },
+        {
           name  = "WORKSPACE",
           value = local.environment
         }

@@ -40,4 +40,14 @@ parameters:
         region: 'eu-west-1'
         validate: true
 
+    api_base_url: https://api.digideps.local/
+    s3_bucket_name: pa-uploads-local
+    s3_sirius_bucket: sirius-bucket-local
+    s3_client_params:
+        version: 'latest'
+        region: 'eu-west-1'
+        validate: true
+
     workspace: local
+    
+    session_prefix: 'dd_api'

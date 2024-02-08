@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
@@ -15,6 +16,8 @@ use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class BaseFeatureContext extends MinkContext
@@ -111,13 +114,24 @@ class BaseFeatureContext extends MinkContext
 
     public Generator $faker;
 
+    protected Application $application;
+    public BufferedOutput $output;
+
     public function __construct(
-        protected FixtureHelper $fixtureHelper,
-        protected KernelInterface $symfonyKernel,
-        protected EntityManagerInterface $em,
-        protected ReportTestHelper $reportTestHelper,
-        protected ParameterStoreService $parameterStoreService
+        protected readonly FixtureHelper $fixtureHelper,
+        protected readonly KernelInterface $symfonyKernel,
+        protected readonly EntityManagerInterface $em,
+        protected readonly ReportTestHelper $reportTestHelper,
+        protected readonly ParameterStoreService $parameterStoreService,
+        protected readonly KernelInterface $kernel,
+        protected readonly S3Storage $s3
     ) {
+        // Required so we can run tests against commands
+        $this->application = new Application($kernel);
+        $this->application->setCatchExceptions(true);
+        $this->application->setAutoExit(true);
+        $this->output = new BufferedOutput();
+        
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {

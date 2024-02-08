@@ -8,12 +8,17 @@ keys = [
     "/email",
     "/email_settings",
     "/redis",
+    "/s3/sirius/bucket",
+    "/s3/localstack",
     "/secret",
     "/secrets",
     "/secrets/manager/localstack",
     "/security",
+    "/session/prefix",
     "/smtp",
     "/ssm/localstack",
     "/url",
-    "/workspace"
+    "/workspace",
+    "/pa/pro/report/csv/filename",
+    "/lay/report/csv/filename"
 ]
