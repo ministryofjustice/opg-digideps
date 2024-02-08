@@ -110,7 +110,7 @@ class ProcessLayCSVCommand extends Command
                 $this->logger->error($logMessage);
                 $this->cliOutput->writeln(
                     sprintf(
-                        '%s - partial - %s Output: %s',
+                        '%s - failure - (partial) - %s Output: %s',
                         self::JOB_NAME,
                         $logMessage,
                         $this->processedStringOutput()

@@ -133,7 +133,7 @@ class ProcessOrgCSVCommand extends Command
                 $this->logger->error($logMessage);
                 $this->cliOutput->writeln(
                     sprintf(
-                        '%s - partial - %s processing Output: %s',
+                        '%s failure - (partial) - %s processing Output: %s',
                         self::JOB_NAME,
                         $logMessage,
                         $this->processedStringOutput()
