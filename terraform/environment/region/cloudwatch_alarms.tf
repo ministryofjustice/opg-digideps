@@ -216,7 +216,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
 
 resource "aws_cloudwatch_log_metric_filter" "pre_registration_add_in_progress" {
   name           = "AdminCSVUploadInProgressFilter.${local.environment}"
-  pattern        = "{ ($.service_name = \"admin\") && ($.request_uri = \"/admin/ajax/pre-registration-add*\") }"
+  pattern        = "{ ($.service_name = \"api\") && ($.request_uri = \"/v2/org-deputyships\") }"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
