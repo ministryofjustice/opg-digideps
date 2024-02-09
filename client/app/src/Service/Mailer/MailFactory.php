@@ -421,7 +421,7 @@ class MailFactory
             ->setToEmail($adminEmail)
             ->setTemplate(self::PROCESS_ORG_CSV_TEMPLATE_ID);
 
-        $isError = count($output['errors']) > 0 ? 'yes' : 'no';
+        $isError = $output['errors']['count'] > 0 ? 'yes' : 'no';
 
         $notifyParams = [
             'addedClients' => $output['added']['clients'],
@@ -430,9 +430,9 @@ class MailFactory
             'addedOrganisations' => $output['added']['organisations'],
             'skipped' => $output['skipped'],
             'updatedClient' => $output['updated']['clients'],
-            'updatedDeputies' => $output['updated']['clients'],
-            'updatedReports' => $output['updated']['clients'],
-            'updatedOrganisations' => $output['updated']['clients'],
+            'updatedDeputies' => $output['updated']['named_deputies'],
+            'updatedReports' => $output['updated']['reports'],
+            'updatedOrganisations' => $output['updated']['organisations'],
             'isError' => $isError,
         ];
 

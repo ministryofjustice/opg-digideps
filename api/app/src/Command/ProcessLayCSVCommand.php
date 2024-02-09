@@ -184,7 +184,7 @@ class ProcessLayCSVCommand extends Command
         }
 
         if (!empty($processingOutput['skipped'])) {
-            $this->processingOutput['skipped'] = count($processingOutput['skipped']);
+            $this->processingOutput['skipped'] += count($processingOutput['skipped']);
         }
     }
     
