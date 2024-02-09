@@ -9,7 +9,6 @@ terraform {
   }
 }
 
-# Old config - To remove
 provider "aws" {
   region = "eu-west-1"
   default_tags {
