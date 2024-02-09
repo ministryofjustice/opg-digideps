@@ -25,6 +25,43 @@ class ProcessOrgCSVCommand extends Command
 
     private const CHUNK_SIZE = 50;
 
+    private const EXPECTED_COLUMNS = [
+        'Case',
+        'ClientForename',
+        'ClientSurname',
+        'ClientDateOfBirth',
+        'ClientPostcode',
+        'DeputyUid',
+        'DeputyType',
+        'DeputyEmail',
+        'DeputyOrganisation',
+        'DeputyForename',
+        'DeputySurname',
+        'DeputyPostcode',
+        'MadeDate',
+        'LastReportDay',
+        'ReportType',
+        'OrderType',
+        'Hybrid',
+    ];
+
+    private const OPTIONAL_COLUMNS = [
+        'ClientAddress1',
+        'ClientAddress2',
+        'ClientAddress3',
+        'ClientAddress4',
+        'ClientAddress5',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+    ];
+
+    private const UNEXPECTED_COLUMNS = [
+        'NDR'
+    ];
+
     private array $output = [
         'errors' => [],
         'added' => [
@@ -104,40 +141,9 @@ class ProcessOrgCSVCommand extends Command
     {
         try {
             return (new CsvToArray($fileName, false))
-            ->setExpectedColumns([
-                'Case',
-                'ClientForename',
-                'ClientSurname',
-                'ClientDateOfBirth',
-                'ClientPostcode',
-                'DeputyUid',
-                'DeputyType',
-                'DeputyEmail',
-                'DeputyOrganisation',
-                'DeputyForename',
-                'DeputySurname',
-                'DeputyPostcode',
-                'MadeDate',
-                'LastReportDay',
-                'ReportType',
-                'OrderType',
-                'Hybrid',
-            ])
-            ->setOptionalColumns([
-                'ClientAddress1',
-                'ClientAddress2',
-                'ClientAddress3',
-                'ClientAddress4',
-                'ClientAddress5',
-                'DeputyAddress1',
-                'DeputyAddress2',
-                'DeputyAddress3',
-                'DeputyAddress4',
-                'DeputyAddress5',
-            ])
-            ->setUnexpectedColumns([
-                'NDR',
-            ])
+            ->setExpectedColumns(self::EXPECTED_COLUMNS)
+            ->setOptionalColumns(self::OPTIONAL_COLUMNS)
+            ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
             ->getData();
         } catch (\Throwable $e) {
             $this->logger->error(sprintf('Error processing CSV: %s', $e->getMessage()));
@@ -171,9 +177,8 @@ class ProcessOrgCSVCommand extends Command
 
     private function storeOutput(array $output): void
     {
-        if (!empty($output['errors'])) {
-            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
-        }
+        $this->output['errors']['count'] += $output['errors']['count'];
+        $this->output['errors']['messages'] = implode(', ', $output['errors']['messages']);
 
         if (!empty($output['added'])) {
             foreach ($output['added'] as $group => $items) {

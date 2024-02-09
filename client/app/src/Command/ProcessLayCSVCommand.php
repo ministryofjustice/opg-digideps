@@ -25,6 +25,30 @@ class ProcessLayCSVCommand extends Command
 
     private const CHUNK_SIZE = 50;
 
+    protected const EXPECTED_COLUMNS = [
+        'Case',
+        'ClientSurname',
+        'DeputyUid',
+        'DeputyFirstname',
+        'DeputySurname',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+        'DeputyPostcode',
+        'ReportType',
+        'MadeDate',
+        'OrderType',
+        'CoDeputy',
+        'Hybrid',
+    ];
+
+    protected const UNEXPECTED_COLUMNS = [
+        'LastReportDay',
+        'DeputyOrganisation'
+    ];
+
     private array $output = [
         'errors' => [],
         'added' => 0,
@@ -93,25 +117,8 @@ class ProcessLayCSVCommand extends Command
     {
         try {
             return (new CsvToArray($fileName, false, false))
-                ->setOptionalColumns([
-                    'Case',
-                    'ClientSurname',
-                    'DeputyUid',
-                    'DeputyFirstname',
-                    'DeputySurname',
-                    'DeputyAddress1',
-                    'DeputyAddress2',
-                    'DeputyAddress3',
-                    'DeputyAddress4',
-                    'DeputyAddress5',
-                    'DeputyPostcode',
-                    'ReportType',
-                    'MadeDate',
-                    'OrderType',
-                    'CoDeputy',
-                    'Hybrid',
-                ])
-                ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
+                ->setOptionalColumns(self::EXPECTED_COLUMNS)
+                ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
 
         } catch (Throwable $e) {
@@ -142,7 +149,10 @@ class ProcessLayCSVCommand extends Command
     private function storeOutput(array $output): void
     {
         if (!empty($output['errors'])) {
-            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
+            $this->output['errors'] = array_merge(
+                $this->output['errors'],
+                $output['errors']
+            );
         }
 
         if (!empty($output['added'])) {
@@ -150,7 +160,7 @@ class ProcessLayCSVCommand extends Command
         }
 
         if (!empty($output['skipped'])) {
-            $this->output['skipped'] += $output['skipped'];
+            $this->output['skipped'] += count($output['skipped']);
         }
     }
 }
