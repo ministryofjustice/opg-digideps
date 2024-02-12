@@ -58,6 +58,9 @@ class SatisfactionPerformanceStatsCommand extends Command
             $satisfactionScores = [];
             $statsStartDate = (new \DateTime('FIRST DAY OF PREVIOUS MONTH'))->format('Y-m-d');
 
+            $statsYear = (new \DateTime('FIRST DAY OF PREVIOUS MONTH'))->format('y');
+            $statsMonth = (new \DateTime('FIRST DAY OF PREVIOUS MONTH'))->format('m');
+
             foreach ($satisfactionScoresResults[0] as $satisfactionScoreKey => $satisfactionScoreRow) {
                 $satisfactionScores[] = [
                     '_timestamp' => $statsStartDate.'T00:00:00+00:00',
@@ -71,7 +74,9 @@ class SatisfactionPerformanceStatsCommand extends Command
 
             $satisfactionScoresJson = json_encode($satisfactionScores, JSON_PRETTY_PRINT);
 
-            $this->s3SatisfactionDataStorage->store('digideps_satisfaction_data.json', $satisfactionScoresJson);
+            $s3FileName = 'complete_the_deputy_report_'.$statsYear.'_'.$statsMonth.'.json';
+
+            $this->s3SatisfactionDataStorage->store($s3FileName, $satisfactionScoresJson);
 
             $output->writeln('satisfaction_performance_stats - success - Successfully extracted the satisfaction scores for Digideps');
 
