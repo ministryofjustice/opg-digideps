@@ -230,4 +230,15 @@ trait MoneyInShortSectionTrait
 
         $this->expectedResultsDisplayedSimplified();
     }
+
+    /**
+     * @Then /^I enter a reason for no money in short$/
+     */
+    public function iEnterAReasonForNoMoneyInShort()
+    {
+        $this->iAmOnNoMoneyInShortExistsPage();
+
+        $this->fillInField('reason_for_no_money[reasonForNoMoneyIn]', 'No money in', 'reasonForNoMoneyIn');
+        $this->pressButton('Save and continue');
+    }
 }

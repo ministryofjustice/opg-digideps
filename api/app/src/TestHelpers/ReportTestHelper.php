@@ -312,7 +312,8 @@ class ReportTestHelper
 
     private function completeMoneyInShort(ReportInterface $report): void
     {
-        $report->setMoneyTransactionsShortInExist('no');
+        $report->setMoneyInExists('No');
+        $report->setReasonForNoMoneyIn('No money in');
     }
 
     private function completeMoneyOutShort(ReportInterface $report): void
