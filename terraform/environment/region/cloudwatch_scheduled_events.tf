@@ -56,7 +56,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
