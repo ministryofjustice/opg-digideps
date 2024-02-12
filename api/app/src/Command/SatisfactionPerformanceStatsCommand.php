@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SatisfactionPerformanceStatsCommand extends Command
 {
-    protected static $defaultName = 'digideps:satisfaction-performance-stats';
+    public static $defaultName = 'digideps:satisfaction-performance-stats';
 
     /** @var EntityManagerInterface */
     private $em;
@@ -71,13 +71,13 @@ class SatisfactionPerformanceStatsCommand extends Command
 
             $satisfactionScoresJson = json_encode($satisfactionScores, JSON_PRETTY_PRINT);
 
-            $this->s3SatisfactionDataStorage->store('data.json', $satisfactionScoresJson);
+            $this->s3SatisfactionDataStorage->store('digideps_satisfaction_data.json', $satisfactionScoresJson);
 
-            $output->writeln('Done');
+            $output->writeln('satisfaction_performance_stats - success - Successfully extracted the satisfaction scores for Digideps');
 
             return 0;
-        } catch (Exception $e) {
-            $output->writeln('delete_zero_activity_users - failure - Failed to delete lay user(s) that have never had any activity after 30 days of registration');
+        } catch (\Exception $e) {
+            $output->writeln('satisfaction_performance_stats - failure - Failed to extract the satisfaction scores for Digideps');
             $output->writeln($e);
 
             return 1;
