@@ -311,16 +311,17 @@ resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats" {
   description         = "Extract Satisfaction Scores in ${terraform.workspace}"
   schedule_expression = "cron(0 10 1 * ? *)"
   tags                = var.default_tags
+  is_enabled          = var.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
   rule     = aws_cloudwatch_event_rule.satisfaction_performance_stats.name
   arn      = aws_ecs_cluster.main.arn
-  role_arn = aws_iam_role.performance_data.arn
+  role_arn = aws_iam_role.events_task_runner.arn
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.api.arn
+    task_definition_arn = module.performance_data.task_definition_arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
@@ -334,7 +335,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
     {
       "containerOverrides" : [
         {
-          "name" : "api_app",
+          "name" : "performance-data",
           "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:satisfaction-performance-stats"]
         }
       ]
