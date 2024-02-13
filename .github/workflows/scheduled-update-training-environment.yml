@@ -2,8 +2,8 @@ name: "[Scheduled] Update Training Environment"
 
 on:
   schedule:
-    # 11pm on Friday
-    - cron: "0 23 * * 5"
+    # 8pm on Friday
+    - cron: "0 20 * * 5"
 
 permissions:
   contents: read
