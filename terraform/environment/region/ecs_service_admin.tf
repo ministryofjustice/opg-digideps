@@ -152,8 +152,8 @@ locals {
         { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
         { name = "ENVIRONMENT", value = local.environment },
         { name = "NGINX_APP_NAME", value = "admin" },
-        { name = "PA_PRO_REPORT_CSV_FILENAME", value = "paProDeputyReport.csv" },
-        { name = "LAY_REPORT_CSV_FILENAME", value = "layDeputyReport.csv" },
+        { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
+        { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
         { name = "WORKSPACE", value = local.environment }
       ]
     }
