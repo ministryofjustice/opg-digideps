@@ -59,9 +59,9 @@ Feature: Money in Low Assets
         Then I should see "money-in-short" as "1 item over £1,000"
 
     @lay-pfa-low-completed 
-    Scenario: A user edits money in section and adds an one off payment
+    Scenario: A user edits money in section and adds a one off payment
         Given a Lay Deputy has completed a Pfa Low Assets report
-        When I edit an existing money in short payment
+        When I edit the money in short section and add a payment
         Then I should see the expected money in section summary
 
     @lay-pfa-low-completed 

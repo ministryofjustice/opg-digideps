@@ -142,9 +142,9 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @When I edit an existing money in short payment
+     * @When I edit the money in short section and add a payment
      */
-    public function iEditOneOffMoneyInPayment()
+    public function iEditTheMoneyInShortSectionAndAddAPayment()
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();

@@ -318,10 +318,8 @@ class ReportTestHelper
 
     private function completeMoneyOutShort(ReportInterface $report): void
     {
-        $report->setMoneyTransactionsShortOutExist('no');
-        //        $report->setMoneyTransactionsShort(new ArrayCollection([
-        //            (new MoneyTransactionShortOut($report))->setAmount(1001)
-        //        ]));
+        $report->setMoneyOutExists('No');
+        $report->setReasonForNoMoneyOut('No money out');
     }
 
     private function completeDeputyExpenses(ReportInterface $report): void
