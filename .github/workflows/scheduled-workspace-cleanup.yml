@@ -3,7 +3,7 @@ name: "[Scheduled] Cleanup PR Workspaces"
 on:
   schedule:
     # 10pm every day except Sundays
-    - cron: "0 22 * * 0-6"
+    - cron: "0 21 * * 0-6"
 
 permissions:
   contents: read

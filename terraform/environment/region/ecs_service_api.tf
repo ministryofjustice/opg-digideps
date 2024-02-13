@@ -215,11 +215,11 @@ locals {
         },
         {
           name  = "PA_PRO_REPORT_CSV_FILENAME",
-          value = "paProDeputyReport.csv"
+          value = local.pa_pro_report_csv_filename
         },
         {
           name  = "LAY_REPORT_CSV_FILENAME",
-          value = "layDeputyReport.csv"
+          value = local.lay_report_csv_file
         },
       ]
     }
