@@ -312,14 +312,22 @@ class ReportTestHelper
 
     private function completeMoneyInShort(ReportInterface $report): void
     {
-        $report->setMoneyInExists('No');
-        $report->setReasonForNoMoneyIn('No money in');
+        if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            $report->setMoneyInExists('No');
+            $report->setReasonForNoMoneyIn('No money in');
+        }
     }
 
     private function completeMoneyOutShort(ReportInterface $report): void
     {
-        $report->setMoneyOutExists('No');
-        $report->setReasonForNoMoneyOut('No money out');
+        if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            $report->setMoneyOutExists('No');
+            $report->setReasonForNoMoneyOut('No money out');
+        }
     }
 
     private function completeDeputyExpenses(ReportInterface $report): void
