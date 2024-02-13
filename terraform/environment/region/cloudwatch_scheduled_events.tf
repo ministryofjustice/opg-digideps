@@ -316,7 +316,7 @@ resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats" {
 resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
   rule     = aws_cloudwatch_event_rule.satisfaction_performance_stats.name
   arn      = aws_ecs_cluster.main.arn
-  role_arn = aws_iam_role.events_task_runner.arn
+  role_arn = aws_iam_role.performance_data.arn
 
   ecs_target {
     task_count          = 1
