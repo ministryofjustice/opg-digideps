@@ -28,7 +28,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", local.pa_pro_report_csv_filename]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", local.lay_report_csv_file]
         }
       ]
     }
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", local.lay_report_csv_file]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", local.pa_pro_report_csv_filename]
         }
       ]
     }
