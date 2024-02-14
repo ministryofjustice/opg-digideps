@@ -41,7 +41,7 @@ resource "aws_cloudwatch_event_target" "cross_account_backup_check" {
 resource "aws_cloudwatch_event_rule" "delete_inactive_users_check" {
   name                = "check-delete-inactive-users-${terraform.workspace}"
   description         = "Execute the delete inactive users check for ${terraform.workspace}"
-  schedule_expression = "cron(0 10 ? * 1 *)"
+  schedule_expression = "cron(11 09 ? * 1 *)"
   is_enabled          = var.account.is_production == 1 ? true : false
 }
 
@@ -206,6 +206,35 @@ resource "aws_cloudwatch_event_target" "sync_checklists_check" {
         channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
         channel-identifier-failure = "scheduled-jobs"
+      }
+    }
+  )
+}
+
+# Extract Satisfaction Scores
+
+resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats_check" {
+  name                = "check-satisfaction-performance-stats-${terraform.workspace}"
+  description         = "Extract Satisfaction Scores for ${terraform.workspace}"
+  schedule_expression = local.sync_service_cron_schedule
+  is_enabled          = var.account.is_production == 1 ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "satisfaction_performance_stats_check" {
+  target_id = "check-satisfaction_performance_stats-${terraform.workspace}"
+  arn       = data.aws_lambda_function.slack_lambda.arn
+  rule      = aws_cloudwatch_event_rule.satisfaction_performance_stats_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "satisfaction_performance_stats_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["satisfaction_performance_stats"],
+        search-timespan            = local.sync_service_schedule
+        bank-holidays              = "true"
+        channel-identifier-absent  = "team",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "team"
       }
     }
   )

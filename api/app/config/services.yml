@@ -206,25 +206,30 @@ services:
         class: App\Security\UserVoter
         tags:
             - { name: security.voter }
-          
+
     App\Service\Client\TokenStorage\RedisStorage:
         arguments:
-          $redis: "@snc_redis.default"
+            $redis: "@snc_redis.default"
 
     App\Service\DataImporter\CsvToArray: ~
 
     # Disable autowiring for these helper classes
     App\Service\ReportStatusService: ~
     App\Service\Stats\StatsQueryParameters: ~
-    
+
     Aws\S3\S3ClientInterface:
         alias: Aws\S3\S3Client
-    
+
     Aws\S3\S3Client:
         arguments: ["%s3_client_params%"]
-        
+
     App\Service\File\Storage\S3Storage:
-        arguments: [ '@Aws\S3\S3Client', "%s3_sirius_bucket%", "@logger" ]
+        arguments: ['@Aws\S3\S3Client', "%s3_sirius_bucket%", "@logger"]
+
+    App\Service\File\Storage\S3SatisfactionDataStorage:
+        parent: App\Service\File\Storage\S3Storage
+        arguments:
+            index_1: "%s3_satisfaction_bucket%"
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: "@security.role_hierarchy"
 

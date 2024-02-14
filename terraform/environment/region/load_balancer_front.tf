@@ -33,6 +33,11 @@ resource "aws_lb_listener_certificate" "front_loadbalancer_service_certificate" 
   certificate_arn = data.aws_acm_certificate.service_justice.arn
 }
 
+resource "aws_lb_listener_certificate" "front_loadbalancer_cdr_certificate" {
+  listener_arn    = aws_lb_listener.front_https.arn
+  certificate_arn = var.complete_deputy_report_cert_arn
+}
+
 resource "aws_lb_listener_rule" "front_maintenance" {
   listener_arn = aws_lb_listener.front_https.arn
 
