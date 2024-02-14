@@ -2,7 +2,7 @@
 resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
-  schedule_expression = "cron(0 1 * * ? *)"
+  schedule_expression = "cron(0 2 * * ? *)"
   tags                = var.default_tags
 }
 
@@ -28,7 +28,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", "$LAY_REPORT_CSV_FILENAME"]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", local.pa_pro_report_csv_filename]
         }
       ]
     }
@@ -39,7 +39,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
-  schedule_expression = "cron(0 2 * * ? *)"
+  schedule_expression = "cron(30 2 * * ? *)"
   tags                = var.default_tags
 }
 
@@ -56,7 +56,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private.*.id
+      subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", "$PA_PRO_REPORT_CSV_FILENAME"]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", local.lay_report_csv_file]
         }
       ]
     }
@@ -77,7 +77,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 resource "aws_cloudwatch_event_rule" "delete_inactive_users" {
   name                = "delete-inactive-users-${local.environment}"
   description         = "Delete inactive admin users in ${terraform.workspace}"
-  schedule_expression = "cron(0 4 ? * 1 *)"
+  schedule_expression = "cron(0 6 ? * 1 *)"
   tags                = var.default_tags
 }
 
@@ -116,7 +116,7 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users" {
 resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
   name                = "delete-zero-activity-users-${local.environment}"
   description         = "Delete zero activity users in ${terraform.workspace}"
-  schedule_expression = "cron(10 4 * * ? *)"
+  schedule_expression = "cron(20 6 * * ? *)"
   tags                = var.default_tags
 }
 
@@ -302,4 +302,42 @@ resource "aws_cloudwatch_event_target" "document_sync" {
       security_groups  = [module.document_sync_service_security_group.id]
     }
   }
+}
+
+# Extract Satisfaction Scores
+
+resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats" {
+  name                = "satisfaction-performance-stats-${local.environment}"
+  description         = "Extract Satisfaction Scores in ${terraform.workspace}"
+  schedule_expression = "cron(0 10 1 * ? *)"
+  tags                = var.default_tags
+}
+
+resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
+  rule     = aws_cloudwatch_event_rule.satisfaction_performance_stats.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.api.arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "api_app",
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:satisfaction-performance-stats"]
+        }
+      ]
+    }
+  )
 }

@@ -68,6 +68,7 @@ parameters:
     {{ else }}
         validate: true
     {{ end }}
+    s3_satisfaction_bucket: opg-performance-data
     s3_sirius_bucket: {{ if exists "/s3/sirius/bucket" }}{{ getv "/s3/sirius/bucket" }}{{ else }}not_set{{ end }}
     pa_pro_report_csv_filename: {{ if exists "/pa/pro/report/csv/filename" }}{{ getv "/pa/pro/report/csv/filename" }}{{ else }}not_set{{ end }}
     lay_report_csv_filename: {{ if exists "/lay/report/csv/filename" }}{{ getv "/lay/report/csv/filename" }}{{ else }}not_set{{ end }}
