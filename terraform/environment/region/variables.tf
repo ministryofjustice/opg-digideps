@@ -40,6 +40,10 @@ variable "certificate_arn" {
   type = string
 }
 
+variable "complete_deputy_report_cert_arn" {
+  type = string
+}
+
 variable "front_fully_qualified_domain_name" {
   type = string
 }
