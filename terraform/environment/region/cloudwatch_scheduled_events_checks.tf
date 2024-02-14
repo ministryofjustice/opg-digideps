@@ -216,7 +216,7 @@ resource "aws_cloudwatch_event_target" "sync_checklists_check" {
 resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats_check" {
   name                = "check-satisfaction-performance-stats-${terraform.workspace}"
   description         = "Extract Satisfaction Scores for ${terraform.workspace}"
-  schedule_expression = local.sync_service_cron_schedule
+  schedule_expression = "cron(0 12 1 * ? *)"
   is_enabled          = var.account.is_production == 1 ? true : false
 }
 
