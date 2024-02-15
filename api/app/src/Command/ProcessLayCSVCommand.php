@@ -169,9 +169,12 @@ class ProcessLayCSVCommand extends Command
 
             foreach ($chunks as $index => $chunk) {
                 $this->logger->warning('Step 7');
+                $mu = memory_get_usage(false);
+                $this->logger->warning('mem: '.$mu);
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
+                $this->logger->warning('Step 7.1 - '.$index);
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
+                $this->logger->warning('Step 7.2 - '.$index);
                 $this->storeOutput($result);
             }
 
