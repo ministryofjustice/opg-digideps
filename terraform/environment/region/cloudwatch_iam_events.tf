@@ -28,6 +28,7 @@ locals {
   events_task_role_list = [
     aws_iam_role.front.arn,
     aws_iam_role.api.arn,
+    aws_iam_role.performance_data.arn,
     data.aws_iam_role.sync.arn,
     aws_iam_role.execution_role.arn,
   ]
@@ -38,8 +39,10 @@ locals {
     aws_ecs_task_definition.check_csv_uploaded.arn,
     aws_ecs_task_definition.checklist_sync.arn,
     aws_ecs_task_definition.api.arn,
+    aws_ecs_task_definition.api_high_memory.arn,
     aws_ecs_task_definition.document_sync.arn,
-    module.analyse.task_definition_arn
+    module.analyse.task_definition_arn,
+    module.performance_data.task_definition_arn
   ]
   combined_events_task_list = tolist(concat(local.events_task_list, local.events_dr_task_list))
 }
