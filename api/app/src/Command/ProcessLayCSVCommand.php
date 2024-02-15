@@ -66,6 +66,8 @@ class ProcessLayCSVCommand extends Command
         private readonly PreRegistrationRepository $preReg,
     ) {
         parent::__construct();
+
+        ini_set('memory_limit', '1024M');
     }
 
     protected function configure(): void 
