@@ -28,7 +28,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", local.pa_pro_report_csv_filename]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", local.lay_report_csv_file]
         }
       ]
     }
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", local.lay_report_csv_file]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", local.pa_pro_report_csv_filename]
         }
       ]
     }
@@ -311,6 +311,7 @@ resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats" {
   description         = "Extract Satisfaction Scores in ${terraform.workspace}"
   schedule_expression = "cron(0 10 1 * ? *)"
   tags                = var.default_tags
+  is_enabled          = var.account.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
@@ -320,7 +321,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.api.arn
+    task_definition_arn = module.performance_data.task_definition_arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
@@ -334,7 +335,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
     {
       "containerOverrides" : [
         {
-          "name" : "api_app",
+          "name" : "performance-data",
           "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:satisfaction-performance-stats"]
         }
       ]

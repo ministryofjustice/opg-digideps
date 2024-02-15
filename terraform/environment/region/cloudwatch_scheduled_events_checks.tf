@@ -216,7 +216,7 @@ resource "aws_cloudwatch_event_target" "sync_checklists_check" {
 resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats_check" {
   name                = "check-satisfaction-performance-stats-${terraform.workspace}"
   description         = "Extract Satisfaction Scores for ${terraform.workspace}"
-  schedule_expression = local.sync_service_cron_schedule
+  schedule_expression = "cron(0 12 1 * ? *)"
   is_enabled          = var.account.is_production == 1 ? true : false
 }
 
@@ -232,6 +232,66 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats_check" {
         log-entries                = ["satisfaction_performance_stats"],
         search-timespan            = local.sync_service_schedule
         bank-holidays              = "true"
+        channel-identifier-absent  = "team",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "team"
+      }
+    }
+  )
+}
+
+# Lay CSV Processing Check
+
+resource "aws_cloudwatch_event_rule" "lay_csv_processing_check" {
+  name                = "lay-csv-processing-users-${terraform.workspace}"
+  description         = "Execute the Lay CSV user processing check for ${terraform.workspace}"
+  schedule_expression = "cron(15 09 * * ? *)"
+  is_enabled          = var.account.is_production == 1 ? true : false
+}
+
+
+resource "aws_cloudwatch_event_target" "lay_csv_processing_check" {
+  target_id = "lay-csv-processing-users-check-${terraform.workspace}"
+  arn       = data.aws_lambda_function.slack_lambda.arn
+  rule      = aws_cloudwatch_event_rule.lay_csv_processing_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "lay_csv_processing_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["lay_csv_processing"],
+        search-timespan            = "24 hours",
+        bank-holidays              = "true",
+        channel-identifier-absent  = "team",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "team"
+      }
+    }
+  )
+}
+
+# Org CSV Processing Check
+
+resource "aws_cloudwatch_event_rule" "org_csv_processing_check" {
+  name                = "org-csv-processing-users-${terraform.workspace}"
+  description         = "Execute the Org CSV user processing check for ${terraform.workspace}"
+  schedule_expression = "cron(16 09 * * ? *)"
+  is_enabled          = var.account.is_production == 1 ? true : false
+}
+
+
+resource "aws_cloudwatch_event_target" "org_csv_processing_check" {
+  target_id = "org-csv-processing-users-check-${terraform.workspace}"
+  arn       = data.aws_lambda_function.slack_lambda.arn
+  rule      = aws_cloudwatch_event_rule.org_csv_processing_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "org_csv_processing_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["org_csv_processing"],
+        search-timespan            = "24 hours",
+        bank-holidays              = "true",
         channel-identifier-absent  = "team",
         channel-identifier-success = "scheduled-jobs",
         channel-identifier-failure = "team"
