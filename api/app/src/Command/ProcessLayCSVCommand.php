@@ -168,11 +168,28 @@ class ProcessLayCSVCommand extends Command
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
-                $this->logger->warning('Step 7');
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
+                $mu = memory_get_usage(false);
+                $memoryUsageMegabytes = $mu / (1024 * 1024);
+                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
+                $this->logger->warning('memory before assembly: '.$formattedMemoryUsage.'mb - '.$index);
+
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
+                $this->logger->warning('skipped - '.count($result['skipped']));
+                $this->logger->warning('errors - '.count($result['errors']));
+
+                $mu = memory_get_usage(false);
+                $memoryUsageMegabytes = $mu / (1024 * 1024);
+                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
+                $this->logger->warning('memory before storeOutput: '.$formattedMemoryUsage.'mb - '.$index);
+
                 $this->storeOutput($result);
+
+                $mu = memory_get_usage(false);
+                $memoryUsageMegabytes = $mu / (1024 * 1024);
+                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
+                $this->logger->warning('memory after storeOutput: '.$formattedMemoryUsage.'mb - '.$index);
             }
 
             return true;
@@ -189,6 +206,8 @@ class ProcessLayCSVCommand extends Command
                 $processingOutput['errors']
             );
         }
+
+        $this->logger->warning('merge errors - '.count($this->processingOutput['errors']));
 
         if (!empty($processingOutput['added'])) {
             $this->processingOutput['added'] += $processingOutput['added'];
