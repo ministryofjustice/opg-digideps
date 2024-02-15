@@ -52,7 +52,7 @@ class LayDeputyshipUploader
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
-                    $added++;
+                    ++$added;
                 } catch (PreRegistrationCreationException $e) {
                     $message = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
                     $this->logger->error($message);
@@ -69,6 +69,7 @@ class LayDeputyshipUploader
 
             return ['added' => $added, 'errors' => [$e->getMessage()]];
         }
+        $this->logger->warning('reports update in func - '.count($this->reportsUpdated));
 
         return [
             'added' => $added,
@@ -106,6 +107,7 @@ class LayDeputyshipUploader
         $reportCaseNumber = '';
         $currentActiveReportId = null;
         $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
+        $this->logger->warning('Case number - '.count($caseNumbers));
         $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         try {
