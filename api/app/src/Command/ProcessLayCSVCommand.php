@@ -169,9 +169,14 @@ class ProcessLayCSVCommand extends Command
 
             foreach ($chunks as $index => $chunk) {
                 $this->logger->warning('Step 7');
+                $mu = memory_get_usage(false);
+                $this->logger->warning('mem: '.$mu);
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
+                $this->logger->warning('Step 7.1 - '.$index);
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
+                $this->logger->warning('skipped - '.count($result['skipped']));
+                $this->logger->warning('errors - '.count($result['errors']));
+                $this->logger->warning('Step 7.2 - '.$index);
                 $this->storeOutput($result);
             }
 
@@ -189,6 +194,8 @@ class ProcessLayCSVCommand extends Command
                 $processingOutput['errors']
             );
         }
+
+        $this->logger->warning('merge errors - '.count($this->processingOutput['errors']));
 
         if (!empty($processingOutput['added'])) {
             $this->processingOutput['added'] += $processingOutput['added'];

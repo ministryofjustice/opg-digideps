@@ -148,12 +148,21 @@ LEFT JOIN odr AS o on d.ndr_id = o.id
 LEFT JOIN report_submission AS rs on d.report_submission_id  = rs.id
 LEFT JOIN client AS c1 on r.client_id = c1.id
 LEFT JOIN client AS c2 on o.client_id = c2.id
-WHERE d.synchronisation_status='PERMANENT_ERROR'
-AND (
-    d.synchronisation_error LIKE 'Report PDF failed to sync%'
-    OR
-    d.synchronisation_error LIKE 'Document failed to sync after%'
-)
+WHERE
+    (
+        d.synchronisation_status='PERMANENT_ERROR'
+        AND
+            (
+                d.synchronisation_error LIKE 'Report PDF failed to sync%'
+                OR
+                d.synchronisation_error LIKE 'Document failed to sync after%'
+            )
+    ) OR
+    (
+        d.synchronisation_status='IN_PROGRESS'
+        AND
+        rs.created_on < (CURRENT_DATE - 1)
+    )
 ORDER BY is_report_pdf DESC, report_submission_id ASC
 LIMIT $limit;";
 
