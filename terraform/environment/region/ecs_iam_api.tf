@@ -43,4 +43,16 @@ data "aws_iam_policy_document" "api_permissions" {
       data.aws_secretsmanager_secret.database_password.arn
     ]
   }
+
+  statement {
+    sid    = "ApiGetSiriusS3Bucket"
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+    ]
+    resources = [
+      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
+      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
+    ]
+  }
 }
