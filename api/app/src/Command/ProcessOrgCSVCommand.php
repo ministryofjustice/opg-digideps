@@ -85,12 +85,10 @@ class ProcessOrgCSVCommand extends Command
     public function __construct(
         private S3Client $s3,
         private ParameterBagInterface $params,
-        private LoggerInterface $logger,
+        private LoggerInterface $verboseLogger,
         private CSVDeputyshipProcessing $csvProcessing,
     ) {
         parent::__construct();
-
-        ini_set('memory_limit', '1024M');
     }
 
     protected function configure(): void
@@ -121,7 +119,7 @@ class ProcessOrgCSVCommand extends Command
             }
             $logMessage = sprintf($logMessage, $paProReportFile, $bucket);
             
-            $this->logger->error($logMessage);
+            $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
             
             return Command::FAILURE;
@@ -132,7 +130,7 @@ class ProcessOrgCSVCommand extends Command
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s', $fileLocation);
 
-                $this->logger->error($logMessage);
+                $this->verboseLogger->error($logMessage);
                 $this->cliOutput->writeln(
                     sprintf(
                         '%s failure - (partial) - %s processing Output: %s',
@@ -155,6 +153,15 @@ class ProcessOrgCSVCommand extends Command
             return Command::SUCCESS;
         }
 
+        $this->cliOutput->writeln(
+            sprintf(
+                '%s - failure - %s Output: %s',
+                self::JOB_NAME,
+                'Process failed for unknown reason',
+                $this->processedStringOutput()
+            )
+        );
+
         return Command::FAILURE;
     }
 
@@ -169,7 +176,7 @@ class ProcessOrgCSVCommand extends Command
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
-            $this->logger->error($logMessage);
+            $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(self::JOB_NAME .' - failure - '. $logMessage);
         }
         
@@ -185,11 +192,10 @@ class ProcessOrgCSVCommand extends Command
                 $upload = $this->csvProcessing->orgProcessing($chunk);
 
                 $this->storeOutput($upload);
-
-                $this->logger->notice(sprintf('Successfully processed chunk: %d', $index));
+                $this->verboseLogger->notice(sprintf('Successfully processed chunk: %d', $index));
             }
 
-            $this->logger->notice('Successfully processed all chunks');
+            $this->verboseLogger->notice('Successfully processed all chunks');
 
             return true;
         }
