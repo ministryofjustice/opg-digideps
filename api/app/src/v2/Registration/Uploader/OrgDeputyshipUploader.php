@@ -28,7 +28,6 @@ class OrgDeputyshipUploader
     private ?NamedDeputy $namedDeputy = null;
     private ?Client $client = null;
 
-
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly OrganisationFactory $orgFactory,
@@ -47,18 +46,24 @@ class OrgDeputyshipUploader
      */
     public function upload(array $deputyshipDtos)
     {
+        $this->changeOrg = [];
         $this->resetAdded();
         $this->resetUpdated();
+        $this->currentOrganisation = null;
+        $this->namedDeputy = null;
+        $this->client = null;
+        $this->em->clear();
+        $this->em->getConnection()->getConfiguration()->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware(new \Psr\Log\NullLogger())]);
 
         $uploadResults = [
             'errors' => [
-                'count' => 0, 
-                'messages' => []
+                'count' => 0,
+                'messages' => [],
             ],
             'added' => [],
             'updated' => [],
             'changeOrg' => [],
-            'skipped' => 0
+            'skipped' => 0,
         ];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
@@ -73,7 +78,7 @@ class OrgDeputyshipUploader
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException $e) {
-                $uploadResults['skipped']++;
+                ++$uploadResults['skipped'];
                 continue;
             } catch (\Throwable $e) {
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
@@ -81,7 +86,7 @@ class OrgDeputyshipUploader
                 $this->logger->notice($message);
                 $uploadResults['errors']['messages'][] = $message;
 
-                $uploadResults['errors']['count']++;
+                ++$uploadResults['errors']['count'];
                 continue;
             }
         }
@@ -122,7 +127,7 @@ class OrgDeputyshipUploader
                     ->setAddress4($dto->getDeputyAddress4())
                     ->setAddress5($dto->getDeputyAddress5())
                     ->setAddressPostcode($dto->getDeputyPostcode());
-                
+
                 $updated = true;
             }
 
@@ -134,16 +139,16 @@ class OrgDeputyshipUploader
                     $namedDeputy->setFirstname($dto->getDeputyFirstname());
                     $namedDeputy->setLastname($dto->getDeputyLastname());
                 }
-                
+
                 $updated = true;
             }
 
             if ($namedDeputy->emailHasChanged($dto)) {
                 $namedDeputy->setEmail1($dto->getDeputyEmail());
-                
+
                 $updated = true;
             }
-            
+
             if ($updated) {
                 $this->em->persist($namedDeputy);
                 $this->em->flush();
