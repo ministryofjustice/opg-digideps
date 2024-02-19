@@ -47,6 +47,7 @@ class OrgDeputyshipUploader
      */
     public function upload(array $deputyshipDtos)
     {
+        $this->changeOrg = [];
         $this->resetAdded();
         $this->resetUpdated();
 

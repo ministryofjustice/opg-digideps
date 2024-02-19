@@ -33,6 +33,8 @@ class OrgDeputyshipController extends AbstractController
     {
         $decompressedData = $this->dataCompression->decompress($request->getContent());
 
+        $this->restFormatter->setJmsSerialiserGroups(['org-created-event']);
+
         return $this->csvProcessing->orgProcessing($decompressedData);
     }
 }
