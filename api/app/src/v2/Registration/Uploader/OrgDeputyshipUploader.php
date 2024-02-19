@@ -28,7 +28,6 @@ class OrgDeputyshipUploader
     private ?NamedDeputy $namedDeputy = null;
     private ?Client $client = null;
 
-
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly OrganisationFactory $orgFactory,
@@ -45,21 +44,32 @@ class OrgDeputyshipUploader
      *
      * @throws \Exception
      */
-    public function upload(array $deputyshipDtos)
+    public function upload(array $deputyshipDtos, int $index)
     {
+        $this->changeOrg = [];
         $this->resetAdded();
         $this->resetUpdated();
+        $this->currentOrganisation = null;
+        $this->namedDeputy = null;
+        $this->client = null;
+        $this->em->clear();
+        $this->em->getConnection()->getConfiguration()->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware(new \Psr\Log\NullLogger())]);
 
         $uploadResults = [
             'errors' => [
-                'count' => 0, 
-                'messages' => []
+                'count' => 0,
+                'messages' => [],
             ],
             'added' => [],
             'updated' => [],
             'changeOrg' => [],
-            'skipped' => 0
+            'skipped' => 0,
         ];
+
+        $mu = memory_get_usage(false);
+        $memoryUsageMegabytes = $mu / (1024 * 1024);
+        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
+        $this->logger->warning('3. memory before dtos: '.$formattedMemoryUsage.'mb - '.$index);
 
         foreach ($deputyshipDtos as $deputyshipDto) {
             try {
@@ -73,7 +83,7 @@ class OrgDeputyshipUploader
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException $e) {
-                $uploadResults['skipped']++;
+                ++$uploadResults['skipped'];
                 continue;
             } catch (\Throwable $e) {
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
@@ -81,16 +91,26 @@ class OrgDeputyshipUploader
                 $this->logger->notice($message);
                 $uploadResults['errors']['messages'][] = $message;
 
-                $uploadResults['errors']['count']++;
+                ++$uploadResults['errors']['count'];
                 continue;
             }
         }
+
+        $mu = memory_get_usage(false);
+        $memoryUsageMegabytes = $mu / (1024 * 1024);
+        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
+        $this->logger->warning('4. memory after dtos: '.$formattedMemoryUsage.'mb - '.$index);
 
         $this->removeDuplicateIds();
 
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
         $uploadResults['changeOrg'] = $this->changeOrg;
+
+        $mu = memory_get_usage(false);
+        $memoryUsageMegabytes = $mu / (1024 * 1024);
+        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
+        $this->logger->warning('5. memory after uploadresults append: '.$formattedMemoryUsage.'mb - '.$index);
 
         return $uploadResults;
     }
@@ -122,7 +142,7 @@ class OrgDeputyshipUploader
                     ->setAddress4($dto->getDeputyAddress4())
                     ->setAddress5($dto->getDeputyAddress5())
                     ->setAddressPostcode($dto->getDeputyPostcode());
-                
+
                 $updated = true;
             }
 
@@ -134,16 +154,16 @@ class OrgDeputyshipUploader
                     $namedDeputy->setFirstname($dto->getDeputyFirstname());
                     $namedDeputy->setLastname($dto->getDeputyLastname());
                 }
-                
+
                 $updated = true;
             }
 
             if ($namedDeputy->emailHasChanged($dto)) {
                 $namedDeputy->setEmail1($dto->getDeputyEmail());
-                
+
                 $updated = true;
             }
-            
+
             if ($updated) {
                 $this->em->persist($namedDeputy);
                 $this->em->flush();
