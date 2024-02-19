@@ -46,7 +46,6 @@ class LayDeputyshipUploader
         $errors = [];
 
         try {
-            $this->em->getConnection()->getConfiguration()->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware(new \Psr\Log\NullLogger())]);
             $this->em->beginTransaction();
 
             foreach ($collection as $index => $layDeputyshipDto) {
@@ -62,8 +61,7 @@ class LayDeputyshipUploader
                 }
             }
 
-            $this
-                ->updateReportTypes()
+            $this->updateReportTypes()
                 ->commitTransactionToDatabase();
             $this->em->clear();
         } catch (\Throwable $e) {

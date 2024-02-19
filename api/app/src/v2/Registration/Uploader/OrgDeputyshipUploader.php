@@ -85,6 +85,8 @@ class OrgDeputyshipUploader
                 $uploadResults['errors']['count']++;
                 continue;
             }
+
+            $this->em->clear();
         }
 
         $this->removeDuplicateIds();
@@ -92,6 +94,8 @@ class OrgDeputyshipUploader
         $uploadResults['added'] = $this->added;
         $uploadResults['updated'] = $this->updated;
         $uploadResults['changeOrg'] = $this->changeOrg;
+
+        
 
         return $uploadResults;
     }
@@ -167,7 +171,7 @@ class OrgDeputyshipUploader
 
             $this->currentOrganisation = $organisation;
 
-            $this->added['organisations'][] = $organisation;
+            $this->added['organisations'][] = $organisation->getId();
         }
     }
 
@@ -231,7 +235,7 @@ class OrgDeputyshipUploader
                         $tempArray[] = ['deputy_id' => $this->client->getNamedDeputy()->getId()];
                         $tempArray[] = ['new_organisation' => $this->client->getOrganisation()->getId()];
 
-                        $changeOrg[] = $tempArray;
+                        $this->changeOrg[] = $tempArray;
                     }
                 }
             }
