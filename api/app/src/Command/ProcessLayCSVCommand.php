@@ -65,13 +65,10 @@ class ProcessLayCSVCommand extends Command
         private readonly PreRegistrationRepository $preReg,
     ) {
         parent::__construct();
-
-        ini_set('memory_limit', '1024M');
     }
 
     protected function configure(): void
     {
-        ini_set('memory_limit', '1024M');
         $this
             ->setDescription('Process the Lay Deputies CSV from the S3 bucket')
             ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
@@ -80,20 +77,17 @@ class ProcessLayCSVCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ini_set('memory_limit', '1024M');
-        $this->logger->warning('Step 1');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $input->getArgument('csv-filename');
         $fileLocation = sprintf('/tmp/%s', $layReportFile);
 
-        $this->logger->warning('Step 2');
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $layReportFile,
                 'SaveAs' => $fileLocation,
             ]);
-            $this->logger->warning('Step 3');
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
                 $logMessage = 'File %s not found in bucket %s';
@@ -107,9 +101,8 @@ class ProcessLayCSVCommand extends Command
 
             return Command::FAILURE;
         }
-        $this->logger->warning('Step 4');
+
         $data = $this->csvToArray($fileLocation);
-        $this->logger->warning('Step 5');
         if (count($data) >= 1 && $this->process($data)) {
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s.', $fileLocation);
@@ -127,7 +120,7 @@ class ProcessLayCSVCommand extends Command
                 return Command::SUCCESS;
             }
 
-            if (!empty($this->processingOutput['errors']) {
+            if (!empty($this->processingOutput['errors'])) {
                 $logMessage = sprintf('There have been soe errors');
 
                 $this->logger->error($logMessage);
@@ -153,12 +146,12 @@ class ProcessLayCSVCommand extends Command
 
             return Command::SUCCESS;
         }
+
         $this->cliOutput->writeln(
             sprintf(
-                '%s - failure - %s Output: %s',
+                '%s - failure - Output: %s',
                 self::JOB_NAME,
-                'Process failed for unknown reason',
-                $this->processedStringOutput()
+                'Process failed for unknown reason'
             )
         );
 
@@ -184,7 +177,6 @@ class ProcessLayCSVCommand extends Command
 
     private function process(mixed $data): bool
     {
-        $this->logger->warning('Step 6');
         $this->preReg->deleteAll();
 
         if (is_array($data)) {
@@ -193,26 +185,8 @@ class ProcessLayCSVCommand extends Command
             foreach ($chunks as $index => $chunk) {
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
-                $mu = memory_get_usage(false);
-                $memoryUsageMegabytes = $mu / (1024 * 1024);
-                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-                $this->logger->warning('memory before assembly: '.$formattedMemoryUsage.'mb - '.$index);
-
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
-                $this->logger->warning('skipped - '.count($result['skipped']));
-                $this->logger->warning('errors - '.count($result['errors']));
-
-                $mu = memory_get_usage(false);
-                $memoryUsageMegabytes = $mu / (1024 * 1024);
-                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-                $this->logger->warning('memory before storeOutput: '.$formattedMemoryUsage.'mb - '.$index);
-
                 $this->storeOutput($result);
-
-                $mu = memory_get_usage(false);
-                $memoryUsageMegabytes = $mu / (1024 * 1024);
-                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-                $this->logger->warning('memory after storeOutput: '.$formattedMemoryUsage.'mb - '.$index);
             }
 
             return true;
