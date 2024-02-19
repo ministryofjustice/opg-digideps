@@ -42,20 +42,7 @@ class CSVDeputyshipProcessing
                 count($uploadCollection['collection'])
             )
         );
-
-        $mu = memory_get_usage(false);
-        $memoryUsageMegabytes = $mu / (1024 * 1024);
-        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-        $this->verboseLogger->warning('memory before upload: '.$formattedMemoryUsage.'mb - '.$chunkId);
-
         $result = $this->layUploader->upload($uploadCollection['collection']);
-
-        $mu = memory_get_usage(false);
-        $memoryUsageMegabytes = $mu / (1024 * 1024);
-        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-        $this->verboseLogger->warning('memory before upload: '.$formattedMemoryUsage.'mb - '.$chunkId);
-
-        $this->verboseLogger->notice('count of rep update - '.$result['report-update-count']);
         $result['skipped'] = $uploadCollection['skipped'];
 
         if (count($result['skipped']) >= 1) {
@@ -77,9 +64,8 @@ class CSVDeputyshipProcessing
     public function orgProcessing(array $data)
     {
         $rowCount = count($data);
-
-        $this->restFormatter->setJmsSerialiserGroups(['org-created-event']);
-
+        
+        // Errors are only for the manual process, so we throw http error
         if (!$rowCount) {
             throw new \RuntimeException('No records received from the API');
         }
