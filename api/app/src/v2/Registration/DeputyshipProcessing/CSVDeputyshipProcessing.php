@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\Service\Formatter\RestFormatter;
+use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
@@ -42,20 +43,7 @@ class CSVDeputyshipProcessing
                 count($uploadCollection['collection'])
             )
         );
-
-        $mu = memory_get_usage(false);
-        $memoryUsageMegabytes = $mu / (1024 * 1024);
-        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-        $this->verboseLogger->warning('memory before upload: '.$formattedMemoryUsage.'mb - '.$chunkId);
-
         $result = $this->layUploader->upload($uploadCollection['collection']);
-
-        $mu = memory_get_usage(false);
-        $memoryUsageMegabytes = $mu / (1024 * 1024);
-        $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-        $this->verboseLogger->warning('memory before upload: '.$formattedMemoryUsage.'mb - '.$chunkId);
-
-        $this->verboseLogger->notice('count of rep update - '.$result['report-update-count']);
         $result['skipped'] = $uploadCollection['skipped'];
 
         if (count($result['skipped']) >= 1) {
@@ -78,8 +66,7 @@ class CSVDeputyshipProcessing
     {
         $rowCount = count($data);
 
-        $this->restFormatter->setJmsSerialiserGroups(['org-created-event']);
-
+        // Errors are only for the manual process, so we throw http error
         if (!$rowCount) {
             throw new \RuntimeException('No records received from the API');
         }
@@ -87,7 +74,9 @@ class CSVDeputyshipProcessing
             throw new \RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
         }
 
-        $dtos = $this->orgAssembler->assembleMultipleDtosFromArray($data);
+        $orgAssembler = new SiriusToOrgDeputyshipDtoAssembler(new ReportUtils());
+
+        $dtos = $orgAssembler->assembleMultipleDtosFromArray($data);
 
         return $this->orgUploader->upload($dtos);
     }
