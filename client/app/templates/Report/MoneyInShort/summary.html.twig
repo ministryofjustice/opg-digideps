@@ -26,11 +26,11 @@
             <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
             {# Missing questions alerts #}
-            {% if status.moneyInShortState.state != 'done' and status.moneyInShortState.state != 'low-done' and comingFromLastStep %}
+            {% if status.moneyInShortState.state != 'done' and status.moneyInShortState.state != 'low-assets-done' and comingFromLastStep %}
                 {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
             {% endif %}
 
-            {% if status.moneyInShortState.state != 'done' and status.moneyInShortState.state != 'low-done' and not comingFromLastStep %}
+            {% if status.moneyInShortState.state != 'done' and status.moneyInShortState.state != 'low-assests-done' and not comingFromLastStep %}
                 {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
             {% endif %}
         </div>

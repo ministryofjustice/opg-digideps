@@ -241,7 +241,7 @@ class ReportStatusServiceTest extends TestCase
             [['getMoneyInExists'=> 'No','getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
             [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
             [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_DONE],
+            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
             [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
         ];
     }
@@ -267,7 +267,7 @@ class ReportStatusServiceTest extends TestCase
             [['getMoneyOutExists'=> 'No','getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
             [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
             [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_DONE],
+            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
             [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
         ];
     }

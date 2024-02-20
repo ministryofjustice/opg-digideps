@@ -16,7 +16,7 @@ class ReportStatusService
     public const STATE_NOT_STARTED = 'not-started';
     public const STATE_INCOMPLETE = 'incomplete';
     public const STATE_DONE = 'done';
-    public const STATE_LOW_DONE = 'low-done';
+    public const STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
     public const STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
     public const STATE_EXPLAINED = 'explained'; // only used for balance section
     public const ENABLE_STATUS_CACHE = true;
@@ -242,7 +242,7 @@ class ReportStatusService
         }
 
         if ($moneyInNo1kItems) {
-            return ['state' => self::STATE_LOW_DONE];
+            return ['state' => self::STATE_LOW_ASSETS_DONE];
         }
         
         if ($isCompleted) {
@@ -280,7 +280,7 @@ class ReportStatusService
         }
         
         if ($moneyOutNo1kItems) {
-            return ['state' => self::STATE_LOW_DONE];
+            return ['state' => self::STATE_LOW_ASSETS_DONE];
         }
         
         if ($isCompleted) {
