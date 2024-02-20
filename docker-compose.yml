@@ -140,7 +140,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:13.11
+    image: postgres:13.14
     ports:
       - 5432:5432
     env_file:
@@ -255,5 +255,5 @@ services:
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
 
   composer:
-    image: composer:2.5.8
+    image: composer:2.7.1
     command: ["install"]
