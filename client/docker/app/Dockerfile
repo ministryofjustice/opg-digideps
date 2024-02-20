@@ -1,4 +1,4 @@
-FROM composer:2.7.1 AS composer
+FROM composer:2.5.7 AS composer
 
 WORKDIR /app
 # Install composer dependencies
@@ -12,7 +12,7 @@ COPY client/app/src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.23-fpm-alpine3.18 as base
+FROM php:8.1.27-fpm-alpine3.18 as base
 WORKDIR /var/www
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/

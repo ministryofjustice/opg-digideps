@@ -3,6 +3,12 @@
     "license": "MIT",
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.1.27"
+        }
+    },
     "autoload": {
         "psr-4": {
             "App\\": "src"
@@ -101,12 +107,6 @@
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ]
-    },
-    "config": {
-        "sort-packages": true,
-        "platform": {
-            "php": "8.1.19"
-        }
     },
     "minimum-stability": "stable",
     "extra": {
