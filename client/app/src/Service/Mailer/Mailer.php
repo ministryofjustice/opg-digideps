@@ -25,68 +25,75 @@ class Mailer
         $this->mailSender = $mailSender;
     }
 
-    public function sendActivationEmail(User $activatedUser)
+    public function sendActivationEmail(User $activatedUser): bool
     {
-        $this->mailSender->send($this->mailFactory->createActivationEmail($activatedUser));
+        return $this->mailSender->send($this->mailFactory->createActivationEmail($activatedUser));
     }
 
-    public function sendInvitationEmail(User $invitedUser, string $deputyName = null)
+    public function sendInvitationEmail(User $invitedUser, string $deputyName = null): bool
     {
-        $this->mailSender->send($this->mailFactory->createInvitationEmail($invitedUser, $deputyName));
+        return $this->mailSender->send($this->mailFactory->createInvitationEmail($invitedUser, $deputyName));
     }
 
-    public function sendResetPasswordEmail(User $passwordResetUser)
+    public function sendResetPasswordEmail(User $passwordResetUser): bool
     {
-        $this->mailSender->send($this->mailFactory->createResetPasswordEmail($passwordResetUser));
+        return $this->mailSender->send($this->mailFactory->createResetPasswordEmail($passwordResetUser));
     }
 
-    public function sendGeneralFeedbackEmail(array $feedbackFormResponse)
+    public function sendGeneralFeedbackEmail(array $feedbackFormResponse): bool
     {
-        $this->mailSender->send($this->mailFactory->createGeneralFeedbackEmail($feedbackFormResponse));
+        return $this->mailSender->send($this->mailFactory->createGeneralFeedbackEmail($feedbackFormResponse));
     }
 
-    public function sendPostSubmissionFeedbackEmail(FeedbackReport $submittedFeedbackReport, User $submittedByDeputy)
-    {
-        $this->mailSender->send(
+    public function sendPostSubmissionFeedbackEmail(
+        FeedbackReport $submittedFeedbackReport,
+        User $submittedByDeputy
+    ): bool {
+        return $this->mailSender->send(
             $this->mailFactory->createPostSubmissionFeedbackEmail($submittedFeedbackReport, $submittedByDeputy)
         );
     }
 
-    public function sendUpdateClientDetailsEmail(Client $updatedClient)
+    public function sendUpdateClientDetailsEmail(Client $updatedClient): bool
     {
-        $this->mailSender->send($this->mailFactory->createUpdateClientDetailsEmail($updatedClient));
+        return $this->mailSender->send($this->mailFactory->createUpdateClientDetailsEmail($updatedClient));
     }
 
-    public function sendUpdateDeputyDetailsEmail(User $updatedDeputy)
+    public function sendUpdateDeputyDetailsEmail(User $updatedDeputy): bool
     {
-        $this->mailSender->send($this->mailFactory->createUpdateDeputyDetailsEmail($updatedDeputy));
+        return $this->mailSender->send($this->mailFactory->createUpdateDeputyDetailsEmail($updatedDeputy));
     }
 
     public function sendReportSubmissionConfirmationEmail(
         User $submittedByDeputy,
         ReportInterface $submittedReport,
         Report $newReport
-    ) {
-        $this->mailSender->send(
+    ): bool {
+        return $this->mailSender->send(
             $this->mailFactory->createReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport)
         );
     }
 
-    public function sendNdrSubmissionConfirmationEmail(User $submittedByDeputy, Ndr $submittedNdr, Report $newReport)
-    {
-        $this->mailSender->send(
+    public function sendNdrSubmissionConfirmationEmail(
+        User $submittedByDeputy,
+        Ndr $submittedNdr,
+        Report $newReport
+    ): bool {
+        return $this->mailSender->send(
             $this->mailFactory->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)
         );
     }
 
-    public function sendProcessOrgCSVEmail(string $adminUser, array $output) {
-        $this->mailSender->send(
+    public function sendProcessOrgCSVEmail(string $adminUser, array $output): bool
+    {
+        return $this->mailSender->send(
             $this->mailFactory->createProcessOrgCSVEmail($adminUser, $output)
         );
     }
 
-    public function sendProcessLayCSVEmail(string $adminUser, array $output) {
-        $this->mailSender->send(
+    public function sendProcessLayCSVEmail(string $adminUser, array $output): bool
+    {
+        return $this->mailSender->send(
             $this->mailFactory->createProcessLayCSVEmail($adminUser, $output)
         );
     }

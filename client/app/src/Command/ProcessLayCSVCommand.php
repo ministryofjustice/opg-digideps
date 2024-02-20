@@ -25,6 +25,30 @@ class ProcessLayCSVCommand extends Command
 
     private const CHUNK_SIZE = 50;
 
+    protected const EXPECTED_COLUMNS = [
+        'Case',
+        'ClientSurname',
+        'DeputyUid',
+        'DeputyFirstname',
+        'DeputySurname',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+        'DeputyPostcode',
+        'ReportType',
+        'MadeDate',
+        'OrderType',
+        'CoDeputy',
+        'Hybrid',
+    ];
+
+    protected const UNEXPECTED_COLUMNS = [
+        'LastReportDay',
+        'DeputyOrganisation'
+    ];
+
     private array $output = [
         'errors' => [],
         'added' => 0,
@@ -54,61 +78,55 @@ class ProcessLayCSVCommand extends Command
     {
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $this->params->get('lay_report_csv_filename');
+        $fileLocation = sprintf('/tmp/%s', $layReportFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $layReportFile,
-                'SaveAs' => '/tmp/layReport.csv',
+                'SaveAs' => $fileLocation
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $this->logger->log('error', sprintf('File %s not found in bucket %s', $layReportFile, $bucket));
+                $this->logger->error(sprintf('File %s not found in bucket %s', $layReportFile, $bucket));
             } else {
-                $this->logger->log('error', sprintf('Error getting file %s from bucket %s: %s', $layReportFile, $bucket, $e->getMessage()));
+                $this->logger->error(
+                    sprintf(
+                        'Error getting file %s from bucket %s: %s',
+                        $layReportFile,
+                        $bucket,
+                        $e->getMessage()
+                    )
+                );
             }
         }
 
-        $data = $this->csvToArray('/tmp/layReport.csv');
-        $this->process($data, $input->getArgument('email'));
+        $data = $this->csvToArray($fileLocation);
+        if ($this->process($data, $input->getArgument('email')) && empty($this->output['errors'])) {
+            if (!unlink($fileLocation)) {
+                $this->logger->error(sprintf('Unable to delete file %s.', $layReportFile));
+            }
 
-        if (!unlink('/tmp/layReport.csv')) {
-            $this->logger->log('error', 'Unable to delete file /tmp/layReport.csv.');
+            return Command::SUCCESS;
         }
 
-        return 0;
+        return Command::FAILURE;
     }
 
-    private function csvToArray(string $fileName)
+    private function csvToArray(string $fileName): array
     {
         try {
             return (new CsvToArray($fileName, false, false))
-                ->setOptionalColumns([
-                    'Case',
-                    'ClientSurname',
-                    'DeputyUid',
-                    'DeputyFirstname',
-                    'DeputySurname',
-                    'DeputyAddress1',
-                    'DeputyAddress2',
-                    'DeputyAddress3',
-                    'DeputyAddress4',
-                    'DeputyAddress5',
-                    'DeputyPostcode',
-                    'ReportType',
-                    'MadeDate',
-                    'OrderType',
-                    'CoDeputy',
-                    'Hybrid',
-                ])
-                ->setUnexpectedColumns(['LastReportDay', 'DeputyOrganisation'])
+                ->setOptionalColumns(self::EXPECTED_COLUMNS)
+                ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
-        } catch (\Throwable $e) {
-            $this->logger->log('error', sprintf('Error processing CSV file: %s', $e->getMessage()));
+
+        } catch (Throwable $e) {
+            $this->logger->error(sprintf('Error processing CSV file: %s', $e->getMessage()));
         }
     }
 
-    private function process(mixed $data, string $email)
+    private function process(mixed $data, string $email): void
     {
         $this->restClient->delete('/pre-registration/delete');
 
@@ -125,16 +143,16 @@ class ProcessLayCSVCommand extends Command
             $this->storeOutput($upload);
         }
 
-        $this->redis->set($this->workspace.'-lay-csv-processing', 'completed');
-        $this->redis->set($this->workspace.'-lay-csv-completed-date', date('Y-m-d H:i:s'));
-
         $this->mailer->sendProcessLayCSVEmail($email, $this->output);
     }
 
-    private function storeOutput(array $output)
+    private function storeOutput(array $output): void
     {
         if (!empty($output['errors'])) {
-            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
+            $this->output['errors'] = array_merge(
+                $this->output['errors'],
+                $output['errors']
+            );
         }
 
         if (!empty($output['added'])) {
@@ -142,7 +160,7 @@ class ProcessLayCSVCommand extends Command
         }
 
         if (!empty($output['skipped'])) {
-            $this->output['skipped'] += $output['skipped'];
+            $this->output['skipped'] += count($output['skipped']);
         }
     }
 }

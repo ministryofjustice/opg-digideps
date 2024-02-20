@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\Entity\Client;
+use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
@@ -17,6 +19,9 @@ trait FixturesTrait
     public array $sameLastNameUserDetails = [];
     public ?UserDetails $twoReportsUserDetails = null;
     public ?UserDetails $oneReportsUserDetails = null;
+    
+    public ?UserDetails $interactingWithUserDetails = null;
+    private UserTestHelper $userTestHelper;
 
     /**
      * @Given the following court orders exist:
@@ -206,4 +211,36 @@ trait FixturesTrait
     {
         $this->fixtureHelper->changeCaseNumber($clientId, $newCaseNumber);
     }
+
+    /**
+     * @Given /^the user has \'([^\']*)\' permissions and another user exists within the same organisation$/
+     */
+    public function theUserHasPermissionsAndAnotherUserExistsWithinTheSameOrganisation(string $adminPermissions)
+    {
+        $setExistingUserFixture = $this->setExistingUser($adminPermissions);
+        
+        $existingUser = $this->interactingWithUserDetails = $setExistingUserFixture;
+        $emailIdentifier = $existingUser->getOrganisationEmailIdentifier();
+        
+        $newUserEmail = sprintf('%s-%s@t.uk', substr(User::ROLE_PROF_TEAM_MEMBER, 5), $this->testRunId);
+        
+        $newUser = $this->fixtureHelper->createAndPersistUser(User::ROLE_PROF_TEAM_MEMBER, $newUserEmail);
+        
+        $organisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($emailIdentifier);
+        
+        $organisation->addUser($newUser);
+        
+        $this->em->persist($organisation);
+        $this->em->flush();
+    }
+    
+    private function setExistingUser(string $adminPermissions){
+        
+        if($adminPermissions === 'admin'){
+            return $this->profAdminCombinedHighNotStartedDetails;
+        } else {
+            return $this->profTeamDeputyNotStartedHealthWelfareDetails;
+        }
+    }
+
 }

@@ -72,14 +72,23 @@ class MoneyOutShortController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['doesMoneyOutExist']->getData();
+            $answer = $form['moneyOutExists']->getData();
 
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
-            if ('yes' === $answer) {
+            if ('Yes' === $answer) {
+                $report->setReasonForNoMoneyOut(null);
+
+                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
+
                 return $this->redirectToRoute('money_out_short_category', ['reportId' => $reportId, 'from' => 'does_money_out_short_exist']);
             } else {
+
+                $this->cleanDataIfAnswerIsChangedFromYesToNo($report);
+
+                $this->restClient->put('report/'.$reportId, $report, ['moneyShortCategoriesOut']);
+
                 return $this->redirectToRoute('no_money_out_short_exists', ['reportId' => $reportId, 'from' => 'does_money_out_short_exist']);
             }
         }
@@ -91,6 +100,25 @@ class MoneyOutShortController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
         ];
+    }
+
+    private function cleanDataIfAnswerIsChangedFromYesToNo($report): void
+    {
+        // selected categories in money short category table are set to false
+        foreach($report->getMoneyShortCategoriesOut() as $shortCategories) {
+            if($shortCategories->isPresent()) {
+                $shortCategories->setPresent(false);
+            }
+        }
+
+        // and all transactions are deleted from 'money transaction short' table if present
+        $reportId = $report->getId();
+
+        if ($report->getMoneyTransactionsShortOutExist()) {
+            $report->setMoneyTransactionsShortOutExist('no');
+
+            $this->restClient->put('report/'.$reportId, $report, ['money-transactions-short-out-exist']);
+        }
     }
 
     /**
@@ -111,6 +139,7 @@ class MoneyOutShortController extends AbstractController
 
             $report->setReasonForNoMoneyOut($answer);
             $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
+
             $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
             return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
@@ -159,7 +188,7 @@ class MoneyOutShortController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'money_out_short', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'does_money_out_short_exist', ['reportId' => $reportId]),
         ];
     }
 

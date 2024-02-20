@@ -49,19 +49,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexController extends AbstractController
 {
     public function __construct(
-        private OrgService $orgService,
-        private LoggerInterface $logger,
-        private RestClient $restClient,
-        private UserApi $userApi,
-        private ObservableEventDispatcher $eventDispatcher,
-        private PreRegistrationApi $preRegistrationApi,
-        private LayDeputyshipApi $layDeputyshipApi,
-        private TokenStorageInterface $tokenStorage,
-        private ParameterBagInterface $params,
-        private KernelInterface $kernel,
-        private EventDispatcherInterface $dispatcher,
-        private S3Client $s3,
-        private string $workspace
+        private readonly LoggerInterface $logger,
+        private readonly RestClient $restClient,
+        private readonly UserApi $userApi,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly PreRegistrationApi $preRegistrationApi,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ParameterBagInterface $params,
+        private readonly KernelInterface $kernel,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly S3Client $s3,
+        private readonly LayDeputyshipApi $layDeputyshipApi,
+        private readonly OrgService $orgService,
+        private readonly string $workspace
     ) {
     }
 
@@ -70,7 +70,7 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): array
     {
         $filters = [
             'limit' => 65,
@@ -105,7 +105,7 @@ class IndexController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function addUserAction(Request $request)
+    public function addUserAction(Request $request): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
@@ -142,7 +142,7 @@ class IndexController extends AbstractController
      *
      * @return User[]|Response
      */
-    public function viewAction($id)
+    public function viewAction($id): array|Response
     {
         try {
             return ['user' => $this->getPopulatedUser($id)];
@@ -160,7 +160,7 @@ class IndexController extends AbstractController
      *
      * @throws \Throwable
      */
-    public function editUserAction(Request $request, TranslatorInterface $translator)
+    public function editUserAction(Request $request, TranslatorInterface $translator): array|Response
     {
         $filter = $request->get('filter');
 
@@ -249,7 +249,7 @@ class IndexController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function editNdrAction(Request $request, $id)
+    public function editNdrAction(Request $request, $id): RedirectResponse
     {
         $ndr = $this->restClient->get('ndr/'.$id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
         $ndrForm = $this->createForm(FormDir\NdrType::class, $ndr);
@@ -278,7 +278,7 @@ class IndexController extends AbstractController
      *
      * @return array
      */
-    public function deleteConfirmAction($id)
+    public function deleteConfirmAction($id): array
     {
         /** @var EntityDir\User $userToDelete */
         $userToDelete = $this->restClient->get("user/{$id}", 'User');
@@ -296,7 +296,7 @@ class IndexController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($id)
+    public function deleteAction($id): RedirectResponse
     {
         $user = $this->userApi->get($id, ['user', 'client', 'client-reports', 'report']);
 
@@ -325,7 +325,7 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      * @Template("@App/Admin/Index/upload.html.twig")
      */
-    public function uploadAction(Request $request, RouterInterface $router)
+    public function uploadAction(Request $request, RouterInterface $router): array|RedirectResponse
     {
         $form = $this->createFormBuilder()
             ->add('type', ChoiceType::class, [
@@ -361,14 +361,9 @@ class IndexController extends AbstractController
      *
      * @throws \Exception
      */
-    public function uploadUsersAction(Request $request, ClientInterface $redisClient)
+    public function uploadUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
         $chunkSize = 2000;
-
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
-            'method' => 'POST',
-        ]);
-        $form->handleRequest($request);
 
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
@@ -378,56 +373,6 @@ class IndexController extends AbstractController
         // AjaxController redirects to this page after working through chunks - check if its completed to dispatch event
         if ('1' === $request->get('complete')) {
             $this->dispatchCSVUploadEvent();
-        }
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $fileName = $form->get('file')->getData();
-                $data = $this->handleLayUploadForm($fileName);
-
-                // small amount of data -> immediate posting and redirect (needed for behat)
-                if (count($data) < $chunkSize) {
-                    $compressedData = CsvUploader::compressData($data);
-                    $this->preRegistrationApi->deleteAll();
-
-                    $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, 'below_2000_rows');
-
-                    $this->addFlash(
-                        'notice',
-                        sprintf('%d record(s) uploaded, %d error(s), %d skipped', $ret['added'], count($ret['errors']), count($ret['skipped']))
-                    );
-
-                    foreach ($ret['errors'] as $err) {
-                        $this->logger->warning(
-                            sprintf('Error while uploading csv: %s', $err)
-                        );
-
-                        $this->addFlash('error', $err);
-                    }
-
-                    $this->dispatchCSVUploadEvent();
-
-                    return $this->redirect($this->generateUrl('pre_registration_upload'));
-                }
-
-                // big amount of data => store in redis + redirect
-                $chunks = array_chunk($data, $chunkSize);
-
-                foreach ($chunks as $k => $chunk) {
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $redisClient->set($this->workspace.'_chunk'.$k, $compressedData);
-                }
-
-                return $this->redirect($this->generateUrl('pre_registration_upload', ['nOfChunks' => count($chunks)]));
-            } catch (\Throwable $e) {
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                $form->get('file')->addError(new FormError($message));
-            }
         }
 
         if ($processForm->isSubmitted() && $processForm->isValid()) {
@@ -476,7 +421,6 @@ class IndexController extends AbstractController
         return [
             'nOfChunks' => $request->get('nOfChunks'),
             'currentRecords' => $this->preRegistrationApi->count(),
-            'form' => $form->createView(),
             'processForm' => $processForm->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
             'processStatus' => $processStatus,
@@ -495,12 +439,8 @@ class IndexController extends AbstractController
      *
      * @throws \Exception
      */
-    public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient)
+    public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
-        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
-            'method' => 'POST',
-        ]);
-        $form->handleRequest($request);
 
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
@@ -508,32 +448,6 @@ class IndexController extends AbstractController
         $processForm->handleRequest($request);
 
         $outputStreamResponse = isset($_GET['ajax']);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $fileName = $form->get('file')->getData();
-                $data = $this->handleOrgUploadForm($fileName);
-
-                $this->orgService->setLogging($outputStreamResponse);
-
-                $redirectUrl = $this->generateUrl('admin_org_upload');
-
-                return $this->orgService->process($data, $redirectUrl);
-            } catch (\Throwable $e) {
-                $message = $e->getMessage();
-
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $message = $e->getData()['message'];
-                }
-
-                if ($outputStreamResponse) {
-                    $this->addFlash('error', $message);
-                    exit;
-                } else {
-                    $form->get('file')->addError(new FormError($message));
-                }
-            }
-        }
 
         if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the org CSV command as a background task */
@@ -579,7 +493,6 @@ class IndexController extends AbstractController
         $processCompletedDate = $redisClient->get($this->workspace.'-org-csv-completed-date');
 
         return [
-            'form' => $form->createView(),
             'processForm' => $processForm->createView(),
             'processStatus' => $processStatus,
             'processStatusDate' => $processCompletedDate,
@@ -594,7 +507,7 @@ class IndexController extends AbstractController
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
-    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger)
+    public function sendUserActivationLinkAction(string $email, LoggerInterface $logger): Response
     {
         try {
             $this->userApi->activate($email, 'pass-reset');

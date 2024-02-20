@@ -9,7 +9,7 @@ use App\Tests\Behat\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
-    public bool $clientBenefitsSectionAvailable = false;
+    public bool $clientBenefitsSectionAvailable = true;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
     private string $missingExplanationErrorText = 'Tell us why you don\'t know if anyone other than you received money on %s\'s behalf';
     private string $missingMoneyTypeErrorText = 'Enter the type of payment';

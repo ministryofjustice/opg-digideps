@@ -39,16 +39,25 @@ class RequestIdLoggerProcessor
      */
     public function processRecord(array $record)
     {
-        if (
-            !$this->container->has('request_stack')
-            || !($request = $this->container->get('request_stack')->getCurrentRequest())
-            || !$request->headers->has('x-request-id')
-        ) {
-            return $record;
+        $reqId = self::getRequestIdFromContainer($this->container);
+
+        if ($reqId) {
+            $record['extra']['request_id'] = $reqId;
         }
 
-        $record['extra']['request_id'] = $request->headers->get('x-request-id');
-
         return $record;
+    }
+
+    public static function getRequestIdFromContainer(ContainerInterface $container)
+    {
+        if (
+            ($rq = $container->get('request_stack'))
+            && ($request = $rq->getCurrentRequest())
+            && ($request->headers->has('x-request-id'))
+        ) {
+            return $request->headers->get('x-request-id');
+        }
+
+        return null;
     }
 }

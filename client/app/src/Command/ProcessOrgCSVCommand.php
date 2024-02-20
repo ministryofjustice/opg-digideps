@@ -25,6 +25,43 @@ class ProcessOrgCSVCommand extends Command
 
     private const CHUNK_SIZE = 50;
 
+    private const EXPECTED_COLUMNS = [
+        'Case',
+        'ClientForename',
+        'ClientSurname',
+        'ClientDateOfBirth',
+        'ClientPostcode',
+        'DeputyUid',
+        'DeputyType',
+        'DeputyEmail',
+        'DeputyOrganisation',
+        'DeputyForename',
+        'DeputySurname',
+        'DeputyPostcode',
+        'MadeDate',
+        'LastReportDay',
+        'ReportType',
+        'OrderType',
+        'Hybrid',
+    ];
+
+    private const OPTIONAL_COLUMNS = [
+        'ClientAddress1',
+        'ClientAddress2',
+        'ClientAddress3',
+        'ClientAddress4',
+        'ClientAddress5',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
+    ];
+
+    private const UNEXPECTED_COLUMNS = [
+        'NDR'
+    ];
+
     private array $output = [
         'errors' => [],
         'added' => [
@@ -65,80 +102,57 @@ class ProcessOrgCSVCommand extends Command
     {
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
+        $fileLocation = sprintf('/tmp/%s', $paProReportFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $paProReportFile,
-                'SaveAs' => '/tmp/orgReport.csv',
+                'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $this->logger->log('error', sprintf('File %s not found in bucket %s', $paProReportFile, $bucket));
+                $this->logger->error(sprintf('File %s not found in bucket %s', $paProReportFile, $bucket));
             } else {
-                $this->logger->log('error', sprintf('Error retrieving file %s from bucket %s', $paProReportFile, $bucket));
+                $this->logger->error(
+                    sprintf(
+                        'Error retrieving file %s from bucket %s',
+                        $paProReportFile,
+                        $bucket
+                    )
+                );
             }
         }
 
-        $data = $this->csvToArray('/tmp/orgReport.csv');
-        $this->process($data, $input->getArgument('email'));
+        $data = $this->csvToArray($fileLocation);
 
-        if (!unlink('/tmp/orgReport.csv')) {
-            $this->logger->log('error', 'Unable to delete file /tmp/orgReport.csv.');
+        if ($this->process($data, $input->getArgument('email')) && empty($this->output['errors'])) {
+            if (!unlink($fileLocation)) {
+                $this->logger->error('Unable to delete file /tmp/orgReport.csv.');
+            }
+
+            return Command::SUCCESS;
         }
 
-        return 0;
+        return Command::FAILURE;
     }
 
-    private function csvToArray(string $fileName)
+    private function csvToArray(string $fileName): array
     {
         try {
             return (new CsvToArray($fileName, false))
-            ->setExpectedColumns([
-                'Case',
-                'ClientForename',
-                'ClientSurname',
-                'ClientDateOfBirth',
-                'ClientPostcode',
-                'DeputyUid',
-                'DeputyType',
-                'DeputyEmail',
-                'DeputyOrganisation',
-                'DeputyForename',
-                'DeputySurname',
-                'DeputyPostcode',
-                'MadeDate',
-                'LastReportDay',
-                'ReportType',
-                'OrderType',
-                'Hybrid',
-            ])
-            ->setOptionalColumns([
-                'ClientAddress1',
-                'ClientAddress2',
-                'ClientAddress3',
-                'ClientAddress4',
-                'ClientAddress5',
-                'DeputyAddress1',
-                'DeputyAddress2',
-                'DeputyAddress3',
-                'DeputyAddress4',
-                'DeputyAddress5',
-            ])
-            ->setUnexpectedColumns([
-                'NDR',
-            ])
+            ->setExpectedColumns(self::EXPECTED_COLUMNS)
+            ->setOptionalColumns(self::OPTIONAL_COLUMNS)
+            ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
             ->getData();
         } catch (\Throwable $e) {
-            $this->logger->log('error', sprintf('Error processing CSV: %s', $e->getMessage()));
+            $this->logger->error(sprintf('Error processing CSV: %s', $e->getMessage()));
         }
     }
 
-    private function process(mixed $data, string $email)
+    private function process(mixed $data, string $email): bool
     {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
-
-        $this->redis->set($this->workspace.'-org-csv-processing', 'processing');
 
         foreach ($chunks as $index => $chunk) {
             try {
@@ -149,25 +163,22 @@ class ProcessOrgCSVCommand extends Command
 
                 $this->storeOutput($upload);
 
-                $this->logger->log('notice', sprintf('Successfully processed chunk: %d', $index));
+                $this->logger->notice(sprintf('Successfully processed chunk: %d', $index));
             } catch (\Throwable $e) {
-                $this->logger->log('error', sprintf('Error processing chunk: %d, error: %s', $index, $e->getMessage()));
+                $this->logger->error(sprintf('Error processing chunk: %d, error: %s', $index, $e->getMessage()));
             }
         }
 
-        $this->logger->log('notice', 'Successfully processed all chunks');
+        $this->logger->notice('Successfully processed all chunks');
 
-        $this->redis->set($this->workspace.'-org-csv-processing', 'completed');
-        $this->redis->set($this->workspace.'-org-csv-completed-date', date('Y-m-d H:i:s'));
 
-        $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
+        return $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }
 
-    private function storeOutput(array $output)
+    private function storeOutput(array $output): void
     {
-        if (!empty($output['errors'])) {
-            $this->output['errors'] = array_merge($this->output['errors'], $output['errors']);
-        }
+        $this->output['errors']['count'] += $output['errors']['count'];
+        $this->output['errors']['messages'] = implode(', ', $output['errors']['messages']);
 
         if (!empty($output['added'])) {
             foreach ($output['added'] as $group => $items) {

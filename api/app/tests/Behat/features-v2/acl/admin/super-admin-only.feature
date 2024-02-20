@@ -43,3 +43,10 @@ Feature: Limiting access to sections of the app to super admins
         Then I should not be able to access the 'Fixtures' page
         Then I should not be able to access the 'Notifications' page
         Then I should not be able to access the 'Tools' page
+
+    @lay-pfa-high-not-started
+    Scenario: A Lay Deputy attempts to access the admin app 
+        Given a Lay Deputy attempts to log into the admin app
+        Then I should see "You've entered an invalid email or password. Please try again." 
+        
+        

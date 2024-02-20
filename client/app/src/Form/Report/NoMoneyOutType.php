@@ -24,11 +24,6 @@ class NoMoneyOutType extends AbstractType
                         'minMessage' => 'moneyOut.reasonForNoMoneyOut.minLength',
                         'groups' => 'reason-for-no-money',
                     ]),
-                    new Constraints\Length([
-                        'max' => 256,
-                        'maxMessage' => 'moneyOut.reasonForNoMoneyOut.maxLength',
-                        'groups' => 'reason-for-no-money',
-                    ]),
                 ]])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
