@@ -121,7 +121,7 @@ class ProcessLayCSVCommand extends Command
             }
 
             if (!empty($this->processingOutput['errors'])) {
-                $logMessage = sprintf('There have been soe errors');
+                $logMessage = sprintf('There have been some errors');
 
                 $this->logger->error($logMessage);
                 $this->cliOutput->writeln(
