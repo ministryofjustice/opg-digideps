@@ -36,35 +36,21 @@ locals {
         name      = "POSTGRES_PASSWORD",
         valueFrom = data.aws_secretsmanager_secret.database_password.arn
       }],
-      environment = [{
-        name  = "S3_BUCKET",
-        value = data.aws_s3_bucket.backup.bucket
-        },
-        {
-          name  = "S3_OPTS",
-          value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${var.shared_environment_variables["canonical_id_preproduction"]},id=${var.shared_environment_variables["canonical_id_production"]}"
-        },
-        {
-          name  = "S3_PREFIX",
-          value = local.environment
-        },
-        {
-          name  = "POSTGRES_DATABASE",
-          value = local.db.name
-        },
-        {
-          name  = "POSTGRES_HOST",
-          value = local.db.endpoint
-        },
-        {
-          name  = "POSTGRES_PORT",
-          value = tostring(local.db.port)
-        },
-        {
-          name  = "POSTGRES_USER",
-          value = local.db.username
-        }
-      ]
+      environment = concat(local.api_single_db_tasks_base_config,
+        [
+          {
+            name  = "S3_BUCKET",
+            value = data.aws_s3_bucket.backup.bucket
+          },
+          {
+            name  = "S3_OPTS",
+            value = "--sse=aws:kms --sse-kms-key-id=${data.aws_kms_alias.backup.target_key_arn} --grants=read=id=${var.shared_environment_variables["canonical_id_preproduction"]},id=${var.shared_environment_variables["canonical_id_production"]}"
+          },
+          {
+            name  = "S3_PREFIX",
+            value = local.environment
+          }
+      ])
     }
   )
 }

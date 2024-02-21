@@ -28,24 +28,7 @@ locals {
         awslogs-stream-prefix = "database-analyse-command"
       }
     },
-    environment = [
-      {
-        name  = "POSTGRES_DATABASE",
-        value = local.db.name
-      },
-      {
-        name  = "POSTGRES_PORT",
-        value = "5432"
-      },
-      {
-        name  = "POSTGRES_USER",
-        value = local.db.username
-      },
-      {
-        name  = "POSTGRES_HOST",
-        value = local.db.endpoint
-      }
-    ],
+    environment = local.api_single_db_tasks_base_config
     secrets = [{
       name      = "POSTGRES_PASSWORD",
       valueFrom = data.aws_secretsmanager_secret.database_password.arn
