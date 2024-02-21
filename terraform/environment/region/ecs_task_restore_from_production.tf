@@ -31,7 +31,7 @@ locals {
         name      = "POSTGRES_PASSWORD",
         valueFrom = data.aws_secretsmanager_secret.database_password.arn
       }],
-      environment = concat(local.api_single_db_tasks_base_config,
+      environment = concat(local.api_single_db_tasks_base_variables,
         [
           {
             name  = "S3_BUCKET",
