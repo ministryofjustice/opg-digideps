@@ -3,6 +3,12 @@
     "license": "MIT",
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.1.27"
+        }
+    },
     "autoload": {
         "psr-4": {
             "App\\": "src"
@@ -16,7 +22,7 @@
     },
     "require": {
         "php": "^8.1",
-        "aws/aws-sdk-php": "3.288.1",
+        "aws/aws-sdk-php": "3.299.1",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.6.3",
@@ -101,12 +107,6 @@
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ]
-    },
-    "config": {
-        "sort-packages": true,
-        "platform": {
-            "php": "8.1.19"
-        }
     },
     "minimum-stability": "stable",
     "extra": {
