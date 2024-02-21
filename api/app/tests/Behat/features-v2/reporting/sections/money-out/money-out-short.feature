@@ -7,8 +7,8 @@ Feature: Money Out Short
         And I visit the report overview page
         Then I should see "money-out-short" as "not started"
         When I view and start the money out short report section
-        And I answer "Yes" to taking money out on the clients behalf
-        And I have made no payments out
+        And I answer "No" to taking money out on the clients behalf
+        And I enter a reason for no money out short
         Then I should see the expected money out section summary
         When I follow link back to report overview page
         Then I should see "money-out-short" as "no money out"
@@ -22,7 +22,7 @@ Feature: Money Out Short
         And I answer that there are not any one-off payments over £1k
         Then I should see the expected money out section summary
         When I follow link back to report overview page
-        Then I should see "money-out-short" as "no money out"
+        Then I should see "money-out-short" as "money out"
 
     @lay-pfa-low-not-started
     Scenario: A user has had some money go out including payments over £1k
@@ -33,7 +33,7 @@ Feature: Money Out Short
         And I answer that there are 4 one-off payments over £1k
         Then I should see the expected money out section summary
         When I follow link back to report overview page
-        Then I should see "money-out-short" as "4 items"
+        Then I should see "money-out-short" as "4 items over £1,000"
 
     @lay-pfa-low-not-started
     Scenario: A user removes a one off payment
@@ -71,3 +71,9 @@ Feature: Money Out Short
         And I answer "Yes" to taking money out on the clients behalf
         And I answer that there are 1 one-off payments over £1k but add a payment of less than £1K
         Then I should see correct validation message
+
+    @lay-pfa-low-completed
+    Scenario: A user edits money out section and adds a one off payment
+        Given a Lay Deputy has completed a Pfa Low Assets report
+        When I edit the money out short section and add a payment
+        Then I should see the expected money out section summary
