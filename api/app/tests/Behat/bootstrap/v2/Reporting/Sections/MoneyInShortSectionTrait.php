@@ -142,9 +142,9 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @When I edit an existing money in short payment
+     * @When I edit the money in short section and add a payment
      */
-    public function iEditOneOffMoneyInPayment()
+    public function iEditTheMoneyInShortSectionAndAddAPayment()
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
@@ -229,5 +229,16 @@ trait MoneyInShortSectionTrait
         $this->iAmOnMoneyInShortSummaryPage();
 
         $this->expectedResultsDisplayedSimplified();
+    }
+
+    /**
+     * @Then /^I enter a reason for no money in short$/
+     */
+    public function iEnterAReasonForNoMoneyInShort()
+    {
+        $this->iAmOnNoMoneyInShortExistsPage();
+
+        $this->fillInField('reason_for_no_money[reasonForNoMoneyIn]', 'No money in', 'reasonForNoMoneyIn');
+        $this->pressButton('Save and continue');
     }
 }

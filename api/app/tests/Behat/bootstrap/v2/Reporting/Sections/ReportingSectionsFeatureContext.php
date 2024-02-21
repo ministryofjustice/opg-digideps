@@ -90,7 +90,7 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
                 $statuses = $reportSection->findAll('css', 'span');
 
                 foreach ($statuses as $sts) {
-                    if (str_contains(strtolower($sts->getHtml()), $status)) {
+                    if (trim(strtolower($sts->getHtml())) == $status) {
                         $statusCorrect = true;
                     }
                 }
