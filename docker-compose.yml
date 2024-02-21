@@ -255,5 +255,5 @@ services:
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
 
   composer:
-    image: composer:2.7.1
+    image: composer:2.5.8
     command: ["install"]
