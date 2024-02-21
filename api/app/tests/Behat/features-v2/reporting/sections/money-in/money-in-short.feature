@@ -7,8 +7,8 @@ Feature: Money in Low Assets
         And I visit the report overview page
         Then I should see "money-in-short" as "not started"
         When I view and start the money in short report section
-        And I answer "Yes" to adding money in on the clients behalf
-        And I have no payments going out
+        And I confirm "No" to adding money in on the clients behalf
+        And I enter a reason for no money in short
         Then I should see the expected money in section summary
         When I follow link back to report overview page
         Then I should see "money-in-short" as "no money in"
@@ -24,7 +24,7 @@ Feature: Money in Low Assets
         And I have no one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
-        Then I should see "money-in-short" as "no money in"
+        Then I should see "money-in-short" as "money in"
 
     @lay-pfa-low-not-started
     Scenario: A user has had a multiple items of money go in but nothing over £1k
@@ -43,7 +43,7 @@ Feature: Money in Low Assets
         And I have no one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
-        Then I should see "money-in-short" as "no money in"
+        Then I should see "money-in-short" as "money in"
 
     @lay-pfa-low-not-started
     Scenario: A user has had a single item of money go in and payment over £1k
@@ -56,12 +56,12 @@ Feature: Money in Low Assets
         And I have a single one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
-        Then I should see "money-in-short" as "1 item"
+        Then I should see "money-in-short" as "1 item over £1,000"
 
     @lay-pfa-low-completed
-    Scenario: A user edits a one off payment
+    Scenario: A user edits money in section and adds a one off payment
         Given a Lay Deputy has completed a Pfa Low Assets report
-        When I edit an existing money in short payment
+        When I edit the money in short section and add a payment
         Then I should see the expected money in section summary
 
     @lay-pfa-low-completed
