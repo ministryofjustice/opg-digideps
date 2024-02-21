@@ -137,7 +137,7 @@ locals {
     },
   ]
 
-  api_single_db_tasks_base_config = [
+  api_single_db_tasks_base_variables = [
     {
       name  = "POSTGRES_DATABASE",
       value = local.db.name
@@ -154,5 +154,33 @@ locals {
       name  = "POSTGRES_USER",
       value = local.db.username
     }
+  ]
+
+
+  frontend_base_variables = [
+
+    { name = "ADMIN_HOST", value = "https://${var.admin_fully_qualified_domain_name}" },
+    { name = "NONADMIN_HOST", value = "https://${var.front_fully_qualified_domain_name}" },
+    { name = "API_URL", value = "http://api" },
+    { name = "APP_ENV", value = var.account.app_env },
+    { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
+    { name = "EMAIL_SEND_INTERNAL", value = var.account.is_production == 1 ? "true" : "false" },
+    { name = "ENVIRONMENT", value = local.environment },
+    { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
+    { name = "FILESCANNER_SSLVERIFY", value = "False" },
+    { name = "FILESCANNER_URL", value = "http://scan:8080" },
+    { name = "GA_DEFAULT", value = var.account.ga_default },
+    { name = "GA_GDS", value = var.account.ga_gds },
+    { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
+    { name = "OPG_DOCKER_TAG", value = var.docker_tag },
+    { name = "PARAMETER_PREFIX", value = local.parameter_prefix },
+    { name = "S3_BUCKETNAME", value = "pa-uploads-${local.environment}" },
+    { name = "S3_SIRIUS_BUCKET", value = "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk" },
+    { name = "SECRETS_PREFIX", value = join("", [var.secrets_prefix, "/"]) },
+    { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
+
+    { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
+    { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
+    { name = "WORKSPACE", value = local.environment }
   ]
 }

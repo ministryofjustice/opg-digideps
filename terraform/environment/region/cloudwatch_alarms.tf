@@ -369,7 +369,7 @@ resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 500
+  threshold           = 1
   period              = 300
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
@@ -384,7 +384,7 @@ resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 500
+  threshold           = 1
   period              = 300
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
@@ -399,7 +399,7 @@ resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 500
+  threshold           = 1
   period              = 300
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
@@ -414,7 +414,7 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 500
+  threshold           = 1
   period              = 300
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
