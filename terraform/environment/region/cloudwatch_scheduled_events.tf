@@ -13,7 +13,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.api.arn
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
@@ -28,7 +28,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", local.lay_report_csv_file]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", "--env=prod", "--no-debug", local.lay_report_csv_file]
         }
       ]
     }
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.api.arn
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", local.pa_pro_report_csv_filename]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", "--env=prod", "--no-debug", local.pa_pro_report_csv_filename]
         }
       ]
     }
