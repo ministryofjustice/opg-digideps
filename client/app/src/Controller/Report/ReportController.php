@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\File\Storage\S3Storage;
 
 class ReportController extends AbstractController
 {
@@ -104,7 +105,8 @@ class ReportController extends AbstractController
         private PreRegistrationApi $preRegistrationApi,
         private FormFactoryInterface $formFactory,
         private TranslatorInterface $translator,
-        private ObservableEventDispatcher $eventDispatcher
+        private ObservableEventDispatcher $eventDispatcher,
+        private S3Storage $s3Storage
     ) {
     }
 
@@ -442,7 +444,7 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Report/Report/review.html.twig")
      *
-     * @return array
+     * @return RedirectResponse
      *
      * @throws \Exception
      */
@@ -461,6 +463,39 @@ class ReportController extends AbstractController
         } else {
             $backLink = $this->generateUrl('lay_home');
         }
+
+        // Redirect deputy to doc upload page if docs do not exist in S3
+
+        // Retrieve document storage reference numbers and store in array
+        $documentIds = [];
+        foreach ($report->getDeputyDocuments() as $document) {
+            $documentIds[] = $document->getId();
+        }
+
+        $documentStorageReferences = [];
+        foreach($documentIds as $documentId){
+            $documentStorageReferences[] = $this->restClient->get(
+                sprintf('document/%s', $documentId),
+                'Report\Document',
+            ['document-storage-reference']
+            )->getStorageReference();
+        }
+
+        // call Document Service and check if documents exist in the S3 bucket
+        $documentsNotInS3 = [];
+
+        // loop through references and check if they exist in S3
+        if(!empty($documentStorageReferences)) {
+            foreach ($documentStorageReferences as $docStorageReference) {
+                if(!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
+                    $documentsNotInS3[] = $docStorageReference;
+                };
+            }
+        }
+
+       if(!empty($documentsNotInS3)) {
+           return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+       };
 
         return [
             'user' => $this->getUser(),

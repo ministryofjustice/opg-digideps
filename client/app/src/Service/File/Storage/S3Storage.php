@@ -235,4 +235,14 @@ class S3Storage implements StorageInterface
             'service' => 's3-storage',
         ]]);
     }
+
+    // check if file exists in S3 bucket
+    public function checkFileExistsInS3($key)
+    {
+        if($this->s3Client->doesObjectExistV2($this->bucketName, $key)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
