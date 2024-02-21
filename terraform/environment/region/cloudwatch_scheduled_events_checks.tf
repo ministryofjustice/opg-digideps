@@ -243,7 +243,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats_check" {
 # Lay CSV Processing Check
 
 resource "aws_cloudwatch_event_rule" "lay_csv_processing_check" {
-  name                = "lay-csv-processing-users-${terraform.workspace}"
+  name                = "check-lay-csv-processing-${terraform.workspace}"
   description         = "Execute the Lay CSV user processing check for ${terraform.workspace}"
   schedule_expression = "cron(15 09 * * ? *)"
   is_enabled          = var.account.is_production == 1 ? true : false
@@ -251,7 +251,7 @@ resource "aws_cloudwatch_event_rule" "lay_csv_processing_check" {
 
 
 resource "aws_cloudwatch_event_target" "lay_csv_processing_check" {
-  target_id = "lay-csv-processing-users-check-${terraform.workspace}"
+  target_id = "check-lay-csv-processing-${terraform.workspace}"
   arn       = data.aws_lambda_function.slack_lambda.arn
   rule      = aws_cloudwatch_event_rule.lay_csv_processing_check.name
   input = jsonencode(
@@ -273,7 +273,7 @@ resource "aws_cloudwatch_event_target" "lay_csv_processing_check" {
 # Org CSV Processing Check
 
 resource "aws_cloudwatch_event_rule" "org_csv_processing_check" {
-  name                = "org-csv-processing-users-${terraform.workspace}"
+  name                = "check-org-csv-processing-${terraform.workspace}"
   description         = "Execute the Org CSV user processing check for ${terraform.workspace}"
   schedule_expression = "cron(16 09 * * ? *)"
   is_enabled          = var.account.is_production == 1 ? true : false
@@ -281,7 +281,7 @@ resource "aws_cloudwatch_event_rule" "org_csv_processing_check" {
 
 
 resource "aws_cloudwatch_event_target" "org_csv_processing_check" {
-  target_id = "org-csv-processing-users-check-${terraform.workspace}"
+  target_id = "check-org-csv-processing-${terraform.workspace}"
   arn       = data.aws_lambda_function.slack_lambda.arn
   rule      = aws_cloudwatch_event_rule.org_csv_processing_check.name
   input = jsonencode(

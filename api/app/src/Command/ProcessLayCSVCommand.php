@@ -221,7 +221,7 @@ class ProcessLayCSVCommand extends Command
         foreach ($this->processingOutput as $reportedHeader => $stats) {
             if (is_array($stats)) {
                 foreach ($stats as $statHeader => $statValue) {
-                    $processed .= sprintf('%s %s: %s. ', ucfirst($statHeader), $reportedHeader, $statValue);
+                    $processed .= sprintf('%s %s: %s. ', $reportedHeader, $statHeader, $statValue);
                 }
             } else {
                 $processed .= sprintf('%s %s. ', $stats, $reportedHeader);
