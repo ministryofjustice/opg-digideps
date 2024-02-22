@@ -1,0 +1,81 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% set page = "attachPage" %}
+
+{% trans_default_domain translationDomain %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if successUploaded == "true" %}
+        {{ macros.successBanner(page ~ '.successUploaded', translationDomain, page ~ '.successUploadedHeader') }}
+    {% endif %}
+
+    <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
+
+    <p class="govuk-body">{{ (page ~ '.selectHelp') | trans }}</p>
+
+    <div class="govuk-inset-text">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <strong>{{ (page ~ '.selectHint1') | trans }}</strong>
+                <br>
+                {{ (page ~ '.selectHint2') | trans }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
+    {{ form_input(form.files,'form.files', {
+        'labelText':  '' | trans ,
+        'labelClass': 'visually-hidden',
+        'inputClass': 'no-border behat-link-choose-file' })
+    }}
+
+    <h2 class="govuk-heading-m flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
+
+    <div class="js-hidden">
+        {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
+    </div>
+    <div class="custom-submit">
+        {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
+    </div>
+    <div>
+        <br>
+        {% set alertMessage %}
+            <p class="govuk-body">{{ (page ~ '.pleaseWait') | trans }}</p>
+            <p class="govuk-body">{{ (page ~ '.uploadHint') | trans }}</p>
+        {% endset %}
+    </div>
+    <div id="upload-progress" class="hidden">
+        {{ macros.notification('loader', alertMessage) }}
+    </div>
+
+    {{ form_end(form) }}
+
+    {% if report.isSubmitted %}
+        {% include '@App/Report/Document/_list_submitted.html.twig'  with {
+            'documents': report.submittedDocuments,
+            'translationDomain': translationDomain,
+            'page' : page,
+        } %}
+    {% elseif report.documents | length > 0 %}
+        {% include '@App/Report/Document/_list.html.twig'  with {
+            'translationDomain': translationDomain,
+            'page' : page
+        } %}
+        <a href="{{ nextLink }}" class="govuk-button push--top behat-link-continue">{{ 'continue' | trans({}, 'common' ) }}</a>
+    {% endif %}
+
+{% endblock %}

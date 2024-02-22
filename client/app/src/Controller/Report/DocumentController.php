@@ -14,6 +14,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\DocumentService;
 use App\Service\File\S3FileUploader;
+use App\Service\File\Storage\S3Storage;
 use App\Service\File\Verifier\MultiFileFormUploadVerifier;
 use App\Service\File\Storage\FileUploadFailedException;
 use App\Service\StepRedirector;
@@ -47,6 +48,7 @@ class DocumentController extends AbstractController
     private TranslatorInterface $translator;
     private DocumentService $documentService;
     private LoggerInterface $logger;
+    private S3Storage $s3Storage;
 
     public function __construct(
         RestClient $restClient,
@@ -56,7 +58,8 @@ class DocumentController extends AbstractController
         StepRedirector $stepRedirector,
         TranslatorInterface $translator,
         DocumentService $documentService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        S3Storage $s3Storage
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
@@ -66,6 +69,7 @@ class DocumentController extends AbstractController
         $this->translator = $translator;
         $this->documentService = $documentService;
         $this->logger = $logger;
+        $this->s3Storage = $s3Storage;
     }
 
     /**
@@ -222,6 +226,113 @@ class DocumentController extends AbstractController
             'successUploaded' => $request->get('successUploaded'),
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/documents/reupload", name="report_documents_reupload")
+     * @Template("@App/Report/Document/reupload.html.twig")
+     *
+     * @param $reportId
+     *
+     * @return array|RedirectResponse
+     *
+     */
+    public function documentReupload(
+        Request $request,
+        MultiFileFormUploadVerifier $multiFileVerifier,
+        string $reportId,
+        LoggerInterface $logger,
+    )
+    {
+        $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
+        list($nextLink, $backLink) = $this->buildNavigationLinks($report);
+
+        $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
+        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
+
+        if ('tooBig' == $request->get('error')) {
+            $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
+            $form->get('files')->addError(new FormError($message));
+        }
+
+        $form->handleRequest($request);
+
+        //identify docs that require re-uploading
+        $documentsToBeReuploaded = $this->identifyMissingFilesInS3Bucket($report);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile[]|null $uploadedFiles */
+            $uploadedFiles = $request->files->get('report_document_upload')['files'];
+
+            if (is_array($uploadedFiles)) {
+                $verified = $multiFileVerifier->verify($uploadedFiles, $form, $report);
+
+                if ($verified) {
+                    try {
+                        $this->fileUploader->uploadSupportingFilesAndPersistDocuments($uploadedFiles, $report);
+
+                        return $this->redirectToRoute('report_document_upload', ['reportId' => $reportId, 'successUploaded' => 'true']);
+                    } catch (MimeTypeAndFileExtensionDoNotMatchException $e) {
+                        $errorMessage = sprintf('Cannot upload file: %s.', $e->getMessage());
+                        $logger->warning($errorMessage);
+
+                        $form->get('files')->addError(new FormError($errorMessage));
+                    } catch (FileUploadFailedException $e) {
+                        $errorMessage = sprintf('File "%s" upload did not complete, please try again', $e->getMessage());
+
+                        $form->get('files')->addError(new FormError($errorMessage));
+                    } catch (Throwable $e) {
+                        $logger->warning('Error uploading file: '.$e->getMessage());
+
+                        $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
+                    }
+                }
+            }
+
+            // if file re-uploaded successfully, then delete the existing missing file
+        }
+
+        return [
+            'report' => $report,
+            'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
+            'backLink' => $backLink,
+            'nextLink' => $nextLink,
+            'successUploaded' => $request->get('successUploaded'),
+            'form' => $form->createView(),
+            'documentsToBeReuploaded' => $documentsToBeReuploaded
+        ];
+    }
+
+    private function identifyMissingFilesInS3Bucket($report): array
+    {
+        $documentIds = [];
+
+        foreach ($report->getDeputyDocuments() as $document) {
+            $documentIds[] = $document->getId();
+        }
+
+        $uploadedDocuments = [];
+        foreach($documentIds as $documentId){
+            $uploadedDocuments[] = $this->restClient->get(
+                sprintf('document/%s', $documentId),
+                'Report\Document',
+                ['document-storage-reference', 'documents']
+            );
+        }
+
+        // call Document Service and check if documents exist in the S3 bucket
+        $documentsNotInS3 = [];
+
+        // loop through references and check if they exist in S3
+        if(!empty($uploadedDocuments)) {
+            foreach ($uploadedDocuments as $uploadedDocument) {
+                if(!$this->s3Storage->checkFileExistsInS3($uploadedDocument->getStorageReference())) {
+                    $documentsNotInS3[] = $uploadedDocument->getFileName();
+                };
+            }
+        }
+
+        return $documentsNotInS3;
     }
 
     /**

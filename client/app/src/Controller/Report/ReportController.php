@@ -484,7 +484,7 @@ class ReportController extends AbstractController
         // call Document Service and check if documents exist in the S3 bucket
         $documentsNotInS3 = [];
 
-        // loop through references and check if they exist in S3
+        // loop through references and check if they exist in S3, as soon as a file is not found in S3 redirect to reuploads page
         if(!empty($documentStorageReferences)) {
             foreach ($documentStorageReferences as $docStorageReference) {
                 if(!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
@@ -494,7 +494,7 @@ class ReportController extends AbstractController
         }
 
        if(!empty($documentsNotInS3)) {
-           return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+           return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
        };
 
         return [
