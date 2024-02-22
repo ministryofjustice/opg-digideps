@@ -190,13 +190,6 @@ class ProcessOrgCSVCommand extends Command
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
-                $upload = null;
-
-                $mu = memory_get_usage(false);
-                $memoryUsageMegabytes = $mu / (1024 * 1024);
-                $formattedMemoryUsage = number_format($memoryUsageMegabytes, 2);
-                $this->verboseLogger->warning('memory each chunk: '.$formattedMemoryUsage.'mb - '.$index);
-
                 $upload = $this->csvProcessing->orgProcessing($chunk);
 
                 $this->storeOutput($upload);

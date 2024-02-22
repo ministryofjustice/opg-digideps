@@ -64,13 +64,11 @@ class LayDeputyshipUploader
             $this
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
-            $this->em->clear();
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
 
             return ['added' => $added, 'errors' => [$e->getMessage()]];
         }
-        $this->logger->warning('reports update in func - '.count($this->reportsUpdated));
 
         return [
             'added' => $added,
@@ -108,7 +106,6 @@ class LayDeputyshipUploader
         $reportCaseNumber = '';
         $currentActiveReportId = null;
         $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
-        $this->logger->warning('Case number - '.count($caseNumbers));
         $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         try {
