@@ -1,0 +1,116 @@
+on:
+  workflow_call:
+    inputs:
+      terraform_path:
+        description: "The name of the terraform path"
+        required: true
+        type: string
+      workspace:
+        description: "Terraform workspace"
+        required: true
+        type: string
+      container_version:
+        description: "Image tag to use"
+        required: false
+        type: string
+        default: ""
+      apply:
+        description: "Whether to apply terraform"
+        required: false
+        type: string
+        default: "false"
+      path_to_live:
+        description: "Called from path to live"
+        required: false
+        type: string
+        default: "false"
+
+jobs:
+  terraform_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+        with:
+          fetch-depth: "0"
+
+      - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
+
+      - uses: actions/setup-python@e9d6f990972a57673cdb72ec29e19d42ba28880f
+        if: inputs.terraform_path == 'shared'
+        with:
+          python-version: "3.11"
+
+      - name: python layers folder
+        if: inputs.terraform_path == 'account'
+        run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.11/site-packages/
+        working-directory: lambdas/functions/slack_lambda
+
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.7.3
+        with:
+          terraform_directory: terraform/${{ inputs.terraform_path }}
+
+      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
+          terraform_wrapper: false
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 7400
+          aws-region: eu-west-1
+
+      - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: build redeployer
+        if: inputs.terraform_path == 'account'
+        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
+        working-directory: terraform/account/region/go_redeployer
+
+      - name: terraform init for account
+        if: inputs.terraform_path == 'account'
+        run: terraform init -input=false
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform init for environment
+        run: terraform init -input=false
+        if: inputs.terraform_path == 'environment'
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform plan ${{ inputs.terraform_path }}
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+        run: |
+          terraform workspace show
+          terraform plan -input=false -parallelism=30 -lock-timeout=5m
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - id: terraform_workspace_manager
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment' && inputs.path_to_live == 'false'
+        name: register workspace
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@3e01d915db49e76c1cda18a3bd9a4b23dda25795
+        with:
+          aws_account_id: 248804316466
+          aws_iam_role: digideps-ci
+          register_workspace: ${{ inputs.workspace }}
+          time_to_protect: 3
+          oidc_role: arn:aws:iam::631181914621:role/oidc-digideps-development
+
+      - name: terraform apply ${{ inputs.terraform_path }}
+        if: inputs.apply == 'true'
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+          CI: true
+        run: |
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+        working-directory: terraform/${{ inputs.terraform_path }}
