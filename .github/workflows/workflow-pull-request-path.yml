@@ -142,7 +142,7 @@ jobs:
 
   terraform_plan_account_development:
     name: account plan terraform development
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: ./.github/workflows/_run-terraform-oidc.yml
     needs:
       - workflow_variables
       - terraform_lint
@@ -154,7 +154,7 @@ jobs:
 
   terraform_apply_environment:
     name: environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: ./.github/workflows/_run-terraform-oidc.yml
     needs:
       - docker_build_scan_push
       - terraform_lint
