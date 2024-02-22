@@ -150,7 +150,9 @@ class ClientController extends AbstractController
                     $this->preRegistrationApi->verify($client);
                     $response = $this->clientApi->create($form->getData());
                 } else {
-                    $response = $this->clientApi->update($client, $form->getData(), AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
+                    $upsertData = $form->getData();
+                    $upsertData['id'] = $client->getId();
+                    $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
                 }
 
                 /** @var User $currentUser */
