@@ -24,6 +24,11 @@ on:
         required: false
         type: string
         default: "false"
+      oidc_credentials:
+        description: "Whether to use oidc credentials"
+        required: false
+        type: string
+        default: "false"
 
 jobs:
   terraform_workflow:
@@ -56,7 +61,17 @@ jobs:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
+      - name: configure OIDC AWS credentials for terraform
+        if: inputs.oidc_credentials == 'true'
+        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 7400
+          aws-region: eu-west-1
+
       - name: configure AWS credentials for terraform
+        if: inputs.oidc_credentials == 'false'
         uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
@@ -95,17 +110,16 @@ jobs:
           terraform plan -input=false -parallelism=30 -lock-timeout=5m
         working-directory: terraform/${{ inputs.terraform_path }}
 
-      - id: terraform_workspace
+      - id: terraform_workspace_manager
         if: inputs.apply == 'true' && inputs.terraform_path == 'environment' && inputs.path_to_live == 'false'
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v2.7.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@ff793ae8c260cd6fb0fa739e82abe9ff09aef016
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_account_id: 248804316466
           aws_iam_role: digideps-ci
           register_workspace: ${{ inputs.workspace }}
           time_to_protect: 3
+          oidc_role: arn:aws:iam::631181914621:role/oidc-digideps-development
 
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply == 'true'
