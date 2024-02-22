@@ -151,7 +151,7 @@ class ClientController extends AbstractController
                     $response = $this->clientApi->create($form->getData());
                 } else {
                     $upsertData = $form->getData();
-                    $upsertData['id'] = $client->getId();
+                    $upsertData->setId($client->getId());
                     $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
                 }
 
