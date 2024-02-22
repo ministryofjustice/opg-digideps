@@ -48,11 +48,10 @@ jobs:
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 7400
           aws-region: eu-west-1
-          role-duration-seconds: 3600
-          role-session-name: OPGDigidepsCleanupGithubAction
 
       - name: install workspace manager
         run: |
