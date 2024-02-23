@@ -227,7 +227,7 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
-        $noCategoriesChosen = ('Yes' === $this->report->getMoneyInExists() && $categoriesCount == 0);
+        $noCategoriesChosen = ('Yes' === $this->report->getMoneyInExists() && 0 == $categoriesCount);
         $moneyInNo1kItems = ($categoriesCount > 0 && 'no' == $transactionsExist);
         $isCompleted = ('yes' == $transactionsExist && count($this->report->getMoneyTransactionsShortIn()) > 0);
 
@@ -236,7 +236,7 @@ class ReportStatusService
         } elseif ('No' === $this->report->getMoneyInExists()) {
             return ['state' => self::STATE_INCOMPLETE];
         }
-        
+
         if ($noCategoriesChosen) {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
@@ -244,11 +244,11 @@ class ReportStatusService
         if ($moneyInNo1kItems) {
             return ['state' => self::STATE_LOW_ASSETS_DONE];
         }
-        
+
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortIn())];
         }
-        
+
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
@@ -265,7 +265,7 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
-        $noCategoriesChosen = ('Yes' === $this->report->getMoneyOutExists() && $categoriesCount == 0);
+        $noCategoriesChosen = ('Yes' === $this->report->getMoneyOutExists() && 0 == $categoriesCount);
         $moneyOutNo1kItems = ($categoriesCount > 0 && 'no' == $transactionsExist);
         $isCompleted = ('yes' == $transactionsExist && count($this->report->getMoneyTransactionsShortOut()) > 0);
 
@@ -278,15 +278,15 @@ class ReportStatusService
         if ($noCategoriesChosen) {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
-        
+
         if ($moneyOutNo1kItems) {
             return ['state' => self::STATE_LOW_ASSETS_DONE];
         }
-        
+
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
         }
-        
+
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
@@ -643,7 +643,7 @@ class ReportStatusService
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
-            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e);
+            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e) && (self::STATE_LOW_ASSETS_DONE != $e);
         }) ?: [];
     }
 
