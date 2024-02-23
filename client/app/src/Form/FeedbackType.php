@@ -17,7 +17,7 @@ class FeedbackType extends AbstractType
         $this->translator = $translator;
     }
 
-    public const HONEYPOT_FIELD_NAME = 'old_question';
+    public const HONEYPOT_FIELD_NAME = 'current_address';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
