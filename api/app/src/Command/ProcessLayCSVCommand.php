@@ -50,9 +50,9 @@ class ProcessLayCSVCommand extends Command
     ];
 
     private array $processingOutput = [
-        'errors' => [],
         'added' => 0,
         'skipped' => 0,
+        'errors' => [],
     ];
 
     private OutputInterface $cliOutput;
@@ -106,22 +106,6 @@ class ProcessLayCSVCommand extends Command
         if (count($data) >= 1 && $this->process($data)) {
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s.', $fileLocation);
-
-                $this->logger->error($logMessage);
-                $this->cliOutput->writeln(
-                    sprintf(
-                        '%s - failure - (partial) %s Output: %s',
-                        self::JOB_NAME,
-                        $logMessage,
-                        $this->processedStringOutput()
-                    )
-                );
-
-                return Command::SUCCESS;
-            }
-
-            if (!empty($this->processingOutput['errors'])) {
-                $logMessage = sprintf('There have been some errors');
 
                 $this->logger->error($logMessage);
                 $this->cliOutput->writeln(
@@ -204,8 +188,6 @@ class ProcessLayCSVCommand extends Command
             );
         }
 
-        $this->logger->warning('merge errors - '.count($this->processingOutput['errors']));
-
         if (!empty($processingOutput['added'])) {
             $this->processingOutput['added'] += $processingOutput['added'];
         }
@@ -220,8 +202,11 @@ class ProcessLayCSVCommand extends Command
         $processed = '';
         foreach ($this->processingOutput as $reportedHeader => $stats) {
             if (is_array($stats)) {
+                $processed .= $reportedHeader .': '; 
+
                 foreach ($stats as $statHeader => $statValue) {
-                    $processed .= sprintf('%s %s: %s. ', $reportedHeader, $statHeader, $statValue);
+                    $statValue = str_replace(PHP_EOL, '', $statValue);
+                    $processed .= sprintf('%s: %s. ', $statHeader, $statValue);
                 }
             } else {
                 $processed .= sprintf('%s %s. ', $stats, $reportedHeader);
