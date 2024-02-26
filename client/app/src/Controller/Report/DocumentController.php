@@ -247,7 +247,7 @@ class DocumentController extends AbstractController
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
-        $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
+        $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
         $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
 
         if ('tooBig' == $request->get('error')) {
@@ -271,7 +271,7 @@ class DocumentController extends AbstractController
                     try {
                         $this->fileUploader->uploadSupportingFilesAndPersistDocuments($uploadedFiles, $report);
 
-                        return $this->redirectToRoute('report_document_upload', ['reportId' => $reportId, 'successUploaded' => 'true']);
+                        return $this->redirectToRoute('report_documents_reupload',['reportId' => $reportId, 'successUploaded' => 'true'] );
                     } catch (MimeTypeAndFileExtensionDoNotMatchException $e) {
                         $errorMessage = sprintf('Cannot upload file: %s.', $e->getMessage());
                         $logger->warning($errorMessage);
@@ -327,7 +327,7 @@ class DocumentController extends AbstractController
         if(!empty($uploadedDocuments)) {
             foreach ($uploadedDocuments as $uploadedDocument) {
                 if(!$this->s3Storage->checkFileExistsInS3($uploadedDocument->getStorageReference())) {
-                    $documentsNotInS3[] = $uploadedDocument->getFileName();
+                    $documentsNotInS3[] = $uploadedDocument->getStorageReference();
                 };
             }
         }
@@ -458,28 +458,38 @@ class DocumentController extends AbstractController
         $report = $document->getReport();
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
-        try {
-            $result = $this->documentService->removeDocumentFromS3($document); // rethrows any exception
+        // If document needs to be re-uploaded because it's missing from S3 bucket then delete Document object
+        $documentNotInS3 = $request->get('notInS3');
 
-            if ($result) {
-                $this->addFlash('notice', 'Document has been removed');
+        if($documentNotInS3 == 1) {
+            $this->deleteMissingS3DocFromDocumentTable($request, $documentId);
+        } else {
+
+            try {
+                $result = $this->documentService->removeDocumentFromS3($document); // rethrows any exception
+
+                if ($result) {
+                    $this->addFlash('notice', 'Document has been removed');
+                }
+            } catch (Throwable $e) {
+                $this->logger->error($e->getMessage());
+
+                $this->addFlash(
+                    'error',
+                    'Document could not be removed. Details: ' . $e->getMessage()
+                );
             }
-        } catch (Throwable $e) {
-            $this->logger->error($e->getMessage());
-
-            $this->addFlash(
-                'error',
-                'Document could not be removed. Details: '.$e->getMessage()
-            );
         }
-
         if ($report->isSubmitted()) {
             // if report is submitted, then this remove path has come from adding additional documents so return the user
             // to the step 2 page.
             $returnUrl = $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
         } else {
             $reportDocumentStatus = $report->getStatus()->getDocumentsState();
-            if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
+
+            if('reuploadPage' == $request->get('from')) {
+                $returnUrl = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
+            } else if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
                 $returnUrl = 'summaryPage' == $request->get('from')
                     ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
                     : $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
@@ -489,6 +499,16 @@ class DocumentController extends AbstractController
         }
 
         return $this->redirect($returnUrl);
+    }
+
+    private function deleteMissingS3DocFromDocumentTable($request, $documentId) {
+
+        $documentNotInS3 = $request->get('notInS3');
+
+        if($documentNotInS3 == 1) {
+            $this->restClient->delete('/document/' . $documentId);
+            $this->addFlash('notice', 'Document has been removed');
+        }
     }
 
     /**

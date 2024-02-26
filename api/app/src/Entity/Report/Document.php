@@ -62,7 +62,7 @@ class Document implements SynchronisableInterface
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"document-storage-reference"})
+     * @JMS\Groups({"document-storage-reference", "documents"})
      *
      * @ORM\Column(name="storage_reference", type="string", length=512, nullable=true)
      */
