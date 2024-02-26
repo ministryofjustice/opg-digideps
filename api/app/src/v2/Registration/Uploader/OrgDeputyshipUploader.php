@@ -50,14 +50,14 @@ class OrgDeputyshipUploader
         $this->em->clear();
 
         $uploadResults = [
-            'errors' => [
-                'count' => 0,
-                'messages' => [],
-            ],
             'added' => [],
             'updated' => [],
             'changeOrg' => [],
             'skipped' => 0,
+            'errors' => [
+                'count' => 0,
+                'messages' => [],
+            ],
         ];
 
         foreach ($deputyshipDtos as $deputyshipDto) {
@@ -75,7 +75,8 @@ class OrgDeputyshipUploader
                 ++$uploadResults['skipped'];
                 continue;
             } catch (\Throwable $e) {
-                $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $e->getMessage());
+                $message = str_replace(PHP_EOL, '', $e->getMessage());
+                $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $message);
 
                 $this->logger->notice($message);
                 $uploadResults['errors']['messages'][] = $message;

@@ -99,7 +99,7 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'org_csv_processing - success - Finished processing OrgCSV, Output -', 
+            'org_csv_processing - success - Finished processing OrgCSV, Output: ', 
             $output
         );
     }
