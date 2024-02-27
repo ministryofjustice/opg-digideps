@@ -83,6 +83,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyHealthWelfareNotStartedDetails;
     public UserDetails $profAdminDeputyHealthWelfareCompletedDetails;
     public UserDetails $profAdminDeputyHealthWelfareSubmittedDetails;
+    public UserDetails $profAdminDeputyNotStartedPfaLowAssetsDetails;
 
     public UserDetails $profAdminCombinedHighNotStartedDetails;
     public UserDetails $profAdminCombinedHighCompletedDetails;
@@ -190,6 +191,15 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createLayPfaLowAssetsNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-pfa-low-not-started
+     */
+    public function createProfPfaLowNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfPfaLowAssetsNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
     }
 
     /**

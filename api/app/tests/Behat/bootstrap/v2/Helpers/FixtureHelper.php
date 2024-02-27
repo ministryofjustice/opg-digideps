@@ -431,6 +431,20 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
+    public function createProfPfaLowAssetsNotStarted(string $testRunId): array
+    {
+        $user = $this->createOrgUserClientNamedDeputyAndReport(
+            $testRunId,
+            User::ROLE_PROF_ADMIN,
+            'prof-pfa-low-assets-not-started',
+            Report::PROF_PFA_LOW_ASSETS_TYPE,
+            false,
+            false
+        );
+
+        return self::buildUserDetails($user);
+    }
+
     public function createLayPfaLowAssetsCompleted(string $testRunId): array
     {
         $user = $this->createDeputyClientAndReport(

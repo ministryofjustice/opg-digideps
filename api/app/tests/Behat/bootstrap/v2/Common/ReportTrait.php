@@ -225,6 +225,19 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Professional Admin has not started a Pfa Low Assets report
+     */
+    public function aProfDeputyHasNotStartedAPfaLowAssetsReport()
+    {
+        if (empty($this->profAdminDeputyNotStartedPfaLowAssetsDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profAdminDeputyNotStartedPfaLowAssetsDetails;
+    }
+
+    /**
      * @Given a Lay Deputy has completed a Pfa Low Assets report
      */
     public function aLayDeputyHasCompletedAPfaLowAssetsReport()
