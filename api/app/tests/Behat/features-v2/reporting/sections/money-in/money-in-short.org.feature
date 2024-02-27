@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-in-low-assets @Iqpal
+@v2 @v2_reporting_2 @money-in-low-assets
 Feature: Money in Low Assets - Org users
 
     @prof-pfa-low-not-started
@@ -57,4 +57,15 @@ Feature: Money in Low Assets - Org users
         Then I should see the expected money in section summary
         When I follow link back to report overview page
         Then I should see "money-in-short" as "1 item over £1,000"
-        
+
+    @prof-pfa-low-completed
+    Scenario: A user edits money in section and adds a one off payment
+        Given a Professional Admin has completed a Pfa Low Assets report
+        When I edit the money in short section and add a payment
+        Then I should see the expected money in section summary
+
+    @prof-pfa-low-completed
+    Scenario: A user tries to add a one off payment of less than £1k
+        Given a Professional Admin has completed a Pfa Low Assets report
+        When I add a one off money in payment that is less than £1k
+        Then I should the see correct validation message

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\User;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
@@ -84,6 +85,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyHealthWelfareCompletedDetails;
     public UserDetails $profAdminDeputyHealthWelfareSubmittedDetails;
     public UserDetails $profAdminDeputyNotStartedPfaLowAssetsDetails;
+    public UserDetails $profAdminDeputyCompletedPfaLowAssetsDetails;
 
     public UserDetails $profAdminCombinedHighNotStartedDetails;
     public UserDetails $profAdminCombinedHighCompletedDetails;
@@ -209,6 +211,15 @@ class BaseFeatureContext extends MinkContext
     {
         $userDetails = $this->fixtureHelper->createLayPfaLowAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-pfa-low-completed
+     */
+    public function createProfPfaLowCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createProfPfaLowAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
     }
 
     /**
