@@ -98,14 +98,14 @@ submitMoreDocumentsConfirm:
 reuploadPage:
   pageTitle: Re-upload documents
   supportingDocuments: Supporting document
-  selectHeading: 1. Select the documents
+  selectHeading: 1. Select the documents that need to be re-uploaded
   selectHelp: Please select 'Choose files' below to find your files.
   selectHint1: You only need to upload documents if we have asked you to.
   selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 15MB.
   uploadHeading: 2. Re-upload the documents to your report
   noDocuments: No documents
   documentList: Attached documents to submit with report
-  corruptedFiles: Documents that need re-uploading
+  missingFiles: Documents to remove and re-upload
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
@@ -117,3 +117,6 @@ reuploadPage:
     If the file takes more than 5 minutes to upload, please refresh the page and try again.
     To stop uploading the file, just refresh the page.
   reuploadLabel: Re-upload file
+  reuploadErrorMessage: We've identified technical problem with your documents, please remove and re-upload the documents marked below.
+  removeDocumentAction: |
+    The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed and re-uploaded if you wish to re-attach them to your report.

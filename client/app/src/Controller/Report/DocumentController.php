@@ -245,7 +245,8 @@ class DocumentController extends AbstractController
     )
     {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
-        list($nextLink, $backLink) = $this->buildNavigationLinks($report);
+
+        $nextLinkAndBackLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
         $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
@@ -288,15 +289,12 @@ class DocumentController extends AbstractController
                     }
                 }
             }
-
-            // if file re-uploaded successfully, then delete the existing missing file
         }
 
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $backLink,
-            'nextLink' => $nextLink,
+            'nextAndBackLink' => $nextLinkAndBackLink,
             'successUploaded' => $request->get('successUploaded'),
             'form' => $form->createView(),
             'documentsToBeReuploaded' => $documentsToBeReuploaded
