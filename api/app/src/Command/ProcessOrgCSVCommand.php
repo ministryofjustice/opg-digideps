@@ -146,7 +146,7 @@ class ProcessOrgCSVCommand extends Command
 
             $this->cliOutput->writeln(
                 sprintf(
-                    '%s - success - Finished processing OrgCSV, Output - %s',
+                    '%s - success - Finished processing OrgCSV, Output: %s',
                     self::JOB_NAME,
                     $this->processedStringOutput()
                 )
