@@ -202,7 +202,7 @@ class ProcessLayCSVCommand extends Command
         $processed = '';
         foreach ($this->processingOutput as $reportedHeader => $stats) {
             if (is_array($stats)) {
-                $processed .= $reportedHeader .': '; 
+                $processed .= $reportedHeader.': ';
 
                 foreach ($stats as $statHeader => $statValue) {
                     $statValue = str_replace(PHP_EOL, '', $statValue);

@@ -365,7 +365,7 @@ resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
 
 # Adding unrealistically high thresholds at the moment as we have to clear up some old document data
 resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
-  alarm_name          = "${local.environment}-queued-docs-over-1hr"
+  alarm_name          = "${local.environment}-document-queued-over-1hr"
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -380,7 +380,7 @@ resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
-  alarm_name          = "${local.environment}-progress-docs-over-1hr"
+  alarm_name          = "${local.environment}-document-progress-over-1hr"
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -395,7 +395,7 @@ resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
-  alarm_name          = "${local.environment}-temporary-error"
+  alarm_name          = "${local.environment}-document-temporary-error"
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -410,7 +410,7 @@ resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
-  alarm_name          = "${local.environment}-permanent-error"
+  alarm_name          = "${local.environment}-document-permanent-error"
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
