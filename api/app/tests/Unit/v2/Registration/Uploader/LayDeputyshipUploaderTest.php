@@ -191,7 +191,7 @@ class LayDeputyshipUploaderTest extends TestCase
 
         $this->assertEquals(0, $return['added']);
         $this->assertCount(1, $return['errors']);
-        $this->assertEquals('ERROR IN LINE 2: Unable to create PreRegistration entity', $return['errors'][0]);
+        $this->assertEquals('ERROR IN LINE: Unable to create PreRegistration entity', $return['errors'][0]);
     }
 
     private function buildLayDeputyshipDto($count): LayDeputyshipDto
