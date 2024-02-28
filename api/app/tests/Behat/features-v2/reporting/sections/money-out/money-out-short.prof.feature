@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-out-short @Iqpal
+@v2 @v2_reporting_2 @money-out-short
 Feature: Money Out Short - Org users
 
     @prof-pfa-low-not-started

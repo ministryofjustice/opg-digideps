@@ -643,7 +643,7 @@ class ReportStatusService
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
-            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e) && (self::STATE_LOW_ASSETS_DONE != $e);
+            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e);
         }) ?: [];
     }
 
