@@ -29,6 +29,11 @@ on:
         required: false
         type: string
         default: "false"
+      account_name:
+        required: false
+        default: "development"
+        type: string
+        description: "Account to get credentials for"
 
 jobs:
   terraform_workflow:
@@ -65,7 +70,7 @@ jobs:
         if: inputs.oidc_credentials == 'true'
         uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
         with:
-          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
+          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}"
           role-session-name: github-actions-terraform
           role-duration-seconds: 7400
           aws-region: eu-west-1

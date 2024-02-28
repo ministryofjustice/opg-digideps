@@ -121,6 +121,8 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
+      oidc_credentials: true
+      account_name: development
     secrets: inherit
 
   terraform_apply_development:
@@ -141,6 +143,8 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
+      oidc_credentials: true
+      account_name: development
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -155,6 +159,8 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
+      oidc_credentials: true
+      account_name: preproduction
     secrets: inherit
 
   terraform_apply_integration:
@@ -169,6 +175,8 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
+      oidc_credentials: true
+      account_name: preproduction
     secrets: inherit
 
   scale_services_up:
@@ -180,7 +188,7 @@ jobs:
     with:
       replicas: 6
       acu: 16
-      account: 454262938596
+      account_id: 454262938596
       workspace: integration
     secrets: inherit
 
@@ -192,6 +200,7 @@ jobs:
       - scale_services_up
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "500"
       override: "sh,./tests/Behat/reset-db.sh"
@@ -205,6 +214,7 @@ jobs:
       - reset_database
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
@@ -218,6 +228,7 @@ jobs:
       - reset_database
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
@@ -231,6 +242,7 @@ jobs:
       - reset_database
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
@@ -244,6 +256,7 @@ jobs:
       - reset_database
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
@@ -257,6 +270,7 @@ jobs:
       - reset_database
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
@@ -270,6 +284,7 @@ jobs:
       - reset_database
     with:
       workspace: integration
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
@@ -290,7 +305,7 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account: 454262938596
+      account_id: 454262938596
       workspace: integration
     secrets: inherit
 
@@ -364,6 +379,7 @@ jobs:
       - terraform_apply_production
     with:
       workspace: production02
+      account_name: production
       task_name: "backup"
       timeout: "700"
     secrets: inherit
@@ -376,6 +392,7 @@ jobs:
       - backup_production
     with:
       workspace: preproduction
+      account_name: preproduction
       task_name: "restore_from_production"
       timeout: "700"
     secrets: inherit
