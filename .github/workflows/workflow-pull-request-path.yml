@@ -152,6 +152,7 @@ jobs:
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       oidc_credentials: true
+      account_name: development
     secrets: inherit
 
   terraform_apply_environment:
@@ -167,6 +168,7 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       oidc_credentials: true
+      account_name: development
     secrets: inherit
 
   ecr_scan_results:
@@ -188,7 +190,7 @@ jobs:
     with:
       replicas: 10
       acu: 16
-      account: 248804316466
+      account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
     secrets: inherit
 
@@ -200,6 +202,7 @@ jobs:
       - terraform_apply_environment
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "500"
       override: "sh,./tests/Behat/reset-db.sh"
@@ -214,6 +217,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
@@ -228,6 +232,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
@@ -242,6 +247,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
@@ -256,6 +262,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
@@ -270,6 +277,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
@@ -284,6 +292,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
@@ -304,7 +313,7 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account: 248804316466
+      account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
     secrets: inherit
 
