@@ -1,5 +1,6 @@
 variable "DEFAULT_ROLE" {
   default = "digideps-ci"
+  type    = string
 }
 
 variable "accounts" {
@@ -15,8 +16,9 @@ variable "accounts" {
         domains_allowed = list(string)
         domains_blocked = list(string)
       })
-      sirius_account_id = string
-      apply_immediately = bool
+      sirius_account_id        = string
+      apply_immediately        = bool
+      secondary_region_enabled = bool
     })
   )
 }
@@ -32,6 +34,4 @@ locals {
     infrastructure-support = "OPG WebOps: opgteam+digideps@digital.justice.gov.uk"
     is-production          = local.account.name == "production" ? true : false
   }
-
-  s3_bucket = local.account.name == "production" ? "${local.account.name}02" : local.account.name
 }

@@ -23,12 +23,7 @@ class NoMoneyInType extends AbstractType
                         'min' => 3,
                         'minMessage' => 'moneyIn.reasonForNoMoneyIn.minLength',
                         'groups' => 'reason-for-no-money',
-                    ]),
-                    new Constraints\Length([
-                        'max' => 256,
-                        'maxMessage' => 'moneyIn.reasonForNoMoneyIn.maxLength',
-                        'groups' => 'reason-for-no-money',
-                    ]),
+                    ])
             ]])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
@@ -43,6 +38,6 @@ class NoMoneyInType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'reason-for-no-money';
+        return 'reason_for_no_money';
     }
 }

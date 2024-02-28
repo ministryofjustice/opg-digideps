@@ -17,11 +17,13 @@ class LayDeputyshipDtoCollectionAssembler
         $collection = new LayDeputyshipDtoCollection();
 
         foreach ($data as $line => $uploadRow) {
-            $item = $this->layDeputyshipDtoAssembler->assembleFromArray($uploadRow);
-            if ($item instanceof LayDeputyshipDto) {
-                $collection->append($item);
-            } else {
-                $skipped[] = sprintf('SKIPPED LINE %d:', $line + 2);
+            try {
+                $item = $this->layDeputyshipDtoAssembler->assembleFromArray($uploadRow);
+                if ($item instanceof LayDeputyshipDto) {
+                    $collection->append($item);
+                }
+            } catch (\InvalidArgumentException $e) {
+                $skipped[] = sprintf('SKIPPED LINE %d: %s', $line + 2, $e->getMessage());
             }
         }
 

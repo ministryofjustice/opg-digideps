@@ -61,9 +61,8 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $input = $this->getInput();
         $input['ReportType'] = 'invalidReportType';
 
-        $result = $this->sut->assembleFromArray($input);
-
-        $this->assertNull($result);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->sut->assembleFromArray($input);
     }
 
     /**

@@ -3,6 +3,15 @@
     "license": "MIT",
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.1.27"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
     "autoload": {
         "psr-4": {
             "App\\": "src/",
@@ -12,7 +21,7 @@
     "require": {
         "php": "^8.1",
         "alphagov/notifications-php-client": "^4.0.1",
-        "aws/aws-sdk-php": "3.288.1",
+        "aws/aws-sdk-php": "3.299.1",
         "doctrine/collections": "^2.0.0",
         "egulias/email-validator": "^4.0.0",
         "fakerphp/faker": "^1.16",
@@ -67,12 +76,12 @@
         "symfony/security-core": "^5.4.0",
         "symfony/security-csrf": "^5.4.0",
         "symfony/security-guard": "^5.4.0",
-        "symfony/security-http": "5.4.31",
+        "symfony/security-http": "5.4.35",
         "symfony/serializer": "^5.4.0",
         "symfony/string": "^5.4.0",
         "symfony/templating": "^5.4.0",
         "symfony/translation": "^5.4.0",
-        "symfony/twig-bridge": "5.4.31",
+        "symfony/twig-bridge": "5.4.35",
         "symfony/twig-bundle": "^5.4.0",
         "symfony/validator": "^5.4.0",
         "symfony/var-exporter": "^5.4.0",
@@ -89,15 +98,6 @@
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ]
-    },
-    "config": {
-        "sort-packages": true,
-        "platform": {
-            "php": "8.1.19"
-        },
-        "allow-plugins": {
-            "php-http/discovery": true
-        }
     },
     "minimum-stability": "stable",
     "extra": {

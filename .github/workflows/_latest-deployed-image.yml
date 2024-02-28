@@ -42,7 +42,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@dca38186811c8a0dd295aa416daa974a40eeb950 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -63,6 +63,6 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.resources[] | select(.address == "aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
+          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
           echo "image_tag=$(echo ${IMAGE_TAG})" >> $GITHUB_OUTPUT
         working-directory: terraform/${{ inputs.terraform_path }}

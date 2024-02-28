@@ -6,17 +6,12 @@ use App\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
-    private array $requiredColumns = [
+    private array $requiredData = [
         'Case',
         'ClientSurname',
         'DeputyUid',
         'DeputyFirstname',
         'DeputySurname',
-        'DeputyAddress1',
-        'DeputyAddress2',
-        'DeputyAddress3',
-        'DeputyAddress4',
-        'DeputyAddress5',
         'DeputyPostcode',
         'ReportType',
         'MadeDate',
@@ -42,12 +37,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
             throw new \InvalidArgumentException($message);
         }
-
-        try {
-            return $this->buildDto($data);
-        } catch (\InvalidArgumentException $e) {
-            return null;
-        }
+        
+        return $this->buildDto($data);
     }
 
     private function buildDto(array $data): LayDeputyshipDto
@@ -62,8 +53,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputyAddress1($data['DeputyAddress1'])
                 ->setDeputyAddress2($data['DeputyAddress2'])
                 ->setDeputyAddress3($data['DeputyAddress3'])
-                ->setDeputyAddress4($data['DeputyAddress4'])
-                ->setDeputyAddress5($data['DeputyAddress5'])
+                ->setDeputyAddress4($data['DeputyAddress4'] ?: null)
+                ->setDeputyAddress5($data['DeputyAddress5'] ?: null)
                 ->setDeputyPostcode($data['DeputyPostcode'])
                 ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
                 ->setIsNdrEnabled(false)
@@ -75,8 +66,11 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
     private function collectMissingColumns(array $data)
     {
-        foreach ($this->requiredColumns as $requiredColumn) {
-            $this->missingColumns[] = array_key_exists($requiredColumn, $data) ? null : $requiredColumn;
+        $this->missingColumns = [];
+        foreach ($this->requiredData as $requiredColumn) {
+            $this->missingColumns[] = array_key_exists($requiredColumn, $data) && !empty($data[$requiredColumn]) ? 
+                null : 
+                $requiredColumn;
         }
 
         $this->missingColumns = array_filter($this->missingColumns);
@@ -90,7 +84,12 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         };
 
         if (!$supported) {
-            throw new \InvalidArgumentException();
+            $message = sprintf(
+                'Report type provided: %s is not supported ',
+                $reportType
+            );
+
+            throw new \InvalidArgumentException($message);
         }
 
         return $reportType;

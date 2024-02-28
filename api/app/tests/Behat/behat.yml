@@ -141,11 +141,11 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
-        # report-management:
-        #     description: Coverage of report management features in the admin side of the app
-        #     paths: [ "%paths.base%/features-v2/report-management" ]
-        #     contexts:
-        #         - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+        report-management:
+            description: Coverage of report management features in the admin side of the app
+            paths: ["%paths.base%/features-v2/report-management"]
+            contexts:
+                - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
 
         report-section-navigation:
             description: Coverage of next and previous links in report sections

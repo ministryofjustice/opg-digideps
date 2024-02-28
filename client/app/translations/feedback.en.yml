@@ -43,3 +43,5 @@ form:
     hint: Optional, only required if you'd prefer we call you.
   send:
     label: Send feedback
+  current_address:
+    label: Current Address

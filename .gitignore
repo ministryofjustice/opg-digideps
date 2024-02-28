@@ -25,9 +25,11 @@ vendor/
 **/terraform.output.json.enc
 **/terraform.plan*
 **/account/builds
-**/account/go_redeployer/bootstrap
+**/account/region/.terraform.lock.hcl
+**/go_redeployer/bootstrap
+**/go_redeployer/function.zip
 **/modules/**/.terraform.lock.hcl
-account/go_redeployer/bootstrap
+
 
 # Repo-specific excludes
 terraform/to_import\.sh

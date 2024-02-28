@@ -27,6 +27,19 @@ Feature: Report Management (applies to all admin roles)
         When the user I'm interacting with logs in to the frontend of the app
         Then I should see the report sections the admin ticked as incomplete labelled as changes needed
 
+    @admin-manager @lay-combined-high-submitted
+    Scenario: An admin user un-submits a submitted report and changes the due date at the same time
+        Given a Lay Deputy has submitted a Combined High Assets report
+        And an admin manager user accesses the admin app
+        When I visit the admin client details page associated with the deputy I'm interacting with
+        And I manage the deputies 'submitted' report
+        And I set the due date of the report to a custom date
+        And I confirm all report sections are incomplete
+        And I submit the new report details
+        Then the report details should be updated
+        When the user I'm interacting with logs in to the frontend of the app
+        Then I should see the report sections the admin ticked as incomplete labelled as changes needed
+
     @admin @pa-admin-combined-high-submitted
     Scenario: An admin user changes report type and due date for an un-submitted report
         Given a Public Authority Deputy has submitted a Combined High Assets report

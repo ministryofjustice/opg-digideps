@@ -16,6 +16,7 @@ class ReportStatusService
     public const STATE_NOT_STARTED = 'not-started';
     public const STATE_INCOMPLETE = 'incomplete';
     public const STATE_DONE = 'done';
+    public const STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
     public const STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
     public const STATE_EXPLAINED = 'explained'; // only used for balance section
     public const ENABLE_STATUS_CACHE = true;
@@ -49,7 +50,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "decision-status"})
      *
      * @return array
@@ -77,7 +80,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "contact-status"})
      *
      * @return array
@@ -94,7 +99,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "visits-care-state"})
      *
      * @return array
@@ -121,7 +128,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "account-state"})
      *
      * @return array
@@ -142,7 +151,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "money-transfer-state"})
      *
      * @return array
@@ -161,7 +172,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "money-in-state"})
      *
      * @return array
@@ -171,7 +184,7 @@ class ReportStatusService
         if ($this->report->hasMoneyIn()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsIn())];
         } elseif ($this->report->getMoneyInExists() && $this->report->getReasonForNoMoneyIn()) {
-            return ['state' => self::STATE_DONE];
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         } elseif ($this->report->getMoneyInExists()) {
             return ['state' => self::STATE_INCOMPLETE];
         }
@@ -181,7 +194,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "money-out-state"})
      *
      * @return array
@@ -191,7 +206,7 @@ class ReportStatusService
         if ($this->report->hasMoneyOut()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsOut())];
         } elseif ($this->report->getMoneyOutExists() && $this->report->getReasonForNoMoneyOut()) {
-            return ['state' => self::STATE_DONE];
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         } elseif ($this->report->getMoneyOutExists()) {
             return ['state' => self::STATE_INCOMPLETE];
         }
@@ -201,7 +216,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "money-in-short-state"})
      *
      * @return array
@@ -210,14 +227,26 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
-        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortIn()) > 0));
+        $noCategoriesChosen = ('Yes' === $this->report->getMoneyInExists() && 0 == $categoriesCount);
+        $moneyInNo1kItems = ($categoriesCount > 0 && 'no' == $transactionsExist);
+        $isCompleted = ('yes' == $transactionsExist && count($this->report->getMoneyTransactionsShortIn()) > 0);
+
+        if ('No' === $this->report->getMoneyInExists() && $this->report->getReasonForNoMoneyIn()) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        } elseif ('No' === $this->report->getMoneyInExists()) {
+            return ['state' => self::STATE_INCOMPLETE];
+        }
+
+        if ($noCategoriesChosen) {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
+
+        if ($moneyInNo1kItems) {
+            return ['state' => self::STATE_LOW_ASSETS_DONE];
+        }
 
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortIn())];
-        }
-
-        if ($categoriesCount) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
 
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
@@ -225,7 +254,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "money-out-short-state"})
      *
      * @return array
@@ -234,14 +265,26 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
-        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortOut()) > 0));
+        $noCategoriesChosen = ('Yes' === $this->report->getMoneyOutExists() && 0 == $categoriesCount);
+        $moneyOutNo1kItems = ($categoriesCount > 0 && 'no' == $transactionsExist);
+        $isCompleted = ('yes' == $transactionsExist && count($this->report->getMoneyTransactionsShortOut()) > 0);
+
+        if ('No' === $this->report->getMoneyOutExists() && $this->report->getReasonForNoMoneyOut()) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        } elseif ('No' === $this->report->getMoneyOutExists()) {
+            return ['state' => self::STATE_INCOMPLETE];
+        }
+
+        if ($noCategoriesChosen) {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
+
+        if ($moneyOutNo1kItems) {
+            return ['state' => self::STATE_LOW_ASSETS_DONE];
+        }
 
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
-        }
-
-        if ($categoriesCount) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
 
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
@@ -249,7 +292,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "balance-state"})
      *
      * see https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/152502291
@@ -265,6 +310,8 @@ class ReportStatusService
 
         if (
             $this->report->isMissingMoneyOrAccountsOrClosingBalance()
+            || self::STATE_DONE != $this->getMoneyInState()['state']
+            || self::STATE_DONE != $this->getMoneyOutState()['state']
             || self::STATE_DONE != $this->getGiftsState()['state']
             || self::STATE_DONE != $this->getExpensesState()['state'] // won't be true if the section is not in the report type
             || self::STATE_DONE != $this->getPaFeesExpensesState()['state'] // won't be true if the section is not in the report type
@@ -285,7 +332,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("boolean")
+     *
      * @JMS\Groups({"status"})
      *
      * @return bool
@@ -297,7 +346,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "asset-state"})
      *
      * @return array
@@ -320,7 +371,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "debt-state"})
      *
      * @return array
@@ -344,7 +397,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "fee-state"})
      *
      * @return array
@@ -369,7 +424,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "fee-state"})
      *
      * @return array
@@ -393,7 +450,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "prof-deputy-costs-state"})
      *
      * @return array
@@ -438,7 +497,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "prof-deputy-costs-state"})
      *
      * @return array
@@ -464,7 +525,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "action-state"})
      *
      * @return array
@@ -489,7 +552,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "more-info-state"})
      *
      * @return array
@@ -505,7 +570,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "documents-state"})
      *
      * @return array
@@ -527,7 +594,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "expenses-state"})
      *
      * @return array
@@ -548,7 +617,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "gifts-state"})
      *
      * @return array
@@ -572,7 +643,7 @@ class ReportStatusService
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
-            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e);
+            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e) && (self::STATE_LOW_ASSETS_DONE != $e);
         }) ?: [];
     }
 
@@ -671,7 +742,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "lifestyle-state"})
      *
      * @return array
@@ -696,7 +769,9 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"status", "client-benefits-check-state"})
      */
     public function getClientBenefitsCheckState(): array
@@ -767,7 +842,9 @@ class ReportStatusService
      * e.g. "filled"
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"status", "report-status"})
      *
      * @return string notStarted|readyToSubmit|notFinished

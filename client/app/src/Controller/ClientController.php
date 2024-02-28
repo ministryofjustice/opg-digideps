@@ -128,8 +128,10 @@ class ClientController extends AbstractController
         }
 
         $client = $this->clientApi->getFirstClient();
+        $existingClientId = 0;
         if (!empty($client)) {
             // update existing client
+            $existingClientId = $client->getId();
             $client = $this->restClient->get('client/'.$client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $method = 'put';
             $client_validated = true;
@@ -150,7 +152,9 @@ class ClientController extends AbstractController
                     $this->preRegistrationApi->verify($client);
                     $response = $this->clientApi->create($form->getData());
                 } else {
-                    $response = $this->clientApi->update($client, $form->getData(), AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
+                    $upsertData = $form->getData();
+                    $upsertData->setId($existingClientId);
+                    $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
                 }
 
                 /** @var User $currentUser */

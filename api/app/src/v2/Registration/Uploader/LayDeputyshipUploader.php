@@ -34,14 +34,14 @@ class LayDeputyshipUploader
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
         private PreRegistrationFactory $preRegistrationFactory,
-        private LoggerInterface $verboseLogger
+        private LoggerInterface $logger
     ) {
     }
 
     public function upload(LayDeputyshipDtoCollection $collection): array
     {
         $this->throwExceptionIfDataTooLarge($collection);
-
+        $this->preRegistrationEntriesByCaseNumber = [];
         $added = 0;
         $errors = [];
 
@@ -54,8 +54,9 @@ class LayDeputyshipUploader
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
-                    $message = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
-                    $this->verboseLogger->error($message);
+                    $message = str_replace(PHP_EOL, '', $e->getMessage());
+                    $message = sprintf('ERROR IN LINE: %s',  $message);
+                    $this->logger->error($message);
                     $errors[] = $message;
                     continue;
                 }
@@ -65,9 +66,10 @@ class LayDeputyshipUploader
                 ->updateReportTypes()
                 ->commitTransactionToDatabase();
         } catch (\Throwable $e) {
-            $this->verboseLogger->error($e->getMessage());
+            $this->logger->error($e->getMessage());
+            $errors[] = $e->getMessage();
 
-            return ['added' => $added, 'errors' => [$e->getMessage()]];
+            return ['added' => $added, 'errors' => $errors];
         }
 
         return [
@@ -133,7 +135,7 @@ class LayDeputyshipUploader
                 }
             }
         } catch (\Throwable $e) {
-            $this->verboseLogger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
+            $this->logger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
             throw new \Exception($e->getMessage());
         }
 

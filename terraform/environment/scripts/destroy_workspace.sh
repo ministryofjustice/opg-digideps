@@ -36,7 +36,7 @@ terraform destroy -auto-approve
 if [ $? != 0 ]; then
   export TF_EXIT_CODE="1"
 else
-  terraform import aws_cloudwatch_log_group.container_insights "/aws/ecs/containerinsights/${workspace_name}/performance"
+  terraform import "module.eu_west_1[0].aws_cloudwatch_log_group.container_insights" "/aws/ecs/containerinsights/${workspace_name}/performance"
   # Second destroy to remove performance log group as first destroy recreates it
   terraform destroy -auto-approve
   terraform workspace select default

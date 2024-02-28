@@ -44,8 +44,10 @@
             {{ form_input(form.email, 'form.email') }}
             {{ form_input(form.phone, 'form.phone') }}
 
-            {{ form_widget(form.old_question, {'attr': {'style': 'display:none!important', 'tabindex': '-1',
-                'autocomplete': 'off'}}) }}
+            {{ form_label(form.current_address, 'form.current_address.label', {'label_attr': {'for': 'current_address',
+                'class': 'govuk-label govuk-!-display-none', 'tabindex': '-1', 'aria-hidden': 'true' } }) }}
+            {{ form_widget(form.current_address, {'attr': {'class': 'govuk-!-display-none', 'tabindex': '-1',
+                'autocomplete': 'off', 'aria-hidden': 'true'}}) }}
 
             {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
                 legendClass: 'govuk-label--m'

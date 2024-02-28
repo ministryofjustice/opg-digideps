@@ -1,0 +1,31 @@
+output "aws_lb_admin" {
+  value = aws_lb.admin
+}
+
+output "aws_lb_front" {
+  value = aws_lb.front
+}
+
+output "Services" {
+  value = {
+    Cluster = aws_ecs_cluster.main.name
+    Services = [
+      aws_ecs_service.admin.name,
+      aws_ecs_service.api.name,
+      aws_ecs_service.front.name,
+      aws_ecs_service.scan.name,
+      aws_ecs_service.htmltopdf.name,
+    ]
+  }
+}
+
+output "Tasks" {
+  value = {
+    backup                  = module.backup.render
+    reset_database          = module.reset_database.render
+    restore                 = module.restore.render
+    restore_from_production = module.restore_from_production.render
+    integration_test_v2     = module.integration_tests.render_with_override
+    smoke_test              = module.smoke_test.render
+  }
+}

@@ -321,7 +321,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnMoneyOutShortCategoryPage(): bool
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/category.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -786,5 +786,39 @@ trait IShouldBeOnFrontendTrait
     public function iAmOnDecisionsSummaryPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/summary.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnOrgSettingsPage()
+    {
+        return $this->iAmOnPage('/org\/settings.*$/');
+    }
+
+    public function iAmOnOrgUserAccountsPage()
+    {
+        return $this->iAmOnPage('/org\/settings\/organisation.*$/');
+    }
+
+    public function iAmOnOrgSettingsEditAnotherUserPage()
+    {
+        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/',);
+    }
+      
+    public function iAmOnNoMoneyInExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in\/no-money-in-exists?.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnNoMoneyOutExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out\/no-money-out-exists?.*$/', $this->reportUrlPrefix));
+    }
+
+    public function iAmOnNoMoneyInShortExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/no-money-in-short-exists?.*$/', $this->reportUrlPrefix));
+    }
+    public function iAmOnNoMoneyOutShortExistsPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/no-money-out-short-exists?.*$/', $this->reportUrlPrefix));
     }
 }

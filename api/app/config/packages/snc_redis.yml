@@ -4,3 +4,6 @@ snc_redis:
             type: predis
             alias: default
             dsn: "%redis_dsn%"
+    session:
+        client: default
+        prefix: "%workspace%_%env(SESSION_PREFIX)%"
