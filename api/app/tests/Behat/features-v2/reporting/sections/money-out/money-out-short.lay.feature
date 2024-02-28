@@ -1,5 +1,5 @@
 @v2 @v2_reporting_2 @money-out-short
-Feature: Money Out Short
+Feature: Money Out Short - Lay users
 
     @lay-pfa-low-not-started
     Scenario: A user has had no money go out
