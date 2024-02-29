@@ -109,7 +109,7 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Given I am reporting one category
+     * @Given I am reporting on one category
      */
     public function iAmReportingOnOneMoneyInType()
     {
