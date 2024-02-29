@@ -33,7 +33,7 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
       - name: generate semver tag and release
         id: semver_tag
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
