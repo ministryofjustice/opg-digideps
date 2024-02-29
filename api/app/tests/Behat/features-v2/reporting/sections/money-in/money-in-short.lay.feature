@@ -85,9 +85,5 @@ Feature: Money in Low Assets - Lay users
         Then I should see the expected money in section summary
         When I follow link back to report overview page
         Then I should see "money-in-short" as "money in"
-        When I preview and check the report
-        And I continue to declaration and submission
-        And I confirm I agree to the declaration
-        And I confirm I am the sole deputy
-        And I submit my report
+        Given I submit the report
         Then my report should be submitted
