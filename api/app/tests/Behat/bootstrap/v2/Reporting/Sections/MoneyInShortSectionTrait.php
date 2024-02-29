@@ -109,21 +109,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Given I am reporting on one category
-     */
-    public function iAmReportingOnOneMoneyInType()
-    {
-        $this->tickCheckbox(
-            'money-types',
-            $this->moneyInShortTypeDictionary[0],
-            'money-types',
-            $this->moneyInShortTypeDictionary[0]
-        );
-
-        $this->pressButton('Save and continue');
-    }
-
-    /**
      * @Given I don't have a one off payment
      */
     public function iDontHaveAOneOffPayment()
@@ -188,13 +173,6 @@ trait MoneyInShortSectionTrait
         $this->iAmOnMoneyInShortSummaryPage();
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
-
-        $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
-        $this->iAmReportingOnOneMoneyInType();
-
-        $this->iDontHaveAOneOffPayment();
-
-        $this->iAmOnMoneyInShortSummaryPage();
     }
 
     /**

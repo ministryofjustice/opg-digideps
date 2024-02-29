@@ -77,6 +77,11 @@ Feature: Money in Low Assets - Lay users
         Then I should see "money-in-short" as "no money in"
         When I visit the short money in summary section
         And I edit the money in short summary section
+        And I answer "Yes" to adding money in on the clients behalf
+        And I am reporting on:
+            | Benefit Type    |
+            | Salary or wages |
+        And I have no one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
         Then I should see "money-in-short" as "money in"
