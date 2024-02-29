@@ -24,14 +24,8 @@ on:
         required: false
         type: string
         default: "false"
-      oidc_credentials:
-        description: "Whether to use oidc credentials"
-        required: false
-        type: string
-        default: "false"
       account_name:
-        required: false
-        default: "development"
+        required: true
         type: string
         description: "Account to get credentials for"
 
@@ -39,13 +33,13 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
         with:
           fetch-depth: "0"
 
       - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
-      - uses: actions/setup-python@e9d6f990972a57673cdb72ec29e19d42ba28880f
+      - uses: actions/setup-python@871daa956ca9ea99f3c3e30acb424b7960676734
         if: inputs.terraform_path == 'shared'
         with:
           python-version: "3.11"
@@ -67,23 +61,12 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for terraform
-        if: inputs.oidc_credentials == 'true'
-        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e # pin@v1.7.0
         with:
           role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}"
           role-session-name: github-actions-terraform
           role-duration-seconds: 7400
           aws-region: eu-west-1
-
-      - name: configure AWS credentials for terraform
-        if: inputs.oidc_credentials == 'false'
-        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          aws-region: eu-west-1
-          role-duration-seconds: 1800
-          role-session-name: OPGDigidepsTerraformGithubAction
 
       - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
         with:

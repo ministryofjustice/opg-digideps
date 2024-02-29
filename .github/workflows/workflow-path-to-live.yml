@@ -33,7 +33,7 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
       - name: generate semver tag and release
         id: semver_tag
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
@@ -119,10 +119,9 @@ jobs:
       workspace: development
       terraform_path: account
       apply: true
+      account_name: development
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
-      oidc_credentials: true
-      account_name: development
     secrets: inherit
 
   terraform_apply_development:
@@ -141,10 +140,9 @@ jobs:
       workspace: development
       terraform_path: environment
       apply: true
+      account_name: development
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
-      oidc_credentials: true
-      account_name: development
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -157,10 +155,9 @@ jobs:
       workspace: preproduction
       terraform_path: account
       apply: true
+      account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
-      oidc_credentials: true
-      account_name: preproduction
     secrets: inherit
 
   terraform_apply_integration:
@@ -173,10 +170,9 @@ jobs:
       workspace: integration
       terraform_path: environment
       apply: true
+      account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
-      oidc_credentials: true
-      account_name: preproduction
     secrets: inherit
 
   scale_services_up:
@@ -325,6 +321,7 @@ jobs:
       workspace: preproduction
       terraform_path: environment
       apply: true
+      account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
     secrets: inherit
@@ -339,6 +336,7 @@ jobs:
       workspace: training
       terraform_path: environment
       apply: true
+      account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
     secrets: inherit
@@ -353,6 +351,7 @@ jobs:
       workspace: production
       terraform_path: account
       apply: true
+      account_name: production
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
       path_to_live: true
     secrets: inherit
@@ -368,6 +367,7 @@ jobs:
       terraform_path: environment
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      account_name: production
       path_to_live: true
     secrets: inherit
 
