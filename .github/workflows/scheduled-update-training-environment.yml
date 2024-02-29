@@ -6,6 +6,7 @@ on:
     - cron: "0 20 * * 5"
 
 permissions:
+  id-token: write
   contents: read
   security-events: none
   pull-requests: none

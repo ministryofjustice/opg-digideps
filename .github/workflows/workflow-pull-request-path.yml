@@ -34,7 +34,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:
@@ -151,7 +151,6 @@ jobs:
       workspace: development
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      oidc_credentials: true
       account_name: development
     secrets: inherit
 
@@ -167,7 +166,6 @@ jobs:
       terraform_path: environment
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      oidc_credentials: true
       account_name: development
     secrets: inherit
 
