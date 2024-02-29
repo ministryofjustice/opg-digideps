@@ -69,3 +69,20 @@ Feature: Money in Low Assets - Lay users
         Given a Lay Deputy has completed a Pfa Low Assets report
         When I add a one off money in payment that is less than £1k
         Then I should the see correct validation message
+
+    @lay-pfa-low-completed @Iqpal
+    Scenario: A user adds a single item of money in but nothing over £1k and submits report successfully
+        Given a Lay Deputy has completed a Pfa Low Assets report
+        And I visit the report overview page
+        Then I should see "money-in-short" as "no money in"
+        When I visit the short money in summary section
+        And I edit the money in short summary section
+        Then I should see the expected money in section summary
+        When I follow link back to report overview page
+        Then I should see "money-in-short" as "money in"
+        When I preview and check the report
+        And I continue to declaration and submission
+        And I confirm I agree to the declaration
+        And I confirm I am the sole deputy
+        And I submit my report
+        Then my report should be submitted
