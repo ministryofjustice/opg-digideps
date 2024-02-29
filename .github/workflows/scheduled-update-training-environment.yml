@@ -6,6 +6,7 @@ on:
     - cron: "0 20 * * 5"
 
 permissions:
+  id-token: write
   contents: read
   security-events: none
   pull-requests: none
@@ -23,6 +24,7 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     with:
       workspace: training
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "500"
       override: "sh,./tests/Behat/reset-db.sh"

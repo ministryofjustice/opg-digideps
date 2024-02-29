@@ -17,14 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
 
-      - name: configure AWS credentials ECR scan results
-        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e # pin@v1.7.0
+      - name: configure OIDC AWS credentials for ECR scanning
+        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-scan
+          role-session-name: github-actions-ecr-scan
           role-duration-seconds: 1800
-          role-session-name: OPGDigidepsECRScanGithubAction
+          aws-region: eu-west-1
 
       - name: install python
         uses: actions/setup-python@871daa956ca9ea99f3c3e30acb424b7960676734 # pin@v4.2.0

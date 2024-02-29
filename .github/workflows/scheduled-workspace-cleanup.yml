@@ -6,6 +6,7 @@ on:
     - cron: "0 21 * * 0-6"
 
 permissions:
+  id-token: write
   contents: read
   security-events: none
   pull-requests: none
@@ -23,22 +24,15 @@ jobs:
     steps:
       - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
 
-      - name: parse terraform version
-        id: tf_version_setup
-        run: |
-          if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
-            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
-            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
-          fi
-        working-directory: terraform/environment
-
-      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-
-      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.7.3
         with:
-          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_directory: terraform/environment
+
+      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
       - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
