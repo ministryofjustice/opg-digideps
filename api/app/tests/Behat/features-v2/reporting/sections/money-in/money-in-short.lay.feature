@@ -70,7 +70,7 @@ Feature: Money in Low Assets - Lay users
         When I add a one off money in payment that is less than £1k
         Then I should the see correct validation message
 
-    @lay-pfa-low-completed @Iqpal
+    @lay-pfa-low-completed
     Scenario: A user adds a single item of money in but nothing over £1k and submits report successfully
         Given a Lay Deputy has completed a Pfa Low Assets report
         And I visit the report overview page
