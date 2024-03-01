@@ -256,4 +256,16 @@ trait MoneyOutShortSectionTrait
         $this->iAmOnMoneyOutShortSummaryPage();
         
     }
+
+    /**
+     * @When I edit the money out short summary section
+     */
+    public function iEditTheMoneyOutShortSummarySection()
+    {
+        $this->iVisitMoneyOutShortSummarySection();
+        $this->iAmOnMoneyOutShortSummaryPage();
+
+        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
 }
