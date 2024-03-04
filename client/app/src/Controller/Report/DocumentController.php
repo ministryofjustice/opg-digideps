@@ -261,6 +261,9 @@ class DocumentController extends AbstractController
         //identify docs that require re-uploading
         $documentsToBeReuploaded = $this->identifyMissingFilesInS3Bucket($report);
 
+        //holds a boolean value based on whether other documents exist in S3 that are submittable
+        $documentsAccessibleInS3 = count($report->getDocuments()) > count($documentsToBeReuploaded);
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile[]|null $uploadedFiles */
             $uploadedFiles = $request->files->get('report_document_upload')['files'];
@@ -297,7 +300,8 @@ class DocumentController extends AbstractController
             'nextAndBackLink' => $nextLinkAndBackLink,
             'successUploaded' => $request->get('successUploaded'),
             'form' => $form->createView(),
-            'documentsToBeReuploaded' => $documentsToBeReuploaded
+            'documentsToBeReuploaded' => $documentsToBeReuploaded,
+            'documentsAccessibleInS3' => $documentsAccessibleInS3
         ];
     }
 
@@ -412,9 +416,12 @@ class DocumentController extends AbstractController
         $report = $document->getReport();
         $fromPage = $request->get('from');
 
-        $backLink = 'summaryPage' == $fromPage
-            ? $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()])
-            : $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
+        if('reuploadPage' == $fromPage) {
+            $backLink = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
+        } else {
+            'summaryPage' == $fromPage ? $backLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()])
+        : $backLink = $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
+        }
 
         return [
             'translationDomain' => 'report-documents',

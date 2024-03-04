@@ -18,11 +18,7 @@
 
 {% block pageContent %}
 
-    {% if successUploaded == "true" %}
-        {{ macros.successBanner(page ~ '.successUploaded', translationDomain, page ~ '.successUploadedHeader') }}
-    {% endif %}
-
-
+{% if documentsToBeReuploaded is not empty %}
     <div class="govuk-!-width-two-thirds">
         <div id="error-summary" class="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-heading">There are some problems with your documents
@@ -36,6 +32,7 @@
             </div>
         </div>
     </div>
+{% endif %}
 
     <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
@@ -130,9 +127,7 @@
         </dl>
     {% endif %}
 
-
-    {% for document in report.deputydocuments %}
-        {% if document.storageReference not in documentsToBeReuploaded %}
+        {% if documentsAccessibleInS3 == true %}
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-m govuk-!-margin-top-4">{{ (page ~ '.documentList') | trans }}</h2>
@@ -152,6 +147,7 @@
                             <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                         </dd>
                     </div>
+
                     {% for document in report.deputydocuments %}
                         {% if document.storageReference not in documentsToBeReuploaded %}
                             <div class="govuk-summary-list__row">
@@ -171,8 +167,7 @@
                     {% endfor %}
                 </div>
             </dl>
-        {% endif %}
-    {%  endfor %}
+        {%  endif %}
 
   {% if documentsToBeReuploaded is empty %}
     <a href="{{ nextAndBackLink }}" class="govuk-button push--top behat-link-continue">{{ 'saveAndContinue' | trans({}, 'common' ) }}</a>
