@@ -22,7 +22,7 @@ locals {
   backup_container = jsonencode(
     {
       name    = "backup",
-      image   = local.images.sync,
+      image   = local.images.orchestration,
       command = ["./backup.sh"],
       logConfiguration = {
         logDriver = "awslogs",

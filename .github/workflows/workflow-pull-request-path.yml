@@ -206,6 +206,20 @@ jobs:
       override: "sh,./tests/Behat/reset-db.sh"
     secrets: inherit
 
+  smoke_tests:
+    name: smoke tests
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "smoke_tests"
+      timeout: "900"
+    secrets: inherit
+
   integration_tests_1:
     name: integration tests frontend 1
     uses: ./.github/workflows/_run-task.yml
