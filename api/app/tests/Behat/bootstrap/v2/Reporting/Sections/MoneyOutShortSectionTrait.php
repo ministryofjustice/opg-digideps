@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Behat\Tester\Exception\PendingException;
+
 trait MoneyOutShortSectionTrait
 {
     private array $moneyTypesDictionary = [
@@ -222,5 +224,36 @@ trait MoneyOutShortSectionTrait
         $this->iAmOnMoneyOutShortAddAnotherPage();
         $this->selectOption('add_another[addAnother]', $selection);
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+    }
+
+    /**
+     * @Given /^I enter a reason for no money out short$/
+     */
+    public function iEnterAReasonForNoMoneyOutShort()
+    {
+        $this->iAmOnNoMoneyOutShortExistsPage();
+
+        $this->fillInField('reason_for_no_money[reasonForNoMoneyOut]', 'No money out', 'reasonForNoMoneyOut');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When /^I edit the money out short section and add a payment$/
+     */
+    public function iEditTheMoneyOutShortSectionAndAddAPayment()
+    {
+        $this->iVisitMoneyOutShortSummarySection();
+        $this->iAmOnMoneyOutShortSummaryPage();
+
+        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+
+        $this->iAnswerToTakingMoneyOutOnTheClientsBehalf('Yes');
+        $this->iClickSaveAndContinue();
+        
+        $this->iAnswerNumberOneOffPaymentsOver1k(1);
+
+        $this->iAmOnMoneyOutShortSummaryPage();
+        
     }
 }

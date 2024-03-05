@@ -237,11 +237,12 @@ class ReportStatusServiceTest extends TestCase
         $t = m::mock(MoneyTransactionShort::class);
 
         return [
-            [['getMoneyTransactionsShortInExist' => null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
-            [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_NOT_STARTED],
-            [['getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
-            [['getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_DONE],
+            [['getMoneyInExists'=> null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyInExists'=> 'No','getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
         ];
     }
 
@@ -262,10 +263,12 @@ class ReportStatusServiceTest extends TestCase
         $t = m::mock(MoneyTransactionShort::class);
 
         return [
-            [['getMoneyTransactionsShortOutExist' => null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
-            [['getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
-            [['getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_DONE],
+            [['getMoneyOutExists'=> null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyOutExists'=> 'No','getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
         ];
     }
 

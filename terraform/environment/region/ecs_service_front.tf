@@ -128,30 +128,12 @@ locals {
         { name = "SECRET", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" },
         { name = "SIRIUS_API_BASE_URI", valueFrom = aws_ssm_parameter.sirius_api_base_uri.arn }
       ],
-      environment = [
-        { name = "ROLE", value = "front" },
-        { name = "ADMIN_HOST", value = "https://${var.admin_fully_qualified_domain_name}" },
-        { name = "NONADMIN_HOST", value = "https://${var.front_fully_qualified_domain_name}" },
-        { name = "API_URL", value = "http://api" },
-        { name = "APP_ENV", value = var.account.app_env },
-        { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
-        { name = "EMAIL_SEND_INTERNAL", value = var.account.is_production == 1 ? "true" : "false" },
-        { name = "ENVIRONMENT", value = local.environment },
-        { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
-        { name = "FILESCANNER_SSLVERIFY", value = "False" },
-        { name = "FILESCANNER_URL", value = "http://scan:8080" },
-        { name = "GA_DEFAULT", value = var.account.ga_default },
-        { name = "GA_GDS", value = var.account.ga_gds },
-        { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
-        { name = "NGINX_APP_NAME", value = "frontend" },
-        { name = "OPG_DOCKER_TAG", value = var.docker_tag },
-        { name = "PARAMETER_PREFIX", value = local.parameter_prefix },
-        { name = "S3_BUCKETNAME", value = "pa-uploads-${local.environment}" },
-        { name = "SECRETS_PREFIX", value = join("", [var.secrets_prefix, "/"]) },
-        { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
-        { name = "SESSION_PREFIX", value = "dd_front" },
-        { name = "WORKSPACE", value = local.environment }
-      ]
+      environment = concat(local.frontend_base_variables,
+        [
+          { name = "NGINX_APP_NAME", value = "frontend" },
+          { name = "ROLE", value = "front" },
+          { name = "SESSION_PREFIX", value = "dd_front" },
+      ])
     }
   )
 }

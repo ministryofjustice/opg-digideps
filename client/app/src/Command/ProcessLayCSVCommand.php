@@ -46,7 +46,7 @@ class ProcessLayCSVCommand extends Command
 
     protected const UNEXPECTED_COLUMNS = [
         'LastReportDay',
-        'DeputyOrganisation'
+        'DeputyOrganisation',
     ];
 
     private array $output = [
@@ -60,7 +60,7 @@ class ProcessLayCSVCommand extends Command
         private RestClient $restClient,
         private ParameterBagInterface $params,
         private Mailer $mailer,
-        private LoggerInterface $logger,
+        private LoggerInterface $verboseLogger,
         private ClientInterface $redis,
         private string $workspace
     ) {
@@ -84,13 +84,13 @@ class ProcessLayCSVCommand extends Command
             $this->s3->getObject([
                 'Bucket' => $bucket,
                 'Key' => $layReportFile,
-                'SaveAs' => $fileLocation
+                'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $this->logger->error(sprintf('File %s not found in bucket %s', $layReportFile, $bucket));
+                $this->verboseLogger->error(sprintf('File %s not found in bucket %s', $layReportFile, $bucket));
             } else {
-                $this->logger->error(
+                $this->verboseLogger->error(
                     sprintf(
                         'Error getting file %s from bucket %s: %s',
                         $layReportFile,
@@ -104,7 +104,7 @@ class ProcessLayCSVCommand extends Command
         $data = $this->csvToArray($fileLocation);
         if ($this->process($data, $input->getArgument('email')) && empty($this->output['errors'])) {
             if (!unlink($fileLocation)) {
-                $this->logger->error(sprintf('Unable to delete file %s.', $layReportFile));
+                $this->verboseLogger->error(sprintf('Unable to delete file %s.', $layReportFile));
             }
 
             return Command::SUCCESS;
@@ -120,9 +120,8 @@ class ProcessLayCSVCommand extends Command
                 ->setOptionalColumns(self::EXPECTED_COLUMNS)
                 ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
-
         } catch (Throwable $e) {
-            $this->logger->error(sprintf('Error processing CSV file: %s', $e->getMessage()));
+            $this->verboseLogger->error(sprintf('Error processing CSV file: %s', $e->getMessage()));
         }
     }
 

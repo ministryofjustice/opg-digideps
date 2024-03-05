@@ -133,95 +133,21 @@ locals {
           valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn
         }
       ],
-      environment = [
-        {
-          name  = "ADMIN_HOST",
-          value = "https://${var.admin_fully_qualified_domain_name}"
-        },
-        {
-          name  = "FRONTEND_HOST",
-          value = "https://${var.front_fully_qualified_domain_name}"
-        },
-        { name  = "JWT_HOST",
-          value = "https://${var.front_fully_qualified_domain_name}"
-        },
-        {
-          name  = "AUDIT_LOG_GROUP_NAME",
-          value = "audit-${local.environment}"
-        },
-        {
-          name  = "DATABASE_HOSTNAME",
-          value = local.db.endpoint
-        },
-        {
-          name  = "DATABASE_NAME",
-          value = local.db.name
-        },
-        {
-          name  = "DATABASE_PORT",
-          value = tostring(local.db.port)
-        },
-        {
-          name  = "DATABASE_USERNAME",
-          value = local.db.username
-        },
-        {
-          name  = "DATABASE_SSL",
-          value = "verify-full"
-        },
-        {
-          name  = "FEATURE_FLAG_PREFIX",
-          value = local.feature_flag_prefix
-        },
-        {
-          name  = "FIXTURES_ACCOUNTPASSWORD",
-          value = "DigidepsPass1234"
-        },
-        {
-          name  = "NGINX_APP_NAME",
-          value = "api"
-        },
-        {
-          name  = "OPG_DOCKER_TAG",
-          value = var.docker_tag
-        },
-        {
-          name  = "PARAMETER_PREFIX",
-          value = local.parameter_prefix
-        },
-        {
-          name  = "REDIS_DSN",
-          value = "redis://${aws_route53_record.api_redis.fqdn}"
-        },
-        {
-          name  = "SECRETS_PREFIX",
-          value = join("", [var.secrets_prefix, "/"])
-        },
-        {
-          name  = "SESSION_PREFIX",
-          value = "dd_api"
-        },
-        {
-          name  = "WORKSPACE",
-          value = local.environment
-        },
-        {
-          name  = "S3_BUCKETNAME",
-          value = "pa-uploads-${local.environment}"
-        },
-        {
-          name  = "S3_SIRIUS_BUCKET",
-          value = "digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk"
-        },
-        {
-          name  = "PA_PRO_REPORT_CSV_FILENAME",
-          value = local.pa_pro_report_csv_filename
-        },
-        {
-          name  = "LAY_REPORT_CSV_FILENAME",
-          value = local.lay_report_csv_file
-        },
-      ]
+      environment = concat(local.api_base_variables, local.api_service_variables)
     }
   )
+}
+
+# Additional definition for memory intensive commands (only app needed)
+
+resource "aws_ecs_task_definition" "api_high_memory" {
+  family                   = "api-high-memory-${local.environment}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 1024
+  memory                   = 2048
+  container_definitions    = "[${local.api_container}]"
+  task_role_arn            = aws_iam_role.api.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = var.default_tags
 }

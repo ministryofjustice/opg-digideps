@@ -197,7 +197,7 @@ class FixtureHelper
         );
     }
 
-    public function createUser(string $roleName, string $email = null)
+    public function createUser(string $roleName, ?string $email = null)
     {
         if (is_null($email)) {
             $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
@@ -206,7 +206,7 @@ class FixtureHelper
         return $this->userTestHelper->createUser(null, $roleName, $email);
     }
 
-    public function createAndPersistUser(string $roleName, string $email = null)
+    public function createAndPersistUser(string $roleName, ?string $email = null)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -224,10 +224,10 @@ class FixtureHelper
         User $deputy,
         bool $completed = false,
         bool $submitted = false,
-        string $type = null,
-        \DateTime $startDate = null,
-        int $satisfactionScore = null,
-        string $caseNumber = null
+        ?string $type = null,
+        ?\DateTime $startDate = null,
+        ?int $satisfactionScore = null,
+        ?string $caseNumber = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
@@ -257,7 +257,7 @@ class FixtureHelper
     private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore)
     {
         $submitDate = clone $report->getStartDate();
-        $submitDate->modify('+365 day');
+        $submitDate->modify('+1 year');
         $satisfaction = new Satisfaction();
         $satisfaction->setScore($satisfactionScore);
         $satisfaction->setComments('random comment');
@@ -292,11 +292,11 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
-        \DateTime $startDate = null,
-        int $satisfactionScore = null,
-        string $namedDeputyEmail = null,
-        string $caseNumber = null,
-        string $deputyUid = null
+        ?\DateTime $startDate = null,
+        ?int $satisfactionScore = null,
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyUid = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
@@ -371,7 +371,7 @@ class FixtureHelper
         return $client;
     }
 
-    public function createLayPfaHighAssetsNotStarted(string $testRunId, string $caseNumber = null): array
+    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -856,9 +856,9 @@ class FixtureHelper
 
     public function createProfAdminNotStarted(
         string $testRunId,
-        string $namedDeputyEmail = null,
-        string $caseNumber = null,
-        string $deputyUid = null
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyUid = null
     ) {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -877,9 +877,9 @@ class FixtureHelper
 
     public function createProfAdminCompleted(
         string $testRunId,
-        string $namedDeputyEmail = null,
-        string $caseNumber = null,
-        string $deputyNumber = null
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
     ): array {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -898,9 +898,9 @@ class FixtureHelper
 
     public function createProfAdminSubmitted(
         string $testRunId,
-        string $namedDeputyEmail = null,
-        string $caseNumber = null,
-        string $deputyNumber = null
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyNumber = null
     ): array {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -959,7 +959,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createLayPfaHighAssetsNotStartedLegacyPasswordHash(string $testRunId, string $caseNumber = null): array
+    public function createLayPfaHighAssetsNotStartedLegacyPasswordHash(string $testRunId, ?string $caseNumber = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -1118,9 +1118,9 @@ class FixtureHelper
         $completed,
         $submitted,
         bool $ndr = false,
-        \DateTime $startDate = null,
-        int $satisfactionScore = null,
-        string $caseNumber = null,
+        ?\DateTime $startDate = null,
+        ?int $satisfactionScore = null,
+        ?string $caseNumber = null,
         bool $legacyPasswordHash = false
     ) {
         if ('prod' === $this->symfonyEnvironment) {
@@ -1165,11 +1165,11 @@ class FixtureHelper
         $reportType,
         $completed,
         $submitted,
-        string $namedDeputyEmail = null,
-        string $caseNumber = null,
-        string $deputyUid = null,
-        \DateTime $startDate = null,
-        int $satisfactionScore = null
+        ?string $namedDeputyEmail = null,
+        ?string $caseNumber = null,
+        ?string $deputyUid = null,
+        ?\DateTime $startDate = null,
+        ?int $satisfactionScore = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');

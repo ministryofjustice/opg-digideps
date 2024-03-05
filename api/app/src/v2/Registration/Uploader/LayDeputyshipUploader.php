@@ -41,7 +41,7 @@ class LayDeputyshipUploader
     public function upload(LayDeputyshipDtoCollection $collection): array
     {
         $this->throwExceptionIfDataTooLarge($collection);
-
+        $this->preRegistrationEntriesByCaseNumber = [];
         $added = 0;
         $errors = [];
 
@@ -52,9 +52,10 @@ class LayDeputyshipUploader
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
-                    $added++;
+                    ++$added;
                 } catch (PreRegistrationCreationException $e) {
-                    $message = sprintf('ERROR IN LINE %d: %s', $index + 2, $e->getMessage());
+                    $message = str_replace(PHP_EOL, '', $e->getMessage());
+                    $message = sprintf('ERROR IN LINE: %s',  $message);
                     $this->logger->error($message);
                     $errors[] = $message;
                     continue;
@@ -66,8 +67,9 @@ class LayDeputyshipUploader
                 ->commitTransactionToDatabase();
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
+            $errors[] = $e->getMessage();
 
-            return ['added' => $added, 'errors' => [$e->getMessage()]];
+            return ['added' => $added, 'errors' => $errors];
         }
 
         return [

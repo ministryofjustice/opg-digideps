@@ -42,7 +42,7 @@ class ProcessOrgCSVCommand extends Command
         'OrderType',
         'Hybrid',
     ];
-    
+
     private const OPTIONAL_COLUMNS = [
         'ClientAddress1',
         'ClientAddress2',
@@ -55,15 +55,15 @@ class ProcessOrgCSVCommand extends Command
         'DeputyAddress4',
         'DeputyAddress5',
     ];
-    
+
     private const UNEXPECTED_COLUMNS = [
-        'NDR'
+        'NDR',
     ];
-    
+
     private array $processingOutput = [
         'errors' => [
-            'count' => 0, 
-            'messages' => []
+            'count' => 0,
+            'messages' => [],
         ],
         'added' => [
             'clients' => 0,
@@ -85,7 +85,7 @@ class ProcessOrgCSVCommand extends Command
     public function __construct(
         private S3Client $s3,
         private ParameterBagInterface $params,
-        private LoggerInterface $logger,
+        private LoggerInterface $verboseLogger,
         private CSVDeputyshipProcessing $csvProcessing,
     ) {
         parent::__construct();
@@ -100,6 +100,7 @@ class ProcessOrgCSVCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '1024M');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = $input->getArgument('csv-filename');
@@ -118,10 +119,10 @@ class ProcessOrgCSVCommand extends Command
                 $logMessage = 'Error retrieving file %s from bucket %s';
             }
             $logMessage = sprintf($logMessage, $paProReportFile, $bucket);
-            
-            $this->logger->error($logMessage);
+
+            $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
-            
+
             return Command::FAILURE;
         }
 
@@ -130,7 +131,7 @@ class ProcessOrgCSVCommand extends Command
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s', $fileLocation);
 
-                $this->logger->error($logMessage);
+                $this->verboseLogger->error($logMessage);
                 $this->cliOutput->writeln(
                     sprintf(
                         '%s failure - (partial) - %s processing Output: %s',
@@ -139,19 +140,28 @@ class ProcessOrgCSVCommand extends Command
                         $this->processedStringOutput()
                     )
                 );
-                
+
                 return Command::SUCCESS;
             }
 
             $this->cliOutput->writeln(
                 sprintf(
-                    '%s - success - Finished processing OrgCSV, Output - %s', 
-                    self::JOB_NAME, 
+                    '%s - success - Finished processing OrgCSV, Output: %s',
+                    self::JOB_NAME,
                     $this->processedStringOutput()
                 )
             );
+
             return Command::SUCCESS;
         }
+
+        $this->cliOutput->writeln(
+            sprintf(
+                '%s - failure - Output: %s',
+                self::JOB_NAME,
+                'Process failed for unknown reason'
+            )
+        );
 
         return Command::FAILURE;
     }
@@ -167,10 +177,10 @@ class ProcessOrgCSVCommand extends Command
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
-            $this->logger->error($logMessage);
-            $this->cliOutput->writeln(self::JOB_NAME .' - failure - '. $logMessage);
+            $this->verboseLogger->error($logMessage);
+            $this->cliOutput->writeln(self::JOB_NAME.' - failure - '.$logMessage);
         }
-        
+
         return [];
     }
 
@@ -183,20 +193,19 @@ class ProcessOrgCSVCommand extends Command
                 $upload = $this->csvProcessing->orgProcessing($chunk);
 
                 $this->storeOutput($upload);
-
-                $this->logger->notice(sprintf('Successfully processed chunk: %d', $index));
+                $this->verboseLogger->notice(sprintf('Successfully processed chunk: %d', $index));
             }
 
-            $this->logger->notice('Successfully processed all chunks');
+            $this->verboseLogger->notice('Successfully processed all chunks');
 
             return true;
         }
-        
+
         return false;
     }
 
     private function storeOutput(array $processingOutput): void
-    {        
+    {
         $this->processingOutput['errors']['count'] += $processingOutput['errors']['count'];
         $this->processingOutput['errors']['messages'] = implode(', ', $processingOutput['errors']['messages']);
 
@@ -219,30 +228,30 @@ class ProcessOrgCSVCommand extends Command
 
     private function processedStringOutput(): string
     {
-        $processed = "";
-        foreach ($this->processingOutput as $reportedHeader => $stats ) {
+        $processed = '';
+        foreach ($this->processingOutput as $reportedHeader => $stats) {
             if (is_array($stats) && count($stats) >= 1) {
-                foreach ($stats as $statHeader => $statValue ) {
+                foreach ($stats as $statHeader => $statValue) {
                     if (!is_array($statValue)) {
-                        if ($statHeader === 'count') {
-                            $processed .= sprintf("%s: %s. ", $reportedHeader, $statValue);
+                        if ('count' === $statHeader) {
+                            $processed .= sprintf('%s: %s. ', $reportedHeader, $statValue);
                         } else {
-                            $processed .= sprintf("%s %s: %s. ", ucfirst($statHeader), $reportedHeader, $statValue);
+                            $processed .= sprintf('%s %s: %s. ', ucfirst($statHeader), $reportedHeader, $statValue);
                         }
                     } else {
                         if (count($statValue) >= 1) {
                             foreach ($statValue as $i => $message) {
-                                if ($i === 0) {
-                                    $processed .= sprintf("%s %s: ", ucfirst($statHeader), $reportedHeader);
+                                if (0 === $i) {
+                                    $processed .= sprintf('%s %s: ', ucfirst($statHeader), $reportedHeader);
                                 }
 
-                                $processed .= sprintf("%s; ", $message);
+                                $processed .= sprintf('%s; ', $message);
                             }
                         }
                     }
                 }
-            } else {                
-                $processed .= sprintf("%s %s. ", $stats, $reportedHeader);
+            } else {
+                $processed .= sprintf('%s %s. ', $stats, $reportedHeader);
             }
         }
 
