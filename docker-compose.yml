@@ -162,13 +162,13 @@ services:
     ports:
       - 8085:8080
 
-  sync:
-    build: ./sync
+  orchestration:
+    build: ./orchestration
     depends_on:
       - localstack
       - postgres
     env_file:
-      - sync/sync.env
+      - orchestration/orchestration.env
 
   aws:
     image: infrastructureascode/aws-cli
