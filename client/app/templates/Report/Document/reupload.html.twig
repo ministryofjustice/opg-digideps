@@ -13,12 +13,12 @@
 
 
 {% block linkBack %}
-    {{ macros.linkBackStep(nextAndBackLink, 'back' | trans({}, 'common')) }}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block pageContent %}
 
-{% if documentsToBeReuploaded is not empty %}
+{% if documentsToBeReUploaded is not empty %}
     <div class="govuk-!-width-two-thirds">
         <div id="error-summary" class="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-heading">There are some problems with your documents
@@ -79,7 +79,7 @@
     {% set alertMessage %}
     {% endset %}
 
-    {% if documentsToBeReuploaded is not empty %}
+    {% if documentsToBeReUploaded is not empty %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">{{ (page ~ '.missingFiles') | trans }}</h2>
@@ -101,7 +101,7 @@
                     </dd>
                 </div>
                 {% for document in report.deputydocuments %}
-                    {% if document.storageReference in documentsToBeReuploaded %}
+                    {% if document.storageReference in documentsToBeReUploaded %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__value">
                                 {{ document.fileName }}
@@ -116,7 +116,7 @@
                                 </span>
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page, 'notInS3': true}) }}">
+                                <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'rcustom-submiteportId':report.id, 'documentId': document.id, 'from': page, 'notInS3': true}) }}">
                                     {{ (page ~ '.deleteDocument') | trans }}
                                 </a>
                             </dd>
@@ -127,50 +127,50 @@
         </dl>
     {% endif %}
 
-        {% if documentsAccessibleInS3 == true %}
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                    <h2 class="govuk-heading-m govuk-!-margin-top-4">{{ (page ~ '.documentList') | trans }}</h2>
-                </div>
+    {% if documentsAccessibleInS3 == true %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-m govuk-!-margin-top-4">{{ (page ~ '.documentList') | trans }}</h2>
             </div>
+        </div>
 
-            <dl class="govuk-summary-list behat-region-document-list">
-                <div class="govuk-grid-column-three-thirds">
+        <dl class="govuk-summary-list behat-region-document-list">
+            <div class="govuk-grid-column-three-thirds">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        {{ (page ~ '.filename') | trans }}
+                    </dt>
+                    <dd class="govuk-summary-list__key">
+                        {{ (page ~ '.dateAttached') | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </dd>
+                </div>
+
+            {% for document in report.deputydocuments %}
+                {% if document.storageReference not in documentsToBeReUploaded %}
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            {{ (page ~ '.filename') | trans }}
+                        <dt class="govuk-summary-list__value">
+                            {{ document.fileName }}
                         </dt>
-                        <dd class="govuk-summary-list__key">
-                            {{ (page ~ '.dateAttached') | trans }}
+                        <dd class="govuk-summary-list__value">
+                            {{ document.createdOn | date("j F Y H:i") }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                            <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
+                                {{ (page ~ '.deleteDocument') | trans }}
+                            </a>
                         </dd>
                     </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </dl>
+    {%  endif %}
 
-                    {% for document in report.deputydocuments %}
-                        {% if document.storageReference not in documentsToBeReuploaded %}
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__value">
-                                    {{ document.fileName }}
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    {{ document.createdOn | date("j F Y H:i") }}
-                                </dd>
-                                <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
-                                        {{ (page ~ '.deleteDocument') | trans }}
-                                    </a>
-                                </dd>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </dl>
-        {%  endif %}
-
-  {% if documentsToBeReuploaded is empty %}
-    <a href="{{ nextAndBackLink }}" class="govuk-button push--top behat-link-continue">{{ 'saveAndContinue' | trans({}, 'common' ) }}</a>
+  {% if documentsToBeReUploaded is empty %}
+    <a href="{{ saveAndContinueLink }}" class="govuk-button push--top behat-link-continue">{{ 'saveAndContinue' | trans({}, 'common' ) }}</a>
   {%  else %}
     {{ macros.notification('notice', (page ~ '.removeDocumentAction') | trans) }}
   {%  endif %}

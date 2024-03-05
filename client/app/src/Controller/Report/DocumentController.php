@@ -237,7 +237,7 @@ class DocumentController extends AbstractController
      * @return array|RedirectResponse
      *
      */
-    public function documentReupload(
+    public function documentReUpload(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
         string $reportId,
@@ -246,7 +246,7 @@ class DocumentController extends AbstractController
     {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
 
-        $nextLinkAndBackLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+        $backLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
         $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
@@ -259,10 +259,10 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
 
         //identify docs that require re-uploading
-        $documentsToBeReuploaded = $this->identifyMissingFilesInS3Bucket($report);
+        $documentsToBeReUploaded = $this->identifyMissingFilesInS3Bucket($report);
 
         //holds a boolean value based on whether other documents exist in S3 that are submittable
-        $documentsAccessibleInS3 = count($report->getDocuments()) > count($documentsToBeReuploaded);
+        $documentsAccessibleInS3 = count($report->getDocuments()) > count($documentsToBeReUploaded);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile[]|null $uploadedFiles */
@@ -294,13 +294,16 @@ class DocumentController extends AbstractController
             }
         }
 
+        $saveAndContinueLink = $this->generateUrl('report_overview', ['reportId' => $report->getId(), 'from' => 'report_documents_reupload']);
+
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'nextAndBackLink' => $nextLinkAndBackLink,
+            'backLink' => $backLink,
+            'saveAndContinueLink' => $saveAndContinueLink,
             'successUploaded' => $request->get('successUploaded'),
             'form' => $form->createView(),
-            'documentsToBeReuploaded' => $documentsToBeReuploaded,
+            'documentsToBeReUploaded' => $documentsToBeReUploaded,
             'documentsAccessibleInS3' => $documentsAccessibleInS3
         ];
     }
