@@ -7,7 +7,7 @@ locals {
     api-webserver    = "${data.aws_ecr_repository.images["api-webserver"].repository_url}:${var.docker_tag}"
     client           = "${data.aws_ecr_repository.images["client"].repository_url}:${var.docker_tag}"
     client-webserver = "${data.aws_ecr_repository.images["client-webserver"].repository_url}:${local.client_web_tag}"
-    sync             = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.docker_tag}"
+    orchestration    = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.docker_tag}"
     htmltopdf        = "${data.aws_ecr_repository.images["htmltopdf"].repository_url}:${var.docker_tag}"
     drbackup         = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.docker_tag}"
     synchronise      = "${data.aws_ecr_repository.images["synchronise-lambda"].repository_url}:${var.docker_tag}"
