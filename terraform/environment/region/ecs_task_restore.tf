@@ -18,7 +18,7 @@ locals {
   restore_container = jsonencode(
     {
       name    = "restore",
-      image   = local.images.sync,
+      image   = local.images.orchestration,
       command = ["./restore.sh"],
       logConfiguration = {
         logDriver = "awslogs",

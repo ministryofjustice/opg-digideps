@@ -11,12 +11,15 @@ ENV S3_ENDPOINT **None**
 ENV S3_PREFIX **None**
 ENV S3_S3V4 yes
 
-# install pg_dump and s3
-RUN apk add --no-cache postgresql python3 py3-pip
-
+# install DB and JS tooling
+RUN apk add --no-cache --update postgresql python3 py3-pip
+RUN apk add --no-cache --update nodejs npm
+RUN apk add --no-cache --update aws-cli
+RUN apk add --no-cache \
+    udev \
+    ttf-freefont \
+    chromium
 RUN apk update && apk upgrade
-
-RUN apk add --no-cache aws-cli
 
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh
