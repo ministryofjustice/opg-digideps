@@ -166,6 +166,16 @@ trait MoneyInShortSectionTrait
     }
 
     /**
+     * @When I edit the money in short summary section
+     */
+    public function iEditTheMoneyInShortSummarySection()
+    {
+        $this->iAmOnMoneyInShortSummaryPage();
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
      * @When I add a one off money in payment that is less than £1k
      */
     public function iAddAOneOffMoneyInPaymentThatIsLessThan1k()
