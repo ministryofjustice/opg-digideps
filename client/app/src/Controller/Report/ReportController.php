@@ -247,7 +247,7 @@ class ReportController extends AbstractController
      *
      * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore)
+    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore, Request $request)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -293,6 +293,9 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
+        // throw flash message when deputy has successfully re-uploaded missing S3 documents in order to submit report
+        $this->throwFlashMessageIfDeputyIsRedirectedFromReUploadPage($request);
+
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
@@ -300,6 +303,13 @@ class ReportController extends AbstractController
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
+    }
+
+    private function throwFlashMessageIfDeputyIsRedirectedFromReUploadPage($request) : void
+    {
+        if('report_documents_reupload' == $request->get('from')){
+            $this->addFlash('notice', 'Files have been uploaded');
+        }
     }
 
     /**
@@ -464,8 +474,24 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
-        // Redirect deputy to doc upload page if docs do not exist in S3
+        //Redirect deputy to doc re-upload page if docs do not exist in S3
+        $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
 
+        if(!empty($documentsNotInS3)) {
+           return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+        };
+
+        return [
+            'user' => $this->getUser(),
+            'report' => $report,
+            'reportStatus' => $status,
+            'backLink' => $backLink,
+            'feeTotals' => $report->getFeeTotals(),
+        ];
+    }
+
+    private function checkIfDocumentsExistInS3($report)
+    {
         // Retrieve document storage reference numbers and store in array
         $documentIds = [];
         foreach ($report->getDeputyDocuments() as $document) {
@@ -484,7 +510,7 @@ class ReportController extends AbstractController
         // call Document Service and check if documents exist in the S3 bucket
         $documentsNotInS3 = [];
 
-        // loop through references and check if they exist in S3, as soon as a file is not found in S3 redirect to reuploads page
+        // loop through references and check if they exist in S3, as soon as a file is not found in S3 redirect to re-uploads page
         if(!empty($documentStorageReferences)) {
             foreach ($documentStorageReferences as $docStorageReference) {
                 if(!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
@@ -493,17 +519,7 @@ class ReportController extends AbstractController
             }
         }
 
-       if(!empty($documentsNotInS3)) {
-           return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
-       };
-
-        return [
-            'user' => $this->getUser(),
-            'report' => $report,
-            'reportStatus' => $status,
-            'backLink' => $backLink,
-            'feeTotals' => $report->getFeeTotals(),
-        ];
+        return $documentsNotInS3;
     }
 
     /**

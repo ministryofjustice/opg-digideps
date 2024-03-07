@@ -19,6 +19,7 @@ use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
+use Aws\S3\S3ClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -33,13 +34,15 @@ class FixtureHelper
     private string $testRunId = '';
     private string $orgName = 'Test Org';
     private string $orgEmailIdentifier = 'test-org.uk';
+    public const S3_BUCKETNAME = 'S3_BUCKETNAME';
 
     public function __construct(
         private EntityManagerInterface $em,
         private array $fixtureParams,
         private UserPasswordHasherInterface $hasher,
         private string $symfonyEnvironment,
-        private PreRegistrationFactory $preRegistrationFactory
+        private PreRegistrationFactory $preRegistrationFactory,
+        private S3ClientInterface $s3Client,
     ) {
         $this->userTestHelper = new UserTestHelper();
         $this->reportTestHelper = new ReportTestHelper();
@@ -242,6 +245,8 @@ class FixtureHelper
         }
 
         if ($submitted) {
+            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
+            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
             $this->reportTestHelper->submitReport($report, $this->em);
         }
 
@@ -252,6 +257,19 @@ class FixtureHelper
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
+    }
+
+    private function storeFileInS3(string $bucketName, string $key) {
+        $filePath = sprintf('%s/fixtures/%s', dirname(__DIR__, 3), 'good.pdf');
+        $fileBody = file_get_contents($filePath);
+
+        $this->s3Client->putObject([
+            'Bucket' => $bucketName,
+            'Key' => $key,
+            'Body' => $fileBody,
+            'ServerSideEncryption' => 'AES256',
+            'Metadata' => [],
+        ]);
     }
 
     private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore)
