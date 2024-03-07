@@ -41,7 +41,6 @@ awslocal secretsmanager create-secret --name "local/smoke-test-variables" --secr
 
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -outform PEM -pubout -out public.pem
-
 awslocal secretsmanager create-secret --name "local/private-jwt-key-base64" --secret-string "$(base64 private.pem)"
 awslocal secretsmanager create-secret --name "local/public-jwt-key-base64" --secret-string "$(base64 public.pem)"
 

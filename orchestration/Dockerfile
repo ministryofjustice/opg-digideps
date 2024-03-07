@@ -21,12 +21,14 @@ RUN apk add --no-cache \
     chromium
 RUN apk update && apk upgrade
 
-ADD smoke-tests/package.json smoke-tests/package.json
-ADD smoke-tests/package-lock.json smoke-tests/package-lock.json
-RUN cd smoke-tests && npm ci
+ADD tests/package.json tests/package.json
+ADD tests/package-lock.json tests/package-lock.json
+RUN cd tests && npm ci
 
-ADD smoke-tests/AdminSmokeTest.js smoke-tests/AdminSmokeTest.js
-ADD smoke-tests/run-smoke-tests.sh smoke-tests/run-smoke-tests.sh
+ADD tests/smoke-tests/AdminSmokeTest.js tests/smoke-tests/AdminSmokeTest.js
+ADD tests/smoke-tests/FrontSmokeTest.js tests/smoke-tests/FrontSmokeTest.js
+ADD tests/utility/Utility.js tests/utility/Utility.js
+ADD tests/run-smoke-tests.sh tests/run-smoke-tests.sh
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh
 ADD common.sh common.sh
