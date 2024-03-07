@@ -45,9 +45,3 @@ data "aws_secretsmanager_secret" "public_jwt_key_base64" {
 data "aws_secretsmanager_secret" "jwt_token_synchronisation" {
   name = join("/", compact([var.secrets_prefix, "synchronisation-jwt-token"]))
 }
-
-resource "aws_secretsmanager_secret" "smoke" {
-  name        = join("/", [var.secrets_prefix, "smoke-test-variables"])
-  description = "Smoke test variables"
-  tags        = var.default_tags
-}
