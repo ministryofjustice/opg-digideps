@@ -32,6 +32,7 @@ const runSmoke = async () => {
     await checkServiceHealthFront(page, url);
   } catch (error) {
     console.error('Smoke tests failed:', error);
+    process.exit(1);
   } finally {
     await browser.close();
   }
