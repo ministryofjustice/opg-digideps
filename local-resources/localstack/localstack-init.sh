@@ -37,7 +37,7 @@ awslocal ssm put-parameter --name "/local/parameter/document-sync-row-limit" --v
 
 awslocal secretsmanager create-secret --name "local/opg-response-slack-token" --secret-string "IAMAFAKETOKEN"
 awslocal secretsmanager create-secret --name "local/database-password" --secret-string "api"
-awslocal secretsmanager create-secret --name "local/smoke-test-variables" --secret-string "{\"user\":\"super-admin@publicguardian.gov.uk\",\"password\":\"DigidepsPass1234\",\"client\":\"64444001\"}"
+awslocal secretsmanager create-secret --name "local/smoke-test-variables" --secret-string "{\"user\":\"super-admin@publicguardian.gov.uk\",\"password\":\"DigidepsPass1234\",\"client\":\"64444001\",\"deputy_email\":\"lay-opg102-user-1@publicguardian.gov.uk\",\"deputy_password\":\"DigidepsPass1234\"}"
 
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -outform PEM -pubout -out public.pem

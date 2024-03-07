@@ -7,6 +7,7 @@ import {
   checkOrganisations,
   checkSubmissions,
   checkAnalytics,
+  updateUserDetails,
   checkServiceHealthAdmin
 } from './../utility/Utility.js';
 
@@ -30,6 +31,7 @@ const runSmoke = async () => {
     await checkOrganisations(page);
     await checkSubmissions(page);
     await checkAnalytics(page);
+    await updateUserDetails(page);
     await checkServiceHealthAdmin(page, url);
   } catch (error) {
     console.error('Smoke tests failed:', error);

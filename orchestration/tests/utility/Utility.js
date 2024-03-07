@@ -8,17 +8,6 @@ const checkTextInElement = (expectedText, actualText) => {
     }
   };
 
-const checkValueGreaterThanZero = async (page, selector) => {
-  await page.waitForSelector(selector);
-  const textContent = await page.$eval(selector, element => element.textContent.trim());
-  const value = parseInt(textContent, 10);
-  if (value > 0) {
-    console.log(`The value ${value} is greater than 0.`);
-  } else {
-    console.log(`The value ${value} is not greater than 0.`);
-  }
-};
-
 const getSecret = async (environment, endpoint) => {
   console.log('===== Pre-Step: Get Secret Values from '+environment+' =====');
   let smcParams;
@@ -126,7 +115,7 @@ const checkSubmissions = async (page) => {
 const checkAnalytics = async (page) => {
   console.log('===== Check analytics stats exist =====');
   await Promise.all([
-    page.waitForNavigation(), // This line will wait for navigation to complete
+    page.waitForNavigation(),
     page.click('.behat-link-admin-analytics'),
   ]);
   const textContent = await page.$eval('.govuk-heading-xl[aria-labelledby="metric-registeredDeputies-total-label"]', element => element.textContent.trim());
@@ -136,6 +125,35 @@ const checkAnalytics = async (page) => {
   } else {
     console.log(`The value ${value} is not greater than 0.`);
   }
+};
+
+const updateFirstName = async (page, name) => {
+  await page.click('.behat-link-profile-edit');
+  await page.click('#user_details_firstname', { clickCount: 3 }); // Select all text
+  await page.keyboard.type(name);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    page.click('#user_details_save'),
+  ]);
+  await page.waitForSelector('.behat-region-profile-name');
+  const editedUserText = await page.$eval('.behat-region-profile-name', element => element.textContent.trim());
+  checkTextInElement(name, editedUserText);
+};
+
+const updateUserDetails = async (page) => {
+  console.log('===== Update current users details =====');
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.behat-link-user-account'),
+  ]);
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.behat-link-profile-show'),
+  ]);
+
+  // Properly await the updateFirstName function
+  await updateFirstName(page, 'SmokeyEdit');
+  await updateFirstName(page, 'SmokeyJoe');
 };
 
 const checkServiceHealthAdmin = async (page, url) => {
@@ -165,5 +183,6 @@ export {
     checkServiceHealthFront,
     checkOrganisations,
     checkSubmissions,
-    checkAnalytics
+    checkAnalytics,
+    updateUserDetails
 };
