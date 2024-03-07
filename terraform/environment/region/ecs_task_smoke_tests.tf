@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "smoke_tests" {
       "secretsmanager:GetSecretValue"
     ]
     resources = [
-      aws_secretsmanager_secret.smoke.arn
+      data.aws_secretsmanager_secret.smoke_tests_variables.arn
     ]
   }
 }
