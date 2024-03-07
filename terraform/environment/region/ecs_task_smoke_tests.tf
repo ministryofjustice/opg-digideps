@@ -71,7 +71,7 @@ locals {
     cpu       = 0,
     essential = true,
     image     = local.images.orchestration,
-    command   = ["sh", "./smoke-tests/run-smoke-tests.sh"],
+    command   = ["sh", "./tests/run-smoke-tests.sh"],
     name      = "smoke-tests",
     logConfiguration = {
       logDriver = "awslogs",
