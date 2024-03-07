@@ -67,7 +67,7 @@ const loginAsSuperAdmin = async (page, url, user, password) => {
   };
 
 const searchForUser = async (page, user) => {
-    console.log('===== Try searching for a user =====');
+    console.log('===== Check searching for a user works =====');
     await page.type('#admin_q', user);
     await Promise.all([
         page.waitForNavigation(),
@@ -82,7 +82,7 @@ const searchForUser = async (page, user) => {
 };
 
 const searchForClient = async (page, clientToFind) => {
-    console.log('===== Try searching for a client =====');
+    console.log('===== Check searching for a client work =====');
     await page.waitForSelector('.behat-link-admin-client-search');
     await page.click('.behat-link-admin-client-search')
     await page.type('#search_clients_q', clientToFind);
@@ -124,7 +124,7 @@ const checkSubmissions = async (page) => {
 };
 
 const checkAnalytics = async (page) => {
-  console.log('===== Check Analytics Page =====');
+  console.log('===== Check analytics stats exist =====');
   await Promise.all([
     page.waitForNavigation(), // This line will wait for navigation to complete
     page.click('.behat-link-admin-analytics'),

@@ -65,7 +65,7 @@ trait AnalyticsTrait
      */
     public function iAddMoreClientsDeputiesReports()
     {
-        $fromYearsAgo = $this->dateRangeOfFixtures['from'] + 1;
+        $fromYearsAgo = $this->dateRangeOfFixtures['from'];
 
         ++$this->runNumber;
         $this->createAdditionalDataForAnalytics("$fromYearsAgo years ago", $this->runNumber, 1);
@@ -74,16 +74,16 @@ trait AnalyticsTrait
             'feedBack' => 50,
             'totalRespondents' => 6,
             'totalReports' => 6,
-            'totalRegistered' => 3,
+            'totalRegistered' => 6,
             'laySatisfaction' => 50,
             'laySubmitted' => 2,
-            'layDeputies' => 1,
+            'layDeputies' => 2,
             'profSatisfaction' => 50,
             'profSubmitted' => 2,
-            'profDeputies' => 1,
+            'profDeputies' => 2,
             'paSatisfaction' => 50,
             'paSubmitted' => 2,
-            'paDeputies' => 1,
+            'paDeputies' => 2,
         ];
     }
 
