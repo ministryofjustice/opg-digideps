@@ -1,5 +1,5 @@
 @v2 @v2_reporting_2 @money-out-short
-Feature: Money Out Short
+Feature: Money Out Short - Lay users
 
     @lay-pfa-low-not-started
     Scenario: A user has had no money go out
@@ -77,3 +77,19 @@ Feature: Money Out Short
         Given a Lay Deputy has completed a Pfa Low Assets report
         When I edit the money out short section and add a payment
         Then I should see the expected money out section summary
+
+    @lay-pfa-low-completed
+    Scenario: A user has had some money go out but nothing over £1k and submits report successfully
+        Given a Lay Deputy has completed a Pfa Low Assets report
+        And I visit the report overview page
+        Then I should see "money-out-short" as "no money out"
+        When I visit the short money out summary section
+        And I edit the money out short summary section
+        And I answer "Yes" to taking money out on the clients behalf
+        When I add one category of money paid out
+        And I answer that there are not any one-off payments over £1k
+        Then I should see the expected money out section summary
+        When I follow link back to report overview page
+        Then I should see "money-out-short" as "money out"
+        Given I submit the report
+        Then my report should be submitted

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\User;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
@@ -83,6 +84,8 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyHealthWelfareNotStartedDetails;
     public UserDetails $profAdminDeputyHealthWelfareCompletedDetails;
     public UserDetails $profAdminDeputyHealthWelfareSubmittedDetails;
+    public UserDetails $profAdminDeputyNotStartedPfaLowAssetsDetails;
+    public UserDetails $profAdminDeputyCompletedPfaLowAssetsDetails;
 
     public UserDetails $profAdminCombinedHighNotStartedDetails;
     public UserDetails $profAdminCombinedHighCompletedDetails;
@@ -193,6 +196,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @prof-pfa-low-not-started
+     */
+    public function createProfPfaLowNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfPfaLowAssetsNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
+    }
+    
+    /**
      * @BeforeScenario @lay-pfa-low-completed
      */
     public function createPfaLowCompleted()
@@ -201,6 +213,15 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
     }
 
+    /**
+     * @BeforeScenario @prof-pfa-low-completed
+     */
+    public function createProfPfaLowCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createProfPfaLowAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
+    }
+    
     /**
      * @BeforeScenario @lay-health-welfare-not-started
      */
