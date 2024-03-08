@@ -70,7 +70,8 @@ class UserRegistrationService
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
             $selfRegisterData->getLastname(),
-            $user->getAddressPostcode()
+            $user->getAddressPostcode(),
+            $selfRegisterData->getFirstname()
         );
 
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {

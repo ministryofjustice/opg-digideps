@@ -535,6 +535,7 @@ class FixtureController extends AbstractController
             'caseNumber' => $preRegistration->getCaseNumber(),
             'clientLastName' => $preRegistration->getClientLastname(),
             'deputyLastName' => $preRegistration->getDeputySurname(),
+            'deputyFirstName' => $preRegistration->getDeputyFirstname(),
             'deputyPostCode' => $preRegistration->getDeputyPostCode(),
         ];
 

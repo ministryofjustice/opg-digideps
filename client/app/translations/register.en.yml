@@ -75,3 +75,4 @@ matchingErrors:
   clientLastname: The client's last name you provided does not match our records.
   deputyLastname: Your last name you provided does not match our records.
   deputyPostcode: The postcode you provided does not match our records.
+  deputyFirstname: Your first name you provided does not match our records.

@@ -343,6 +343,9 @@ class UserController extends AbstractController
                         if (true == $decodedError['matching_errors']['deputy_postcode']) {
                             $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
+                        if (true == $decodedError['matching_errors']['deputy_firstname']) {
+                            $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
+                        }
 
                         break;
                     default:
