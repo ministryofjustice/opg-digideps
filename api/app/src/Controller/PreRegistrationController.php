@@ -77,6 +77,7 @@ class PreRegistrationController extends RestController
         $verified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
+            $user->getFirstname(),
             $user->getLastname(),
             $user->getAddressPostcode()
         );

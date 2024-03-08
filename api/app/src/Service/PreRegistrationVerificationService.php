@@ -23,13 +23,13 @@ class PreRegistrationVerificationService
      * Throw error 400 if preregistration has no record matching case number,
      * client surname, deputy surname, and postcode (if set).
      */
-    public function validate(string $caseNumber, string $clientLastname, string $deputyLastname, ?string $deputyPostcode,string $deputyFirstname): bool
+    public function validate(string $caseNumber, string $clientLastname, string $deputyFirstname, string $deputyLastname, ?string $deputyPostcode): bool
     {
         $detailsToMatchOn = [
             'caseNumber' => $caseNumber,
             'clientLastname' => $clientLastname,
+            'deputyFirstname' => $deputyFirstname,
             'deputyLastname' => $deputyLastname,
-            'deputyFirstname' => $deputyFirstname
         ];
 
         if ($deputyPostcode) {
@@ -103,7 +103,7 @@ class PreRegistrationVerificationService
      */
     private function checkOtherDetailsMatch(array $caseNumberMatches, $detailsToMatchOn)
     {
-        $matchingErrors = ['client_lastname' => false, 'deputy_lastname' => false, 'deputy_postcode' => false, 'deputy_firstname' => false];
+        $matchingErrors = ['client_lastname' => false, 'deputy_firstname' => false, 'deputy_lastname' => false, 'deputy_postcode' => false];
 
         /** @var PreRegistration[] $clientLastnameMatches */
         $clientLastnameMatches = [];

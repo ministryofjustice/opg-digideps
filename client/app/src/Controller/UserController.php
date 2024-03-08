@@ -161,6 +161,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
+     *
      * @Template("@App/User/activateLinkSend.html.twig")
      */
     public function activateLinkSendAction(string $token): Response
@@ -175,6 +176,7 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
+     *
      * @Template("@App/User/activateLinkSent.html.twig")
      */
     public function activateLinkSentAction(string $token): array
@@ -196,6 +198,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/user/details", name="user_details")
+     *
      * @Template("@App/User/details.html.twig")
      */
     public function detailsAction(Request $request, Redirector $redirector)
@@ -235,6 +238,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/password-managing/forgotten", name="password_forgotten")
+     *
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
     public function passwordForgottenAction(Request $request)
@@ -263,6 +267,7 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/password-managing/sent", name="password_sent")
+     *
      * @Template("@App/User/passwordSent.html.twig")
      */
     public function passwordSentAction(): array
@@ -274,6 +279,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/register", name="register")
+     *
      * @Template("@App/User/register.html.twig")
      */
     public function registerAction(Request $request)
@@ -340,11 +346,11 @@ class UserController extends AbstractController
                         if (true == $decodedError['matching_errors']['deputy_lastname']) {
                             $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
-                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
-                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
-                        }
                         if (true == $decodedError['matching_errors']['deputy_firstname']) {
                             $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
+                        }
+                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
+                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
 
                         break;
@@ -403,6 +409,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     *
      * @Security("is_granted('ROLE_ORG')")
      */
     public function updatedTermsUseAction(Request $request, string $token): Response

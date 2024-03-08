@@ -69,9 +69,9 @@ class UserRegistrationService
         $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
+            $selfRegisterData->getFirstname(),
             $selfRegisterData->getLastname(),
-            $user->getAddressPostcode(),
-            $selfRegisterData->getFirstname()
+            $user->getAddressPostcode()
         );
 
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
@@ -104,6 +104,7 @@ class UserRegistrationService
         $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
+            $selfRegisterData->getFirstname(),
             $selfRegisterData->getLastname(),
             $selfRegisterData->getPostcode()
         );
