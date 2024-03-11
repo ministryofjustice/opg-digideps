@@ -62,3 +62,17 @@ jobs:
           unset TF_WORKSPACE
           ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
         working-directory: terraform/environment
+
+      - name: install python
+        uses: actions/setup-python@871daa956ca9ea99f3c3e30acb424b7960676734 # pin@v4.2.0
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: clean up old task definitions
+        env:
+          REGION: eu-west-1
+        run: |
+          pip install -r requirements.txt
+          python cleanup_task_definitions.py
+        working-directory: scripts/pipeline/cleanup_task_definitions
