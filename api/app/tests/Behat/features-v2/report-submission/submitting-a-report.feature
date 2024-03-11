@@ -11,3 +11,15 @@ Feature: Submitting a report
         And I confirm I am the sole deputy
         And I submit my report
         Then my report should be submitted
+
+    @lay-pfa-high-completed
+    Scenario: A deputy is unable to submit their report if their documents no longer exist in S3
+        Given a Lay Deputy has a completed report
+        When I visit the report overview page
+        And I view the documents report section
+        And I have documents to upload
+        Then I attach a supporting document "test-image.png" to the report
+        And the supporting document has expired and is no longer stored in the S3 bucket
+        And I try to submit my report with an expired document 
+        Then I should be redirected to the re-upload page
+        

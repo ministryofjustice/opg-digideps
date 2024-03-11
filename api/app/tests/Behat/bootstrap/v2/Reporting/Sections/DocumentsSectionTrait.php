@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
 
 trait DocumentsSectionTrait
@@ -306,5 +307,40 @@ trait DocumentsSectionTrait
     {
         $this->clickLink('Send documents');
         $this->iAmOnLayMainPage();
+    }
+
+    /**
+     * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
+     */
+    public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
+    {
+        $reportId = $this->loggedInUserDetails->getCurrentReportId();
+        
+        $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
+        
+        $storageReference = '';
+        
+        foreach($docs as $doc){
+            $storageReference = $doc->getStorageReference();
+        }
+        
+        $this->s3Client->deleteMatchingObjects('pa-uploads-local', $storageReference, '', []);
+    }
+
+    /**
+     * @Given /^I try to submit my report with an expired document$/
+     */
+    public function iTryToSubmitMyReportWithAnExpiredDocument()
+    {
+        $this->visitFrontendPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->clickLink('Preview and check report');
+    }
+
+    /**
+     * @Then /^I should be redirected to the re\-upload page$/
+     */
+    public function iShouldBeRedirectedToTheReUploadPage()
+    {
+        $this->iAmOnReuploadPage();
     }
 }
