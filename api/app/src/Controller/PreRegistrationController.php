@@ -44,7 +44,7 @@ class PreRegistrationController extends RestController
     }
 
     /**
-     * Verify Deputy & Client last names, Postcode, and Case Number.
+     * Verify Deputy first and last names, Client last name, Postcode, and Case Number.
      *
      * @Route("/verify", methods={"POST"})
      */

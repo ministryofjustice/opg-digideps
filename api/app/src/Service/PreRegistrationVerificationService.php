@@ -21,7 +21,7 @@ class PreRegistrationVerificationService
 
     /**
      * Throw error 400 if preregistration has no record matching case number,
-     * client surname, deputy surname, and postcode (if set).
+     * client surname, deputy firstname and surname, and postcode (if set).
      */
     public function validate(string $caseNumber, string $clientLastname, string $deputyFirstname, string $deputyLastname, ?string $deputyPostcode): bool
     {
