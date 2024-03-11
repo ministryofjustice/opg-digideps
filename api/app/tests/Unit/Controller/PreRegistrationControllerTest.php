@@ -148,8 +148,8 @@ class PreRegistrationControllerTest extends AbstractTestController
         $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '12345678']);
 
-        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'codeputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'test','deputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'cotest','codeputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -173,12 +173,13 @@ class PreRegistrationControllerTest extends AbstractTestController
         ]);
     }
 
-    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputySurname = 'admin'): PreRegistration
+    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputyFirstname = 'test',string $deputySurname = 'admin'): PreRegistration
     {
         $preRegistration = new PreRegistration([
             'Case' => $case,
             'ClientSurname' => 'I should get deleted',
             'DeputyUid' => 'Deputy No',
+            'DeputyFirstname' => $deputyFirstname,
             'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
             'DeputyPostcode' => 'SW1',
@@ -195,8 +196,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testDeputyUidSetWhenSingleMatchFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'test','deputy');
+        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'test','deputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -226,8 +227,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testDeputyUidNotSetWhenMultipleMatchesFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test','deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test','deputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
