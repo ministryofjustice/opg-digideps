@@ -116,7 +116,7 @@
                                 </span>
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'rcustom-submiteportId':report.id, 'documentId': document.id, 'from': page, 'notInS3': true}) }}">
+                                <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'custom-submitReportId':report.id, 'documentId': document.id, 'from': page, 'notInS3': true}) }}">
                                     {{ (page ~ '.deleteDocument') | trans }}
                                 </a>
                             </dd>
