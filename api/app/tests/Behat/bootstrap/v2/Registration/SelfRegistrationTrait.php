@@ -10,9 +10,10 @@ use App\Tests\Behat\v2\Common\UserDetails;
 trait SelfRegistrationTrait
 {
     private string $invalidCaseNumberError = "The case number you provided does not match our records.\nPlease call 0115 934 2700 to make sure we have a record of your deputyship.";
-    private string $invalidDeputyLastnameError = "The client's last name you provided does not match our records.";
-    private string $invalidDeputyPostcodeError = 'Your last name you provided does not match our records.';
-    private string $invalidClientLastnameError = 'The postcode you provided does not match our records.';
+    private string $invalidDeputyFirstnameError = 'Your first name you provided does not match our records.';
+    private string $invalidDeputyLastnameError = 'Your last name you provided does not match our records.';
+    private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
+    private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
     private string $userEmail;
     private string $coDeputyEmail;
     private string $deputyUid;
@@ -22,13 +23,13 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails()
     {
-        $this->userEmail = 'brian@duck.co.uk';
+        $this->userEmail = 'julie@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
         $this->deputyUid = '19371937';
 
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
-            'Brian',
+            'Julie',
             'Duck',
             $this->userEmail,
             'B1',
@@ -36,7 +37,7 @@ trait SelfRegistrationTrait
             'Huey',
             '31313131',
         );
-
+        
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
@@ -116,6 +117,14 @@ trait SelfRegistrationTrait
     }
 
     /**
+     * @Then I should see an 'invalid deputy firstname' error
+     */
+    public function iShouldSeeAnInvalidDeputyFirstnameError()
+    {
+        $this->assertOnErrorMessage($this->invalidDeputyFirstnameError);
+    }
+    
+    /**
      * @Then I should see an 'invalid deputy lastname' error
      */
     public function iShouldSeeAnInvalidDeputyLastnameError()
@@ -192,7 +201,7 @@ trait SelfRegistrationTrait
         $this->userEmail = 'VANDERQUACK@DUCKTAILS.com';
 
         $this->fillInField('admin_email', $this->userEmail);
-        $this->fillInField('admin_firstname', $this->faker->firstName);
+        $this->fillInField('admin_firstname', 'Maria');
         $this->fillInField('admin_lastname', 'Vanderquack');
         $this->fillInField('admin_addressPostcode', 'SW1');
         $this->selectOption('admin[roleType]', 'deputy');

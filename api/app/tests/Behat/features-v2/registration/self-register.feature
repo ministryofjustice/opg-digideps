@@ -13,6 +13,7 @@ Feature: Lay Deputy Self Registration
         Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows.csv'
         When I run the lay CSV command the file contains 3 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with a valid case number and invalid case details
+        And I should see an 'invalid deputy firstname' error
         And I should see an 'invalid deputy lastname' error
         And I should see an 'invalid deputy postcode' error
         Then I should see an 'invalid client lastname' error
