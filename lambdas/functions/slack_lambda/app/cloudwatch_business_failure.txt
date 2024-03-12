@@ -1,0 +1,9 @@
+:warning_triangle: *Possible Business Process Issues*
+
+There could be an issue with these business areas -
+{main_body}
+
+This is based on certain defined endpoints
+not being requested as many times as expected in the last hour.
+
+Check the rule definition for further details.
