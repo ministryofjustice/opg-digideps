@@ -271,6 +271,11 @@ class FixtureHelper
             'Metadata' => [],
         ]);
     }
+    
+    public function deleteFilesFromS3(string $storageReference): void
+    {
+        $this->s3Client->deleteMatchingObjects(getenv(self::S3_BUCKETNAME), $storageReference, '', []);
+    }
 
     private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore)
     {

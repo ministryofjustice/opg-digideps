@@ -419,7 +419,7 @@ class DocumentController extends AbstractController
         $report = $document->getReport();
         $fromPage = $request->get('from');
 
-        if('reuploadPage' == $fromPage) {
+        if('reUploadPage' == $fromPage) {
             $backLink = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
         } else {
             'summaryPage' == $fromPage ? $backLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()])
@@ -495,7 +495,7 @@ class DocumentController extends AbstractController
         } else {
             $reportDocumentStatus = $report->getStatus()->getDocumentsState();
 
-            if('reuploadPage' == $request->get('from')) {
+            if('reUploadPage' == $request->get('from')) {
                 $returnUrl = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
             } else if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
                 $returnUrl = 'summaryPage' == $request->get('from')

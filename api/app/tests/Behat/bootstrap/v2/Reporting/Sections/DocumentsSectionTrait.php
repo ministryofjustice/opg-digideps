@@ -324,7 +324,9 @@ trait DocumentsSectionTrait
             $storageReference = $doc->getStorageReference();
         }
         
-        $this->s3Client->deleteMatchingObjects('pa-uploads-local', $storageReference, '', []);
+        $this->expireDocumentFromUnSubmittedDeputyReport($storageReference);
+     
+//        $this->s3Client->deleteMatchingObjects('pa-uploads-local', $storageReference, '', []);
     }
 
     /**
@@ -341,7 +343,7 @@ trait DocumentsSectionTrait
      */
     public function iShouldBeRedirectedToTheReUploadPage()
     {
-        $this->iAmOnReuploadPage();
+        $this->iAmOnReUploadPage();
     }
 
     /**
@@ -367,7 +369,7 @@ trait DocumentsSectionTrait
 
         $removeLink->click();
         $this->pressButton('confirm_delete_confirm');
-        $this->iAmOnReuploadPage();
+        $this->iAmOnReUploadPage();
         
         // re-upload document
         $this->attachFileToField('report_document_upload_files', $document);

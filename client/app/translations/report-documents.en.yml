@@ -95,7 +95,7 @@ submitMoreDocumentsConfirm:
   deleteDocument: Remove
   submitButton: Send documents
 
-reuploadPage:
+reUploadPage:
   pageTitle: Re-upload documents
   supportingDocuments: Supporting document
   selectHeading: 1. Select the documents that need to be re-uploaded
@@ -116,7 +116,7 @@ reuploadPage:
   uploadHint: |
     If the file takes more than 5 minutes to upload, please refresh the page and try again.
     To stop uploading the file, just refresh the page.
-  reuploadLabel: Re-upload file
-  reuploadErrorMessage: We've identified technical problem with your documents, please remove and re-upload the documents marked below.
+  reUploadLabel: Re-upload file
+  reUploadErrorMessage: Some of your documents have now expired, please remove and re-upload the document(s) marked below.
   removeDocumentAction: |
-    The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed and re-uploaded if you wish to re-attach them to your report.
+    The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed and re-uploaded. This ensures that your documents are successfully re-attached to your report before you submit your report.

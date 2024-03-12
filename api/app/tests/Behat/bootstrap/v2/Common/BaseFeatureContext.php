@@ -581,4 +581,9 @@ class BaseFeatureContext extends MinkContext
     {
         $this->fixtureHelper->createDataForAdminUserTests('edit');
     }
+    
+    public function expireDocumentFromUnSubmittedDeputyReport(string $storageReference): void
+    {
+        $this->fixtureHelper->deleteFilesFromS3($storageReference);
+    }
 }

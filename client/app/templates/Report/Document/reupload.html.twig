@@ -3,7 +3,7 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
-{% set page = "reuploadPage" %}
+{% set page = "reUploadPage" %}
 
 {% trans_default_domain translationDomain %}
 
@@ -21,12 +21,12 @@
 {% if documentsToBeReUploaded is not empty %}
     <div class="govuk-!-width-two-thirds">
         <div id="error-summary" class="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-heading">There are some problems with your documents
+            <h2 class="govuk-error-summary__title" id="error-summary-heading">There's a problem with your documents
             </h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li>
-                        <a href="#">{{ (page ~ '.reuploadErrorMessage') | trans }}</a>
+                        <a href="#">{{ (page ~ '.reUploadErrorMessage') | trans }}</a>
                     </li>
                 </ul>
             </div>
