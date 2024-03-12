@@ -43,7 +43,9 @@ data "aws_iam_policy_document" "integration_tests" {
     effect = "Allow"
     actions = [
       "s3:PutObject",
-      "s3:ListObjects"
+      "s3:ListObjects",
+      "s3:DeleteObject",
+      "s3:ListBucket"
     ]
     #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [

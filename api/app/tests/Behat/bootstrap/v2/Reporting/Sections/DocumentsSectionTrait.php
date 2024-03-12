@@ -325,8 +325,6 @@ trait DocumentsSectionTrait
         }
         
         $this->expireDocumentFromUnSubmittedDeputyReport($storageReference);
-     
-//        $this->s3Client->deleteMatchingObjects('pa-uploads-local', $storageReference, '', []);
     }
 
     /**
