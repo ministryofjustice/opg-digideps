@@ -43,22 +43,12 @@ data "aws_iam_policy_document" "integration_tests" {
     effect = "Allow"
     actions = [
       "s3:PutObject",
+      "s3:ListObjects"
     ]
     #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [
-      "${module.pa_uploads.arn}/*"
-    ]
-  }
-
-  statement {
-    sid    = "AllowS3OnPAUploadsBucket"
-    effect = "Allow"
-    actions = [
-      "s3:ListObjects",
-    ]
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
-    resources = [
-      "${module.pa_uploads.arn}/*"
+      "${module.pa_uploads.arn}/*",
+      module.pa_uploads.arn
     ]
   }
 }
