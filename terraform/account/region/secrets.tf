@@ -13,7 +13,8 @@ module "environment_secrets" {
     "front-notify-api-key",
     "synchronisation-jwt-token",
     "public-jwt-key-base64",
-    "private-jwt-key-base64"
+    "private-jwt-key-base64",
+    "smoke-test-variables"
   ]
   tags = var.default_tags
 }
