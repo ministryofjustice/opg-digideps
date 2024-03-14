@@ -259,7 +259,8 @@ class FixtureHelper
         }
     }
 
-    private function storeFileInS3(string $bucketName, string $key) {
+    private function storeFileInS3(string $bucketName, string $key)
+    {
         $filePath = sprintf('%s/fixtures/%s', dirname(__DIR__, 3), 'good.pdf');
         $fileBody = file_get_contents($filePath);
 
@@ -271,11 +272,9 @@ class FixtureHelper
             'Metadata' => [],
         ]);
     }
-    
+
     public function deleteFilesFromS3(string $storageReference): void
     {
-        var_dump('Fixture Helper');
-        var_dump($storageReference);
         $this->s3Client->deleteMatchingObjects(getenv(self::S3_BUCKETNAME), $storageReference, '', []);
     }
 
