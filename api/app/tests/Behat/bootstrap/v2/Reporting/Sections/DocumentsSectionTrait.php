@@ -314,7 +314,6 @@ trait DocumentsSectionTrait
      */
     public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
     {
-        var_dump($this->loggedInUserDetails->getUserEmail());
         $reportId = $this->loggedInUserDetails->getCurrentReportId();
 
         $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
