@@ -314,16 +314,17 @@ trait DocumentsSectionTrait
      */
     public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
     {
+        var_dump($this->loggedInUserDetails->getUserEmail());
         $reportId = $this->loggedInUserDetails->getCurrentReportId();
-        
+
         $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
-        
+
         $storageReference = '';
-        
-        foreach($docs as $doc){
+
+        foreach ($docs as $doc) {
             $storageReference = $doc->getStorageReference();
         }
-        
+
         $this->expireDocumentFromUnSubmittedDeputyReport($storageReference);
     }
 
@@ -368,15 +369,14 @@ trait DocumentsSectionTrait
         $removeLink->click();
         $this->pressButton('confirm_delete_confirm');
         $this->iAmOnReUploadPage();
-        
+
         // re-upload document
         $this->attachFileToField('report_document_upload_files', $document);
         $this->pressButton('Upload');
-        
+
         $descriptionLists = $this->findAllCssElements('dl');
         $this->findFileNamesInDls($descriptionLists, [$formattedDocName]);
-        
+
         $this->clickLink('Save and continue');
-        
     }
 }
