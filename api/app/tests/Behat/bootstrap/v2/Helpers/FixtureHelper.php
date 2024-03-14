@@ -274,6 +274,8 @@ class FixtureHelper
     
     public function deleteFilesFromS3(string $storageReference): void
     {
+        var_dump('Fixture Helper');
+        var_dump($storageReference);
         $this->s3Client->deleteMatchingObjects(getenv(self::S3_BUCKETNAME), $storageReference, '', []);
     }
 

@@ -12,7 +12,7 @@ Feature: Submitting a report
         And I submit my report
         Then my report should be submitted
         
-    @lay-pfa-high-completed
+    @lay-pfa-high-completed @mia
     Scenario: Deputy is ready to submit report but has a missing document in S3 and is redirected to re-upload page to re-upload document and submit report
         Given a Lay Deputy has a completed report
         When I visit the report overview page
