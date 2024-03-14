@@ -1,3 +1,5 @@
+import time
+
 import boto3
 import logging
 import os
@@ -56,6 +58,7 @@ def main():
             else:
                 print("Deleting inactive task definitions..")
                 delete_task_definition(client, arns)
+                time.sleep(1)
     except Exception as e:
         logging.warning("Error trying to get inactive task definitions")
         logging.error(e)
