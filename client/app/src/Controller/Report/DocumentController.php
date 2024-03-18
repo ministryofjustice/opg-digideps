@@ -264,6 +264,7 @@ class DocumentController extends AbstractController
                 if ($verified) {
                     try {
                         $this->fileUploader->uploadSupportingFilesAndPersistDocuments($uploadedFiles, $report);
+                        $this->addFlash('notice', 'Document has been uploaded');
 
                         return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId, 'successUploaded' => 'true']);
                     } catch (MimeTypeAndFileExtensionDoNotMatchException $e) {

@@ -24,6 +24,7 @@ use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
+use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
@@ -34,7 +35,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Service\File\Storage\S3Storage;
 
 class ReportController extends AbstractController
 {
@@ -115,7 +115,6 @@ class ReportController extends AbstractController
      *
      * @Route("/lay", name="lay_home")
      * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
-     *
      * @Template("@App/Report/Report/index.html.twig")
      *
      * @return array|RedirectResponse
@@ -154,7 +153,6 @@ class ReportController extends AbstractController
      * Edit single report.
      *
      * @Route("/reports/edit/{reportId}", name="report_edit")
-     *
      * @Template("@App/Report/Report/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -198,7 +196,6 @@ class ReportController extends AbstractController
      *   defaults={ "action" = "create"},
      *   requirements={ "action" = "(create|add)"}
      * )
-     *
      * @Template("@App/Report/Report/create.html.twig")
      *
      * @return array|RedirectResponse
@@ -242,7 +239,6 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
-     *
      * @Template("@App/Report/Report/overview.html.twig")
      *
      * @return RedirectResponse|Response|null
@@ -293,9 +289,6 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
-        // throw flash message when deputy has successfully re-uploaded missing S3 documents in order to submit report
-        $this->throwFlashMessageIfDeputyIsRedirectedFromReUploadPage($request);
-
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
@@ -303,13 +296,6 @@ class ReportController extends AbstractController
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
-    }
-
-    private function throwFlashMessageIfDeputyIsRedirectedFromReUploadPage($request) : void
-    {
-        if('report_documents_reupload' == $request->get('from')){
-            $this->addFlash('notice', 'Files have been uploaded');
-        }
     }
 
     /**
@@ -367,7 +353,6 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
-     *
      * @Template("@App/Report/Report/declaration.html.twig")
      *
      * @return array|RedirectResponse
@@ -415,7 +400,6 @@ class ReportController extends AbstractController
      * Page displaying the report has been submitted.
      *
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
-     *
      * @Template("@App/Report/Report/submitConfirmation.html.twig")
      *
      * @return array|RedirectResponse
@@ -451,7 +435,6 @@ class ReportController extends AbstractController
      * Used for active and archived report.
      *
      * @Route("/report/{reportId}/review", name="report_review")
-     *
      * @Template("@App/Report/Report/review.html.twig")
      *
      * @return RedirectResponse
@@ -474,12 +457,12 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
-        //Redirect deputy to doc re-upload page if docs do not exist in S3
+        // Redirect deputy to doc re-upload page if docs do not exist in S3
         $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
 
-        if(!empty($documentsNotInS3)) {
-           return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
-        };
+        if (!empty($documentsNotInS3)) {
+            return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+        }
 
         return [
             'user' => $this->getUser(),
@@ -499,11 +482,11 @@ class ReportController extends AbstractController
         }
 
         $documentStorageReferences = [];
-        foreach($documentIds as $documentId){
+        foreach ($documentIds as $documentId) {
             $documentStorageReferences[] = $this->restClient->get(
                 sprintf('document/%s', $documentId),
                 'Report\Document',
-            ['document-storage-reference']
+                ['document-storage-reference']
             )->getStorageReference();
         }
 
@@ -511,11 +494,11 @@ class ReportController extends AbstractController
         $documentsNotInS3 = [];
 
         // loop through references and check if they exist in S3, as soon as a file is not found in S3 redirect to re-uploads page
-        if(!empty($documentStorageReferences)) {
+        if (!empty($documentStorageReferences)) {
             foreach ($documentStorageReferences as $docStorageReference) {
-                if(!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
+                if (!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
                     $documentsNotInS3[] = $docStorageReference;
-                };
+                }
             }
         }
 

@@ -119,4 +119,5 @@ reUploadPage:
   reUploadLabel: Re-upload file
   reUploadErrorMessage: Some of your documents have now expired, please remove and re-upload the document(s) marked below.
   removeDocumentAction: |
-    The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed and re-uploaded. This ensures that your documents are successfully re-attached to your report before you submit your report.
+    The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed. Please ensure that you re-upload the documents before you save and continue.
+  uploadDocumentReminder: Please remember to re-upload your document(s) before you save and continue.
