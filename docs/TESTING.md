@@ -233,3 +233,9 @@ To set this up in PHPStorm, you should perform the following steps:
 3)
    - That's all there is to it. Now you can switch between contexts for running your tests by going to PHPStorm->Settings…->PHP and changing the interpreter
    - When you have the correct interpreter for your tests, you can click on the green arrow icon by individual tests to run them individually
+
+## Smoke tests
+Smoke tests run as part of our pipeline to check that their aren't any environmental issues outside
+of the scope of our unit and integration tests in production.
+
+Please read this [confluence documentation](https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/3778215945/Smoke+Tests) for more information on this.

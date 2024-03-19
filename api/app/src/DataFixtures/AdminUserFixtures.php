@@ -50,6 +50,12 @@ class AdminUserFixtures extends AbstractDataFixture
             'email' => 'casemanager3@publicguardian.gov.uk',
             'roleType' => 'ROLE_ADMIN',
         ],
+        [
+            'firstName' => 'SmokeyJoe',
+            'lastName' => 'SmokeTest',
+            'email' => 'smoketestddadmin@smoketest.com',
+            'roleType' => 'ROLE_ADMIN',
+        ],
     ];
 
     public function doLoad(ObjectManager $manager)

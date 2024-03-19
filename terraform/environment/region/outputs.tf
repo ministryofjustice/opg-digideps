@@ -26,6 +26,6 @@ output "Tasks" {
     restore                 = module.restore.render
     restore_from_production = module.restore_from_production.render
     integration_test_v2     = module.integration_tests.render_with_override
-    smoke_test              = module.smoke_test.render
+    smoke_tests             = module.smoke_tests.render
   }
 }
