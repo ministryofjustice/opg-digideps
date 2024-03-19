@@ -47,7 +47,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out", name="money_out")
-     *
      * @Template("@App/Report/MoneyOut/start.html.twig")
      *
      * @return array|RedirectResponse
@@ -66,7 +65,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/exist", name="does_money_out_exist")
-     *
      * @Template("@App/Report/MoneyOut/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -80,19 +78,29 @@ class MoneyOutController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
             $answer = $form['moneyOutExists']->getData();
+            $fromPage = $request->get('from');
 
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
-            if ('Yes' === $answer) {
+            if ('Yes' === $answer && !$report->getMoneyTransactionsOut()) {
                 $report->setReasonForNoMoneyOut(null);
 
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
+            } elseif ('Yes' === $answer && 'summary' == $fromPage && $report->getMoneyTransactionsOut() > 0) {
+                $report->setReasonForNoMoneyOut(null);
+                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
+
+                foreach ($report->getMoneyTransactionsOut() as $transactions) {
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$transactions->getId(), ['transactionsSoftDelete']);
+                }
+
+                return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
             } else {
                 foreach ($report->getMoneyTransactionsOut() as $transactions) {
-                    $this->restClient->delete('/report/'.$reportId.'/money-transaction/'.$transactions->getId());
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$transactions->getId(), ['transactionsSoftDelete']);
                 }
 
                 return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
@@ -110,7 +118,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/no-money-out-exists", name="no_money_out_exists")
-     *
      * @Template("@App/Report/MoneyOut/noMoneyOutToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -143,7 +150,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
-     *
      * @Template("@App/Report/MoneyOut/step.html.twig")
      *
      * @param null $transactionId
@@ -253,7 +259,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/add_another", name="money_out_add_another")
-     *
      * @Template("@App/Report/MoneyOut/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -282,7 +287,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
-     *
      * @Template("@App/Report/MoneyOut/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -304,7 +308,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
-     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse

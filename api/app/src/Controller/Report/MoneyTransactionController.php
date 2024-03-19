@@ -28,7 +28,6 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
@@ -75,7 +74,6 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -112,7 +110,6 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"DELETE"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -128,6 +125,23 @@ class MoneyTransactionController extends RestController
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
+
+        return [];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction/soft-delete/{transactionId}", requirements={"id":"\d+"}, methods={"PUT"})
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function softDeleteMoneyTransactionAction($transactionId)
+    {
+        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
+
+        // if item is already marked as deleted then set to null, if not set as deleted
+        $t->isDeleted() ? $t->setDeletedAt() : $t->setDeletedAt(new \DateTime());
+
+        $this->em->flush($t);
 
         return [];
     }
