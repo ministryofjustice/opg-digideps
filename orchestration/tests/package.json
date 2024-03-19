@@ -1,0 +1,12 @@
+{
+  "name": "smoke",
+  "version": "1.0.0",
+  "description": "Smoke tests for Digideps",
+  "author": "OPG",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.525.0",
+    "puppeteer": "^22.4.0"
+  }
+}
