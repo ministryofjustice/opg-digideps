@@ -115,8 +115,8 @@ resource "aws_iam_role_policy" "fis_role_log_encryption" {
 
 # Create experiment template for ECS tasks
 
-resource "aws_fis_experiment_template" "ecs_app_stop_tasks" {
-  description = "Stop one ECS task in the app service"
+resource "aws_fis_experiment_template" "ecs_stop_frontend_tasks" {
+  description = "Stop one ECS task in the frontend service"
   role_arn    = var.fault_injection_simulator_role.arn
   tags = {
     Name = "${data.aws_default_tags.current.tags.environment-name} - Stop ECS Task"
@@ -154,15 +154,15 @@ resource "aws_fis_experiment_template" "ecs_app_stop_tasks" {
     }
     parameters = {
       "cluster" = var.ecs_cluster
-      "service" = "app"
+      "service" = "front-${var.environment}"
     }
     resource_type  = "aws:ecs:task"
     selection_mode = "COUNT(1)"
   }
 }
 
-resource "aws_fis_experiment_template" "ecs_app_cpu_stress" {
-  description = "Stress CPU for all ECS task in the app service"
+resource "aws_fis_experiment_template" "ecs_front_cpu_stress" {
+  description = "Stress CPU for all ECS task in the front service"
   role_arn    = var.fault_injection_simulator_role.arn
   tags = {
     Name = "${data.aws_default_tags.current.tags.environment-name} - Stress ECS Task CPU"
@@ -205,15 +205,15 @@ resource "aws_fis_experiment_template" "ecs_app_cpu_stress" {
     }
     parameters = {
       "cluster" = var.ecs_cluster
-      "service" = "app"
+      "service" = "front-${var.environment}"
     }
     resource_type  = "aws:ecs:task"
     selection_mode = "ALL"
   }
 }
 
-resource "aws_fis_experiment_template" "ecs_app_io_stress" {
-  description = "Stress IO for all ECS task in the app service"
+resource "aws_fis_experiment_template" "ecs_front_io_stress" {
+  description = "Stress IO for all ECS task in the front service"
   role_arn    = var.fault_injection_simulator_role.arn
   tags = {
     Name = "${data.aws_default_tags.current.tags.environment-name} - Stress ECS Task IO"
@@ -255,7 +255,7 @@ resource "aws_fis_experiment_template" "ecs_app_io_stress" {
     }
     parameters = {
       "cluster" = var.ecs_cluster
-      "service" = "app"
+      "service" = "front-${var.environment}"
     }
     resource_type  = "aws:ecs:task"
     selection_mode = "ALL"

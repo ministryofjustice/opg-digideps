@@ -12,3 +12,8 @@ variable "account_name" {
   type        = string
   description = "Account name."
 }
+
+variable "environment" {
+  type        = string
+  description = "Environment identifier."
+}
