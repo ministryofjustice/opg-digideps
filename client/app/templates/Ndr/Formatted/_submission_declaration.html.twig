@@ -6,7 +6,7 @@
 {% elseif app.user.isDeputyProf %}
     {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies" %}
 {% endif %}
-{% set transOptions = {'%link_start%': '<a href="'~standardsLink~'" target=_blank rel=noopener noreferrer>', '%link_end%': '</a>'} %}
+{% set transOptions = {'%link_start%': '<a href="'~standardsLink~'" class="govuk-link" rel="noreferrer noopener" target="_blank">', '%link_end%': '</a>'} %}
 {% trans_default_domain translationDomain %}
 {% if ndr.submitted %}
 
