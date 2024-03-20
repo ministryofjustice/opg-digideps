@@ -3,6 +3,14 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-declaration" %}
+{% if app.user.isLayDeputy %}
+    {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies" %}
+{% elseif app.user.isDeputyPa %}
+    {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-public-authority-deputies/guidance-for-public-authority-deputies" %}
+{% elseif app.user.isDeputyProf %}
+    {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies" %}
+{% endif %}
+{% set transOptions = {'%link_start%': '<a href="'~standardsLink~'" target=_blank rel=noopener noreferrer>', '%link_end%': '</a>'} %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -59,7 +67,9 @@
                     <li>{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
                 </ul>
             {% endif %}
-            <p class="govuk-body">{{ 'page.declarationTerms04' | trans }}</p>
+
+            <p class="govuk-body">{{ 'page.declarationTerms04' | trans(transOptions) | striptags('<a>') | raw }}</p>
+
         </div>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
