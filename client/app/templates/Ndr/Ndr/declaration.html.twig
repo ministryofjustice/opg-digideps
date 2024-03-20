@@ -10,7 +10,6 @@
 {% elseif app.user.isDeputyProf %}
     {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies" %}
 {% endif %}
-{% set transOptions = {'%link_start%': '<a href="'~standardsLink~'" class="govuk-link" rel="noreferrer noopener" target="_blank">', '%link_end%': '</a>'} %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -44,7 +43,10 @@
         <p class="govuk-body">{{ 'page.descriptionPara01' | trans }}</p>
         <p class="govuk-body">{{ 'page.descriptionPara02' | trans }}</p>
         <p class="govuk-body">{{ 'page.descriptionPara03' | trans }}</p>
-        <p class="govuk-body">{{ 'page.descriptionPara04' | trans(transOptions) | striptags('<a>') | raw }}</p>
+        <p class="govuk-body">{{ 'page.descriptionPara04.pre' | trans }}
+            <a href= '{{ standardsLink }}' class="govuk-link" rel="noreferrer noopener" target="_blank">{{ 'page.descriptionPara04.link' | trans }}</a>
+            {{ 'page.descriptionPara04.post' | trans }}
+        </p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
