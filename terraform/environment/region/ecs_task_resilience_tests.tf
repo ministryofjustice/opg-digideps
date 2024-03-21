@@ -23,9 +23,9 @@ data "aws_iam_policy_document" "resilience_tests" {
       "fis:StartExperiment"
     ]
     resources = [
-      module.fault_injection_simulator_experiments.ecs_stop_frontend_tasks_template_id,
-      module.fault_injection_simulator_experiments.ecs_front_cpu_stress_template_id,
-      module.fault_injection_simulator_experiments.front_io_stress_template_id
+      module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id,
+      module.fault_injection_simulator_experiments[0].ecs_front_cpu_stress_template_id,
+      module.fault_injection_simulator_experiments[0].front_io_stress_template_id
     ]
   }
 }
@@ -97,7 +97,7 @@ locals {
     environment = [
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
-      { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments.ecs_stop_frontend_tasks_template_id },
+      { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id },
       { name = "ENVIRONMENT", value = var.secrets_prefix }
     ]
   })
