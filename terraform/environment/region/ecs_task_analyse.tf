@@ -17,7 +17,7 @@ locals {
   psql_analyse = jsonencode({
     cpu       = 0,
     essential = true,
-    image     = local.images.sync,
+    image     = local.images.orchestration,
     command   = ["sh", "./analyse-database.sh"],
     name      = "database-analyse-command",
     logConfiguration = {
