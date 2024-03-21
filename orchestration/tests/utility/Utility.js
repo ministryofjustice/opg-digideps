@@ -164,6 +164,20 @@ const updateUserDetails = async (page, firstNameFieldSelector, saveSelector) => 
   await updateFirstName(page, 'SmokeyJoe', firstNameFieldSelector, saveSelector);
 };
 
+const updateUserDetailsConcurrent = async (page, firstNameFieldSelector, saveSelector) => {
+  console.log('=== Update current users details ===');
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.behat-link-user-account'),
+  ]);
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.behat-link-profile-show'),
+  ]);
+  await page.waitForSelector('.behat-link-profile-edit');
+  await updateFirstName(page, 'LoadeyJoe', firstNameFieldSelector, saveSelector);
+};
+
 const checkForReportLinkText = async (page, expectedText) => {
   const hasDecisionsLink = await page.$$eval(
     'a.opg-overview-section__label-link',
@@ -241,5 +255,6 @@ export {
     checkAnalytics,
     checkReportSectionsVisible,
     updateUserDetails,
+    updateUserDetailsConcurrent,
     logOutUser
 };
