@@ -54,11 +54,12 @@ async function task({ page, data }) {
     fs.writeFileSync(filename, 'timestamp,login,check_report,update_name,logout,check_health\n');
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 3, // Number of threads you want to run concurrently
+        maxConcurrency: 1, // Number of threads you want to run concurrently
         puppeteer,
         puppeteerOptions: {
             executablePath: '/usr/bin/chromium-browser',
-            args: ['--no-sandbox', '--headless']
+            args: ['--no-sandbox', '--headless'],
+            dumpio: true
         },
     });
     console.log(url);
@@ -68,12 +69,12 @@ async function task({ page, data }) {
 
     // Start the timer
     const startTime = Date.now();
-    const duration = 5 * 60 * 1000; // 5 minutes in milliseconds
+    const duration = 1 * 60 * 1000; // 5 minutes in milliseconds
 
     // Loop until the specified duration
     while (Date.now() - startTime < duration) {
         // Define tasks
-        for (let i = 0; i < 3; i++) { // Number of threads
+        for (let i = 0; i < 1; i++) { // Number of threads
             cluster.queue({ url, user, password }, task);
         }
         await cluster.idle(); // Wait for all tasks to finish
