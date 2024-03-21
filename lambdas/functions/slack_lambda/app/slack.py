@@ -565,7 +565,7 @@ def generate_message(event):
         payload = github_actions_message(message)
     elif "scheduled-event-detail" in event:
         message = event["scheduled-event-detail"]
-        if "business_logic_" in event["job-name"]:
+        if "business_functionality_" in message["job-name"]:
             payload = cloudwatch_business_event(message)
         else:
             payload = cloudwatch_event(message)

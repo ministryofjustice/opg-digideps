@@ -9,7 +9,7 @@ node tests/resilience-tests/FrontLoadTest.js &
 sleep 60
 if [[ ${ENVIRONMENT} != "local" ]]
 then
-
+    node tests/resilience-tests/RunExperiments.js
 fi
 sleep 300
 node tests/resilience-tests/Analyse.js
