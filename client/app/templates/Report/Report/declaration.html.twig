@@ -3,13 +3,7 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-declaration" %}
-{% if app.user.isLayDeputy %}
-    {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies" %}
-{% elseif app.user.isDeputyPa %}
-    {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-public-authority-deputies/guidance-for-public-authority-deputies" %}
-{% elseif app.user.isDeputyProf %}
-    {% set standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies" %}
-{% endif %}
+{% set standardsLink = app.user.getStandardsLink %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
