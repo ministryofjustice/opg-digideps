@@ -50,6 +50,7 @@ def main():
     arnsToDelete = True
     try:
         while arnsToDelete:
+            time.sleep(3)
             response = get_inactive_task_definition_arns(client)
             arns = response.get("taskDefinitionArns", [])
             arnsToDelete = True if response.get("nextToken") is not None else False
