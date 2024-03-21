@@ -1,5 +1,3 @@
-import time
-
 import boto3
 import logging
 import os
@@ -11,7 +9,7 @@ def get_session(account_id):
     if "CI" in os.environ:
         role_to_assume = f"arn:aws:iam::{account_id}:role/digideps-ci"
     else:
-        role_to_assume = f"arn:aws:iam::{account_id}:role/breakglass"
+        role_to_assume = f"arn:aws:iam::{account_id}:role/operator"
 
     # Use the Boto3 STS client to assume the role and get a session
     sts_client = boto3.client("sts")
@@ -45,12 +43,11 @@ def delete_task_definition(client, arns):
 def main():
     region = os.environ["REGION"]
     # Hard coding to development account
-    session = get_session("454262938596")
+    session = get_session("248804316466")
     client = session.client("ecs", region_name=region)
     arnsToDelete = True
     try:
         while arnsToDelete:
-            time.sleep(3)
             response = get_inactive_task_definition_arns(client)
             arns = response.get("taskDefinitionArns", [])
             arnsToDelete = True if response.get("nextToken") is not None else False
@@ -58,9 +55,7 @@ def main():
                 print(f"No inactive task definitions found in {region}")
             else:
                 print("Deleting inactive task definitions..")
-                print(arns)
                 delete_task_definition(client, arns)
-                time.sleep(1)
     except Exception as e:
         logging.warning("Error trying to get inactive task definitions")
         logging.error(e)

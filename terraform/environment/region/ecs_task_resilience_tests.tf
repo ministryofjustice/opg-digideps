@@ -1,3 +1,10 @@
+locals {
+  experiment_arn_prefix       = "arn:aws:fis:eu-west-1:${data.aws_caller_identity.current.account_id}:experiment-template"
+  ecs_stop_frontend_arn       = "${local.experiment_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id}"
+  ecs_stress_cpu_frontend_arn = "${local.experiment_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_front_cpu_stress_template_id}"
+  ecs_stress_io_frontend_arn  = "${local.experiment_arn_prefix}/${module.fault_injection_simulator_experiments[0].front_io_stress_template_id}"
+}
+
 resource "aws_iam_role" "resilience_tests" {
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_policy.json
   name               = "resilience-tests.${local.environment}"
@@ -23,9 +30,9 @@ data "aws_iam_policy_document" "resilience_tests" {
       "fis:StartExperiment"
     ]
     resources = [
-      module.fault_injection_simulator_experiments.ecs_stop_frontend_tasks_template_id,
-      module.fault_injection_simulator_experiments.ecs_front_cpu_stress_template_id,
-      module.fault_injection_simulator_experiments.front_io_stress_template_id
+      local.ecs_stop_frontend_arn,
+      local.ecs_stress_cpu_frontend_arn,
+      local.ecs_stress_io_frontend_arn
     ]
   }
 }
@@ -97,7 +104,7 @@ locals {
     environment = [
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
-      { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments.ecs_stop_frontend_tasks_template_id },
+      { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id },
       { name = "ENVIRONMENT", value = var.secrets_prefix }
     ]
   })
