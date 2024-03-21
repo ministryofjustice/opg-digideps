@@ -16,7 +16,7 @@ resource "aws_cloudwatch_event_target" "business_functionality_check" {
         job-name  = "business_functionality_check"
         log-group = terraform.workspace,
         log-entries = [
-          "{\"name\":\"submissions_check\",\"search1\":\"/*/*/review\",\"method1\":\"GET\",\"search2\":\"/*/*/declaration\",\"method2\":\"GET\",\"percentage_threshold\":\"15\",\"count_threshold\":\"20\"}",
+          "{\"name\":\"submissions_check\",\"search1\":\"/*/*/review\",\"method1\":\"GET\",\"search2\":\"/*/*/declaration\",\"method2\":\"GET\",\"percentage_threshold\":\"0\",\"count_threshold\":\"20\"}",
           "{\"name\":\"registration_check\",\"search1\":\"/register\",\"method1\":\"POST\",\"search2\":\"/*/activate/*\",\"method2\":\"GET\",\"percentage_threshold\":\"0\",\"count_threshold\":\"10\"}",
           "{\"name\":\"authentication_check\",\"search1\":\"/login\",\"method1\":\"POST\",\"search2\":\"/lay|/org/\",\"method2\":\"GET\",\"percentage_threshold\":\"0\",\"count_threshold\":\"100\"}",
         ],

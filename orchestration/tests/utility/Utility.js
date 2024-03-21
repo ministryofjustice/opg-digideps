@@ -166,14 +166,16 @@ const updateUserDetails = async (page, firstNameFieldSelector, saveSelector) => 
 
 const updateUserDetailsConcurrent = async (page, firstNameFieldSelector, saveSelector) => {
   console.log('=== Update current users details ===');
-  await Promise.all([
-    page.waitForNavigation(),
-    page.click('.behat-link-user-account'),
-  ]);
-  await Promise.all([
-    page.waitForNavigation(),
-    page.click('.behat-link-profile-show'),
-  ]);
+  await page.click('.behat-link-user-account');
+  await page.click('.behat-link-profile-show');
+  // await Promise.all([
+  //   page.waitForNavigation(),
+  //   page.click('.behat-link-user-account'),
+  // ]);
+  // await Promise.all([
+  //   page.waitForNavigation(),
+  //   page.click('.behat-link-profile-show'),
+  // ]);
   await page.waitForSelector('.behat-link-profile-edit');
   await updateFirstName(page, 'LoadeyJoe', firstNameFieldSelector, saveSelector);
 };
