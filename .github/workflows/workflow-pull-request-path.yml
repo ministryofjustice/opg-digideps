@@ -46,7 +46,7 @@ jobs:
           echo ${build_identifier}
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
         with:
           prerelease: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -204,6 +204,20 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "500"
       override: "sh,./tests/Behat/reset-db.sh"
+    secrets: inherit
+
+  smoke_tests:
+    name: smoke tests
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "smoke_tests"
+      timeout: "900"
     secrets: inherit
 
   integration_tests_1:

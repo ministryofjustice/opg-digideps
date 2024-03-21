@@ -42,7 +42,7 @@ jobs:
             sub_folder: "."
             docker_file: "api/docker/app/Dockerfile"
           - svc_name: "sync"
-            sub_folder: "sync"
+            sub_folder: "orchestration"
             docker_file: "Dockerfile"
           - svc_name: "htmltopdf"
             sub_folder: "."
