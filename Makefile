@@ -78,6 +78,7 @@ integration-tests-parallel: reset-fixtures ##@integration-tests Rerun the integr
 	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
 
 integration-tests-browserkit: reset-fixtures ##@integration-tests Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
+
 ifdef suite
 	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
 else
@@ -180,3 +181,7 @@ build-js: ##@javascript Build JS resources
 
 lint-js: ##@javascript Lint JS resources
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run node-js --build --rm run fix
+
+smoke-tests: ##@smoke-tests Run smoke tests (requires app to be up)
+	docker-compose build orchestration
+	docker-compose run --remove-orphans orchestration sh tests/run-smoke-tests.sh
