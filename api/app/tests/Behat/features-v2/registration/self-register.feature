@@ -55,3 +55,10 @@ Feature: Lay Deputy Self Registration
         When I invite a Co-Deputy to the service
         Then they should be able to register to deputise for a client with valid details
         And they should be on the Lay homepage
+
+    @super-admin
+    Scenario: A Lay user with the same verification details cannot be uniquely identified 
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-valid-rows.csv'
+        When I run the lay CSV command the file contains 2 new pre-registration entities
+        And a Lay Deputy registers to deputise for a client with details that are not unique
+        Then I should see a 'deputy not uniquely identified' error

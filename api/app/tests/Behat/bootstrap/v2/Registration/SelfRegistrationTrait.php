@@ -14,6 +14,7 @@ trait SelfRegistrationTrait
     private string $invalidDeputyLastnameError = 'Your last name you provided does not match our records.';
     private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
+    private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
     private string $userEmail;
     private string $coDeputyEmail;
     private string $deputyUid;
@@ -395,5 +396,33 @@ trait SelfRegistrationTrait
         $this->fillInField('report_endDate_month', '12');
         $this->fillInField('report_endDate_year', '2016');
         $this->pressButton('report_save');
+    }
+
+    /**
+     * @Given a Lay Deputy registers to deputise for a client with details that are not unique 
+     */
+    public function aLayDeputyRegistersToDeputiseForAClientWithSimilarDetails(): void
+    {
+        $this->userEmail = 'julie@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Julie',
+            'Duck',
+            $this->userEmail,
+            'B1',
+            'Billy',
+            'Huey',
+            '31313131',
+        );
+    }
+
+    /**
+     * @Then I should see a 'deputy not uniquely identified' error
+     */
+    public function iShouldSeeADeputyNotUniquelyIdentifiedError(): void
+    {
+        $this->assertOnErrorMessage($this->deputyNotUniquelyIdentifiedError);
     }
 }
