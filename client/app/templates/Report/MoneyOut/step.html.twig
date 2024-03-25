@@ -5,7 +5,7 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
-{% set clientTransOptions = {'%client%': report.client.firstname | e } %}
+{% set clientTransOptions = {'%client%': report.client.firstname | striptags } %}
 {% set transOptions = clientTransOptions | merge({
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
     '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
