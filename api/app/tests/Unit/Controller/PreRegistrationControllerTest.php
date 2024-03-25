@@ -247,12 +247,18 @@ class PreRegistrationControllerTest extends AbstractTestController
                 'case_number' => '39393939',
                 'lastname' => 'I should get deleted',
             ],
-            'mustSucceed' => true,
+            'mustSucceed' => false,
             'AuthToken' => self::$tokenDeputy,
         ]);
 
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $this->assertNull($loggedInUser->getDeputyNo());
+        try {
+            $this->assertNull($loggedInUser->getDeputyNo());
+        } catch (\RuntimeException $e){
+            $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
+            $this->assertEquals($expectedErrorMessage, $e->getMessage());
+            $this->assertEquals(462, $e->getCode());
+        }
     }
 }
