@@ -86,6 +86,9 @@ class PreRegistrationController extends RestController
             $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
             $this->em->persist($user);
             $this->em->flush();
+        } else {
+            // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
+            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
         }
 
         return ['verified' => $verified];

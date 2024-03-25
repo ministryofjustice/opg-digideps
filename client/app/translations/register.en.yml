@@ -67,6 +67,9 @@ formErrors:
   coDepCaseAlreadyRegistered: |
     You are attempting to register a case which already has other deputies assigned to it.
     Please ask one of these deputies to invite you directly.
+  deputyNotUniquelyIdentified: |
+    The information you've given us does not allow us to uniquely identify you as the deputy.
+    Please call 0115 934 2700 to make sure we have the correct record of your deputyship.
 
 matchingErrors:
   caseNumber: |
