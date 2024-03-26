@@ -1,6 +1,6 @@
 {% set translationDomain = "report-money-short" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 
 <div class="govuk-form-group">
 {% for sbSingleForm in elements %}

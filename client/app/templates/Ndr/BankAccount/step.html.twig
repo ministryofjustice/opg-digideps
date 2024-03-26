@@ -4,7 +4,7 @@
 
 {% set translationDomain = "ndr-bank-accounts" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ ('stepPage.pageTitle.' ~ (account.id ? 'edit' : 'add')) | trans(transOptions) }}{% endblock %}

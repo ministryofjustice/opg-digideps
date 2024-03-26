@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 
 {% set transOptions = {
-    '%client%': report.client.firstname | e,
+    '%client%': report.client.firstname | striptags,
     '%moreless%': report.totalsOffset < 0 ? "less" : "more"
 } %}
 
