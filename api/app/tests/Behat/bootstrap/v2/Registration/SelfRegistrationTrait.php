@@ -403,7 +403,7 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForAClientWithSimilarDetails(): void
     {
-        $this->userEmail = 'julie@duck.co.uk';
+        $this->userEmail = 'julie1@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
 
         $this->visitFrontendPath('/register');
@@ -414,7 +414,7 @@ trait SelfRegistrationTrait
             'B1',
             'Billy',
             'Huey',
-            '31313131',
+            '31313135',
         );
     }
 
