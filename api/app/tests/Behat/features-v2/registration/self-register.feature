@@ -20,8 +20,8 @@ Feature: Lay Deputy Self Registration
 
     @super-admin
     Scenario: A Lay user with an existing pre-registration record can self register
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows.csv'
-        When I run the lay CSV command the file contains 3 new pre-registration entities
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-valid-rows-different-first-names.csv'
+        When I run the lay CSV command the file contains 2 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with valid details
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
