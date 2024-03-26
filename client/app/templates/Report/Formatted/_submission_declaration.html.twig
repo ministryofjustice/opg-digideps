@@ -1,4 +1,5 @@
 {% set translationDomain = "report-declaration" %}
+{% set standardsLink = app.user.getStandardsLink %}
 {% trans_default_domain translationDomain %}
 {% if report.submitted %}
 
@@ -18,7 +19,10 @@
                 <li class="label">{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
             </ul>
         {% endif %}
-        <p class="label">{{ 'page.declarationTerms04' | trans }}</p>
+        <p class="label">{{ 'page.declarationTerms04.pre' | trans }}
+            <a href= '{{ standardsLink }}' class="govuk-link" rel="noreferrer noopener" target="_blank">{{ 'page.declarationTerms04.link' | trans }}</a>
+            {{ 'page.declarationTerms04.post' | trans }}
+        </p>
 
         <dl class="labelvalue">
             <dt class="label">{{ 'declaration' | trans }}</dt>
