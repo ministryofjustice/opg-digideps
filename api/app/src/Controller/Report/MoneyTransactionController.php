@@ -122,6 +122,10 @@ class MoneyTransactionController extends RestController
         $this->em->remove($t);
         $this->em->flush();
 
+        // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
+        $this->em->remove($t);
+        $this->em->flush();
+
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
 
