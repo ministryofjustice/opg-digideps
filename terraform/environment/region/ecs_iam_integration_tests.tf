@@ -19,7 +19,7 @@ data "aws_iam_policy_document" "integration_tests" {
   }
 
   statement {
-    sid    = "AllIntegrationActionsCalledOnS3Bucket"
+    sid    = "AllowS3OnSiriusBucket"
     effect = "Allow"
     actions = [
       "s3:GetObject",
@@ -35,6 +35,22 @@ data "aws_iam_policy_document" "integration_tests" {
     resources = [
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
+    ]
+  }
+
+  statement {
+    sid    = "AllowS3OnPAUploadsBucket"
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:ListObjects",
+      "s3:DeleteObject",
+      "s3:ListBucket"
+    ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    resources = [
+      "${module.pa_uploads.arn}/*",
+      module.pa_uploads.arn
     ]
   }
 }

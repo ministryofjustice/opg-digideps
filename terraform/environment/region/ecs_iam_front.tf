@@ -18,11 +18,11 @@ data "aws_iam_policy_document" "front_s3" {
       "s3:GetObject",
       "s3:DeleteObject",
       "s3:DeleteObjectVersion",
-      "s3:ListObjectVersions",
       "s3:ListBucketVersions",
       "s3:PutObject",
       "s3:GetObjectTagging",
       "s3:PutObjectTagging",
+      "s3:ListBucket"
     ]
     #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
     resources = [

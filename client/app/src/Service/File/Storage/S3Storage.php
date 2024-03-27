@@ -8,7 +8,6 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 /**
  * Class to upload/download/delete files from S3.
@@ -24,7 +23,6 @@ class S3Storage implements StorageInterface
     /**
      * S3Storage constructor.
      *
-     *
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html.
      *
@@ -32,11 +30,12 @@ class S3Storage implements StorageInterface
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    function __construct(
+    public function __construct(
         private S3ClientInterface $s3Client,
         private string $bucketName,
         private LoggerInterface $logger
-    ) {}
+    ) {
+    }
 
     public function retrieve(string $key): string
     {
@@ -71,7 +70,7 @@ class S3Storage implements StorageInterface
     public function removeFromS3(string $key): array
     {
         if (empty($key)) {
-            throw new RuntimeException('Could not remove file: Document not specified');
+            throw new \RuntimeException('Could not remove file: Document not specified');
         } else {
             /*
              * ListObjectVersions is permitted by ListBucketVersions in IAM.
@@ -82,14 +81,14 @@ class S3Storage implements StorageInterface
             ]);
 
             if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
-                throw new RuntimeException('Could not remove file: No results returned');
+                throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
                 $s3Result = [];
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
-                    throw new RuntimeException('Could not remove file: No objects founds');
+                    throw new \RuntimeException('Could not remove file: No objects founds');
                 } else {
                     $s3Result = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
@@ -149,7 +148,7 @@ class S3Storage implements StorageInterface
                     $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
             }
             $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
-            throw new RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
+            throw new \RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
         }
     }
 
@@ -163,13 +162,13 @@ class S3Storage implements StorageInterface
             'Metadata' => [],
         ]);
 
-        $this->s3Client->waitUntil('ObjectExists', array(
+        $this->s3Client->waitUntil('ObjectExists', [
             'Bucket' => $this->bucketName,
-            'Key'    => $key
-        ));
+            'Key' => $key,
+        ]);
 
         if (!$this->s3Client->doesObjectExistV2($this->bucketName, $key)) {
-            $this->log('error', 'Failed to upload file to S3. Filename: '. $key);
+            $this->log('error', 'Failed to upload file to S3. Filename: '.$key);
 
             throw new FileUploadFailedException($key);
         }
@@ -179,9 +178,6 @@ class S3Storage implements StorageInterface
 
     /**
      * Appends new tagset to S3 Object.
-     *
-     * @param $key
-     * @param $newTagset
      *
      * @throws \Exception
      */
@@ -223,9 +219,6 @@ class S3Storage implements StorageInterface
 
     /**
      * Log message using the internal logger.
-     *
-     * @param $level
-     * @param $message
      */
     private function log($level, $message): void
     {
@@ -234,5 +227,15 @@ class S3Storage implements StorageInterface
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
         ]]);
+    }
+
+    // check if file exists in S3 bucket
+    public function checkFileExistsInS3($key)
+    {
+        if ($this->s3Client->doesObjectExistV2($this->bucketName, $key)) {
+            return true;
+        }
+
+        return false;
     }
 }

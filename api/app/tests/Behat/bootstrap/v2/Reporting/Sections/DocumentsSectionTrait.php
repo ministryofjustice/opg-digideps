@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
 
 trait DocumentsSectionTrait
@@ -306,5 +307,75 @@ trait DocumentsSectionTrait
     {
         $this->clickLink('Send documents');
         $this->iAmOnLayMainPage();
+    }
+
+    /**
+     * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
+     */
+    public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
+    {
+        $reportId = $this->loggedInUserDetails->getCurrentReportId();
+
+        $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
+
+        $storageReference = '';
+
+        foreach ($docs as $doc) {
+            $storageReference = $doc->getStorageReference();
+        }
+
+        $this->expireDocumentFromUnSubmittedDeputyReport($storageReference);
+    }
+
+    /**
+     * @Given /^I try to submit my report with the expired document$/
+     */
+    public function iTryToSubmitMyReportWithTheExpiredDocument()
+    {
+        $this->visitFrontendPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
+        $this->clickLink('Preview and check report');
+    }
+
+    /**
+     * @Then /^I should be redirected to the re\-upload page$/
+     */
+    public function iShouldBeRedirectedToTheReUploadPage()
+    {
+        $this->iAmOnReUploadPage();
+    }
+
+    /**
+     * @Given I delete the missing document and re-upload :document to the report
+     */
+    public function iDeleteTheMissingDocumentAndReUploadToTheReport(string $document)
+    {
+        // remove expired document
+        $formattedDocName = preg_replace('#[^A-Za-z0-9/.]#', '', $document);
+        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $formattedDocName);
+        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
+
+        if (is_null($documentRowDiv)) {
+            throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $document));
+        }
+
+        $removeLinkSelector = '//a[contains(text(),"Remove")]';
+        $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
+
+        if (is_null($removeLink)) {
+            throw new BehatException('A link with the text remove was not found in the document row');
+        }
+
+        $removeLink->click();
+        $this->pressButton('confirm_delete_confirm');
+        $this->iAmOnReUploadPage();
+
+        // re-upload document
+        $this->attachFileToField('report_document_upload_files', $document);
+        $this->pressButton('Upload');
+
+        $descriptionLists = $this->findAllCssElements('dl');
+        $this->findFileNamesInDls($descriptionLists, [$formattedDocName]);
+
+        $this->clickLink('Save and continue');
     }
 }
