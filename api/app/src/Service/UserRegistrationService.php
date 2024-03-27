@@ -116,6 +116,21 @@ class UserRegistrationService
     }
 
     /**
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function retrieveCoDeputyUid()
+    {
+        if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
+            return $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
+        } else {
+            // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
+            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
+        }
+    }
+
+    /**
      * @throws \Exception
      */
     public function saveUserAndClient(User $user, Client $client)
