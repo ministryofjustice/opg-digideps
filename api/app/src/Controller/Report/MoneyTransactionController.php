@@ -4,6 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\RestController;
 use App\Entity as EntityDir;
+use App\Repository\MoneyTransactionRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,18 +13,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransactionController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
     private array $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN,
         EntityDir\Report\Report::SECTION_MONEY_OUT,
     ];
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
-    {
-        $this->em = $em;
-        $this->formatter = $formatter;
+    public function __construct(
+       private EntityManagerInterface $em,
+       private RestFormatter $formatter,
+       private MoneyTransactionRepository $moneyTransactionRepository
+    ) {
     }
 
     /**
@@ -130,19 +129,33 @@ class MoneyTransactionController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transaction/soft-delete/{transactionId}", requirements={"id":"\d+"}, methods={"PUT"})
+     * @Route("/report/{reportId}/money-transaction/soft-delete/{transactionId}", methods={"PUT"})
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function softDeleteMoneyTransactionAction($transactionId)
     {
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $filter = $this->em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(EntityDir\Report\MoneyTransaction::class);
+
+        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found');
+
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        // if item is already marked as deleted then set to null, if not set as deleted
-        $t->isDeleted() ? $t->setDeletedAt() : $t->setDeletedAt(new \DateTime());
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
 
         $this->em->flush($t);
 
+        $this->em->getFilters()->enable('softdeleteable');
+
         return [];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction/get-soft-delete", methods={"GET"})
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function getSoftDeletedMoneyTransactionItems($reportId)
+    {
+        return $this->moneyTransactionRepository->retrieveSoftDeleted($reportId);
     }
 }
