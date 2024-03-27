@@ -3,16 +3,20 @@
 namespace App\Entity\Report;
 
 use App\Entity\Report\Traits\HasBankAccountTrait;
+use App\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Table(name="money_transaction")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity
  */
 class MoneyTransaction implements MoneyTransactionInterface
 {
     use HasBankAccountTrait;
+    use IsSoftDeleteableEntity;
 
     /**
      * Static list of possible money transaction categories.
@@ -174,15 +178,6 @@ class MoneyTransaction implements MoneyTransactionInterface
     private $meta;
 
     /**
-     * @var \DateTime
-     *
-     * @JMS\Groups({"transactionsSoftDelete"})
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
-     */
-    private $deletedAt;
-
-    /**
      * MoneyTransaction constructor.
      */
     public function __construct(Report $report)
@@ -317,37 +312,5 @@ class MoneyTransaction implements MoneyTransactionInterface
         }
 
         return null;
-    }
-
-    /**
-     * Sets deleted at.
-     *
-     * @return \DateTime
-     */
-    public function setDeletedAt(\DateTime $deletedAt = null)
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this->deletedAt;
-    }
-
-    /**
-     * Returns deletedAt.
-     *
-     * @return \DateTime
-     */
-    public function getDeletedAt()
-    {
-        return $this->deletedAt;
-    }
-
-    /**
-     * Is deleted?
-     *
-     * @return bool
-     */
-    public function isDeleted()
-    {
-        return !(null === $this->getDeletedAt());
     }
 }
