@@ -3,6 +3,7 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-declaration" %}
+{% set standardsLink = app.user.getStandardsLink %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -59,7 +60,13 @@
                     <li>{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
                 </ul>
             {% endif %}
-            <p class="govuk-body">{{ 'page.declarationTerms04' | trans }}</p>
+
+            <p class="govuk-body">
+                {{ 'page.declarationTerms04.pre' | trans }}
+                <a href= '{{ standardsLink }}' class="govuk-link" rel="noreferrer noopener" target="_blank">{{ 'page.declarationTerms04.link' | trans }}</a>
+                {{ 'page.declarationTerms04.post' | trans }}
+            </p>
+
         </div>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}

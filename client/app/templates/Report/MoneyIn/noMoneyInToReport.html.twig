@@ -4,7 +4,7 @@
 
 {% set translationDomain = "report-money-in" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 
 {% block htmlTitle %}{{ 'noMoneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageHeader %}{% endblock %}

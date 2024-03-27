@@ -4,7 +4,7 @@
 
 {% set translationDomain = "ndr-more-info" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
 
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}

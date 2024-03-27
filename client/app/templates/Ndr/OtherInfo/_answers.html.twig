@@ -1,6 +1,6 @@
 {% set translationDomain = "ndr-more-info" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
 
 <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">

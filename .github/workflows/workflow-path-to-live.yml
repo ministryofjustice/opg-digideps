@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
         with:
           prerelease: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -326,6 +326,19 @@ jobs:
       path_to_live: true
     secrets: inherit
 
+  smoke_tests_preproduction:
+    name: smoke tests on preproduction
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_preproduction
+    with:
+      workspace: preproduction
+      account_name: preproduction
+      task_name: "smoke_tests"
+      timeout: "900"
+    secrets: inherit
+
   terraform_apply_training:
     name: training environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
@@ -347,6 +360,7 @@ jobs:
     needs:
       - workflow_variables
       - terraform_apply_preproduction
+      - smoke_tests_preproduction
     with:
       workspace: production
       terraform_path: account
