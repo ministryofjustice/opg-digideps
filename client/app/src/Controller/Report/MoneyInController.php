@@ -98,7 +98,7 @@ class MoneyInController extends AbstractController
 
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
 
-                return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
+                return empty($softDeletedTransactionIds) ? $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']) : $this->redirectToRoute('money_in_summary', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
             } elseif ('No' === $answer && 'summary' === $fromPage) {
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
 
