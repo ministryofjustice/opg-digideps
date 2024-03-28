@@ -68,10 +68,11 @@ class MissingDeputyNoUpdaterCommand extends Command
 
                 $caseNumber = $client->getCaseNumber();
                 $clientSurname = $client->getLastname();
+                $deputyFirstName = $user->getFirstname();
                 $deputySurname = $user->getLastname();
                 $deputyPostcode = $user->getAddressPostcode();
 
-                $this->verificationService->validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode);
+                $this->verificationService->validate($caseNumber, $clientSurname, $deputyFirstName, $deputySurname, $deputyPostcode);
                 $deputyNo = implode(',', $this->verificationService->getLastMatchedDeputyNumbers());
                 $user->setDeputyNo($deputyNo);
                 $this->em->flush($user);

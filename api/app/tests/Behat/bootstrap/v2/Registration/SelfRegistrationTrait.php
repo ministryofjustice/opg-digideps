@@ -10,9 +10,11 @@ use App\Tests\Behat\v2\Common\UserDetails;
 trait SelfRegistrationTrait
 {
     private string $invalidCaseNumberError = "The case number you provided does not match our records.\nPlease call 0115 934 2700 to make sure we have a record of your deputyship.";
-    private string $invalidDeputyLastnameError = "The client's last name you provided does not match our records.";
-    private string $invalidDeputyPostcodeError = 'Your last name you provided does not match our records.';
-    private string $invalidClientLastnameError = 'The postcode you provided does not match our records.';
+    private string $invalidDeputyFirstnameError = 'Your first name you provided does not match our records.';
+    private string $invalidDeputyLastnameError = 'Your last name you provided does not match our records.';
+    private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
+    private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
+    private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
     private string $userEmail;
     private string $coDeputyEmail;
     private string $deputyUid;
@@ -22,13 +24,13 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails()
     {
-        $this->userEmail = 'brian@duck.co.uk';
+        $this->userEmail = 'julie@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
         $this->deputyUid = '19371937';
 
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
-            'Brian',
+            'Julie',
             'Duck',
             $this->userEmail,
             'B1',
@@ -36,7 +38,7 @@ trait SelfRegistrationTrait
             'Huey',
             '31313131',
         );
-
+        
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
@@ -116,6 +118,14 @@ trait SelfRegistrationTrait
     }
 
     /**
+     * @Then I should see an 'invalid deputy firstname' error
+     */
+    public function iShouldSeeAnInvalidDeputyFirstnameError()
+    {
+        $this->assertOnErrorMessage($this->invalidDeputyFirstnameError);
+    }
+    
+    /**
      * @Then I should see an 'invalid deputy lastname' error
      */
     public function iShouldSeeAnInvalidDeputyLastnameError()
@@ -152,7 +162,7 @@ trait SelfRegistrationTrait
      */
     public function iCompleteTheCaseManagerUserRegistrationFlowWithValidDeputyhsipDetails()
     {
-        $this->deputyUid = '19371938';
+        $this->deputyUid = '19355556';
 
         $this->setPasswordAndTickTAndCs();
 
@@ -165,7 +175,7 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillInField('client_firstname', $this->faker->firstName());
-        $this->fillInField('client_lastname', 'DEWEY');
+        $this->fillInField('client_lastname', 'TUDOR');
         $this->fillInField('client_address', '1 South Parade');
         $this->fillInField('client_address2', 'First Floor');
         $this->fillInField('client_address3', 'Big Building');
@@ -174,7 +184,7 @@ trait SelfRegistrationTrait
         $this->fillInField('client_postcode', 'NG1 2HT');
         $this->fillInField('client_country', 'GB');
         $this->fillInField('client_phone', '01789432876');
-        $this->fillInField('client_caseNumber', '32323232');
+        $this->fillInField('client_caseNumber', '70777772');
         $this->fillInField('client_courtDate_day', '01');
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2016');
@@ -192,9 +202,9 @@ trait SelfRegistrationTrait
         $this->userEmail = 'VANDERQUACK@DUCKTAILS.com';
 
         $this->fillInField('admin_email', $this->userEmail);
-        $this->fillInField('admin_firstname', $this->faker->firstName);
-        $this->fillInField('admin_lastname', 'Vanderquack');
-        $this->fillInField('admin_addressPostcode', 'SW1');
+        $this->fillInField('admin_firstname', 'Stuart');
+        $this->fillInField('admin_lastname', 'Trump');
+        $this->fillInField('admin_addressPostcode', 'M1');
         $this->selectOption('admin[roleType]', 'deputy');
         $this->selectOption('admin[roleNameDeputy]', 'ROLE_LAY_DEPUTY');
 
@@ -386,5 +396,88 @@ trait SelfRegistrationTrait
         $this->fillInField('report_endDate_month', '12');
         $this->fillInField('report_endDate_year', '2016');
         $this->pressButton('report_save');
+    }
+
+    /**
+     * @Given a Lay Deputy registers to deputise for a client with details that are not unique 
+     */
+    public function aLayDeputyRegistersToDeputiseForAClientWithSimilarDetails(): void
+    {
+        $this->userEmail = 'julie1@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Julie',
+            'Duck',
+            $this->userEmail,
+            'B1',
+            'Billy',
+            'Huey',
+            '31313135',
+        );
+    }
+
+    /**
+     * @Then I should see a 'deputy not uniquely identified' error
+     */
+    public function iShouldSeeADeputyNotUniquelyIdentifiedError(): void
+    {
+        $this->assertOnErrorMessage($this->deputyNotUniquelyIdentifiedError);
+    }
+
+    /**
+     * @Given /^I create a Lay Deputy user account for one of the deputies in the CSV that are not unique$/
+     */
+    public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSVNotUnique(): void
+    {
+        $this->iVisitAdminAddUserPage();
+        $this->userEmail = 'themightyducks@duck.com';
+
+        $this->fillInField('admin_email', $this->userEmail);
+        $this->fillInField('admin_firstname', 'Julie');
+        $this->fillInField('admin_lastname', 'Duck');
+        $this->fillInField('admin_addressPostcode', 'B1');
+        $this->selectOption('admin[roleType]', 'deputy');
+        $this->selectOption('admin[roleNameDeputy]', 'ROLE_LAY_DEPUTY');
+
+        $this->pressButton('Save user');
+
+        $this->assertOnAlertMessage('email has been sent to the user');
+
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+    }
+
+    /**
+     * @Given /^I complete the case manager user registration flow with deputyship details that are not unique$/
+     */
+    public function iCompleteTheCaseManagerUserRegistrationFlowWithValidDeputyhsipDetailsNotUnique(): void
+    {
+        $this->setPasswordAndTickTAndCs();
+
+        $this->pressButton('Submit');
+
+        $this->fillField('login_email', $this->interactingWithUserDetails->getUserEmail());
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillUserDetailsAndSubmit();
+
+        $this->fillInField('client_firstname', $this->faker->firstName());
+        $this->fillInField('client_lastname', 'HUEY');
+        $this->fillInField('client_address', '1 South Parade');
+        $this->fillInField('client_address2', 'First Floor');
+        $this->fillInField('client_address3', 'Big Building');
+        $this->fillInField('client_address4', 'Large Town');
+        $this->fillInField('client_address5', 'Notts');
+        $this->fillInField('client_postcode', 'NG1 2HT');
+        $this->fillInField('client_country', 'GB');
+        $this->fillInField('client_phone', '01789432876');
+        $this->fillInField('client_caseNumber', '31313135');
+        $this->fillInField('client_courtDate_day', '01');
+        $this->fillInField('client_courtDate_month', '01');
+        $this->fillInField('client_courtDate_year', '2016');
+        $this->pressButton('client_save');
+        
     }
 }

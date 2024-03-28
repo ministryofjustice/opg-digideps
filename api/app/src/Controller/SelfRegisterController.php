@@ -104,13 +104,14 @@ class SelfRegisterController extends RestController
 
         try {
             $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
+            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid();
             $this->logger->warning('PreRegistration codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Throwable $e) {
             $this->logger->warning('PreRegistration codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
 
-        return ['verified' => $coDeputyVerified];
+        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid];
     }
 
     public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)

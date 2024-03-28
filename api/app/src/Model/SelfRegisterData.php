@@ -202,7 +202,7 @@ class SelfRegisterData
     public function toArray()
     {
         return [
-            // 'deputy_firstname' => $this->firstname,
+            'deputy_firstname' => $this->firstname,
             'deputy_lastname' => $this->lastname,
             // 'deputy_email' => $this->email,
             'deputy_postcode' => $this->postcode,
