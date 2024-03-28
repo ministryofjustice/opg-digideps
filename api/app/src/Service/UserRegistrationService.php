@@ -75,7 +75,14 @@ class UserRegistrationService
         );
 
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
-            $user->setDeputyNo($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
+            $lastMatchedDeputyNumber = $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
+            $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $lastMatchedDeputyNumber);
+
+            if (empty($existingDeputyCase)) {
+                $user->setDeputyNo($lastMatchedDeputyNumber);
+            } else {
+                throw new \RuntimeException(json_encode(sprintf('A deputy with deputy number %s is already associated with the case number %s', $lastMatchedDeputyNumber, $selfRegisterData->getCaseNumber())), 463);
+            }
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);

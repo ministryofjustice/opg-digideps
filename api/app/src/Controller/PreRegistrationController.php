@@ -83,9 +83,16 @@ class PreRegistrationController extends RestController
         );
 
         if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
-            $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
-            $this->em->persist($user);
-            $this->em->flush();
+            $lastMatchedDeputyNumber = $verificationService->getLastMatchedDeputyNumbers()[0];
+            $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($clientData['case_number'], $lastMatchedDeputyNumber);
+
+            if (empty($existingDeputyCase)) {
+                $user->setDeputyNo($lastMatchedDeputyNumber);
+                $this->em->persist($user);
+                $this->em->flush();
+            } else {
+                throw new \RuntimeException(json_encode(sprintf('A deputy with deputy number %s is already associated with the case number %s', $lastMatchedDeputyNumber, $selfRegisterData->getCaseNumber())), 463);
+            }
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
