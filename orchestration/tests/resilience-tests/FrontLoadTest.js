@@ -14,6 +14,7 @@ const url = process.env.FRONT_URL;
 const environment = process.env.ENVIRONMENT;
 const endpoint = process.env.ENDPOINT;
 const taskTimingsFilePath = process.env.TASK_TIMINGS_LOG;
+const taskErrorsFilePath = process.env.TASK_ERROR_LOG;
 
 // Define your task
 async function measureElapsedTime(page, action, csvRow, timeoutValue) {
@@ -54,6 +55,7 @@ async function task({ page, data }) {
 // Create a cluster
 (async () => {
     fs.writeFileSync(taskTimingsFilePath, 'timestamp,login,check_report,update_name,logout,check_health\n');
+    fs.writeFileSync(taskErrorsFilePath, 'time_hours_minutes,error_message\n');
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 3, // Number of threads you want to run concurrently

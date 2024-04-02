@@ -111,7 +111,9 @@ locals {
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
       { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id },
       { name = "ENVIRONMENT", value = var.secrets_prefix },
-      { name = "LOG_AND_CONTINUE", value = "true" }
+      { name = "LOG_AND_CONTINUE", value = "true" },
+      { name = "TASK_TIMINGS_LOG", value = "tests/resilience-tests/task_timings.csv" },
+      { name = "TASK_ERROR_LOG", value = "tests/resilience-tests/task_errors.csv" }
     ]
   })
 }
