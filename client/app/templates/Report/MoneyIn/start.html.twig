@@ -5,7 +5,7 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {
-    '%client%': report.client.firstname | e,
+    '%client%': report.client.firstname | striptags,
     '%startDate%': report.startDate | date("j M Y"),
     '%endDate%': report.endDate | date("j M Y"),
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),

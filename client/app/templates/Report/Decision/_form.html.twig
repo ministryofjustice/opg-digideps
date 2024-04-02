@@ -1,6 +1,6 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 

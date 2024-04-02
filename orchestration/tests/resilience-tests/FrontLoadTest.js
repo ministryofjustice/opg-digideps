@@ -28,7 +28,8 @@ async function measureElapsedTime(page, action, csvRow, timeoutValue) {
 
 async function task({ page, data }) {
     const { url, user, password } = data;
-    const timeoutValue = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+    const timeoutValue = Math.floor(Math.random() * (2000 - 499)) + 500;
+    console.log(timeoutValue);
     await new Promise(resolve => setTimeout(resolve, timeoutValue));
     let csvRow = `${Date.now()},`;
 
@@ -58,6 +59,7 @@ async function task({ page, data }) {
         puppeteer,
         puppeteerOptions: {
             executablePath: '/usr/bin/chromium-browser',
+            timeout: 5000000,
             args: ['--no-sandbox', '--headless']
         },
     });

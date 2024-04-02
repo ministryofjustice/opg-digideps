@@ -4,7 +4,7 @@
 {% trans_default_domain translationDomain %}
 {% set translationPrefix = "form." %}
 
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
