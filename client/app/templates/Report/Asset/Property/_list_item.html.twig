@@ -2,7 +2,7 @@
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 {% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 

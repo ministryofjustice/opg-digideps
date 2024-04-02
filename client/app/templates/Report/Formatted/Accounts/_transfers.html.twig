@@ -41,7 +41,7 @@
         {% else %}
             <div class="box">
                 <dl class="labelvalue">
-                    <dt class="label">Tick this box if you did not move any money between {{ report.client.firstname | e }}'s
+                    <dt class="label">Tick this box if you did not move any money between {{ report.client.firstname | striptags }}'s
                         accounts.
                     </dt>
                     <dd class="value checkbox" id="money-transfers-no-transfers-add">{{ report.noTransfersToAdd ? 'X' : '' }}</dd>

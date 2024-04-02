@@ -73,11 +73,14 @@ module "resilience_tests_security_group" {
   environment = local.environment
 }
 
+# Needs a reasonable amount of resource for multi-threaded on the browser
 module "resilience_tests" {
   source = "./modules/task"
   name   = "resilience-tests"
 
   cluster_name          = aws_ecs_cluster.main.name
+  cpu                   = 2048
+  memory                = 8192
   container_definitions = "[${local.resilience_tests}]"
   tags                  = var.default_tags
   environment           = local.environment

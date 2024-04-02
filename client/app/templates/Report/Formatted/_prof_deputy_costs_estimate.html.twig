@@ -1,6 +1,6 @@
 {% set translationDomain = "report-prof-deputy-costs-estimate" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 <div class="section break-before" id="prof-deputy-costs-estimate-section">
     <h2 class="section-heading">{{ 'startPage.pageTitle'|trans }}</h2>
     <div class="dont-break">

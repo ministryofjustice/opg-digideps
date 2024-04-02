@@ -18,7 +18,8 @@ RUN apk add --no-cache --update aws-cli
 RUN apk add --no-cache \
     udev \
     ttf-freefont \
-    chromium
+    chromium \
+    curl
 RUN apk update && apk upgrade
 
 ADD tests/package.json tests/package.json
