@@ -88,7 +88,6 @@ class MoneyOutController extends AbstractController
 
             if ('Yes' === $answer && 'summary' != $fromPage) {
                 $report->setReasonForNoMoneyOut(null);
-
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
@@ -125,9 +124,7 @@ class MoneyOutController extends AbstractController
             // undelete soft deleted items if present
             if (!empty($softDeletedTransactionIds)) {
                 foreach ($softDeletedTransactionIds as $transactionId) {
-                    foreach ($transactionId as $key => $value) {
-                        $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$value, ['transactionSoftDelete']);
-                    }
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$transactionId, ['transactionSoftDelete']);
                 }
             }
         } else {

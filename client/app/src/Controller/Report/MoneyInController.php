@@ -88,7 +88,6 @@ class MoneyInController extends AbstractController
 
             if ('Yes' === $answer && 'summary' != $fromPage) {
                 $report->setReasonForNoMoneyIn(null);
-
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
 
                 return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
@@ -125,9 +124,7 @@ class MoneyInController extends AbstractController
             // undelete soft deleted items if present
             if (!empty($softDeletedTransactionIds)) {
                 foreach ($softDeletedTransactionIds as $transactionId) {
-                    foreach ($transactionId as $key => $value) {
-                        $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$value, ['transactionSoftDelete']);
-                    }
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$transactionId, ['transactionSoftDelete']);
                 }
             }
         } else {

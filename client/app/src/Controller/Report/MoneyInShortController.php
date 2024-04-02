@@ -79,13 +79,11 @@ class MoneyInShortController extends AbstractController
 
             if ('Yes' === $answer) {
                 $report->setReasonForNoMoneyIn(null);
-
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
 
                 return $this->redirectToRoute('money_in_short_category', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
             } else {
                 $this->cleanDataIfAnswerIsChangedFromYesToNo($report);
-
                 $this->restClient->put('report/'.$reportId, $report, ['moneyShortCategoriesIn']);
 
                 return $this->redirectToRoute('no_money_in_short_exists', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
@@ -111,7 +109,6 @@ class MoneyInShortController extends AbstractController
         }
 
         // all transactions are deleted from 'money transaction short' table if present
-
         $reportId = $report->getId();
 
         if ($report->getMoneyTransactionsShortInExist()) {
@@ -218,14 +215,14 @@ class MoneyInShortController extends AbstractController
             $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-in-exist']);
 
             // undelete items if they exist
-            if ('yes' === $data->getMoneyTransactionsShortInExist() && $fromSummaryPage && !empty($softDeletedTransactionIds)) {
+            if ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($softDeletedTransactionIds)) {
                 foreach ($softDeletedTransactionIds as $transactionId) {
-                    foreach ($transactionId as $key => $value) {
-                        $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$value, ['transactionSoftDelete']);
-                    }
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$transactionId, ['transactionSoftDelete']);
                 }
 
-                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
+                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
+            } elseif ('yes' === $data->getMoneyTransactionsShortInExist() && empty($softDeletedTransactionIds) && 'summary' == $fromSummaryPage) {
+                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
             }
 
             switch ($data->getMoneyTransactionsShortInExist()) {

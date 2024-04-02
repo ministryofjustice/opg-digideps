@@ -25,7 +25,7 @@ class MoneyTransactionShortRepository extends ServiceEntityRepository
             ->createQuery('SELECT t.id FROM App\Entity\Report\MoneyTransactionShort t WHERE t.report = :reportId AND t.deletedAt is not null')
             ->setParameter('reportId', $reportId);
 
-        $transactionIds = $query->getArrayResult();
+        $transactionIds = $query->getSingleColumnResult();
 
         $this->_em->getFilters()->enable('softdeleteable');
 
