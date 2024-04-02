@@ -408,9 +408,10 @@ class DocumentController extends AbstractController
 
         if ('reUploadPage' == $fromPage) {
             $backLink = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
+        } elseif ('summaryPage' == $fromPage) {
+            $backLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
         } else {
-            'summaryPage' == $fromPage ? $backLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()])
-        : $backLink = $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
+            $backLink = $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
         }
 
         return [
@@ -454,7 +455,7 @@ class DocumentController extends AbstractController
         // If document needs to be re-uploaded because it's missing from S3 bucket then delete Document object
         $documentNotInS3 = $request->get('notInS3');
 
-        if (1 == $documentNotInS3) {
+        if ($documentNotInS3) {
             $this->deleteMissingS3DocFromDocumentTable($documentId);
         } else {
             try {
