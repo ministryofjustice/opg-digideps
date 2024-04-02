@@ -12,3 +12,6 @@ node tests/smoke-tests/FrontSmokeTest.js
 echo ""
 echo ""
 echo "===== Smoke tests completed without any issues ====="
+echo "Lets try node tests"
+node tests/resilience-tests/FrontLoadTest.js
+echo "Finished node tests"

@@ -1422,4 +1422,19 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
         return $this;
     }
+
+    public function getStandardsLink() :string
+    {
+        $standardsLink = '';
+
+        if ($this->isLayDeputy()) {
+            $standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies";
+        } elseif ($this->isDeputyPa()) {
+            $standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-public-authority-deputies/guidance-for-public-authority-deputies";
+        } elseif ($this->isDeputyProf()) {
+            $standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies";
+        }
+
+        return $standardsLink;
+    }
 }

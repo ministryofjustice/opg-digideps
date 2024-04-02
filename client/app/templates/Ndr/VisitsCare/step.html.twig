@@ -5,7 +5,7 @@
 
 {% set translationDomain = "ndr-visits-care" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageHeader %}{% endblock %}
