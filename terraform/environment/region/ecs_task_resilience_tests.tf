@@ -73,11 +73,14 @@ module "resilience_tests_security_group" {
   environment = local.environment
 }
 
+# Needs a reasonable amount of resource for multi-threaded on the browser
 module "resilience_tests" {
   source = "./modules/task"
   name   = "resilience-tests"
 
   cluster_name          = aws_ecs_cluster.main.name
+  cpu                   = 2048
+  memory                = 8192
   container_definitions = "[${local.resilience_tests}]"
   tags                  = var.default_tags
   environment           = local.environment
@@ -107,7 +110,8 @@ locals {
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
       { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id },
-      { name = "ENVIRONMENT", value = var.secrets_prefix }
+      { name = "ENVIRONMENT", value = var.secrets_prefix },
+      { name = "LOG_AND_CONTINUE", value = "true" }
     ]
   })
 }

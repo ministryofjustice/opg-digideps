@@ -3,6 +3,7 @@
 set -e
 set -o pipefail
 
+sleep 30
 echo "===== Running load test in the background against Frontend ====="
 node tests/resilience-tests/FrontLoadTest.js &
 # Wait for a minute so that we can have a baseline
@@ -13,4 +14,5 @@ then
 fi
 sleep 300
 node tests/resilience-tests/Analyse.js
+cat ${TASK_ERROR_LOG}
 echo "===== Experiment tests completed without any issues ====="

@@ -1,6 +1,6 @@
 {% set translationDomain = transDomain %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 
 {# Set page to summary page to allow correct translations to be pulled in#}
 {% set page = 'summaryPage' %}

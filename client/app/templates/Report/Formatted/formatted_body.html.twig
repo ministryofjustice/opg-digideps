@@ -7,7 +7,7 @@
 {% set isEmailAttachment = true %}
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 {% set reportTypeHeading = ('-4' == report.get104TransSuffix) ? 'property and financial, and health and welfare' : ('104' in report.type) ? 'health and welfare' : 'property and financial'  %}
 
 {# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
