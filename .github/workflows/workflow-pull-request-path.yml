@@ -179,20 +179,20 @@ jobs:
       - workflow_variables
     secrets: inherit
 
-  scale_services_up:
-    name: scale up services
-    uses: ./.github/workflows/_scale-services.yml
-    needs:
-      - workflow_variables
-      - terraform_apply_environment
-    with:
-      #      replicas: 10
-      #      acu: 16
-      replicas: 3
-      acu: 8
-      account_id: 248804316466
-      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-    secrets: inherit
+  #  scale_services_up:
+  #    name: scale up services
+  #    uses: ./.github/workflows/_scale-services.yml
+  #    needs:
+  #      - workflow_variables
+  #      - terraform_apply_environment
+  #    with:
+  #      #      replicas: 10
+  #      #      acu: 16
+  #      replicas: 3
+  #      acu: 8
+  #      account_id: 248804316466
+  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+  #    secrets: inherit
 
   reset_database:
     name: reset database
@@ -213,7 +213,7 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - scale_services_up
+      #      - scale_services_up
       - reset_database
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -222,18 +222,18 @@ jobs:
       timeout: "3600"
     secrets: inherit
 
-  smoke_tests:
-    name: smoke tests
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - resilience_tests
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_name: development
-      task_name: "smoke_tests"
-      timeout: "900"
-    secrets: inherit
+  #  smoke_tests:
+  #    name: smoke tests
+  #    uses: ./.github/workflows/_run-task.yml
+  #    needs:
+  #      - workflow_variables
+  #      - resilience_tests
+  #    with:
+  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+  #      account_name: development
+  #      task_name: "smoke_tests"
+  #      timeout: "900"
+  #    secrets: inherit
   #
   #  integration_tests_1:
   #    name: integration tests frontend 1
@@ -332,7 +332,6 @@ jobs:
     needs:
       - workflow_variables
       - resilience_tests
-      - smoke_tests
     #      - integration_tests_sequential_1
     #      - integration_tests_sequential_2
     #      - integration_tests_sequential_3

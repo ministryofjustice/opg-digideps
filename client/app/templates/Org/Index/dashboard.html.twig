@@ -93,7 +93,7 @@
 
             <tr class="behat-region-client behat-region-client-{{ report.client.caseNumber | upper }}{{ clientRegionAppend }}">
                 <td>
-                    <a href="{{ linkToReportOverviewPage }}" class="behat-link-pa-report-open behat-link-pa-report-{{ report.getPeriod() | behat_namify }}-open">{{ report.client.lastName | title | e }}, {{ report.client.firstName | title | e }}</a>
+                    <a href="{{ linkToReportOverviewPage }}" class="behat-link-pa-report-open behat-link-pa-report-{{ report.getPeriod() | behat_namify }}-open">{{ report.client.lastName | title | striptags }}, {{ report.client.firstName | title | striptags }}</a>
                 </td>
                 {% if app.user.organisations | length > 1 %}
                     <td>

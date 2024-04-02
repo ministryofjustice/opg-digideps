@@ -22,13 +22,15 @@ async function measureElapsedTime(page, action, csvRow, timeoutValue) {
     const endTime = Date.now();
     const elapsedTime = endTime - startTime;
     csvRow += `${elapsedTime},`;
+    console.log('elapsedTime: '+elapsedTime);
     await new Promise(resolve => setTimeout(resolve, timeoutValue));
     return csvRow;
 }
 
 async function task({ page, data }) {
     const { url, user, password } = data;
-    const timeoutValue = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+    const timeoutValue = Math.floor(Math.random() * (2000 - 499)) + 500;
+    console.log('timeoutvalue: '+timeoutValue);
     await new Promise(resolve => setTimeout(resolve, timeoutValue));
     let csvRow = `${Date.now()},`;
 
@@ -54,10 +56,11 @@ async function task({ page, data }) {
     fs.writeFileSync(filename, 'timestamp,login,check_report,update_name,logout,check_health\n');
     const cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 1, // Number of threads you want to run concurrently
+        maxConcurrency: 3, // Number of threads you want to run concurrently
         puppeteer,
         puppeteerOptions: {
             executablePath: '/usr/bin/chromium-browser',
+            timeout: 5000000,
             args: ['--no-sandbox', '--headless']
         },
     });
@@ -68,12 +71,12 @@ async function task({ page, data }) {
 
     // Start the timer
     const startTime = Date.now();
-    const duration = 1 * 60 * 1000; // 5 minutes in milliseconds
+    const duration = 5 * 60 * 1000; // 5 minutes in milliseconds
 
     // Loop until the specified duration
     while (Date.now() - startTime < duration) {
         // Define tasks
-        for (let i = 0; i < 1; i++) { // Number of threads
+        for (let i = 0; i < 3; i++) { // Number of threads
             cluster.queue({ url, user, password }, task);
         }
         await cluster.idle(); // Wait for all tasks to finish
