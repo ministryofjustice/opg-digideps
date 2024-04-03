@@ -72,3 +72,17 @@ Feature: Lay Deputy Self Registration
         When a Lay Deputy clicks the activation link in the registration email
         And I complete the case manager user registration flow with deputyship details that are not unique
         Then I should see a 'deputy not uniquely identified' error
+
+    @super-admin @Iqpal
+    Scenario: A Co-deputy cannot register for the service with details that already registered
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy-change-details.csv'
+        Given a super admin user accesses the admin app
+        When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
+        And I create a Lay Deputy user account for one of the deputies in the CSV2
+        When a Lay Deputy clicks the activation link in the registration email
+        And I complete the case manager user registration flow with other deputy valid deputyship details
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
+        When I invite a Co-Deputy to the service who is already registered
+        Then they shouldn't be able to register to deputise for a client with already registered details
+        And I should be on the Lay homepage

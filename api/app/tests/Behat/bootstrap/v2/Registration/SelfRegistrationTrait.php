@@ -480,4 +480,114 @@ trait SelfRegistrationTrait
         $this->pressButton('client_save');
         
     }
+
+    /**
+     * @Given /^I create a Lay Deputy user account for one of the deputies in the CSV2$/
+     */
+    public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV2()
+    {
+        $this->iVisitAdminAddUserPage();
+        $this->userEmail = 'SOPHIE@FISH.COM';
+
+        $this->fillInField('admin_email', $this->userEmail);
+        $this->fillInField('admin_firstname', 'Sophie');
+        $this->fillInField('admin_lastname', 'Fish');
+        $this->fillInField('admin_addressPostcode', 'B73');
+        $this->selectOption('admin[roleType]', 'deputy');
+        $this->selectOption('admin[roleNameDeputy]', 'ROLE_LAY_DEPUTY');
+
+        $this->pressButton('Save user');
+
+        $this->assertOnAlertMessage('email has been sent to the user');
+
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+    }
+
+    /**
+     * @Given /^I complete the case manager user registration flow with other deputy valid deputyship details$/
+     */
+    public function iCompleteTheCaseManagerUserRegistrationFlowWithOtherDeputyValidDeputyshipDetails()
+    {
+        $this->deputyUid = '85462400';
+
+        $this->setPasswordAndTickTAndCs();
+
+        $this->pressButton('Submit');
+
+        $this->fillField('login_email', $this->interactingWithUserDetails->getUserEmail());
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillInField('user_details_firstname', 'Bill');
+        
+        $this->fillUserDetailsAndSubmit();
+        
+        $this->assertPageContainsText('Add your client\'s details');
+
+        $this->fillInField('client_firstname', $this->faker->firstName());
+        $this->fillInField('client_lastname', 'Pilot');
+        $this->fillInField('client_address', '1 South Parade');
+        $this->fillInField('client_address2', 'First Floor');
+        $this->fillInField('client_address3', 'Big Building');
+        $this->fillInField('client_address4', 'Large Town');
+        $this->fillInField('client_address5', 'Notts');
+        $this->fillInField('client_postcode', 'NG1 2HT');
+        $this->fillInField('client_country', 'GB');
+        $this->fillInField('client_phone', '01789432876');
+        $this->fillInField('client_caseNumber', '1515151P');
+        $this->fillInField('client_courtDate_day', '01');
+        $this->fillInField('client_courtDate_month', '01');
+        $this->fillInField('client_courtDate_year', '2016');
+        $this->pressButton('client_save');
+        
+        var_dump($this->getSession()->getPage()->getHtml());
+
+        $this->fillInReportDetailsAndSubmit();
+    }
+
+    /**
+     * @When I invite a Co-Deputy to the service who is already registered
+     */
+    public function iInviteACoDeputyToTheServiceWhoIsAlreadyRegistered()
+    {
+        $matches = [];
+        preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
+        $clientId = $matches[0];
+
+        $this->getCurrentUrl();
+        $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
+
+        $this->coDeputyEmail = 'bill@fish.co.uk';
+
+        $this->fillInField('co_deputy_invite_email', $this->coDeputyEmail);
+        $this->pressButton('co_deputy_invite_submit');
+    }
+    
+    /**
+     * @Then /^they shouldn't be able to register to deputise for a client with already registered details$/
+     */
+    public function theyShouldNotBeAbleToRegisterToDeputiseForAClientWithAlreadyRegisteredDetails()
+    {
+        $this->visitPath('/logout');
+        
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->coDeputyEmail, 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $this->coDeputyEmail);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillInField('co_deputy_firstname', 'Bill');
+        $this->fillInField('co_deputy_lastname', 'Fish');
+        $this->fillInField('co_deputy_address1', 'Fieldag');
+        $this->fillInField('co_deputy_addressPostcode', 'B73');
+        $this->fillInField('co_deputy_addressCountry', 'GB');
+        $this->fillInField('co_deputy_phoneMain', '01789432876');
+        $this->fillInField('co_deputy_clientLastname', 'Pilot');
+        $this->fillInField('co_deputy_clientCaseNumber', '1515151P');
+
+        $this->pressButton('co_deputy_save');
+    }
 }
