@@ -4,7 +4,10 @@ page:
   descriptionPara01: "I confirm the information I have given in this report is true and correct to the best of my knowledge and belief."
   descriptionPara02: "I understand I have obligations to the Court of Protection and the Office of the Public Guardian, and that if I knowingly provide false or misleading information there may be legal consequences."
   descriptionPara03: "I am submitting this report on behalf of myself and each of the deputies named in the court order (unless I have stated otherwise and provided reasons)."
-  descriptionPara04: "I confirm I have had regard to the Mental Capacity Act 2005, its Code of Practice and the court order in this case. I understand the duties and obligations placed on me."
+  descriptionPara04:
+    pre: "I confirm I have had regard to the Mental Capacity Act 2005, its Code of Practice, the "
+    link: "Deputy standards (opens in new tab)"
+    post: ", and the court order in this case. I understand the duties and obligations placed on me."
   reportSubmittedFlashMessage: "The report has been submitted."
   goBackLink: "Go back to make changes to the report"
 agree:
