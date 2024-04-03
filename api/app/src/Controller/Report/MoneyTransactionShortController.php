@@ -89,7 +89,8 @@ class MoneyTransactionShortController extends RestController
 
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
-        $this->em->remove($t);
+
+        $t->setDeletedAt(new \DateTime());
         $this->em->flush();
 
         // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
