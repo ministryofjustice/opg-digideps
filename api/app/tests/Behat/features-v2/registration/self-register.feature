@@ -20,8 +20,8 @@ Feature: Lay Deputy Self Registration
 
     @super-admin
     Scenario: A Lay user with an existing pre-registration record can self register
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows-different-first-names.csv'
-        When I run the lay CSV command the file contains 4 new pre-registration entities
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-6-valid-rows-different-first-names.csv'
+        When I run the lay CSV command the file contains 6 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with valid details
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
@@ -36,9 +36,9 @@ Feature: Lay Deputy Self Registration
 
     @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows-different-first-names.csv'
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-6-valid-rows-different-first-names.csv'
         Given a super admin user accesses the admin app
-        When I run the lay CSV command the file contains 4 new pre-registration entities
+        When I run the lay CSV command the file contains 6 new pre-registration entities
         And I create a Lay Deputy user account for one of the deputies in the CSV
         When a Lay Deputy clicks the activation link in the registration email
         And I complete the case manager user registration flow with valid deputyship details
@@ -72,3 +72,18 @@ Feature: Lay Deputy Self Registration
         When a Lay Deputy clicks the activation link in the registration email
         And I complete the case manager user registration flow with deputyship details that are not unique
         Then I should see a 'deputy not uniquely identified' error
+
+    @super-admin
+    Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-6-valid-rows-different-first-names.csv'
+        Given a super admin user accesses the admin app
+        When I run the lay CSV command the file contains 6 new pre-registration entities
+        And I create a Lay Deputy user account for the first deputy in the CSV
+        When a Lay Deputy clicks the activation link in the registration email
+        And I complete the case manager user registration flow with valid deputyship details using other deputy details
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
+        And I create a Lay Deputy user account for the other deputy in the CSV
+        When a Lay Deputy clicks the activation link in the registration email
+        Given I complete the case manager user registration flow with already registered deputyship details
+        Then I should see an 'invalid deputy registration' error
