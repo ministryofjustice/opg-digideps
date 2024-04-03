@@ -15,7 +15,6 @@ trait SelfRegistrationTrait
     private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
     private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
-    private string $invalidDeputyRegistrationError = "You are attempting to register a case which already has other deputies assigned to it.\nPlease ask one of these deputies to invite you directly.";
     private string $userEmail;
     private string $coDeputyEmail;
     private string $deputyUid;
@@ -475,130 +474,6 @@ trait SelfRegistrationTrait
         $this->fillInField('client_country', 'GB');
         $this->fillInField('client_phone', '01789432876');
         $this->fillInField('client_caseNumber', '31313135');
-        $this->fillInField('client_courtDate_day', '01');
-        $this->fillInField('client_courtDate_month', '01');
-        $this->fillInField('client_courtDate_year', '2016');
-        $this->pressButton('client_save');
-        
-    }
-
-    /**
-     * @Given /^I create a Lay Deputy user account for the first deputy in the CSV$/
-     */
-    public function iCreateALayDeputyUserAccountForTheFirstDeputyInTheCSV()
-    {
-        $this->iVisitAdminAddUserPage();
-        $this->userEmail = 'POTTER@HOGWARTS.com';
-
-        $this->fillInField('admin_email', $this->userEmail);
-        $this->fillInField('admin_firstname', 'Kim');
-        $this->fillInField('admin_lastname', 'Trent');
-        $this->fillInField('admin_addressPostcode', 'F1');
-        $this->selectOption('admin[roleType]', 'deputy');
-        $this->selectOption('admin[roleNameDeputy]', 'ROLE_LAY_DEPUTY');
-
-        $this->pressButton('Save user');
-
-        $this->assertOnAlertMessage('email has been sent to the user');
-
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
-    }
-    
-    /**
-     * @Given /^I complete the case manager user registration flow with valid deputyship details using other deputy details$/
-     */
-    public function iCompleteTheCaseManagerUserRegistrationFlowWithOtherValidDeputyhsipDetails()
-    {
-        $this->deputyUid = '19111112';
-
-        $this->setPasswordAndTickTAndCs();
-
-        $this->pressButton('Submit');
-
-        $this->fillField('login_email', $this->interactingWithUserDetails->getUserEmail());
-        $this->fillField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
-
-        $this->fillInField('user_details_firstname', 'Meg');
-        $this->fillUserDetailsAndSubmit();
-
-        $this->fillInField('client_firstname', $this->faker->firstName());
-        $this->fillInField('client_lastname', 'POTTER');
-        $this->fillInField('client_address', '1 South Parade');
-        $this->fillInField('client_address2', 'First Floor');
-        $this->fillInField('client_address3', 'Big Building');
-        $this->fillInField('client_address4', 'Large Town');
-        $this->fillInField('client_address5', 'Notts');
-        $this->fillInField('client_postcode', 'NG1 2HT');
-        $this->fillInField('client_country', 'GB');
-        $this->fillInField('client_phone', '01789432876');
-        $this->fillInField('client_caseNumber', '50555552');
-        $this->fillInField('client_courtDate_day', '01');
-        $this->fillInField('client_courtDate_month', '01');
-        $this->fillInField('client_courtDate_year', '2016');
-        $this->pressButton('client_save');
-
-        $this->fillInReportDetailsAndSubmit();
-    }
-
-    /**
-     * @Given /^I create a Lay Deputy user account for the other deputy in the CSV$/
-     */
-    public function iCreateALayDeputyUserAccountForTheOtherDeputyInTheCSV()
-    {
-        $this->iVisitAdminAddUserPage();
-        $this->userEmail = 'POTTER2@HOGWARTS.com';
-
-        $this->fillInField('admin_email', $this->userEmail);
-        $this->fillInField('admin_firstname', 'Meg');
-        $this->fillInField('admin_lastname', 'Trent');
-        $this->fillInField('admin_addressPostcode', 'F1');
-        $this->selectOption('admin[roleType]', 'deputy');
-        $this->selectOption('admin[roleNameDeputy]', 'ROLE_LAY_DEPUTY');
-
-        $this->pressButton('Save user');
-
-        $this->assertOnAlertMessage('email has been sent to the user');
-
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
-    }
-
-    /**
-     * @Then I should see an 'invalid deputy registration' error
-     */
-    public function iShouldSeeAnInvalidDeputyRegistrationError()
-    {
-        $this->assertOnErrorMessage($this->invalidDeputyRegistrationError);
-    }
-
-    /**
-     * @Given /^I complete the case manager user registration flow with already registered deputyship details$/
-     */
-    public function iCompleteTheCaseManagerUserRegistrationFlowWithDeputyhsipDetailsAlreadyRegistered()
-    {
-        $this->deputyUid = '19111112';
-
-        $this->setPasswordAndTickTAndCs();
-
-        $this->pressButton('Submit');
-
-        $this->fillField('login_email', $this->interactingWithUserDetails->getUserEmail());
-        $this->fillField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
-
-        $this->fillUserDetailsAndSubmit();
-
-        $this->fillInField('client_firstname', $this->faker->firstName());
-        $this->fillInField('client_lastname', 'POTTER');
-        $this->fillInField('client_address', '1 South Parade');
-        $this->fillInField('client_address2', 'First Floor');
-        $this->fillInField('client_address3', 'Big Building');
-        $this->fillInField('client_address4', 'Large Town');
-        $this->fillInField('client_address5', 'Notts');
-        $this->fillInField('client_postcode', 'NG1 2HT');
-        $this->fillInField('client_country', 'GB');
-        $this->fillInField('client_phone', '01789432876');
-        $this->fillInField('client_caseNumber', '50555552');
         $this->fillInField('client_courtDate_day', '01');
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2016');
