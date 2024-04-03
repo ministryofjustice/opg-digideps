@@ -55,6 +55,20 @@ class DoctrineListener
     {
         $entity = $args->getEntity();
 
+        if ($entity instanceof EntityDir\Report\MoneyTransactionShortIn) {
+            $report = $entity->getReport();
+            if (0 === count($report->getMoneyTransactionsShortIn())) {
+                $report->setMoneyTransactionsShortInExist('no');
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\MoneyTransactionShortOut) {
+            $report = $entity->getReport();
+            if (0 === count($report->getMoneyTransactionsShortOut())) {
+                $report->setMoneyTransactionsShortOutExist('no');
+            }
+        }
+
         if ($entity instanceof EntityDir\Report\Contact) {
             $report = $entity->getReport();
             if (1 === count($report->getContacts())) {

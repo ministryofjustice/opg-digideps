@@ -221,7 +221,7 @@ class MoneyOutShortController extends AbstractController
                 }
 
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
-            } elseif ('yes' === $data->getMoneyTransactionsShortOutExist() && empty($softDeletedTransactionIds) && 'summary' == $fromSummaryPage) {
+            } elseif ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($data->getMoneyTransactionsShortOut()) && 'summary' == $fromSummaryPage) {
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
             }
 
