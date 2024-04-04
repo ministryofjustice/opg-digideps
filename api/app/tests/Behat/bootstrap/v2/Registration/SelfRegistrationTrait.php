@@ -493,7 +493,7 @@ trait SelfRegistrationTrait
     }
 
     /**
-     * @Given /^I create a Lay Deputy user account for one of the deputies in the CSV2$/
+     * @Given /^I create a Lay Deputy user account for one of the deputies in the co-deputy CSV$/
      */
     public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV2()
     {
