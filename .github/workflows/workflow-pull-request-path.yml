@@ -186,10 +186,8 @@ jobs:
       - workflow_variables
       - terraform_apply_environment
     with:
-      #      replicas: 10
-      #      acu: 16
-      replicas: 3
-      acu: 8
+      replicas: 10
+      acu: 16
       account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
     secrets: inherit
@@ -208,122 +206,109 @@ jobs:
       override: "sh,./tests/Behat/reset-db.sh"
     secrets: inherit
 
-  resilience_tests:
-    name: resilience tests on integration
+  smoke_tests:
+    name: smoke tests
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - scale_services_up
       - reset_database
+      - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "resilience_tests"
-      timeout: "3600"
+      task_name: "smoke_tests"
+      timeout: "900"
     secrets: inherit
 
-  #  smoke_tests:
-  #    name: smoke tests
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - resilience_tests
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "smoke_tests"
-  #      timeout: "900"
-  #    secrets: inherit
-  #
-  #  integration_tests_1:
-  #    name: integration tests frontend 1
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - reset_database
-  #      - scale_services_up
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "integration_test_v2"
-  #      timeout: "1200"
-  #      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
-  #    secrets: inherit
-  #
-  #  integration_tests_2:
-  #    name: integration tests frontend 2
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - reset_database
-  #      - scale_services_up
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "integration_test_v2"
-  #      timeout: "1200"
-  #      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
-  #    secrets: inherit
-  #
-  #  integration_tests_admin:
-  #    name: integration tests admin
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - reset_database
-  #      - scale_services_up
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "integration_test_v2"
-  #      timeout: "1200"
-  #      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
-  #    secrets: inherit
-  #
-  #  integration_tests_sequential_1:
-  #    name: integration tests sequential 1
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - reset_database
-  #      - scale_services_up
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "integration_test_v2"
-  #      timeout: "1200"
-  #      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
-  #    secrets: inherit
-  #
-  #  integration_tests_sequential_2:
-  #    name: integration tests sequential 2
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - reset_database
-  #      - scale_services_up
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "integration_test_v2"
-  #      timeout: "1200"
-  #      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
-  #    secrets: inherit
-  #
-  #  integration_tests_sequential_3:
-  #    name: integration tests sequential 3
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - workflow_variables
-  #      - reset_database
-  #      - scale_services_up
-  #    with:
-  #      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-  #      account_name: development
-  #      task_name: "integration_test_v2"
-  #      timeout: "1200"
-  #      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
-  #    secrets: inherit
+  integration_tests_1:
+    name: integration tests frontend 1
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_2:
+    name: integration tests frontend 2
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_admin:
+    name: integration tests admin
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_1:
+    name: integration tests sequential 1
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_2:
+    name: integration tests sequential 2
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_sequential_3:
+    name: integration tests sequential 3
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
+    secrets: inherit
 
   scale_services_down:
     if: always()
@@ -331,13 +316,12 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - resilience_tests
-    #      - integration_tests_sequential_1
-    #      - integration_tests_sequential_2
-    #      - integration_tests_sequential_3
-    #      - integration_tests_admin
-    #      - integration_tests_1
-    #      - integration_tests_2
+      - integration_tests_sequential_1
+      - integration_tests_sequential_2
+      - integration_tests_sequential_3
+      - integration_tests_admin
+      - integration_tests_1
+      - integration_tests_2
     with:
       replicas: 1
       acu: 4
