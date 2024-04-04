@@ -1,0 +1,182 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% set page = "reUploadPage" %}
+
+{% trans_default_domain translationDomain %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+{% if documentsToBeReUploaded is not empty %}
+    <div class="govuk-!-width-two-thirds">
+        <div id="error-summary" class="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-heading">There's a problem with your documents
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#">{{ (page ~ '.reUploadErrorMessage') | trans }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+    <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
+
+    <p class="govuk-body">{{ (page ~ '.selectHelp') | trans }}</p>
+
+    <div class="govuk-inset-text">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <strong>{{ (page ~ '.selectHint1') | trans }}</strong>
+                <br>
+                {{ (page ~ '.selectHint2') | trans }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
+    {{ form_input(form.files,'form.files', {
+        'labelText':  '' | trans ,
+        'labelClass': 'visually-hidden',
+        'inputClass': 'no-border behat-link-choose-file' })
+    }}
+
+    <h2 class="govuk-heading-m flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
+
+    <div class="js-hidden">
+        {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
+    </div>
+    <div class="custom-submit">
+        {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
+    </div>
+    <div>
+        <br>
+        {% set alertMessage %}
+            <p class="govuk-body">{{ (page ~ '.pleaseWait') | trans }}</p>
+            <p class="govuk-body">{{ (page ~ '.uploadHint') | trans }}</p>
+        {% endset %}
+    </div>
+    <div id="upload-progress" class="hidden">
+        {{ macros.notification('loader', alertMessage) }}
+    </div>
+
+    {{ form_end(form) }}
+
+    {% set alertMessage %}
+    {% endset %}
+
+    {% if documentsToBeReUploaded is not empty %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-m">{{ (page ~ '.missingFiles') | trans }}</h2>
+            </div>
+        </div>
+
+        <dl class="govuk-summary-list behat-region-document-list">
+            <div class="govuk-grid-column-four-quarters">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        {{ (page ~ '.filename') | trans }}
+                    </dt>
+                    <dd class="govuk-summary-list__key">
+                        {{ (page ~ '.dateAttached') | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                    </dd>
+                </div>
+                {% for document in report.deputydocuments %}
+                    {% if document.storageReference in documentsToBeReUploaded %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__value">
+                                {{ document.fileName }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ document.createdOn | date("j F Y H:i") }}
+                            </dd>
+
+                            <dd class="govuk-summary-list__actions">
+                                <span class="opg-overview-section__status govuk-tag govuk-tag--red behat-region-documents-state govuk-!-margin-right-8">
+                                    {{ (page ~ '.reUploadLabel') | trans }}
+                                </span>
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'custom-submitReportId':report.id, 'documentId': document.id, 'from': page, 'notInS3': true}) }}">
+                                    {{ (page ~ '.deleteDocument') | trans }}
+                                </a>
+                            </dd>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </dl>
+    {% endif %}
+
+    {% if documentsAccessibleInS3 == true %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-m govuk-!-margin-top-4">{{ (page ~ '.documentList') | trans }}</h2>
+            </div>
+        </div>
+
+        <dl class="govuk-summary-list behat-region-document-list">
+            <div class="govuk-grid-column-three-thirds">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        {{ (page ~ '.filename') | trans }}
+                    </dt>
+                    <dd class="govuk-summary-list__key">
+                        {{ (page ~ '.dateAttached') | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </dd>
+                </div>
+
+            {% for document in report.deputydocuments %}
+                {% if document.storageReference not in documentsToBeReUploaded %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__value">
+                            {{ document.fileName }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ document.createdOn | date("j F Y H:i") }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
+                                {{ (page ~ '.deleteDocument') | trans }}
+                            </a>
+                        </dd>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </dl>
+    {%  endif %}
+
+    {% if documentsToBeReUploaded is empty %}
+        <div class="govuk-!-padding-top-3">
+            {{ macros.notification('notice', (page ~ '.uploadDocumentReminder') | trans) }}
+        </div>
+        <a href="{{ saveAndContinueLink }}" class="govuk-button push--top behat-link-continue">{{ 'saveAndContinue' | trans({}, 'common' ) }}
+        </a>
+    {%  else %}
+        {{ macros.notification('notice', (page ~ '.removeDocumentAction') | trans) }}
+    {%  endif %}
+
+{% endblock %}

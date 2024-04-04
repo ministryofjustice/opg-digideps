@@ -1,9 +1,15 @@
 locals {
   fis_arn_prefix              = "arn:aws:fis:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}"
   template_arn_prefix         = "${local.fis_arn_prefix}:experiment-template"
-  ecs_stop_frontend_arn       = "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id}"
-  ecs_stress_cpu_frontend_arn = "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_front_cpu_stress_template_id}"
-  ecs_stress_io_frontend_arn  = "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].front_io_stress_template_id}"
+  ecs_stop_frontend_arn       = var.account.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id}" : ""
+  ecs_stress_cpu_frontend_arn = var.account.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_front_cpu_stress_template_id}" : ""
+  ecs_stress_io_frontend_arn  = var.account.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].front_io_stress_template_id}" : ""
+  experiment_resources = var.account.fault_injection_experiments_enabled ? [
+    local.ecs_stop_frontend_arn,
+    local.ecs_stress_cpu_frontend_arn,
+    local.ecs_stress_io_frontend_arn,
+    "arn:aws:fis:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:experiment/*"
+  ] : ["arn:aws:fis:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:experiment/*"]
 }
 
 resource "aws_iam_role" "resilience_tests" {
@@ -30,12 +36,7 @@ data "aws_iam_policy_document" "resilience_tests" {
     actions = [
       "fis:StartExperiment"
     ]
-    resources = [
-      local.ecs_stop_frontend_arn,
-      local.ecs_stress_cpu_frontend_arn,
-      local.ecs_stress_io_frontend_arn,
-      "arn:aws:fis:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:experiment/*"
-    ]
+    resources = local.experiment_resources
   }
 }
 
@@ -106,14 +107,14 @@ locals {
         awslogs-stream-prefix = "resilience-tests"
       }
     },
-    environment = [
-      { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
-      { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
-      { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id },
-      { name = "ENVIRONMENT", value = var.secrets_prefix },
-      { name = "LOG_AND_CONTINUE", value = "true" },
-      { name = "TASK_TIMINGS_LOG", value = "tests/resilience-tests/task_timings.csv" },
-      { name = "TASK_ERROR_LOG", value = "tests/resilience-tests/task_errors.csv" }
-    ]
+    environment = concat(local.fis_template_variables,
+      [
+        { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
+        { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
+        { name = "ENVIRONMENT", value = var.secrets_prefix },
+        { name = "LOG_AND_CONTINUE", value = "true" },
+        { name = "TASK_TIMINGS_LOG", value = "tests/resilience-tests/task_timings.csv" },
+        { name = "TASK_ERROR_LOG", value = "tests/resilience-tests/task_errors.csv" }
+    ])
   })
 }

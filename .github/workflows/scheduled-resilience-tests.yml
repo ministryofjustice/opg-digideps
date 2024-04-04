@@ -2,8 +2,8 @@ name: "[Scheduled] Resilience Tests"
 
 on:
   schedule:
-    # 10pm every day except Sundays
-    - cron: "0 21 * * 0-6"
+    # 11am every Sunday
+    - cron: "0 11 * * 0"
 
 permissions:
   id-token: write
