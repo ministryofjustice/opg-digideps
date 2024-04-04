@@ -57,13 +57,13 @@ Feature: Lay Deputy Self Registration
         And they should be on the Lay homepage
 
     @super-admin
-    Scenario: A Lay user with the same verification details cannot be uniquely identified 
+    Scenario: A Lay user with the same verification details cannot be uniquely identified
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-valid-rows-not-unique.csv'
         When I run the lay CSV command the file contains 2 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with details that are not unique
         Then I should see a 'deputy not uniquely identified' error
 
-    @super-admin 
+    @super-admin
     Scenario: A Lay user with an existing pre-registration record that is not unique and a user account created by a case manager cannot register
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-valid-rows-not-unique.csv'
         Given a super admin user accesses the admin app
@@ -73,7 +73,7 @@ Feature: Lay Deputy Self Registration
         And I complete the case manager user registration flow with deputyship details that are not unique
         Then I should see a 'deputy not uniquely identified' error
 
-    @super-admin @Iqpal
+    @super-admin
     Scenario: A Co-deputy cannot register for the service with details that already registered
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy-change-details.csv'
         Given a super admin user accesses the admin app
@@ -85,4 +85,4 @@ Feature: Lay Deputy Self Registration
         And I should be on the Lay homepage
         When I invite a Co-Deputy to the service who is already registered
         Then they shouldn't be able to register to deputise for a client with already registered details
-        And I should be on the Lay homepage
+        And they should see a 'deputy already linked to case number' error

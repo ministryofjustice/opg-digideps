@@ -205,7 +205,7 @@ class ClientRepository extends ServiceEntityRepository
                 FROM deputy_case dc
                 INNER JOIN client c ON dc.client_id = c.id
                 INNER JOIN dd_user du ON dc.user_id = du.id
-                WHERE c.case_number = :case_number AND du.deputy_no = :deputy_no;
+                WHERE LOWER(c.case_number) = LOWER(:case_number) AND LOWER(du.deputy_no) = LOWER(:deputy_no);
         ';
 
         $conn = $this->getEntityManager()->getConnection();
