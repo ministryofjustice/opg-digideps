@@ -601,7 +601,7 @@ trait SelfRegistrationTrait
     }
 
     /**
-     * @Then my co-deputy details should be saved to my account
+     * @Then the co-deputy details should be saved to the co-deputy's account
      */
     public function CoDeputyDetailsShouldBeSavedToMyAccount()
     {
@@ -614,5 +614,9 @@ trait SelfRegistrationTrait
         );
 
         $this->assertStringEqualsString($this->coDeputyUid, $coDeputy->getDeputyNo(), 'Asserting CoDeputyUid is the same');
+        $this->assertStringEqualsString('Fieldag', $coDeputy->getAddress1(), 'Asserting Address Line 1 is the same');
+        $this->assertStringEqualsString('Y73', $coDeputy->getAddressPostcode(), 'Asserting Postcode is the same');
+        $this->assertStringEqualsString('GB', $coDeputy->getAddressCountry(), 'Asserting Address Country is the same');
+        $this->assertStringEqualsString('01789432876', $coDeputy->getPhoneMain(), 'Asserting Main Phone is the same');
     }
 }

@@ -54,7 +54,7 @@ Feature: Lay Deputy Self Registration
         And I should be on the Lay homepage
         When I invite a Co-Deputy to the service
         Then they should be able to register to deputise for a client with valid details
-        Then my co-deputy details should be saved to my account
+        Then the co-deputy details should be saved to the co-deputy's account
         And they should be on the Lay homepage
 
     @super-admin
