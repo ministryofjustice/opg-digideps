@@ -19,6 +19,7 @@ trait SelfRegistrationTrait
     private string $userEmail;
     private string $coDeputyEmail;
     private string $deputyUid;
+    private string $coDeputyUid;
 
     /**
      * @Given a Lay Deputy registers to deputise for a client with valid details
@@ -296,6 +297,8 @@ trait SelfRegistrationTrait
      */
     public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails()
     {
+        $this->coDeputyUid = '85462817';
+        
         $this->visitPath('/logout');
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->coDeputyEmail, 'active');
         $this->setPasswordAndTickTAndCs();
@@ -595,5 +598,21 @@ trait SelfRegistrationTrait
         $this->fillInField('co_deputy_clientCaseNumber', '1515151P');
 
         $this->pressButton('co_deputy_save');
+    }
+
+    /**
+     * @Then my co-deputy details should be saved to my account
+     */
+    public function CoDeputyDetailsShouldBeSavedToMyAccount()
+    {
+        $this->em->flush();
+        $this->em->clear();
+
+        /** @var User $coDeputy */
+        $coDeputy = $this->em->getRepository(User::class)->findOneBy(
+            ['email' => strtolower($this->coDeputyEmail)]
+        );
+
+        $this->assertStringEqualsString($this->coDeputyUid, $coDeputy->getDeputyNo(), 'Asserting CoDeputyUid is the same');
     }
 }
