@@ -14,5 +14,6 @@ then
 fi
 sleep 300
 node tests/resilience-tests/Analyse.js
+echo "===== Output of Error File ====="
 cat ${TASK_ERROR_LOG}
 echo "===== Experiment tests completed without any issues ====="
