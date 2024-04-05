@@ -8,7 +8,7 @@ use Behat\Gherkin\Node\TableNode;
 
 trait MoneyInShortSectionTrait
 {
-    private int $moneyOutPaymentCount = 0;
+    private int $moneyInPaymentCount = 0;
     private array $moneyInShortTypeDictionary = [
         0 => 'State pension and benefits',
         1 => 'Bequests - for example, inheritance, gifts received',
@@ -42,27 +42,22 @@ trait MoneyInShortSectionTrait
     }
 
     /**
+     * @Given /^I answer "([^"]*)" to having one off payments over 1k$/
+     */
+    public function iAnswerToHavingOneOffPaymentsOver1k($arg1)
+    {
+        $this->chooseOption('yes_no[moneyTransactionsShortInExist]', $arg1, 'one-off-payments');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
      * @Given I have no payments going out
      */
     public function iHaveNoPaymentsGoingOut()
     {
         $this->iAmOnMoneyInShortCategoryPage();
         $this->pressButton('Save and continue');
-        $this->iHaveNoOneOffPayments();
-    }
-
-    /**
-     * @Given I have no one-off payments over £1k
-     */
-    public function iHaveNoOneOffPayments()
-    {
-        $this->chooseOption(
-            'yes_no[moneyTransactionsShortInExist]',
-            'no',
-            'one-off-payments'
-        );
-
-        $this->pressButton('Save and continue');
+        $this->iAnswerToHavingOneOffPaymentsOver1k('no');
     }
 
     /**
@@ -109,16 +104,15 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Given I don't have a one off payment
+     * @Given /^I answer "([^"]*)" to one off payments over £1k$/
      */
-    public function iDontHaveAOneOffPayment()
+    public function iAnswerToOneOffPaymentsOver£1k($arg1)
     {
         $this->chooseOption(
             'yes_no[moneyTransactionsShortInExist]',
-            'no',
+            $arg1,
             'one-off-payments'
         );
-
         $this->pressButton('Save and continue');
     }
 
@@ -135,7 +129,41 @@ trait MoneyInShortSectionTrait
 
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyOutPayment('Lorem ipsum', 1500);
+        $this->addMoneyInPayment('Lorem ipsum', 1500);
+
+        $this->chooseOption('add_another[addAnother]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+    }
+
+    /**
+     * @Given /^I have a "([^"]*)" one off payments over £1k$/
+     */
+    public function iHaveAOneOffPaymentsOver£1k($numberOfPayments)
+    {
+        $this->iAmOnMoneyInShortOneOffPaymentsExistsPage();
+
+        $this->chooseOption(
+            'yes_no[moneyTransactionsShortInExist]',
+            'yes',
+            'one-off-payments'
+        );
+
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
+
+        $i = 0;
+        while ($i <= intval($numberOfPayments)) {
+            $this->addMoneyInPayment(sprintf('lorem ipsum %s', rand(1, 10)), rand(1000, 10000));
+
+            $this->iAmOnMoneyInShortAddAnotherPage();
+
+            if ($i == $numberOfPayments - 1) {
+                break;
+            }
+
+            $this->chooseOption('add_another[addAnother]', 'yes');
+            $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+            ++$i;
+        }
 
         $this->chooseOption('add_another[addAnother]', 'no');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
@@ -157,7 +185,7 @@ trait MoneyInShortSectionTrait
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyOutPayment('Lorem ipsum', 1500, '08/12/2021');
+        $this->addMoneyInPayment('Lorem ipsum', 1500, '08/12/2021');
 
         $this->chooseOption('add_another[addAnother]', 'no');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
@@ -191,7 +219,7 @@ trait MoneyInShortSectionTrait
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyOutPayment('Lorem upsum', 10, '05/05/2015');
+        $this->addMoneyInPayment('Lorem upsum', 10, '05/05/2015');
     }
 
     /**
@@ -207,14 +235,14 @@ trait MoneyInShortSectionTrait
      * @param int         $amount      amount for the one off payment
      * @param string|null $date        date the money came in (optional) format: DD/MM/YYYY
      */
-    private function addMoneyOutPayment(string $description, int $amount, string $date = null)
+    private function addMoneyInPayment(string $description, int $amount, string $date = null)
     {
-        ++$this->moneyOutPaymentCount;
+        ++$this->moneyInPaymentCount;
 
         $this->iAmOnMoneyInShortAddPage();
 
-        $this->fillInField('money_short_transaction[description]', $description, 'payment'.$this->moneyOutPaymentCount);
-        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'payment'.$this->moneyOutPaymentCount);
+        $this->fillInField('money_short_transaction[description]', $description, 'payment'.$this->moneyInPaymentCount);
+        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'payment'.$this->moneyInPaymentCount);
 
         if (null !== $date) {
             $explodedDate = explode('/', $date);
@@ -224,9 +252,10 @@ trait MoneyInShortSectionTrait
                 intval($explodedDate[0]),
                 intval($explodedDate[1]),
                 intval($explodedDate[2]),
-                'payment'.$this->moneyOutPaymentCount
+                'payment'.$this->moneyInPaymentCount
             );
         }
+        $this->moneyInShortOneOff[] = [$description => $amount];
 
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
@@ -250,5 +279,61 @@ trait MoneyInShortSectionTrait
 
         $this->fillInField('reason_for_no_money[reasonForNoMoneyIn]', 'No money in', 'reasonForNoMoneyIn');
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then /^there should be "([^"]*)" one off payments displayed on the summary page$/
+     */
+    public function thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage($arg1)
+    {
+        $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+
+        $this->iAmOnMoneyInShortSummaryPage();
+
+        if ('no' == $arg1) {
+            if ($this->getSectionAnswers('moneyOutExists')) {
+                $this->expectedResultsDisplayedSimplified('moneyOutExists', true);
+            }
+            $this->assertPageNotContainsText('List of items of income over £1000');
+            $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
+        } else {
+            $this->assertPageContainsText('List of items of income over £1000');
+
+            foreach ($this->moneyInShortOneOff as $transactionItems) {
+                foreach ($transactionItems as $description => $value) {
+                    $this->assertElementContainsText('table', $description);
+                    $this->assertElementContainsText('table', '£'.number_format($value, 2));
+                }
+            }
+        }
+    }
+
+    /**
+     * @Given /^I delete the transaction from the summary page$/
+     */
+    public function iDeleteTheTransactionFromTheSummaryPage()
+    {
+        $this->clickLink('Remove');
+        assert($this->iShouldBeOnTheMoneyInShortDeletePage());
+        $this->pressButton('Yes, remove item of income');
+
+        $this->moneyInShortOneOff = [];
+    }
+
+    /**
+     * @Then I should be on the delete page
+     */
+    private function iShouldBeOnTheMoneyInShortDeletePage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/report\/.*\/money-in-short\/.*\/delete$/'));
+    }
+
+    /**
+     * @Then /^I edit the answer to the one off payments over 1k$/
+     */
+    public function iEditTheAnswerToTheOneOffPaymentsOver1k()
+    {
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 }

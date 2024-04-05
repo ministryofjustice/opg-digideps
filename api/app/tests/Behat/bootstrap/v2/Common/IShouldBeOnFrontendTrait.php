@@ -325,11 +325,11 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the money out short exists page
+     * @Then I should be on the money in short exists page
      */
-    public function iAmOnMoneyOutShortOneOffPaymentsExistsPage(): bool
+    public function iAmOnMoneyInShortOneOffPaymentsExistsPage(): bool
     {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -354,6 +354,14 @@ trait IShouldBeOnFrontendTrait
     public function iAmOnMoneyOutShortAddAnotherPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/add_another.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
+     * @Then I should be on the money in short add another page
+     */
+    public function iAmOnMoneyInShortAddAnotherPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/add_another.*$/', $this->reportUrlPrefix));
     }
 
     /**
@@ -800,9 +808,9 @@ trait IShouldBeOnFrontendTrait
 
     public function iAmOnOrgSettingsEditAnotherUserPage()
     {
-        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/',);
+        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/');
     }
-      
+
     public function iAmOnNoMoneyInExistsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-in\/no-money-in-exists?.*$/', $this->reportUrlPrefix));
@@ -817,6 +825,7 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-in-short\/no-money-in-short-exists?.*$/', $this->reportUrlPrefix));
     }
+
     public function iAmOnNoMoneyOutShortExistsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/no-money-out-short-exists?.*$/', $this->reportUrlPrefix));

@@ -392,27 +392,6 @@ class MoneyOutShortController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-out-short/new_summary", name="money_out_short_new_summary")
-     * @Template("@App/Report/MoneyOutShort/new_summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function newSummaryAction(Request $request, $reportId)
-    {
-        $fromPage = $request->get('from');
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutShortState()['state'] && 'skip-step' != $fromPage) {
-            return $this->redirectToRoute('money_out_short', ['reportId' => $reportId]);
-        }
-
-        return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
-            'report' => $report,
-            'status' => $report->getStatus(),
-        ];
-    }
-
-    /**
      * @return string
      */
     protected function getSectionId()
