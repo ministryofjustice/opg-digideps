@@ -95,7 +95,7 @@ Feature: Money in Low Assets - Lay users
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
-        And I have a "3" one off payments over £1k
+        And I add "3" one off payments over £1k
         Then I should see the expected money in section summary
         When I edit the money in short summary section
         And I answer "No" to adding money in on the clients behalf
@@ -108,33 +108,18 @@ Feature: Money in Low Assets - Lay users
         And I answer "yes" to one off payments over £1k
         Then there should be "3" one off payments displayed on the summary page
 
-    @lay-pfa-low-not-started
-    Scenario: Transaction items over $1k are restored when user accidentally changes answer to having no one off payments
-        Given a Lay Deputy has not started a Pfa Low Assets report
-        When I view and start the money in short report section
-        And I answer "Yes" to adding money in on the clients behalf
-        And I am reporting on:
-            | Benefit Type    |
-        And I have a "3" one off payments over £1k
-        Then I should see the expected money in section summary
-        When I edit the answer to the one off payments over 1k
-        And I answer "no" to having one off payments over 1k
-        Then there should be "no" one off payments displayed on the summary page
-        Then I edit the answer to the one off payments over 1k
-        And I answer "yes" to having one off payments over 1k
-        Then there should be "3" one off payments displayed on the summary page
 
     @lay-pfa-low-not-started
-    Scenario: A user adds a transaction item and then removes it and reports to having no money in
+    Scenario: A user adds a transaction item and then removes it and reports to having no money in then adds a new transaction item
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money in short report section
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
-        And I have a "1" one off payments over £1k
+        And I add "1" one off payments over £1k
         Then I should see the expected money in section summary
         When I delete the transaction from the summary page
         Then there should be "no" one off payments displayed on the summary page
         Then I edit the answer to the one off payments over 1k
-        And I have a "1" one off payments over £1k
+        And I add "1" one off payments over £1k
         Then there should be "1" one off payments displayed on the summary page

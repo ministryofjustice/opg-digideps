@@ -136,9 +136,9 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Given /^I have a "([^"]*)" one off payments over £1k$/
+     * @Given /^I add "([^"]*)" one off payments over £1k$/
      */
-    public function iHaveAOneOffPaymentsOver£1k($numberOfPayments)
+    public function iAddAOneOffPaymentsOver£1k($numberOfPayments)
     {
         $this->iAmOnMoneyInShortOneOffPaymentsExistsPage();
 
