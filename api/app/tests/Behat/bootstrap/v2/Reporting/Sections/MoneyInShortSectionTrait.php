@@ -198,6 +198,8 @@ trait MoneyInShortSectionTrait
      */
     public function iEditTheMoneyInShortSummarySection()
     {
+        $this->removeAnswerFromSection('does_money_in_exist[moneyInExists]', 'moneyInExists');
+
         $this->iAmOnMoneyInShortSummaryPage();
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
@@ -282,7 +284,7 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then /^there should be "([^"]*)" one off payments displayed on the summary page$/
+     * @Then /^there should be "([^"]*)" one off payments displayed on the money in summary page$/
      */
     public function thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage($arg1)
     {
@@ -291,12 +293,17 @@ trait MoneyInShortSectionTrait
         $this->iAmOnMoneyInShortSummaryPage();
 
         if ('no' == $arg1) {
-            if ($this->getSectionAnswers('moneyOutExists')) {
-                $this->expectedResultsDisplayedSimplified('moneyOutExists', true);
+            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
+                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist', true, false, false);
             }
+
             $this->assertPageNotContainsText('List of items of income over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
         } else {
+            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
+                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist');
+            }
+
             $this->assertPageContainsText('List of items of income over £1000');
 
             foreach ($this->moneyInShortOneOff as $transactionItems) {

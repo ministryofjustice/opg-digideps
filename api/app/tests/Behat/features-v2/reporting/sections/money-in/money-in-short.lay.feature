@@ -100,14 +100,13 @@ Feature: Money in Low Assets - Lay users
         When I edit the money in short summary section
         And I answer "No" to adding money in on the clients behalf
         And I enter a reason for no money in short
-        Then there should be "no" one off payments displayed on the summary page
+        Then there should be "no" one off payments displayed on the money in summary page
         When I edit the money in short summary section
         Then I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
         And I answer "yes" to one off payments over £1k
-        Then there should be "3" one off payments displayed on the summary page
-
+        Then there should be "3" one off payments displayed on the money in summary page
 
     @lay-pfa-low-not-started
     Scenario: A user adds a transaction item and then removes it and reports to having no money in then adds a new transaction item
@@ -119,7 +118,7 @@ Feature: Money in Low Assets - Lay users
         And I add "1" one off payments over £1k
         Then I should see the expected money in section summary
         When I delete the transaction from the summary page
-        Then there should be "no" one off payments displayed on the summary page
+        Then there should be "no" one off payments displayed on the money in summary page
         Then I edit the answer to the one off payments over 1k
         And I add "1" one off payments over £1k
-        Then there should be "1" one off payments displayed on the summary page
+        Then there should be "1" one off payments displayed on the money in summary page

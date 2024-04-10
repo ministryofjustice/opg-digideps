@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
-use Behat\Behat\Tester\Exception\PendingException;
-
 trait MoneyOutShortSectionTrait
 {
     private array $moneyTypesDictionary = [
@@ -18,6 +16,8 @@ trait MoneyOutShortSectionTrait
         6 => 'New investments – for example, buying shares, new bonds',
         7 => 'Travel costs – for example, bus, train, taxi fares',
     ];
+
+    private array $moneyOutShortOneOff = [];
 
     /**
      * @When I view and start the money out short report section
@@ -129,6 +129,8 @@ trait MoneyOutShortSectionTrait
             'Yes, remove payment'
         );
 
+        $this->moneyOutShortOneOff = [];
+
         $this->iAmOnMoneyOutShortSummaryPage();
     }
 
@@ -200,7 +202,10 @@ trait MoneyOutShortSectionTrait
         $this->expectedResultsDisplayedSimplified();
     }
 
-    private function oneOffPaymentOver1kExists($selection)
+    /**
+     * @Given /^I answer "([^"]*)" to one off payments over £1k for money out$/
+     */
+    public function oneOffPaymentOver1kExists($selection)
     {
         $this->iAmOnMoneyOutShortOneOffPaymentsExistsPage();
 
@@ -215,6 +220,8 @@ trait MoneyOutShortSectionTrait
         $this->fillInField('money_short_transaction[description]', $description, 'moneyOutDetails'.$paymentCount);
         $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyOutDetails'.$paymentCount);
         $this->fillInDateFields('money_short_transaction[date]', $day, $month, $year, 'moneyOutDetails'.$paymentCount);
+
+        $this->moneyOutShortOneOff[] = [$description => $amount];
 
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
@@ -250,11 +257,10 @@ trait MoneyOutShortSectionTrait
 
         $this->iAnswerToTakingMoneyOutOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
-        
+
         $this->iAnswerNumberOneOffPaymentsOver1k(1);
 
         $this->iAmOnMoneyOutShortSummaryPage();
-        
     }
 
     /**
@@ -262,10 +268,72 @@ trait MoneyOutShortSectionTrait
      */
     public function iEditTheMoneyOutShortSummarySection()
     {
+        $this->removeAnswerFromSection('does_money_out_exist[moneyOutExists]', 'moneyOutExists');
+
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
 
         $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
+     * @Then /^there should be "([^"]*)" one off payments displayed on the money out summary page$/
+     */
+    public function thereShouldBeOneOffPaymentsDisplayedOnTheMoneyOutSummaryPage($arg1)
+    {
+        $this->iAmOnMoneyOutShortSummaryPage();
+
+        $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+
+        if ('no' == $arg1) {
+            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
+                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist', true, false, false);
+            }
+            $this->assertPageNotContainsText('List of expenses over £1000');
+            $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
+        } else {
+            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
+                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist');
+            }
+
+            $this->assertPageContainsText('List of expenses over £1000');
+
+            foreach ($this->moneyOutShortOneOff as $transactionItems) {
+                foreach ($transactionItems as $description => $value) {
+                    $this->assertElementContainsText('table', $description);
+                    $this->assertElementContainsText('table', '£'.number_format($value, 2));
+                }
+            }
+        }
+    }
+
+    /**
+     * @When /^I delete the transaction from the money out summary page$/
+     */
+    public function iDeleteTheTransactionFromTheMoneyOutSummaryPage()
+    {
+        $this->clickLink('Remove');
+        assert($this->iShouldBeOnTheMoneyOutShortDeletePage());
+        $this->pressButton('Yes, remove payment');
+
+        $this->moneyOutShortOneOff = [];
+    }
+
+    /**
+     * @Then I should be on the delete page
+     */
+    private function iShouldBeOnTheMoneyOutShortDeletePage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/report\/.*\/money-out-short\/.*\/delete$/'));
+    }
+
+    /**
+     * @Then /^I edit the answer to the money out one off payment over 1k$/
+     */
+    public function iEditTheAnswerToTheMoneyOutOneOffPaymentOver1k()
+    {
+        $urlRegex = sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 }
