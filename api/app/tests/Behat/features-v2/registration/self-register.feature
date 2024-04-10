@@ -54,7 +54,7 @@ Feature: Lay Deputy Self Registration
         And I should be on the Lay homepage
         When I invite a Co-Deputy to the service
         Then they should be able to register to deputise for a client with valid details
-        Then my co-deputy details should be saved to my account
+        Then the co-deputy details should be saved to the co-deputy's account
         And they should be on the Lay homepage
 
     @super-admin
@@ -79,7 +79,7 @@ Feature: Lay Deputy Self Registration
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy-change-details.csv'
         Given a super admin user accesses the admin app
         When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
-        And I create a Lay Deputy user account for one of the deputies in the CSV2
+        And I create a Lay Deputy user account for one of the deputies in the co-deputy CSV
         When a Lay Deputy clicks the activation link in the registration email
         And I complete the case manager user registration flow with other deputy valid deputyship details
         Then my deputy details should be saved to my account
