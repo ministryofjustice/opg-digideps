@@ -41,7 +41,7 @@ class CourtOrder
      *
      * @JMS\Type("integer")
      *
-     * @ORM\Column(name="court_order_uid", type="integer", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="court_order_uid", type="integer", nullable=false, unique=true)
      */
     private $courtOrderUid;
 
@@ -50,7 +50,7 @@ class CourtOrder
      *
      * @JMS\Type("string")
      *
-     * @ORM\Column(type="string", name="comments", length=10, nullable=true)
+     * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
     private $type;
 
@@ -63,7 +63,10 @@ class CourtOrder
      */
     private $active;
 
-    public function getId(): int
+    /**
+     * @return int
+     */
+    public function getId()
     {
         return $this->id;
     }
