@@ -1,0 +1,55 @@
+name: "[Scheduled] Resilience Tests"
+
+on:
+  schedule:
+    # 11am every Sunday
+    - cron: "0 11 * * 0"
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  scale_services_up:
+    name: scale up integration services
+    uses: ./.github/workflows/_scale-services.yml
+    with:
+      replicas: 3
+      acu: 8
+      account_id: 454262938596
+      workspace: integration
+    secrets: inherit
+
+  resilience_tests_integration:
+    name: resilience tests on integration
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - scale_services_up
+    with:
+      workspace: integration
+      account_name: preproduction
+      task_name: "resilience_tests"
+      timeout: "3600"
+    secrets: inherit
+
+  scale_services_down:
+    if: always()
+    name: scale down integration services
+    uses: ./.github/workflows/_scale-services.yml
+    needs:
+      - resilience_tests_integration
+    with:
+      replicas: 1
+      acu: 4
+      account_id: 454262938596
+      workspace: integration
+    secrets: inherit

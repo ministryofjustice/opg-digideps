@@ -27,8 +27,13 @@ RUN cd tests && npm ci
 
 ADD tests/smoke-tests/AdminSmokeTest.js tests/smoke-tests/AdminSmokeTest.js
 ADD tests/smoke-tests/FrontSmokeTest.js tests/smoke-tests/FrontSmokeTest.js
+ADD tests/resilience-tests/FrontLoadTest.js tests/resilience-tests/FrontLoadTest.js
+ADD tests/resilience-tests/Analyse.js tests/resilience-tests/Analyse.js
+ADD tests/resilience-tests/RunExperiments.js tests/resilience-tests/RunExperiments.js
 ADD tests/utility/Utility.js tests/utility/Utility.js
+ADD tests/utility/DataAnalysis.js tests/utility/DataAnalysis.js
 ADD tests/run-smoke-tests.sh tests/run-smoke-tests.sh
+ADD tests/run-resilience-tests.sh tests/run-resilience-tests.sh
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh
 ADD common.sh common.sh
