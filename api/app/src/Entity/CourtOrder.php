@@ -66,10 +66,7 @@ class CourtOrder
         return $this->id;
     }
 
-    /**
-     * @return $this
-     */
-    public function setId(int $id)
+    public function setId(int $id): CourtOrder
     {
         $this->id = $id;
 
@@ -81,10 +78,7 @@ class CourtOrder
         return $this->courtOrderUid;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCourtOrderUid(int $courtOrderUid)
+    public function setCourtOrderUid(int $courtOrderUid): CourtOrder
     {
         $this->courtOrderUid = $courtOrderUid;
 
@@ -96,10 +90,7 @@ class CourtOrder
         return $this->type;
     }
 
-    /**
-     * @return $this
-     */
-    public function setType(string $type)
+    public function setType(string $type): CourtOrder
     {
         $this->type = $type;
 
@@ -111,10 +102,7 @@ class CourtOrder
         return $this->active;
     }
 
-    /**
-     * @return $this
-     */
-    public function setActive(bool $active)
+    public function setActive(bool $active): CourtOrder
     {
         $this->active = $active;
 
