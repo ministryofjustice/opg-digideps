@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Behat\Tester\Exception\PendingException;
+
 trait MoneyOutShortSectionTrait
 {
     private array $moneyTypesDictionary = [
@@ -277,9 +279,9 @@ trait MoneyOutShortSectionTrait
     }
 
     /**
-     * @When I edit the money out short summary section
+     * @When /^I edit the money out short "([^"]*)" summary section$/
      */
-    public function iEditTheMoneyOutShortSummarySection()
+    public function iEditTheMoneyOutShortSummarySection($arg)
     {
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
@@ -294,7 +296,7 @@ trait MoneyOutShortSectionTrait
             $this->removeSection('moneyOutDetails'.$payment);
         }
 
-        $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $urlRegex = sprintf('/%s\/.*\/money-out-short\/%s\?from\=summary$/', $this->reportUrlPrefix,$arg);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 

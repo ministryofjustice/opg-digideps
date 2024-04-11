@@ -84,7 +84,7 @@ Feature: Money Out Short - Lay users
         And I visit the report overview page
         Then I should see "money-out-short" as "no money out"
         When I visit the short money out summary section
-        And I edit the money out short summary section
+        And I edit the money out short "exist" summary section
         And I answer "Yes" to taking money out on the clients behalf
         When I add one category of money paid out
         And I answer that there are not any one-off payments over £1k
@@ -102,11 +102,11 @@ Feature: Money Out Short - Lay users
         And I add one category of money paid out
         And I answer that there are 2 one-off payments over £1k
         Then I should see the expected money out section summary
-        When I edit the money out short summary section
+        When I edit the money out short "exist" summary section
         And I answer "No" to taking money out on the clients behalf
         And I enter a reason for no money out short
         Then there should be "no" one off payments displayed on the money out summary page
-        When I edit the money out short summary section
+        When I edit the money out short "exist" summary section
         Then I answer "Yes" to taking money out on the clients behalf
         And I add one category of money paid out
         And I answer "yes" to one off payments over £1k for money out
