@@ -18,6 +18,7 @@ trait MoneyOutShortSectionTrait
     ];
 
     private array $moneyOutShortOneOff = [];
+    private array $paymentNumber = [];
 
     /**
      * @When I view and start the money out short report section
@@ -109,6 +110,9 @@ trait MoneyOutShortSectionTrait
 
         foreach ($paymentsRange as $paymentNumber) {
             $this->addAMoneyOutPayment($this->faker->sentence(mt_rand(4, 20)), mt_rand(1000, 2000), 1, 2, 2019, $paymentNumber);
+
+            $this->paymentNumber[] = $paymentNumber;
+
             $this->addAnotherMoneyOutPayment($numberOfPayments === $paymentNumber ? 'no' : 'yes');
         }
 
@@ -128,6 +132,15 @@ trait MoneyOutShortSectionTrait
             true,
             'Yes, remove payment'
         );
+
+        $count = 0;
+        foreach ($this->paymentNumber as $payment) {
+            $this->getSectionAnswers('moneyOutDetails'.$payment) ? $count++ : $count;
+        }
+        if (0 == $count) {
+            $this->removeSection('over1K');
+            $this->updateExpectedAnswerInSection('yes_no[moneyTransactionsShortOutExist]', 'over1K', 'no');
+        }
 
         $this->moneyOutShortOneOff = [];
 
@@ -268,10 +281,18 @@ trait MoneyOutShortSectionTrait
      */
     public function iEditTheMoneyOutShortSummarySection()
     {
-        $this->removeAnswerFromSection('does_money_out_exist[moneyOutExists]', 'moneyOutExists');
-
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
+
+        // clean data to correctly track expected results when user edits answers.
+        $this->removeSection('moneyOutExists');
+        $this->removeSection('haveMadePayment');
+        $this->removeSection('over1K');
+        $this->removeSection('reasonForNoMoneyOut');
+
+        foreach ($this->paymentNumber as $payment) {
+            $this->removeSection('moneyOutDetails'.$payment);
+        }
 
         $urlRegex = sprintf('/%s\/.*\/money-out-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
@@ -287,16 +308,11 @@ trait MoneyOutShortSectionTrait
         $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
-            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
-                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist', true, false, false);
-            }
             $this->assertPageNotContainsText('List of expenses over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
-        } else {
-            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
-                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist');
-            }
 
+            $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
+        } else {
             $this->assertPageContainsText('List of expenses over £1000');
 
             foreach ($this->moneyOutShortOneOff as $transactionItems) {
@@ -305,6 +321,7 @@ trait MoneyOutShortSectionTrait
                     $this->assertElementContainsText('table', '£'.number_format($value, 2));
                 }
             }
+            $this->expectedResultsDisplayedSimplified();
         }
     }
 
@@ -331,8 +348,10 @@ trait MoneyOutShortSectionTrait
     /**
      * @Then /^I edit the answer to the money out one off payment over 1k$/
      */
-    public function iEditTheAnswerToTheMoneyOutOneOffPaymentOver1k()
+    public function iEditTheAnswerToTheMoneyOutOneOffPaymentOver1K()
     {
+        $this->removeSection('over1K');
+
         $urlRegex = sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
