@@ -53,7 +53,7 @@ variable "admin_fully_qualified_domain_name" {
 }
 
 module "allow_list" {
-  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v2.3.2"
+  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.0.1"
 }
 
 data "aws_ip_ranges" "route53_healthchecks_ips" {
