@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-in-low-assets @Iqpal
+@v2 @v2_reporting_2 @money-in-low-assets
 Feature: Money in Low Assets - Lay users
 
     @lay-pfa-low-not-started
