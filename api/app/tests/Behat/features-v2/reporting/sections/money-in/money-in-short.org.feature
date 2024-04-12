@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-in-low-assets
+@v2 @v2_reporting_2 @money-in-low-assets @Iqpal
 Feature: Money in Low Assets - Org users
 
     @prof-pfa-low-not-started
@@ -53,7 +53,7 @@ Feature: Money in Low Assets - Org users
         And I am reporting on:
             | Benefit Type    |
             | Salary or wages |
-        And I have a single one-off payments over £1k
+        And I add 1 one-off payments over £1k
         Then I should see the expected money in section summary
         When I follow link back to report overview page
         Then I should see "money-in-short" as "1 item over £1,000"
@@ -76,7 +76,7 @@ Feature: Money in Low Assets - Org users
         And I visit the report overview page
         Then I should see "money-in-short" as "no money in"
         When I visit the short money in summary section
-        And I edit the money in short summary section
+        And I edit the money in short "exist" summary section
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
@@ -95,11 +95,13 @@ Feature: Money in Low Assets - Org users
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
-        And I add "3" one off payments over £1k
+        And I add 3 one-off payments over £1k
         Then I should see the expected money in section summary
-        When I edit the answer to the one off payments over 1k
+#        When I edit the answer to the one off payments over 1k
+        And I edit the money in short "oneOffPaymentsExist" summary section
         And I answer "no" to having one off payments over 1k
-        Then there should be "no" one off payments displayed on the summary page
-        Then I edit the answer to the one off payments over 1k
+        Then there should be "no" one off payments displayed on the money in summary page
+#        Then I edit the answer to the one off payments over 1k
+        And I edit the money in short "oneOffPaymentsExist" summary section
         And I answer "yes" to having one off payments over 1k
-        Then there should be "3" one off payments displayed on the summary page
+        Then there should be "3" one off payments displayed on the money in summary page
