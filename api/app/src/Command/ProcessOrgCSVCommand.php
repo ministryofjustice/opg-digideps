@@ -54,6 +54,7 @@ class ProcessOrgCSVCommand extends Command
         'DeputyAddress3',
         'DeputyAddress4',
         'DeputyAddress5',
+        'CourtOrderUid'
     ];
 
     private const UNEXPECTED_COLUMNS = [
