@@ -76,7 +76,7 @@ Feature: Money in Low Assets - Lay users
         And I visit the report overview page
         Then I should see "money-in-short" as "no money in"
         When I visit the short money in summary section
-        And I edit the money in short summary section
+        And I edit the money in short "exist" summary section
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
@@ -97,11 +97,11 @@ Feature: Money in Low Assets - Lay users
             | Benefit Type    |
         And I add "3" one off payments over £1k
         Then I should see the expected money in section summary
-        When I edit the money in short summary section
+        When I edit the money in short "exist" summary section
         And I answer "No" to adding money in on the clients behalf
         And I enter a reason for no money in short
         Then there should be "no" one off payments displayed on the money in summary page
-        When I edit the money in short summary section
+        When I edit the money in short "exist" summary section
         Then I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |

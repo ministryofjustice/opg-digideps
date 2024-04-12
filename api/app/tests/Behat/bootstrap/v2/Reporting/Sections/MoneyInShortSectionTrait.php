@@ -22,6 +22,7 @@ trait MoneyInShortSectionTrait
     private array $moneyInShortList = [];
     private array $moneyInShortOneOff = [];
     private float $moneyInShortTotal = 0.0;
+    private array $paymentNumber = [];
 
     /**
      * @When I view and start the money in short report section
@@ -194,13 +195,23 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @When I edit the money in short summary section
+     * @When /^I edit the money in short "([^"]*)" summary section$/
      */
-    public function iEditTheMoneyInShortSummarySection()
+    public function iEditTheMoneyInShortSummarySection($arg)
     {
-        $this->removeAnswerFromSection('does_money_in_exist[moneyInExists]', 'moneyInExists');
-
+        $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
+
+        // clean data to correctly track expected results when user edits answers.
+        $this->removeSection('moneyInExists');
+        $this->removeSection('haveMadePayment');
+        $this->removeSection('over1K');
+        $this->removeSection('reasonForNoMoneyIn');
+
+        foreach ($this->paymentNumber as $payment) {
+            $this->removeSection('moneyOutDetails'.$payment);
+        }
+        
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
