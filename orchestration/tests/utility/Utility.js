@@ -1,4 +1,5 @@
 import { SecretsManager, SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import fs from 'fs';
 
 const checkTextInElement = (expectedText, actualText) => {
     if (actualText.includes(expectedText)) {
@@ -17,10 +18,28 @@ const checkUrl = (actualUrl, baseUrl, expectedUrl) => {
   }
 }
 
-const errorAndExit = (errorText) => {
-  console.error(errorText);
-  process.exit(1);
+const logFailureAndContinue = (errorText) => {
+  const currentDate = new Date();
+  const hours = String(currentDate.getHours()).padStart(2, '0'); // Ensure two digits with leading zero
+  const minutes = String(currentDate.getMinutes()).padStart(2, '0'); // Ensure two digits with leading zero
+  const currentTime = `${hours}:${minutes}`;
+  // Create a row for the error and set the timings to fail timings so we can analyse it better
+  const taskErrorsFilePath = process.env.TASK_ERROR_LOG;
+  const taskTimingsFilePath = process.env.TASK_TIMINGS_LOG;
+  fs.appendFileSync(taskErrorsFilePath, `${currentTime},${errorText}\n`);
+  const taskTimingsCsvRow = `${Date.now()},10000,10000,10000,10000,10000,`;
+  fs.appendFileSync(taskTimingsFilePath, taskTimingsCsvRow + '\n');
 }
+
+const errorAndExit = (errorText) => {
+  const logAndContinue = process.env.LOG_AND_CONTINUE === 'true';
+  if (logAndContinue) {
+    logFailureAndContinue(errorText);
+  } else {
+    console.error(errorText);
+    process.exit(1);
+  }
+};
 
 const getSecret = async (environment, endpoint) => {
   console.log('=== Pre-Step: Get Secret Values from '+environment+' ===');
@@ -164,6 +183,20 @@ const updateUserDetails = async (page, firstNameFieldSelector, saveSelector) => 
   await updateFirstName(page, 'SmokeyJoe', firstNameFieldSelector, saveSelector);
 };
 
+const updateUserDetailsConcurrent = async (page, firstNameFieldSelector, saveSelector) => {
+  console.log('=== Update current users details ===');
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.behat-link-user-account'),
+  ]);
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.behat-link-profile-show'),
+  ]);
+  await page.waitForSelector('.behat-link-profile-edit');
+  await updateFirstName(page, 'LoadeyJoe', firstNameFieldSelector, saveSelector);
+};
+
 const checkForReportLinkText = async (page, expectedText) => {
   const hasDecisionsLink = await page.$$eval(
     'a.opg-overview-section__label-link',
@@ -241,5 +274,6 @@ export {
     checkAnalytics,
     checkReportSectionsVisible,
     updateUserDetails,
+    updateUserDetailsConcurrent,
     logOutUser
 };
