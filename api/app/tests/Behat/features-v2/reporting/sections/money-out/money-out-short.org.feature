@@ -95,18 +95,16 @@ Feature: Money Out Short - Org users
         Then my report should be submitted
 
     @prof-pfa-low-not-started
-    Scenario: Transaction items over $1k are restored when user accidentally changes answer to having no one off payments
+    Scenario: Transaction items over £1k are restored when user accidentally changes answer to having no one off payments
         Given a Professional Admin has not started a Pfa Low Assets report
         When I view and start the money out short report section
         And I answer "Yes" to taking money out on the clients behalf
         And I add one category of money paid out
         And I answer that there are 3 one-off payments over £1k
         Then I should see the expected money out section summary
-#        When I edit the answer to the one off payments over 1k
         And I edit the money out short "oneOffPaymentsExist" summary section
         And I answer that there are not any one-off payments over £1k
         Then there should be "no" one off payments displayed on the money out summary page
-#        Then I edit the answer to the one off payments over 1k
         And I edit the money out short "oneOffPaymentsExist" summary section
         And I answer "yes" to one off payments over £1k for money out
         Then there should be "3" one off payments displayed on the money out summary page

@@ -242,8 +242,8 @@ trait MoneyInShortSectionTrait
 
         $this->iAmOnMoneyInShortAddPage();
 
-        $this->fillInField('money_short_transaction[description]', $description, 'payment'.$paymentCount);
-        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'payment'.$paymentCount);
+        $this->fillInField('money_short_transaction[description]', $description, 'moneyInDetails'.$paymentCount);
+        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyInDetails'.$paymentCount);
 
         if (null !== $date) {
             $explodedDate = explode('/', $date);
@@ -253,7 +253,7 @@ trait MoneyInShortSectionTrait
                 intval($explodedDate[0]),
                 intval($explodedDate[1]),
                 intval($explodedDate[2]),
-                'payment'.$paymentCount
+                'moneyInDetails'.$paymentCount
             );
         }
         $this->moneyInShortOneOff[] = [$description => $amount];
@@ -292,19 +292,11 @@ trait MoneyInShortSectionTrait
         $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
-//            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
-//                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist', true, false, false);
-//            }
-
             $this->assertPageNotContainsText('List of items of income over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
             
             $this->expectedResultsDisplayedSimplified(null,true,false,false,false);
         } else {
-//            if ($this->getSectionAnswers('moneyTransactionsShortInExist')) {
-//                $this->expectedResultsDisplayedSimplified('moneyTransactionsShortInExist');
-//            }
-
             $this->assertPageContainsText('List of items of income over £1000');
 
             foreach ($this->moneyInShortOneOff as $transactionItems) {
@@ -322,11 +314,27 @@ trait MoneyInShortSectionTrait
      */
     public function iDeleteTheTransactionFromTheSummaryPage()
     {
-        $this->clickLink('Remove');
-        assert($this->iShouldBeOnTheMoneyInShortDeletePage());
-        $this->pressButton('Yes, remove item of income');
+        $this->iVisitMoneyInShortSummarySection();
+
+        $this->removeAnswerFromSection(
+            'money_short_transaction[amount]',
+            'moneyInDetails1',
+            true,
+            'Yes, remove item of income'
+        );
+
+        $count = 0;
+        foreach ($this->paymentNumber as $payment) {
+            $this->getSectionAnswers('moneyInDetails'.$payment) ? $count++ : $count;
+        }
+        if (0 == $count) {
+            $this->removeSection('one-off-payments');
+            $this->updateExpectedAnswerInSection('yes_no[moneyTransactionsShortInExist]', 'one-off-payments', 'no');
+        }
 
         $this->moneyInShortOneOff = [];
+
+        $this->iAmOnMoneyInShortSummaryPage();
     }
 
     /**
