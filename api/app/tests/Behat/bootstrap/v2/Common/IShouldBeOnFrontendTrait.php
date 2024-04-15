@@ -831,6 +831,11 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/no-money-out-short-exists?.*$/', $this->reportUrlPrefix));
     }
 
+    public function iAmOnReUploadPage(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/reupload\/*$/', $this->reportUrlPrefix));
+    }
+
     public function iAmOnMoneyOutShortOneOffPaymentsExistsPage(): bool
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));

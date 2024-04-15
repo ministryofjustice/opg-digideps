@@ -44,6 +44,10 @@ class ProcessLayCSVCommand extends Command
         'Hybrid',
     ];
 
+    private const OPTIONAL_COLUMNS = [
+        'CourtOrderUid'
+    ];
+
     protected const UNEXPECTED_COLUMNS = [
         'LastReportDay',
         'DeputyOrganisation',
@@ -117,7 +121,8 @@ class ProcessLayCSVCommand extends Command
     {
         try {
             return (new CsvToArray($fileName, false, false))
-                ->setOptionalColumns(self::EXPECTED_COLUMNS)
+                ->setExpectedColumns(self::EXPECTED_COLUMNS)
+                ->setOptionalColumns(self::OPTIONAL_COLUMNS)
                 ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
         } catch (Throwable $e) {

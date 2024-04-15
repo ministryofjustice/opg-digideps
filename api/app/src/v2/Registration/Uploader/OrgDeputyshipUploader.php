@@ -160,7 +160,8 @@ class OrgDeputyshipUploader
         $this->currentOrganisation = $foundOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
 
         if (is_null($foundOrganisation)) {
-            $organisation = $this->orgFactory->createFromFullEmail(OrgService::DEFAULT_ORG_NAME, $dto->getDeputyEmail());
+            $orgName = empty($dto->getOrganisationName()) ? OrgService::DEFAULT_ORG_NAME : $dto->getOrganisationName();
+            $organisation = $this->orgFactory->createFromFullEmail($orgName, $dto->getDeputyEmail());
             $this->em->persist($organisation);
             $this->em->flush();
 

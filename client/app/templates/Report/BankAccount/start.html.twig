@@ -5,7 +5,7 @@
 {% set translationDomain = "report-bank-accounts" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {
-    '%client%': report.client.firstname | e,
+    '%client%': report.client.firstname | striptags,
     '%moneyInPath%': path('money_in', {reportId: report.id})
 } %}
 

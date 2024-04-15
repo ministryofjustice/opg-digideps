@@ -45,8 +45,7 @@ class SatisfactionPerformanceStatsCommand extends Command
                         count(CASE WHEN score = 4 THEN 1 END) AS satisfied,
                         count(CASE WHEN score = 5 THEN 1 END) AS very_satisfied
                     FROM satisfaction
-                    WHERE (report_id IS NOT NULL OR ndr_id IS NOT NULL)
-                    AND created_at >= date_trunc('month', CURRENT_DATE - INTERVAL '1' month)
+                    WHERE created_at >= date_trunc('month', CURRENT_DATE - INTERVAL '1' month)
                     AND created_at <= date_trunc('month', CURRENT_DATE) - INTERVAL '1' second
             ";
 
@@ -66,7 +65,7 @@ class SatisfactionPerformanceStatsCommand extends Command
                     '_timestamp' => $statsStartDate.'T00:00:00+00:00',
                     'service' => 'deputy-reporting',
                     'channel' => 'digital',
-                    'count' => $satisfactionScoreRow,
+                    'count' => intval($satisfactionScoreRow),
                     'dataType' => str_replace('-', '_', $satisfactionScoreKey),
                     'period' => 'month',
                 ];
