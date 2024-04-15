@@ -43,6 +43,7 @@ trait MoneyInSectionTrait
     ];
 
     private array $moneyTypeCategoriesCompleted = [];
+    private array $moneyInTransaction = [];
 
     /**
      * @When I view the money in report section
@@ -167,6 +168,8 @@ trait MoneyInSectionTrait
             $this->currentMoneyTypeReportingOn
         );
 
+        $this->moneyInTransaction[] = [$this->currentMoneyTypeReportingOn => $value];
+
         $this->pressButton('Save and continue');
     }
 
@@ -185,7 +188,7 @@ trait MoneyInSectionTrait
      */
     public function iShouldSeeTheMoneyInSummary(): bool
     {
-        return $this->iAmOnPage('/report\/.*\/money-in\/summary$/');
+        return $this->iAmOnPage('/report\/.*\/money-in\/summary.*$/');
     }
 
     /**
@@ -199,23 +202,32 @@ trait MoneyInSectionTrait
     }
 
     /**
-     * @Then the money in summary page should contain the money in values I added
+     * @Then /^the money in summary page should contain "([^"]*)" money in values$/
      */
-    public function theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded()
+    public function theMoneyInSummaryPageShouldContainMoneyInValues($arg1)
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
-        if ($this->getSectionAnswers('moneyInExists')) {
-            $this->expectedResultsDisplayedSimplified('moneyInExists');
+        $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+
+        if ('no' == $arg1) {
+            $this->assertPageNotContainsText('Income you\'ve already told us about');
+            $this->assertIsNull($transactionItemTableRows, 'transaction item rows are not rendered');
+
+            $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
+        } else {
+            $this->assertPageContainsText('Income you\'ve already told us about');
+
+            foreach ($this->moneyInTransaction as $transactionItems) {
+                foreach ($transactionItems as $moneyType => $value) {
+                    $this->assertElementContainsText('main', $moneyType);
+                    $this->assertElementContainsText('main', '£'.number_format($value, 2));
+                }
+            }
+            $this->expectedResultsDisplayedSimplified();
         }
 
-        if ($this->getSectionAnswers('reasonForNoMoneyIn')) {
-            $this->expectedResultsDisplayedSimplified('reasonForNoMoneyIn');
-        }
-
-        foreach (array_unique($this->moneyTypeCategoriesCompleted) as $completedCategory) {
-            $this->expectedResultsDisplayedSimplified($completedCategory);
-        }
+        $this->moneyInTransaction = [];
     }
 
     /**
@@ -256,6 +268,10 @@ trait MoneyInSectionTrait
             $xpath
         );
 
+        foreach ($this->moneyInTransaction as $moneyType => $value) {
+            $this->subtractFromSectionTotal($this->currentMoneyTypeReportingOn, $value);
+        }
+
         $this->editFieldAnswerInSectionTrackTotal(
             $moneyTypeRow,
             'account[amount]',
@@ -267,7 +283,7 @@ trait MoneyInSectionTrait
      */
     public function theMoneyInSummaryPageShouldContainTheEditedValue()
     {
-        $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
+        $this->theMoneyInSummaryPageShouldContainMoneyInValues('1');
     }
 
     /**
@@ -280,18 +296,11 @@ trait MoneyInSectionTrait
         $moneyTypeLabel = 'State pension';
         $option = $this->translateMoneyType($moneyTypeLabel);
 
-        $this->chooseOption('account[category]', $option, $moneyTypeLabel);
+        $this->chooseOption('account[category]', $option, $moneyTypeLabel, $moneyTypeLabel);
         $this->pressButton('Save and continue');
+        $this->currentMoneyTypeReportingOn = $moneyTypeLabel;
 
         $this->iEnterAValidAmount();
-    }
-
-    /**
-     * @Then the money in summary page should contain the added value
-     */
-    public function theMoneyInSummaryPageShouldContainTheAddedValue()
-    {
-        $this->theMoneyInSummaryPageShouldContainTheMoneyInValuesIAdded();
     }
 
     /**
@@ -300,8 +309,53 @@ trait MoneyInSectionTrait
     public function iEnterAReasonForNoMoneyIn()
     {
         $this->iAmOnNoMoneyInExistsPage();
-        
+
         $this->fillInField('reason_for_no_money[reasonForNoMoneyIn]', 'No money in', 'reasonForNoMoneyIn');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @When /^I edit the money in exist summary section$/
+     */
+    public function iEditTheMoneyInExistSummarySection()
+    {
+        $this->iShouldSeeTheMoneyInSummary();
+
+        // clean data to correctly track expected results when user edits answers.
+        $this->removeSection('moneyInExists');
+        $this->removeSection($this->currentMoneyTypeReportingOn);
+        $this->removeSection('reasonForNoMoneyIn');
+        $this->removeSection('totals');
+
+        $urlRegex = sprintf('/%s\/.*\/money-in\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
+     * @When /^I delete the transaction item from the summary page$/
+     */
+    public function iDeleteTheTransactionItemFromTheSummaryPage()
+    {
+        $this->iShouldSeeTheMoneyInSummary();
+
+        $this->removeAnswerFromSection(
+            'account[category]',
+            $this->currentMoneyTypeReportingOn,
+            true,
+            'Yes, remove item of income'
+        );
+
+        $this->moneyInTransaction = [];
+    }
+
+    /**
+     * @Given /^I add a new transaction item$/
+     */
+    public function iAddANewTransactionItem()
+    {
+        $this->iHaveMoneyTypeToReportOn('Income Support');
+        $this->fillField('account[amount]', '200');
+
         $this->pressButton('Save and continue');
     }
 }

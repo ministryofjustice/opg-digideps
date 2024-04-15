@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 trait MoneyInShortSectionTrait
@@ -148,14 +147,14 @@ trait MoneyInShortSectionTrait
 
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $paymentsRange = range(1,$numberOfPayments);
-        
+        $paymentsRange = range(1, $numberOfPayments);
+
         foreach ($paymentsRange as $paymentNumber) {
-            $this->addMoneyInPayment(sprintf('lorem ipsum %s', rand(1, 10)), rand(1000, 10000),$paymentNumber);
+            $this->addMoneyInPayment(sprintf('lorem ipsum %s', rand(1, 10)), rand(1000, 10000), $paymentNumber);
             $this->paymentNumber[] = $paymentNumber;
             $this->addAnotherMoneyInPayment($numberOfPayments === $paymentNumber ? 'no' : 'yes');
         }
-        
+
         $this->iAmOnMoneyInShortSummaryPage();
     }
 
@@ -175,7 +174,7 @@ trait MoneyInShortSectionTrait
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyInPayment('Lorem ipsum', 1500, 1,'08/12/2021');
+        $this->addMoneyInPayment('Lorem ipsum', 1500, 1, '08/12/2021');
 
         $this->chooseOption('add_another[addAnother]', 'no');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
@@ -188,7 +187,6 @@ trait MoneyInShortSectionTrait
      */
     public function iEditTheMoneyInShortSummarySection($arg)
     {
-        $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
 
         // clean data to correctly track expected results when user edits answers.
@@ -200,8 +198,8 @@ trait MoneyInShortSectionTrait
         foreach ($this->paymentNumber as $payment) {
             $this->removeSection('moneyInDetails'.$payment);
         }
-        
-        $urlRegex = sprintf('/%s\/.*\/money-in-short\/%s\?from\=summary$/', $this->reportUrlPrefix,$arg);
+
+        $urlRegex = sprintf('/%s\/.*\/money-in-short\/%s\?from\=summary$/', $this->reportUrlPrefix, $arg);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
@@ -210,7 +208,6 @@ trait MoneyInShortSectionTrait
      */
     public function iAddAOneOffMoneyInPaymentThatIsLessThan1k()
     {
-        $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
@@ -221,7 +218,7 @@ trait MoneyInShortSectionTrait
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyInPayment('Lorem upsum', 10, 1,'05/05/2015');
+        $this->addMoneyInPayment('Lorem upsum', 10, 1, '05/05/2015');
     }
 
     /**
@@ -237,9 +234,8 @@ trait MoneyInShortSectionTrait
      * @param int         $amount      amount for the one off payment
      * @param string|null $date        date the money came in (optional) format: DD/MM/YYYY
      */
-    private function addMoneyInPayment(string $description, int $amount, int $paymentCount,string $date = null)
+    private function addMoneyInPayment(string $description, int $amount, int $paymentCount, string $date = null)
     {
-
         $this->iAmOnMoneyInShortAddPage();
 
         $this->fillInField('money_short_transaction[description]', $description, 'moneyInDetails'.$paymentCount);
@@ -288,14 +284,14 @@ trait MoneyInShortSectionTrait
     public function thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage($arg1)
     {
         $this->iAmOnMoneyInShortSummaryPage();
-        
+
         $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
             $this->assertPageNotContainsText('List of items of income over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
-            
-            $this->expectedResultsDisplayedSimplified(null,true,false,false,false);
+
+            $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
         } else {
             $this->assertPageContainsText('List of items of income over £1000');
 
@@ -351,7 +347,7 @@ trait MoneyInShortSectionTrait
     public function iEditTheAnswerToTheOneOffPaymentsOver1K()
     {
         $this->removeSection('one-off-payments');
-        
+
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }

@@ -89,7 +89,7 @@ Feature: Money in Low Assets - Lay users
         Then my report should be submitted
 
     @lay-pfa-low-not-started
-    Scenario: Transaction items over $1k are restored when user accidentally changes answer to reporting no money in
+    Scenario: Transaction items over £1k are restored when user accidentally changes answer to reporting no money in
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money in short report section
         And I answer "Yes" to adding money in on the clients behalf
