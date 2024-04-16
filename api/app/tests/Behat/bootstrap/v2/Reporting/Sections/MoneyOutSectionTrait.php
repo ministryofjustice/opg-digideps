@@ -333,7 +333,6 @@ trait MoneyOutSectionTrait
         $this->removeSection('moneyOutExists');
         $this->removeSection('addPayment-'.$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant']);
         $this->removeSection('reasonForNoMoneyOut');
-        $this->removeSection('totals');
 
         $urlRegex = sprintf('/%s\/.*\/money-out\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);

@@ -328,7 +328,6 @@ trait MoneyInSectionTrait
         $this->removeSection('moneyInExists');
         $this->removeSection($this->currentMoneyTypeReportingOn);
         $this->removeSection('reasonForNoMoneyIn');
-        $this->removeSection('totals');
 
         $urlRegex = sprintf('/%s\/.*\/money-in\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
