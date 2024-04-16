@@ -208,7 +208,7 @@ trait MoneyInShortSectionTrait
      */
     public function iAddAOneOffMoneyInPaymentThatIsLessThan1k()
     {
-        $this->iAmOnMoneyInShortSummaryPage();
+        $this->iVisitMoneyInShortSummarySection();
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
 
