@@ -185,3 +185,7 @@ lint-js: ##@javascript Lint JS resources
 smoke-tests: ##@smoke-tests Run smoke tests (requires app to be up)
 	docker-compose build orchestration
 	docker-compose run --remove-orphans orchestration sh tests/run-smoke-tests.sh
+
+resilience-tests: ##@resilience-tests Run resilience tests (requires app to be up)
+	docker-compose build orchestration
+	docker-compose run -e LOG_AND_CONTINUE=true --remove-orphans orchestration sh tests/run-resilience-tests.sh
