@@ -131,8 +131,6 @@ Scenario: A user adds a transaction item and then removes it and reports to havi
     Then the money in summary page should contain "1" money in values
     When I delete the transaction item from the summary page
     Then the money in summary page should contain "no" money in values
-    Then I edit the money in exist summary section
-    And I confirm "Yes" to adding money in on the clients behalf
     And I add a new transaction item
     And I dont add another item
     Then the money in summary page should contain "1" money in values

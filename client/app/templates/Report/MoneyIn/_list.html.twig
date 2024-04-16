@@ -55,7 +55,7 @@
     {% endif %}
 </dl>
 
-{% if (report.moneyInExists == 'Yes') and (report.moneyTransactionsIn | length > 0) %}
+{% if (report.moneyInExists == 'Yes') %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-l">{{ 'summaryPage.moneyIn.listOfMoneyIns' | trans(transOptions) }}</h2>

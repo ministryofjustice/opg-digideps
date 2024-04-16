@@ -211,7 +211,6 @@ trait MoneyInSectionTrait
         $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
-            $this->assertPageNotContainsText('Income you\'ve already told us about');
             $this->assertIsNull($transactionItemTableRows, 'transaction item rows are not rendered');
 
             $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
@@ -226,8 +225,6 @@ trait MoneyInSectionTrait
             }
             $this->expectedResultsDisplayedSimplified();
         }
-
-        $this->moneyInTransaction = [];
     }
 
     /**
@@ -268,14 +265,20 @@ trait MoneyInSectionTrait
             $xpath
         );
 
-        foreach ($this->moneyInTransaction as $moneyType => $value) {
-            $this->subtractFromSectionTotal($this->currentMoneyTypeReportingOn, $value);
-        }
+        $newValue = $this->faker->numberBetween(1, 10000);
 
         $this->editFieldAnswerInSectionTrackTotal(
             $moneyTypeRow,
             'account[amount]',
-            $this->currentMoneyTypeReportingOn);
+            $this->currentMoneyTypeReportingOn,
+            false,
+            $newValue
+        );
+
+        foreach ($this->moneyInTransaction[0] as $moneyType => $value) {
+            $this->subtractFromSectionTotal($this->currentMoneyTypeReportingOn, $value);
+            $this->moneyInTransaction[0][$this->currentMoneyTypeReportingOn] = $newValue;
+        }
     }
 
     /**
@@ -345,6 +348,10 @@ trait MoneyInSectionTrait
             'Yes, remove item of income'
         );
 
+        foreach ($this->moneyInTransaction[0] as $moneyType => $value) {
+            $this->subtractFromGrandTotal($value);
+        }
+
         $this->moneyInTransaction = [];
     }
 
@@ -353,6 +360,7 @@ trait MoneyInSectionTrait
      */
     public function iAddANewTransactionItem()
     {
+        $this->clickLink('Add item of income');
         $this->iHaveMoneyTypeToReportOn('Income Support');
         $this->fillField('account[amount]', '200');
 
