@@ -219,7 +219,7 @@ class ComponentsExtension extends AbstractExtension
      */
     public function progressBarRegistration(Environment $env, User $user, $selectedStepId)
     {
-        if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_SUPER_ADMIN])) {
+        if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN_MANAGER])) {
             $availableStepIds = ['password', 'user_details'];
         } elseif ($user->isNdrEnabled() && !$user->getIsCoDeputy()) {
             $availableStepIds = ['password', 'user_details', 'client_details'];
