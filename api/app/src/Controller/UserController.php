@@ -475,6 +475,29 @@ class UserController extends RestController
         }
 
         $user->setAgreeTermsUse(true);
+
+        $this->em->persist($user);
+        $this->em->flush($user);
+
+        return $user->getId();
+    }
+
+    /**
+     * @Route("/clear-registration-token/{token}", methods={"PUT"})
+     */
+    public function clearRegistrationToken(Request $request, $token)
+    {
+        if (!$this->authService->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
+
+        /* @var $user User */
+        $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
+
+        if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
+            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+        }
+
         $user->setRegistrationToken(null);
 
         $this->em->persist($user);
