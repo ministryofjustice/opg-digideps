@@ -91,16 +91,14 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
+            return $this->router->generate('user_details');
+        } else if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
-            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
-                return $this->router->generate('user_details');
-            } else {
-                return $this->router->generate('org_dashboard');
-            }
+            return $this->router->generate('org_dashboard');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
