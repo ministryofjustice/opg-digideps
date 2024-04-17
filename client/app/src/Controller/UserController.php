@@ -140,6 +140,7 @@ class UserController extends AbstractController
 
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);
+            $this->userApi->clearRegistrationToken($token);
 
             if ($isActivatePage) {
                 $request->getSession()->set('login-context', 'password-create');
@@ -161,6 +162,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
+     *
      * @Template("@App/User/activateLinkSend.html.twig")
      */
     public function activateLinkSendAction(string $token): Response
@@ -175,6 +177,7 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
+     *
      * @Template("@App/User/activateLinkSent.html.twig")
      */
     public function activateLinkSentAction(string $token): array
@@ -196,6 +199,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/user/details", name="user_details")
+     *
      * @Template("@App/User/details.html.twig")
      */
     public function detailsAction(Request $request, Redirector $redirector)
@@ -236,6 +240,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/password-managing/forgotten", name="password_forgotten")
+     *
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
     public function passwordForgottenAction(Request $request)
@@ -264,6 +269,7 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/password-managing/sent", name="password_sent")
+     *
      * @Template("@App/User/passwordSent.html.twig")
      */
     public function passwordSentAction(): array
@@ -275,6 +281,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/register", name="register")
+     *
      * @Template("@App/User/register.html.twig")
      */
     public function registerAction(Request $request)
@@ -401,6 +408,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     *
      * @Security("is_granted('ROLE_ORG')")
      */
     public function updatedTermsUseAction(Request $request, string $token): Response
@@ -411,6 +419,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
+            $this->userApi->clearRegistrationToken($token);
 
             return $this->redirectToRoute('org_dashboard');
         }
