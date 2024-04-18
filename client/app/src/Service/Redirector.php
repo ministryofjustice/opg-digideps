@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity as EntityDir;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -59,8 +58,6 @@ class Redirector
 
     /**
      * Redirector constructor.
-     *
-     * @param $env
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -77,7 +74,7 @@ class Redirector
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     private function getLoggedUser()
     {
@@ -91,15 +88,21 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
-            return $this->router->generate('user_details');
-        } else if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            return $this->router->generate('admin_homepage');
-        } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
+        if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
+            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
+                return $this->router->generate('user_details');
+            } else {
+                return $this->router->generate('admin_homepage');
+            }
+        } elseif ($this->authChecker->isGranted(User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
-            return $this->router->generate('org_dashboard');
-        } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
+            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
+                return $this->router->generate('user_details');
+            } else {
+                return $this->router->generate('org_dashboard');
+            }
+        } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
             return $this->router->generate('access_denied');
@@ -113,14 +116,14 @@ class Redirector
      *
      * @return bool|string
      */
-    public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
+    public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
             $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
-        //none of these corrections apply to admin
+        // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
@@ -153,7 +156,7 @@ class Redirector
     /**
      * @return string
      */
-    private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(User $user, $enabledLastAccessedUrl = false)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -213,10 +216,10 @@ class Redirector
     {
         if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');
             }
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
+            if ($this->authChecker->isGranted(User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');
             }
 
@@ -224,7 +227,7 @@ class Redirector
         }
 
         // PROF and PA redirect to org homepage
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ORG)) {
+        if ($this->authChecker->isGranted(User::ROLE_ORG)) {
             return $this->router->generate('org_dashboard');
         }
 
