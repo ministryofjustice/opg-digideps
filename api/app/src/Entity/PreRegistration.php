@@ -9,6 +9,7 @@ use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -49,6 +50,7 @@ class PreRegistration
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
         $this->hybrid = $row['Hybrid'] ?? null;
+        $this->courtOrderUid = intval($row['CourtOrderUid']) ?? 0;
 
         $this->updatedAt = null;
     }
@@ -186,6 +188,15 @@ class PreRegistration
      * @ORM\Column(name="is_co_deputy", type="boolean", nullable=true)
      */
     private ?bool $isCoDeputy;
+
+    /**
+     * @JMS\Type("integer")
+     *
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(name="court_order_uid", type="integer", nullable=false)
+     */
+    private int $courtOrderUid;
 
     public static function getReportTypeByOrderType(string $reportType, string $orderType, string $realm): string
     {
@@ -384,6 +395,18 @@ class PreRegistration
     public function setIsCoDeputy(mixed $isCoDeputy): self
     {
         $this->isCoDeputy = $isCoDeputy;
+
+        return $this;
+    }
+
+    public function getCourtOrderUid(): ?int
+    {
+        return $this->courtOrderUid;
+    }
+
+    public function setCourtOrderUid(?int $courtOrderUid): PreRegistration
+    {
+        $this->courtOrderUid = $courtOrderUid;
 
         return $this;
     }

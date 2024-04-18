@@ -18,6 +18,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'OrderType',
         'CoDeputy',
         'Hybrid',
+        'CourtOrderUid',
     ];
 
     private array $missingColumns = [];
@@ -37,7 +38,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
             throw new \InvalidArgumentException($message);
         }
-        
+
         return $this->buildDto($data);
     }
 
@@ -61,15 +62,16 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setOrderDate(new \DateTime($data['MadeDate']))
                 ->setOrderType($data['OrderType'])
                 ->setIsCoDeputy('yes' === $data['CoDeputy'])
-                ->setHybrid($data['Hybrid']);
+                ->setHybrid($data['Hybrid'])
+                ->setCourtOrderUid($data['CourtOrderUid']);
     }
 
     private function collectMissingColumns(array $data)
     {
         $this->missingColumns = [];
         foreach ($this->requiredData as $requiredColumn) {
-            $this->missingColumns[] = array_key_exists($requiredColumn, $data) && !empty($data[$requiredColumn]) ? 
-                null : 
+            $this->missingColumns[] = array_key_exists($requiredColumn, $data) && !empty($data[$requiredColumn]) ?
+                null :
                 $requiredColumn;
         }
 

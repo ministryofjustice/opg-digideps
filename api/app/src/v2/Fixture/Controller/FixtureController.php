@@ -539,7 +539,7 @@ class FixtureController extends AbstractController
         ];
 
         if ($fromRequest['createCoDeputy']) {
-            $coDeputy = $this->preRegistrationFactory->createCoDeputy($preRegistration->getCaseNumber(), $fromRequest);
+            $coDeputy = $this->preRegistrationFactory->createCoDeputy($preRegistration->getCaseNumber(), $preRegistration->getCourtOrderUid(), $fromRequest);
             $this->em->persist($coDeputy);
             $data['coDeputyLastName'] = $coDeputy->getDeputySurname();
             $data['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
