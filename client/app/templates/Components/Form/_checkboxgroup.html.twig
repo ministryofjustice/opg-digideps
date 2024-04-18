@@ -15,7 +15,7 @@
         </legend>
 
         {% if hintText is not null %}
-            <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
+            <div class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</div>
         {% endif %}
 
         {{  form_errors(element) }}

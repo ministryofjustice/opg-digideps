@@ -38,9 +38,9 @@
         class="govuk-form-group {% if not form.vars.valid %}govuk-form-group--error{% endif %} govuk-!-margin-bottom-{{ margin }}"
     >
         <div class="govuk-checkboxes govuk-checkboxes--small">
-            <span class="govuk-hint">
+            <div class="govuk-hint">
                 <strong>{{ ('checklistPage.form.' ~ form.vars.name ~ '.qid') | trans({}, form.vars.translation_domain) }}</strong>
-            </span>
+            </div>
 
             {{ form_errors(form) }}
 
