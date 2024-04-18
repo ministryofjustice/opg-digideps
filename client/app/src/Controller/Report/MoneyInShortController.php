@@ -213,15 +213,17 @@ class MoneyInShortController extends AbstractController
             /* @var $data EntityDir\Report\Report */
 
             $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-in-exist']);
+            $moneyTransactionsShortInExist = 'yes' === $data->getMoneyTransactionsShortInExist();
 
-            // undelete items if they exist
-            if ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($softDeletedTransactionIds)) {
+            if ($moneyTransactionsShortInExist && !empty($softDeletedTransactionIds)) {
+                // undelete items if they exist
                 foreach ($softDeletedTransactionIds as $transactionId) {
                     $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$transactionId, ['transactionSoftDelete']);
                 }
 
                 return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
-            } elseif ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($data->getMoneyTransactionsShortIn()) && 'summary' == $fromSummaryPage) {
+            } elseif ($moneyTransactionsShortInExist && !empty($data->getMoneyTransactionsShortIn()) && 'summary' == $fromSummaryPage) {
+                // covers scenarios where deputy clicks edit link from summary change but chooses not to change answer
                 return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
             }
 

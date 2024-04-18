@@ -86,24 +86,28 @@ class MoneyOutController extends AbstractController
             // retrieve soft deleted transaction ids if present
             $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction/get-soft-delete', 'array');
 
+            $moneyOutStepRoute = $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
+            $moneyOutSummaryRoute = $this->redirectToRoute('money_out_summary', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
+            $noMoneyOutExistsRoute = $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
+
             if ('Yes' === $answer && 'summary' != $fromPage) {
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
-                return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
+                return $moneyOutStepRoute;
             } elseif ('Yes' === $answer && 'summary' === $fromPage) {
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
 
-                return empty($softDeletedTransactionIds) ? $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']) : $this->redirectToRoute('money_out_summary', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
+                return empty($softDeletedTransactionIds) ? $moneyOutStepRoute : $moneyOutSummaryRoute;
             } elseif ('No' === $answer && 'summary' === $fromPage) {
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
 
-                return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
+                return $noMoneyOutExistsRoute;
             } else {
-                return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
+                return $noMoneyOutExistsRoute;
             }
         }
 
@@ -116,7 +120,7 @@ class MoneyOutController extends AbstractController
         ];
     }
 
-    private function handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report)
+    private function handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report): void
     {
         $reportId = $report->getId();
 

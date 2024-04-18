@@ -212,16 +212,18 @@ class MoneyOutShortController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
+
             $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-out-exist']);
+            $moneyTransactionsShortOutExist = 'yes' === $data->getMoneyTransactionsShortOutExist();
 
             // undelete items if they exist
-            if ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($softDeletedTransactionIds)) {
+            if ($moneyTransactionsShortOutExist && !empty($softDeletedTransactionIds)) {
                 foreach ($softDeletedTransactionIds as $transactionId) {
                     $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$transactionId, ['transactionSoftDelete']);
                 }
 
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
-            } elseif ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($data->getMoneyTransactionsShortOut()) && 'summary' == $fromSummaryPage) {
+            } elseif ($moneyTransactionsShortOutExist && !empty($data->getMoneyTransactionsShortOut()) && 'summary' == $fromSummaryPage) {
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
             }
 
