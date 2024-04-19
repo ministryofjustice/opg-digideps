@@ -86,28 +86,28 @@ class MoneyInController extends AbstractController
             // retrieve soft deleted transaction ids if present
             $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction/get-soft-delete', 'array');
 
-            $moneyInStepRoute = $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
-            $moneyInSummaryRoute = $this->redirectToRoute('money_in_summary', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
-            $noMoneyInExistsRoute = $this->redirectToRoute('no_money_in_exists', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
-
             if ('Yes' === $answer && 'summary' != $fromPage) {
                 $report->setReasonForNoMoneyIn(null);
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
 
-                return $moneyInStepRoute;
+                return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
             } elseif ('Yes' === $answer && 'summary' === $fromPage) {
                 $report->setReasonForNoMoneyIn(null);
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
 
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
 
-                return empty($softDeletedTransactionIds) ? $moneyInStepRoute : $moneyInSummaryRoute;
+                $moneyInStepRedirectParameters = ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist'];
+                $moneyInSummaryRedirectParameters = ['reportId' => $reportId, 'from' => 'does_money_in_exist'];
+
+                return empty($softDeletedTransactionIds) ? $this->redirectToRoute('money_in_step', $moneyInStepRedirectParameters)
+                : $this->redirectToRoute('money_in_summary', $moneyInSummaryRedirectParameters);
             } elseif ('No' === $answer && 'summary' === $fromPage) {
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
 
-                return $noMoneyInExistsRoute;
+                return $this->redirectToRoute('no_money_in_exists', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
             } else {
-                return $noMoneyInExistsRoute;
+                return $this->redirectToRoute('no_money_in_exists', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
             }
         }
 
