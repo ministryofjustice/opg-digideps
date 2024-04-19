@@ -42,7 +42,7 @@
     {% include '@App/Layouts/_google_analytics_events_gtag.html.twig' %}
 {% endif %}
 
-<a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
 {% if not app.request.cookies.has('cookie_policy') %}
     <div class="govuk-cookie-banner behat-region-cookie-banner" data-module="opg-cookie-banner" data-nosnippet
