@@ -20,15 +20,13 @@
         {% block proposition_title %}Complete the deputy report{% endblock %}
     </a>
 
-    {% if app.user %}
-        <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle"
-                aria-controls="navigation" aria-label="Show or hide Top Level Navigation" hidden>
-            Menu
-        </button>
-    {% endif %}
-    <nav>
+    <nav aria-label="Top Level Navigation" class="govuk-header__navigation behat-region-navbar">
         {% if app.user %}
-            <ul id="navigation" class="govuk-header__navigation behat-region-navbar" aria-label="Top Level Navigation">
+            <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle"
+                    aria-controls="navigation" aria-label="Show or hide Top Level Navigation" hidden>
+                Menu
+            </button>
+            <ul id="navigation" class="govuk-header__navigation-list">
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
                     {% if adLoggedAsDeputy %}
                         <li class="govuk-header__navigation-item">
