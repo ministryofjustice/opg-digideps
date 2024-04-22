@@ -95,16 +95,6 @@ class UserController extends AbstractController
             ]);
         }
 
-        // PA must agree to terms before activating the account
-        // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if (
-            $isActivatePage
-            && $user->hasRoleOrgNamed()
-            && !$user->getAgreeTermsUse()
-        ) {
-            return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
-        }
-
         // define form and template that differs depending on the action (activate or password-reset)
         if ($isActivatePage) {
             $passwordMismatchMessage = $this->translator->trans('password.validation.passwordMismatch', [], 'user-activate');
@@ -375,35 +365,6 @@ class UserController extends AbstractController
         return $vars + [
             'form' => $form->createView(),
         ];
-    }
-
-    /**
-     * @Route("/user/agree-terms-use/{token}", name="user_agree_terms_use")
-     */
-    public function agreeTermsUseAction(Request $request, string $token): Response
-    {
-        $user = $this->restClient->loadUserByToken($token);
-
-        $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->userApi->agreeTermsUse($token);
-
-            return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
-        }
-
-        if (EntityDir\User::ROLE_PA_NAMED == $user->getRoleName()) {
-            $view = '@App/User/agreeTermsUsePa.html.twig';
-        } elseif (EntityDir\User::ROLE_PROF_NAMED == $user->getRoleName()) {
-            $view = '@App/User/agreeTermsUseProf.html.twig';
-        } else {
-            throw new \RuntimeException('terms page not implemented');
-        }
-
-        return $this->render($view, [
-            'user' => $user,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
