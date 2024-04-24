@@ -1,40 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Registration\SelfRegistration\Factory;
 
-use App\Entity\PreRegistration;
+use App\Entity\CourtOrder;
 use App\Service\DateTimeProvider;
-use App\v2\Registration\DTO\LayDeputyshipDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PreRegistrationFactory
+class CourtOrderFactory
 {
     public function __construct(private ValidatorInterface $validator, private DateTimeProvider $dateProvider)
     {
     }
-
-    /**
-     * @return PreRegistration
-     */
-    public function createFromDto(LayDeputyshipDto $dto)
+    public function createFromDto(CourtOrderDto $dto): CourtOrder
     {
-        $entity = new PreRegistration($this->convertDtoToArray($dto));
+        $entity = new CourtOrder($this->convertDtoToArray($dto));
 
         $this->throwExceptionOnInvalidEntity($entity);
 
         return $entity;
     }
 
-    private function convertDtoToArray(LayDeputyshipDto $dto): array
+    private function convertDtoToArray(CourtOrderDto $dto): array
     {
         return [
-            'Case' => $dto->getCaseNumber(),
-            'ClientSurname' => $dto->getClientSurname(),
-            'DeputyUid' => $dto->getDeputyUid(),
+            'CourtOrderUid' => $dto->getCaseNumber(),
+            'Type' => $dto->getClientSurname(),
+            'Active' => $dto->getDeputyUid(),
         ];
     }
 
-    private function throwExceptionOnInvalidEntity(PreRegistration $entity): void
+    private function throwExceptionOnInvalidEntity(CourtOrder $entity): void
     {
         $errors = $this->validator->validate($entity);
 

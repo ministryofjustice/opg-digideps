@@ -2,6 +2,7 @@
 
 namespace App\v2\Registration\Uploader;
 
+use App\Entity\CourtOrder;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -44,14 +45,22 @@ class LayDeputyshipUploader
         $this->preRegistrationEntriesByCaseNumber = [];
         $added = 0;
         $errors = [];
+        $courtOrderUids = [];
 
         try {
             $this->em->beginTransaction();
 
             foreach ($collection as $index => $layDeputyshipDto) {
+                
+                if ($this->findCourtOrderEntity($layDeputyshipDto->getCourtOrderUid())) {
+                    
+                }
+                $courtOrderUids[] = $layDeputyshipDto->getCourtOrderUid();
+                
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
+                    $this->createAndPersistCourtOrderEntity($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
@@ -78,6 +87,7 @@ class LayDeputyshipUploader
             'report-update-count' => count($this->reportsUpdated),
             'cases-with-updated-reports' => $this->reportsUpdated,
             'source' => 'sirius',
+            'court-orders' => $courtOrderUids,
         ];
     }
 
@@ -142,15 +152,21 @@ class LayDeputyshipUploader
         return $this;
     }
 
-    /**
-     * @throws MappingException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     private function commitTransactionToDatabase(): void
     {
         $this->em->flush();
         $this->em->commit();
         $this->em->clear();
+    }
+    
+    private function findCourtOrderEntity(int $courtOrderUid): bool
+    {
+        return (bool)$this->em->getRepository(CourtOrder::class)->findOneBy(['court_order_uid' => $courtOrderUid]);
+    }
+
+    private function createAndPersistCourtOrderEntity(mixed $layDeputyshipDto): void
+    {
+        
+        
     }
 }

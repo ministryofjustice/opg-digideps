@@ -55,6 +55,8 @@ class ProcessLayCSVCommand extends Command
         'skipped' => 0,
         'errors' => [],
     ];
+    
+    private array $courtOrderUids = [];
 
     private OutputInterface $cliOutput;
 
@@ -128,6 +130,9 @@ class ProcessLayCSVCommand extends Command
                     $this->processedStringOutput()
                 )
             );
+            
+            array
+            
 
             return Command::SUCCESS;
         }
@@ -171,6 +176,7 @@ class ProcessLayCSVCommand extends Command
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
+                $this->courtOrderUids = array_merge($this->courtOrderUID, $result['court-orders']);
                 $this->storeOutput($result);
             }
 
