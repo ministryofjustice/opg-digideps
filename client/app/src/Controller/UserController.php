@@ -196,6 +196,10 @@ class UserController extends AbstractController
     {
         $user = $this->userApi->getUserWithData();
 
+        if ($user->hasAdminRole() && !$user->getRegistrationDate() && !$user->getActive()) {
+            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+        }
+
         $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client
             && !$user->isDeputyOrg();
 
@@ -212,7 +216,9 @@ class UserController extends AbstractController
             }
 
             //            this is the final step for Org users so registration has succeeded
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+            if ($user->isDeputyOrg()) {
+                $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+            }
             $request->getSession()->remove('login-context');
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
