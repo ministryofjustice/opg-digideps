@@ -22,13 +22,13 @@ class MoneyTransactionShortRepository extends ServiceEntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT t.id FROM App\Entity\Report\MoneyTransactionShort t WHERE t.report = :reportId AND t.deletedAt is not null')
+            ->createQuery('SELECT t FROM App\Entity\Report\MoneyTransactionShort t WHERE t.report = :reportId AND t.deletedAt is not null')
             ->setParameter('reportId', $reportId);
 
-        $transactionIds = $query->getSingleColumnResult();
+        $moneyTransactionObject = $query->getArrayResult();
 
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return $transactionIds;
+        return $moneyTransactionObject;
     }
 }

@@ -16,19 +16,19 @@ class MoneyTransactionRepository extends ServiceEntityRepository
     /**
      * Get soft-deleted money transaction objects.
      */
-    public function retrieveSoftDeleted($reportId): array
+    public function retrieveSoftDeleted($reportId)
     {
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(MoneyTransaction::class);
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT t.id FROM App\Entity\Report\MoneyTransaction t WHERE t.report = :reportId AND t.deletedAt is not null')
+            ->createQuery('SELECT t FROM App\Entity\Report\MoneyTransaction t WHERE t.report = :reportId AND t.deletedAt is not null')
             ->setParameter('reportId', $reportId);
 
-        $transactionIds = $query->getSingleColumnResult();
+        $moneyTransactionObject = $query->getResult();
 
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return $transactionIds;
+        return $moneyTransactionObject;
     }
 }

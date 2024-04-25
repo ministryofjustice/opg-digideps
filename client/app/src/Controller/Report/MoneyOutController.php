@@ -83,8 +83,15 @@ class MoneyOutController extends AbstractController
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
-            // retrieve soft deleted transaction ids if present
-            $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction/get-soft-delete', 'array');
+            // retrieve soft deleted transaction ids if present and handle money out ids only
+            $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction/get-soft-delete', 'Report\MoneyTransaction[]');
+
+            $softDeletedMoneyOutTransactionIds = [];
+            foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
+                if ('out' == $softDeletedTransactionId->getType()) {
+                    $softDeletedMoneyOutTransactionIds[] = $softDeletedTransactionId->getId();
+                }
+            }
 
             if ('Yes' === $answer && 'summary' != $fromPage) {
                 $report->setReasonForNoMoneyOut(null);
@@ -95,15 +102,15 @@ class MoneyOutController extends AbstractController
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
-                $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
+                $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyOutTransactionIds, $report);
 
                 $moneyOutStepRedirectParameters = ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist'];
                 $moneyOutSummaryRedirectParameters = ['reportId' => $reportId, 'from' => 'does_money_out_exist'];
 
-                return empty($softDeletedTransactionIds) ? $this->redirectToRoute('money_out_step', $moneyOutStepRedirectParameters)
+                return empty($softDeletedMoneyOutTransactionIds) ? $this->redirectToRoute('money_out_step', $moneyOutStepRedirectParameters)
                 : $this->redirectToRoute('money_out_summary', $moneyOutSummaryRedirectParameters);
             } elseif ('No' === $answer && 'summary' === $fromPage) {
-                $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report);
+                $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyOutTransactionIds, $report);
 
                 return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
             } else {

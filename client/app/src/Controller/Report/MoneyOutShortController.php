@@ -206,8 +206,15 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
         $fromSummaryPage = 'summary' == $request->get('from');
 
-        // retrieve soft deleted transaction ids if present
+        // retrieve soft deleted transaction ids if present and store money out short ids only
         $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction-short/get-soft-delete', 'array');
+
+        $softDeletedMoneyOutShortTransactionIds = [];
+        foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
+            if ('out' == $softDeletedTransactionId['type']) {
+                $softDeletedMoneyOutShortTransactionIds[] = $softDeletedTransactionId['id'];
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
@@ -216,8 +223,8 @@ class MoneyOutShortController extends AbstractController
             $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-out-exist']);
 
             // undelete items if they exist
-            if ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($softDeletedTransactionIds)) {
-                foreach ($softDeletedTransactionIds as $transactionId) {
+            if ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($softDeletedMoneyOutShortTransactionIds)) {
+                foreach ($softDeletedMoneyOutShortTransactionIds as $transactionId) {
                     $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$transactionId, ['transactionSoftDelete']);
                 }
 

@@ -159,6 +159,8 @@ class MoneyTransactionController extends RestController
      */
     public function getSoftDeletedMoneyTransactionItems($reportId)
     {
+        $this->formatter->setJmsSerialiserGroups(['transaction']);
+
         return $this->moneyTransactionRepository->retrieveSoftDeleted($reportId);
     }
 }
