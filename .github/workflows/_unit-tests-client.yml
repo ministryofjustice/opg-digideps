@@ -31,6 +31,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-client-unit-tests-build
 
+      - name: check for raw tags in twig templates
+        run: |
+          if [[ $(grep -r '|.* raw' | wc -l) -gt 0 ]]
+            then
+            echo "Check failed: 'raw' tags found in twig templates. Remove them ..."
+            exit 1
+          fi
+
       - name: build docker image
         run: |
           REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker buildx build \
