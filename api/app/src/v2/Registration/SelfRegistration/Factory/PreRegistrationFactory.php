@@ -31,6 +31,21 @@ class PreRegistrationFactory
             'Case' => $dto->getCaseNumber(),
             'ClientSurname' => $dto->getClientSurname(),
             'DeputyUid' => $dto->getDeputyUid(),
+            'DeputyFirstname' => $dto->getDeputyFirstname(),
+            'DeputySurname' => $dto->getDeputySurname(),
+            'DeputyAddress1' => $dto->getDeputyAddress1(),
+            'DeputyAddress2' => $dto->getDeputyAddress2(),
+            'DeputyAddress3' => $dto->getDeputyAddress3(),
+            'DeputyAddress4' => $dto->getDeputyAddress4(),
+            'DeputyAddress5' => $dto->getDeputyAddress5(),
+            'DeputyPostcode' => $dto->getDeputyPostcode(),
+            'ReportType' => $dto->getTypeOfReport(),
+            'NDR' => $dto->isNdrEnabled() ? 'yes' : 'no',
+            'MadeDate' => $dto->getOrderDate()->format('Y-m-d'),
+            'OrderType' => $dto->getOrderType(),
+            'CoDeputy' => $dto->getIsCoDeputy() ? 'yes' : 'no',
+            'Hybrid' => $dto->getHybrid(),
+            'CourtOrderUid' => $dto->getCourtOrderUid(),
         ];
     }
 

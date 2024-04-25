@@ -7,8 +7,12 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
+use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
+use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\SelfRegistration\Factory\CourtOrderCreationException;
+use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
@@ -32,10 +36,12 @@ class LayDeputyshipUploader
     public const FLUSH_EVERY = 5000;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private ReportRepository $reportRepository,
-        private PreRegistrationFactory $preRegistrationFactory,
-        private LoggerInterface $logger
+        private readonly EntityManagerInterface $em,
+        private readonly ReportRepository $reportRepository,
+        private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly LoggerInterface $logger,
+        private readonly CourtOrderDtoAssembler $courtOrderAssembler,
+        private readonly CourtOrderFactory $courtOrderFactory,
     ) {
     }
 
@@ -50,25 +56,32 @@ class LayDeputyshipUploader
         try {
             $this->em->beginTransaction();
 
-            foreach ($collection as $index => $layDeputyshipDto) {
-                
-                if ($this->findCourtOrderEntity($layDeputyshipDto->getCourtOrderUid())) {
-                    
-                }
-                $courtOrderUids[] = $layDeputyshipDto->getCourtOrderUid();
-                
+            foreach ($collection as $layDeputyshipDto) {                
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
-                    $this->createAndPersistCourtOrderEntity($layDeputyshipDto);
+                    
+                    if ($courtOrder = $this->findCourtOrderEntity($layDeputyshipDto->getCourtOrderUid())) {
+                        if ($courtOrder->getOrderType() !== $layDeputyshipDto->getOrderType()) {
+                            $courtOrder->setOrderType($layDeputyshipDto->getOrderType());
+                        }
+                        
+                        $courtOrder->setActive(true);
+                    } else {
+                        $courtOrder = $this->createCourtOrderEntity($layDeputyshipDto);
+                    }
+
+                    $this->persistCourtOrderEntity($courtOrder);
                     ++$added;
-                } catch (PreRegistrationCreationException $e) {
+                } catch (PreRegistrationCreationException | CourtOrderCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
                     $message = sprintf('ERROR IN LINE: %s',  $message);
                     $this->logger->error($message);
                     $errors[] = $message;
                     continue;
                 }
+
+                $courtOrderUids[] = $layDeputyshipDto->getCourtOrderUid();
             }
 
             $this
@@ -159,14 +172,22 @@ class LayDeputyshipUploader
         $this->em->clear();
     }
     
-    private function findCourtOrderEntity(int $courtOrderUid): bool
+    private function findCourtOrderEntity(int $courtOrderUid): CourtOrder
     {
-        return (bool)$this->em->getRepository(CourtOrder::class)->findOneBy(['court_order_uid' => $courtOrderUid]);
+        return $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
     }
 
-    private function createAndPersistCourtOrderEntity(mixed $layDeputyshipDto): void
+    private function createCourtOrderEntity(LayDeputyshipDto $layDeputyshipDto): CourtOrderDto
     {
+        return $this->courtOrderAssembler->assembleFromLayDto($layDeputyshipDto);
+    }
+    
+    private function persistCourtOrderEntity(CourtOrderDto $courtOrder): CourtOrder
+    {
+        $courtOrderEntity = $this->courtOrderFactory->createFromDto($courtOrder);
         
+        $this->em->persist($courtOrderEntity);
         
+        return $courtOrderEntity;
     }
 }

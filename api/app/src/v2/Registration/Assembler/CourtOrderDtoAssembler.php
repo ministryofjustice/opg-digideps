@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Assembler;
 
+use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 
 class CourtOrderDtoAssembler
@@ -31,14 +32,26 @@ class CourtOrderDtoAssembler
 
         return $this->buildDto($data);
     }
+    
+    public function assembleFromLayDto(LayDeputyshipDto $layDeputyshipDto): courtOrderDto
+    {
+        $courtOrderDto = [
+            'CourtOrderUid' => $layDeputyshipDto->getCourtOrderUid(),
+            'Type' => $layDeputyshipDto->getOrderType(),
+            'Active' => true
+        ];
+        
+        $this->collectMissingColumns($courtOrderDto);
+        return $this->buildDto($courtOrderDto);
+    }
 
     private function buildDto(array $data): CourtOrderDto
     {
         return
             (new CourtOrderDto())
                 ->setOrderUid($data['CourtOrderUid'])
-                ->setTypeOfOrder($this->determineOrderTypeIsSupported($data['Type']))
-                ->setActive($data['Active']);
+                ->setOrderType($this->determineOrderTypeIsSupported($data['Type']))
+                ->setOrderActive($data['Active']);
     }
 
     private function collectMissingColumns(array $data): void

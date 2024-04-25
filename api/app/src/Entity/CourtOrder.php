@@ -85,12 +85,12 @@ class CourtOrder
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
         return $this->type;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $type): CourtOrder
     {
         $this->type = $type;
 

@@ -6,6 +6,7 @@ namespace App\v2\Registration\SelfRegistration\Factory;
 
 use App\Entity\CourtOrder;
 use App\Service\DateTimeProvider;
+use App\v2\Registration\DTO\CourtOrderDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CourtOrderFactory
@@ -25,9 +26,9 @@ class CourtOrderFactory
     private function convertDtoToArray(CourtOrderDto $dto): array
     {
         return [
-            'CourtOrderUid' => $dto->getCaseNumber(),
-            'Type' => $dto->getClientSurname(),
-            'Active' => $dto->getDeputyUid(),
+            'CourtOrderUid' => $dto->getOrderUid(),
+            'Type' => $dto->getOrderType(),
+            'Active' => $dto->getOrderActive(),
         ];
     }
 
@@ -36,7 +37,7 @@ class CourtOrderFactory
         $errors = $this->validator->validate($entity);
 
         if (count($errors) > 0) {
-            throw new PreRegistrationCreationException(str_replace('Object(App\Entity\PreRegistration).', '', (string) $errors));
+            throw new CourtOrderCreationException(str_replace('Object(App\Entity\CourtOrder).', '', (string) $errors));
         }
     }
 }
