@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\v2\Registration\TestHelpers;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -127,7 +127,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
     {
-        return $namedDeputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof NamedDeputy;
+        return $namedDeputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof Deputy;
     }
 
     public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
@@ -181,11 +181,11 @@ class OrgDeputyshipDTOTestHelper
     }
 
     /**
-     * @return NamedDeputy
+     * @return Deputy
      */
     public static function ensureNamedDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
-        $namedDeputy = (new NamedDeputy())
+        $namedDeputy = (new Deputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())

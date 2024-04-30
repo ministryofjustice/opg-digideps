@@ -3,7 +3,7 @@
 namespace App\v2\Fixture\Controller;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
@@ -243,11 +243,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @return NamedDeputy
+     * @return Deputy
      */
     private function buildNamedDeputy(User $deputy, array $fromRequest)
     {
-        $namedDeputy = (new NamedDeputy())
+        $namedDeputy = (new Deputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
@@ -496,7 +496,7 @@ class FixtureController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
-                $namedDeputy = (new NamedDeputy())
+                $namedDeputy = (new Deputy())
                     ->setDeputyUid(rand(8, 8))
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())

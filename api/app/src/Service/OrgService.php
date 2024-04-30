@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity as EntityDir;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\User;
 use App\Factory\NamedDeputyFactory;
 use App\Repository\ClientRepository;
@@ -80,11 +80,11 @@ class OrgService
     /**
      * @param array $csvRow
      *
-     * @return NamedDeputy|null
+     * @return Deputy|null
      */
     public function identifyNamedDeputy($csvRow)
     {
-        /** @var NamedDeputy|null $namedDeputy */
+        /** @var Deputy|null $namedDeputy */
         $namedDeputy = $this->namedDeputyRepository->findOneBy([
             'deputyUid' => $csvRow['Deputy Uid'],
             'email1' => strtolower($csvRow['Email']),
@@ -100,7 +100,7 @@ class OrgService
     /**
      * @param array $csvRow
      *
-     * @return EntityDir\NamedDeputy
+     * @return Deputy
      */
     public function createNamedDeputy($csvRow)
     {

@@ -2,11 +2,11 @@
 
 namespace App\Factory;
 
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 
 class NamedDeputyFactory
 {
-    public function createFromOrgCsv(array $csvRow): NamedDeputy
+    public function createFromOrgCsv(array $csvRow): Deputy
     {
         $data['deputyUid'] = $csvRow['Deputy Uid'];
         $data['deputyFirstname'] = $csvRow['Dep Forename'];
@@ -27,9 +27,9 @@ class NamedDeputyFactory
         return $this->create($data);
     }
 
-    private function create(array $data): NamedDeputy
+    private function create(array $data): Deputy
     {
-        return (new NamedDeputy())
+        return (new Deputy())
             ->setDeputyUid($data['deputyUid'])
             ->setFirstname($data['deputyFirstname'])
             ->setLastname($data['deputyLastname'])

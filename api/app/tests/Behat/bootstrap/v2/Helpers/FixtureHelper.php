@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Helpers;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
@@ -181,7 +181,7 @@ class FixtureHelper
         );
     }
 
-    private static function buildNamedDeputyAddressArray(NamedDeputy $namedDeputy): array
+    private static function buildNamedDeputyAddressArray(Deputy $namedDeputy): array
     {
         return array_filter(
             [

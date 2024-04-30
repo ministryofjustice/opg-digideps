@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
@@ -50,7 +50,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->namedDeputyRepository = $this->em->getRepository(NamedDeputy::class);
+        $this->namedDeputyRepository = $this->em->getRepository(Deputy::class);
         $this->orgRepository = $this->em->getRepository(Organisation::class);
         $this->clientRepository = $this->em->getRepository(Client::class);
         $this->reportRepository = $this->em->getRepository(Report::class);
@@ -771,8 +771,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
         );
 
-        /** @var NamedDeputy $updatedNamedDeputy */
-        $updatedNamedDeputy = $this->em->getRepository(NamedDeputy::class)->find($existingDeputy);
+        /** @var Deputy $updatedNamedDeputy */
+        $updatedNamedDeputy = $this->em->getRepository(Deputy::class)->find($existingDeputy);
         $this->em->refresh($updatedNamedDeputy);
 
         self::assertEquals('Joe', $updatedNamedDeputy->getFirstName());
@@ -807,8 +807,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
         );
 
-        /** @var NamedDeputy $updatedNamedDeputy */
-        $updatedNamedDeputy = $this->em->getRepository(NamedDeputy::class)->find($existingDeputy);
+        /** @var Deputy $updatedNamedDeputy */
+        $updatedNamedDeputy = $this->em->getRepository(Deputy::class)->find($existingDeputy);
         $this->em->refresh($updatedNamedDeputy);
 
         self::assertEquals('william@differentcompany.com', $updatedNamedDeputy->getEmail1());
@@ -823,8 +823,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
         );
 
-        /** @var NamedDeputy $updatedNamedDeputy */
-        $updatedNamedDeputy = $this->em->getRepository(NamedDeputy::class)->find($existingDeputy);
+        /** @var Deputy $updatedNamedDeputy */
+        $updatedNamedDeputy = $this->em->getRepository(Deputy::class)->find($existingDeputy);
         $this->em->refresh($updatedNamedDeputy);
 
         self::assertEquals('william@somecompany.com', $updatedNamedDeputy->getEmail1());
