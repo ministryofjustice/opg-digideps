@@ -34,7 +34,7 @@ alert:
   instructions: Use the details below during the registration process to create accounts.
   caseNumber: Case number
   email: Email
-  clientLastName: Client last name
+  clientLastName: Client Last Name
   deputyLastName: Deputy Last Name
   deputyPostCode: Deputy Postal Code
   coDeputyLastName: Co-Deputy Last Name
