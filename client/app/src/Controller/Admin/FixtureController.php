@@ -12,8 +12,6 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
-use DateTime;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Throwable;
 use Twig\Environment;
 
 /**
@@ -90,7 +87,7 @@ class FixtureController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $submitted = $form->getData();
-            $courtDate = $request->get('court-date') ? new DateTime($request->get('court-date')) : new DateTime();
+            $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
             $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
             $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
 
@@ -113,7 +110,7 @@ class FixtureController extends AbstractController
 
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
 
-            $this->addFlash('fixture', $this->createUsersFlashMessage(array_reverse($deputies), $caseNumber));
+            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
         }
 
         return ['form' => $form->createView()];
@@ -139,21 +136,9 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @return string
-     */
-    public function createUsersFlashMessage(array $deputies, string $caseNumber)
-    {
-        return $this->twig->render(
-            '@App/FlashMessages/fixture-user-created.html.twig',
-            ['deputies' => $deputies, 'caseNumber' => $caseNumber]
-        );
-    }
-
-    /**
      * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @param $reportId
      * @param KernelInterface $kernel
      */
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId): JsonResponse
@@ -289,7 +274,7 @@ class FixtureController extends AbstractController
                         ]
                     )
                 );
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
 
@@ -326,7 +311,7 @@ class FixtureController extends AbstractController
                         ]
                     )
                 );
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
 
@@ -380,21 +365,10 @@ class FixtureController extends AbstractController
                 'createCoDeputy' => $submitted['createCoDeputy'],
             ]), [], 'array');
 
-            $this->addFlash('fixture', $this->createPreRegistrationFlashMessage($response));
+            $this->addFlash('preRegFixture', $response);
         }
 
         return ['form' => $form->createView()];
-    }
-
-    /**
-     * @param array  $deputies
-     * @param string $caseNumber
-     *
-     * @return string
-     */
-    public function createPreRegistrationFlashMessage(array $data)
-    {
-        return $this->twig->render('@App/FlashMessages/fixture-pre-registration-created.html.twig', $data);
     }
 
     /**
@@ -403,7 +377,7 @@ class FixtureController extends AbstractController
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function unsubmitReport(int $reportId)
     {
@@ -414,8 +388,8 @@ class FixtureController extends AbstractController
         try {
             $report = $this->reportApi->getReport($reportId);
             $this->reportApi->unsubmit($report, $this->getUser(), 'Fixture tests');
-        } catch (Throwable $e) {
-            throw new Exception(sprintf('Could not unsubmit report %s: %s', $reportId, $e->getMessage()));
+        } catch (\Throwable $e) {
+            throw new \Exception(sprintf('Could not unsubmit report %s: %s', $reportId, $e->getMessage()));
         }
     }
 
@@ -442,7 +416,7 @@ class FixtureController extends AbstractController
             }
 
             return new Response('Clients added to Users org');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return new Response(sprintf('Could not move %s clients to users org: %s', $userEmail, $e->getMessage()), 500);
         }
     }
@@ -472,7 +446,7 @@ class FixtureController extends AbstractController
             }
 
             return new Response('Org activated');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return new Response(sprintf('Could not activate %s org: %s', $orgName, $response->getBody()->getContents()), 500);
         }
     }
