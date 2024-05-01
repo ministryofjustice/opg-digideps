@@ -4,6 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\RestController;
 use App\Entity as EntityDir;
+use App\Repository\MoneyTransactionRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,23 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransactionController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
     private array $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN,
         EntityDir\Report\Report::SECTION_MONEY_OUT,
     ];
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
-    {
-        $this->em = $em;
-        $this->formatter = $formatter;
+    public function __construct(
+       private EntityManagerInterface $em,
+       private RestFormatter $formatter,
+       private MoneyTransactionRepository $moneyTransactionRepository
+    ) {
     }
 
     /**
      * @Route("/report/{reportId}/money-transaction", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
@@ -75,7 +73,6 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -112,7 +109,6 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"DELETE"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -126,9 +122,45 @@ class MoneyTransactionController extends RestController
         $this->em->remove($t);
         $this->em->flush();
 
+        // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
+        $this->em->remove($t);
+
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
 
         return [];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction/soft-delete/{transactionId}", methods={"PUT"})
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function softDeleteMoneyTransactionAction($transactionId)
+    {
+        $filter = $this->em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(EntityDir\Report\MoneyTransaction::class);
+
+        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found');
+
+        $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
+
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
+
+        $this->em->flush($t);
+
+        $this->em->getFilters()->enable('softdeleteable');
+
+        return [];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction/get-soft-delete", methods={"GET"})
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function getSoftDeletedMoneyTransactionItems($reportId)
+    {
+        $this->formatter->setJmsSerialiserGroups(['transaction']);
+
+        return $this->moneyTransactionRepository->retrieveSoftDeleted($reportId);
     }
 }

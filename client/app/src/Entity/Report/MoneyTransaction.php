@@ -277,4 +277,25 @@ class MoneyTransaction
         }
         throw new \RuntimeException('Invalid category: '.$category);
     }
+
+    /**
+     * Get the type (in/out) based on the category.
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("type")
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
+     *
+     * @return string in/out
+     */
+    public function getType()
+    {
+        foreach (self::$categories as $cat) {
+            list($categoryId, $hasDetails, $groupId, $type) = $cat;
+            if ($this->getCategory() == $categoryId) {
+                return $type;
+            }
+        }
+
+        return null;
+    }
 }
