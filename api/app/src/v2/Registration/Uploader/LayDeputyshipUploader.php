@@ -14,6 +14,7 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\CourtOrderCreationException;
 use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -35,7 +36,7 @@ class LayDeputyshipUploader
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ReportRepository $reportRepository,
-        private readonly PreRegistreportRepositoryrationFactory $preRegistrationFactory,
+        private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly LoggerInterface $logger,
         private readonly CourtOrderDtoAssembler $courtOrderAssembler,
         private readonly CourtOrderFactory $courtOrderFactory,
@@ -128,7 +129,7 @@ class LayDeputyshipUploader
         $reportCaseNumber = '';
         $currentActiveReportId = null;
         $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
-        $reports = $this->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
+        $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         try {
             /** @var Report $currentActiveReport */
@@ -169,7 +170,7 @@ class LayDeputyshipUploader
         $this->em->clear();
     }
 
-    private function findCourtOrderEntity(int $courtOrderUid): CourtOrder
+    private function findCourtOrderEntity(int $courtOrderUid): ?CourtOrder
     {
         return $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
     }
