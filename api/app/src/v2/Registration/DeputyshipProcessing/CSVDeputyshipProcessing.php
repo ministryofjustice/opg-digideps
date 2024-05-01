@@ -8,6 +8,7 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
+use App\v2\Registration\Uploader\CourtOrderUpdater;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Psr\Log\LoggerInterface;
@@ -20,6 +21,7 @@ class CSVDeputyshipProcessing
         private readonly LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
         private readonly LayDeputyshipUploader $layUploader,
         private readonly OrgDeputyshipUploader $orgUploader,
+        private readonly CourtOrderUpdater $courtOrderUpdater,
         private readonly SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
         private readonly RestFormatter $restFormatter,
         private readonly LoggerInterface $verboseLogger
@@ -79,5 +81,10 @@ class CSVDeputyshipProcessing
         $dtos = $orgAssembler->assembleMultipleDtosFromArray($data);
 
         return $this->orgUploader->upload($dtos);
+    }
+
+    public function courtOrdersActiveSwitch(array $courtOrderUids): void
+    {
+        $this->courtOrderUpdater->upload($courtOrderUids);
     }
 }

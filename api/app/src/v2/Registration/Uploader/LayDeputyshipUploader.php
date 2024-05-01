@@ -14,10 +14,7 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\CourtOrderCreationException;
 use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 
@@ -38,7 +35,7 @@ class LayDeputyshipUploader
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ReportRepository $reportRepository,
-        private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly PreRegistreportRepositoryrationFactory $preRegistrationFactory,
         private readonly LoggerInterface $logger,
         private readonly CourtOrderDtoAssembler $courtOrderAssembler,
         private readonly CourtOrderFactory $courtOrderFactory,
@@ -56,16 +53,16 @@ class LayDeputyshipUploader
         try {
             $this->em->beginTransaction();
 
-            foreach ($collection as $layDeputyshipDto) {                
+            foreach ($collection as $layDeputyshipDto) {
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
-                    
+
                     if ($courtOrder = $this->findCourtOrderEntity($layDeputyshipDto->getCourtOrderUid())) {
                         if ($courtOrder->getOrderType() !== $layDeputyshipDto->getOrderType()) {
                             $courtOrder->setOrderType($layDeputyshipDto->getOrderType());
                         }
-                        
+
                         $courtOrder->setActive(true);
                     } else {
                         $courtOrder = $this->createCourtOrderEntity($layDeputyshipDto);
@@ -73,9 +70,9 @@ class LayDeputyshipUploader
 
                     $this->persistCourtOrderEntity($courtOrder);
                     ++$added;
-                } catch (PreRegistrationCreationException | CourtOrderCreationException $e) {
+                } catch (PreRegistrationCreationException|CourtOrderCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
-                    $message = sprintf('ERROR IN LINE: %s',  $message);
+                    $message = sprintf('ERROR IN LINE: %s', $message);
                     $this->logger->error($message);
                     $errors[] = $message;
                     continue;
@@ -131,7 +128,7 @@ class LayDeputyshipUploader
         $reportCaseNumber = '';
         $currentActiveReportId = null;
         $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
-        $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
+        $reports = $this->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
 
         try {
             /** @var Report $currentActiveReport */
@@ -171,7 +168,7 @@ class LayDeputyshipUploader
         $this->em->commit();
         $this->em->clear();
     }
-    
+
     private function findCourtOrderEntity(int $courtOrderUid): CourtOrder
     {
         return $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
@@ -181,13 +178,13 @@ class LayDeputyshipUploader
     {
         return $this->courtOrderAssembler->assembleFromLayDto($layDeputyshipDto);
     }
-    
+
     private function persistCourtOrderEntity(CourtOrderDto $courtOrder): CourtOrder
     {
         $courtOrderEntity = $this->courtOrderFactory->createFromDto($courtOrder);
-        
+
         $this->em->persist($courtOrderEntity);
-        
+
         return $courtOrderEntity;
     }
 }

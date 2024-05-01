@@ -55,7 +55,7 @@ class ProcessLayCSVCommand extends Command
         'skipped' => 0,
         'errors' => [],
     ];
-    
+
     private array $courtOrderUids = [];
 
     private OutputInterface $cliOutput;
@@ -122,8 +122,8 @@ class ProcessLayCSVCommand extends Command
 
                 return Command::SUCCESS;
             }
-            
-            $this->courtOrdersActiveSwitch();
+
+            $this->csvProcessing->courtOrdersActiveSwitch($this->courtOrderUids);
 
             $this->cliOutput->writeln(
                 sprintf(
@@ -132,7 +132,6 @@ class ProcessLayCSVCommand extends Command
                     $this->processedStringOutput()
                 )
             );
-            
 
             return Command::SUCCESS;
         }
