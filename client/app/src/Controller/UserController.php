@@ -128,6 +128,13 @@ class UserController extends AbstractController
             // set password for user
             $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-password', $data, 'array', [], false);
 
+            if ($user->hasAdminRole()) {
+                $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-registration-date', null, 'array', [], false);
+                $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-active', null, 'array', [], false);
+
+                $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::ADMIN);
+            }
+
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);
             $this->userApi->clearRegistrationToken($token);
@@ -196,10 +203,6 @@ class UserController extends AbstractController
     {
         $user = $this->userApi->getUserWithData();
 
-        if ($user->hasAdminRole() && !$user->getRegistrationDate() && !$user->getActive()) {
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
-        }
-
         $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client
             && !$user->isDeputyOrg();
 
@@ -217,7 +220,7 @@ class UserController extends AbstractController
 
             //            this is the final step for Org users so registration has succeeded
             if ($user->isDeputyOrg()) {
-                $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+                $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
             }
             $request->getSession()->remove('login-context');
 

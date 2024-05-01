@@ -7,7 +7,6 @@ use App\Entity as EntityDir;
 use App\Entity\User;
 use App\Event\AdminManagerDeletedEvent;
 use App\Event\CSVUploadedEvent;
-use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Form as FormDir;
@@ -87,8 +86,8 @@ class IndexController extends AbstractController
 
         $user = $this->userApi->getUserWithData();
 
-        if ($user->hasAdminRole() && !$user->getRegistrationDate() && !$user->getActive()) {
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+        if (!$user->getActive()) {
+            $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-active', null, 'array', [], false);
         }
 
         $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);

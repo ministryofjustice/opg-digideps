@@ -560,4 +560,56 @@ class UserController extends RestController
 
         return $user->getRegistrationToken();
     }
+
+    /**
+     * Set Registration date on user.
+     *
+     * @Route("/{id}/set-registration-date", methods={"PUT"})
+     */
+    public function setRegistrationDate(Request $request, int $id): int
+    {
+        $data = $this->formatter->deserializeBodyContent($request);
+
+        /** @var User $requestedUser */
+        $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
+
+        if (!$requestedUser->getActive() && isset($data['token'])) {
+            if ($requestedUser->getRegistrationToken() !== $data['token']) {
+                $tokenMismatchMessage = sprintf('Registration token provided does not match the User (id: %s) registration token', $id);
+                throw $this->createAccessDeniedException($tokenMismatchMessage);
+            }
+        }
+
+        $requestedUser->setRegistrationDate(new \DateTime());
+
+        $this->em->flush();
+
+        return $requestedUser->getId();
+    }
+
+    /**
+     * Set active flag on user.
+     *
+     * @Route("/{id}/set-active", methods={"PUT"})
+     */
+    public function setActive(Request $request, int $id): int
+    {
+        $data = $this->formatter->deserializeBodyContent($request);
+
+        /** @var User $requestedUser */
+        $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
+
+        if (!$requestedUser->getActive() && isset($data['token'])) {
+            if ($requestedUser->getRegistrationToken() !== $data['token']) {
+                $tokenMismatchMessage = sprintf('Registration token provided does not match the User (id: %s) registration token', $id);
+                throw $this->createAccessDeniedException($tokenMismatchMessage);
+            }
+        }
+
+        $requestedUser->setActive(true);
+
+        $this->em->flush();
+
+        return $requestedUser->getId();
+    }
 }
