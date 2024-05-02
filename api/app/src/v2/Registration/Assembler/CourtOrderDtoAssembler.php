@@ -16,7 +16,7 @@ class CourtOrderDtoAssembler
     ];
 
     private array $missingColumns = [];
-    
+
     public function assembleFromArray(array $data): CourtOrderDto
     {
         $this->collectMissingColumns($data);
@@ -32,16 +32,17 @@ class CourtOrderDtoAssembler
 
         return $this->buildDto($data);
     }
-    
-    public function assembleFromLayDto(LayDeputyshipDto $layDeputyshipDto): courtOrderDto
+
+    public function assembleFromLayDto(LayDeputyshipDto $layDeputyshipDto): CourtOrderDto
     {
         $courtOrderDto = [
             'CourtOrderUid' => $layDeputyshipDto->getCourtOrderUid(),
-            'Type' => $layDeputyshipDto->getOrderType(),
-            'Active' => true
+            'Type' => $layDeputyshipDto->getHybrid(),
+            'Active' => true,
         ];
-        
+
         $this->collectMissingColumns($courtOrderDto);
+
         return $this->buildDto($courtOrderDto);
     }
 
@@ -50,7 +51,7 @@ class CourtOrderDtoAssembler
         return
             (new CourtOrderDto())
                 ->setOrderUid($data['CourtOrderUid'])
-                ->setOrderType($this->determineOrderTypeIsSupported($data['Type']))
+                ->setOrderType($this->determineCourtOrderTypeIsSupported($data['Type']))
                 ->setOrderActive($data['Active']);
     }
 
@@ -66,10 +67,10 @@ class CourtOrderDtoAssembler
         $this->missingColumns = array_filter($this->missingColumns);
     }
 
-    private function determineOrderTypeIsSupported(?string $reportType): string
+    private function determineCourtOrderTypeIsSupported(?string $reportType): string
     {
         $supported = match ($reportType) {
-            'HW', 'PFA', 'DUAL', 'HYBRID' => true,
+            'SINGLE', 'DUAL', 'HYBRID' => true,
             default => false
         };
 

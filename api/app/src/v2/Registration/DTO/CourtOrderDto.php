@@ -18,7 +18,7 @@ class CourtOrderDto
     public function setOrderUid(?int $courtOrderUid): CourtOrderDto
     {
         $this->courtOrderUid = $courtOrderUid;
-        
+
         return $this;
     }
 
@@ -30,7 +30,7 @@ class CourtOrderDto
     public function setOrderType(?string $type): CourtOrderDto
     {
         $this->type = $type;
-        
+
         return $this;
     }
 
@@ -39,10 +39,10 @@ class CourtOrderDto
         return $this->active;
     }
 
-    public function setOrderActive(?string $active): CourtOrderDto
+    public function setOrderActive(?bool $active): CourtOrderDto
     {
         $this->active = $active;
-        
+
         return $this;
     }
 }
