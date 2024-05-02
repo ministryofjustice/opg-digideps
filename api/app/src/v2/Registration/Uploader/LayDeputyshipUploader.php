@@ -180,12 +180,12 @@ class LayDeputyshipUploader
         return $this->courtOrderAssembler->assembleFromLayDto($layDeputyshipDto);
     }
 
-    private function persistCourtOrderEntity(CourtOrderDto $courtOrder): CourtOrder
+    private function persistCourtOrderEntity(CourtOrder|CourtOrderDto $courtOrder): void
     {
-        $courtOrderEntity = $this->courtOrderFactory->createFromDto($courtOrder);
+        $courtOrderEntity = (!$courtOrder instanceof CourtOrder)? 
+            $this->courtOrderFactory->createFromDto($courtOrder):
+            $courtOrder;
 
         $this->em->persist($courtOrderEntity);
-
-        return $courtOrderEntity;
     }
 }

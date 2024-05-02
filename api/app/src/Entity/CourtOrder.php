@@ -61,6 +61,13 @@ class CourtOrder
      */
     private $active;
 
+    public function __construct(array $row)
+    {
+        $this->courtOrderUid = $row['CourtOrderUid'];
+        $this->type = $row['Type'];
+        $this->active = $row['Active'];
+    }
+
     public function getId(): int
     {
         return $this->id;
