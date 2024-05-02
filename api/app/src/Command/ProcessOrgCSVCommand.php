@@ -81,6 +81,11 @@ class ProcessOrgCSVCommand extends Command
         'skipped' => 0,
     ];
 
+    /**
+     * @var array<int> 
+     */
+    private array $courtOrderUids = [];
+
     private OutputInterface $cliOutput;
 
     public function __construct(
@@ -144,6 +149,7 @@ class ProcessOrgCSVCommand extends Command
 
                 return Command::SUCCESS;
             }
+            $this->csvProcessing->courtOrdersActiveSwitch($this->courtOrderUids);
 
             $this->cliOutput->writeln(
                 sprintf(
@@ -191,9 +197,14 @@ class ProcessOrgCSVCommand extends Command
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
-                $upload = $this->csvProcessing->orgProcessing($chunk);
+                $result = $this->csvProcessing->orgProcessing($chunk);
+                $this->courtOrderUids = array_merge(
+                    $this->courtOrderUids, 
+                    $result['added']['court_orders'], 
+                    $result['updated']['court_orders']
+                );
 
-                $this->storeOutput($upload);
+                $this->storeOutput($result);
                 $this->verboseLogger->notice(sprintf('Successfully processed chunk: %d', $index));
             }
 

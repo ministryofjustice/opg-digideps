@@ -70,8 +70,8 @@ class ProcessLayCSVCommandTest extends KernelTestCase
             ->willReturn([
                 'added' => 1,
                 'errors' => 0,
-                'report-update-count' => 0,
-                'cases-with-updated-reports' => 0,
+                'report_update_count' => 0,
+                'cases_with_updated_reports' => 0,
                 'source' => 'sirius',
             ]);
 

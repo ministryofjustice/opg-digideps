@@ -6,6 +6,7 @@ namespace App\v2\Registration\Assembler;
 
 use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class CourtOrderDtoAssembler
 {
@@ -33,11 +34,11 @@ class CourtOrderDtoAssembler
         return $this->buildDto($data);
     }
 
-    public function assembleFromLayDto(LayDeputyshipDto $layDeputyshipDto): CourtOrderDto
+    public function assembleFromDto(LayDeputyshipDto|OrgDeputyshipDto $dto): CourtOrderDto
     {
         $courtOrderDto = [
-            'CourtOrderUid' => $layDeputyshipDto->getCourtOrderUid(),
-            'Type' => $layDeputyshipDto->getHybrid(),
+            'CourtOrderUid' => $dto->getCourtOrderUid(),
+            'Type' => $dto->getHybrid(),
             'Active' => true,
         ];
 

@@ -60,8 +60,8 @@ class LayDeputyshipUploader
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
 
                     if ($courtOrder = $this->findCourtOrderEntity($layDeputyshipDto->getCourtOrderUid())) {
-                        if ($courtOrder->getOrderType() !== $layDeputyshipDto->getOrderType()) {
-                            $courtOrder->setOrderType($layDeputyshipDto->getOrderType());
+                        if ($courtOrder->getOrderType() !== $layDeputyshipDto->getHybrid()) {
+                            $courtOrder->setOrderType($layDeputyshipDto->getHybrid());
                         }
 
                         $courtOrder->setActive(true);
@@ -95,10 +95,10 @@ class LayDeputyshipUploader
         return [
             'added' => $added,
             'errors' => $errors,
-            'report-update-count' => count($this->reportsUpdated),
-            'cases-with-updated-reports' => $this->reportsUpdated,
+            'report_update_count' => count($this->reportsUpdated),
+            'cases_with_updated_reports' => $this->reportsUpdated,
             'source' => 'sirius',
-            'court-orders' => $courtOrderUids,
+            'court_orders' => $courtOrderUids,
         ];
     }
 
@@ -177,7 +177,7 @@ class LayDeputyshipUploader
 
     private function createCourtOrderEntity(LayDeputyshipDto $layDeputyshipDto): CourtOrderDto
     {
-        return $this->courtOrderAssembler->assembleFromLayDto($layDeputyshipDto);
+        return $this->courtOrderAssembler->assembleFromDto($layDeputyshipDto);
     }
 
     private function persistCourtOrderEntity(CourtOrder|CourtOrderDto $courtOrder): void

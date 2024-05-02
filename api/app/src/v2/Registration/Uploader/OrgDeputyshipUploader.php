@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
@@ -13,27 +14,46 @@ use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\NamedDeputyAssembler;
+use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
+use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class OrgDeputyshipUploader
 {
-    private array $added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-    private array $updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    private array $added = [
+        'clients' => [],
+        'named_deputies' => [],
+        'reports' => [],
+        'organisations' => [],
+        'court_orders' => []
+    ];
+    private array $updated = [
+        'clients' => [],
+        'named_deputies' => [],
+        'reports' => [],
+        'organisations' => [],
+        'court_orders' => []
+    ];
     private array $changeOrg = [];
 
     private ?Organisation $currentOrganisation = null;
     private ?NamedDeputy $namedDeputy = null;
     private ?Client $client = null;
 
+    private array $courtOrderUids = [];
+
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly OrganisationFactory $orgFactory,
         private readonly ClientAssembler $clientAssembler,
         private readonly NamedDeputyAssembler $namedDeputyAssembler,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly CourtOrderDtoAssembler $courtOrderAssembler,
+        private readonly CourtOrderFactory $courtOrderFactory,
     ) {
     }
 
@@ -65,6 +85,21 @@ class OrgDeputyshipUploader
                 $this->handleDtoErrors($deputyshipDto);
 
                 $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
+
+                if ($courtOrder = $this->findCourtOrderEntity($deputyshipDto->getCourtOrderUid())) {
+                    if ($courtOrder->getOrderType() !== $deputyshipDto->getHybrid()) {
+                        $courtOrder->setOrderType($deputyshipDto->getHybrid());
+                    }
+
+                    $courtOrder->setActive(true);
+                    $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+                } else {
+                    $courtOrder = $this->createCourtOrderEntity($deputyshipDto);
+                    
+                    $this->added['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+                }
+                
+                $this->persistCourtOrderEntity($courtOrder);
 
                 $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
@@ -354,8 +389,13 @@ class OrgDeputyshipUploader
 
     private function resetDeputyshipUploaderObjects()
     {
-        $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-        $this->updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+        $this->updated = $this->added = [
+            'clients' => [],
+            'named_deputies' => [],
+            'reports' => [],
+            'organisations' => [],
+            'court_orders' => []
+        ];
         $this->changeOrg = [];
         $this->currentOrganisation = null;
         $this->namedDeputy = null;
@@ -407,5 +447,24 @@ class OrgDeputyshipUploader
 
             throw new ClientIsArchivedException($message);
         }
+    }
+
+    private function findCourtOrderEntity(int $courtOrderUid): ?CourtOrder
+    {
+        return $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
+    }
+
+    private function createCourtOrderEntity(OrgDeputyshipDto $layDeputyshipDto): CourtOrderDto
+    {
+        return $this->courtOrderAssembler->assembleFromDto($layDeputyshipDto);
+    }
+
+    private function persistCourtOrderEntity(CourtOrder|CourtOrderDto $courtOrder): void
+    {
+        $courtOrderEntity = (!$courtOrder instanceof CourtOrder)?
+            $this->courtOrderFactory->createFromDto($courtOrder):
+            $courtOrder;
+
+        $this->em->persist($courtOrderEntity);
     }
 }
