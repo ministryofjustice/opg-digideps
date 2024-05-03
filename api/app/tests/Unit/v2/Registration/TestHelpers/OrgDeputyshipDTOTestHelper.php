@@ -10,7 +10,7 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ClientRepository;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Service\ReportUtils;
@@ -125,7 +125,7 @@ class OrgDeputyshipDTOTestHelper
         return json_encode($deputyships);
     }
 
-    public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, NamedDeputyRepository $namedDeputyRepository)
+    public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $namedDeputyRepository)
     {
         return $namedDeputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof Deputy;
     }
@@ -150,7 +150,7 @@ class OrgDeputyshipDTOTestHelper
         return $org->getClients()->contains($client) && $client->getOrganisation() === $org;
     }
 
-    public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
+    public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $namedDeputyRepo)
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $namedDeputy = $namedDeputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
@@ -158,7 +158,7 @@ class OrgDeputyshipDTOTestHelper
         return $client->getDeputy() === $namedDeputy;
     }
 
-    public static function clientAndNamedDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
+    public static function clientAndNamedDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $namedDeputyRepo)
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $namedDeputy = $namedDeputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);

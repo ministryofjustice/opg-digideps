@@ -13,7 +13,7 @@ use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\PreRegistrationFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
@@ -49,7 +49,7 @@ class FixtureController extends AbstractController
         private UserRepository $userRepository,
         private NdrRepository $ndrRepository,
         private PreRegistrationFactory $preRegistrationFactory,
-        private NamedDeputyRepository $namedDeputyRepository,
+        private DeputyRepository $namedDeputyRepository,
         private string $symfonyEnvironment
     ) {
     }

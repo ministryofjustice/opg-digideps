@@ -8,7 +8,7 @@ use App\EventSubscriber\ClientDeletedSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ClientHelpers;
-use App\TestHelpers\NamedDeputyHelper;
+use App\TestHelpers\DeputyHelper;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -64,7 +64,7 @@ class ClientDeletedSubscriberTest extends TestCase
     {
         $clientWithUsers = ClientHelpers::createClient();
         $layDeputy = UserHelpers::createUser()->setRoleName('ROLE_LAY_DEPUTY');
-        $namedDeputy = NamedDeputyHelper::createNamedDeputy();
+        $namedDeputy = DeputyHelper::createDeputy();
 
         return [
             'Lay deputy' => [(clone $clientWithUsers)->addUser($layDeputy), $layDeputy],

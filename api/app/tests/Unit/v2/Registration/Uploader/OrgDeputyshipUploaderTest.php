@@ -9,7 +9,7 @@ use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
@@ -29,7 +29,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     /** @var EntityManager */
     private $em;
 
-    /** @var NamedDeputyRepository */
+    /** @var DeputyRepository */
     private $namedDeputyRepository;
 
     /** @var OrganisationRepository */
