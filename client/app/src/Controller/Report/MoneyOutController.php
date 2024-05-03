@@ -47,7 +47,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out", name="money_out")
-     *
      * @Template("@App/Report/MoneyOut/start.html.twig")
      *
      * @return array|RedirectResponse
@@ -66,7 +65,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/exist", name="does_money_out_exist")
-     *
      * @Template("@App/Report/MoneyOut/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -80,21 +78,42 @@ class MoneyOutController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
             $answer = $form['moneyOutExists']->getData();
+            $fromPage = $request->get('from');
 
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/'.$reportId, $report, ['doesMoneyOutExist']);
 
-            if ('Yes' === $answer) {
-                $report->setReasonForNoMoneyOut(null);
+            // retrieve soft deleted transaction ids if present and handle money out ids only
+            $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction/get-soft-delete', 'Report\MoneyTransaction[]');
 
+            $softDeletedMoneyOutTransactionIds = [];
+            foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
+                if ('out' == $softDeletedTransactionId->getType()) {
+                    $softDeletedMoneyOutTransactionIds[] = $softDeletedTransactionId->getId();
+                }
+            }
+
+            if ('Yes' === $answer && 'summary' != $fromPage) {
+                $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
-            } else {
-                foreach ($report->getMoneyTransactionsOut() as $transactions) {
-                    $this->restClient->delete('/report/'.$reportId.'/money-transaction/'.$transactions->getId());
-                }
+            } elseif ('Yes' === $answer && 'summary' === $fromPage) {
+                $report->setReasonForNoMoneyOut(null);
+                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
+                $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyOutTransactionIds, $report);
+
+                $moneyOutStepRedirectParameters = ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist'];
+                $moneyOutSummaryRedirectParameters = ['reportId' => $reportId, 'from' => 'does_money_out_exist'];
+
+                return empty($softDeletedMoneyOutTransactionIds) ? $this->redirectToRoute('money_out_step', $moneyOutStepRedirectParameters)
+                : $this->redirectToRoute('money_out_summary', $moneyOutSummaryRedirectParameters);
+            } elseif ('No' === $answer && 'summary' === $fromPage) {
+                $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyOutTransactionIds, $report);
+
+                return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
+            } else {
                 return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
             }
         }
@@ -108,9 +127,30 @@ class MoneyOutController extends AbstractController
         ];
     }
 
+    private function handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report): void
+    {
+        $reportId = $report->getId();
+
+        if ('Yes' === $answer) {
+            // undelete soft deleted items if present
+            if (!empty($softDeletedTransactionIds)) {
+                foreach ($softDeletedTransactionIds as $transactionId) {
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$transactionId, ['transactionSoftDelete']);
+                }
+            }
+        } else {
+            // soft delete items
+            $transactions = $report->getMoneyTransactionsOut();
+            if (!empty($transactions)) {
+                foreach ($transactions as $t) {
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$t->getId(), ['transactionSoftDelete']);
+                }
+            }
+        }
+    }
+
     /**
      * @Route("/report/{reportId}/money-out/no-money-out-exists", name="no_money_out_exists")
-     *
      * @Template("@App/Report/MoneyOut/noMoneyOutToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -143,7 +183,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
-     *
      * @Template("@App/Report/MoneyOut/step.html.twig")
      *
      * @param null $transactionId
@@ -253,7 +292,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/add_another", name="money_out_add_another")
-     *
      * @Template("@App/Report/MoneyOut/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -282,7 +320,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
-     *
      * @Template("@App/Report/MoneyOut/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -304,7 +341,6 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/{transactionId}/delete", name="money_out_delete")
-     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse

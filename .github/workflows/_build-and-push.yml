@@ -97,7 +97,7 @@ jobs:
           name: web-distribution
           path: client/resources/public
         if: |
-          (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver')
+          (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver' || matrix.svc_name == 'htmltopdf')
 
       - name: build docker image
         env:
