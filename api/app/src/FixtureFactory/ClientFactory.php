@@ -50,7 +50,7 @@ class ClientFactory
             ->setCountry('GB')
             ->setCourtDate($courtDate ? new \DateTime($courtDate) : new \DateTime());
 
-        $client->setNamedDeputy($namedDeputy);
+        $client->setDeputy($namedDeputy);
         $client->setOrganisation($organisation);
 
         return $client;

@@ -208,8 +208,8 @@ class OrgDeputyshipUploader
             //                $this->updated['clients'][] = $this->client->getId();
             //            }
             //
-            //            if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
-            //                $this->client->setNamedDeputy($this->namedDeputy);
+            //            if ($this->clientHasNewNamedDeputy($this->client, $this->deputy)) {
+            //                $this->client->setDeputy($this->deputy);
             //
             //                $this->updated['clients'][] = $this->client->getId();
             //            }
@@ -228,7 +228,7 @@ class OrgDeputyshipUploader
 
                         // Track clients for audit logging purposes
                         $tempArray[] = ['client_id' => $this->client->getId()];
-                        $tempArray[] = ['deputy_id' => $this->client->getNamedDeputy()->getId()];
+                        $tempArray[] = ['deputy_id' => $this->client->getDeputy()->getId()];
                         $tempArray[] = ['new_organisation' => $this->client->getOrganisation()->getId()];
 
                         $changeOrg[] = $tempArray;
@@ -239,7 +239,7 @@ class OrgDeputyshipUploader
             // Temp fix for clients who have new named deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
                 if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
-                    $this->client->setNamedDeputy($this->namedDeputy);
+                    $this->client->setDeputy($this->namedDeputy);
 
                     $this->updated['clients'][] = $this->client->getId();
                 }
@@ -254,7 +254,7 @@ class OrgDeputyshipUploader
     {
         $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
 
-        $client->setNamedDeputy($this->namedDeputy);
+        $client->setDeputy($this->namedDeputy);
 
         if (!is_null($this->currentOrganisation)) {
             $this->currentOrganisation->addClient($client);
@@ -295,8 +295,8 @@ class OrgDeputyshipUploader
     private function clientHasNewNamedDeputy(Client $client, Deputy $namedDeputy): bool
     {
         return
-            null === $client->getNamedDeputy()
-            || $client->getNamedDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUid();
+            null === $client->getDeputy()
+            || $client->getDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUid();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)
@@ -306,7 +306,7 @@ class OrgDeputyshipUploader
         if ($report) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 if (OrgDeputyshipDto::DUAL_TYPE == $dto->getHybrid()) {
-                    if ($this->client->getNamedDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
+                    if ($this->client->getDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
                         if ($report->getType() !== $dto->getReportType()) {
                             $report->setType($dto->getReportType());
 
@@ -323,7 +323,7 @@ class OrgDeputyshipUploader
                 }
             }
 
-        //            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
+        //            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->deputy)) {
         //                $report = new Report(
         //                    $this->client,
         //                    $dto->getReportType(),

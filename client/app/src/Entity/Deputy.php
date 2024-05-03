@@ -5,7 +5,7 @@ namespace App\Entity;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Named Deputy.
+ * Deputy.
  */
 class Deputy implements DeputyInterface
 {

@@ -152,9 +152,6 @@ trait ClientManagementTrait
         }
     }
 
-    /**
-     * @return mixed
-     */
     private function getSearchResultHtml()
     {
         $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.client-list');
@@ -363,7 +360,7 @@ MESSAGE;
         $this->assertInteractingWithUserIsSet();
 
         $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
-        $client->setNamedDeputy(null);
+        $client->setDeputy(null);
 
         $this->em->persist($client);
         $this->em->flush();

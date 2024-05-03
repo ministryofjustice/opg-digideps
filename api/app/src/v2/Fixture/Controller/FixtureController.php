@@ -210,7 +210,7 @@ class FixtureController extends AbstractController
 
         $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
 
-        $client->setNamedDeputy($namedDeputy);
+        $client->setDeputy($namedDeputy);
         $client->setOrganisation($organisation);
 
         // if the org size is 1 but we want 10 clients still then create the clients but
@@ -474,7 +474,7 @@ class FixtureController extends AbstractController
 
         if (!empty($fromRequest['namedDeputyEmail'])) {
             $namedDeputy = $this->createNamedDeputyByExistingUser($fromRequest['namedDeputyEmail']);
-            $client->setNamedDeputy($namedDeputy);
+            $client->setDeputy($namedDeputy);
         }
 
         $client->setOrganisation($org);

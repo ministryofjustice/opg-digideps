@@ -32,7 +32,7 @@ class ClientTransformer
     /**
      * @return array
      */
-    public function transform(ClientDto $dto, array $exclude = [], array $org = null)
+    public function transform(ClientDto $dto, array $exclude = [], ?array $org = null)
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -57,7 +57,7 @@ class ClientTransformer
             $transformed['organisation'] = $org;
         }
 
-        if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
+        if (!in_array('deputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
             $transformed['named_deputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
         }
 

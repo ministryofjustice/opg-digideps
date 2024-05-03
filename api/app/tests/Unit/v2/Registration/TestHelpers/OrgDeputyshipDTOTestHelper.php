@@ -155,7 +155,7 @@ class OrgDeputyshipDTOTestHelper
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $namedDeputy = $namedDeputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
 
-        return $client->getNamedDeputy() === $namedDeputy;
+        return $client->getDeputy() === $namedDeputy;
     }
 
     public static function clientAndNamedDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, NamedDeputyRepository $namedDeputyRepo)
@@ -163,7 +163,7 @@ class OrgDeputyshipDTOTestHelper
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $namedDeputy = $namedDeputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
 
-        return !($client->getNamedDeputy() === $namedDeputy);
+        return !($client->getDeputy() === $namedDeputy);
     }
 
     public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo)

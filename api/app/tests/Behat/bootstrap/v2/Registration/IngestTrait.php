@@ -313,7 +313,7 @@ trait IngestTrait
 
         $this->assertStringEqualsString(
             $this->expectedNamedDeputyName,
-            sprintf('%s %s', $client->getNamedDeputy()->getFirstName(), $client->getNamedDeputy()->getLastName()),
+            sprintf('%s %s', $client->getDeputy()->getFirstName(), $client->getDeputy()->getLastName()),
             'Comparing expected named deputy full name to client named deputy full name'
         );
     }
@@ -344,7 +344,7 @@ trait IngestTrait
         $namedDeputy = $this->em
             ->getRepository(Client::class)
             ->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId())
-            ->getNamedDeputy();
+            ->getDeputy();
 
         $actualNamedDeputiesAddress = sprintf(
             '%s, %s, %s, %s, %s, %s',
@@ -627,7 +627,7 @@ trait IngestTrait
             throw new BehatException('Existing Client not found with case number "1919191t"');
         }
 
-        if (is_null($existingClient->getNamedDeputy())) {
+        if (is_null($existingClient->getDeputy())) {
             throw new BehatException('Existing client has no associated Named Deputy');
         }
 
@@ -907,8 +907,8 @@ trait IngestTrait
         }
 
         $this->assertEntitiesAreNotTheSame(
-            $client1->getNamedDeputy(),
-            $client2->getNamedDeputy(),
+            $client1->getDeputy(),
+            $client2->getDeputy(),
             'Comparing named deputies of clients created during CSV upload'
         );
     }
@@ -928,12 +928,12 @@ trait IngestTrait
 
         $actualNamedDeputiesAddress = sprintf(
             '%s, %s, %s, %s, %s, %s',
-            $client->getNamedDeputy()->getAddress1(),
-            $client->getNamedDeputy()->getAddress2(),
-            $client->getNamedDeputy()->getAddress3(),
-            $client->getNamedDeputy()->getAddress4(),
-            $client->getNamedDeputy()->getAddress5(),
-            $client->getNamedDeputy()->getAddressPostcode()
+            $client->getDeputy()->getAddress1(),
+            $client->getDeputy()->getAddress2(),
+            $client->getDeputy()->getAddress3(),
+            $client->getDeputy()->getAddress4(),
+            $client->getDeputy()->getAddress5(),
+            $client->getDeputy()->getAddressPostcode()
         );
 
         $this->assertStringEqualsString(

@@ -209,7 +209,7 @@ class PAUserFixtures extends AbstractDataFixture
                 }
 
                 // Set the named deputy on the client
-                $client->setNamedDeputy($namedDeputy);
+                $client->setDeputy($namedDeputy);
 
                 // Add the client to the organisation
                 $organisation->addClient($client);

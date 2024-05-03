@@ -28,6 +28,7 @@ class ClientDeletedSubscriberTest extends TestCase
 
     /**
      * @dataProvider deputyProvider
+     *
      * @test
      */
     public function logEvent(Client $clientWithUsers, $deputy)
@@ -62,12 +63,12 @@ class ClientDeletedSubscriberTest extends TestCase
     public function deputyProvider()
     {
         $clientWithUsers = ClientHelpers::createClient();
-        $layDeputy = (UserHelpers::createUser())->setRoleName('ROLE_LAY_DEPUTY');
+        $layDeputy = UserHelpers::createUser()->setRoleName('ROLE_LAY_DEPUTY');
         $namedDeputy = NamedDeputyHelper::createNamedDeputy();
 
         return [
             'Lay deputy' => [(clone $clientWithUsers)->addUser($layDeputy), $layDeputy],
-            'Named deputy' => [(clone $clientWithUsers)->setNamedDeputy($namedDeputy), $namedDeputy],
+            'Named deputy' => [(clone $clientWithUsers)->setDeputy($namedDeputy), $namedDeputy],
         ];
     }
 }
