@@ -36,7 +36,7 @@ class OrgService
     private $namedDeputyFactory;
 
     /**
-     * @var EntityDir\Repository\NamedDeputyRepository
+     * @var EntityDir\Repository\DeputyRepository
      */
     private $namedDeputyRepository;
 
