@@ -326,19 +326,6 @@ jobs:
       path_to_live: true
     secrets: inherit
 
-  smoke_tests_preproduction:
-    name: smoke tests on preproduction
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - terraform_apply_preproduction
-    with:
-      workspace: preproduction
-      account_name: preproduction
-      task_name: "smoke_tests"
-      timeout: "900"
-    secrets: inherit
-
   terraform_apply_training:
     name: training environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
@@ -360,7 +347,6 @@ jobs:
     needs:
       - workflow_variables
       - terraform_apply_preproduction
-      - smoke_tests_preproduction
     with:
       workspace: production
       terraform_path: account
@@ -385,12 +371,25 @@ jobs:
       path_to_live: true
     secrets: inherit
 
+  smoke_tests_production:
+    name: smoke tests on preproduction
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_production
+    with:
+      workspace: production02
+      account_name: production
+      task_name: "smoke_tests"
+      timeout: "900"
+    secrets: inherit
+
   backup_production:
     name: backup production
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - terraform_apply_production
+      - smoke_tests_production
     with:
       workspace: production02
       account_name: production
