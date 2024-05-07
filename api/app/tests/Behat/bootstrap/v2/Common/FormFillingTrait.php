@@ -443,4 +443,10 @@ trait FormFillingTrait
             $this->getSession()->visit($url);
         }
     }
+
+    public function updateExpectedAnswerInSection($select, $formSectionName, $newAnswer)
+    {
+        $answerGroup = $this->determineAnswerGroup($formSectionName, $select);
+        $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$select] = $newAnswer;
+    }
 }

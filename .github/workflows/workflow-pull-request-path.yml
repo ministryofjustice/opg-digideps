@@ -49,7 +49,6 @@ jobs:
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
         with:
           prerelease: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: "minor"
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'

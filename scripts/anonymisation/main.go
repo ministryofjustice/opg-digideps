@@ -6,21 +6,23 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/go-faker/faker/v4"
 	_ "github.com/lib/pq"
 )
 
-const ChunkSize = 100
+const ChunkSize = 10
 
 type TableColumn struct {
-	Schema     string
-	Table      string
-	Column     string
-	ColumnType string
-	Constraint string
-	FakerType  string
+	Schema       string
+	Table        string
+	Column       string
+	ColumnType   string
+	Constraint   string
+	ColumnLength string
+	FakerType    string
 }
 
 type Table struct {
@@ -46,7 +48,7 @@ type PostCode struct {
 func getTableColumns(db *sql.DB) ([]TableColumn, error) {
 	query := `
 		SELECT
-			c.table_schema, c.table_name, c.column_name, c.data_type, links.constraint_type
+			c.table_schema, c.table_name, c.column_name, c.data_type, c.character_maximum_length, links.constraint_type
 		FROM information_schema.columns c
 		LEFT JOIN (
 		   SELECT
@@ -75,18 +77,19 @@ func getTableColumns(db *sql.DB) ([]TableColumn, error) {
 	var columns []TableColumn
 	for rows.Next() {
 		var column TableColumn
-		var schema, table, colName, colType, constraint sql.NullString
-		err := rows.Scan(&schema, &table, &colName, &colType, &constraint)
+		var schema, table, colName, colType, colLen, constraint sql.NullString
+		err := rows.Scan(&schema, &table, &colName, &colType, &colLen, &constraint)
 		if err != nil {
 			return nil, err
 		}
 		column = TableColumn{
-			Schema:     schema.String,
-			Table:      table.String,
-			Column:     colName.String,
-			ColumnType: colType.String,
-			Constraint: constraint.String,
-			FakerType:  "NA",
+			Schema:       schema.String,
+			Table:        table.String,
+			Column:       colName.String,
+			ColumnType:   colType.String,
+			Constraint:   constraint.String,
+			ColumnLength: colLen.String,
+			FakerType:    "NA",
 		}
 		columns = append(columns, column)
 	}
@@ -178,7 +181,42 @@ func filterColumnsToAnonAndPkOnly(columns []TableColumn) ([]TableColumn, error) 
 	return columnsFiltered, nil
 }
 
-func createSchemaIfNotExists(db *sql.DB, schemaName string) error {
+func dropAllTables(db *sql.DB, schema string) error {
+	// Query for getting all table names in the schema
+	query := fmt.Sprintf("SELECT table_name FROM information_schema.tables WHERE table_schema = '%s'", schema)
+
+	// Execute the query to fetch table names
+	rows, err := db.Query(query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	// Iterate over the rows to drop each table
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return err
+		}
+
+		// Construct the SQL statement to drop the table
+		dropStatement := fmt.Sprintf("DROP TABLE IF EXISTS %s.%s CASCADE", schema, tableName)
+		fmt.Print(dropStatement + "\n")
+		// Execute the SQL statement to drop the table
+		if _, err := db.Exec(dropStatement); err != nil {
+			return err
+		}
+	}
+
+	// Check for any errors during row iteration
+	if err := rows.Err(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func createSchemaIfNotExists(db *sql.DB, schemaName string, dropTables bool) error {
 	var exists bool
 	err := db.QueryRow("SELECT EXISTS(SELECT schema_name FROM information_schema.schemata WHERE schema_name = $1)", schemaName).Scan(&exists)
 	if err != nil {
@@ -193,10 +231,18 @@ func createSchemaIfNotExists(db *sql.DB, schemaName string) error {
 	} else {
 		fmt.Printf("Schema %s already exists.\n", schemaName)
 	}
+
+	if dropTables {
+		err := dropAllTables(db, schemaName)
+		if err != nil {
+			return nil
+		}
+	}
+
 	return nil
 }
 
-func createProcessingTables(columns []TableColumn, db *sql.DB) ([]Table, error) {
+func createTables(db *sql.DB, columns []TableColumn, schema string) ([]Table, error) {
 	// Loop through each column in the columns array
 	var tableDetails []Table
 	for _, col := range columns {
@@ -223,7 +269,12 @@ func createProcessingTables(columns []TableColumn, db *sql.DB) ([]Table, error) 
 					continue
 				}
 				if column.Table == tableName {
-					columnsSQL = append(columnsSQL, fmt.Sprintf("%s %s", column.Column, column.ColumnType))
+					colType := column.ColumnType
+					if column.ColumnType == "character varying" {
+						colType = fmt.Sprintf("character varying(%s)", column.ColumnLength)
+					}
+
+					columnsSQL = append(columnsSQL, fmt.Sprintf("%s %s", column.Column, colType))
 					table.FieldNames = append(table.FieldNames, column)
 				}
 			}
@@ -234,7 +285,7 @@ func createProcessingTables(columns []TableColumn, db *sql.DB) ([]Table, error) 
 
 			// Create the SQL statement to create the table
 			processingPrimaryKey := "ppk_id SERIAL PRIMARY KEY"
-			sqlStatement := fmt.Sprintf("CREATE TABLE IF NOT EXISTS processing.%s (%s, %s, %s)", tableName, processingPrimaryKey, strings.Join(columnsSQL, ", "), "anonymised bool")
+			sqlStatement := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.%s (%s, %s, %s)", schema, tableName, processingPrimaryKey, strings.Join(columnsSQL, ", "), "anonymised bool")
 			fmt.Print(sqlStatement + "\n")
 			// Execute the SQL statement to create the table
 			_, err := db.Exec(sqlStatement)
@@ -257,7 +308,7 @@ func outputToCSV(columns []TableColumn, filename string) error {
 	defer writer.Flush()
 
 	// Write CSV headers
-	headers := []string{"Schema", "Table", "Field", "Field_Type", "Constraint", "FakerType"}
+	headers := []string{"Schema", "Table", "Field", "Field_Type", "Field_Length", "Constraint", "FakerType"}
 	err = writer.Write(headers)
 	if err != nil {
 		return err
@@ -265,7 +316,7 @@ func outputToCSV(columns []TableColumn, filename string) error {
 
 	// Write each row to the CSV file
 	for _, col := range columns {
-		row := []string{col.Schema, col.Table, col.Column, col.ColumnType, col.Constraint, col.FakerType}
+		row := []string{col.Schema, col.Table, col.Column, col.ColumnType, col.ColumnLength, col.Constraint, col.FakerType}
 		err := writer.Write(row)
 		if err != nil {
 			return err
@@ -326,17 +377,16 @@ func insertSqlChunk(db *sql.DB, tableName string, rows [][]FakedData) error {
 	}
 
 	// Construct query
-	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES",
+	query := fmt.Sprintf("INSERT INTO anon.%s (%s) VALUES",
 		tableName,
 		strings.Join(columnNames, ", "),
 	)
-
 	// Build value sets
 	var valueSets []string
 	for _, row := range rows {
 		values := make([]string, len(row))
 		for i, data := range row {
-			if data.FieldType == "string" {
+			if strings.EqualFold(data.FieldType, "text") || strings.EqualFold(data.FieldType, "character varying") {
 				values[i] = fmt.Sprintf("'%s'", data.FieldValue)
 			} else {
 				values[i] = data.FieldValue
@@ -347,7 +397,7 @@ func insertSqlChunk(db *sql.DB, tableName string, rows [][]FakedData) error {
 
 	// Combine value sets
 	query += strings.Join(valueSets, ",\n")
-
+	fmt.Print(query)
 	// Execute query
 	_, err := db.Exec(query)
 	if err != nil {
@@ -362,6 +412,7 @@ func generateFakeData(db *sql.DB, tableDetails []Table) error {
 		numChunks := int(math.Ceil(float64(table.RowCount) / float64(ChunkSize)))
 
 		for i := 0; i < numChunks; i++ {
+			fmt.Printf("%s %d", table.TableName, i)
 			var rows [][]FakedData
 			for j := 0; j < ChunkSize; j++ {
 				var fakedColumns []FakedData
@@ -378,13 +429,28 @@ func generateFakeData(db *sql.DB, tableDetails []Table) error {
 						fakedValue = fmt.Sprintf("%s%d %s%d", pc.FirstTwoChars, pc.FirstInt, pc.SecondTwoChars, pc.SecondInt)
 					case "PhoneNumber":
 						fakedValue = faker.Phonenumber()
+					case "Email":
+						fakedValue = faker.Email()
 					case "Lorem":
-						fakedValue = faker.Sentence()
+						colLen, _ := strconv.Atoi(col.ColumnLength)
+						if colLen < 20 {
+							fakedValue = faker.Word()
+						} else if colLen < 50 {
+							fakedValue = faker.Sentence()
+						} else {
+							fakedValue = faker.Paragraph()
+						}
+						if len(fakedValue) > colLen && colLen > 0 {
+							fakedValue = fakedValue[:colLen]
+						} else {
+							fakedValue = fakedValue[:200]
+						}
 					default:
 						fakedValue = ""
 					}
 					var fakedData FakedData
 					fakedData.FieldName = col.Column
+					fakedValue = strings.ReplaceAll(fakedValue, "'", "''")
 					fakedData.FieldValue = fakedValue
 					fakedData.FieldType = col.ColumnType
 					fakedColumns = append(fakedColumns, fakedData)
@@ -433,17 +499,22 @@ func main() {
 	checkError(err)
 
 	// ===== Setup for the anon schema and tables =====
-	err = createSchemaIfNotExists(db, "processing")
+	err = createSchemaIfNotExists(db, "processing", true)
 	checkError(err)
 
-	err = createSchemaIfNotExists(db, "anon")
+	err = createSchemaIfNotExists(db, "anon", true)
 	checkError(err)
 
-	tableDetails, err := createProcessingTables(columns, db)
+	tableDetails, err := createTables(db, columnsFiltered, "processing")
+	checkError(err)
+
+	_, err = createTables(db, columnsFiltered, "anon")
 	checkError(err)
 
 	tableDetails, err = copySourceTablesToProcessing(db, tableDetails, true)
 	checkError(err)
 
 	err = generateFakeData(db, tableDetails)
+
+	// update processing table
 }

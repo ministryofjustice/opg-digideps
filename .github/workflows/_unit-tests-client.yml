@@ -33,11 +33,12 @@ jobs:
 
       - name: check for raw tags in twig templates
         run: |
-          if [[ $(grep -r '|.* raw' | wc -l) -gt 0 ]]
+          if [[ $(grep -r '|.*raw' | wc -l) -gt 0 ]]
             then
             echo "Check failed: 'raw' tags found in twig templates. Remove them ..."
             exit 1
           fi
+        working-directory: client/app/templates
 
       - name: build docker image
         run: |

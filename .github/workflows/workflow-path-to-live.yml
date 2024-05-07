@@ -39,7 +39,6 @@ jobs:
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
         with:
           prerelease: false
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: "minor"
 
   build_web_resources:
