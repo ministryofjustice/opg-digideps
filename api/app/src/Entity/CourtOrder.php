@@ -39,7 +39,7 @@ class CourtOrder
      *
      * @JMS\Type("integer")
      *
-     * @ORM\Column(name="court_order_uid", type="integer", nullable=false, unique=true)
+     * @ORM\Column(name="court_order_uid", type="bigint", nullable=false, unique=true)
      */
     private $courtOrderUid;
 

@@ -12,6 +12,8 @@ RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto term
     && fc-list | sort
 
 COPY htmltopdf/requirements.txt .
+COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
+COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
 RUN pip3 install --upgrade pip && pip install --upgrade pip
 
