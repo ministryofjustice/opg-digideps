@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Deputy.
  *
- * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uid_idx", columns={"deputy_uid"})})
+ * @ORM\Table(name="deputy", indexes={@ORM\Index(name="deputy_uid_idx", columns={"deputy_uid"})})
  *
  * @ORM\Entity(repositoryClass="App\Repository\DeputyRepository")
  *
@@ -32,7 +32,7 @@ class Deputy
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @ORM\SequenceGenerator(sequenceName="named_deputy_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="deputy_id_seq", allocationSize=1, initialValue=1)
      *
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */

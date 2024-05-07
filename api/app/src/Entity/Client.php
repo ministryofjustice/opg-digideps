@@ -269,7 +269,7 @@ class Client implements ClientInterface
      *
      * @JMS\Type("App\Entity\Deputy")
      *
-     * @ORM\ManyToOne(targetEntity="Deputy", inversedBy="clients", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="named_deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */

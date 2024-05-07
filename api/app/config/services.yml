@@ -249,8 +249,8 @@ services:
         class: App\Repository\DocumentRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\NamedDeputyRepository:
-        class: App\Repository\NamedDeputyRepository
+    App\Repository\DeputyRepository:
+        class: App\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\NdrRepository:
