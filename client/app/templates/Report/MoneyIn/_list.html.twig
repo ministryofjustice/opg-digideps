@@ -63,12 +63,14 @@
             </div>
         {% endif %}
         <div class="govuk-grid-column-two-half text--right">
+            {% if not hideEditLink %}
             <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
                 <strong>
                     <span class="icon icon-plus"></span>
                     {{ 'summaryPage.moneyIn.addIncome' | trans(transOptions) }}
                 </strong>
             </a>
+            {% endif %}
         </div>
     </div>
 {% endif %}
