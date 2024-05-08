@@ -13,7 +13,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const ChunkSize = 10
+const ChunkSize = 100
 
 type TableColumn struct {
 	Schema       string
@@ -442,7 +442,7 @@ func generateFakeData(db *sql.DB, tableDetails []Table) error {
 						}
 						if len(fakedValue) > colLen && colLen > 0 {
 							fakedValue = fakedValue[:colLen]
-						} else {
+						} else if len(fakedValue) > 200 {
 							fakedValue = fakedValue[:200]
 						}
 					default:
@@ -459,6 +459,35 @@ func generateFakeData(db *sql.DB, tableDetails []Table) error {
 			}
 			err := insertSqlChunk(db, table.TableName, rows)
 			checkError(err)
+		}
+	}
+	return nil
+}
+
+func updateOriginalTables(db *sql.DB, tableDetails []Table) error {
+	for _, table := range tableDetails {
+
+		totalChunks := (table.RowCount + ChunkSize - 1) / ChunkSize
+
+		for chunk := 0; chunk < totalChunks; chunk++ {
+			offset := chunk * ChunkSize
+
+			// Construct the update query
+			sqlQuery := fmt.Sprintf("UPDATE public.%s pub SET", table.TableName)
+			for _, field := range table.FieldNames {
+				sqlQuery += fmt.Sprintf(" %s = CASE WHEN NULLIF(proc.%s, '') IS NULL THEN proc.%s ELSE anon.%s END,", field.Column, field.Column, field.Column, field.Column)
+			}
+			sqlQuery = sqlQuery[:len(sqlQuery)-1] // Remove the trailing comma
+			sqlQuery += fmt.Sprintf(" FROM processing.%s AS proc, (SELECT * FROM anon.%s ORDER BY ppk_id LIMIT %d OFFSET %d) AS anon WHERE pub.%s = proc.%s AND proc.ppk_id = anon.ppk_id;",
+				table.TableName, table.TableName, ChunkSize, offset, table.PkColumn.Column, table.PkColumn.Column)
+
+			fmt.Print(sqlQuery + "\n\n")
+
+			// Execute the update query
+			_, err := db.Exec(sqlQuery)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -515,6 +544,8 @@ func main() {
 	checkError(err)
 
 	err = generateFakeData(db, tableDetails)
+	checkError(err)
 
-	// update processing table
+	err = updateOriginalTables(db, tableDetails)
+	checkError(err)
 }

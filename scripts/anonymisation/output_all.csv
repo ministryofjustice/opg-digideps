@@ -143,7 +143,7 @@ public,contact,relationship,character varying,100,,Lorem
 public,contact,report_id,integer,,FOREIGN KEY,NA
 public,contact,updated_at,timestamp without time zone,,,NA
 public,court_order,active,boolean,,,NA
-public,court_order,court_order_uid,integer,,,NA
+public,court_order,court_order_uid,bigint,,,NA
 public,court_order,created_at,timestamp without time zone,,,NA
 public,court_order,id,integer,,PRIMARY KEY,NA
 public,court_order,type,character varying,10,,Lorem
@@ -253,12 +253,14 @@ public,money_short_category,type_id,character varying,255,,Lorem
 public,money_transaction,amount,numeric,,,NA
 public,money_transaction,bank_account_id,integer,,FOREIGN KEY,NA
 public,money_transaction,category,character varying,255,,Lorem
+public,money_transaction,deleted_at,timestamp without time zone,,,NA
 public,money_transaction,description,text,,,Lorem
 public,money_transaction,id,integer,,PRIMARY KEY,NA
 public,money_transaction,meta,text,,,Lorem
 public,money_transaction,report_id,integer,,FOREIGN KEY,NA
 public,money_transaction_short,amount,numeric,,,NA
 public,money_transaction_short,date,date,,,NA
+public,money_transaction_short,deleted_at,timestamp without time zone,,,NA
 public,money_transaction_short,description,text,,,Lorem
 public,money_transaction_short,id,integer,,PRIMARY KEY,NA
 public,money_transaction_short,report_id,integer,,FOREIGN KEY,NA
