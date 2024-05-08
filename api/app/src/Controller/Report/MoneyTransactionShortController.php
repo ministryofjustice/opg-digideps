@@ -4,6 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\RestController;
 use App\Entity as EntityDir;
+use App\Repository\MoneyTransactionShortRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,23 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransactionShortController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
     private $sectionIds = [
         EntityDir\Report\Report::SECTION_MONEY_IN_SHORT,
         EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT,
     ];
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
-    {
-        $this->em = $em;
-        $this->formatter = $formatter;
+    public function __construct(
+        private EntityManagerInterface $em,
+        private RestFormatter $formatter,
+        private MoneyTransactionShortRepository $moneyTransactionShortRepository
+    ) {
     }
 
     /**
      * @Route("/report/{reportId}/money-transaction-short", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
@@ -59,7 +57,6 @@ class MoneyTransactionShortController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction-short/{transactionId}", methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -83,7 +80,6 @@ class MoneyTransactionShortController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction-short/{transactionId}", methods={"DELETE"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -93,8 +89,12 @@ class MoneyTransactionShortController extends RestController
 
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
-        $this->em->remove($t);
+
+        $t->setDeletedAt(new \DateTime());
         $this->em->flush();
+
+        // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
+        $this->em->remove($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->em->flush();
@@ -104,7 +104,6 @@ class MoneyTransactionShortController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction-short/{transactionId}", requirements={"reportId":"\d+", "transactionId":"\d+"}, methods={"GET"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getOneById($reportId, $transactionId)
@@ -128,5 +127,36 @@ class MoneyTransactionShortController extends RestController
         if (array_key_exists('date', $data)) {
             $t->setDate($data['date'] ? new \DateTime($data['date']) : null);
         }
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction-short/soft-delete/{transactionId}", methods={"PUT"})
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function softDeleteMoneyTransactionShortAction($transactionId)
+    {
+        $filter = $this->em->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(EntityDir\Report\MoneyTransactionShort::class);
+
+        $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found');
+
+        $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
+
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
+
+        $this->em->flush($t);
+
+        $this->em->getFilters()->enable('softdeleteable');
+
+        return [];
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction-short/get-soft-delete", methods={"GET"})
+     * @Security("is_granted('ROLE_DEPUTY')")
+     */
+    public function getSoftDeletedMoneyTransactionShortItems($reportId)
+    {
+        return $this->moneyTransactionShortRepository->retrieveSoftDeleted($reportId);
     }
 }
