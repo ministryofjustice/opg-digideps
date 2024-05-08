@@ -101,6 +101,7 @@ class UserController extends RestController
             'job_title' => 'setJobTitle',
             'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
             'deputy_no' => 'setDeputyNo',
+            'deputy_uid' => 'setDeputyUid',
         ]);
 
         if (array_key_exists('last_logged_in', $data)) {

@@ -148,8 +148,8 @@ class PreRegistrationControllerTest extends AbstractTestController
         $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '12345678']);
 
-        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'test','deputy');
-        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'cotest','codeputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'cotest', 'codeputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -173,12 +173,12 @@ class PreRegistrationControllerTest extends AbstractTestController
         ]);
     }
 
-    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputyFirstname = 'test',string $deputySurname = 'admin'): PreRegistration
+    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputyFirstname = 'test', string $deputySurname = 'admin'): PreRegistration
     {
         $preRegistration = new PreRegistration([
             'Case' => $case,
             'ClientSurname' => 'I should get deleted',
-            'DeputyUid' => 'Deputy No',
+            'DeputyUid' => '700571111000',
             'DeputyFirstname' => $deputyFirstname,
             'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
@@ -196,8 +196,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testDeputyUidSetWhenSingleMatchFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'test','deputy');
-        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'test','deputy');
+        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'test', 'deputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -207,6 +207,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyNo(null);
+        $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
         $this->fixtures()->clear();
@@ -222,13 +223,14 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $this->assertEquals('Deputy No', $loggedInUser->getDeputyNo());
+        $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
+        $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
     }
 
     public function testDeputyUidNotSetWhenMultipleMatchesFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test','deputy');
-        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test','deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test', 'deputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -238,6 +240,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyNo(null);
+        $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
         $this->fixtures()->clear();
@@ -255,7 +258,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         try {
             $this->assertNull($loggedInUser->getDeputyNo());
-        } catch (\RuntimeException $e){
+            $this->assertEquals(0, $loggedInUser->getDeputyUid());
+        } catch (\RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
             $this->assertEquals($expectedErrorMessage, $e->getMessage());
             $this->assertEquals(462, $e->getCode());

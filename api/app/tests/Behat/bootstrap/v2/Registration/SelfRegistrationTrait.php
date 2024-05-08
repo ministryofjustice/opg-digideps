@@ -231,6 +231,8 @@ trait SelfRegistrationTrait
         );
 
         $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
+        /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
+        $this->assertIntEqualsInt((int) $this->deputyUid, $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
         $this->assertStringEqualsString('102 Petty France', $deputy->getAddress1(), 'Asserting Address Line 1 is the same');
         $this->assertStringEqualsString('MOJ', $deputy->getAddress2(), 'Asserting Address Line 2 is the same');
         $this->assertStringEqualsString('London', $deputy->getAddress3(), 'Asserting Address Line 3 is the same');
@@ -298,7 +300,7 @@ trait SelfRegistrationTrait
     public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails()
     {
         $this->coDeputyUid = '85462817';
-        
+
         $this->visitPath('/logout');
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->coDeputyEmail, 'active');
         $this->setPasswordAndTickTAndCs();
@@ -614,6 +616,8 @@ trait SelfRegistrationTrait
         );
 
         $this->assertStringEqualsString($this->coDeputyUid, $coDeputy->getDeputyNo(), 'Asserting CoDeputyUid is the same');
+        /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
+        $this->assertIntEqualsInt((int) $this->coDeputyUid, $coDeputy->getDeputyUid(), 'Asserting CoDeputyUid is the same');
         $this->assertStringEqualsString('Fieldag', $coDeputy->getAddress1(), 'Asserting Address Line 1 is the same');
         $this->assertStringEqualsString('Y73', $coDeputy->getAddressPostcode(), 'Asserting Postcode is the same');
         $this->assertStringEqualsString('GB', $coDeputy->getAddressCountry(), 'Asserting Address Country is the same');
