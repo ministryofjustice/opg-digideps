@@ -28,7 +28,7 @@ server {
     }
 
     location / {
-        # cache static assets for 90 days
+        # cache static assets for specified time period
         location ~* \.(css|jpg|png|ico|jpeg|woff2|woff)$ {
             expires    24h;
             access_log off;
