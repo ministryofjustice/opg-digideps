@@ -325,9 +325,9 @@ class Client
         return $this->deputy;
     }
 
-    public function setDeputy(Deputy $namedDeputy): self
+    public function setDeputy(Deputy $deputy): self
     {
-        $this->deputy = $namedDeputy;
+        $this->deputy = $deputy;
 
         return $this;
     }
