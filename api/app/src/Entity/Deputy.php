@@ -44,9 +44,9 @@ class Deputy
      *
      * @JMS\Exclude
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="namedDeputy")
+     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
      *
-     * @ORM\JoinColumn(name="id", referencedColumnName="named_deputy_id")
+     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
      */
     private $clients;
 

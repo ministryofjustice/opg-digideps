@@ -271,7 +271,7 @@ class Client implements ClientInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
      *
-     * @ORM\JoinColumn(name="named_deputy_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $deputy;
 
