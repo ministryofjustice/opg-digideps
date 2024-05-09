@@ -100,8 +100,11 @@ class UserController extends RestController
             'role_name' => 'setRoleName',
             'job_title' => 'setJobTitle',
             'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
-            'deputy_no' => 'setDeputyNo',
         ]);
+
+        if (array_key_exists('deputy_no', $data) && !empty($data['deputy_no'])) {
+            $user->setDeputyNo($data['deputy_no']);
+        }
 
         if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
             $user->setDeputyUid($data['deputy_uid']);
