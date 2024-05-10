@@ -349,7 +349,7 @@ class ReportController extends AbstractController
             $jms[] = 'client-users';
         } elseif ($user->isDeputyOrg()) {
             $jms[] = 'client-deputy';
-            $jms[] = 'named-deputy';
+            $jms[] = 'deputy';
         }
 
         return $jms;

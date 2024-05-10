@@ -130,7 +130,7 @@ class ClientApi
                 'report',
                 'status',
                 'client-deputy',
-                'named-deputy',
+                'deputy',
                 'client-organisations',
                 'organisation',
             ]
@@ -155,7 +155,7 @@ class ClientApi
                 'report',
                 'status',
                 'client-deputy',
-                'named-deputy',
+                'deputy',
                 'client-organisations',
                 'organisation',
             ]
