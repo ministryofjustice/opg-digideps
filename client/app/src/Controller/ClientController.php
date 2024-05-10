@@ -167,7 +167,7 @@ class ClientController extends AbstractController
                 if ($currentUser->isNdrEnabled()) {
                     $event = new RegistrationSucceededEvent($currentUser);
 
-                    $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::NAME);
+                    $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
                 }
 
                 return $this->redirect($url);
