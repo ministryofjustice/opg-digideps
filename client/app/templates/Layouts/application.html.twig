@@ -158,8 +158,8 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ 'javascripts/application.js'| assetUrl }}"></script>
-    <script src="{{ 'javascripts/common.js'| assetUrl }}"></script>
+    <script type="module" src="{{ 'javascripts/application.js'| assetUrl }}"></script>
+    <script type="module" src="{{ 'javascripts/common.js'| assetUrl }}"></script>
 {% endblock %}
 
 {% block bodyEnd %}
