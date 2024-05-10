@@ -50,7 +50,13 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function savesValidUserToDb()
     {
-        $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', 'DEP0011', 'Tolley');
+        $preRegistration = $this->generatePreRegistration(
+            '12345678',
+            'Cross-Tolley',
+            'DEP0011',
+            'Zac',
+            'Tolley'
+        );
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
@@ -132,7 +138,13 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForDuplicate()
     {
-        $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', 'DEP0011', 'Tolley');
+        $preRegistration = $this->generatePreRegistration(
+            '12345678',
+            'Cross-Tolley',
+            'DEP0011',
+            'Zac',
+            'Tolley'
+        );
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
@@ -182,7 +194,13 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new \DateTime();
 
-        $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', 'DEP00199', 'Murphy');
+        $preRegistration = $this->generatePreRegistration(
+            '97643164',
+            'Douglas',
+            'DEP00199',
+            'John',
+            'Murphy'
+        );
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
@@ -217,7 +235,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'case_number' => '97643164',
                     'client_lastname' => 'Douglas',
                     'deputy_uid' => 'DEP00199',
-                    'deputy_firstname' => null,
+                    'deputy_firstname' => 'John',
                     'deputy_surname' => 'Murphy',
                     'deputy_address1' => 'Victoria Road',
                     'deputy_address2' => null,
@@ -233,6 +251,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'ndr' => true,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
+                    'court_order_uid' => 123
                 ],
             ],
             'matching_errors' => [
@@ -252,7 +271,13 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new \DateTime();
 
-        $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', 'DEP00199', 'Murphy');
+        $preRegistration = $this->generatePreRegistration(
+            '97643164',
+            'Douglas',
+            'DEP00199',
+            'John',
+            'Murphy'
+        );
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
@@ -287,7 +312,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'case_number' => '97643164',
                     'client_lastname' => 'Douglas',
                     'deputy_uid' => 'DEP00199',
-                    'deputy_firstname' => null,
+                    'deputy_firstname' => 'John',
                     'deputy_surname' => 'Murphy',
                     'deputy_address1' => 'Victoria Road',
                     'deputy_address2' => null,
@@ -303,6 +328,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'ndr' => true,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
+                    'court_order_uid' => 123
                 ],
             ],
             'matching_errors' => [
@@ -322,7 +348,12 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $now = new \DateTime();
 
-        $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', 'DEP00199', 'Murphy');
+        $preRegistration = $this->generatePreRegistration(
+            '97643164',
+            'Douglas',
+            'DEP00199',
+            'Zac',
+            'Murphy');
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
@@ -357,7 +388,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'case_number' => '97643164',
                     'client_lastname' => 'Douglas',
                     'deputy_uid' => 'DEP00199',
-                    'deputy_firstname' => null,
+                    'deputy_firstname' => 'Zac',
                     'deputy_surname' => 'Murphy',
                     'deputy_address1' => 'Victoria Road',
                     'deputy_address2' => null,
@@ -373,6 +404,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'ndr' => true,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
+                    'court_order_uid' => 123
                 ],
             ],
             'matching_errors' => [
@@ -385,12 +417,20 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputySurname, \DateTime $createdAt = null): PreRegistration
-    {
+    public function generatePreRegistration(
+        string $caseNumber, 
+        string $clientSurname, 
+        string $deputyUid,
+        string $deputyFirstname, 
+        string $deputySurname, 
+        \DateTime $createdAt = null
+    ): PreRegistration {
+
         return new PreRegistration([
             'Case' => $caseNumber,
             'ClientSurname' => $clientSurname,
             'DeputyUid' => $deputyUid,
+            'DeputyFirstname' => $deputyFirstname,
             'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
             'DeputyPostcode' => 'SW1',
@@ -398,6 +438,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'MadeDate' => '2010-03-30',
             'OrderType' => 'pfa',
             'NDR' => 'yes',
+            'CourtOrderUid' => 123
         ], $createdAt);
     }
 }

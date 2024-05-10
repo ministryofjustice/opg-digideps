@@ -9,6 +9,7 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\Result;
 use Mockery as Mock;
+use PhpParser\Node\Arg;
 use Predis\ClientInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -40,8 +41,8 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $this->csvFilename = 'layDeputyReport.csv';
 
         $this->logger = self::prophesize(LoggerInterface::class);
-        $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
+        $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         
         $this->csvArray = Mock::mock(CsvToArray::class);
 
@@ -73,7 +74,11 @@ class ProcessLayCSVCommandTest extends KernelTestCase
                 'report_update_count' => 0,
                 'cases_with_updated_reports' => 0,
                 'source' => 'sirius',
+                'court_orders' => [1]
             ]);
+
+        $this->csvProcessing->courtOrdersActiveSwitch([1])
+            ->shouldBeCalled();
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();

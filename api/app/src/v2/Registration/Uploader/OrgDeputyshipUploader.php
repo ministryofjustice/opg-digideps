@@ -11,6 +11,7 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
+use App\Repository\CourtOrderRepository;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\NamedDeputyAssembler;
@@ -53,6 +54,7 @@ class OrgDeputyshipUploader
         private readonly NamedDeputyAssembler $namedDeputyAssembler,
         private readonly LoggerInterface $logger,
         private readonly CourtOrderDtoAssembler $courtOrderAssembler,
+        private readonly CourtOrderRepository $courtOrderRepository,
         private readonly CourtOrderFactory $courtOrderFactory,
     ) {
     }
@@ -86,7 +88,7 @@ class OrgDeputyshipUploader
 
                 $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
 
-                if ($courtOrder = $this->findCourtOrderEntity($deputyshipDto->getCourtOrderUid())) {
+                if ($courtOrder = $this->courtOrderRepository->findCourtOrderByUid($deputyshipDto->getCourtOrderUid())) {
                     if ($courtOrder->getOrderType() !== $deputyshipDto->getHybrid()) {
                         $courtOrder->setOrderType($deputyshipDto->getHybrid());
                     }
@@ -447,11 +449,6 @@ class OrgDeputyshipUploader
 
             throw new ClientIsArchivedException($message);
         }
-    }
-
-    private function findCourtOrderEntity(int $courtOrderUid): ?CourtOrder
-    {
-        return $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
     }
 
     private function createCourtOrderEntity(OrgDeputyshipDto $layDeputyshipDto): CourtOrderDto

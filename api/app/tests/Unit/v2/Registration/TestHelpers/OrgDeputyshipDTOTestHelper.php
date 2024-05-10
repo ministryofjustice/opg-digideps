@@ -61,6 +61,7 @@ class OrgDeputyshipDTOTestHelper
             'ClientAddress4' => null,
             'ClientAddress5' => null,
             'ClientPostcode' => Address::postcode(),
+            'CourtOrderUid'  => $faker->randomNumber(8),
             'DeputyUid' => (string) $faker->randomNumber(8),
             'DeputyType' => $faker->randomElement(['PRO', 'PA']),
             'DeputyEmail' => sprintf('%s@%s%s.com', $faker->userName(), $faker->randomNumber(8), $faker->domainWord()),

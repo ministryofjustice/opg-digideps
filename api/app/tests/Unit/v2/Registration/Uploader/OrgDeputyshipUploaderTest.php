@@ -9,11 +9,14 @@ use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
+use App\Repository\CourtOrderRepository;
 use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -55,12 +58,24 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->clientRepository = $this->em->getRepository(Client::class);
         $this->reportRepository = $this->em->getRepository(Report::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->courtOrderAssembler = $this->createMock(CourtOrderDtoAssembler::class);
+        $this->courtOrderRepository = $this->createMock(CourtOrderRepository::class);
+        $this->courtOrderFactory = $this->createMock(CourtOrderFactory::class);
 
         $orgFactory = $container->get('App\Factory\OrganisationFactory');
         $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
         $namedDeputyAssembler = $container->get('App\v2\Assembler\NamedDeputyAssembler');
 
-        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $namedDeputyAssembler, $this->logger);
+        $this->sut = new OrgDeputyshipUploader(
+            $this->em, 
+            $orgFactory, 
+            $clientAssembler, 
+            $namedDeputyAssembler, 
+            $this->logger,
+            $this->courtOrderAssembler,
+            $this->courtOrderRepository,
+            $this->courtOrderFactory,
+        );
 
         $this->purgeDatabase();
     }

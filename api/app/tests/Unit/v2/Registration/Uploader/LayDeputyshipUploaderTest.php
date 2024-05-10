@@ -3,16 +3,22 @@
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\CourtOrderRepository;
 use App\Repository\ReportRepository;
+use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
+use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
+use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -35,16 +41,22 @@ class LayDeputyshipUploaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+        $this->em = $this->createMock(EntityManager::class);
+        $this->reportRepository = $this->createMock(ReportRepository::class);
+        $this->factory = $this->createMock(PreRegistrationFactory::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->courtOrderRepository = $this->createMock(CourtOrderRepository::class);
+        $this->courtOrderAssembler = $this->createMock(CourtOrderDtoAssembler::class);
+        $this->courtOrderFactory = $this->createMock(CourtOrderFactory::class);
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
             $this->reportRepository,
             $this->factory,
-            $this->logger
+            $this->logger,
+            $this->courtOrderAssembler,
+            $this->courtOrderRepository,
+            $this->courtOrderFactory,
         );
     }
 
@@ -79,6 +91,16 @@ class LayDeputyshipUploaderTest extends TestCase
             ->expects($this->exactly(3))
             ->method('createFromDto')
             ->willReturnOnConsecutiveCalls(new PreRegistration([]), new PreRegistration([]), new PreRegistration([]));
+        
+        $this->courtOrderRepository
+            ->expects($this->exactly(3))
+            ->method('findCourtOrderByUid')
+            ->willReturnOnConsecutiveCalls(null, null, null);
+        
+        $this->courtOrderAssembler
+            ->expects($this->exactly(3))
+            ->method('assembleFromDto')
+            ->willReturnOnConsecutiveCalls(new CourtOrderDto(), new CourtOrderDto(), new CourtOrderDto());
 
         // Assert Report Types will not be updated (not relevant for this test).
         $this->reportRepository
@@ -88,6 +110,8 @@ class LayDeputyshipUploaderTest extends TestCase
             ->willReturn([]);
 
         $return = $this->sut->upload($collection);
+        
+        print_r($return);
 
         $this->assertEquals(3, $return['added']);
         $this->assertCount(0, $return['errors']);
@@ -196,9 +220,12 @@ class LayDeputyshipUploaderTest extends TestCase
 
     private function buildLayDeputyshipDto($count): LayDeputyshipDto
     {
+        $faker = Factory::create();
+
         return (new LayDeputyshipDto())
-            ->setCaseNumber('case-'.$count)
-            ->setDeputyUid('depnum-'.$count);
+            ->setCaseNumber((string) $faker->randomNumber(8))
+            ->setDeputyUid((string) $faker->randomNumber(8))
+            ->setCourtOrderUid($faker->randomNumber(8));
     }
 
     private function assertReportTypesWillNotBeUpdated(): void

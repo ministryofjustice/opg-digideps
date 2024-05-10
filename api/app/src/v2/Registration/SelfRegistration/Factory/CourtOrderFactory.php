@@ -7,12 +7,19 @@ namespace App\v2\Registration\SelfRegistration\Factory;
 use App\Entity\CourtOrder;
 use App\Service\DateTimeProvider;
 use App\v2\Registration\DTO\CourtOrderDto;
+use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CourtOrderFactory
 {
     public function __construct(private ValidatorInterface $validator, private DateTimeProvider $dateProvider)
     {
+    }
+    
+    public function createFromDeputyDto(LayDeputyshipDto|OrgDeputyshipDto $deputyshipDto)
+    {
+        
     }
     public function createFromDto(CourtOrderDto $dto): CourtOrder
     {

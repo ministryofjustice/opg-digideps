@@ -186,6 +186,7 @@ class PreRegistrationControllerTest extends AbstractTestController
             'MadeDate' => '2010-03-30',
             'OrderType' => 'pfa',
             'Hybrid' => $hybrid,
+            'CourtOrderUid' => 123,
         ]);
 
         $this->fixtures()->persist($preRegistration);

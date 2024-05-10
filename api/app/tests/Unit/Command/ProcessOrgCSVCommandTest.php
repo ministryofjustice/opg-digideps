@@ -41,8 +41,8 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $this->csvFilename = 'paProDeputyReport.csv';
         
         $this->logger = self::prophesize(LoggerInterface::class);
-        $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
+        $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         
         $this->csvArray = Mock::mock(CsvToArray::class);
 
@@ -77,13 +77,15 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
                     'named_deputies' => [1],
                     'organisations' => [1],
                     'clients' => [1],
-                    'reports' => [1]
+                    'reports' => [1],
+                    'court_orders' => [123]
                 ],
                 'updated' => [
                     'named_deputies' => [0],
                     'organisations' => [0],
                     'clients' => [0],
-                    'reports' => [0]
+                    'reports' => [0],
+                    'court_orders' => [456]
                 ],
                 'changeOrg' => [
                     'named_deputies' => [0],
@@ -93,6 +95,9 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
                 ],
                 'skipped' => 1
             ]);
+
+        $this->csvProcessing->courtOrdersActiveSwitch([123, 456])
+            ->shouldBeCalled();
         
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
