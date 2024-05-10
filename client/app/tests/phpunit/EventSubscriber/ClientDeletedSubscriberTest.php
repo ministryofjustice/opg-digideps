@@ -64,11 +64,11 @@ class ClientDeletedSubscriberTest extends TestCase
     {
         $clientWithUsers = ClientHelpers::createClient();
         $layDeputy = UserHelpers::createUser()->setRoleName('ROLE_LAY_DEPUTY');
-        $namedDeputy = DeputyHelper::createDeputy();
+        $deputy = DeputyHelper::createDeputy();
 
         return [
             'Lay deputy' => [(clone $clientWithUsers)->addUser($layDeputy), $layDeputy],
-            'Named deputy' => [(clone $clientWithUsers)->setDeputy($namedDeputy), $namedDeputy],
+            'Deputy' => [(clone $clientWithUsers)->setDeputy($deputy), $deputy],
         ];
     }
 }

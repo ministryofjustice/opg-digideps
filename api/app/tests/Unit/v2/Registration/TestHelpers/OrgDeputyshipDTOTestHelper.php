@@ -125,9 +125,9 @@ class OrgDeputyshipDTOTestHelper
         return json_encode($deputyships);
     }
 
-    public static function namedDeputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $namedDeputyRepository)
+    public static function deputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $deputyRepository)
     {
-        return $namedDeputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof Deputy;
+        return $deputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof Deputy;
     }
 
     public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
@@ -150,20 +150,20 @@ class OrgDeputyshipDTOTestHelper
         return $org->getClients()->contains($client) && $client->getOrganisation() === $org;
     }
 
-    public static function clientAndNamedDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $namedDeputyRepo)
+    public static function clientAndDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo)
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
-        $namedDeputy = $namedDeputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
+        $deputy = $deputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
 
-        return $client->getDeputy() === $namedDeputy;
+        return $client->getDeputy() === $deputy;
     }
 
-    public static function clientAndNamedDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $namedDeputyRepo)
+    public static function clientAndDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo)
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
-        $namedDeputy = $namedDeputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
+        $deputy = $deputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
 
-        return !($client->getDeputy() === $namedDeputy);
+        return !($client->getDeputy() === $deputy);
     }
 
     public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo)
@@ -183,9 +183,9 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return Deputy
      */
-    public static function ensureNamedDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
-        $namedDeputy = (new Deputy())
+        $deputy = (new Deputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())
@@ -197,10 +197,10 @@ class OrgDeputyshipDTOTestHelper
             ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode());
 
-        $em->persist($namedDeputy);
+        $em->persist($deputy);
         $em->flush();
 
-        return $namedDeputy;
+        return $deputy;
     }
 
     /**

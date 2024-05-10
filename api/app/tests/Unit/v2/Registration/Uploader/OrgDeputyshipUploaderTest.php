@@ -79,7 +79,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->sut->upload($deputyships);
 
         self::assertTrue(
-            OrgDeputyshipDTOTestHelper::namedDeputyWasCreated($deputyships[0], $this->namedDeputyRepository),
+            OrgDeputyshipDTOTestHelper::deputyWasCreated($deputyships[0], $this->namedDeputyRepository),
             sprintf('Named deputy with DeputyUid %s could not be found', $deputyships[0]->getDeputyUid())
         );
     }
@@ -88,7 +88,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     public function uploadExistingNamedDeputiesAreNotProcessed()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -101,7 +101,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     public function uploadNamedDeputyWithSameDetailsButNewDeputyUidCreatesNewDeputy()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $namedDeputy->setDeputyUid('12345678');
 
         $this->em->persist($namedDeputy);
@@ -118,7 +118,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     public function uploadExistingNamedDeputiesWithNewAddressDetailsAreUpdated()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $namedDeputy->setAddress1('10 New Road');
 
         $this->em->persist($namedDeputy);
@@ -235,7 +235,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalOrgIdentifier = 'differentorg.co.uk';
 
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $originalOrgIdentifier));
         $originalNamedDeputy->setDeputyUid('ABCD1234');
 
@@ -252,7 +252,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertFalse(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+            OrgDeputyshipDTOTestHelper::clientAndDeputyAreAssociated(
                 $deputyships[0],
                 $this->clientRepository,
                 $this->namedDeputyRepository
@@ -281,7 +281,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalOrgIdentifier = 'differentorg.co.uk';
 
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
 
         $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->em);
         $organisation->setEmailIdentifier($originalOrgIdentifier);
@@ -295,7 +295,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertTrue(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+            OrgDeputyshipDTOTestHelper::clientAndDeputyAreAssociated(
                 $deputyships[0],
                 $this->clientRepository,
                 $this->namedDeputyRepository
@@ -328,7 +328,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalOrgIdentifier = 'differentorg.co.uk';
 
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
 
         $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->em);
         $organisation->setEmailIdentifier($originalOrgIdentifier);
@@ -343,7 +343,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertTrue(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+            OrgDeputyshipDTOTestHelper::clientAndDeputyAreAssociated(
                 $deputyships[0],
                 $this->clientRepository,
                 $this->namedDeputyRepository
@@ -375,7 +375,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
 
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
         $originalNamedDeputy->setDeputyUid('ABCD1234');
 
@@ -392,7 +392,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertTrue(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+            OrgDeputyshipDTOTestHelper::clientAndDeputyAreAssociated(
                 $deputyships[0],
                 $this->clientRepository,
                 $this->namedDeputyRepository
@@ -424,7 +424,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
 
-        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $originalNamedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $originalNamedDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
         $originalNamedDeputy->setDeputyUid('ABCD1234');
 
@@ -440,7 +440,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $actualUploadResults = $this->sut->upload($deputyships);
 
         self::assertTrue(
-            OrgDeputyshipDTOTestHelper::clientAndNamedDeputyAreAssociated(
+            OrgDeputyshipDTOTestHelper::clientAndDeputyAreAssociated(
                 $deputyships[0],
                 $this->clientRepository,
                 $this->namedDeputyRepository
@@ -516,7 +516,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships[0]->setDeputyUid('12345678');
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $client->setDeputy($namedDeputy);
         $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->em)->getType();
 
@@ -545,7 +545,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships[0]->setDeputyUid('87654321');
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
         $namedDeputy->setDeputyUid('12345678');
         $client->setDeputy($namedDeputy);
 
@@ -675,7 +675,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $namedDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
 
         $client->setDeputy($namedDeputy);
         $client->setArchivedAt(new \DateTime());
@@ -745,7 +745,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
 
         $deputyships[0]->setDeputyUid('abc123');
         $deputyships[0]->setDeputyFirstname('Bob');
@@ -785,7 +785,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->em);
-        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
+        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->em);
 
         $deputyships[0]->setDeputyUid('abc123');
         $deputyships[0]->setDeputyEmail('william@somecompany.com');

@@ -265,7 +265,7 @@ class ReportController extends AbstractController
         $client = $this->generateClient($user, $clientId);
 
         /** @var Deputy */
-        $namedDeputy = $client->getDeputy();
+        $deputy = $client->getDeputy();
 
         $activeReportId = null;
         if ($user->isDeputyOrg()) {
@@ -296,7 +296,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'deputy' => $namedDeputy,
+            'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
