@@ -51,7 +51,7 @@
         {% if deputy %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    {{ 'deputy' | trans({}, 'common') }}
+                    {{ 'namedDeputy' | trans({}, 'common') }}
                 </dt>
                 <dd class="govuk-summary-list__value behat-region-deputy-fullname  ">
                     {{ deputy.fullName }}
@@ -64,13 +64,13 @@
         <details class="govuk-details" data-module="govuk-details" role="group">
             <summary class="govuk-details__summary" role="button">
         <span class="govuk-details__summary-text">
-            {{ (page ~ '.deputy.title') | trans }}
+            {{ (page ~ '.namedDeputy.title') | trans }}
         </span>
             </summary>
             <div class="govuk-details__text behat-region-deputy-details">
                 {% if deputy.addressNotEmptyParts | length > 0 %}
                     <h3 class="govuk-heading-s">
-                        {{ (page ~ '.deputy.address') | trans }}
+                        {{ (page ~ '.namedDeputy.address') | trans }}
                     </h3>
                     <p class="govuk-body">
                         {% for addressPart in deputy.addressNotEmptyParts %}
@@ -79,7 +79,7 @@
                     </p>
                 {% endif %}
                 <h3 class="govuk-heading-s">
-                    {{ (page ~ '.deputy.contact') | trans }}
+                    {{ (page ~ '.namedDeputy.contact') | trans }}
                 </h3>
                 <p class="govuk-body">
                     {% if deputy.phoneMain %}
