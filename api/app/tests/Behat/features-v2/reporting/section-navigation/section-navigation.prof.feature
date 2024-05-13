@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @section-navigation @Iqpal
+@v2 @v2_reporting_1 @section-navigation
 Feature: Section navigation - Professional (see section-navigation.lay.combined.feature for other shared sections)
 
     @prof-deputy-pfa-high-not-started

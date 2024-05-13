@@ -118,16 +118,16 @@ class FixtureHelper
             $details = [
                 'organisationName' => $organisation->getName(),
                 'organisationEmailIdentifier' => $organisation->getEmailIdentifier(),
-                'namedDeputyName' => sprintf(
+                'deputyName' => sprintf(
                     '%s %s',
                     $namedDeputy->getFirstname(),
                     $namedDeputy->getLastName()
                 ),
-                'namedDeputyFullAddressArray' => self::buildNamedDeputyAddressArray($namedDeputy),
-                'namedDeputyPhone' => $namedDeputy->getPhoneMain(),
-                'namedDeputyPhoneAlt' => $namedDeputy->getPhoneAlternative(),
-                'namedDeputyEmail' => $namedDeputy->getEmail1(),
-                'namedDeputyEmailAlt' => $namedDeputy->getEmail2(),
+                'deputyFullAddressArray' => self::buildNamedDeputyAddressArray($namedDeputy),
+                'deputyPhone' => $namedDeputy->getPhoneMain(),
+                'deputyPhoneAlt' => $namedDeputy->getPhoneAlternative(),
+                'deputyEmail' => $namedDeputy->getEmail1(),
+                'deputyEmailAlt' => $namedDeputy->getEmail2(),
             ];
         }
 
