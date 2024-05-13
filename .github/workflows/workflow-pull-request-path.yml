@@ -49,8 +49,15 @@ jobs:
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
         with:
           prerelease: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: "minor"
+      - name: show build identifier and tag
+        id: show
+        env:
+          BUILD: ${{ steps.variables.outputs.build_identifier }}
+          TAG: ${{ steps.semver_tag.outputs.created_tag }}
+        run: |
+          echo "Build Identifier: ${BUILD}"
+          echo "Container Tag: ${TAG}"
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'
         with:
@@ -85,7 +92,7 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
@@ -150,7 +157,7 @@ jobs:
     with:
       workspace: development
       terraform_path: account
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
     secrets: inherit
 
@@ -165,7 +172,7 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
     secrets: inherit
 
@@ -173,7 +180,7 @@ jobs:
     name: ecr scan results
     uses: ./.github/workflows/_ecr-scanning.yml
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
     needs:
       - terraform_apply_environment
       - workflow_variables
@@ -340,7 +347,7 @@ jobs:
       - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
