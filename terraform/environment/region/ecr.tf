@@ -1,6 +1,5 @@
 locals {
-  docker_tag_elems = split("-", var.docker_tag)
-  client_web_tag   = local.environment == "development" ? "development-${local.docker_tag_elems[1]}" : var.docker_tag
+  client_web_tag = local.environment == "development" ? "development-${var.docker_tag}" : var.docker_tag
 
   images = {
     api              = "${data.aws_ecr_repository.images["api"].repository_url}:${var.docker_tag}"

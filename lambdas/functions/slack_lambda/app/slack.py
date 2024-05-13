@@ -76,84 +76,10 @@ def parse_human_time_span(human_time_span):
 def check_log_format(log_string):
     # Define a regular expression pattern for the desired format
     pattern = r"^\w+(?:_\w+)* - (success|failure) - .+$"
+    # Use re.match to check if the string matches the pattern
     match = re.match(pattern, log_string)
+    # Return True if it's a match, otherwise False
     return bool(match)
-
-
-# def perform_log_query(client, log_group, start_time, end_time, log_entry_pattern):
-#     """Perform a CloudWatch Logs query for the log group."""
-#     response = client.start_query(
-#         logGroupName=log_group,
-#         startTime=start_time,
-#         endTime=end_time,
-#         queryString=f"""
-#             fields @message
-#             | filter @message like "{log_entry_pattern}"
-#             | sort @timestamp desc
-#             | limit 10000""",
-#     )
-#     return response
-#
-#
-# def wait_query_completion(client, query_id):
-#     """Wait for the CloudWatch Logs query to complete."""
-#     while True:
-#         query_status = client.get_query_results(queryId=query_id)
-#         if query_status["status"] == "Complete":
-#             break
-#         time.sleep(1)
-#
-#
-# def process_query_results(query_results, event_counts, descriptions):
-#     """Process the CloudWatch Logs query results."""
-#     for result in query_results["results"]:
-#         for field in result:
-#             if field["field"] == "@message":
-#                 value = field["value"]
-#                 if check_log_format(value):
-#                     value_parts = value.split(" - ")
-#                     job_name = value_parts[0]
-#                     status = value_parts[1]
-#                     description = value_parts[2]
-#                     # Increment the count for this event_name - status combination
-#                     event_counts[f"{job_name}-{status}"] += 1
-#                     # Store the description for this event_name - status combination
-#                     descriptions[f"{job_name}-{status}"] = description
-#     return
-#
-#
-# def generate_template_values(event_counts, descriptions):
-#     """Generate template values from event counts and descriptions."""
-#     template_values_collection = []
-#     for key, count in event_counts.items():
-#         key_parts = key.split("-")
-#         template_values = {
-#             "log_title": key_parts[0],
-#             "count": count,
-#             "status": key_parts[1],
-#             "description": descriptions[key],
-#         }
-#         template_values_collection.append(template_values)
-#     return template_values_collection
-#
-#
-# def log_event_search_by_log_entries(log_group, log_entries, search_timespan):
-#     """Search for events in CloudWatch Logs."""
-#     client = boto3.client("logs")
-#     event_counts = defaultdict(int)
-#     descriptions = {}
-#     timespan = parse_human_time_span(search_timespan)
-#
-#     for log_entry_pattern in log_entries:
-#         logger.info(f"trying to find this pattern: {log_entry_pattern}")
-#         response = perform_log_query(
-#             client, log_group, int(timespan["start_time"]), int(timespan["end_time"]), log_entry_pattern
-#         )
-#         query_id = response["queryId"]
-#         wait_query_completion(client, query_id)
-#         process_query_results(client.get_query_results(queryId=query_id), event_counts, descriptions)
-#
-#     return generate_template_values(event_counts, descriptions)
 
 
 def log_event_search_by_log_entries(log_group, log_entries, search_timespan):

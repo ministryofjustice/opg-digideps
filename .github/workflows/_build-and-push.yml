@@ -172,7 +172,7 @@ jobs:
           IMAGE_TAG: ${{ inputs.tag }}
           IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
-          export IMAGE_TAG_DEV="development-$(echo $IMAGE_TAG | awk -F'-' '{print $2}')"
+          export IMAGE_TAG_DEV="development-${IMAGE_TAG}"
           docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
 
       - name: tag and push container
