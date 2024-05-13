@@ -1,4 +1,4 @@
-@v2 @v2_sequential_3 @registration @ingest
+@v2 @v2_sequential_3 @registration @ingest @Iqpal
 Feature: Org CSV data ingestion - sirius source data
 
     @super-admin
@@ -75,7 +75,7 @@ Feature: Org CSV data ingestion - sirius source data
     Scenario: Uploading a CSV where the same named deputy appears with two addresses
         Given a csv has been uploaded to the sirius bucket with the file 'org-2-rows-1-named-deputy-with-different-addresses.csv'
         When I run the lay CSV command the file contains two rows with the same named deputy at two different addresses with different deputy uids
-        Then there should be two named deputies created
+        Then there should be two deputies created
         And the named deputy for case number '97864531' should have the address '6 MAYFIELD AVENUE, WYLDE GREEN, SUTTON COLDFIELD, WEST MIDLANDS, WARWICKSHIRE, B73 5QQ'
         And the named deputy for case number '64597832' should have the address '21 NIGEL ROAD, NORTHFIELD, BIRMINGHAM, WEST MIDLANDS, WARWICKSHIRE, B31 1LL'
         And the count of the new 'org' entities added should be in the command output

@@ -29,7 +29,7 @@ class FixtureHelper
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
-    private DeputyTestHelper $namedDeputyTestHelper;
+    private DeputyTestHelper $deputyTestHelper;
 
     private string $testRunId = '';
     private string $orgName = 'Test Org';
@@ -48,7 +48,7 @@ class FixtureHelper
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
-        $this->namedDeputyTestHelper = new DeputyTestHelper();
+        $this->deputyTestHelper = new DeputyTestHelper();
     }
 
     public static function buildUserDetails(User $user)
@@ -324,7 +324,7 @@ class FixtureHelper
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
-        $namedDeputy = $this->namedDeputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyUid);
+        $namedDeputy = $this->deputyTestHelper->generatenamedDeputy($namedDeputyEmail, $deputyUid);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
@@ -595,7 +595,7 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createProfNamedHealthWelfareNotStarted(string $testRunId): array
+    public function createProfDeputyHealthWelfareNotStarted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -609,7 +609,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedHealthWelfareCompleted(string $testRunId): array
+    public function createProfDeputyHealthWelfareCompleted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -623,7 +623,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedHealthWelfareSubmitted(string $testRunId): array
+    public function createProfDeputyHealthWelfareSubmitted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -637,7 +637,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedHealthWelfareNotStarted(string $testRunId): array
+    public function createPaDeputyHealthWelfareNotStarted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -651,7 +651,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedHealthWelfareCompleted(string $testRunId): array
+    public function createPaDeputyHealthWelfareCompleted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -665,7 +665,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedHealthWelfareSubmitted(string $testRunId): array
+    public function createPaDeputyHealthWelfareSubmitted(string $testRunId): array
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -763,7 +763,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedPfaHighNotStarted(string $testRunId)
+    public function createProfDeputyPfaHighNotStarted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -777,7 +777,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedPfaHighSubmitted(string $testRunId)
+    public function createProfDeputyPfaHighSubmitted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -791,7 +791,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedPfaHighNotStarted(string $testRunId)
+    public function createPaDeputyPfaHighNotStarted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,
@@ -805,7 +805,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedPfaHighSubmitted(string $testRunId)
+    public function createPaDeputyPfaHighSubmitted(string $testRunId)
     {
         $user = $this->createOrgUserClientNamedDeputyAndReport(
             $testRunId,

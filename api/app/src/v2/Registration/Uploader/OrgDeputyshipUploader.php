@@ -20,8 +20,8 @@ use Psr\Log\LoggerInterface;
 
 class OrgDeputyshipUploader
 {
-    private array $added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-    private array $updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+    private array $added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
+    private array $updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $changeOrg = [];
 
     private ?Organisation $currentOrganisation = null;
@@ -110,7 +110,7 @@ class OrgDeputyshipUploader
             $this->em->persist($deputy);
             $this->em->flush();
 
-            $this->added['named_deputies'][] = $deputy->getId();
+            $this->added['deputies'][] = $deputy->getId();
         } elseif ($deputy->getDeputyUid() === $dto->getDeputyUid()) {
             $updated = false;
 
@@ -148,7 +148,7 @@ class OrgDeputyshipUploader
                 $this->em->persist($deputy);
                 $this->em->flush();
 
-                $this->updated['named_deputies'][] = $deputy->getId();
+                $this->updated['deputies'][] = $deputy->getId();
             }
         }
 
@@ -236,7 +236,7 @@ class OrgDeputyshipUploader
                 }
             }
 
-            // Temp fix for clients who have new named deputy in same organisation
+            // Temp fix for clients who have new deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
                 if ($this->clientHasNewDeputy($this->client, $this->deputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
                     $this->client->setDeputy($this->deputy);
@@ -354,8 +354,8 @@ class OrgDeputyshipUploader
 
     private function resetDeputyshipUploaderObjects()
     {
-        $this->added = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
-        $this->updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
+        $this->added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
+        $this->updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
         $this->changeOrg = [];
         $this->currentOrganisation = null;
         $this->deputy = null;
@@ -386,12 +386,12 @@ class OrgDeputyshipUploader
 
     private function removeDuplicateIds()
     {
-        $this->added['named_deputies'] = array_unique($this->added['named_deputies']);
+        $this->added['deputies'] = array_unique($this->added['deputies']);
         $this->added['organisations'] = array_unique($this->added['organisations'], SORT_REGULAR);
         $this->added['clients'] = array_unique($this->added['clients']);
         $this->added['reports'] = array_unique($this->added['reports']);
 
-        $this->updated['named_deputies'] = array_unique($this->updated['named_deputies']);
+        $this->updated['deputies'] = array_unique($this->updated['deputies']);
         $this->updated['organisations'] = array_unique($this->updated['organisations']);
         $this->updated['clients'] = array_unique($this->updated['clients']);
         $this->updated['reports'] = array_unique($this->updated['reports']);

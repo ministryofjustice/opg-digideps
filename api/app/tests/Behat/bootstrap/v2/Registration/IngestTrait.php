@@ -886,7 +886,7 @@ trait IngestTrait
     }
 
     /**
-     * @Then there should be two Deputies created
+     * @Then there should be two deputies created
      */
     public function shouldBeTwoDeputiesWithSeparateAddresses()
     {
