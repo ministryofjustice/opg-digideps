@@ -56,24 +56,24 @@ class ProcessOrgCSVCommand extends Command
         'DeputyAddress3',
         'DeputyAddress4',
         'DeputyAddress5',
-        'CourtOrderUid'
+        'CourtOrderUid',
     ];
 
     private const UNEXPECTED_COLUMNS = [
-        'NDR'
+        'NDR',
     ];
 
     private array $output = [
         'errors' => [],
         'added' => [
             'clients' => 0,
-            'named_deputies' => 0,
+            'deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
         ],
         'updated' => [
             'clients' => 0,
-            'named_deputies' => 0,
+            'deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
         ],
@@ -171,7 +171,6 @@ class ProcessOrgCSVCommand extends Command
         }
 
         $this->logger->notice('Successfully processed all chunks');
-
 
         return $this->mailer->sendProcessOrgCSVEmail($email, $this->output);
     }
