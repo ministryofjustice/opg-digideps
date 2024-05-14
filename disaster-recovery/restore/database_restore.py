@@ -36,10 +36,15 @@ class SnapshotManagement:
             else environments[environment]
         )
         self.backup_account = environments["backup"]
-        self.role = "breakglass"
+        self.role = "digideps-ci" if os.getenv("CI") else "breakglass"
+        self.backup_role = (
+            "cross-acc-db-restore.digideps-development"
+            if os.getenv("CI")
+            else "breakglass"
+        )
         self.role_to_assume = str(f"arn:aws:iam::{self.account}:role/{self.role}")
         self.backup_role_to_assume = str(
-            f"arn:aws:iam::{self.backup_account}:role/{self.role}"
+            f"arn:aws:iam::{self.backup_account}:role/{self.backup_role}"
         )
         self.region = "eu-west-1"
         self.client = None
@@ -164,7 +169,8 @@ class SnapshotManagement:
         response = self.client.describe_db_clusters(
             DBClusterIdentifier=self.db_cluster_identifier_source
         )
-        print(response)
+        # Uncomment below print statement to debug all the RDS options available
+        # print(response)
         self.AllocatedStorage = response["DBClusters"][0]["AllocatedStorage"]
         self.AvailabilityZones = response["DBClusters"][0]["AvailabilityZones"]
         self.BackupRetentionPeriod = response["DBClusters"][0]["BackupRetentionPeriod"]
@@ -263,6 +269,8 @@ class SnapshotManagement:
             )
 
         self.restore_cluster_point_in_time_recovery()
+        if self.EngineMode != "serverless":
+            self.create_db_instances()
 
         if self.same_target:
             self.overwrite_existing_cluster()
