@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uid_idx", columns={"deputy_uid"})})
  *
- * @ORM\Entity(repositoryClass="DeputyRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\DeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */

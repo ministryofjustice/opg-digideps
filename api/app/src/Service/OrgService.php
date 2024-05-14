@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity as EntityDir;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Factory\DeputyFactory;
@@ -36,7 +35,7 @@ class OrgService
     private $namedDeputyFactory;
 
     /**
-     * @var EntityDir\Repository\NamedDeputyRepository
+     * @var DeputyRepository
      */
     private $namedDeputyRepository;
 
