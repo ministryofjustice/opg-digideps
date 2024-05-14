@@ -4,6 +4,6 @@ COPY requirements.txt /requirements.txt
 RUN apk update && apk upgrade && pip install --upgrade pip \
     \ pip install -r /requirements.txt
 RUN pip uninstall -y wheel setuptools
-COPY ./cross-account-backup.py /cross-account-backup.py
-RUN chmod 755 cross-account-backup.py
-CMD ["python3", "cross-account-backup.py"]
+COPY ./cross_account_backup.py /cross_account_backup.py
+RUN chmod 755 cross-account_backup.py
+CMD ["python3", "cross_account_backup.py"]
