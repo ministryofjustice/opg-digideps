@@ -70,7 +70,7 @@
             <div class="govuk-details__text behat-region-deputy-details">
                 {% if deputy.addressNotEmptyParts | length > 0 %}
                     <h3 class="govuk-heading-s">
-                        {{ (page ~ '.deputy.address') | trans }}
+                        {{ (page ~ '.namedDeputy.address') | trans }}
                     </h3>
                     <p class="govuk-body">
                         {% for addressPart in deputy.addressNotEmptyParts %}
