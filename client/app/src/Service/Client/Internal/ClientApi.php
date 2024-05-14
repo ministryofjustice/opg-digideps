@@ -12,7 +12,6 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use App\Service\Time\DateTimeProvider;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -87,7 +86,7 @@ class ClientApi
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function generateClientProfileLink(Client $client)
     {
@@ -110,7 +109,7 @@ class ClientApi
             'Client entity missing current report when trying to generate client profile link'
         );
 
-        throw new Exception('Unable to generate client profile link.');
+        throw new \Exception('Unable to generate client profile link.');
     }
 
     /**
@@ -131,7 +130,7 @@ class ClientApi
                 'report',
                 'status',
                 'client-named-deputy',
-                'named-deputy',
+                'deputy',
                 'client-organisations',
                 'organisation',
             ]
@@ -156,7 +155,7 @@ class ClientApi
                 'report',
                 'status',
                 'client-named-deputy',
-                'named-deputy',
+                'deputy',
                 'client-organisations',
                 'organisation',
             ]
