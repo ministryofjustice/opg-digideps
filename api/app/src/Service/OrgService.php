@@ -32,12 +32,12 @@ class OrgService
     /**
      * @var DeputyFactory
      */
-    private $namedDeputyFactory;
+    private $deputyFactory;
 
     /**
      * @var DeputyRepository
      */
-    private $namedDeputyRepository;
+    private $deputyRepository;
 
     /**
      * @var array
@@ -48,14 +48,14 @@ class OrgService
         EntityManagerInterface $em,
         UserRepository $userRepository,
         ClientRepository $clientRepository,
-        DeputyRepository $namedDeputyRepository,
-        DeputyFactory $namedDeputyFactory
+        DeputyRepository $deputyRepository,
+        DeputyFactory $deputyFactory
     ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->clientRepository = $clientRepository;
-        $this->namedDeputyRepository = $namedDeputyRepository;
-        $this->namedDeputyFactory = $namedDeputyFactory;
+        $this->deputyRepository = $deputyRepository;
+        $this->deputyFactory = $deputyFactory;
         $this->added = [];
     }
 
@@ -81,10 +81,10 @@ class OrgService
      *
      * @return Deputy|null
      */
-    public function identifyNamedDeputy($csvRow)
+    public function identifyDeputy($csvRow)
     {
-        /** @var Deputy|null $namedDeputy */
-        $namedDeputy = $this->namedDeputyRepository->findOneBy([
+        /** @var Deputy|null $deputy */
+        $deputy = $this->deputyRepository->findOneBy([
             'deputyUid' => $csvRow['Deputy Uid'],
             'email1' => strtolower($csvRow['Email']),
             'firstname' => $csvRow['Dep Forename'],
@@ -93,7 +93,7 @@ class OrgService
             'addressPostcode' => $csvRow['Dep Postcode'],
         ]);
 
-        return $namedDeputy;
+        return $deputy;
     }
 
     /**
@@ -101,14 +101,14 @@ class OrgService
      *
      * @return Deputy
      */
-    public function createNamedDeputy($csvRow)
+    public function createDeputy($csvRow)
     {
-        $namedDeputy = $this->namedDeputyFactory->createFromOrgCsv($csvRow);
-        $this->em->persist($namedDeputy);
+        $deputy = $this->deputyFactory->createFromOrgCsv($csvRow);
+        $this->em->persist($deputy);
         $this->em->flush();
 
-        $this->added['named_deputies'][] = $csvRow['Deputy Uid'];
+        $this->added['deputies'][] = $csvRow['Deputy Uid'];
 
-        return $namedDeputy;
+        return $deputy;
     }
 }

@@ -260,12 +260,12 @@ class Client implements ClientInterface
     private $clientContacts;
 
     /**
-     * Holds the named deputy the client belongs to
+     * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
      * @var Deputy|null
      *
-     * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "client-deputy"})
      *
      * @JMS\Type("App\Entity\Deputy")
      *

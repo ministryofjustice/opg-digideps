@@ -18,7 +18,6 @@ class UserVoter extends Voter
      * Does this voter support the attribute?
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -42,7 +41,6 @@ class UserVoter extends Voter
      * Vote on whether to grant attribute permission on subject.
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -83,7 +81,7 @@ class UserVoter extends Voter
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
-                return $this->paProfNamedAdminDeletePermissions($deletee);
+                return $this->paProfDeputyAdminDeletePermissions($deletee);
             case User::ROLE_ADMIN_MANAGER:
                 return $this->adminManagerDeletePermissions($deletee);
             case User::ROLE_SUPER_ADMIN:
@@ -93,7 +91,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    private function paProfNamedAdminDeletePermissions(User $deletee): bool
+    private function paProfDeputyAdminDeletePermissions(User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
             case User::ROLE_LAY_DEPUTY:
@@ -144,7 +142,7 @@ class UserVoter extends Voter
                 if (
                     $editee->hasAdminRole()
                     || $editee->isLayDeputy()
-                    || $editee->isProfDeputy()
+                    || $editee->isProfDeputyAnyRole()
                 ) {
                     return false;
                 }
@@ -155,7 +153,7 @@ class UserVoter extends Voter
                 if (
                     $editee->hasAdminRole()
                     || $editee->isLayDeputy()
-                    || $editee->isPaDeputy()
+                    || $editee->isPaDeputyAnyRole()
                 ) {
                     return false;
                 }
@@ -165,9 +163,9 @@ class UserVoter extends Voter
                 if (
                     $editee->hasAdminRole()
                     || $editee->isLayDeputy()
-                    || $editee->isPaNamedDeputy()
+                    || $editee->isPaDeputy()
                     || $editee->isPaTopRole()
-                    || $editee->isProfDeputy()
+                    || $editee->isProfDeputyAnyRole()
                 ) {
                     return false;
                 }
@@ -177,9 +175,9 @@ class UserVoter extends Voter
                 if (
                     $editee->hasAdminRole()
                     || $editee->isLayDeputy()
-                    || $editee->isProfNamedDeputy()
+                    || $editee->isProfDeputy()
                     || $editee->isProfTopRole()
-                    || $editee->isPaDeputy()
+                    || $editee->isPaDeputyAnyRole()
                 ) {
                     return false;
                 }

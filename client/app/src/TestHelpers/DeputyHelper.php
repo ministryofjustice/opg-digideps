@@ -7,9 +7,9 @@ namespace App\TestHelpers;
 use App\Entity\Deputy;
 use Faker;
 
-class NamedDeputyHelper
+class DeputyHelper
 {
-    public static function createNamedDeputy()
+    public static function createDeputy()
     {
         $faker = Faker\Factory::create();
 

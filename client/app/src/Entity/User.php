@@ -546,7 +546,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @return string $password
      */
-    public function getPassword(): null|string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -616,11 +616,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param \DateTime $registrationDate
-     *
      * @return User
      */
-    public function setRegistrationDate(\DateTime $registrationDate = null)
+    public function setRegistrationDate(?\DateTime $registrationDate = null)
     {
         $this->registrationDate = $registrationDate;
 
@@ -893,10 +891,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->lastLoggedIn;
     }
 
-    /**
-     * @param \DateTime $lastLoggedIn
-     */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
     }
@@ -910,8 +905,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param mixed $deputyNo
-     *
      * @return $this
      */
     public function setDeputyNo($deputyNo)
@@ -1129,7 +1122,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isOrgNamedDeputy()
+    public function isOrgDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PROF_NAMED]);
     }
@@ -1139,7 +1132,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isPaNamedDeputy()
+    public function isPaDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED]);
     }
@@ -1149,7 +1142,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isProfNamedDeputy()
+    public function isProfDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PROF_NAMED]);
     }
@@ -1159,7 +1152,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isProfNamedOrAdmin()
+    public function isProfDeputyOrAdmin()
     {
         return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN]);
     }
@@ -1204,7 +1197,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function hasRoleOrgNamed()
+    public function hasRoleOrgDeputy()
     {
         return in_array($this->roleName, [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
     }
@@ -1423,16 +1416,16 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getStandardsLink() :string
+    public function getStandardsLink(): string
     {
         $standardsLink = '';
 
         if ($this->isLayDeputy()) {
-            $standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies";
+            $standardsLink = 'https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies';
         } elseif ($this->isDeputyPa()) {
-            $standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-public-authority-deputies/guidance-for-public-authority-deputies";
+            $standardsLink = 'https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-public-authority-deputies/guidance-for-public-authority-deputies';
         } elseif ($this->isDeputyProf()) {
-            $standardsLink = "https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies";
+            $standardsLink = 'https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies';
         }
 
         return $standardsLink;

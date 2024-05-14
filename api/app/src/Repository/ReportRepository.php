@@ -265,7 +265,7 @@ END deputy_type";
             ->addSelect($caseStatement)
             ->leftJoin('b.report', 'r')
             ->leftJoin('r.client', 'c')
-            ->leftJoin('c.deputy', 'nd');
+            ->leftJoin('c.deputy', 'd');
 
         if ($startDate && $endDate) {
             $startDate = new \DateTime($startDate);

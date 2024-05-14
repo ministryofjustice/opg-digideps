@@ -47,7 +47,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertArrayHasKey('errors', $decodedResponseContent);
         $this->assertArrayHasKey('added', $decodedResponseContent);
         $this->assertArrayHasKey('clients', $decodedResponseContent['added']);
-        $this->assertArrayHasKey('named_deputies', $decodedResponseContent['added']);
+        $this->assertArrayHasKey('deputies', $decodedResponseContent['added']);
         $this->assertArrayHasKey('organisations', $decodedResponseContent['added']);
         $this->assertArrayHasKey('reports', $decodedResponseContent['added']);
     }
@@ -60,7 +60,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     public function uploadProvidesFeedbackOnEntitiesProcessed(
         string $deputyshipsJson,
         int $expectedClients,
-        int $expectedNamedDeputies,
+        int $expectedDeputies,
         int $expectedReports,
         int $expectedOrganisations,
         int $expectedErrors
@@ -70,7 +70,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $actualUploadResults = json_decode($this->client->getResponse()->getContent(), true)['data'];
 
         self::assertCount($expectedClients, $actualUploadResults['added']['clients'], 'clients count was unexpected');
-        self::assertCount($expectedNamedDeputies, $actualUploadResults['added']['named_deputies'], 'named_deputies count was unexpected');
+        self::assertCount($expectedDeputies, $actualUploadResults['added']['deputies'], 'deputies count was unexpected');
         self::assertCount($expectedReports, $actualUploadResults['added']['reports'], 'reports count was unexpected');
         self::assertCount($expectedOrganisations, $actualUploadResults['added']['organisations'], 'organisations count was unexpected');
         self::assertCount($expectedErrors, $actualUploadResults['errors']['messages'], 'errors count was unexpected');
@@ -80,11 +80,11 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     {
         return [
             '3 valid Org Deputyships' => [
-                    OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(3, 0), 3, 3, 3, 3, 0,
-                ],
+                OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(3, 0), 3, 3, 3, 3, 0,
+            ],
             '2 valid, 1 invalid Org Deputyships' => [
-                    OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 1), 2, 2, 2, 2, 1,
-                ],
+                OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 1), 2, 2, 2, 2, 1,
+            ],
         ];
     }
 

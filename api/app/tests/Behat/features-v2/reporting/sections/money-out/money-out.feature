@@ -66,7 +66,7 @@ Feature: Money Out
         And I add the Fees charged by a solicitor, accountant or other professional payment
         Then I should see the expected results on money out summary page
 
-    @pa-named-pfa-high-not-started
+    @pa-deputy-pfa-high-not-started
     Scenario: A Public Authority user can see the professional fees not including deputy costs option
         Given a Public Authority Named Deputy has not started a Pfa High Assets report
         When I view and start the money out report section
@@ -74,7 +74,7 @@ Feature: Money Out
         And I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
         Then I should see the expected results on money out summary page
 
-    @prof-named-pfa-high-not-started
+    @prof-deputy-pfa-high-not-started
     Scenario: A Professional user can see the professional fees not including deputy costs option
         Given a Professional Deputy has not started a Pfa High Assets report
         When I view and start the money out report section

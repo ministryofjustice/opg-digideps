@@ -21,8 +21,8 @@ class DeputyFactory
         $data['deputyAddressCountry'] = 'GB';
         $data['deputyEmail2'] = isset($csvRow['Email2']) ? strtolower($csvRow['Email2']) : null;
         $data['deputyEmail3'] = isset($csvRow['Email3']) ? strtolower($csvRow['Email3']) : null;
-        $data['deputyPhoneMain'] = isset($csvRow['Phone Main']) ? $csvRow['Phone Main'] : null;
-        $data['deputyPhoneAlternative'] = isset($csvRow['Phone Alternative']) ? $csvRow['Phone Alternative'] : null;
+        $data['deputyPhoneMain'] = $csvRow['Phone Main'] ?? null;
+        $data['deputyPhoneAlternative'] = $csvRow['Phone Alternative'] ?? null;
 
         return $this->create($data);
     }

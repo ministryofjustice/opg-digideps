@@ -33,7 +33,7 @@ class NamedDeputyAssembler
             $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
         }
 
-        $namedDeputy = (new Deputy())
+        return (new Deputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($deputyFirstName)
@@ -44,7 +44,5 @@ class NamedDeputyAssembler
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
             ->setAddressPostcode($dto->getDeputyPostcode());
-
-        return $namedDeputy;
     }
 }

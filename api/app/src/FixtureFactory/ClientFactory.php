@@ -34,7 +34,7 @@ class ClientFactory
     /**
      * @return Client
      */
-    public function createGenericOrgClient(Deputy $namedDeputy, Organisation $organisation, ?string $courtDate)
+    public function createGenericOrgClient(Deputy $deputy, Organisation $organisation, ?string $courtDate)
     {
         $faker = Factory::create();
 
@@ -50,7 +50,7 @@ class ClientFactory
             ->setCountry('GB')
             ->setCourtDate($courtDate ? new \DateTime($courtDate) : new \DateTime());
 
-        $client->setDeputy($namedDeputy);
+        $client->setDeputy($deputy);
         $client->setOrganisation($organisation);
 
         return $client;

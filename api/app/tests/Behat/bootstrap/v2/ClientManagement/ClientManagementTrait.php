@@ -273,8 +273,8 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $namedDeputyName = $this->interactingWithUserDetails->getNamedDeputyName();
-        $namedDeputyEmail = $this->interactingWithUserDetails->getNamedDeputyEmail();
+        $namedDeputyName = $this->interactingWithUserDetails->getDeputyName();
+        $namedDeputyEmail = $this->interactingWithUserDetails->getDeputyEmail();
 
         $nameXpathSelector = "//dt[normalize-space() = 'Named deputy']/..";
         $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $nameXpathSelector)->getHtml();

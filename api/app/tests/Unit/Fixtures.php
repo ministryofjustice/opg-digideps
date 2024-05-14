@@ -525,7 +525,7 @@ class Fixtures
      *
      * @return EntityDir\Deputy
      */
-    public function findNamedDeputyByNumber($deputyNo)
+    public function findDeputyByNumber($deputyNo)
     {
         return $this->getRepo('Deputy')->findOneBy(['deputyNo' => $deputyNo]);
     }
