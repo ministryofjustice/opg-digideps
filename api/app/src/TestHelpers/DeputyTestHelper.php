@@ -7,7 +7,7 @@ namespace App\TestHelpers;
 use App\Entity\Deputy;
 use Faker\Factory;
 
-class NamedDeputyTestHelper
+class DeputyTestHelper
 {
     /**
      * @return Deputy

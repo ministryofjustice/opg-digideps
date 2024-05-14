@@ -4,7 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Deputy;
 
-class NamedDeputyFactory
+class DeputyFactory
 {
     public function createFromOrgCsv(array $csvRow): Deputy
     {

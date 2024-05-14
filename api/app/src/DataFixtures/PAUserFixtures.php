@@ -8,7 +8,7 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
 
@@ -145,7 +145,7 @@ class PAUserFixtures extends AbstractDataFixture
     public function __construct(
         private OrganisationRepository $orgRepository,
         private OrganisationFactory $orgFactory,
-        private NamedDeputyRepository $namedDeputyRepository
+        private DeputyRepository $namedDeputyRepository
     ) {
     }
 

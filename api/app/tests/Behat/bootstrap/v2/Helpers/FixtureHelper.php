@@ -14,7 +14,7 @@ use App\Entity\Satisfaction;
 use App\Entity\User;
 use App\FixtureFactory\PreRegistrationFactory;
 use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\NamedDeputyTestHelper;
+use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -29,7 +29,7 @@ class FixtureHelper
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
-    private NamedDeputyTestHelper $namedDeputyTestHelper;
+    private DeputyTestHelper $namedDeputyTestHelper;
 
     private string $testRunId = '';
     private string $orgName = 'Test Org';
@@ -48,7 +48,7 @@ class FixtureHelper
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
-        $this->namedDeputyTestHelper = new NamedDeputyTestHelper();
+        $this->namedDeputyTestHelper = new DeputyTestHelper();
     }
 
     public static function buildUserDetails(User $user)

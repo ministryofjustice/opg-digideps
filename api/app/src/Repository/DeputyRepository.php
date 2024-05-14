@@ -8,7 +8,7 @@ use App\Entity\Deputy;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class NamedDeputyRepository extends ServiceEntityRepository
+class DeputyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

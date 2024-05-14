@@ -5,9 +5,9 @@ namespace App\Service;
 use App\Entity as EntityDir;
 use App\Entity\Deputy;
 use App\Entity\User;
-use App\Factory\NamedDeputyFactory;
+use App\Factory\DeputyFactory;
 use App\Repository\ClientRepository;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -31,7 +31,7 @@ class OrgService
     private $clientRepository;
 
     /**
-     * @var NamedDeputyFactory
+     * @var DeputyFactory
      */
     private $namedDeputyFactory;
 
@@ -49,8 +49,8 @@ class OrgService
         EntityManagerInterface $em,
         UserRepository $userRepository,
         ClientRepository $clientRepository,
-        NamedDeputyRepository $namedDeputyRepository,
-        NamedDeputyFactory $namedDeputyFactory
+        DeputyRepository $namedDeputyRepository,
+        DeputyFactory $namedDeputyFactory
     ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
