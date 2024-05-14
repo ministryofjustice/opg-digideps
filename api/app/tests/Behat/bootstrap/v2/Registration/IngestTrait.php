@@ -655,7 +655,7 @@ trait IngestTrait
      */
     public function namedDeputyAssociatedWitClientShouldBeUpdatedToNewNamedDeputy()
     {
-        $namedDeputyAfterUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+        $namedDeputyAfterUpload = $this->clientAfterCsvUpload->getDeputy();
 
         if (is_null($namedDeputyAfterUpload)) {
             throw new BehatException('A named deputy is not associated with client after CSV upload');
@@ -809,7 +809,7 @@ trait IngestTrait
      */
     public function theNamedDeputiesAddressShouldBeUpdatedTo(string $address)
     {
-        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getDeputy();
 
         if (is_null($namedDeputyAfterCsvUpload)) {
             throw new BehatException('A named deputy is not associated with client after CSV upload');
@@ -839,14 +839,14 @@ trait IngestTrait
     {
         $this->em->clear();
 
-        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getDeputy();
 
         if (is_null($namedDeputyAfterCsvUpload)) {
             throw new BehatException('A named deputy is not associated with client after CSV upload');
         }
 
         $this->assertEntitiesAreTheSame(
-            $this->clientBeforeCsvUpload->getNamedDeputy(),
+            $this->clientBeforeCsvUpload->getDeputy(),
             $namedDeputyAfterCsvUpload,
             'Comparing named deputy associated with client before CSV upload against named deputy associated with client after CSV upload'
         );

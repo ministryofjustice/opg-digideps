@@ -112,7 +112,7 @@ class FixtureHelper
     public static function buildOrgUserDetails(User $user)
     {
         $organisation = $user->getOrganisations()->first();
-        $namedDeputy = $organisation?->getClients()[0]->getNamedDeputy();
+        $namedDeputy = $organisation?->getClients()[0]->getDeputy();
 
         if ($namedDeputy) {
             $details = [
