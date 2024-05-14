@@ -5,12 +5,13 @@ namespace App\Entity;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Named Deputy.
+ * Deputy.
  */
-class NamedDeputy implements DeputyInterface
+class Deputy implements DeputyInterface
 {
     /**
      * @var int
+     *
      * @JMS\Type("integer")
      */
     private $id;
@@ -24,6 +25,7 @@ class NamedDeputy implements DeputyInterface
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     private $firstname;

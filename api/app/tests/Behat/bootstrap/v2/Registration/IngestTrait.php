@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Registration;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\Console\Input\ArrayInput;
 
@@ -18,29 +17,28 @@ trait IngestTrait
 {
     private array $clients = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
     private array $namedDeputies = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
     private array $organisations = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
     private array $reports = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
-    
+
     private array $errors = [
-        "count" => 0,
-        "messages" => []
+        'count' => 0,
+        'messages' => [],
     ];
 
     private array $preRegistration = ['expected' => 0, 'found' => 0];
-    
-    
+
     private array $skipped = ['expected' => 0, 'found' => 0];
     private array $expectedMissingDTOProperties = [];
     public array $entityUids = [
@@ -61,7 +59,7 @@ trait IngestTrait
 
     private $clientBeforeCsvUpload;
     private $clientAfterCsvUpload;
-    
+
     /**
      * @Given a csv has been uploaded to the sirius bucket with the file :fileName
      */
@@ -72,7 +70,7 @@ trait IngestTrait
         $this->csvFileName = $fileName;
         $filePath = sprintf('%s/fixtures/sirius-csvs/%s', dirname(__DIR__, 3), $this->csvFileName);
         $fileBody = file_get_contents($filePath);
-        
+
         $this->s3->store($this->csvFileName, $fileBody);
     }
 
@@ -100,32 +98,32 @@ trait IngestTrait
      */
     public function theNewEntitiesShouldBeAddedToTheDatabase(string $type)
     {
-//        $this->iAmOnCorrectUploadPage($type);
+        //        $this->iAmOnCorrectUploadPage($type);
 
         if (in_array(strtolower($type), ['org', 'pa'])) {
             $this->assertIntEqualsInt(
-                $this->clients['added']['expected'], 
+                $this->clients['added']['expected'],
                 $this->clients['added']['found'],
                 'Count of entities based on UIDs - clients'
             );
             $this->assertIntEqualsInt(
-                $this->namedDeputies['added']['expected'], 
+                $this->namedDeputies['added']['expected'],
                 $this->namedDeputies['added']['found'],
                 'Count of entities based on UIDs - named deputies'
             );
             $this->assertIntEqualsInt(
-                $this->organisations['added']['expected'], 
+                $this->organisations['added']['expected'],
                 $this->organisations['added']['found'],
                 'Count of entities based on UIDs - organisations'
             );
             $this->assertIntEqualsInt(
-                $this->reports['added']['expected'], 
+                $this->reports['added']['expected'],
                 $this->reports['added']['found'],
                 'Count of entities based on UIDs - reports'
             );
-        } else {            
+        } else {
             $this->assertIntEqualsInt(
-                $this->preRegistration['expected'], 
+                $this->preRegistration['expected'],
                 $this->preRegistration['found'],
                 'Count of entities based on UIDs - Pre-registration'
             );
@@ -143,45 +141,45 @@ trait IngestTrait
                 [
                     'added' => [
                         'dataType' => sprintf('clients added: %u', $this->clients['added']['expected']),
-                        'message' => 'Asserting Org Clients added on the Command output is incorrect'
+                        'message' => 'Asserting Org Clients added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('clients updated: %u', $this->clients['updated']['expected']),
-                        'message' => 'Asserting Org Clients updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Org Clients updated on the Command output is incorrect',
+                    ],
                 ],
                 [
                     'added' => [
                         'dataType' => sprintf('named_deputies added: %u', $this->namedDeputies['added']['expected']),
-                        'message' => 'Asserting Org Named Deputies added on the Command output is incorrect'
+                        'message' => 'Asserting Org Named Deputies added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('named_deputies updated: %u', $this->namedDeputies['updated']['expected']),
-                        'message' => 'Asserting Org Named Deputies updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Org Named Deputies updated on the Command output is incorrect',
+                    ],
                 ],
                 [
                     'added' => [
                         'dataType' => sprintf('organisations added: %u', $this->organisations['added']['expected']),
-                        'message' => 'Asserting Organisations added on the Command output is incorrect'
+                        'message' => 'Asserting Organisations added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('organisations updated: %u', $this->organisations['updated']['expected']),
-                        'message' => 'Asserting Organisations updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Organisations updated on the Command output is incorrect',
+                    ],
                 ],
                 [
                     'added' => [
                         'dataType' => sprintf('reports added: %u', $this->reports['added']['expected']),
-                        'message' => 'Asserting Reports added on the Command output is incorrect'
+                        'message' => 'Asserting Reports added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('reports updated: %u', $this->reports['updated']['expected']),
-                        'message' => 'Asserting Reports updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Reports updated on the Command output is incorrect',
+                    ],
                 ],
             ];
-            
+
             foreach ($processedStats as $type) {
                 $this->assertStringContainsString(
                     $type['added']['dataType'],
@@ -198,7 +196,7 @@ trait IngestTrait
 
             if ($this->errors['count'] >= 1) {
                 $this->assertStringContainsString(
-                    (string)$this->errors['count'],
+                    (string) $this->errors['count'],
                     $output,
                     'Asserting expected amount of errors during ingestion is incorrect'
                 );
@@ -211,7 +209,7 @@ trait IngestTrait
             }
         } else {
             $this->assertStringContainsString(
-                sprintf('%u added.', $this->preRegistration['expected']), 
+                sprintf('%u added.', $this->preRegistration['expected']),
                 $output,
                 'Asserting users added to pre-registration table via Command is incorrect'
             );
@@ -260,7 +258,7 @@ trait IngestTrait
         $this->em->clear();
 
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
-        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
+        $namedDeputies = $this->em->getRepository(Deputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
 
@@ -298,7 +296,7 @@ trait IngestTrait
     {
         $filePath = sprintf('sirius-csvs/%s', $this->csvFileName);
         $this->extractUidsFromCsv($filePath);
-        
+
         $type = (str_starts_with($this->csvFileName, 'lay-')) ? 'lay' : 'org';
 
         $this->runCSVCommand($type, $this->csvFileName);
@@ -328,7 +326,7 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
-        
+
         $this->expectedNamedDeputyAddress = $address;
 
         $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
@@ -424,7 +422,7 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->errors['count'] = 1;
-        $this->errors['messages'][] = "Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail";
+        $this->errors['messages'][] = 'Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail';
 
         $this->createProfAdminNotStarted();
 
@@ -453,7 +451,6 @@ trait IngestTrait
         }
 
         $this->uploadCsvAndCountCreatedEntities($fileName);
-
     }
 
     /**
@@ -461,8 +458,6 @@ trait IngestTrait
      */
     public function iShouldSeeErrorShowingMissingColumns(string $userType)
     {
-
-
         if ('org' === strtolower($userType)) {
             $requiredColumns = [
                 'Case',
@@ -577,7 +572,6 @@ trait IngestTrait
      */
     public function theClientsReportTypeShouldBeUpdated()
     {
-
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
 
@@ -642,7 +636,7 @@ trait IngestTrait
         }
 
         $this->clientBeforeCsvUpload = $existingClient;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -670,7 +664,7 @@ trait IngestTrait
         $deputyUid = $this->entityUids['named_deputy_uids'][0];
 
         $namedDeputyWithCsvDeputyUid = $this->em
-            ->getRepository(NamedDeputy::class)
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
         if (is_null($namedDeputyWithCsvDeputyUid)) {
@@ -885,7 +879,7 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
         $this->organisations['added']['expected'] = 1;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -958,7 +952,7 @@ trait IngestTrait
         $this->namedDeputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -974,7 +968,7 @@ trait IngestTrait
         $namedDeputyUid = $this->entityUids['named_deputy_uids'][0];
 
         $namedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $namedDeputyUid]);
 
         if (is_null($namedDeputy)) {
@@ -1029,15 +1023,13 @@ trait IngestTrait
         $this->em->clear();
     }
 
-
-
     /**
      * @Given I run the lay CSV command the file that updates the person deputy with an org name and the org deputy with a person name
      */
     public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName()
     {
         $this->namedDeputies['updated']['expected'] = 2;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -1051,7 +1043,7 @@ trait IngestTrait
         $this->organisations['added']['expected'] = 3;
         $this->clients['updated']['expected'] = 1;
         $this->namedDeputies['updated']['expected'] = 1;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -1063,7 +1055,7 @@ trait IngestTrait
     public function theNamedDeputyWithDeputyUIDShouldHaveTheFullName($deputyUid, $fullName)
     {
         $namedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
         if (is_null($namedDeputy)) {
@@ -1089,7 +1081,7 @@ trait IngestTrait
     public function theNamedDeputyWithDeputyUIDShouldHaveTheEmail($deputyUid, $email)
     {
         $namedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
         if (is_null($namedDeputy)) {
@@ -1114,13 +1106,13 @@ trait IngestTrait
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
-    
+
     protected function runCSVCommand(string $type, string $fileName)
     {
-        $command = ($type === 'lay') ? 
-            'digideps:api:process-lay-csv': 
+        $command = ('lay' === $type) ?
+            'digideps:api:process-lay-csv' :
             'digideps:api:process-org-csv';
-        
+
         $input = new ArrayInput([
             'command' => $command,
             'csv-filename' => $fileName,

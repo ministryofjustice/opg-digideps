@@ -4,8 +4,8 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
-use App\Entity\NamedDeputy;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationSucceededEvent;
@@ -264,7 +264,7 @@ class ReportController extends AbstractController
         /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
-        /** @var NamedDeputy */
+        /** @var Deputy */
         $namedDeputy = $client->getNamedDeputy();
 
         $activeReportId = null;

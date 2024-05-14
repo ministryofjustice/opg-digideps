@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Assembler;
 
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\v2\DTO\NamedDeputyDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
@@ -33,7 +33,7 @@ class NamedDeputyAssembler
             $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
         }
 
-        $namedDeputy = (new NamedDeputy())
+        $namedDeputy = (new Deputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($deputyFirstName)

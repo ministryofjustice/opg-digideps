@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Exception\ClientIsArchivedException;
@@ -25,7 +25,7 @@ class OrgDeputyshipUploader
     private array $changeOrg = [];
 
     private ?Organisation $currentOrganisation = null;
-    private ?NamedDeputy $namedDeputy = null;
+    private ?Deputy $namedDeputy = null;
     private ?Client $client = null;
 
     public function __construct(
@@ -97,8 +97,8 @@ class OrgDeputyshipUploader
 
     private function handleNamedDeputy(OrgDeputyshipDto $dto)
     {
-        /** @var NamedDeputy $namedDeputy */
-        $namedDeputy = $this->em->getRepository(NamedDeputy::class)->findOneBy(
+        /** @var Deputy $namedDeputy */
+        $namedDeputy = $this->em->getRepository(Deputy::class)->findOneBy(
             [
                 'deputyUid' => $dto->getDeputyUid(),
             ]
@@ -271,7 +271,7 @@ class OrgDeputyshipUploader
             && $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()->format('Ymd');
     }
 
-    private function clientHasNewOrgAndNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
+    private function clientHasNewOrgAndNamedDeputy(Client $client, Deputy $namedDeputy): bool
     {
         return $this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $namedDeputy);
     }
@@ -292,7 +292,7 @@ class OrgDeputyshipUploader
         return false;
     }
 
-    private function clientHasNewNamedDeputy(Client $client, NamedDeputy $namedDeputy): bool
+    private function clientHasNewNamedDeputy(Client $client, Deputy $namedDeputy): bool
     {
         return
             null === $client->getNamedDeputy()
@@ -323,18 +323,18 @@ class OrgDeputyshipUploader
                 }
             }
 
-            //            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
-            //                $report = new Report(
-            //                    $this->client,
-            //                    $dto->getReportType(),
-            //                    $dto->getReportStartDate(),
-            //                    $dto->getReportEndDate()
-            //                );
-            //
-            //                $this->client->addReport($report);
-            //
-            //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
-            //            }
+        //            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->namedDeputy)) {
+        //                $report = new Report(
+        //                    $this->client,
+        //                    $dto->getReportType(),
+        //                    $dto->getReportStartDate(),
+        //                    $dto->getReportEndDate()
+        //                );
+        //
+        //                $this->client->addReport($report);
+        //
+        //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+        //            }
         } else {
             $report = new Report(
                 $this->client,

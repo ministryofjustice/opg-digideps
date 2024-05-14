@@ -3,7 +3,7 @@
 namespace App\FixtureFactory;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use Faker\Factory;
 
@@ -34,7 +34,7 @@ class ClientFactory
     /**
      * @return Client
      */
-    public function createGenericOrgClient(NamedDeputy $namedDeputy, Organisation $organisation, ?string $courtDate)
+    public function createGenericOrgClient(Deputy $namedDeputy, Organisation $organisation, ?string $courtDate)
     {
         $faker = Factory::create();
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use Faker;
 
 class NamedDeputyHelper
@@ -13,7 +13,7 @@ class NamedDeputyHelper
     {
         $faker = Faker\Factory::create();
 
-        return (new NamedDeputy())
+        return (new Deputy())
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail1($faker->safeEmail())

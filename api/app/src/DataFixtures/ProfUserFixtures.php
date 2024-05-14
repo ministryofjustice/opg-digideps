@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -274,7 +274,7 @@ class ProfUserFixtures extends AbstractDataFixture
 
     private function createNamedDeputy(mixed $namedDeputyData, mixed $clientData)
     {
-        return (new NamedDeputy())
+        return (new Deputy())
             ->setFirstname($namedDeputyData['id'])
             ->setLastname('Named Deputy')
             ->setDeputyUid($clientData['namedDeputyUid'])
