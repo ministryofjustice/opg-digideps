@@ -66,7 +66,7 @@
                     {% if user.jobTitle != '' %}
                         <br />{{ user.jobTitle }}
                     {% endif %}
-                    {% if user.isOrgAdministrator or user.isOrgNamedDeputy %}
+                    {% if user.isOrgAdministrator or user.isOrgDeputy %}
                         <br />
                         <span class="govuk-tag">{{ 'listPage.roleAdmin' | trans }}</span>
                     {% endif %}

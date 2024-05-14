@@ -277,7 +277,7 @@ trait IngestTrait
     }
 
     /**
-     * @When I run the lay CSV command the file has a new named deputy :newNamedDeputy within the same org as the clients existing name deputy
+     * @When I run the lay CSV command the file has a new named deputy :newDeputy within the same org as the clients existing name deputy
      */
     public function iUploadAnOrgCsvThatHasANewMadeDateAndDeputyWithinTheSameOrgAsTheClientsExistingDeputy(string $newDeputy)
     {
