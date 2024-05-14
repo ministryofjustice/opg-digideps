@@ -708,7 +708,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::assertNotEquals(
             $deputyships[0]->getDeputyAddress1(),
-            $updatedClient->getNamedDeputy()->getAddress1()
+            $updatedClient->getDeputy()->getAddress1()
         );
     }
 
