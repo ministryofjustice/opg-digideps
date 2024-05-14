@@ -62,7 +62,7 @@ class Client
      *
      * @var Deputy|null
      */
-    private $namedDeputy;
+    private $deputy;
 
     /**
      * @JMS\Type("array<App\Entity\Report\Report>")
@@ -322,12 +322,12 @@ class Client
      */
     public function getNamedDeputy()
     {
-        return $this->namedDeputy;
+        return $this->deputy;
     }
 
     public function setDeputy(Deputy $namedDeputy): self
     {
-        $this->namedDeputy = $namedDeputy;
+        $this->deputy = $namedDeputy;
 
         return $this;
     }

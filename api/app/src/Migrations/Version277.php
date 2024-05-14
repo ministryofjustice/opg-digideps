@@ -25,6 +25,7 @@ final class Version277 extends AbstractMigration
         $this->addSql('ALTER INDEX named_deputy_uid_idx RENAME TO deputy_uid_idx');
         //        $this->addSql('ALTER TABLE client RENAME COLUMN named_deputy_id to deputy_id');
         //        $this->addSql('CREATE INDEX deputy_id_idx ON deputy (deputy_uid)');
+        $this->addSql('ALTER TABLE client RENAME COLUMN named_deputy_id to deputy_id');
     }
 
     public function down(Schema $schema): void
@@ -35,5 +36,6 @@ final class Version277 extends AbstractMigration
         $this->addSql('ALTER INDEX deputy_uid_idx RENAME TO named_deputy_uid_idx');
         //        $this->addSql('ALTER TABLE client RENAME COLUMN deputy_id to named_deputy_id');
         //        $this->addSql('CREATE INDEX named_deputy_id_idx ON named_deputy (deputy_uid)');
+        $this->addSql('ALTER TABLE client RENAME COLUMN deputy_id to named_deputy_id');
     }
 }
