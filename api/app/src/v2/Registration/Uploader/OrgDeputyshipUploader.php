@@ -25,7 +25,7 @@ class OrgDeputyshipUploader
     private array $changeOrg = [];
 
     private ?Organisation $currentOrganisation = null;
-    private ?Deputy $namedDeputy = null;
+    private ?Deputy $deputy = null;
     private ?Client $client = null;
 
     public function __construct(
@@ -67,7 +67,7 @@ class OrgDeputyshipUploader
                 $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
 
                 $this->skipArchivedClients();
-                $this->handleNamedDeputy($deputyshipDto);
+                $this->handleDeputy($deputyshipDto);
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
@@ -95,27 +95,27 @@ class OrgDeputyshipUploader
         return $uploadResults;
     }
 
-    private function handleNamedDeputy(OrgDeputyshipDto $dto)
+    private function handleDeputy(OrgDeputyshipDto $dto)
     {
-        /** @var Deputy $namedDeputy */
-        $namedDeputy = $this->em->getRepository(Deputy::class)->findOneBy(
+        /** @var Deputy $deputy */
+        $deputy = $this->em->getRepository(Deputy::class)->findOneBy(
             [
                 'deputyUid' => $dto->getDeputyUid(),
             ]
         );
 
-        if (is_null($namedDeputy)) {
-            $namedDeputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
+        if (is_null($deputy)) {
+            $deputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
 
-            $this->em->persist($namedDeputy);
+            $this->em->persist($deputy);
             $this->em->flush();
 
-            $this->added['named_deputies'][] = $namedDeputy->getId();
-        } elseif ($namedDeputy->getDeputyUid() === $dto->getDeputyUid()) {
+            $this->added['named_deputies'][] = $deputy->getId();
+        } elseif ($deputy->getDeputyUid() === $dto->getDeputyUid()) {
             $updated = false;
 
-            if ($namedDeputy->addressHasChanged($dto)) {
-                $namedDeputy
+            if ($deputy->addressHasChanged($dto)) {
+                $deputy
                     ->setAddress1($dto->getDeputyAddress1())
                     ->setAddress2($dto->getDeputyAddress2())
                     ->setAddress3($dto->getDeputyAddress3())
@@ -126,33 +126,33 @@ class OrgDeputyshipUploader
                 $updated = true;
             }
 
-            if ($namedDeputy->nameHasChanged($dto)) {
+            if ($deputy->nameHasChanged($dto)) {
                 if ($dto->deputyIsAnOrganisation()) {
-                    $namedDeputy->setFirstname($dto->getOrganisationName());
-                    $namedDeputy->setLastname('');
+                    $deputy->setFirstname($dto->getOrganisationName());
+                    $deputy->setLastname('');
                 } else {
-                    $namedDeputy->setFirstname($dto->getDeputyFirstname());
-                    $namedDeputy->setLastname($dto->getDeputyLastname());
+                    $deputy->setFirstname($dto->getDeputyFirstname());
+                    $deputy->setLastname($dto->getDeputyLastname());
                 }
 
                 $updated = true;
             }
 
-            if ($namedDeputy->emailHasChanged($dto)) {
-                $namedDeputy->setEmail1($dto->getDeputyEmail());
+            if ($deputy->emailHasChanged($dto)) {
+                $deputy->setEmail1($dto->getDeputyEmail());
 
                 $updated = true;
             }
 
             if ($updated) {
-                $this->em->persist($namedDeputy);
+                $this->em->persist($deputy);
                 $this->em->flush();
 
-                $this->updated['named_deputies'][] = $namedDeputy->getId();
+                $this->updated['named_deputies'][] = $deputy->getId();
             }
         }
 
-        $this->namedDeputy = $namedDeputy;
+        $this->deputy = $deputy;
     }
 
     private function handleOrganisation(OrgDeputyshipDto $dto)
@@ -208,7 +208,7 @@ class OrgDeputyshipUploader
             //                $this->updated['clients'][] = $this->client->getId();
             //            }
             //
-            //            if ($this->clientHasNewNamedDeputy($this->client, $this->deputy)) {
+            //            if ($this->clientHasNewDeputy($this->client, $this->deputy)) {
             //                $this->client->setDeputy($this->deputy);
             //
             //                $this->updated['clients'][] = $this->client->getId();
@@ -217,7 +217,7 @@ class OrgDeputyshipUploader
             // Temp fix for deputies that have switched organisation and taken the client with them
             if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
                 if ($this->clientHasSwitchedOrganisation($this->client)) {
-                    if (!$this->clientHasNewNamedDeputy($this->client, $this->namedDeputy)) {
+                    if (!$this->clientHasNewDeputy($this->client, $this->deputy)) {
                         // Track clients original organisation for audit logging before it is updated
                         $tempArray = ['old_organisation' => $this->client->getOrganisation()->getId()];
 
@@ -238,8 +238,8 @@ class OrgDeputyshipUploader
 
             // Temp fix for clients who have new named deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
-                if ($this->clientHasNewNamedDeputy($this->client, $this->namedDeputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
-                    $this->client->setDeputy($this->namedDeputy);
+                if ($this->clientHasNewDeputy($this->client, $this->deputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
+                    $this->client->setDeputy($this->deputy);
 
                     $this->updated['clients'][] = $this->client->getId();
                 }
@@ -254,7 +254,7 @@ class OrgDeputyshipUploader
     {
         $client = $this->clientAssembler->assembleFromOrgDeputyshipDto($dto);
 
-        $client->setDeputy($this->namedDeputy);
+        $client->setDeputy($this->deputy);
 
         if (!is_null($this->currentOrganisation)) {
             $this->currentOrganisation->addClient($client);
@@ -271,9 +271,9 @@ class OrgDeputyshipUploader
             && $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()->format('Ymd');
     }
 
-    private function clientHasNewOrgAndNamedDeputy(Client $client, Deputy $namedDeputy): bool
+    private function clientHasNewOrgAndDeputy(Client $client, Deputy $deputy): bool
     {
-        return $this->clientHasSwitchedOrganisation($client) && $this->clientHasNewNamedDeputy($client, $namedDeputy);
+        return $this->clientHasSwitchedOrganisation($client) && $this->clientHasNewDeputy($client, $deputy);
     }
 
     /**
@@ -292,11 +292,11 @@ class OrgDeputyshipUploader
         return false;
     }
 
-    private function clientHasNewNamedDeputy(Client $client, Deputy $namedDeputy): bool
+    private function clientHasNewDeputy(Client $client, Deputy $deputy): bool
     {
         return
             null === $client->getDeputy()
-            || $client->getDeputy()->getDeputyUid() !== $namedDeputy->getDeputyUid();
+            || $client->getDeputy()->getDeputyUid() !== $deputy->getDeputyUid();
     }
 
     private function handleReport(OrgDeputyshipDto $dto)
@@ -323,7 +323,7 @@ class OrgDeputyshipUploader
                 }
             }
 
-        //            if ($this->clientHasNewOrgAndNamedDeputy($this->client, $this->deputy)) {
+        //            if ($this->clientHasNewOrgAndDeputy($this->client, $this->deputy)) {
         //                $report = new Report(
         //                    $this->client,
         //                    $dto->getReportType(),
@@ -358,7 +358,7 @@ class OrgDeputyshipUploader
         $this->updated = ['clients' => [], 'named_deputies' => [], 'reports' => [], 'organisations' => []];
         $this->changeOrg = [];
         $this->currentOrganisation = null;
-        $this->namedDeputy = null;
+        $this->deputy = null;
         $this->client = null;
     }
 
