@@ -44,7 +44,7 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         $client = ClientHelpers::createClient();
         $clientOrg = OrganisationHelpers::createActivatedOrganisation();
         $namedDeputy = NamedDeputyHelper::createNamedDeputy();
-        $client->setNamedDeputy($namedDeputy);
+        $client->setDeputy($namedDeputy);
         $client->setOrganisation($clientOrg);
 
         $deputyId = $client->getDeputy()->getId();

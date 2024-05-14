@@ -265,7 +265,7 @@ class ReportController extends AbstractController
         $client = $this->generateClient($user, $clientId);
 
         /** @var Deputy */
-        $namedDeputy = $client->getNamedDeputy();
+        $namedDeputy = $client->getDeputy();
 
         $activeReportId = null;
         if ($user->isDeputyOrg()) {
@@ -296,7 +296,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'namedDeputy' => $namedDeputy,
+            'deputy' => $namedDeputy,
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
@@ -373,7 +373,7 @@ class ReportController extends AbstractController
             throw new ReportNotSubmittableException($message);
         }
 
-        $deputy = $report->getClient()->getNamedDeputy();
+        $deputy = $report->getClient()->getDeputy();
 
         if (is_null($deputy)) {
             $deputy = $this->userApi->getUserWithData();

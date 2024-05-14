@@ -328,7 +328,7 @@ class FixtureHelper
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
-        $client->setNamedDeputy($namedDeputy);
+        $client->setDeputy($namedDeputy);
 
         $organisation->addClient($client);
         $organisation->addUser($deputy);

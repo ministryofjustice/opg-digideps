@@ -273,7 +273,7 @@ class Client implements ClientInterface
      *
      * @ORM\JoinColumn(name="named_deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $namedDeputy;
+    private $deputy;
 
     /**
      * @var \DateTime|null
@@ -826,17 +826,17 @@ class Client implements ClientInterface
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
 
-    public function getNamedDeputy(): ?Deputy
+    public function getDeputy(): ?Deputy
     {
-        return $this->namedDeputy;
+        return $this->deputy;
     }
 
     /**
      * @return Client
      */
-    public function setNamedDeputy(?Deputy $namedDeputy)
+    public function setDeputy(?Deputy $deputy)
     {
-        $this->namedDeputy = $namedDeputy;
+        $this->deputy = $deputy;
 
         return $this;
     }
