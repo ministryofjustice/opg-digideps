@@ -19,7 +19,7 @@ class DeputyRepository extends ServiceEntityRepository
     {
         return $this
             ->getEntityManager()
-            ->createQuery('SELECT COUNT(nd.id) FROM App\Entity\NamedDeputy nd')
+            ->createQuery('SELECT COUNT(d.id) FROM App\Entity\Deputy d')
             ->getSingleScalarResult();
     }
 }
