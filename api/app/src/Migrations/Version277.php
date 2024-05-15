@@ -24,6 +24,7 @@ final class Version277 extends AbstractMigration
         $this->addSql('ALTER SEQUENCE named_deputy_id_seq RENAME TO deputy_id_seq');
         $this->addSql('ALTER INDEX named_deputy_uid_idx RENAME TO deputy_uid_idx');
         $this->addSql('ALTER TABLE client RENAME COLUMN named_deputy_id to deputy_id');
+        $this->addSql('ALTER INDEX named_deputy_pkey RENAME to deputy_pkey;');
     }
 
     public function down(Schema $schema): void
@@ -33,5 +34,6 @@ final class Version277 extends AbstractMigration
         $this->addSql('ALTER SEQUENCE deputy_id_seq RENAME TO named_deputy_id_seq');
         $this->addSql('ALTER INDEX deputy_uid_idx RENAME TO named_deputy_uid_idx');
         $this->addSql('ALTER TABLE client RENAME COLUMN deputy_id to named_deputy_id');
+        $this->addSql('ALTER INDEX deputy_pkey RENAME to named_deputy_pkey;');
     }
 }
