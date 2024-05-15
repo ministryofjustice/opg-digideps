@@ -189,7 +189,7 @@ trait UserTrait
     /**
      * @When I activate the named deputy :email with password :password
      */
-    public function iActivateTheDeputyAndSetThePasswordTo($email, $password)
+    public function iActivateTheNamedDeputyAndSetThePasswordTo($email, $password)
     {
         $this->visit('/logout');
         $this->openActivationOrPasswordResetPage(false, 'activation', $email);
