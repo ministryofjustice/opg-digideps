@@ -273,21 +273,21 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $namedDeputyName = $this->interactingWithUserDetails->getDeputyName();
-        $namedDeputyEmail = $this->interactingWithUserDetails->getDeputyEmail();
+        $deputyName = $this->interactingWithUserDetails->getDeputyName();
+        $deputyEmail = $this->interactingWithUserDetails->getDeputyEmail();
 
         $nameXpathSelector = "//dt[normalize-space() = 'Named deputy']/..";
         $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $nameXpathSelector)->getHtml();
 
-        $namedDeputyNameVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyName);
+        $namedDeputyNameVisible = str_contains($namedDeputyNameDivHtml, $deputyName);
 
         $emailXpathSelector = "//h3[normalize-space() = 'Named deputy contact details']/..";
         $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $emailXpathSelector)->getHtml();
 
-        $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $namedDeputyEmail);
+        $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $deputyEmail);
 
         if (!$namedDeputyNameVisible || !$namedDeputyEmailVisible) {
-            throw new BehatException(sprintf('Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s', $namedDeputyName, $namedDeputyEmail, $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
+            throw new BehatException(sprintf('Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s', $deputyName, $deputyEmail, $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
         }
     }
 
