@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/go-faker/faker/v4"
 	_ "github.com/lib/pq"
@@ -490,6 +491,67 @@ func updateOriginalTables(db *sql.DB, tableDetails []Table) error {
 			}
 		}
 	}
+	return nil
+}
+
+func updateAsyncOriginalTables(db *sql.DB, tableDetails []Table) error {
+	// Create a channel to control the number of concurrent goroutines
+	concurrency := 5
+	semaphore := make(chan struct{}, concurrency)
+
+	// Create a channel to signal when all updates are done
+	done := make(chan struct{})
+
+	// Launch a goroutine to close the done channel when all updates are done
+	go func() {
+		defer close(done)
+		var wg sync.WaitGroup
+		wg.Add(len(tableDetails))
+		for range tableDetails {
+			<-done
+		}
+	}()
+
+	// Iterate over each table
+	for _, table := range tableDetails {
+		// Acquire a token from the semaphore
+		semaphore <- struct{}{}
+
+		// Launch a goroutine to process the table
+		go func(table Table) {
+			defer func() {
+				// Release the token back to the semaphore
+				<-semaphore
+				done <- struct{}{} // Signal that this table's processing is done
+			}()
+
+			totalChunks := (table.RowCount + ChunkSize - 1) / ChunkSize
+
+			for chunk := 0; chunk < totalChunks; chunk++ {
+				offset := chunk * ChunkSize
+
+				// Construct the update query
+				sqlQuery := fmt.Sprintf("UPDATE public.%s pub SET", table.TableName)
+				for _, field := range table.FieldNames {
+					sqlQuery += fmt.Sprintf(" %s = CASE WHEN NULLIF(proc.%s, '') IS NULL THEN proc.%s ELSE anon.%s END,", field.Column, field.Column, field.Column, field.Column)
+				}
+				sqlQuery = sqlQuery[:len(sqlQuery)-1] // Remove the trailing comma
+				sqlQuery += fmt.Sprintf(" FROM processing.%s AS proc, (SELECT * FROM anon.%s ORDER BY ppk_id LIMIT %d OFFSET %d) AS anon WHERE pub.%s = proc.%s AND proc.ppk_id = anon.ppk_id;",
+					table.TableName, table.TableName, ChunkSize, offset, table.PkColumn.Column, table.PkColumn.Column)
+
+				fmt.Print(sqlQuery + "\n\n")
+
+				// Execute the update query
+				_, err := db.Exec(sqlQuery)
+				if err != nil {
+					fmt.Println(err) // Handle error
+				}
+			}
+		}(table)
+	}
+
+	// Wait for all updates to finish
+	<-done
 	return nil
 }
 
