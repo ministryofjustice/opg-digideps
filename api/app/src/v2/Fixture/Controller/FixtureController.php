@@ -73,7 +73,7 @@ class FixtureController extends AbstractController
 
         $client = $this->createClient($fromRequest);
 
-        if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+        if (null === $deputy = $this->userRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
             $deputy = $this->createDeputy($fromRequest);
             $deputyPreRegistration = $this->preRegistrationFactory->create(
                 [
