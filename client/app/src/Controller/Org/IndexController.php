@@ -75,7 +75,7 @@ class IndexController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        if ($user->hasRoleOrgDeputy()
+        if ($user->hasRoleOrgNamed()
             && !$user->getAgreeTermsUse()
             && $user->regBeforeToday($user)) {
             $token = $this->restClient->get('/user/get-reg-token', 'array');

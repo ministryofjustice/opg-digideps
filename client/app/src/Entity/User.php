@@ -1122,7 +1122,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isOrgDeputy()
+    public function isOrgNamedDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PROF_NAMED]);
     }
@@ -1132,7 +1132,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isPaDeputy()
+    public function isPaNamedDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED]);
     }
@@ -1142,7 +1142,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isProfDeputy()
+    public function isProfNamedDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PROF_NAMED]);
     }
@@ -1152,7 +1152,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function isProfDeputyOrAdmin()
+    public function isProfNamedOrAdmin()
     {
         return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN]);
     }
@@ -1197,7 +1197,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @return bool
      */
-    public function hasRoleOrgDeputy()
+    public function hasRoleOrgNamed()
     {
         return in_array($this->roleName, [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
     }
