@@ -1141,9 +1141,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return bool
      */
-    public function isPaDeputyAnyRole()
+    public function isPaDeputy()
     {
-        return $this->isPaDeputy() || $this->isPaAdministrator() || $this->isPaTeamMember() || $this->isPaTopRole();
+        return $this->isPaNamedDeputy() || $this->isPaAdministrator() || $this->isPaTeamMember() || $this->isPaTopRole();
     }
 
     /**
@@ -1151,9 +1151,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return bool
      */
-    public function isProfDeputyAnyRole()
+    public function isProfDeputy()
     {
-        return $this->isProfDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember() || $this->isProfTopRole();
+        return $this->isProfNamedDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember() || $this->isProfTopRole();
     }
 
     /**
@@ -1161,9 +1161,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return bool
      */
-    public function isOrgDeputy()
+    public function isOrgNamedDeputy()
     {
-        return $this->isPaDeputy() || $this->isProfDeputy();
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
     }
 
     /**
@@ -1171,7 +1171,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return bool
      */
-    public function isPaDeputy()
+    public function isPaNamedDeputy()
     {
         return self::ROLE_PA_NAMED === $this->getRoleName();
     }
@@ -1181,7 +1181,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return bool
      */
-    public function isProfDeputy()
+    public function isProfNamedDeputy()
     {
         return self::ROLE_PROF_NAMED === $this->getRoleName();
     }
@@ -1263,9 +1263,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return bool
      */
-    public function isOrgDeputyOrAdmin()
+    public function isOrgNamedOrAdmin()
     {
-        return $this->isOrgDeputy() || $this->isOrgAdministrator();
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
     }
 
     /**
@@ -1285,7 +1285,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isDeputyOrg()
     {
-        return $this->isOrgDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
     }
 
     public function isAdmin(): bool
@@ -1314,9 +1314,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDefaultRoleIfEmpty()
     {
         if (empty($this->getRoleName())) {
-            if ($this->isProfDeputyAnyRole()) {
+            if ($this->isProfDeputy()) {
                 $this->setRoleName(User::ROLE_PROF_TEAM_MEMBER);
-            } elseif ($this->isPaDeputyAnyRole()) {
+            } elseif ($this->isPaDeputy()) {
                 $this->setRoleName(User::ROLE_PA_TEAM_MEMBER);
             }
         }

@@ -64,7 +64,7 @@ class NoteVoter extends Voter
         /** @var User $loggedInUser */
         $loggedInUser = $token->getUser();
 
-        if (!$loggedInUser instanceof User && $loggedInUser->isPaDeputyAnyRole()) {
+        if (!$loggedInUser instanceof User && $loggedInUser->isPaDeputy()) {
             // the loggedUser must be logged in PA user; if not, deny access
             return false;
         }

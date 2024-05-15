@@ -168,7 +168,7 @@ class UserVoter extends Voter
                 if (
                     $subject->hasAdminRole()
                     || $subject->isLayDeputy()
-                    || $subject->isPaDeputy()
+                    || $subject->isPaNamedDeputy()
                     || $subject->isPaTopRole()
                     || $subject->isDeputyProf()
                 ) {
@@ -180,7 +180,7 @@ class UserVoter extends Voter
                 if (
                     $subject->hasAdminRole()
                     || $subject->isLayDeputy()
-                    || $subject->isProfDeputy()
+                    || $subject->isProfNamedDeputy()
                     || $subject->isProfTopRole()
                     || $subject->isDeputyPa()
                 ) {
