@@ -464,11 +464,13 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
-        // Redirect deputy to doc re-upload page if docs do not exist in S3
-        $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
+        if (!$report->isSubmitted()) {
+            // Redirect deputy to doc re-upload page if docs do not exist in S3
+            $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
 
-        if (!empty($documentsNotInS3)) {
-            return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            if (!empty($documentsNotInS3)) {
+                return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            }
         }
 
         return [
