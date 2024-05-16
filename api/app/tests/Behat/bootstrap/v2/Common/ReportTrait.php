@@ -351,12 +351,12 @@ trait ReportTrait
      */
     public function aPublicAuthorityDeputyHasSubmittedAReport()
     {
-        if (empty($this->publicAuthorityDeputySubmittedDetails)) {
-            throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityDeputySubmittedDetails');
+        if (empty($this->publicAuthorityNamedDeputySubmittedDetails)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityNamedDeputySubmittedDetails');
         }
 
-        $this->loginToFrontendAs($this->publicAuthorityDeputySubmittedDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->publicAuthorityDeputySubmittedDetails;
+        $this->loginToFrontendAs($this->publicAuthorityNamedDeputySubmittedDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedDeputySubmittedDetails;
     }
 
     /**
@@ -378,12 +378,12 @@ trait ReportTrait
      */
     public function aProfDeputyHasNotStartedAPfaHighAssetsReport()
     {
-        if (empty($this->profDeputyNotStartedPfaHighDetails)) {
-            throw new \Exception('It looks like fixtures are not loaded - missing $profDeputyNotStartedPfaHighDetails');
+        if (empty($this->profNamedDeputyNotStartedPfaHighDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $profNamedDeputyNotStartedPfaHighDetails');
         }
 
-        $this->loginToFrontendAs($this->profDeputyNotStartedPfaHighDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->profDeputyNotStartedPfaHighDetails;
+        $this->loginToFrontendAs($this->profNamedDeputyNotStartedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profNamedDeputyNotStartedPfaHighDetails;
     }
 
     /**
@@ -391,12 +391,12 @@ trait ReportTrait
      */
     public function aProfDeputyHasSubmittedAPfaHighAssetsReport()
     {
-        if (empty($this->profDeputySubmittedPfaHighDetails)) {
-            throw new \Exception('It looks like fixtures are not loaded - missing $profDeputySubmittedPfaHighDetails');
+        if (empty($this->profNamedDeputySubmittedPfaHighDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $profNamedDeputySubmittedPfaHighDetails');
         }
 
-        $this->loginToFrontendAs($this->profDeputySubmittedPfaHighDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->profDeputySubmittedPfaHighDetails;
+        $this->loginToFrontendAs($this->profNamedDeputySubmittedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profNamedDeputySubmittedPfaHighDetails;
     }
 
     /**
@@ -430,12 +430,12 @@ trait ReportTrait
      */
     public function aPublicAuthorityDeputyHasNotStartedAPfaHighAssetsReport()
     {
-        if (empty($this->publicAuthorityDeputyNotStartedPfaHighDetails)) {
-            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityDeputyNotStartedPfaHighDetails');
+        if (empty($this->publicAuthorityNamedNotStartedPfaHighDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedNotStartedPfaHighDetails');
         }
 
-        $this->loginToFrontendAs($this->publicAuthorityDeputyNotStartedPfaHighDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->publicAuthorityDeputyNotStartedPfaHighDetails;
+        $this->loginToFrontendAs($this->publicAuthorityNamedNotStartedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedNotStartedPfaHighDetails;
     }
 
     /**
@@ -443,12 +443,12 @@ trait ReportTrait
      */
     public function aPublicAuthorityDeputyHasSubmittedAPfaHighAssetsReport()
     {
-        if (empty($this->publicAuthorityDeputySubmittedPfaHighDetails)) {
-            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityDeputySubmittedPfaHighDetails');
+        if (empty($this->publicAuthorityNamedSubmittedPfaHighDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedSubmittedPfaHighDetails');
         }
 
-        $this->loginToFrontendAs($this->publicAuthorityDeputySubmittedPfaHighDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->publicAuthorityDeputySubmittedPfaHighDetails;
+        $this->loginToFrontendAs($this->publicAuthorityNamedSubmittedPfaHighDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->publicAuthorityNamedSubmittedPfaHighDetails;
     }
 
     /**

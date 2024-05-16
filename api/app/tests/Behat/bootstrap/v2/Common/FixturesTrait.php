@@ -200,7 +200,7 @@ trait FixturesTrait
         $users = [];
 
         for ($i = 0; $i < $numberOfUsers; ++$i) {
-            $userDetails = $this->fixtureHelper->createProfDeputyHealthWelfareNotStarted($this->testRunId.'-f'.$i);
+            $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStarted($this->testRunId.'-f'.$i);
             $users[] = new UserDetails($userDetails);
         }
 
