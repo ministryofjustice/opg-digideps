@@ -82,7 +82,7 @@ class UserVoter extends Voter
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PROF_NAMED:
             case User::ROLE_PROF_ADMIN:
-                return $this->paProfDeputyAdminDeletePermissions($deletee);
+                return $this->paProfNamedAdminDeletePermissions($deletee);
             case User::ROLE_ADMIN_MANAGER:
                 return $this->adminManagerDeletePermissions($deletee);
             case User::ROLE_SUPER_ADMIN:
@@ -92,7 +92,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    private function paProfDeputyAdminDeletePermissions(User $deletee): bool
+    private function paProfNamedAdminDeletePermissions(User $deletee): bool
     {
         switch ($deletee->getRoleName()) {
             case User::ROLE_LAY_DEPUTY:
