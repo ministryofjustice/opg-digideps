@@ -163,7 +163,7 @@
                         {{ user.email }}
                     </td>
                     <td class="govuk-table__cell">
-                        {{ (user.isOrgAdministrator or user.isOrgDeputy ? 'yes' : 'no') | trans({}, 'common') }}
+                        {{ (user.isOrgAdministrator or user.isOrgNamedDeputy ? 'yes' : 'no') | trans({}, 'common') }}
                     </td>
                     <td class="govuk-table__cell">
                         {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}

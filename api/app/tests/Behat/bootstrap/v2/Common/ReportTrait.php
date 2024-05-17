@@ -428,7 +428,7 @@ trait ReportTrait
     /**
      * @Given a Public Authority Named Deputy has not started a Pfa High Assets report
      */
-    public function aPublicAuthorityDeputyHasNotStartedAPfaHighAssetsReport()
+    public function aPublicAuthorityNamedDeputyHasNotStartedAPfaHighAssetsReport()
     {
         if (empty($this->publicAuthorityNamedNotStartedPfaHighDetails)) {
             throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedNotStartedPfaHighDetails');
@@ -441,7 +441,7 @@ trait ReportTrait
     /**
      * @Given a Public Authority Named Deputy has submitted a Pfa High Assets report
      */
-    public function aPublicAuthorityDeputyHasSubmittedAPfaHighAssetsReport()
+    public function aPublicAuthorityNamedDeputyHasSubmittedAPfaHighAssetsReport()
     {
         if (empty($this->publicAuthorityNamedSubmittedPfaHighDetails)) {
             throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedSubmittedPfaHighDetails');
