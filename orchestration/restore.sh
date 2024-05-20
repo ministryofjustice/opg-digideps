@@ -25,3 +25,9 @@ echo "Restoring ${LATEST_BACKUP}"
 psql -v ON_ERROR_STOP=1 $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
 echo "Restore complete"
+
+echo "Anonymising data..."
+
+anonymisation/anonymisation
+
+echo "Data Anonymised"

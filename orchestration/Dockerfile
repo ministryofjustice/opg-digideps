@@ -24,6 +24,7 @@ RUN apk update && apk upgrade
 ADD tests/package.json tests/package.json
 ADD tests/package-lock.json tests/package-lock.json
 RUN cd tests && npm ci
+RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
 ADD tests/smoke-tests/AdminSmokeTest.js tests/smoke-tests/AdminSmokeTest.js
 ADD tests/smoke-tests/FrontSmokeTest.js tests/smoke-tests/FrontSmokeTest.js
@@ -38,3 +39,4 @@ ADD backup.sh backup.sh
 ADD restore.sh restore.sh
 ADD common.sh common.sh
 ADD analyse-database.sh analyse-database.sh
+ADD anonymisation anonymisation

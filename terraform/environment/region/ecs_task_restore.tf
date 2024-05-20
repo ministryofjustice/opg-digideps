@@ -4,6 +4,8 @@ module "restore" {
   name   = "restore"
 
   cluster_name          = aws_ecs_cluster.main.name
+  cpu                   = 2048
+  memory                = 4096
   container_definitions = "[${local.restore_container}]"
   tags                  = var.default_tags
   environment           = local.environment

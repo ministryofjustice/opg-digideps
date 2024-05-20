@@ -1,4 +1,0 @@
-Schema,Table,Field,Field_Type,Constraint,FakerType
-public,client,case_number,character varying,,NA
-public,dd_user,address_country,character varying,,NA
-public,pre_registration,client_case_number,character varying,,NA
