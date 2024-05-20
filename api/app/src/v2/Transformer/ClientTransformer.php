@@ -120,32 +120,32 @@ class ClientTransformer
         return $this->namedDeputyTransformer->transform($namedDeputy);
     }
 
-    private function transformDeputies(array $deputyDtos)
+    private function transformDeputies(array $userDtos)
     {
-        if (empty($deputyDtos)) {
+        if (empty($userDtos)) {
             return [];
         }
 
         $transformed = [];
 
-        foreach ($deputyDtos as $deputyDto) {
-            if ($deputyDto instanceof UserDto) {
+        foreach ($userDtos as $userDto) {
+            if ($userDto instanceof UserDto) {
                 $transformed[] = [
-                    'id' => $deputyDto->getId(),
-                    'firstname' => $deputyDto->getFirstName(),
-                    'lastname' => $deputyDto->getLastName(),
-                    'email' => $deputyDto->getEmail(),
-                    'role_name' => $deputyDto->getRoleName(),
-                    'address1' => $deputyDto->getAddress1(),
-                    'address2' => $deputyDto->getAddress2(),
-                    'address3' => $deputyDto->getAddress3(),
-                    'address_postcode' => $deputyDto->getAddressPostcode(),
-                    'address_country' => $deputyDto->getAddressCountry(),
-                    'ndr_enabled' => $deputyDto->getNdrEnabled(),
-                    'active' => $deputyDto->isActive(),
-                    'job_title' => $deputyDto->getJobTitle(),
-                    'phone_main' => $deputyDto->getPhoneMain(),
-                    'last_logged_in' => $deputyDto->getLastLoggedIn() instanceof \DateTime ? $deputyDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
+                    'id' => $userDto->getId(),
+                    'firstname' => $userDto->getFirstName(),
+                    'lastname' => $userDto->getLastName(),
+                    'email' => $userDto->getEmail(),
+                    'role_name' => $userDto->getRoleName(),
+                    'address1' => $userDto->getAddress1(),
+                    'address2' => $userDto->getAddress2(),
+                    'address3' => $userDto->getAddress3(),
+                    'address_postcode' => $userDto->getAddressPostcode(),
+                    'address_country' => $userDto->getAddressCountry(),
+                    'ndr_enabled' => $userDto->getNdrEnabled(),
+                    'active' => $userDto->isActive(),
+                    'job_title' => $userDto->getJobTitle(),
+                    'phone_main' => $userDto->getPhoneMain(),
+                    'last_logged_in' => $userDto->getLastLoggedIn() instanceof \DateTime ? $userDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
                 ];
             }
         }
