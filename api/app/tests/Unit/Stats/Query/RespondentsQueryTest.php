@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Service\Stats\Query;
 
+use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Service\Stats\Query\RespondentsQuery;
 use App\Service\Stats\StatsQueryParameters;
@@ -33,8 +35,8 @@ class RespondentsQueryTest extends WebTestCase
         static::givenSatisfactionScoreForReportOfTypeAndRole(1);
         static::givenSatisfactionScoreForReportOfTypeAndRole(2);
         static::givenSatisfactionScoreForReportOfTypeAndRole(3);
-        static::givenSatisfactionScoreForReportOfTypeAndRole(4);
-        static::givenSatisfactionScoreForReportOfTypeAndRole(5);
+        static::givenSatisfactionScoreForReportOfTypeAndRole(4, '102', 'LAY');
+        static::givenSatisfactionScoreForReportOfTypeAndRole(5, '104', 'LAY');
 
         self::$em->flush();
     }
@@ -48,7 +50,7 @@ class RespondentsQueryTest extends WebTestCase
         ]));
 
         $this->assertCount(1, $result);
-        $this->assertEquals(5, $result[0]['amount']);
+        $this->assertEquals(2, $result[0]['amount']);
     }
 
     private static function givenSatisfactionScoreForReportOfTypeAndRole($score, $reportType = null, $deputyType = null)
@@ -57,7 +59,19 @@ class RespondentsQueryTest extends WebTestCase
             ->setScore($score);
 
         if (isset($reportType)) {
+            $client = new Client();
+
+            $report = new Report(
+                $client,
+                $reportType,
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
+            );
+            self::$em->persist($client);
+            self::$em->persist($report);
+
             $satisfaction->setReportType($reportType);
+            $satisfaction->setReport($report);
         }
 
         if (isset($deputyType)) {
