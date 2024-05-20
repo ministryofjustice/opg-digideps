@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\v2\Transformer;
 
-use App\v2\DTO\DeputyDto;
 use App\v2\DTO\OrganisationDto;
+use App\v2\DTO\UserDto;
 use App\v2\Transformer\DeputyTransformer;
 use App\v2\Transformer\OrganisationTransformer;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +45,7 @@ class OrganisationTransformerTest extends TestCase
             ->setName('foo')
             ->setEmailIdentifier('bar')
             ->setIsActivated(true)
-            ->setUsers([new DeputyDto(), new DeputyDto()])
+            ->setUsers([new UserDto(), new UserDto()])
             ->setTotalUserCount(2);
 
         $deputyTransformer = $this
@@ -57,8 +57,8 @@ class OrganisationTransformerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('transform')
             ->withConsecutive(
-                [$this->isInstanceOf(DeputyDto::class), ['clients']],
-                [$this->isInstanceOf(DeputyDto::class), ['clients']]
+                [$this->isInstanceOf(UserDto::class), ['clients']],
+                [$this->isInstanceOf(UserDto::class), ['clients']]
             )
             ->willReturnOnConsecutiveCalls(
                 ['user_one' => 'transformed'],

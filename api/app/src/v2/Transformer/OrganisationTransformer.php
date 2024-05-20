@@ -3,8 +3,8 @@
 namespace App\v2\Transformer;
 
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\DeputyDto;
 use App\v2\DTO\OrganisationDto;
+use App\v2\DTO\UserDto;
 
 class OrganisationTransformer
 {
@@ -14,11 +14,7 @@ class OrganisationTransformer
     /** @var ClientTransformer */
     private $clientTransformer;
 
-    /**
-     * @param DeputyTransformer $deputyTransformer
-     * @param ClientTransformer $clientTransformer
-     */
-    public function __construct(DeputyTransformer $deputyTransformer = null, ClientTransformer $clientTransformer = null)
+    public function __construct(?DeputyTransformer $deputyTransformer = null, ?ClientTransformer $clientTransformer = null)
     {
         $this->deputyTransformer = $deputyTransformer;
         $this->clientTransformer = $clientTransformer;
@@ -61,7 +57,7 @@ class OrganisationTransformer
         $transformed = [];
 
         foreach ($users as $user) {
-            if ($user instanceof DeputyDto) {
+            if ($user instanceof UserDto) {
                 $transformed[] = $this->deputyTransformer->transform($user, ['clients']);
             }
         }
@@ -69,7 +65,7 @@ class OrganisationTransformer
         return $transformed;
     }
 
-    private function transformClients(array $clients, array $transformedOrg = null): array
+    private function transformClients(array $clients, ?array $transformedOrg = null): array
     {
         if (empty($clients)) {
             return [];

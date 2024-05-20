@@ -3,8 +3,8 @@
 namespace App\v2\Assembler;
 
 use App\Entity\User;
-use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\DTO\UserDto;
 
 class DeputyAssembler
 {
@@ -13,20 +13,17 @@ class DeputyAssembler
     /** @var ClientAssembler */
     private $clientDtoAssembler;
 
-    /**
-     * @param ClientAssembler $clientDtoAssembler
-     */
-    public function __construct(ClientAssembler $clientDtoAssembler = null)
+    public function __construct(?ClientAssembler $clientDtoAssembler = null)
     {
         $this->clientDtoAssembler = $clientDtoAssembler;
     }
 
     /**
-     * @return DeputyDto
+     * @return UserDto
      */
     public function assembleFromArray(array $data)
     {
-        $dto = new DeputyDto();
+        $dto = new UserDto();
 
         $this->setPropertiesFromData($dto, $data);
 
@@ -38,11 +35,11 @@ class DeputyAssembler
     }
 
     /**
-     * @return DeputyDto
+     * @return UserDto
      */
     public function assembleFromEntity(User $deputy)
     {
-        $dto = new DeputyDto();
+        $dto = new UserDto();
 
         $dto->setId($deputy->getId());
         $dto->setFirstName($deputy->getFirstName());

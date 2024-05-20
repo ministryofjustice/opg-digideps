@@ -3,10 +3,10 @@
 namespace App\v2\Transformer;
 
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\DeputyDto;
 use App\v2\DTO\NamedDeputyDto;
 use App\v2\DTO\NdrDto;
 use App\v2\DTO\ReportDto;
+use App\v2\DTO\UserDto;
 
 class ClientTransformer
 {
@@ -129,7 +129,7 @@ class ClientTransformer
         $transformed = [];
 
         foreach ($deputyDtos as $deputyDto) {
-            if ($deputyDto instanceof DeputyDto) {
+            if ($deputyDto instanceof UserDto) {
                 $transformed[] = [
                     'id' => $deputyDto->getId(),
                     'firstname' => $deputyDto->getFirstName(),

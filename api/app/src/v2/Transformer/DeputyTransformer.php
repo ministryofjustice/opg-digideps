@@ -3,17 +3,14 @@
 namespace App\v2\Transformer;
 
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\DeputyDto;
+use App\v2\DTO\UserDto;
 
 class DeputyTransformer
 {
     /** @var ClientTransformer */
     private $clientTransformer;
 
-    /**
-     * @param ClientTransformer $clientTransformer
-     */
-    public function __construct(ClientTransformer $clientTransformer = null)
+    public function __construct(?ClientTransformer $clientTransformer = null)
     {
         $this->clientTransformer = $clientTransformer;
     }
@@ -21,7 +18,7 @@ class DeputyTransformer
     /**
      * @return array
      */
-    public function transform(DeputyDto $dto, array $exclude = [])
+    public function transform(UserDto $dto, array $exclude = [])
     {
         $data = [
             'id' => $dto->getId(),

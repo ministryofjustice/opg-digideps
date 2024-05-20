@@ -5,9 +5,9 @@ namespace App\v2\Assembler;
 use App\Entity\Client;
 use App\v2\Assembler\Report\ReportAssemblerInterface;
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\v2\DTO\OrganisationDto;
+use App\v2\DTO\UserDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
@@ -137,7 +137,7 @@ class ClientAssembler
         $dtos = [];
 
         foreach ($deputies as $deputy) {
-            $dto = new DeputyDto();
+            $dto = new UserDto();
             $this->setPropertiesFromData($dto, $deputy, ['clients']);
             $dtos[] = $dto;
         }
