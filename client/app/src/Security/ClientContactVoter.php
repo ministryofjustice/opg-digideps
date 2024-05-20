@@ -10,9 +10,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ClientContactVoter extends Voter
 {
-    const ADD_CLIENT_CONTACT = 'add-client-contact';
-    const EDIT_CLIENT_CONTACT = 'edit-client-contact';
-    const DELETE_CLIENT_CONTACT = 'delete-client-contact';
+    public const ADD_CLIENT_CONTACT = 'add-client-contact';
+    public const EDIT_CLIENT_CONTACT = 'edit-client-contact';
+    public const DELETE_CLIENT_CONTACT = 'delete-client-contact';
 
     /**
      * @var AccessDecisionManagerInterface
@@ -31,7 +31,6 @@ class ClientContactVoter extends Voter
      * Does this voter support the attribute?
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -56,7 +55,6 @@ class ClientContactVoter extends Voter
      * Vote on whether to grant attribute permission on subject.
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */

@@ -33,6 +33,7 @@ class ClientController extends AbstractController
     /**
      * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      * //TODO define Security group (AD to remove?)
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
@@ -48,12 +49,13 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'namedDeputy' => $client->getDeputy(),
+            'deputy' => $client->getDeputy(),
         ];
     }
 
     /**
      * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @return RedirectResponse
@@ -67,9 +69,8 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
-     * @param $id
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @Template("@App/Admin/Client/Client/discharge.html.twig")
      *
@@ -81,16 +82,14 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'namedDeputy' => $client->getDeputy(),
+            'deputy' => $client->getDeputy(),
         ];
     }
 
     /**
      * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
-     * @param $id
-     * @param AuditEvents $auditEvents
+     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @return RedirectResponse
      *
@@ -105,6 +104,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/{id}/archived", name="admin_client_archived", requirements={"id":"\d+"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @Template("@App/Admin/Client/Client/archived.html.twig")
@@ -118,12 +118,13 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'namedDeputy' => $client->getDeputy(),
+            'deputy' => $client->getDeputy(),
         ];
     }
 
     /**
      * @Route("/{id}/unarchived", name="admin_client_unarchived", requirements={"id":"\d+"})
+     *
      * @Security ("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @Template("@App/Admin/Client/Client/unarchived.html.twig")

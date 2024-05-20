@@ -11,9 +11,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class NoteVoter extends Voter
 {
-    const ADD_NOTE = 'add-note';
-    const EDIT_NOTE = 'edit-note';
-    const DELETE_NOTE = 'delete-note';
+    public const ADD_NOTE = 'add-note';
+    public const EDIT_NOTE = 'edit-note';
+    public const DELETE_NOTE = 'delete-note';
 
     /**
      * @var AccessDecisionManagerInterface
@@ -32,7 +32,6 @@ class NoteVoter extends Voter
      * Does this voter support the attribute?
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -57,7 +56,6 @@ class NoteVoter extends Voter
      * Vote on whether to grant attribute permission on subject.
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */

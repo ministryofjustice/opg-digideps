@@ -9,15 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Named Deputy.
+ * Deputy.
  *
- * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_uid_idx", columns={"deputy_uid"})})
+ * @ORM\Table(name="deputy", indexes={@ORM\Index(name="deputy_uid_idx", columns={"deputy_uid"})})
  *
- * @ORM\Entity(repositoryClass="App\Repository\NamedDeputyRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\DeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
-class NamedDeputy
+class Deputy
 {
     use CreateUpdateTimestamps;
 
@@ -32,21 +32,21 @@ class NamedDeputy
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @ORM\SequenceGenerator(sequenceName="named_deputy_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="deputy_id_seq", allocationSize=1, initialValue=1)
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      */
     private $id;
 
     /**
-     * Holds the named deputy the client belongs to
+     * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
      * @JMS\Exclude
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="namedDeputy")
+     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
      *
-     * @ORM\JoinColumn(name="id", referencedColumnName="named_deputy_id")
+     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
      */
     private $clients;
 
@@ -55,7 +55,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
      */
@@ -66,7 +66,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -79,14 +79,14 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      */
     private $lastname;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @JMS\Type("string")
      *
@@ -97,7 +97,7 @@ class NamedDeputy
     /**
      * @var string
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @JMS\Type("string")
      *
@@ -108,7 +108,7 @@ class NamedDeputy
     /**
      * @var string
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @JMS\Type("string")
      *
@@ -121,7 +121,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({ "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
@@ -132,7 +132,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({ "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
@@ -143,7 +143,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({ "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
@@ -154,7 +154,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({ "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
@@ -165,7 +165,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({ "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
@@ -176,7 +176,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({ "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
@@ -187,7 +187,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"user", "team", "report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
@@ -198,7 +198,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
@@ -209,7 +209,7 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "deputy"})
      *
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */

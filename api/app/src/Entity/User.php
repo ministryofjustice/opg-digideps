@@ -732,9 +732,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoleName()
     {
         return $this->roleName;
@@ -763,7 +760,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return;
     }
 
-    public function getPassword(): null|string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -884,10 +881,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastLoggedIn;
     }
 
-    /**
-     * @param \DateTime $lastLoggedIn
-     */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
