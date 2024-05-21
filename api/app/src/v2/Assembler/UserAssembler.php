@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\v2\DTO\UserDto;
 
-class DeputyAssembler
+class UserAssembler
 {
     use DtoPropertySetterTrait;
 
@@ -28,7 +28,7 @@ class DeputyAssembler
         $this->setPropertiesFromData($dto, $data);
 
         if ($this->clientDtoAssembler && isset($data['clients']) && is_array($data['clients'])) {
-            $dto->setClients($this->assembleDeputyClients($data['clients']));
+            $dto->setClients($this->assembleUserClients($data['clients']));
         }
 
         return $dto;
@@ -37,20 +37,20 @@ class DeputyAssembler
     /**
      * @return UserDto
      */
-    public function assembleFromEntity(User $deputy)
+    public function assembleFromEntity(User $user)
     {
         $dto = new UserDto();
 
-        $dto->setId($deputy->getId());
-        $dto->setFirstName($deputy->getFirstName());
-        $dto->setLastName($deputy->getLastName());
-        $dto->setEmail($deputy->getEmail());
-        $dto->setRoleName($deputy->getRoleName());
-        $dto->setAddressPostcode($deputy->getAddressPostcode());
-        $dto->setNdrEnabled($deputy->getNdrEnabled());
-        $dto->setActive((bool) $deputy->getActive());
-        $dto->setJobTitle($deputy->getJobTitle());
-        $dto->setPhoneMain($deputy->getPhoneMain());
+        $dto->setId($user->getId());
+        $dto->setFirstName($user->getFirstName());
+        $dto->setLastName($user->getLastName());
+        $dto->setEmail($user->getEmail());
+        $dto->setRoleName($user->getRoleName());
+        $dto->setAddressPostcode($user->getAddressPostcode());
+        $dto->setNdrEnabled($user->getNdrEnabled());
+        $dto->setActive((bool) $user->getActive());
+        $dto->setJobTitle($user->getJobTitle());
+        $dto->setPhoneMain($user->getPhoneMain());
 
         return $dto;
     }
@@ -58,7 +58,7 @@ class DeputyAssembler
     /**
      * @return array
      */
-    private function assembleDeputyClients(array $clients)
+    private function assembleUserClients(array $clients)
     {
         $dtos = [];
 
