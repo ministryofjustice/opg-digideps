@@ -246,9 +246,11 @@
                         <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{message.caseNumber}}</strong></li>
                         <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.clientLastName' | trans({}, 'admin-fixtures') }}: <strong>{{message.clientLastName}}</strong></li>
                         <br/>
+                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{message.deputyFirstName}}</strong></li>
                         <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{message.deputyLastName}}</strong></li>
                         <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ message.deputyPostCode }}</strong></li>
                         {% if message.coDeputyLastName is defined %}
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyFirstName }}</strong></li>
                             <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyLastName }}</strong></li>
                             <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyPostCode }}</strong></li>
                         {% endif %}
