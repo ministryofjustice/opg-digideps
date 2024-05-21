@@ -43,7 +43,7 @@ jobs:
       - name: show build identifier and tag
         id: show
         env:
-          BUILD: ${{ steps.variables.outputs.build_identifier }}
+          BUILD: "main"
           TAG: ${{ steps.semver_tag.outputs.created_tag }}
         run: |
           echo "Build Identifier: ${BUILD}"
@@ -131,33 +131,18 @@ jobs:
       path_to_live: true
     secrets: inherit
 
-  terraform_apply_development:
-    name: development environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_account_development
-      - docker_build_scan_push
-      - workflow_variables
-      - synchronisation_unit_tests
-      - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
-    with:
-      workspace: development
-      terraform_path: environment
-      apply: true
-      account_name: development
-      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
-    secrets: inherit
-
   terraform_apply_account_preproduction:
     name: preproduction account apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
-      - terraform_apply_development
+      - terraform_apply_account_development
+      - docker_build_scan_push
+      - synchronisation_unit_tests
+      - client_unit_tests
+      - api_unit_tests_1
+      - api_unit_tests_2
+      - api_unit_tests_3
     with:
       workspace: preproduction
       terraform_path: account
@@ -438,7 +423,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: true
+      success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit
@@ -451,7 +436,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: false
+      success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit

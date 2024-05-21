@@ -102,6 +102,14 @@ class UserController extends RestController
             'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
         ]);
 
+        if (array_key_exists('deputy_no', $data) && !empty($data['deputy_no'])) {
+            $user->setDeputyNo($data['deputy_no']);
+        }
+
+        if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
+            $user->setDeputyUid($data['deputy_uid']);
+        }
+
         if (array_key_exists('last_logged_in', $data)) {
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
         }

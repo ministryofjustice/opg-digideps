@@ -17,13 +17,13 @@ on:
       apply:
         description: "Whether to apply terraform"
         required: false
-        type: string
-        default: "false"
+        type: boolean
+        default: false
       path_to_live:
         description: "Called from path to live"
         required: false
-        type: string
-        default: "false"
+        type: boolean
+        default: false
       account_name:
         required: true
         type: string
@@ -99,7 +99,7 @@ jobs:
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - id: terraform_workspace_manager
-        if: inputs.apply == 'true' && inputs.terraform_path == 'environment' && inputs.path_to_live == 'false'
+        if: inputs.apply && inputs.terraform_path == 'environment' && !inputs.path_to_live
         name: register workspace
         uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v3.0.3
         with:
@@ -110,7 +110,7 @@ jobs:
           oidc_role: arn:aws:iam::631181914621:role/oidc-digideps-development
 
       - name: terraform apply ${{ inputs.terraform_path }}
-        if: inputs.apply == 'true'
+        if: inputs.apply
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}

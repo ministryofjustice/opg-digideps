@@ -357,7 +357,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: True
+      success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
     secrets: inherit
@@ -370,7 +370,7 @@ jobs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: false
+      success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
     secrets: inherit

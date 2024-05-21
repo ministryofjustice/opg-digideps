@@ -86,10 +86,15 @@ class CoDeputyController extends AbstractController
 
                 // validate against pre-registration data
                 try {
-                    $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
+                    $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
                     $user->setCoDeputyClientConfirmed(true);
+
+                    $user->setDeputyNo($coDeputyVerificationData['coDeputyUid']);
+                    $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
+
                     $user->setActive(true);
                     $user->setRegistrationDate(new \DateTime());
+
                     if ($mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
                     }
@@ -119,6 +124,14 @@ class CoDeputyController extends AbstractController
 
                         case 425:
                             $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                            break;
+
+                        case 462:
+                            $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
+                            break;
+
+                        case 463:
+                            $form->addError(new FormError($translator->trans('formErrors.deputyAlreadyLinkedToCaseNumber', [], 'register')));
                             break;
 
                         default:

@@ -76,3 +76,16 @@ jobs:
           pip install -r requirements.txt
           python cleanup_task_definitions.py
         working-directory: scripts/pipeline/cleanup_task_definitions
+
+  slack_notify_failure:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - terraform_environment_cleanup
+    with:
+      success: no
+      branch: main
+      account: 454262938596
+      scheduled_task: "Environment Cleanup"
+    secrets: inherit
