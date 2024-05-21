@@ -298,6 +298,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $deputyNo;
 
     /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
+     */
+    private $deputyUid;
+
+    /**
      * @var bool
      *
      * @JMS\Type("boolean")
@@ -912,6 +923,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): int
+    {
+        return $this->deputyUid;
+    }
+
+    public function setDeputyUid(int $deputyUid): User
+    {
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }
