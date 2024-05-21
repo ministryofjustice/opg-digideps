@@ -4,8 +4,8 @@ namespace App\Tests\Unit\v2\Transformer;
 
 use App\v2\DTO\OrganisationDto;
 use App\v2\DTO\UserDto;
-use App\v2\Transformer\DeputyTransformer;
 use App\v2\Transformer\OrganisationTransformer;
+use App\v2\Transformer\UserTransformer;
 use PHPUnit\Framework\TestCase;
 
 class OrganisationTransformerTest extends TestCase
@@ -21,12 +21,12 @@ class OrganisationTransformerTest extends TestCase
             ->setEmailIdentifier('bar')
             ->setIsActivated(true);
 
-        $deputyTransformer = $this
-            ->getMockBuilder(DeputyTransformer::class)
+        $userTransformer = $this
+            ->getMockBuilder(UserTransformer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transformed = (new OrganisationTransformer($deputyTransformer))->transform($dto, ['users', 'total_user_count', 'total_client_count']);
+        $transformed = (new OrganisationTransformer($userTransformer))->transform($dto, ['users', 'total_user_count', 'total_client_count']);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('foo', $transformed['name']);
@@ -48,12 +48,12 @@ class OrganisationTransformerTest extends TestCase
             ->setUsers([new UserDto(), new UserDto()])
             ->setTotalUserCount(2);
 
-        $deputyTransformer = $this
-            ->getMockBuilder(DeputyTransformer::class)
+        $userTransformer = $this
+            ->getMockBuilder(UserTransformer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $deputyTransformer
+        $userTransformer
             ->expects($this->exactly(2))
             ->method('transform')
             ->withConsecutive(
@@ -65,7 +65,7 @@ class OrganisationTransformerTest extends TestCase
                 ['user_two' => 'transformed']
             );
 
-        $transformed = (new OrganisationTransformer($deputyTransformer))->transform($dto, ['total_client_count', 'clients']);
+        $transformed = (new OrganisationTransformer($userTransformer))->transform($dto, ['total_client_count', 'clients']);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('foo', $transformed['name']);

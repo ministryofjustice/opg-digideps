@@ -4,7 +4,7 @@ namespace App\v2\Controller;
 
 use App\Repository\UserRepository;
 use App\v2\Assembler\UserAssembler;
-use App\v2\Transformer\DeputyTransformer;
+use App\v2\Transformer\UserTransformer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,10 +22,10 @@ class DeputyController
     /** @var UserAssembler */
     private $assembler;
 
-    /** @var DeputyTransformer */
+    /** @var UserTransformer */
     private $transformer;
 
-    public function __construct(UserRepository $repository, UserAssembler $assembler, DeputyTransformer $transformer)
+    public function __construct(UserRepository $repository, UserAssembler $assembler, UserTransformer $transformer)
     {
         $this->repository = $repository;
         $this->assembler = $assembler;

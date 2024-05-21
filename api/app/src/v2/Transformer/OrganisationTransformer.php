@@ -8,15 +8,15 @@ use App\v2\DTO\UserDto;
 
 class OrganisationTransformer
 {
-    /** @var DeputyTransformer */
-    private $deputyTransformer;
+    /** @var UserTransformer */
+    private $userTransformer;
 
     /** @var ClientTransformer */
     private $clientTransformer;
 
-    public function __construct(?DeputyTransformer $deputyTransformer = null, ?ClientTransformer $clientTransformer = null)
+    public function __construct(?UserTransformer $userTransformer = null, ?ClientTransformer $clientTransformer = null)
     {
-        $this->deputyTransformer = $deputyTransformer;
+        $this->userTransformer = $userTransformer;
         $this->clientTransformer = $clientTransformer;
     }
 
@@ -58,7 +58,7 @@ class OrganisationTransformer
 
         foreach ($users as $user) {
             if ($user instanceof UserDto) {
-                $transformed[] = $this->deputyTransformer->transform($user, ['clients']);
+                $transformed[] = $this->userTransformer->transform($user, ['clients']);
             }
         }
 

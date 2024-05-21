@@ -5,7 +5,7 @@ namespace App\v2\Transformer;
 use App\v2\DTO\ClientDto;
 use App\v2\DTO\UserDto;
 
-class DeputyTransformer
+class UserTransformer
 {
     /** @var ClientTransformer */
     private $clientTransformer;
