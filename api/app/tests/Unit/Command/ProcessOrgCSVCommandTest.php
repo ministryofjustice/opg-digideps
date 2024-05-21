@@ -2,35 +2,33 @@
 
 namespace App\Tests\Unit\Entity\Command;
 
+use App\Command\ProcessOrgCSVCommand;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
+use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Aws\S3\S3ClientInterface;
-use Aws\Result;
 use Mockery as Mock;
-use Predis\ClientInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use App\Command\ProcessOrgCSVCommand;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProcessOrgCSVCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
-    
+
     public function setUp(): void
     {
         $kernel = static::createKernel();
         $app = new Application($kernel);
 
-        # TODO Refactor CSV Process so we can mock this properly
-        copy(dirname(dirname(__DIR__)) .'/csv/paProDeputyReport.csv', '/tmp/paProDeputyReport.csv');
+        // TODO Refactor CSV Process so we can mock this properly
+        copy(dirname(dirname(__DIR__)).'/csv/paProDeputyReport.csv', '/tmp/paProDeputyReport.csv');
 
         $this->s3 = self::prophesize(S3Client::class);
         $this->params = self::prophesize(ParameterBagInterface::class);
@@ -39,18 +37,18 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
             ->willReturn('bucket');
 
         $this->csvFilename = 'paProDeputyReport.csv';
-        
+
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
-        
+
         $this->csvArray = Mock::mock(CsvToArray::class);
 
         $setUp = new ProcessOrgCSVCommand(
             $this->s3->reveal(),
             $this->params->reveal(),
             $this->logger->reveal(),
-            $this->csvProcessing->reveal(), 
+            $this->csvProcessing->reveal(),
             $this->preReg->reveal()
         );
 
@@ -71,35 +69,35 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
             ->willReturn([
                 'errors' => [
                     'count' => 1,
-                    'messages' => ['ERROR']
+                    'messages' => ['ERROR'],
                 ],
                 'added' => [
-                    'named_deputies' => [1],
+                    'deputies' => [1],
                     'organisations' => [1],
                     'clients' => [1],
-                    'reports' => [1]
+                    'reports' => [1],
                 ],
                 'updated' => [
-                    'named_deputies' => [0],
+                    'deputies' => [0],
                     'organisations' => [0],
                     'clients' => [0],
-                    'reports' => [0]
+                    'reports' => [0],
                 ],
                 'changeOrg' => [
-                    'named_deputies' => [0],
+                    'deputies' => [0],
                     'organisations' => [0],
                     'clients' => [0],
-                    'reports' => [0]
+                    'reports' => [0],
                 ],
-                'skipped' => 1
+                'skipped' => 1,
             ]);
-        
+
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'org_csv_processing - success - Finished processing OrgCSV, Output: ', 
+            'org_csv_processing - success - Finished processing OrgCSV, Output: ',
             $output
         );
     }
@@ -114,19 +112,17 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-    'org_csv_processing - failure - Error retrieving file paProDeputyReport.csv from bucket',
+            'org_csv_processing - failure - Error retrieving file paProDeputyReport.csv from bucket',
             $output
         );
     }
-    
-    
 
     public function testExecuteWithMissingCSVCol(): void
     {
-        # Required so we can trigger missing column exception with bad file
-        copy(dirname(dirname(__DIR__)) .'/csv/paProDeputyReport-bad.csv', '/tmp/paProDeputyReport.csv');
+        // Required so we can trigger missing column exception with bad file
+        copy(dirname(dirname(__DIR__)).'/csv/paProDeputyReport-bad.csv', '/tmp/paProDeputyReport.csv');
         $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
-        
+
         $this->csvArray->shouldReceive(
             'setExpectedColumns->setUnexpectedColumns->getData'
         )->andThrow($mockError);

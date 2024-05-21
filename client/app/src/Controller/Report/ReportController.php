@@ -4,8 +4,8 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
-use App\Entity\NamedDeputy;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationSucceededEvent;
@@ -52,7 +52,7 @@ class ReportController extends AbstractController
         'balance-state',
         'client',
         'client-benefits-check',
-        'client-named-deputy',
+        'client-deputy',
         'contact',
         'debt',
         'debts',
@@ -264,8 +264,8 @@ class ReportController extends AbstractController
         /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
-        /** @var NamedDeputy */
-        $namedDeputy = $client->getNamedDeputy();
+        /** @var Deputy */
+        $deputy = $client->getDeputy();
 
         $activeReportId = null;
         if ($user->isDeputyOrg()) {
@@ -296,7 +296,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'namedDeputy' => $namedDeputy,
+            'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
@@ -348,8 +348,8 @@ class ReportController extends AbstractController
         if ($user->isLayDeputy()) {
             $jms[] = 'client-users';
         } elseif ($user->isDeputyOrg()) {
-            $jms[] = 'client-named-deputy';
-            $jms[] = 'named-deputy';
+            $jms[] = 'client-deputy';
+            $jms[] = 'deputy';
         }
 
         return $jms;
@@ -373,7 +373,7 @@ class ReportController extends AbstractController
             throw new ReportNotSubmittableException($message);
         }
 
-        $deputy = $report->getClient()->getNamedDeputy();
+        $deputy = $report->getClient()->getDeputy();
 
         if (is_null($deputy)) {
             $deputy = $this->userApi->getUserWithData();
@@ -464,11 +464,13 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
-        // Redirect deputy to doc re-upload page if docs do not exist in S3
-        $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
+        if (!$report->isSubmitted()) {
+            // Redirect deputy to doc re-upload page if docs do not exist in S3
+            $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
 
-        if (!empty($documentsNotInS3)) {
-            return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            if (!empty($documentsNotInS3)) {
+                return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            }
         }
 
         return [

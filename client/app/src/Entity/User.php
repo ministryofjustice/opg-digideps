@@ -553,7 +553,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @return string $password
      */
-    public function getPassword(): string|null
+    public function getPassword(): ?string
     {
         return $this->password;
     }

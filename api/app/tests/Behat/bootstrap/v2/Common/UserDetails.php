@@ -25,12 +25,12 @@ class UserDetails
     private ?string $currentReportNdrOrReport = null;
     private ?\DateTime $currentReportStartDate = null;
     private ?string $currentReportType = null;
-    private ?string $namedDeputyEmail = null;
-    private ?string $namedDeputyEmailAlt = null;
-    private ?array $namedDeputyFullAddressArray = null;
-    private ?string $namedDeputyName = null;
-    private ?string $namedDeputyPhone = null;
-    private ?string $namedDeputyPhoneAlt = null;
+    private ?string $deputyEmail = null;
+    private ?string $deputyEmailAlt = null;
+    private ?array $deputyFullAddressArray = null;
+    private ?string $deputyName = null;
+    private ?string $deputyPhone = null;
+    private ?string $deputyPhoneAlt = null;
     private ?string $organisationEmailIdentifier = null;
     private ?string $organisationName = null;
     private ?int $previousReportBankAccountId = null;
@@ -83,12 +83,12 @@ class UserDetails
         $this->setUserFullAddressArray($userDetails['userFullAddressArray'] ?? null);
         $this->setUserPhone($userDetails['userPhone'] ?? null);
 
-        $this->setNamedDeputyName($userDetails['namedDeputyName'] ?? null);
-        $this->setNamedDeputyFullAddressArray($userDetails['namedDeputyFullAddressArray'] ?? null);
-        $this->setNamedDeputyPhone($userDetails['namedDeputyPhone'] ?? null);
-        $this->setNamedDeputyPhoneAlt($userDetails['namedDeputyPhoneAlt'] ?? null);
-        $this->setNamedDeputyEmail($userDetails['namedDeputyEmail'] ?? null);
-        $this->setNamedDeputyEmailAlt($userDetails['namedDeputyEmailAlt'] ?? null);
+        $this->setDeputyName($userDetails['deputyName'] ?? null);
+        $this->setDeputyFullAddressArray($userDetails['deputyFullAddressArray'] ?? null);
+        $this->setDeputyPhone($userDetails['deputyPhone'] ?? null);
+        $this->setDeputyPhoneAlt($userDetails['deputyPhoneAlt'] ?? null);
+        $this->setDeputyEmail($userDetails['deputyEmail'] ?? null);
+        $this->setDeputyEmailAlt($userDetails['deputyEmailAlt'] ?? null);
         $this->setOrganisationName($userDetails['organisationName'] ?? null);
         $this->setOrganisationEmailIdentifier($userDetails['organisationEmailIdentifier'] ?? null);
         $this->setCourtDate($userDetails['courtDate'] ?? null);
@@ -413,74 +413,74 @@ class UserDetails
         return $this;
     }
 
-    public function getNamedDeputyName(): ?string
+    public function getDeputyName(): ?string
     {
-        return $this->namedDeputyName;
+        return $this->deputyName;
     }
 
-    public function setNamedDeputyName(?string $namedDeputyName): UserDetails
+    public function setDeputyName(?string $deputyName): UserDetails
     {
-        $this->namedDeputyName = $namedDeputyName;
+        $this->deputyName = $deputyName;
 
         return $this;
     }
 
-    public function getNamedDeputyFullAddressArray(): ?array
+    public function getDeputyFullAddressArray(): ?array
     {
-        return $this->namedDeputyFullAddressArray;
+        return $this->deputyFullAddressArray;
     }
 
-    public function setNamedDeputyFullAddressArray(?array $namedDeputyFullAddressArray): UserDetails
+    public function setDeputyFullAddressArray(?array $deputyFullAddressArray): UserDetails
     {
-        $this->namedDeputyFullAddressArray = $namedDeputyFullAddressArray;
+        $this->deputyFullAddressArray = $deputyFullAddressArray;
 
         return $this;
     }
 
-    public function getNamedDeputyPhone(): ?string
+    public function getDeputyPhone(): ?string
     {
-        return $this->namedDeputyPhone;
+        return $this->deputyPhone;
     }
 
-    public function setNamedDeputyPhone(?string $namedDeputyPhone): UserDetails
+    public function setDeputyPhone(?string $deputyPhone): UserDetails
     {
-        $this->namedDeputyPhone = $namedDeputyPhone;
+        $this->deputyPhone = $deputyPhone;
 
         return $this;
     }
 
-    public function getNamedDeputyPhoneAlt(): ?string
+    public function getDeputyPhoneAlt(): ?string
     {
-        return $this->namedDeputyPhoneAlt;
+        return $this->deputyPhoneAlt;
     }
 
-    public function setNamedDeputyPhoneAlt(?string $namedDeputyPhoneAlt): UserDetails
+    public function setDeputyPhoneAlt(?string $deputyPhoneAlt): UserDetails
     {
-        $this->namedDeputyPhoneAlt = $namedDeputyPhoneAlt;
+        $this->deputyPhoneAlt = $deputyPhoneAlt;
 
         return $this;
     }
 
-    public function getNamedDeputyEmail(): ?string
+    public function getDeputyEmail(): ?string
     {
-        return $this->namedDeputyEmail;
+        return $this->deputyEmail;
     }
 
-    public function setNamedDeputyEmail(?string $namedDeputyEmail): UserDetails
+    public function setDeputyEmail(?string $deputyEmail): UserDetails
     {
-        $this->namedDeputyEmail = $namedDeputyEmail;
+        $this->deputyEmail = $deputyEmail;
 
         return $this;
     }
 
-    public function getNamedDeputyEmailAlt(): ?string
+    public function getDeputyEmailAlt(): ?string
     {
-        return $this->namedDeputyEmailAlt;
+        return $this->deputyEmailAlt;
     }
 
-    public function setNamedDeputyEmailAlt(?string $namedDeputyEmailAlt): UserDetails
+    public function setDeputyEmailAlt(?string $deputyEmailAlt): UserDetails
     {
-        $this->namedDeputyEmailAlt = $namedDeputyEmailAlt;
+        $this->deputyEmailAlt = $deputyEmailAlt;
 
         return $this;
     }

@@ -2,11 +2,11 @@
 
 namespace App\Factory;
 
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 
-class NamedDeputyFactory
+class DeputyFactory
 {
-    public function createFromOrgCsv(array $csvRow): NamedDeputy
+    public function createFromOrgCsv(array $csvRow): Deputy
     {
         $data['deputyUid'] = $csvRow['Deputy Uid'];
         $data['deputyFirstname'] = $csvRow['Dep Forename'];
@@ -21,15 +21,15 @@ class NamedDeputyFactory
         $data['deputyAddressCountry'] = 'GB';
         $data['deputyEmail2'] = isset($csvRow['Email2']) ? strtolower($csvRow['Email2']) : null;
         $data['deputyEmail3'] = isset($csvRow['Email3']) ? strtolower($csvRow['Email3']) : null;
-        $data['deputyPhoneMain'] = isset($csvRow['Phone Main']) ? $csvRow['Phone Main'] : null;
-        $data['deputyPhoneAlternative'] = isset($csvRow['Phone Alternative']) ? $csvRow['Phone Alternative'] : null;
+        $data['deputyPhoneMain'] = $csvRow['Phone Main'] ?? null;
+        $data['deputyPhoneAlternative'] = $csvRow['Phone Alternative'] ?? null;
 
         return $this->create($data);
     }
 
-    private function create(array $data): NamedDeputy
+    private function create(array $data): Deputy
     {
-        return (new NamedDeputy())
+        return (new Deputy())
             ->setDeputyUid($data['deputyUid'])
             ->setFirstname($data['deputyFirstname'])
             ->setLastname($data['deputyLastname'])

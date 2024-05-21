@@ -3,7 +3,7 @@
 namespace App\v2\Fixture\Controller;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
@@ -13,7 +13,7 @@ use App\FixtureFactory\ClientFactory;
 use App\FixtureFactory\PreRegistrationFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
@@ -44,12 +44,11 @@ class FixtureController extends AbstractController
         private ReportFactory $reportFactory,
         private ReportRepository $reportRepository,
         private ReportSection $reportSection,
-        private UserRepository $deputyRepository,
         private OrganisationRepository $organisationRepository,
         private UserRepository $userRepository,
         private NdrRepository $ndrRepository,
         private PreRegistrationFactory $preRegistrationFactory,
-        private NamedDeputyRepository $namedDeputyRepository,
+        private DeputyRepository $deputyRepository,
         private string $symfonyEnvironment
     ) {
     }
@@ -74,7 +73,7 @@ class FixtureController extends AbstractController
 
         $client = $this->createClient($fromRequest);
 
-        if (null === $deputy = $this->deputyRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+        if (null === $deputy = $this->userRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
             $deputy = $this->createDeputy($fromRequest);
             $deputyPreRegistration = $this->preRegistrationFactory->create(
                 [
@@ -210,16 +209,16 @@ class FixtureController extends AbstractController
             }
         }
 
-        $namedDeputy = $this->buildNamedDeputy($deputy, $fromRequest);
+        $deputy = $this->buildDeputy($deputy, $fromRequest);
 
-        $client->setNamedDeputy($namedDeputy);
+        $client->setDeputy($deputy);
         $client->setOrganisation($organisation);
 
         // if the org size is 1 but we want 10 clients still then create the clients but
         // we return so we don't create another 10 clients on top if we have a org size > 1
         if (1 === $fromRequest['orgSizeUsers'] && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
             foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation, $fromRequest['courtDate']);
+                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
                 $this->em->persist($orgClient);
 
                 $this->createReport($fromRequest, $orgClient);
@@ -233,7 +232,7 @@ class FixtureController extends AbstractController
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($namedDeputy, $organisation, $fromRequest['courtDate']);
+                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
                 $this->em->persist($orgClient);
 
                 $this->createReport($fromRequest, $orgClient);
@@ -245,11 +244,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @return NamedDeputy
+     * @return Deputy
      */
-    private function buildNamedDeputy(User $deputy, array $fromRequest)
+    private function buildDeputy(User $deputy, array $fromRequest)
     {
-        $namedDeputy = (new NamedDeputy())
+        $deputy = (new Deputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
@@ -258,9 +257,9 @@ class FixtureController extends AbstractController
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain());
 
-        $this->em->persist($namedDeputy);
+        $this->em->persist($deputy);
 
-        return $namedDeputy;
+        return $deputy;
     }
 
     /**
@@ -474,9 +473,9 @@ class FixtureController extends AbstractController
             return $this->buildNotFoundResponse(sprintf("Could not find org with email identifier '%s'", $fromRequest['orgEmailIdentifier']));
         }
 
-        if (!empty($fromRequest['namedDeputyEmail'])) {
-            $namedDeputy = $this->createNamedDeputyByExistingUser($fromRequest['namedDeputyEmail']);
-            $client->setNamedDeputy($namedDeputy);
+        if (!empty($fromRequest['deputyEmail'])) {
+            $deputy = $this->createDeputyByExistingUser($fromRequest['deputyEmail']);
+            $client->setDeputy($deputy);
         }
 
         $client->setOrganisation($org);
@@ -490,27 +489,27 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
 
-    private function createNamedDeputyByExistingUser(string $userEmail)
+    private function createDeputyByExistingUser(string $userEmail)
     {
-        $namedDeputy = $this->namedDeputyRepository->findOneBy(['email1' => $userEmail]);
+        $deputy = $this->deputyRepository->findOneBy(['email1' => $userEmail]);
 
-        if (is_null($namedDeputy)) {
+        if (is_null($deputy)) {
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
-                $namedDeputy = (new NamedDeputy())
+                $deputy = (new Deputy())
                     ->setDeputyUid(rand(8, 8))
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
                     ->setLastname($user->getLastname());
 
-                $this->em->persist($namedDeputy);
+                $this->em->persist($deputy);
 
-                return $namedDeputy;
+                return $deputy;
             } else {
                 return $this->buildNotFoundResponse(
                     sprintf(
-                        "Could not find user or named Deputy with email identifier '%s'. Ensure one exists before using this function.",
+                        "Could not find user or deputy with email identifier '%s'. Ensure one exists before using this function.",
                         $userEmail
                     )
                 );

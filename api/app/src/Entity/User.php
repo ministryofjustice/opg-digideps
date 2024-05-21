@@ -771,7 +771,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return;
     }
 
-    public function getPassword(): string|null
+    public function getPassword(): ?string
     {
         return $this->password;
     }
