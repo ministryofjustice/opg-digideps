@@ -1,7 +1,6 @@
 name: "[Manual] Spin up Development environment"
 
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 permissions:
   id-token: write
@@ -23,6 +22,7 @@ jobs:
     with:
       workspace: training
       terraform_path: environment
+      account_name: preproduction
     secrets: inherit
 
   terraform_apply_development:
@@ -33,15 +33,17 @@ jobs:
     with:
       workspace: development
       terraform_path: environment
-      path_to_live: true
       apply: true
       account_name: development
       container_version: ${{ needs.latest_deployed_image.outputs.image_tag }}
+      pull_request_path: true
     secrets: inherit
 
   reset_database:
     name: reset development database
     uses: ./.github/workflows/_run-task.yml
+    needs:
+      - terraform_apply_development
     with:
       workspace: development
       account_name: development
