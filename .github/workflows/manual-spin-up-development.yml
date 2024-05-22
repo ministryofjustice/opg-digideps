@@ -33,10 +33,10 @@ jobs:
     with:
       workspace: development
       terraform_path: environment
-      path_to_live: true
       apply: true
       account_name: development
       container_version: ${{ needs.latest_deployed_image.outputs.image_tag }}
+      pull_request_path: true
     secrets: inherit
 
   reset_database:

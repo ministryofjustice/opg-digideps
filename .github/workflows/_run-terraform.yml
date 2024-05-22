@@ -19,8 +19,8 @@ on:
         required: false
         type: boolean
         default: false
-      path_to_live:
-        description: "Called from path to live"
+      pull_request_path:
+        description: "Called from pull request"
         required: false
         type: boolean
         default: false
@@ -99,7 +99,7 @@ jobs:
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - id: terraform_workspace_manager
-        if: inputs.apply && inputs.terraform_path == 'environment' && !inputs.path_to_live
+        if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
         uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v3.0.3
         with:
