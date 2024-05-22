@@ -81,6 +81,7 @@ class FixtureController extends AbstractController
                     'clientLastName' => $client->getLastname(),
                     'deputyPostCode' => $deputy->getAddressPostcode(),
                     'deputyLastName' => $deputy->getLastname(),
+                    'deputyFirstName' => $deputy->getFirstName(),
                     'reportType' => $fromRequest['reportType'],
                 ]
             );
@@ -111,6 +112,7 @@ class FixtureController extends AbstractController
                     'clientLastName' => $client->getLastname(),
                     'deputyPostCode' => $coDeputy->getAddressPostcode(),
                     'deputyLastName' => $coDeputy->getLastname(),
+                    'deputyFirstName' => $coDeputy->getFirstName(),
                     'reportType' => $fromRequest['reportType'],
                 ]
             );
@@ -534,6 +536,7 @@ class FixtureController extends AbstractController
             'caseNumber' => $preRegistration->getCaseNumber(),
             'clientLastName' => $preRegistration->getClientLastname(),
             'deputyLastName' => $preRegistration->getDeputySurname(),
+            'deputyFirstName' => $preRegistration->getDeputyFirstname(),
             'deputyPostCode' => $preRegistration->getDeputyPostCode(),
         ];
 
@@ -541,6 +544,7 @@ class FixtureController extends AbstractController
             $coDeputy = $this->preRegistrationFactory->createCoDeputy($preRegistration->getCaseNumber(), $fromRequest);
             $this->em->persist($coDeputy);
             $data['coDeputyLastName'] = $coDeputy->getDeputySurname();
+            $data['coDeputyFirstName'] = $coDeputy->getDeputyFirstname();
             $data['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
         }
 

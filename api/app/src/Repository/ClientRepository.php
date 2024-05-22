@@ -194,4 +194,25 @@ class ClientRepository extends ServiceEntityRepository
             'count' => $count,
         ];
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function findExistingDeputyCases(string $caseNumber, string $deputyNumber)
+    {
+        $deputyCaseQuery = '
+                SELECT dc.client_id, dc.user_id
+                FROM deputy_case dc
+                INNER JOIN client c ON dc.client_id = c.id
+                INNER JOIN dd_user du ON dc.user_id = du.id
+                WHERE LOWER(c.case_number) = LOWER(:case_number) AND LOWER(du.deputy_no) = LOWER(:deputy_no);
+        ';
+
+        $conn = $this->getEntityManager()->getConnection();
+        $statsStmt = $conn->prepare($deputyCaseQuery);
+        $result = $statsStmt->executeQuery(['case_number' => $caseNumber, 'deputy_no' => $deputyNumber]);
+        $deputyCaseResults = $result->fetchAllAssociative();
+
+        return 0 === count($deputyCaseResults) ? null : $deputyCaseResults[0];
+    }
 }

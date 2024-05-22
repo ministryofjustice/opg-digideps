@@ -345,6 +345,13 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $deputyNo;
 
     /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     */
+    private $deputyUid;
+
+    /**
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
@@ -910,6 +917,18 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): int
+    {
+        return $this->deputyUid;
+    }
+
+    public function setDeputyUid(int $deputyUid): User
+    {
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }

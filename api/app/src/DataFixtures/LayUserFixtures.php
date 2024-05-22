@@ -125,6 +125,7 @@ class LayUserFixtures extends AbstractDataFixture
             ->setFirstname($data['id'])
             ->setLastname('User '.$iteration)
             ->setDeputyNo($data['deputyUid'])
+            ->setDeputyUid($data['deputyUid'])
             ->setEmail(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
