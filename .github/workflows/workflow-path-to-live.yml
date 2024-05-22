@@ -128,7 +128,6 @@ jobs:
       apply: true
       account_name: development
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -149,7 +148,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_integration:
@@ -164,7 +162,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   scale_services_up:
@@ -315,7 +312,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_training:
@@ -330,7 +326,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_account_production:
@@ -345,7 +340,6 @@ jobs:
       apply: true
       account_name: production
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_production:
@@ -360,7 +354,6 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: production
-      path_to_live: true
     secrets: inherit
 
   smoke_tests_production:

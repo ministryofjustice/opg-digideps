@@ -12,19 +12,15 @@ class OrganisationAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var DeputyAssembler */
-    private $deputyDtoAssembler;
+    /** @var UserAssembler */
+    private $userDtoAssembler;
 
     /** @var ClientAssembler */
     private $clientDtoAssembler;
 
-    /**
-     * @param DeputyAssembler $deputyDtoAssembler
-     * @param ClientAssembler $clientDtoAssembler
-     */
-    public function __construct(DeputyAssembler $deputyDtoAssembler = null, ClientAssembler $clientDtoAssembler = null)
+    public function __construct(?UserAssembler $userDtoAssembler = null, ?ClientAssembler $clientDtoAssembler = null)
     {
-        $this->deputyDtoAssembler = $deputyDtoAssembler;
+        $this->userDtoAssembler = $userDtoAssembler;
         $this->clientDtoAssembler = $clientDtoAssembler;
     }
 
@@ -74,9 +70,9 @@ class OrganisationAssembler
 
         foreach ($users as $user) {
             if ($user instanceof User) {
-                $dtos[] = $this->deputyDtoAssembler->assembleFromEntity($user);
+                $dtos[] = $this->userDtoAssembler->assembleFromEntity($user);
             } else {
-                $dtos[] = $this->deputyDtoAssembler->assembleFromArray($user);
+                $dtos[] = $this->userDtoAssembler->assembleFromArray($user);
             }
         }
 
