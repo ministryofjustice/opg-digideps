@@ -60,7 +60,7 @@ class ClientAssembler
         }
 
         if (isset($data['deputy']) && is_array($data['deputy'])) {
-            $dto->setNamedDeputy($this->assembleClientNamedDeputy($data['deputy']));
+            $dto->setDeputy($this->assembleClientNamedDeputy($data['deputy']));
         }
 
         if (isset($data['users']) && is_array($data['users'])) {

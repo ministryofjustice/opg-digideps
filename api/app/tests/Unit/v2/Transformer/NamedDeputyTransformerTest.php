@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\v2\Transformer;
 
-use App\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\DeputyDto;
 use App\v2\Transformer\NamedDeputyTransformer;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ class NamedDeputyTransformerTest extends TestCase
      */
     public function transformsANamedDeputyDto()
     {
-        $dto = (new NamedDeputyDto())
+        $dto = (new DeputyDto())
             ->setId(4)
             ->setDeputyUid('01234567')
             ->setFirstName('foo')

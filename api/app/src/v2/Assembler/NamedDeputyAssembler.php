@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\v2\Assembler;
 
 use App\Entity\Deputy;
+use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\NamedDeputyDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class NamedDeputyAssembler
@@ -14,11 +14,11 @@ class NamedDeputyAssembler
     use DtoPropertySetterTrait;
 
     /**
-     * @return NamedDeputyDto
+     * @return DeputyDto
      */
     public function assembleFromArray(array $data)
     {
-        $dto = new NamedDeputyDto();
+        $dto = new DeputyDto();
 
         $this->setPropertiesFromData($dto, $data);
 

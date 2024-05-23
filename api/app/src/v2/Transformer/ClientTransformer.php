@@ -3,7 +3,7 @@
 namespace App\v2\Transformer;
 
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\DeputyDto;
 use App\v2\DTO\NdrDto;
 use App\v2\DTO\ReportDto;
 use App\v2\DTO\UserDto;
@@ -57,8 +57,8 @@ class ClientTransformer
             $transformed['organisation'] = $org;
         }
 
-        if (!in_array('deputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
-            $transformed['deputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
+        if (!in_array('deputy', $exclude) && $dto->getDeputy() instanceof DeputyDto) {
+            $transformed['deputy'] = $this->transformNamedDeputy($dto->getDeputy());
         }
 
         if (!in_array('deputies', $exclude) && !empty($dto->getDeputies())) {
@@ -115,7 +115,7 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformNamedDeputy(NamedDeputyDto $namedDeputy)
+    private function transformNamedDeputy(DeputyDto $namedDeputy)
     {
         return $this->namedDeputyTransformer->transform($namedDeputy);
     }
