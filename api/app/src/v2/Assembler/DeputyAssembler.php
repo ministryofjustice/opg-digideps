@@ -9,7 +9,7 @@ use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
-class NamedDeputyAssembler
+class DeputyAssembler
 {
     use DtoPropertySetterTrait;
 

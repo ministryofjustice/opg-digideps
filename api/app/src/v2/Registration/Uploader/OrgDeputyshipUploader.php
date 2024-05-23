@@ -12,7 +12,7 @@ use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
-use App\v2\Assembler\NamedDeputyAssembler;
+use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +32,7 @@ class OrgDeputyshipUploader
         private readonly EntityManagerInterface $em,
         private readonly OrganisationFactory $orgFactory,
         private readonly ClientAssembler $clientAssembler,
-        private readonly NamedDeputyAssembler $namedDeputyAssembler,
+        private readonly DeputyAssembler $deputyAssembler,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -105,7 +105,7 @@ class OrgDeputyshipUploader
         );
 
         if (is_null($deputy)) {
-            $deputy = $this->namedDeputyAssembler->assembleFromOrgDeputyshipDto($dto);
+            $deputy = $this->deputyAssembler->assembleFromOrgDeputyshipDto($dto);
 
             $this->em->persist($deputy);
             $this->em->flush();
@@ -236,7 +236,7 @@ class OrgDeputyshipUploader
                 }
             }
 
-            // Temp fix for clients who have new named deputy in same organisation
+            // Temp fix for clients who have new deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
                 if ($this->clientHasNewDeputy($this->client, $this->deputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
                     $this->client->setDeputy($this->deputy);
