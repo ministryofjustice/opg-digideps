@@ -4,7 +4,7 @@ namespace App\v2\Transformer;
 
 use App\v2\DTO\DeputyDto;
 
-class NamedDeputyTransformer
+class DeputyTransformer
 {
     /**
      * @return array

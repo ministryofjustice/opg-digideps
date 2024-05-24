@@ -16,17 +16,17 @@ class ClientTransformer
     /** @var NdrTransformer */
     private $ndrTransformer;
 
-    /** @var NamedDeputyTransformer */
-    private $namedDeputyTransformer;
+    /** @var DeputyTransformer */
+    private $deputyTransformer;
 
     public function __construct(
         ReportTransformer $reportTransformer,
         NdrTransformer $ndrTransformer,
-        NamedDeputyTransformer $namedDeputyTransformer
+        DeputyTransformer $deputyTransformer
     ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
-        $this->namedDeputyTransformer = $namedDeputyTransformer;
+        $this->deputyTransformer = $deputyTransformer;
     }
 
     /**
@@ -58,7 +58,7 @@ class ClientTransformer
         }
 
         if (!in_array('deputy', $exclude) && $dto->getDeputy() instanceof DeputyDto) {
-            $transformed['deputy'] = $this->transformNamedDeputy($dto->getDeputy());
+            $transformed['deputy'] = $this->transformDeputy($dto->getDeputy());
         }
 
         if (!in_array('deputies', $exclude) && !empty($dto->getDeputies())) {
@@ -115,9 +115,9 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformNamedDeputy(DeputyDto $namedDeputy)
+    private function transformDeputy(DeputyDto $deputy)
     {
-        return $this->namedDeputyTransformer->transform($namedDeputy);
+        return $this->deputyTransformer->transform($deputy);
     }
 
     private function transformDeputies(array $userDtos)
