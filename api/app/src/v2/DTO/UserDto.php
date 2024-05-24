@@ -2,7 +2,7 @@
 
 namespace App\v2\DTO;
 
-class DeputyDto
+class UserDto
 {
     /** @var int */
     private $id;
@@ -62,9 +62,6 @@ class DeputyDto
         return $this->firstName;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): ?string
     {
         return $this->lastName;
@@ -75,65 +72,41 @@ class DeputyDto
         return $this->email;
     }
 
-    /**
-     * @return string
-     */
     public function getRoleName(): ?string
     {
         return $this->roleName;
     }
 
-    /**
-     * @return string
-     */
     public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
     }
 
-    /**
-     * @return bool
-     */
     public function getNdrEnabled(): ?bool
     {
         return $this->ndrEnabled;
     }
 
-    /**
-     * @return bool
-     */
     public function isActive(): ?bool
     {
         return $this->active;
     }
 
-    /**
-     * @return string
-     */
     public function getJobTitle(): ?string
     {
         return $this->jobTitle;
     }
 
-    /**
-     * @return string
-     */
     public function getPhoneMain(): ?string
     {
         return $this->phoneMain;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getLastLoggedIn(): ?\DateTime
     {
         return $this->lastLoggedIn;
     }
 
-    /**
-     * @return array
-     */
     public function getClients(): ?array
     {
         return $this->clients;
@@ -142,7 +115,7 @@ class DeputyDto
     /**
      * @param int $id
      */
-    public function setId($id): DeputyDto
+    public function setId($id): UserDto
     {
         $this->id = $id;
 
@@ -152,7 +125,7 @@ class DeputyDto
     /**
      * @param \DateTime $lastLoggedIn
      *
-     * @return DeputyDto
+     * @return UserDto
      */
     public function setLastLoggedIn($lastLoggedIn)
     {
@@ -164,7 +137,7 @@ class DeputyDto
     /**
      * @param string $firstName
      */
-    public function setFirstName($firstName): DeputyDto
+    public function setFirstName($firstName): UserDto
     {
         $this->firstName = $firstName;
 
@@ -174,7 +147,7 @@ class DeputyDto
     /**
      * @param string $lastName
      */
-    public function setLastName($lastName): DeputyDto
+    public function setLastName($lastName): UserDto
     {
         $this->lastName = $lastName;
 
@@ -184,7 +157,7 @@ class DeputyDto
     /**
      * @param string $email
      */
-    public function setEmail($email): DeputyDto
+    public function setEmail($email): UserDto
     {
         $this->email = strtolower($email);
 
@@ -194,7 +167,7 @@ class DeputyDto
     /**
      * @param string $roleName
      */
-    public function setRoleName($roleName): DeputyDto
+    public function setRoleName($roleName): UserDto
     {
         $this->roleName = $roleName;
 
@@ -204,7 +177,7 @@ class DeputyDto
     /**
      * @param string $addressPostcode
      */
-    public function setAddressPostcode($addressPostcode): DeputyDto
+    public function setAddressPostcode($addressPostcode): UserDto
     {
         $this->addressPostcode = $addressPostcode;
 
@@ -214,14 +187,14 @@ class DeputyDto
     /**
      * @param bool $ndrEnabled
      */
-    public function setNdrEnabled($ndrEnabled): DeputyDto
+    public function setNdrEnabled($ndrEnabled): UserDto
     {
         $this->ndrEnabled = $ndrEnabled;
 
         return $this;
     }
 
-    public function setActive(bool $active): DeputyDto
+    public function setActive(bool $active): UserDto
     {
         $this->active = $active;
 
@@ -231,7 +204,7 @@ class DeputyDto
     /**
      * @param string $jobTitle
      */
-    public function setJobTitle($jobTitle): DeputyDto
+    public function setJobTitle($jobTitle): UserDto
     {
         $this->jobTitle = $jobTitle;
 
@@ -241,14 +214,14 @@ class DeputyDto
     /**
      * @param string $phoneMain
      */
-    public function setPhoneMain($phoneMain): DeputyDto
+    public function setPhoneMain($phoneMain): UserDto
     {
         $this->phoneMain = $phoneMain;
 
         return $this;
     }
 
-    public function setClients(array $clients): DeputyDto
+    public function setClients(array $clients): UserDto
     {
         $this->clients = $clients;
 
@@ -260,7 +233,7 @@ class DeputyDto
         return $this->address1;
     }
 
-    public function setAddress1(?string $address1): DeputyDto
+    public function setAddress1(?string $address1): UserDto
     {
         $this->address1 = $address1;
 
@@ -272,7 +245,7 @@ class DeputyDto
         return $this->address2;
     }
 
-    public function setAddress2(?string $address2): DeputyDto
+    public function setAddress2(?string $address2): UserDto
     {
         $this->address2 = $address2;
 
@@ -284,7 +257,7 @@ class DeputyDto
         return $this->address3;
     }
 
-    public function setAddress3(?string $address3): DeputyDto
+    public function setAddress3(?string $address3): UserDto
     {
         $this->address3 = $address3;
 
@@ -296,7 +269,7 @@ class DeputyDto
         return $this->addressCountry;
     }
 
-    public function setAddressCountry(?string $addressCountry): DeputyDto
+    public function setAddressCountry(?string $addressCountry): UserDto
     {
         $this->addressCountry = $addressCountry;
 
