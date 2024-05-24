@@ -940,6 +940,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @JMS\Type("App\Entity\Deputy")
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
+     */
+    private Deputy|null $deputy;
+
+    /**
      * Return Id of the client (if it has details).
      *
      * @JMS\VirtualProperty

@@ -218,9 +218,9 @@ class Deputy
     /**
      * @JMS\Type("App\Entity\User")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy")
      *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private User|null $user;
 
