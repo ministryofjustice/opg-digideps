@@ -412,6 +412,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $deletionProtection;
 
     /**
+     * @JMS\Type("App\Entity\Deputy")
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
+     */
+    private Deputy|null $deputy;
+
+    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
@@ -940,13 +947,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @JMS\Type("App\Entity\Deputy")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
-     */
-    private Deputy|null $deputy;
-
-    /**
      * Return Id of the client (if it has details).
      *
      * @JMS\VirtualProperty
@@ -1388,6 +1388,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserResearchResponse(?UserResearchResponse $userResearchResponse): User
     {
         $this->userResearchResponse = $userResearchResponse;
+
+        return $this;
+    }
+
+    public function getDeputy(): ?Deputy
+    {
+        return $this->deputy;
+    }
+
+    public function setDeputy(?Deputy $deputy): User
+    {
+        $this->deputy = $deputy;
 
         return $this;
     }
