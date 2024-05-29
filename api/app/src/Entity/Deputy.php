@@ -216,6 +216,15 @@ class Deputy
     private $phoneAlternative;
 
     /**
+     * @JMS\Type("App\Entity\User")
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy")
+     *
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private User|null $user;
+
+    /**
      * @return int
      */
     public function getId()
@@ -546,6 +555,18 @@ class Deputy
         if (!is_null($phoneAlternative)) {
             $this->phoneAlternative = trim($phoneAlternative);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): Deputy
+    {
+        $this->user = $user;
 
         return $this;
     }
