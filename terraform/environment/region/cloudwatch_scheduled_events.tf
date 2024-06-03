@@ -1,4 +1,5 @@
 # Sirius Lay CSV Ingestion
+
 resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
@@ -36,6 +37,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 }
 
 # Sirius Org CSV Ingestion
+
 resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
