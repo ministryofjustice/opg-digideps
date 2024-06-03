@@ -43,10 +43,9 @@ jobs:
       - name: show build identifier and tag
         id: show
         env:
-          BUILD: "main"
           TAG: ${{ steps.semver_tag.outputs.created_tag }}
         run: |
-          echo "Build Identifier: ${BUILD}"
+          echo "Build Identifier: main"
           echo "Container Tag: ${TAG}"
 
   build_web_resources:

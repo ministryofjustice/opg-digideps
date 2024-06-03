@@ -921,12 +921,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getDeputyUid(): int
+    public function getDeputyUid(): ?int
     {
         return $this->deputyUid;
     }
 
-    public function setDeputyUid(int $deputyUid): User
+    public function setDeputyUid(?int $deputyUid): User
     {
         $this->deputyUid = $deputyUid;
 
