@@ -19,7 +19,7 @@ jobs:
     outputs:
       image_tag: ${{ steps.export_tag.outputs.image_tag }}
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
         with:
           fetch-depth: "0"
 
@@ -42,7 +42,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for slack notification
-        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e
+        uses: aws-actions/configure-aws-credentials@43c891271eabca0b34d95f2453e2fe354928b16d
         with:
           role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-preproduction
           role-session-name: github-actions-slack-notifier
