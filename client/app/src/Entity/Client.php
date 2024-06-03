@@ -317,14 +317,6 @@ class Client
         return $this->users;
     }
 
-    /**
-     * @return Deputy|null
-     */
-    public function getNamedDeputy()
-    {
-        return $this->deputy;
-    }
-
     public function setDeputy(Deputy $deputy): self
     {
         $this->deputy = $deputy;
@@ -1028,8 +1020,8 @@ class Client
      */
     public function getDeputy()
     {
-        if (!is_null($this->getNamedDeputy())) {
-            return $this->getNamedDeputy();
+        if (!is_null($this->deputy)) {
+            return $this->deputy;
         }
 
         if ($this->getDeletedAt() instanceof \DateTime) {
