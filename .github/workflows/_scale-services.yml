@@ -21,7 +21,7 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
         with:
           fetch-depth: "0"
 
@@ -29,7 +29,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure OIDC AWS credentials for scaling services
-        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e
+        uses: aws-actions/configure-aws-credentials@43c891271eabca0b34d95f2453e2fe354928b16d
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-scale-infra"
           role-session-name: github-actions-scale-infra
