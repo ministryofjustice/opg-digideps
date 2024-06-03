@@ -90,7 +90,7 @@ class ReportController extends AbstractController
         'documents',
         'report-prof-service-fees',
         'prof-service-fees',
-        'client-named-deputy',
+        'client-deputy',
         'client-benefits-check',
         'client-benefits-check-state',
     ];

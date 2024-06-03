@@ -249,8 +249,8 @@ services:
         class: App\Repository\DocumentRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\NamedDeputyRepository:
-        class: App\Repository\NamedDeputyRepository
+    App\Repository\DeputyRepository:
+        class: App\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\NdrRepository:
@@ -346,8 +346,8 @@ services:
         class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
         arguments: ["@em"]
 
-    PlainDeputyAssembler:
-        class: App\v2\Assembler\DeputyAssembler
+    PlainUserAssembler:
+        class: App\v2\Assembler\UserAssembler
 
     App\v2\Assembler\Report\ReportSummaryAssembler: ~
     App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'

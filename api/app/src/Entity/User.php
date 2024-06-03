@@ -298,6 +298,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $deputyNo;
 
     /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
+     */
+    private $deputyUid;
+
+    /**
      * @var bool
      *
      * @JMS\Type("boolean")
@@ -399,6 +410,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="deletion_protection", type="boolean", nullable=true, options = { "default": null })
      */
     private $deletionProtection;
+
+    /**
+     * @JMS\Type("App\Entity\Deputy")
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
+     */
+    private Deputy|null $deputy;
 
     /**
      * Constructor.
@@ -732,9 +750,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoleName()
     {
         return $this->roleName;
@@ -763,7 +778,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return;
     }
 
-    public function getPassword(): null|string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -884,10 +899,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastLoggedIn;
     }
 
-    /**
-     * @param \DateTime $lastLoggedIn
-     */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
@@ -918,6 +930,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): ?int
+    {
+        return $this->deputyUid;
+    }
+
+    public function setDeputyUid(?int $deputyUid): User
+    {
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }
@@ -1364,6 +1388,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserResearchResponse(?UserResearchResponse $userResearchResponse): User
     {
         $this->userResearchResponse = $userResearchResponse;
+
+        return $this;
+    }
+
+    public function getDeputy(): ?Deputy
+    {
+        return $this->deputy;
+    }
+
+    public function setDeputy(?Deputy $deputy): User
+    {
+        $this->deputy = $deputy;
 
         return $this;
     }

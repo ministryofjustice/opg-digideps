@@ -1,6 +1,6 @@
 {% set translationDomain = "client-profile" %}
 {% trans_default_domain translationDomain %}
-{% set page = "namedDeputyDetails" %}
+{% set page = "deputyDetails" %}
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 <div class="govuk-accordion__section">
@@ -21,14 +21,14 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ namedDeputy.firstname ~ " " ~ namedDeputy.lastname }}
+                        {{ deputy.firstname ~ " " ~ deputy.lastname }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {% for addressPart in namedDeputy.addressNotEmptyParts %}
+                        {% for addressPart in deputy.addressNotEmptyParts %}
                             {{ addressPart }}<br/>
                         {% endfor %}
                     </dd>
@@ -41,28 +41,28 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainPhone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (namedDeputy.phoneMain) ? namedDeputy.phoneMain : '-' }}
+                        {{ (deputy.phoneMain) ? deputy.phoneMain : '-' }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altPhone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (namedDeputy.phoneAlternative) ? namedDeputy.phoneAlternative : '-' }}
+                        {{ (deputy.phoneAlternative) ? deputy.phoneAlternative : '-' }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainEmail') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (namedDeputy.email1) ? namedDeputy.email1 : '-' }}
+                        {{ (deputy.email1) ? deputy.email1 : '-' }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altEmail') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (namedDeputy.email2) ? namedDeputy.email2 : '-' }}
+                        {{ (deputy.email2) ? deputy.email2 : '-' }}
                     </dd>
                 </dl>
             </div>

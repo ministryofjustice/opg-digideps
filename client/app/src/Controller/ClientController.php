@@ -210,10 +210,17 @@ class ClientController extends AbstractController
                         if ($decodedError['matching_errors']['deputy_lastname']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
+                        if ($decodedError['matching_errors']['deputy_firstname']) {
+                            $form->addError(new FormError($translator->trans('matchingErrors.deputyFirstname', [], 'register')));
+                        }
                         if ($decodedError['matching_errors']['deputy_postcode']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
 
+                        break;
+
+                    case 462:
+                        $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
                         break;
 
                     default:
