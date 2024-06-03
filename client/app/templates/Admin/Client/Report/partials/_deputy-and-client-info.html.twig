@@ -71,7 +71,7 @@
     </dl>
 
     {# DEPUTY DETAILS #}
-    {% set deputy = report.submittedBy.isDeputyOrg and report.client.getNamedDeputy ? report.client.getNamedDeputy : report.submittedBy %}
+    {% set deputy = report.submittedBy.isDeputyOrg and report.client.getDeputy ? report.client.getDeputy : report.submittedBy %}
     <h3 class="govuk-heading-m">Deputy details</h3>
 
     <dl class="govuk-summary-list">

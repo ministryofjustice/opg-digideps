@@ -2,14 +2,14 @@
 
 namespace App\v2\Transformer;
 
-use App\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\DeputyDto;
 
-class NamedDeputyTransformer
+class DeputyTransformer
 {
     /**
      * @return array
      */
-    public function transform(NamedDeputyDto $dto)
+    public function transform(DeputyDto $dto)
     {
         $data = [
             'id' => $dto->getId(),
