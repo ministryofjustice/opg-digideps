@@ -19,8 +19,8 @@ on:
       push_to_ecr:
         description: "Whether to push to ECR"
         required: false
-        default: "true"
-        type: string
+        default: true
+        type: boolean
 
 jobs:
   docker_build_scan_push:
