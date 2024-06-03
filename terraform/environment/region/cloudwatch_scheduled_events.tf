@@ -344,3 +344,81 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
     }
   )
 }
+
+# Sleep mode - Turn on environment
+
+resource "aws_cloudwatch_event_rule" "sleep_mode_on" {
+  name                = "sleep-mode-on-${local.environment}"
+  description         = "Sleep mode - turn on environment ${terraform.workspace}"
+  schedule_expression = "cron(0 08,23 * * ? *)"
+  tags                = var.default_tags
+  is_enabled          = var.account.is_production == 1 ? false : true
+}
+
+resource "aws_cloudwatch_event_target" "sleep_mode_on" {
+  rule     = aws_cloudwatch_event_rule.sleep_mode_on.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = module.sleep_mode.task_definition_arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "sleep-mode",
+          "command" : ["./environment_status", "-action=ON"]
+        }
+      ]
+    }
+  )
+}
+
+# Sleep mode - Turn off environment
+
+resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
+  name                = "sleep-mode-off-${local.environment}"
+  description         = "Sleep mode - turn off environment ${terraform.workspace}"
+  schedule_expression = "cron(0 02,21 * * ? *)"
+  tags                = var.default_tags
+  is_enabled          = var.account.is_production == 1 ? false : true
+}
+
+resource "aws_cloudwatch_event_target" "sleep_mode_off" {
+  rule     = aws_cloudwatch_event_rule.sleep_mode_off.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = module.sleep_mode.task_definition_arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "sleep-mode",
+          "command" : ["./environment_status", "-action=OFF"]
+        }
+      ]
+    }
+  )
+}

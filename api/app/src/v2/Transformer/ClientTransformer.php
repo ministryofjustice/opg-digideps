@@ -3,7 +3,7 @@
 namespace App\v2\Transformer;
 
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\NamedDeputyDto;
+use App\v2\DTO\DeputyDto;
 use App\v2\DTO\NdrDto;
 use App\v2\DTO\ReportDto;
 use App\v2\DTO\UserDto;
@@ -16,17 +16,17 @@ class ClientTransformer
     /** @var NdrTransformer */
     private $ndrTransformer;
 
-    /** @var NamedDeputyTransformer */
-    private $namedDeputyTransformer;
+    /** @var DeputyTransformer */
+    private $deputyTransformer;
 
     public function __construct(
         ReportTransformer $reportTransformer,
         NdrTransformer $ndrTransformer,
-        NamedDeputyTransformer $namedDeputyTransformer
+        DeputyTransformer $deputyTransformer
     ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
-        $this->namedDeputyTransformer = $namedDeputyTransformer;
+        $this->deputyTransformer = $deputyTransformer;
     }
 
     /**
@@ -57,8 +57,8 @@ class ClientTransformer
             $transformed['organisation'] = $org;
         }
 
-        if (!in_array('deputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
-            $transformed['deputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
+        if (!in_array('deputy', $exclude) && $dto->getDeputy() instanceof DeputyDto) {
+            $transformed['deputy'] = $this->transformDeputy($dto->getDeputy());
         }
 
         if (!in_array('deputies', $exclude) && !empty($dto->getDeputies())) {
@@ -115,9 +115,9 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformNamedDeputy(NamedDeputyDto $namedDeputy)
+    private function transformDeputy(DeputyDto $deputy)
     {
-        return $this->namedDeputyTransformer->transform($namedDeputy);
+        return $this->deputyTransformer->transform($deputy);
     }
 
     private function transformDeputies(array $userDtos)

@@ -58,9 +58,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $orgFactory = $container->get('App\Factory\OrganisationFactory');
         $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
-        $namedDeputyAssembler = $container->get('App\v2\Assembler\NamedDeputyAssembler');
+        $deputyAssembler = $container->get('App\v2\Assembler\DeputyAssembler');
 
-        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $namedDeputyAssembler, $this->logger);
+        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $deputyAssembler, $this->logger);
 
         $this->purgeDatabase();
     }
