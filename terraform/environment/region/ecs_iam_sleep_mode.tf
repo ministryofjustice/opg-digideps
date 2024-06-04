@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "sleep_mode" {
       "rds:StartDBCluster"
     ]
     resources = [
-      module.api_aurora.cluster_arn
+      module.api_aurora[0].cluster_arn
     ]
   }
 
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "sleep_mode" {
       "ecs:UpdateService"
     ]
     resources = [
-      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:cluster/${local.environment}",
+      aws_ecs_cluster.main.arn,
       "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:service/${local.environment}/*"
     ]
   }
