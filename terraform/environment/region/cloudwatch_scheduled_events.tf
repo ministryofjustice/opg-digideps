@@ -367,7 +367,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
     platform_version    = "1.4.0"
 
     network_configuration {
-      security_groups  = [module.api_service_security_group.id]
+      security_groups  = [module.sleep_mode_security_group.id]
       subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
@@ -406,7 +406,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_off" {
     platform_version    = "1.4.0"
 
     network_configuration {
-      security_groups  = [module.api_service_security_group.id]
+      security_groups  = [module.sleep_mode_security_group.id]
       subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
