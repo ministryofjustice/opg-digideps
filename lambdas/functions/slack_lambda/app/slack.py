@@ -513,7 +513,7 @@ def github_actions_message(message):
 
     path_to_live = True if "Path to live" in workflow_name else False
 
-    status_emoji = ":white_check_mark:" if success == "true" else ":x:"
+    status_emoji = ":white_check_mark:" if success == "yes" else ":x:"
     success_string = "Success" if success == "yes" else "Failure"
     workflow_type = "Digideps Live Release" if path_to_live else "Digideps Workflow"
     extra_emoji = ":rocket:" if path_to_live and success == "yes" else ""
