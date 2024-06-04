@@ -20,8 +20,8 @@ class ClientAssembler
     /** @var NdrAssembler */
     private $ndrDtoAssembler;
 
-    /** @var NamedDeputyAssembler */
-    private $namedDeputyAssembler;
+    /** @var DeputyAssembler */
+    private $deputyAssembler;
 
     /**
      * ClientAssembler constructor.
@@ -29,11 +29,11 @@ class ClientAssembler
     public function __construct(
         ReportAssemblerInterface $reportDtoAssembler,
         NdrAssembler $ndrDtoAssembler,
-        NamedDeputyAssembler $namedDeputyDtoAssembler
+        DeputyAssembler $deputyDtoAssembler
     ) {
         $this->reportDtoAssembler = $reportDtoAssembler;
         $this->ndrDtoAssembler = $ndrDtoAssembler;
-        $this->namedDeputyAssembler = $namedDeputyDtoAssembler;
+        $this->deputyAssembler = $deputyDtoAssembler;
     }
 
     /**
@@ -60,7 +60,7 @@ class ClientAssembler
         }
 
         if (isset($data['deputy']) && is_array($data['deputy'])) {
-            $dto->setNamedDeputy($this->assembleClientNamedDeputy($data['deputy']));
+            $dto->setDeputy($this->assembleClientDeputy($data['deputy']));
         }
 
         if (isset($data['users']) && is_array($data['users'])) {
@@ -105,9 +105,9 @@ class ClientAssembler
         return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
 
-    private function assembleClientNamedDeputy(array $namedDeputy)
+    private function assembleClientDeputy(array $deputy)
     {
-        return $this->namedDeputyAssembler->assembleFromArray($namedDeputy);
+        return $this->deputyAssembler->assembleFromArray($deputy);
     }
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
