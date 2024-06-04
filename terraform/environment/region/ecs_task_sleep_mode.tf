@@ -10,7 +10,7 @@ module "sleep_mode" {
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.sleep_mode.arn
   vpc_id                = data.aws_vpc.vpc.id
-  security_group_id     = module.db_access_task_security_group.id
+  security_group_id     = module.sleep_mode_security_group.id
 }
 
 locals {
@@ -18,7 +18,7 @@ locals {
     {
       name    = "sleep-mode",
       image   = local.images.orchestration,
-      command = ["./sleep_mode"],
+      command = ["./environment_status"],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -28,13 +28,40 @@ locals {
         }
       },
       secrets = [],
-      environment = concat(local.api_single_db_tasks_base_variables,
-        [
-          {
-            name  = "ENVIRONMENT",
-            value = local.environment
-          }
-      ])
+      environment = [
+        {
+          name  = "ENVIRONMENT",
+          value = local.environment
+        }
+      ]
     }
   )
+}
+
+locals {
+  sleep_mode_sg_rules = {
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    ecr_api = local.common_sg_rules.ecr_api
+    secrets = local.common_sg_rules.secrets
+    outbound_rds = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
+  }
+}
+
+module "sleep_mode_security_group" {
+  source      = "./modules/security_group"
+  name        = "sleep-mode"
+  description = "Sleep Mode SG Rules"
+  rules       = local.sleep_mode_sg_rules
+  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

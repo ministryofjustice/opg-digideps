@@ -56,8 +56,12 @@ func turnOff(sess *session.Session, rdsClusterID string, ecsClusterName string) 
 		DBClusterIdentifier: aws.String(rdsClusterID),
 	})
 	if err != nil {
-		fmt.Println("Error stopping RDS cluster:", err)
-		return
+		if strings.Contains(err.Error(), "InvalidDBClusterStateFault") {
+			fmt.Println("RDS cluster is already stopped")
+		} else {
+			fmt.Println("Error stopping RDS cluster:", err)
+			return
+		}
 	}
 	fmt.Printf("Stopping RDS cluster: %s\n", rdsClusterID)
 
@@ -92,8 +96,12 @@ func turnOn(sess *session.Session, rdsClusterID string, ecsClusterName string) {
 		DBClusterIdentifier: aws.String(rdsClusterID),
 	})
 	if err != nil {
-		fmt.Println("Error starting RDS cluster:", err)
-		return
+		if strings.Contains(err.Error(), "InvalidDBClusterStateFault") {
+			fmt.Println("RDS cluster is already started")
+		} else {
+			fmt.Println("Error starting RDS cluster:", err)
+			return
+		}
 	}
 	fmt.Printf("Starting RDS cluster: %s\n", rdsClusterID)
 
