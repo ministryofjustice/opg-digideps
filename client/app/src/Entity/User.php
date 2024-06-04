@@ -92,7 +92,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *     "admin_add_user", "ad_add_user", "admin_edit_user", "codeputy"})
      * @Assert\NotBlank( message="user.firstname.notBlankOtherUser",
      *     groups={"org_team_add", "user_details_org", "admin_add_user", "ad_add_user", "user_details_basic", "codeputy",
-     *     "user_details_full", "verify-codeputy", "admin_edit_user"
+     *     "user_details_full", "verify-codeputy", "admin_edit_user", "codeputy_invite"
      * } )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
      *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org",
@@ -107,7 +107,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user", "codeputy"})
      * @Assert\NotBlank(message="user.lastname.notBlankOtherUser",
      *     groups={"admin_add_user","ad_add_user","user_details_basic","user_details_full","org_team_add",
-     *     "user_details_org", "verify-codeputy", "admin_edit_user"
+     *     "user_details_org", "verify-codeputy", "admin_edit_user", "codeputy_invite"
      * } )
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user"} )
      *
