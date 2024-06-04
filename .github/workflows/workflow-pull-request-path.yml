@@ -352,7 +352,7 @@ jobs:
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
-    name: notify of result
+    name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
@@ -364,7 +364,7 @@ jobs:
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:

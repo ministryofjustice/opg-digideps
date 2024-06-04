@@ -106,19 +106,19 @@ jobs:
     needs:
       - restore_from_remote_backup
     with:
-      success: True
+      success: yes
       branch: integration
       account: 248804316466
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - restore_from_remote_backup
     with:
-      success: false
+      success: no
       branch: integration
       account: 248804316466
     secrets: inherit

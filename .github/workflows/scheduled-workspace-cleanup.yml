@@ -78,7 +78,7 @@ jobs:
         working-directory: scripts/pipeline/cleanup_task_definitions
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
