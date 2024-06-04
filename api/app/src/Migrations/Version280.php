@@ -14,7 +14,7 @@ final class Version280 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Added timestamp field when user validated their details and registration route field';
+        return '';
     }
 
     public function up(Schema $schema): void
