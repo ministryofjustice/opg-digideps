@@ -10,7 +10,7 @@ reinviteDeputy:
   htmlTitle: Reinvite deputy - Complete the deputy report | GOV.UK
   pageTitle: Reinvite deputy
   intro: |
-    Use the box below to resend an invitation to the original or alternative email address.
+    Use the boxes below to edit the deputy's name and resend an invitation to the original or alternative email address.
   submitButton: Resend invitation
 
 form:

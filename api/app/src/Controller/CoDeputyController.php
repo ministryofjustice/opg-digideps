@@ -91,6 +91,8 @@ class CoDeputyController extends RestController
         if (!empty($data['email'])) {
             $originalUser = clone $user;
             $user->setEmail($data['email']);
+            $user->setFirstname($data['firstname']);
+            $user->setLastname($data['lastname']);
             $this->userService->editUser($originalUser, $user);
         }
 
