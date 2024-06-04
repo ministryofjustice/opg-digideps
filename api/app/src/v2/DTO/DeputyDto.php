@@ -2,7 +2,7 @@
 
 namespace App\v2\DTO;
 
-class NamedDeputyDto
+class DeputyDto
 {
     /** @var int */
     private $id;
@@ -127,9 +127,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail2(): ?string
     {
         return $this->email2;
@@ -145,9 +142,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail3(): ?string
     {
         return $this->email3;
@@ -163,9 +157,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPhoneMain(): ?string
     {
         return $this->phoneMain;
@@ -181,9 +172,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPhoneAlterrnative(): ?string
     {
         return $this->phoneAlterrnative;
@@ -199,9 +187,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress1(): ?string
     {
         return $this->address1;
@@ -217,9 +202,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress2(): ?string
     {
         return $this->address2;
@@ -235,9 +217,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress3(): ?string
     {
         return $this->address3;
@@ -253,9 +232,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress4(): ?string
     {
         return $this->address4;
@@ -271,9 +247,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress5(): ?string
     {
         return $this->address5;
@@ -289,9 +262,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
@@ -307,9 +277,6 @@ class NamedDeputyDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getAddressCountry(): ?string
     {
         return $this->addressCountry;

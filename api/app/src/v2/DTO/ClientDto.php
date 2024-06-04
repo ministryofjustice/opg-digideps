@@ -39,8 +39,8 @@ class ClientDto
     /** @var Organisation */
     private $organisation;
 
-    /** @var NamedDeputyDto */
-    private $namedDeputy;
+    /** @var DeputyDto */
+    private $deputy;
 
     /** @var array */
     private $deputies;
@@ -134,11 +134,11 @@ class ClientDto
     }
 
     /**
-     * @return NamedDeputyDto
+     * @return DeputyDto
      */
-    public function getNamedDeputy()
+    public function getDeputy()
     {
-        return $this->namedDeputy;
+        return $this->deputy;
     }
 
     /**
@@ -270,9 +270,9 @@ class ClientDto
     /**
      * @return $this
      */
-    public function setNamedDeputy(NamedDeputyDto $namedDeputy)
+    public function setDeputy(DeputyDto $deputy)
     {
-        $this->namedDeputy = $namedDeputy;
+        $this->deputy = $deputy;
 
         return $this;
     }

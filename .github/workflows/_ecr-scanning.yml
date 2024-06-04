@@ -15,10 +15,10 @@ jobs:
   ecr-scan-results:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
 
       - name: configure OIDC AWS credentials for ECR scanning
-        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e
+        uses: aws-actions/configure-aws-credentials@bd0758102444af2a09b9e47a2c93d0f091c1252d
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-scan
           role-session-name: github-actions-ecr-scan
@@ -26,7 +26,7 @@ jobs:
           aws-region: eu-west-1
 
       - name: install python
-        uses: actions/setup-python@871daa956ca9ea99f3c3e30acb424b7960676734 # pin@v4.2.0
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # pin@v4.2.0
         with:
           python-version: "3.10"
           cache: "pip"
