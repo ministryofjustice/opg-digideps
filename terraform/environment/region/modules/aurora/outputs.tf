@@ -29,6 +29,6 @@ output "cluster" {
 }
 
 output "cluster_arn" {
-  description = "Aurora cluster arn."
+  description = "ARN for the Aurora cluster."
   value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].arn : aws_rds_cluster.cluster[0].arn
 }

@@ -352,7 +352,7 @@ resource "aws_cloudwatch_event_rule" "sleep_mode_on" {
   description         = "Sleep mode - turn on environment ${terraform.workspace}"
   schedule_expression = "cron(0 08,23 * * ? *)"
   tags                = var.default_tags
-  is_enabled          = var.account.is_production == 1 ? false : true
+  is_enabled          = var.account.sleep_mode_enabled ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sleep_mode_on" {
@@ -367,7 +367,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
     platform_version    = "1.4.0"
 
     network_configuration {
-      security_groups  = [module.api_service_security_group.id]
+      security_groups  = [module.sleep_mode_security_group.id]
       subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
@@ -391,7 +391,7 @@ resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
   description         = "Sleep mode - turn off environment ${terraform.workspace}"
   schedule_expression = "cron(0 02,21 * * ? *)"
   tags                = var.default_tags
-  is_enabled          = var.account.is_production == 1 ? false : true
+  is_enabled          = var.account.sleep_mode_enabled ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sleep_mode_off" {
@@ -406,7 +406,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_off" {
     platform_version    = "1.4.0"
 
     network_configuration {
-      security_groups  = [module.api_service_security_group.id]
+      security_groups  = [module.sleep_mode_security_group.id]
       subnets          = data.aws_subnet.private[*].id
       assign_public_ip = false
     }
