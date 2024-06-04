@@ -18,7 +18,7 @@ locals {
     {
       name    = "sleep-mode",
       image   = local.images.orchestration,
-      command = ["./sleep_mode"],
+      command = ["./environment_status"],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
