@@ -53,7 +53,7 @@ jobs:
     secrets: inherit
 
   slack_notify_success:
-    name: notify of result
+    name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - reset_database
@@ -65,7 +65,7 @@ jobs:
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
