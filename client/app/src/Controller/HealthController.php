@@ -34,6 +34,8 @@ class HealthController extends AbstractController
      */
     public function containerHealthAction()
     {
+        $this->logger->warning('Remove this warning');
+
         return ['status' => 'OK'];
     }
 
