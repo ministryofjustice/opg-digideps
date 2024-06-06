@@ -1,5 +1,3 @@
-version: "3.2"
-
 ## Defines commands we can run from containers
 services:
   dr-restore:

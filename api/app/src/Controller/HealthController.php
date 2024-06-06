@@ -27,6 +27,8 @@ class HealthController extends RestController
      */
     public function containerHealthAction()
     {
+        $this->logger->warning('Remove this warning');
+
         return 'ok';
     }
 

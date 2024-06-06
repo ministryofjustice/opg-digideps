@@ -390,6 +390,12 @@ services:
     class: Monolog\Formatter\LogstashFormatter
     arguments: ["application.client", null, null, "", 1]
 
+  opg_json_formatter:
+    class: App\Logger\OpgJsonFormatter
+
+  opg_line_formatter:
+    class: App\Logger\OpgLineFormatter
+
   line_formatter:
     class: Monolog\Formatter\LineFormatter
 

@@ -1,4 +1,3 @@
-version: "3.2"
 services:
   # API Unit Testing
   api-unit-tests:
@@ -18,7 +17,7 @@ services:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./api/app/api.env
