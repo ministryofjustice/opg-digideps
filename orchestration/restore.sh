@@ -28,6 +28,6 @@ echo "Restore complete"
 
 echo "Anonymising data..."
 
-anonymisation/anonymisation
+./anonymise
 
 echo "Data Anonymised"

@@ -13,7 +13,7 @@ clientDetails:
   editClient: Edit client details
   archiveClient: Archive client
 
-namedDeputyDetails:
+deputyDetails:
   heading: Deputy details
   name: Full Name
   mainEmail: Email address

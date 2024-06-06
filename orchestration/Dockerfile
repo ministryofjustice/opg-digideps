@@ -1,3 +1,8 @@
+FROM golang:1.20-alpine as builder
+WORKDIR /app
+COPY anonymisation anonymisation
+RUN cd anonymisation && go build -o anonymise main.go
+
 FROM alpine:3.19
 
 ENV POSTGRES_DATABASE **None**
@@ -39,4 +44,6 @@ ADD backup.sh backup.sh
 ADD restore.sh restore.sh
 ADD common.sh common.sh
 ADD analyse-database.sh analyse-database.sh
-ADD anonymisation anonymisation
+
+COPY --from=builder /app/anonymisation/anonymise .
+RUN chmod +x anonymise

@@ -1,25 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Assembler;
 
-use App\Entity\User;
+use App\Entity\Deputy;
 use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class DeputyAssembler
 {
     use DtoPropertySetterTrait;
-
-    /** @var ClientAssembler */
-    private $clientDtoAssembler;
-
-    /**
-     * @param ClientAssembler $clientDtoAssembler
-     */
-    public function __construct(ClientAssembler $clientDtoAssembler = null)
-    {
-        $this->clientDtoAssembler = $clientDtoAssembler;
-    }
 
     /**
      * @return DeputyDto
@@ -30,45 +22,27 @@ class DeputyAssembler
 
         $this->setPropertiesFromData($dto, $data);
 
-        if ($this->clientDtoAssembler && isset($data['clients']) && is_array($data['clients'])) {
-            $dto->setClients($this->assembleDeputyClients($data['clients']));
-        }
-
         return $dto;
     }
 
-    /**
-     * @return DeputyDto
-     */
-    public function assembleFromEntity(User $deputy)
+    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $dto = new DeputyDto();
-
-        $dto->setId($deputy->getId());
-        $dto->setFirstName($deputy->getFirstName());
-        $dto->setLastName($deputy->getLastName());
-        $dto->setEmail($deputy->getEmail());
-        $dto->setRoleName($deputy->getRoleName());
-        $dto->setAddressPostcode($deputy->getAddressPostcode());
-        $dto->setNdrEnabled($deputy->getNdrEnabled());
-        $dto->setActive((bool) $deputy->getActive());
-        $dto->setJobTitle($deputy->getJobTitle());
-        $dto->setPhoneMain($deputy->getPhoneMain());
-
-        return $dto;
-    }
-
-    /**
-     * @return array
-     */
-    private function assembleDeputyClients(array $clients)
-    {
-        $dtos = [];
-
-        foreach ($clients as $client) {
-            $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
+        if ($dto->deputyIsAnOrganisation()) {
+            $deputyFirstName = $dto->getOrganisationName();
+        } else {
+            $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
         }
 
-        return $dtos;
+        return (new Deputy())
+            ->setEmail1($dto->getDeputyEmail())
+            ->setDeputyUid($dto->getDeputyUid())
+            ->setFirstname($deputyFirstName)
+            ->setLastname($dto->getDeputyLastname())
+            ->setAddress1($dto->getDeputyAddress1())
+            ->setAddress2($dto->getDeputyAddress2())
+            ->setAddress3($dto->getDeputyAddress3())
+            ->setAddress4($dto->getDeputyAddress4())
+            ->setAddress5($dto->getDeputyAddress5())
+            ->setAddressPostcode($dto->getDeputyPostcode());
     }
 }

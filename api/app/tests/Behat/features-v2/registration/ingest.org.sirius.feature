@@ -5,7 +5,7 @@ Feature: Org CSV data ingestion - sirius source data
     Scenario: Uploading a CSV that contains new clients and named deputies only
         Given a csv has been uploaded to the sirius bucket with the file 'org-3-valid-rows.csv'
         When I run the lay CSV command the file contains the following new entities:
-            | clients | named_deputies | organisations | reports |
+            | clients | deputies | organisations | reports |
             | 3       | 2              | 2             | 3       |
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be in the command output
@@ -87,7 +87,7 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be in the command output
 
-# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process. 
+# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
 # Currently throws critical error
 #    @super-admin
 #    Scenario: Uploading a CSV that has missing required columns

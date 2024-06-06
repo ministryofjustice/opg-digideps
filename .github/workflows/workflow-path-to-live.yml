@@ -33,13 +33,22 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
+
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
         with:
           prerelease: false
           default_bump: "minor"
+
+      - name: show build identifier and tag
+        id: show
+        env:
+          TAG: ${{ steps.semver_tag.outputs.created_tag }}
+        run: |
+          echo "Build Identifier: main"
+          echo "Container Tag: ${TAG}"
 
   build_web_resources:
     name: build web resources
@@ -53,7 +62,7 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
@@ -119,29 +128,7 @@ jobs:
       terraform_path: account
       apply: true
       account_name: development
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
-    secrets: inherit
-
-  terraform_apply_development:
-    name: development environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_account_development
-      - docker_build_scan_push
-      - workflow_variables
-      - synchronisation_unit_tests
-      - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
-    with:
-      workspace: development
-      terraform_path: environment
-      apply: true
-      account_name: development
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -149,14 +136,19 @@ jobs:
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
-      - terraform_apply_development
+      - terraform_apply_account_development
+      - docker_build_scan_push
+      - synchronisation_unit_tests
+      - client_unit_tests
+      - api_unit_tests_1
+      - api_unit_tests_2
+      - api_unit_tests_3
     with:
       workspace: preproduction
       terraform_path: account
       apply: true
       account_name: preproduction
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   terraform_apply_integration:
@@ -170,8 +162,7 @@ jobs:
       terraform_path: environment
       apply: true
       account_name: preproduction
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   scale_services_up:
@@ -321,21 +312,7 @@ jobs:
       terraform_path: environment
       apply: true
       account_name: preproduction
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
-    secrets: inherit
-
-  smoke_tests_preproduction:
-    name: smoke tests on preproduction
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - terraform_apply_preproduction
-    with:
-      workspace: preproduction
-      account_name: preproduction
-      task_name: "smoke_tests"
-      timeout: "900"
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   terraform_apply_training:
@@ -349,8 +326,7 @@ jobs:
       terraform_path: environment
       apply: true
       account_name: preproduction
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   terraform_apply_account_production:
@@ -359,14 +335,12 @@ jobs:
     needs:
       - workflow_variables
       - terraform_apply_preproduction
-      - smoke_tests_preproduction
     with:
       workspace: production
       terraform_path: account
       apply: true
       account_name: production
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
     secrets: inherit
 
   terraform_apply_production:
@@ -379,9 +353,21 @@ jobs:
       workspace: production02
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: production
-      path_to_live: true
+    secrets: inherit
+
+  smoke_tests_production:
+    name: smoke tests on production
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_production
+    with:
+      workspace: production02
+      account_name: production
+      task_name: "smoke_tests"
+      timeout: "900"
     secrets: inherit
 
   backup_production:
@@ -389,7 +375,7 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - terraform_apply_production
+      - smoke_tests_production
     with:
       workspace: production02
       account_name: production
@@ -421,30 +407,30 @@ jobs:
       - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
-    name: notify of result
+    name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: true
+      success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: false
+      success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit

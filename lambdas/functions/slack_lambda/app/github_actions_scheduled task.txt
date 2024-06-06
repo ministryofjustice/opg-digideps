@@ -1,6 +1,0 @@
-:pipeline: *Digideps Scheduled Task {success_string}* {status_emoji}
-
-*Scheduled task name:* {scheduled_task}
-
-*Links*
-    *GH Actions build url:* {job_url}

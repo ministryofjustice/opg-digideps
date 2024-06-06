@@ -4,8 +4,8 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
-use App\Entity\NamedDeputy;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationSucceededEvent;
@@ -52,7 +52,7 @@ class ReportController extends AbstractController
         'balance-state',
         'client',
         'client-benefits-check',
-        'client-named-deputy',
+        'client-deputy',
         'contact',
         'debt',
         'debts',
@@ -115,6 +115,7 @@ class ReportController extends AbstractController
      *
      * @Route("/lay", name="lay_home")
      * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
+     *
      * @Template("@App/Report/Report/index.html.twig")
      *
      * @return array|RedirectResponse
@@ -153,6 +154,7 @@ class ReportController extends AbstractController
      * Edit single report.
      *
      * @Route("/reports/edit/{reportId}", name="report_edit")
+     *
      * @Template("@App/Report/Report/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -196,6 +198,7 @@ class ReportController extends AbstractController
      *   defaults={ "action" = "create"},
      *   requirements={ "action" = "(create|add)"}
      * )
+     *
      * @Template("@App/Report/Report/create.html.twig")
      *
      * @return array|RedirectResponse
@@ -229,7 +232,7 @@ class ReportController extends AbstractController
             $this->restClient->post('report', $form->getData());
 
             $user = $this->userApi->getUserWithData();
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
 
             return $this->redirect($this->generateUrl('homepage'));
         }
@@ -239,6 +242,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
+     *
      * @Template("@App/Report/Report/overview.html.twig")
      *
      * @return RedirectResponse|Response|null
@@ -260,8 +264,8 @@ class ReportController extends AbstractController
         /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
-        /** @var NamedDeputy */
-        $namedDeputy = $client->getNamedDeputy();
+        /** @var Deputy */
+        $deputy = $client->getDeputy();
 
         $activeReportId = null;
         if ($user->isDeputyOrg()) {
@@ -292,7 +296,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'namedDeputy' => $namedDeputy,
+            'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
@@ -344,8 +348,8 @@ class ReportController extends AbstractController
         if ($user->isLayDeputy()) {
             $jms[] = 'client-users';
         } elseif ($user->isDeputyOrg()) {
-            $jms[] = 'client-named-deputy';
-            $jms[] = 'named-deputy';
+            $jms[] = 'client-deputy';
+            $jms[] = 'deputy';
         }
 
         return $jms;
@@ -353,6 +357,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
+     *
      * @Template("@App/Report/Report/declaration.html.twig")
      *
      * @return array|RedirectResponse
@@ -368,7 +373,7 @@ class ReportController extends AbstractController
             throw new ReportNotSubmittableException($message);
         }
 
-        $deputy = $report->getClient()->getNamedDeputy();
+        $deputy = $report->getClient()->getDeputy();
 
         if (is_null($deputy)) {
             $deputy = $this->userApi->getUserWithData();
@@ -400,6 +405,7 @@ class ReportController extends AbstractController
      * Page displaying the report has been submitted.
      *
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
+     *
      * @Template("@App/Report/Report/submitConfirmation.html.twig")
      *
      * @return array|RedirectResponse
@@ -435,6 +441,7 @@ class ReportController extends AbstractController
      * Used for active and archived report.
      *
      * @Route("/report/{reportId}/review", name="report_review")
+     *
      * @Template("@App/Report/Report/review.html.twig")
      *
      * @return RedirectResponse
@@ -457,11 +464,13 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
-        // Redirect deputy to doc re-upload page if docs do not exist in S3
-        $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
+        if (!$report->isSubmitted()) {
+            // Redirect deputy to doc re-upload page if docs do not exist in S3
+            $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
 
-        if (!empty($documentsNotInS3)) {
-            return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            if (!empty($documentsNotInS3)) {
+                return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            }
         }
 
         return [

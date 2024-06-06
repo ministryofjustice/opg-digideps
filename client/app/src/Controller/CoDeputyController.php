@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 class CoDeputyController extends AbstractController
 {
@@ -44,6 +43,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
+     *
      * @Template("@App/CoDeputy/verification.html.twig")
      */
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
@@ -86,15 +86,22 @@ class CoDeputyController extends AbstractController
 
                 // validate against pre-registration data
                 try {
-                    $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
+                    $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
                     $user->setCoDeputyClientConfirmed(true);
+
+                    $user->setDeputyNo($coDeputyVerificationData['coDeputyUid']);
+                    $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
+
+                    $user->setActive(true);
+                    $user->setRegistrationDate(new \DateTime());
+
                     if ($mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
                     }
                     $this->restClient->put('user/'.$user->getId(), $user);
 
                     return $this->redirect($this->generateUrl('homepage'));
-                } catch (Throwable $e) {
+                } catch (\Throwable $e) {
                     $translator = $this->translator;
 
                     switch ((int) $e->getCode()) {
@@ -119,6 +126,14 @@ class CoDeputyController extends AbstractController
                             $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
                             break;
 
+                        case 462:
+                            $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
+                            break;
+
+                        case 463:
+                            $form->addError(new FormError($translator->trans('formErrors.deputyAlreadyLinkedToCaseNumber', [], 'register')));
+                            break;
+
                         default:
                             $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                     }
@@ -137,11 +152,12 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
+     *
      * @Template("@App/CoDeputy/add.html.twig")
      *
      * @return array|RedirectResponse
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function addAction(Request $request, Redirector $redirector)
     {
@@ -173,7 +189,7 @@ class CoDeputyController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
                 return $this->redirect($backLink);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
@@ -195,13 +211,12 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
-     * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
-     * @param $email
+     * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
      * @return array|RedirectResponse
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function resendActivationAction(Request $request, string $email)
     {
@@ -220,7 +235,7 @@ class CoDeputyController extends AbstractController
             try {
                 $formEmail = $form->getData()->getEmail();
 
-                //email was updated on the fly
+                // email was updated on the fly
                 if ($formEmail != $email) {
                     $this->restClient->put('codeputy/'.$existingCoDeputy->getId(), $form->getData(), []);
                 }
@@ -230,7 +245,7 @@ class CoDeputyController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
 
                 return $this->redirect($backLink);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));

@@ -236,7 +236,7 @@ trait ReportTrait
         $this->loginToFrontendAs($this->profAdminDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->profAdminDeputyNotStartedPfaLowAssetsDetails;
     }
-    
+
     /**
      * @Given a Lay Deputy has completed a Pfa Low Assets report
      */
