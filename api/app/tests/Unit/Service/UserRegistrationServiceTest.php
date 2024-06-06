@@ -215,8 +215,6 @@ class UserRegistrationServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @doesNotPerformAssertions
      */
     public function renderRegistrationHtmlEmail()
     {
@@ -279,7 +277,8 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegistrationVerificationService);
-        $this->userRegistrationService->selfRegisterUser($data);
+        $selfRegisterUser = $this->userRegistrationService->selfRegisterUser($data);
+        self::assertEquals(User::SELF_REGISTER, $selfRegisterUser->getRegistrationRoute());
     }
 
     public function testUserCannotRegisterIfDeputyExists()
