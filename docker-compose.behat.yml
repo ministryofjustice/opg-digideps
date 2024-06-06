@@ -1,5 +1,3 @@
-version: "3.2"
-
 services:
   integration-tests:
     build:
@@ -16,17 +14,17 @@ services:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
     environment:
-      APP_ENV: dev
+      APP_ENV: local
 
   frontend-app:
     environment:
-      APP_ENV: dev
+      APP_ENV: local
     env_file:
       - .env
 
   admin-app:
     environment:
-      APP_ENV: dev
+      APP_ENV: local
     env_file:
       - .env
 
