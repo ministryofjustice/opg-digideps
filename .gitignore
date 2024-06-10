@@ -40,7 +40,8 @@ log/pact.log
 **/client/resources/public/images
 **/client/resources/public/*.png
 **/client/resources/public/*.ico
-
+ecs-helper
+opg-ecs-helper_*.tar.gz
 
 # Lambda specific
 **lambda*.zip

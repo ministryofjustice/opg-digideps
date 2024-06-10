@@ -35,8 +35,12 @@ class OpgJsonFormatter extends MonologJsonFormatter
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
         foreach ($backtrace as $trace) {
-            // Files go up stack trace as monolog and finally the name of this file before we get to relevant calling file
-            if (isset($trace['file']) && !str_contains($trace['file'], 'monolog') && !str_contains($trace['file'], 'OpgJsonFormatter.php')) {
+            // We want the first file that doesn't have monolog in path or this file
+            if (
+                isset($trace['file'])
+                && !str_contains($trace['file'], 'monolog')
+                && !str_contains($trace['file'], 'OpgJsonFormatter.php')
+            ) {
                 return [
                     'file' => $trace['file'],
                     'line' => $trace['line'],
