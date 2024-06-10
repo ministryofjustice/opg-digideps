@@ -350,7 +350,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
 resource "aws_cloudwatch_event_rule" "sleep_mode_on" {
   name                = "sleep-mode-on-${local.environment}"
   description         = "Sleep mode - turn on environment ${terraform.workspace}"
-  schedule_expression = "cron(0 08,23 * * ? *)"
+  schedule_expression = "cron(0 07,23 * * ? *)"
   tags                = var.default_tags
   is_enabled          = var.account.sleep_mode_enabled ? true : false
 }
@@ -389,7 +389,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
 resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
   name                = "sleep-mode-off-${local.environment}"
   description         = "Sleep mode - turn off environment ${terraform.workspace}"
-  schedule_expression = "cron(0 02,21 * * ? *)"
+  schedule_expression = "cron(0 02,20 * * ? *)"
   tags                = var.default_tags
   is_enabled          = var.account.sleep_mode_enabled ? true : false
 }
