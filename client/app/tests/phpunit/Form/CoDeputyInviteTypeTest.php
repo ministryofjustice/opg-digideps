@@ -60,4 +60,21 @@ class CoDeputyInviteTypeTest extends TypeTestCase
         $errors = $form['firstname']->getErrors();
         $this->assertGreaterThan(0, $errors->count());
     }
+
+    public function testSubmissionWhenMinLengthIsNotMet()
+    {
+        $formData = [
+            'firstname' => 'Jamie',
+            'lastname' => 'J',
+            'email' => 'jamie@hotmail.co.uk',
+        ];
+
+        $invitedUser = new User();
+        $form = $this->factory->create(CoDeputyInviteType::class, $invitedUser);
+        $form->submit($formData);
+
+        $this->assertFalse($form->isValid());
+        $errors = $form['lastname']->getErrors();
+        $this->assertGreaterThan(0, $errors->count());
+    }
 }
