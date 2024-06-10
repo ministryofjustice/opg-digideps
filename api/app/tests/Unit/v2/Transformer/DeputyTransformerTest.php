@@ -2,18 +2,18 @@
 
 namespace App\Tests\Unit\v2\Transformer;
 
-use App\v2\DTO\NamedDeputyDto;
-use App\v2\Transformer\NamedDeputyTransformer;
+use App\v2\DTO\DeputyDto;
+use App\v2\Transformer\DeputyTransformer;
 use PHPUnit\Framework\TestCase;
 
-class NamedDeputyTransformerTest extends TestCase
+class DeputyTransformerTest extends TestCase
 {
     /**
      * @test
      */
-    public function transformsANamedDeputyDto()
+    public function transformsADeputyDto()
     {
-        $dto = (new NamedDeputyDto())
+        $dto = (new DeputyDto())
             ->setId(4)
             ->setDeputyUid('01234567')
             ->setFirstName('foo')
@@ -31,7 +31,7 @@ class NamedDeputyTransformerTest extends TestCase
             ->setAddressPostcode('apc')
             ->setAddressCountry('bar');
 
-        $transformed = (new NamedDeputyTransformer())->transform($dto);
+        $transformed = (new DeputyTransformer())->transform($dto);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('01234567', $transformed['deputy_uid']);

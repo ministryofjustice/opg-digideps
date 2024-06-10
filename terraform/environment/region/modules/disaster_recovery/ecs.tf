@@ -16,7 +16,7 @@ locals {
   dr_backup = jsonencode({
     cpu       = 0,
     essential = true,
-    image     = var.images.drbackup,
+    image     = var.images.dr-backup,
     name      = "backup_cross_account",
     healthCheck = {
       command     = ["CMD-SHELL", "echo healthy || exit 1"],
@@ -69,8 +69,7 @@ resource "aws_cloudwatch_log_group" "dr_backup" {
   tags              = var.default_tags
 }
 
-//TASK ROLE
-
+# TASK ROLE
 resource "aws_iam_role" "dr_backup" {
   assume_role_policy = var.task_role_assume_policy.json
   name               = "dr-backup.${var.environment}"
@@ -86,6 +85,7 @@ data "aws_iam_policy_document" "dr_backup" {
       "sts:AssumeRole"
     ]
   }
+
   statement {
     sid    = "allowKMSAccess"
     effect = "Allow"
@@ -95,6 +95,7 @@ data "aws_iam_policy_document" "dr_backup" {
     ]
     resources = [aws_kms_key.db_backup.arn]
   }
+
   statement {
     sid    = "allowSnapshotAccess"
     effect = "Allow"

@@ -48,19 +48,19 @@
             </dd>
         {% endif %}
 
-        {% if namedDeputy %}
+        {% if deputy %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     {{ 'namedDeputy' | trans({}, 'common') }}
                 </dt>
-                <dd class="govuk-summary-list__value behat-region-named-deputy-fullname  ">
-                    {{ namedDeputy.fullName }}
+                <dd class="govuk-summary-list__value behat-region-deputy-fullname  ">
+                    {{ deputy.fullName }}
                 </dd>
             </div>
         {% endif %}
     </dl>
 
-    {% if namedDeputy %}
+    {% if deputy %}
         <details class="govuk-details" data-module="govuk-details" role="group">
             <summary class="govuk-details__summary" role="button">
         <span class="govuk-details__summary-text">
@@ -68,12 +68,12 @@
         </span>
             </summary>
             <div class="govuk-details__text behat-region-deputy-details">
-                {% if namedDeputy.addressNotEmptyParts | length > 0 %}
+                {% if deputy.addressNotEmptyParts | length > 0 %}
                     <h3 class="govuk-heading-s">
                         {{ (page ~ '.namedDeputy.address') | trans }}
                     </h3>
                     <p class="govuk-body">
-                        {% for addressPart in namedDeputy.addressNotEmptyParts %}
+                        {% for addressPart in deputy.addressNotEmptyParts %}
                             {{ addressPart }}<br/>
                         {% endfor %}
                     </p>
@@ -82,17 +82,17 @@
                     {{ (page ~ '.namedDeputy.contact') | trans }}
                 </h3>
                 <p class="govuk-body">
-                    {% if namedDeputy.phoneMain %}
-                        {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br/>
+                    {% if deputy.phoneMain %}
+                        {{ 'phone' | trans({}, 'common') }}: {{ deputy.phoneMain }}<br/>
                     {% endif %}
-                    {% if namedDeputy.email %}
-                        {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br/>
+                    {% if deputy.email %}
+                        {{ 'email' | trans({}, 'common') }}: {{ deputy.email }}<br/>
                     {% endif %}
-                    {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
-                        {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br/>
+                    {% if deputy.email2 is defined and deputy.email2 %}
+                        {{ 'alternativeEmail' | trans({}, 'common') }}: {{ deputy.email2 }}<br/>
                     {% endif %}
-                    {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
-                        {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br/>
+                    {% if deputy.email3 is defined and deputy.email3 %}
+                        {{ 'alternativeEmail' | trans({}, 'common') }}: {{ deputy.email3 }}<br/>
                     {% endif %}
                 </p>
             </div>

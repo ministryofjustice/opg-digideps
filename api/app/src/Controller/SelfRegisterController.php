@@ -6,6 +6,7 @@ use App\Model\SelfRegisterData;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserRegistrationService;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,16 +22,20 @@ class SelfRegisterController extends RestController
     private AuthService $authService;
     private RestFormatter $formatter;
 
+    private EntityManagerInterface $em;
+
     public function __construct(
         LoggerInterface $logger,
         ValidatorInterface $validator,
         AuthService $authService,
-        RestFormatter $formatter
+        RestFormatter $formatter,
+        EntityManagerInterface $em
     ) {
         $this->logger = $logger;
         $this->validator = $validator;
         $this->authService = $authService;
         $this->formatter = $formatter;
+        $this->em = $em;
     }
 
     /**
@@ -104,13 +109,20 @@ class SelfRegisterController extends RestController
 
         try {
             $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
+            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid();
+
+            $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
+            if (!empty($existingDeputyCase)) {
+                throw new \RuntimeException(json_encode(sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber())), 463);
+            }
+
             $this->logger->warning('PreRegistration codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Throwable $e) {
             $this->logger->warning('PreRegistration codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
 
-        return ['verified' => $coDeputyVerified];
+        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid];
     }
 
     public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)

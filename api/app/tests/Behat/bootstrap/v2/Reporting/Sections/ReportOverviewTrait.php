@@ -51,30 +51,30 @@ trait ReportOverviewTrait
         $deputy = $this->fixtureUsers[0];
 
         $this->assertStringEqualsString(
-            $deputy->getNamedDeputyName(),
+            $deputy->getDeputyName(),
             $this->sectionList['Deputy details']['Full Name'],
-            'Asserting named deputy name found on Overview page');
+            'Asserting deputy name found on Overview page');
 
         // Format address into a single string
         $address = '';
-        foreach ($deputy->getNamedDeputyFullAddressArray() as $addressLine) {
+        foreach ($deputy->getDeputyFullAddressArray() as $addressLine) {
             $address = $address.preg_replace("/\r|\n/", ' ', $addressLine).' ';
         }
 
         $this->assertStringEqualsString(
             trim($address),
             $this->sectionList['Deputy details']['Address'],
-            'Asserting named deputy address found on Overview page');
+            'Asserting deputy address found on Overview page');
 
         $this->assertStringEqualsString(
-            $deputy->getNamedDeputyPhone(),
+            $deputy->getDeputyPhone(),
             $this->sectionList['Deputy details']['Phone'],
-            'Asserting named deputy phone found on Overview page');
+            'Asserting deputy phone found on Overview page');
 
         $this->assertStringEqualsString(
-            $deputy->getNamedDeputyEmail(),
+            $deputy->getDeputyEmail(),
             $this->sectionList['Deputy details']['Email address'],
-            'Asserting named deputy email found on Overview page');
+            'Asserting deputy email found on Overview page');
 
         // Contact email depends on User role
         $role = $deputy->getUserRole();

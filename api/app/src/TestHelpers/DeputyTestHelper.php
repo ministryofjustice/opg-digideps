@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use Faker\Factory;
 
-class NamedDeputyTestHelper
+class DeputyTestHelper
 {
     /**
-     * @return NamedDeputy
+     * @return Deputy
      */
-    public function generateNamedDeputy(string $email = null, string $deputyUid = null)
+    public function generateDeputy(?string $email = null, ?string $deputyUid = null)
     {
         $faker = Factory::create('en_GB');
 
-        return (new NamedDeputy())
+        return (new Deputy())
             ->setDeputyUid($deputyUid ?: $faker->randomNumber(8))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())

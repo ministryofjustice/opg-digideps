@@ -4,9 +4,9 @@ namespace App\v2\Transformer;
 
 use App\v2\DTO\ClientDto;
 use App\v2\DTO\DeputyDto;
-use App\v2\DTO\NamedDeputyDto;
 use App\v2\DTO\NdrDto;
 use App\v2\DTO\ReportDto;
+use App\v2\DTO\UserDto;
 
 class ClientTransformer
 {
@@ -16,23 +16,23 @@ class ClientTransformer
     /** @var NdrTransformer */
     private $ndrTransformer;
 
-    /** @var NamedDeputyTransformer */
-    private $namedDeputyTransformer;
+    /** @var DeputyTransformer */
+    private $deputyTransformer;
 
     public function __construct(
         ReportTransformer $reportTransformer,
         NdrTransformer $ndrTransformer,
-        NamedDeputyTransformer $namedDeputyTransformer
+        DeputyTransformer $deputyTransformer
     ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
-        $this->namedDeputyTransformer = $namedDeputyTransformer;
+        $this->deputyTransformer = $deputyTransformer;
     }
 
     /**
      * @return array
      */
-    public function transform(ClientDto $dto, array $exclude = [], array $org = null)
+    public function transform(ClientDto $dto, array $exclude = [], ?array $org = null)
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -57,8 +57,8 @@ class ClientTransformer
             $transformed['organisation'] = $org;
         }
 
-        if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
-            $transformed['named_deputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
+        if (!in_array('deputy', $exclude) && $dto->getDeputy() instanceof DeputyDto) {
+            $transformed['deputy'] = $this->transformDeputy($dto->getDeputy());
         }
 
         if (!in_array('deputies', $exclude) && !empty($dto->getDeputies())) {
@@ -115,37 +115,37 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformNamedDeputy(NamedDeputyDto $namedDeputy)
+    private function transformDeputy(DeputyDto $deputy)
     {
-        return $this->namedDeputyTransformer->transform($namedDeputy);
+        return $this->deputyTransformer->transform($deputy);
     }
 
-    private function transformDeputies(array $deputyDtos)
+    private function transformDeputies(array $userDtos)
     {
-        if (empty($deputyDtos)) {
+        if (empty($userDtos)) {
             return [];
         }
 
         $transformed = [];
 
-        foreach ($deputyDtos as $deputyDto) {
-            if ($deputyDto instanceof DeputyDto) {
+        foreach ($userDtos as $userDto) {
+            if ($userDto instanceof UserDto) {
                 $transformed[] = [
-                    'id' => $deputyDto->getId(),
-                    'firstname' => $deputyDto->getFirstName(),
-                    'lastname' => $deputyDto->getLastName(),
-                    'email' => $deputyDto->getEmail(),
-                    'role_name' => $deputyDto->getRoleName(),
-                    'address1' => $deputyDto->getAddress1(),
-                    'address2' => $deputyDto->getAddress2(),
-                    'address3' => $deputyDto->getAddress3(),
-                    'address_postcode' => $deputyDto->getAddressPostcode(),
-                    'address_country' => $deputyDto->getAddressCountry(),
-                    'ndr_enabled' => $deputyDto->getNdrEnabled(),
-                    'active' => $deputyDto->isActive(),
-                    'job_title' => $deputyDto->getJobTitle(),
-                    'phone_main' => $deputyDto->getPhoneMain(),
-                    'last_logged_in' => $deputyDto->getLastLoggedIn() instanceof \DateTime ? $deputyDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
+                    'id' => $userDto->getId(),
+                    'firstname' => $userDto->getFirstName(),
+                    'lastname' => $userDto->getLastName(),
+                    'email' => $userDto->getEmail(),
+                    'role_name' => $userDto->getRoleName(),
+                    'address1' => $userDto->getAddress1(),
+                    'address2' => $userDto->getAddress2(),
+                    'address3' => $userDto->getAddress3(),
+                    'address_postcode' => $userDto->getAddressPostcode(),
+                    'address_country' => $userDto->getAddressCountry(),
+                    'ndr_enabled' => $userDto->getNdrEnabled(),
+                    'active' => $userDto->isActive(),
+                    'job_title' => $userDto->getJobTitle(),
+                    'phone_main' => $userDto->getPhoneMain(),
+                    'last_logged_in' => $userDto->getLastLoggedIn() instanceof \DateTime ? $userDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
                 ];
             }
         }

@@ -18,7 +18,6 @@ class UserVoter extends Voter
      * Does this voter support the attribute?
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -42,7 +41,6 @@ class UserVoter extends Voter
      * Vote on whether to grant attribute permission on subject.
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
