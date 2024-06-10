@@ -1,3 +1,8 @@
+FROM golang:1.20-alpine as builder
+WORKDIR /app
+COPY sleep_mode sleep_mode
+RUN cd sleep_mode && go build -o environment_status main.go
+
 FROM alpine:3.19
 
 ENV POSTGRES_DATABASE **None**
@@ -24,6 +29,9 @@ RUN apk update && apk upgrade
 ADD tests/package.json tests/package.json
 ADD tests/package-lock.json tests/package-lock.json
 RUN cd tests && npm ci
+
+COPY --from=builder /app/sleep_mode/environment_status .
+RUN chmod +x environment_status
 
 ADD tests/smoke-tests/AdminSmokeTest.js tests/smoke-tests/AdminSmokeTest.js
 ADD tests/smoke-tests/FrontSmokeTest.js tests/smoke-tests/FrontSmokeTest.js
