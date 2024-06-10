@@ -39,6 +39,15 @@ class UserService
 
         $userToAdd->recreateRegistrationToken();
         $userToAdd->setCreatedBy($loggedInUser);
+
+        if ($loggedInUser->isLayDeputy()) {
+            $userToAdd->setRegistrationRoute(User::CO_DEPUTY_INVITE);
+        } elseif ($loggedInUser->hasAdminRole()) {
+            $userToAdd->setRegistrationRoute(User::ADMIN_INVITE);
+        } elseif ($loggedInUser->isOrgAdministrator()) {
+            $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE);
+        }
+
         $this->em->persist($userToAdd);
         $this->em->flush();
 
