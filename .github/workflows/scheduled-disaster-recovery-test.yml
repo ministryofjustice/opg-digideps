@@ -34,7 +34,7 @@ jobs:
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@bd0758102444af2a09b9e47a2c93d0f091c1252d
         with:
-          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-preproduction"
+          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-development"
           role-session-name: github-actions-terraform-run-task
           role-duration-seconds: 7200
           aws-region: eu-west-1
@@ -47,7 +47,7 @@ jobs:
       - name: restore to a point in time
         id: restore
         run: |
-          export TEN_MIN_AGO=$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')
+          export TEN_MINS_AGO=$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')
           python database_restore.py \
           --environment preproduction \
           --cluster_from api-integration \
@@ -71,7 +71,7 @@ jobs:
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@bd0758102444af2a09b9e47a2c93d0f091c1252d
         with:
-          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-preproduction"
+          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-development"
           role-session-name: github-actions-terraform-run-task
           role-duration-seconds: 7200
           aws-region: eu-west-1
