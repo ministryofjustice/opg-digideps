@@ -1,4 +1,8 @@
 Schema,Table,Field,Field_Type,Constraint,FakerType,Consistent_Field
+public,account,bank_name,character varying,,NA
+public,account,account_number,character varying,,StringNumber
+public,account,sort_code,character varying,,StringNumber
+public,account,account_type,character varying,,NA
 public,client,case_number,character varying,,NA,
 public,dd_user,address_country,character varying,,NA,
 public,pre_registration,client_case_number,character varying,,NA,
@@ -9,6 +13,7 @@ public,asset,has_charges,character varying,,NA,
 public,asset,has_mortgage,character varying,,NA,
 public,asset,is_rented_out,character varying,,NA,
 public,asset,is_subject_equity_rel,character varying,,NA,
+public,asset,owned,character varying,,NA
 public,lifestyle,does_client_undertake_social_activities,character varying,,NA,
 public,odr_account,account_number,character varying,,NA,
 public,odr_asset,has_charges,character varying,,NA,
@@ -54,6 +59,7 @@ public,odr,paid_for_anything,character varying,,NA,
 public,odr_account,is_joint_account,character varying,,NA,
 public,report,action_more_info,character varying,,NA,
 public,report,gifts_exist,character varying,,NA,
+public,money_transaction,category,character varying,,NA
 public,report,money_transactions_short_in_exist,character varying,,NA,
 public,report,money_transactions_short_out_exist,character varying,,NA,
 public,report,paid_for_anything,character varying,,NA,

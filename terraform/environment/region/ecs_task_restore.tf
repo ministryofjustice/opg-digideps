@@ -54,7 +54,7 @@ locals {
           },
           {
             name  = "CHUNK_SIZE",
-            value = "5000"
+            value = "10000"
           }
       ])
     }

@@ -272,7 +272,6 @@ public,money_short_category,report_id,integer,,FOREIGN KEY,NA
 public,money_short_category,type_id,character varying,255,,NA
 public,money_transaction,amount,numeric,,,NA
 public,money_transaction,bank_account_id,integer,,FOREIGN KEY,NA
-public,money_transaction,category,character varying,255,,Lorem
 public,money_transaction,deleted_at,timestamp without time zone,,,NA
 public,money_transaction,description,text,,,Lorem
 public,money_transaction,id,integer,,PRIMARY KEY,NA
