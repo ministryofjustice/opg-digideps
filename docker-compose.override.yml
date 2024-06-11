@@ -76,6 +76,11 @@ services:
     volumes:
       - ./client/app/govuk-notifications.yaml:/tmp/govuk-notifications.yaml
 
+  orchestration:
+    volumes:
+      - ./orchestration/anonymisation/output_all.csv:/anonymisation/output_all.csv
+      - ./orchestration/anonymisation/output_filtered.csv:/anonymisation/output_filtered.csv
+
   aws:
     volumes:
       - .:/app

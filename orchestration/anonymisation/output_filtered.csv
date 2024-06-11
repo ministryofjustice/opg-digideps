@@ -92,6 +92,22 @@ public,debt,more_details,text,,,Lorem
 public,decision,client_involved_details,text,,,Lorem
 public,decision,description,text,,,Lorem
 public,decision,id,integer,,PRIMARY KEY,NA
+public,deputy,address1,character varying,200,,Lorem
+public,deputy,address2,character varying,200,,Lorem
+public,deputy,address3,character varying,200,,Lorem
+public,deputy,address4,character varying,200,,Lorem
+public,deputy,address5,character varying,200,,Lorem
+public,deputy,address_country,character varying,10,,Lorem
+public,deputy,address_postcode,character varying,10,,PostCode
+public,deputy,deputy_uid,character varying,20,,Lorem
+public,deputy,email1,character varying,60,,Email
+public,deputy,email2,character varying,60,,Email
+public,deputy,email3,character varying,60,,Email
+public,deputy,firstname,character varying,100,,FirstName
+public,deputy,id,integer,,PRIMARY KEY,NA
+public,deputy,lastname,character varying,100,,LastName
+public,deputy,phone_alternative,character varying,20,,PhoneNumber
+public,deputy,phone_main,character varying,20,,PhoneNumber
 public,deputy_case,client_id,integer,,PRIMARY KEY,NA
 public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,document,filename,character varying,255,,Lorem
@@ -127,22 +143,6 @@ public,money_transaction_short,id,integer,,PRIMARY KEY,NA
 public,money_transaction_short,type,character varying,255,,Lorem
 public,money_transfer,description,character varying,75,,Lorem
 public,money_transfer,id,integer,,PRIMARY KEY,NA
-public,named_deputy,address1,character varying,200,,Lorem
-public,named_deputy,address2,character varying,200,,Lorem
-public,named_deputy,address3,character varying,200,,Lorem
-public,named_deputy,address4,character varying,200,,Lorem
-public,named_deputy,address5,character varying,200,,Lorem
-public,named_deputy,address_country,character varying,10,,Lorem
-public,named_deputy,address_postcode,character varying,10,,PostCode
-public,named_deputy,deputy_uid,character varying,20,,Lorem
-public,named_deputy,email1,character varying,60,,Email
-public,named_deputy,email2,character varying,60,,Email
-public,named_deputy,email3,character varying,60,,Email
-public,named_deputy,firstname,character varying,100,,FirstName
-public,named_deputy,id,integer,,PRIMARY KEY,NA
-public,named_deputy,lastname,character varying,100,,LastName
-public,named_deputy,phone_alternative,character varying,20,,PhoneNumber
-public,named_deputy,phone_main,character varying,20,,PhoneNumber
 public,note,category,character varying,100,,Lorem
 public,note,content,text,,,Lorem
 public,note,id,integer,,PRIMARY KEY,NA

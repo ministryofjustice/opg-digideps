@@ -46,6 +46,10 @@ locals {
           {
             name  = "DROP_PUBLIC",
             value = "yes"
+          },
+          {
+            name  = "ANON_PATH",
+            value = "anonymisation/"
           }
       ])
     }
