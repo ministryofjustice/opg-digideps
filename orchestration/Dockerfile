@@ -1,9 +1,12 @@
-FROM golang:1.20-alpine as builder
+FROM golang:1.22-alpine3.20 as builder
 WORKDIR /app
 COPY anonymisation anonymisation
 RUN cd anonymisation && go build -o anonymise main.go
 
-FROM alpine:3.19
+COPY sleep_mode sleep_mode
+RUN cd sleep_mode && go build -o environment_status main.go
+
+FROM alpine:3.20
 
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_HOST **None**
@@ -31,6 +34,11 @@ ADD tests/package-lock.json tests/package-lock.json
 RUN cd tests && npm ci
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
+COPY --from=builder /app/sleep_mode/environment_status .
+RUN chmod +x environment_status
+COPY --from=builder /app/anonymisation /anonymisation
+RUN chmod +x /anonymisation/anonymise
+
 ADD tests/smoke-tests/AdminSmokeTest.js tests/smoke-tests/AdminSmokeTest.js
 ADD tests/smoke-tests/FrontSmokeTest.js tests/smoke-tests/FrontSmokeTest.js
 ADD tests/resilience-tests/FrontLoadTest.js tests/resilience-tests/FrontLoadTest.js
@@ -44,6 +52,3 @@ ADD backup.sh backup.sh
 ADD restore.sh restore.sh
 ADD common.sh common.sh
 ADD analyse-database.sh analyse-database.sh
-
-COPY --from=builder /app/anonymisation/anonymise .
-RUN chmod +x anonymise

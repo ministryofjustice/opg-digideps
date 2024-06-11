@@ -95,11 +95,11 @@ public,client,court_date,date,,,NA
 public,client,created_at,timestamp without time zone,,,NA
 public,client,date_of_birth,date,,,NA
 public,client,deleted_at,timestamp without time zone,,,NA
+public,client,deputy_id,integer,,FOREIGN KEY,NA
 public,client,email,character varying,60,,Email
 public,client,firstname,character varying,50,,FirstName
 public,client,id,integer,,PRIMARY KEY,NA
 public,client,lastname,character varying,50,,LastName
-public,client,named_deputy_id,integer,,FOREIGN KEY,NA
 public,client,organisation_id,integer,,FOREIGN KEY,NA
 public,client,phone,character varying,20,,PhoneNumber
 public,client,postcode,character varying,10,,PostCode
@@ -164,6 +164,7 @@ public,dd_user,created_at,timestamp without time zone,,,NA
 public,dd_user,created_by_id,integer,,FOREIGN KEY,NA
 public,dd_user,deletion_protection,boolean,,,NA
 public,dd_user,deputy_no,character varying,100,,Lorem
+public,dd_user,deputy_uid,bigint,,,NA
 public,dd_user,email,character varying,60,,Email
 public,dd_user,firstname,character varying,100,,FirstName
 public,dd_user,id,integer,,PRIMARY KEY,NA
@@ -193,8 +194,27 @@ public,decision,description,text,,,Lorem
 public,decision,id,integer,,PRIMARY KEY,NA
 public,decision,report_id,integer,,FOREIGN KEY,NA
 public,decision,updated_at,timestamp without time zone,,,NA
-public,deputy_case,client_id,integer,,FOREIGN KEY,NA
+public,deputy,address1,character varying,200,,Lorem
+public,deputy,address2,character varying,200,,Lorem
+public,deputy,address3,character varying,200,,Lorem
+public,deputy,address4,character varying,200,,Lorem
+public,deputy,address5,character varying,200,,Lorem
+public,deputy,address_country,character varying,10,,Lorem
+public,deputy,address_postcode,character varying,10,,PostCode
+public,deputy,created_at,timestamp without time zone,,,NA
+public,deputy,deputy_uid,character varying,20,,Lorem
+public,deputy,email1,character varying,60,,Email
+public,deputy,email2,character varying,60,,Email
+public,deputy,email3,character varying,60,,Email
+public,deputy,firstname,character varying,100,,FirstName
+public,deputy,id,integer,,PRIMARY KEY,NA
+public,deputy,lastname,character varying,100,,LastName
+public,deputy,phone_alternative,character varying,20,,PhoneNumber
+public,deputy,phone_main,character varying,20,,PhoneNumber
+public,deputy,updated_at,timestamp without time zone,,,NA
+public,deputy,user_id,integer,,FOREIGN KEY,NA
 public,deputy_case,client_id,integer,,PRIMARY KEY,NA
+public,deputy_case,client_id,integer,,FOREIGN KEY,NA
 public,deputy_case,user_id,integer,,FOREIGN KEY,NA
 public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,document,created_by,integer,,FOREIGN KEY,NA
@@ -271,24 +291,6 @@ public,money_transfer,from_account_id,integer,,FOREIGN KEY,NA
 public,money_transfer,id,integer,,PRIMARY KEY,NA
 public,money_transfer,report_id,integer,,FOREIGN KEY,NA
 public,money_transfer,to_account_id,integer,,FOREIGN KEY,NA
-public,named_deputy,address1,character varying,200,,Lorem
-public,named_deputy,address2,character varying,200,,Lorem
-public,named_deputy,address3,character varying,200,,Lorem
-public,named_deputy,address4,character varying,200,,Lorem
-public,named_deputy,address5,character varying,200,,Lorem
-public,named_deputy,address_country,character varying,10,,Lorem
-public,named_deputy,address_postcode,character varying,10,,PostCode
-public,named_deputy,created_at,timestamp without time zone,,,NA
-public,named_deputy,deputy_uid,character varying,20,,Lorem
-public,named_deputy,email1,character varying,60,,Email
-public,named_deputy,email2,character varying,60,,Email
-public,named_deputy,email3,character varying,60,,Email
-public,named_deputy,firstname,character varying,100,,FirstName
-public,named_deputy,id,integer,,PRIMARY KEY,NA
-public,named_deputy,lastname,character varying,100,,LastName
-public,named_deputy,phone_alternative,character varying,20,,PhoneNumber
-public,named_deputy,phone_main,character varying,20,,PhoneNumber
-public,named_deputy,updated_at,timestamp without time zone,,,NA
 public,note,category,character varying,100,,Lorem
 public,note,client_id,integer,,FOREIGN KEY,NA
 public,note,content,text,,,Lorem
@@ -409,8 +411,8 @@ public,organisation,is_activated,boolean,,,NA
 public,organisation,name,character varying,256,,Lorem
 public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
-public,organisation_user,user_id,integer,,FOREIGN KEY,NA
 public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,organisation_user,user_id,integer,,FOREIGN KEY,NA
 public,pre_registration,client_case_number,character varying,20,,NA
 public,pre_registration,client_lastname,character varying,50,,LastName
 public,pre_registration,created_at,timestamp without time zone,,,NA
