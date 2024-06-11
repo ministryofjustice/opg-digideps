@@ -1,4 +1,5 @@
 # Sirius Lay CSV Ingestion
+
 resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
@@ -36,6 +37,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 }
 
 # Sirius Org CSV Ingestion
+
 resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
@@ -337,6 +339,84 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
         {
           "name" : "performance-data",
           "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:satisfaction-performance-stats"]
+        }
+      ]
+    }
+  )
+}
+
+# Sleep mode - Turn on environment
+
+resource "aws_cloudwatch_event_rule" "sleep_mode_on" {
+  name                = "sleep-mode-on-${local.environment}"
+  description         = "Sleep mode - turn on environment ${terraform.workspace}"
+  schedule_expression = "cron(0 08,23 * * ? *)"
+  tags                = var.default_tags
+  is_enabled          = var.account.sleep_mode_enabled ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "sleep_mode_on" {
+  rule     = aws_cloudwatch_event_rule.sleep_mode_on.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = module.sleep_mode.task_definition_arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.sleep_mode_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "sleep-mode",
+          "command" : ["./environment_status", "-action=ON"]
+        }
+      ]
+    }
+  )
+}
+
+# Sleep mode - Turn off environment
+
+resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
+  name                = "sleep-mode-off-${local.environment}"
+  description         = "Sleep mode - turn off environment ${terraform.workspace}"
+  schedule_expression = "cron(0 02,21 * * ? *)"
+  tags                = var.default_tags
+  is_enabled          = var.account.sleep_mode_enabled ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "sleep_mode_off" {
+  rule     = aws_cloudwatch_event_rule.sleep_mode_off.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = module.sleep_mode.task_definition_arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.sleep_mode_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "sleep-mode",
+          "command" : ["./environment_status", "-action=OFF"]
         }
       ]
     }
