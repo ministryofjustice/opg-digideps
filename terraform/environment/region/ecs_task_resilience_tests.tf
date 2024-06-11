@@ -38,6 +38,15 @@ data "aws_iam_policy_document" "resilience_tests" {
     ]
     resources = local.experiment_resources
   }
+
+  statement {
+    sid    = "CreateServiceLinkedRole"
+    effect = "Allow"
+    actions = [
+      "iam:CreateServiceLinkedRole"
+    ]
+    resources = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/fis.amazonaws.com/AWSServiceRoleForFIS"]
+  }
 }
 
 resource "aws_iam_role_policy" "resilience_tests" {
