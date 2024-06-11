@@ -17,9 +17,18 @@ func main() {
 	action := flag.String("action", "", "Action to perform: OFF or ON")
 	flag.Parse()
 
-	environment := os.Getenv("ENVIRONMENT")
-	if strings.Contains(environment, "production") {
-		fmt.Println("ENVIRONMENT env var can not contain production")
+	allowedEnvironments := []string{"preproduction", "training", "integration", "development"}
+	environment := strings.ToLower(os.Getenv("ENVIRONMENT"))
+
+	// Check if environment variable is not equal to any of the allowed environments
+	validEnv := false
+	for _, env := range allowedEnvironments {
+		if environment == env {
+			validEnv = true
+		}
+	}
+	if !validEnv {
+		fmt.Println("Environment is not one of the allowed environments. Returning...")
 		return
 	}
 
