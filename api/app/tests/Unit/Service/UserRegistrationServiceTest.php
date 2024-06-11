@@ -279,6 +279,7 @@ class UserRegistrationServiceTest extends TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegistrationVerificationService);
         $selfRegisteredUser = $this->userRegistrationService->selfRegisterUser($data);
         self::assertEquals(User::SELF_REGISTER, $selfRegisteredUser->getRegistrationRoute());
+        self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof \DateTime);
     }
 
     public function testUserCannotRegisterIfDeputyExists()
