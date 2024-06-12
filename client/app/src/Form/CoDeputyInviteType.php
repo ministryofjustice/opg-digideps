@@ -11,7 +11,9 @@ class CoDeputyInviteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', FormTypes\TextType::class)
+        $builder->add('firstname', FormTypes\TextType::class)
+                ->add('lastname', FormTypes\TextType::class)
+                ->add('email', FormTypes\TextType::class)
                 ->add('submit', FormTypes\SubmitType::class);
     }
 
