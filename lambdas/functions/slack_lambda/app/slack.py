@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import time
 import urllib
@@ -606,6 +607,10 @@ def send_message(payload):
 
 def lambda_handler(event, context):
     payload = generate_message(event)
-    response = send_message(payload)
 
+    pause_notifications = os.getenv("PAUSE_NOTIFICATIONS", "0")
+    if pause_notifications == "1":
+        return 0
+
+    response = send_message(payload)
     return response
