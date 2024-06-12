@@ -112,7 +112,12 @@ func CreateTables(db *sql.DB, columns []common.TableColumn, schema string) ([]co
 
 			// Create the SQL statement to create the table
 			processingPrimaryKey := "ppk_id SERIAL PRIMARY KEY"
-			sqlStatement := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.%s (%s, %s, %s)", schema, tableName, processingPrimaryKey, strings.Join(columnsSQL, ", "), "anonymised bool")
+			var sqlStatement string
+			if schema == "processing" {
+				sqlStatement = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.%s (%s, %s)", schema, tableName, processingPrimaryKey, "anonymised bool")
+			} else {
+				sqlStatement = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.%s (%s, %s, %s)", schema, tableName, processingPrimaryKey, strings.Join(columnsSQL, ", "), "anonymised bool")
+			}
 			// fmt.Print(sqlStatement + "\n")
 			// Execute the SQL statement to create the table
 			_, err := db.Exec(sqlStatement)

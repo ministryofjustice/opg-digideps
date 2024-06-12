@@ -18,13 +18,13 @@ func CopySourceTablesToProcessing(db *sql.DB, tables []common.Table, truncate bo
 		}
 
 		// Generate the INSERT INTO SELECT statement
-		fieldList := ""
-		for _, field := range table.FieldNames {
-			fieldList += field.Column + ","
-		}
-		fieldList = fieldList[:len(fieldList)-1] // Remove the trailing comma
+		// fieldList := ""
+		// for _, field := range table.FieldNames {
+		// 	fieldList += field.Column + ","
+		// }
+		// fieldList = fieldList[:len(fieldList)-1] // Remove the trailing comma
 
-		query := fmt.Sprintf("INSERT INTO processing.%s (%s,%s,%s) SELECT %s,%s,%s FROM public.%s", table.TableName, table.PkColumn.Column, fieldList, "anonymised", table.PkColumn.Column, fieldList, "false", table.TableName)
+		query := fmt.Sprintf("INSERT INTO processing.%s (%s,%s) SELECT %s,%s FROM public.%s", table.TableName, table.PkColumn.Column, "anonymised", table.PkColumn.Column, "false", table.TableName)
 
 		// Execute the INSERT INTO SELECT query
 		_, err := db.Exec(query)
