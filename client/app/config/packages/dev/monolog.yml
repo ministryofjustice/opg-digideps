@@ -5,14 +5,14 @@ monolog:
       type: stream
       path: php://stderr
       level: warning
-      formatter: line_formatter
+      formatter: opg_json_formatter
       channels: ["!translation", "!verbose"]
       bubble: false
     csv:
       type: stream
       path: php://stderr
       level: notice
-      formatter: line_formatter
+      formatter: opg_json_formatter
       channels: ["verbose"]
       bubble: false
     audit:
