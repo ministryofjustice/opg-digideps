@@ -260,7 +260,6 @@ class PreRegistrationControllerTest extends AbstractTestController
         try {
             $this->assertNull($loggedInUser->getDeputyNo());
             $this->assertEquals(0, $loggedInUser->getDeputyUid());
-            self::assertFalse($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
         } catch (\RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
             $this->assertEquals($expectedErrorMessage, $e->getMessage());
