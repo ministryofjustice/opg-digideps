@@ -1,6 +1,6 @@
 {% if ((formErrorMessages | length + formUncaughtErrors | length) > 0) and (error is not defined) %}
 <div class="govuk-!-width-two-thirds">
-    <div id="error-summary" class="govuk-error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
+    <div id="error-summary" class="govuk-error-summary" role="group" aria-labelledby="error-summary-heading">
         <h2 class="govuk-error-summary__title" id="error-summary-heading">{{ 'summaryHeading' | trans({},'common')}}</h2>
         <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">

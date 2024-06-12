@@ -18,9 +18,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <p class="govuk-hint">
+    <div class="govuk-hint">
         {{ 'form.categoriesIn.hint' | trans(transOptions) }}
-    </p>
+    </div>
 
     {% include '@App/Report/MoneyInShort/_checkboxes_list.html.twig' with {
     'elements': form.moneyShortCategoriesIn,

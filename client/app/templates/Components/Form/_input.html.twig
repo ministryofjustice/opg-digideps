@@ -28,9 +28,9 @@
 
     {% if (hintText is defined) and (hintText is not empty) %}
         {% set describedby = element.vars.id ~ '-hint' %}
-        <span class="govuk-hint" id="{{ element.vars.id }}-hint">
+        <div class="govuk-hint" id="{{ element.vars.id }}-hint">
             {{ hintText }}
-        </span>
+        </div>
     {% endif %}
 
     {% if hintListArray is defined and hintListArray is not empty %}

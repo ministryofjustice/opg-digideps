@@ -14,7 +14,7 @@
         </legend>
 
         <span class="govuk-!-font-weight-bold" id="{{ element.vars.id }}-hint">{{ hintTextBold }}</span>
-        <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
+        <div class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</div>
         {{ form_errors(element) }}
 
         {# day: show element or disable field depending on "showDay" setting #}

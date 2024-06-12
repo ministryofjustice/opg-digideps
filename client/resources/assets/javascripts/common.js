@@ -11,8 +11,8 @@ import MoneyTransfer from './modules_new/MoneyTransfer'
 import TableMultiSelect from './modules_new/TableMultiSelect'
 import ReturnHTML from './modules_new/ReturnHTML'
 import ShowHideContent from './modules_new/ShowHideContent'
-import MOJFrontend from '@ministryofjustice/frontend'
-import GOVUKFrontend from 'govuk-frontend'
+import { initAll as MOJFrontendAll } from '@ministryofjustice/frontend'
+import { initAll as GOVUKInitAll } from 'govuk-frontend'
 import GoogleAnalyticsLinkTracking from './modules_new/GoogleAnalyticsLinkTracking'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 import GoogleAnalyticsObject from './modules_new/GoogleAnalyticsObject'
@@ -70,6 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
     errorSummaries.focus()
   }
 
-  GOVUKFrontend.initAll()
-  MOJFrontend.initAll()
+  GOVUKInitAll()
+  MOJFrontendAll()
 })

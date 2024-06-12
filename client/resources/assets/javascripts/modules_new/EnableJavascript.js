@@ -1,6 +1,6 @@
 const EnableJavascript = {
   init: function (document) {
-    document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled')
+    document.body.className += ' js-enabled' + ('noModule' in window.HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')
   }
 }
 

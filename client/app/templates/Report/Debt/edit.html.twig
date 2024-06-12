@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    <p class="govuk-hint">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</p>
+    <div class="govuk-hint">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 

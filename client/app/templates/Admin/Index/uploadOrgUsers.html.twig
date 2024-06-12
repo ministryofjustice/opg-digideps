@@ -23,7 +23,7 @@
             <p class="govuk-!-margin-0 govuk-!-margin-bottom-2">Status: {{ processStatus == 'processing' ? 'Currently processing' : '' }}</span></p>
         {% endif %}
         <p class="govuk-!-margin-0 govuk-!-margin-bottom-1">S3 Filename: {{ fileUploadedInfo['fileName'] }}</p>
-        <span class="govuk-hint">Time uploaded: {{ fileUploadedInfo['date']|date('d/m/Y - H:i:s A') }}</span>
+        <div class="govuk-hint">Time uploaded: {{ fileUploadedInfo['date']|date('d/m/Y - H:i:s A') }}</div>
         {{ form_errors(processForm) }}
 
         {{ form_start(processForm) }}
