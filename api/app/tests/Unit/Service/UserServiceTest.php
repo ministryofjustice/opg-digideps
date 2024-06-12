@@ -39,28 +39,27 @@ class UserServiceTest extends TestCase
         $this->sut = new UserService($this->em, $this->orgService);
     }
 
-    public function testCoDeputyRegistrationRoute()
+    /**
+     * Provides logged-in user role and expected registration route that should be set.
+     *
+     * @return array
+     */
+    public static function setRoleForLoggedInUser()
     {
-        $loggedInUser = $this->user;
-        $loggedInUser->setRoleName(User::ROLE_LAY_DEPUTY);
-
-        $userToAdd = new User();
-
-        $userToAdd->setEmail('test@tester.co.uk');
-        $this->em->shouldReceive('persist');
-        $this->em->shouldReceive('flush');
-        $this->orgService->shouldReceive('addUserToUsersClients')
-        ->with($loggedInUser, $userToAdd);
-
-        $this->sut->addUser($loggedInUser, $userToAdd, '');
-
-        $this->assertEquals(User::CO_DEPUTY_INVITE, $userToAdd->getRegistrationRoute());
+        return [
+            [User::ROLE_LAY_DEPUTY, User::CO_DEPUTY_INVITE],
+            [User::ROLE_ADMIN, User::ADMIN_INVITE],
+            [User::ROLE_PROF_ADMIN, User::ORG_ADMIN_INVITE],
+        ];
     }
 
-    public function testAdminRegistrationRoute()
+    /**
+     * @dataProvider setRoleForLoggedInUser
+     */
+    public function testRegistrationRoute($role, $expectedRoute)
     {
         $loggedInUser = $this->user;
-        $loggedInUser->setRoleName(User::ROLE_ADMIN);
+        $loggedInUser->setRoleName($role);
 
         $userToAdd = new User();
 
@@ -72,24 +71,6 @@ class UserServiceTest extends TestCase
 
         $this->sut->addUser($loggedInUser, $userToAdd, '');
 
-        $this->assertEquals(User::ADMIN_INVITE, $userToAdd->getRegistrationRoute());
-    }
-
-    public function testOrgAdminRegistrationRoute()
-    {
-        $loggedInUser = $this->user;
-        $loggedInUser->setRoleName(User::ROLE_PROF_ADMIN);
-
-        $userToAdd = new User();
-
-        $userToAdd->setEmail('test@tester.co.uk');
-        $this->em->shouldReceive('persist');
-        $this->em->shouldReceive('flush');
-        $this->orgService->shouldReceive('addUserToUsersClients')
-            ->with($loggedInUser, $userToAdd);
-
-        $this->sut->addUser($loggedInUser, $userToAdd, '');
-
-        $this->assertEquals(User::ORG_ADMIN_INVITE, $userToAdd->getRegistrationRoute());
+        $this->assertEquals($expectedRoute, $userToAdd->getRegistrationRoute());
     }
 }
