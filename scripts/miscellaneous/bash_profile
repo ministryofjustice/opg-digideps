@@ -112,7 +112,7 @@ dd-behat-run()
       dd-cache-clear;
     fi
 
-    time docker-compose -f $DD_DOCKER_DIR/docker-compose.dev.yml run --rm test $@
+    time docker-compose -f $DD_DOCKER_DIR/docker-compose.behat.yml run --rm test $@
 
     # Re-enable dev mode
     dd-enable-debug

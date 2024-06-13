@@ -41,6 +41,6 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
 
     protected function getEnvironments()
     {
-        return ['dev', 'test'];
+        return ['dev', 'test', 'local'];
     }
 }

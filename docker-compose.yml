@@ -1,5 +1,3 @@
-version: "3.2"
-
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
   resources:
@@ -56,7 +54,7 @@ services:
       - file-scanner-rest
       - squid
     environment:
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
       https_proxy: https://squid:3128
       http_proxy: http://squid:3128
@@ -94,7 +92,7 @@ services:
       - localstack
       - mock-notify-api
     environment:
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./client/app/frontend.env
@@ -128,7 +126,7 @@ services:
       - redis-api
       - localstack
     environment:
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
       WORKSPACE: local
     env_file:
