@@ -30,6 +30,17 @@ data "aws_iam_policy_document" "sleep_mode" {
       "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:service/${local.environment}/*"
     ]
   }
+
+  statement {
+    sid    = "UpdateLambdaConfig"
+    effect = "Allow"
+    actions = [
+      "lambda:UpdateFunctionConfiguration"
+    ]
+    resources = [
+      data.aws_lambda_function.slack_lambda.arn
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "sleep_mode" {
