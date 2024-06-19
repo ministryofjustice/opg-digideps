@@ -27,4 +27,7 @@ RUN /harden-nginx.sh && rm /harden-nginx.sh
 USER nginx
 
 CMD confd -onetime -backend env \
+  && echo "Curling api..." \
+  && curl -I http://api/health-check/service \
+  && echo "Finished curling" \
   && nginx -g "daemon off;"

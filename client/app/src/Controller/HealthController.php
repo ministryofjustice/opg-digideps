@@ -10,8 +10,11 @@ use App\Service\Availability\RedisAvailability;
 use App\Service\Availability\SiriusApiAvailability;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @Route("/health-check")
@@ -23,7 +26,8 @@ class HealthController extends AbstractController
         private string $symfonyDebug,
         private string $environment,
         private LoggerInterface $logger,
-        private string $hostedEnv
+        private string $hostedEnv,
+        private HttpClientInterface $client
     ) {
     }
 
@@ -35,6 +39,54 @@ class HealthController extends AbstractController
     public function containerHealthAction()
     {
         return ['status' => 'OK'];
+    }
+
+    /**
+     * @Route("/test-requests", methods={"GET"})
+     */
+    public function testRequests(): JsonResponse
+    {
+        $results = [];
+
+        // URLs to test
+        $urls = [
+            'https://wikipedia.org',
+            'https://google.com',
+            'https://registry.terraform.io',
+            'https://complete-deputy-report.service.gov.uk',
+            'http://neverssl.com',
+            'http://captive.apple.com',
+        ];
+
+        $initialValue = getenv('JIMTEST');
+
+        // Change the value of the environment variable
+        $newValue = 'CHANGED';
+        putenv("JIMTEST=$newValue");
+
+        // Retrieve the new value of the environment variable
+        $changedValue = getenv('JIMTEST');
+
+        foreach ($urls as $url) {
+            $client = HttpClient::create([
+                'verify_peer' => false,  // Not recommended for production
+                'cafile' => '/usr/local/share/ca-certificates/myca.crt',
+            ]);
+            $response = $client->request('GET', $url);
+            $statusCode = $response->getStatusCode();
+            //            $response = $this->client->request('GET', $url);
+
+            $results[] = [
+                'url' => $url,
+                'status_code' => $statusCode,
+            ];
+        }
+        $results[] = [
+            'init_value' => $initialValue,
+            'changed_value' => $changedValue,
+        ];
+
+        return new JsonResponse($results);
     }
 
     /**

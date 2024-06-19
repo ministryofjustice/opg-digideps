@@ -1,4 +1,10 @@
 #!/bin/sh
+
+
+echo "Curling api..."
+curl -I http://api/health-check/service
+echo "Finished curling"
+
 set -e
 
 echo "Initializing cache..."
