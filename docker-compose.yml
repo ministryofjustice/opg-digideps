@@ -56,9 +56,9 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
-      https_proxy: https://squid:3128
       http_proxy: http://squid:3128
-      ftp_proxy: ftp://squid:3128
+      JIMTEST: ORIGINAL
+
     env_file:
       - ./client/app/frontend.env
     restart: always
@@ -170,6 +170,9 @@ services:
     build:
       context: .
       dockerfile: ./squid/Dockerfile
+    ports:
+      - 3128:3128
+      - 3129:3129
 
   orchestration:
     build: ./orchestration

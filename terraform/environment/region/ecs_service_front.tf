@@ -138,9 +138,8 @@ locals {
           { name = "NGINX_APP_NAME", value = "frontend" },
           { name = "ROLE", value = "front" },
           { name = "SESSION_PREFIX", value = "dd_front" },
-          { name = "https_proxy", value = "https://127.0.0.1:3128" },
           { name = "http_proxy", value = "http://127.0.0.1:3128" },
-          { name = "ftp_proxy", value = "ftp://127.0.0.1:3128" }
+          { name = "JIMTEST", value = "ORIGINAL" }
       ])
     }
   )
