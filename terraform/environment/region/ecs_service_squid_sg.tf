@@ -1,41 +1,27 @@
-module "front_service_security_group" {
+module "squid_service_security_group" {
   source      = "./modules/security_group"
-  description = "Front Service"
-  rules       = local.front_sg_rules
-  name        = "front-service"
+  description = "Squid Service"
+  rules       = local.squid_sg_rules
+  name        = "squid-service"
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
 }
 
 locals {
-  front_sg_rules = {
+  squid_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
     s3      = local.common_sg_rules.s3
     ssm     = local.common_sg_rules.ssm
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
-    front_elb_http = {
-      port        = 80
+    squid_elb_http = {
+      port        = 3128
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.front_elb_security_group.id
-    }
-    cache_front = {
-      port        = 6379
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = data.aws_security_group.front_cache_sg.id
-    }
-    squid = {
-      port        = 3128
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.squid_service_security_group.id
+      target      = module.front_service_security_group.id
     }
     api = {
       port        = 80
@@ -51,7 +37,7 @@ locals {
       target_type = "security_group_id"
       target      = module.htmltopdf_security_group.id
     }
-    notify = {
+    outbound = {
       port        = 443
       type        = "egress"
       protocol    = "tcp"
