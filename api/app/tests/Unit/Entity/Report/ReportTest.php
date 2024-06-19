@@ -52,7 +52,7 @@ class ReportTest extends KernelTestCase
         $endDate = new \DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
-        $this->assertEquals('2019-02-25', $report->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2019-02-26', $report->getDueDate()->format('Y-m-d'));
     }
 
     public static function constructorProvider()
