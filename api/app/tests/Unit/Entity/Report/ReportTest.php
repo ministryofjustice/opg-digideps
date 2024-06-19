@@ -458,14 +458,14 @@ class ReportTest extends KernelTestCase
     public function reportTypesWithEndDateProvider()
     {
         return [
-            // lay pre-changover (56 daye)
-            ['102', '2019-11-12', '2020-01-07'],
-            // lay post cchangeover (21 days)
+            // lay pre-changover (40 days)
+            ['102', '2019-11-12', '2020-01-10'],
+            // lay post cchangeover (15 days)
             ['102', '2019-11-13', '2019-12-04'],
-            // non-lay pre changover (56 days)
-            ['102-5', '2019-11-12', '2020-01-07'],
-            // non lay post changeover (56 days)
-            ['102-5', '2019-11-13', '2020-01-08'],
+            // non-lay pre changover (40 days)
+            ['102-5', '2019-11-12', '2020-01-10'],
+            // non lay post changeover (40 days)
+            ['102-5', '2019-11-13', '2020-01-13'],
         ];
     }
 
