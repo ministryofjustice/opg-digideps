@@ -1,0 +1,13 @@
+.api-webserver
+.api
+.htmltopdf
+.admin-webserver
+.admin
+.frontend
+.frontend-webserver
+.redis-frontend
+.internal
+.apple.com
+.terraform.io
+.google.com
+.service.gov.uk

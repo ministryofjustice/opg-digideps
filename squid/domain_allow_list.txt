@@ -1,1 +1,3 @@
 .wikipedia.org
+.terraform.io
+.service.gov.uk

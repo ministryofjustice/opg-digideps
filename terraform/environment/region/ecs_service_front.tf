@@ -4,7 +4,7 @@ resource "aws_ecs_task_definition" "front" {
   network_mode             = "awsvpc"
   cpu                      = var.account.cpu_low
   memory                   = var.account.memory_low
-  container_definitions    = "[${local.front_web}, ${local.front_container}, ${local.front_squid}]"
+  container_definitions    = "[${local.front_web}, ${local.front_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = var.default_tags
@@ -138,35 +138,34 @@ locals {
           { name = "NGINX_APP_NAME", value = "frontend" },
           { name = "ROLE", value = "front" },
           { name = "SESSION_PREFIX", value = "dd_front" },
-          { name = "https_proxy", value = "https://127.0.0.1:3128" },
-          { name = "http_proxy", value = "http://127.0.0.1:3128" },
-          { name = "ftp_proxy", value = "ftp://127.0.0.1:3128" }
+          { name = "http_proxy", value = "http://squid:3128" },
+          { name = "JIMTEST", value = "ORIGINAL" }
       ])
     }
   )
-  front_squid = jsonencode(
-    {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.squid-proxy,
-      mountPoints = [],
-      name        = "squid",
-      portMappings = [{
-        name          = "squid-port",
-        containerPort = 3128,
-        hostPort      = 3128,
-        protocol      = "tcp"
-      }],
-      volumesFrom = [],
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
-          awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "${aws_iam_role.front.name}.squid"
-        }
-      },
-      environment = []
-    }
-  )
+  #  front_squid = jsonencode(
+  #    {
+  #      cpu         = 0,
+  #      essential   = true,
+  #      image       = local.images.squid-proxy,
+  #      mountPoints = [],
+  #      name        = "squid",
+  #      portMappings = [{
+  #        name          = "squid-port",
+  #        containerPort = 3128,
+  #        hostPort      = 3128,
+  #        protocol      = "tcp"
+  #      }],
+  #      volumesFrom = [],
+  #      logConfiguration = {
+  #        logDriver = "awslogs",
+  #        options = {
+  #          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+  #          awslogs-region        = "eu-west-1",
+  #          awslogs-stream-prefix = "${aws_iam_role.front.name}.squid"
+  #        }
+  #      },
+  #      environment = []
+  #    }
+  #  )
 }
