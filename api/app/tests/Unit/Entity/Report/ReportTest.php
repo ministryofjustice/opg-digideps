@@ -55,6 +55,24 @@ class ReportTest extends KernelTestCase
         $this->assertEquals('2019-02-26', $report->getDueDate()->format('Y-m-d'));
     }
 
+    public function testDueDateAccountsForBankHolidaysForProfs()
+    {
+        $startDate = new \DateTime('2023-04-23');
+        $endDate = new \DateTime('2024-04-22');
+
+        $report = new Report($this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
+        $this->assertEquals('2024-06-19', $report->getDueDate()->format('Y-m-d'));
+    }
+
+    public function testDueDateAccountsForBankHolidaysForLays()
+    {
+        $startDate = new \DateTime('2023-04-23');
+        $endDate = new \DateTime('2024-04-22');
+
+        $report = new Report($this->client, Report::LAY_PFA_LOW_ASSETS_TYPE, $startDate, $endDate, false);
+        $this->assertEquals('2024-05-14', $report->getDueDate()->format('Y-m-d'));
+    }
+
     public static function constructorProvider()
     {
         return [
