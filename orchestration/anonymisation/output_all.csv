@@ -1,7 +1,7 @@
 Schema,Table,Field,Field_Type,Field_Length,Constraint,FakerType
 public,account,account_number,character varying,4,,NA
-public,account,account_type,character varying,125,,Lorem
-public,account,bank_name,character varying,500,,Lorem
+public,account,account_type,character varying,125,,NA
+public,account,bank_name,character varying,500,,NA
 public,account,closing_balance,numeric,,,NA
 public,account,created_at,timestamp without time zone,,,NA
 public,account,id,integer,,PRIMARY KEY,NA
@@ -10,7 +10,7 @@ public,account,is_joint_account,character varying,3,,NA
 public,account,meta,text,,,Lorem
 public,account,opening_balance,numeric,,,NA
 public,account,report_id,integer,,FOREIGN KEY,NA
-public,account,sort_code,character varying,6,,Lorem
+public,account,sort_code,character varying,6,,StringNumber
 public,account,updated_at,timestamp without time zone,,,NA
 public,action,do_you_expect_decisions,character varying,4,,NA
 public,action,do_you_expect_decisions_details,text,,,Lorem
@@ -31,7 +31,7 @@ public,asset,is_rented_out,character varying,4,,NA
 public,asset,is_subject_equity_rel,character varying,4,,NA
 public,asset,mortgage_outstanding,numeric,,,NA
 public,asset,occupants,character varying,550,,Lorem
-public,asset,owned,character varying,15,,Lorem
+public,asset,owned,character varying,15,,NA
 public,asset,owned_percentage,numeric,,,NA
 public,asset,postcode,character varying,10,,PostCode
 public,asset,rent_agreement_end_date,timestamp without time zone,,,NA
@@ -165,7 +165,7 @@ public,dd_user,created_by_id,integer,,FOREIGN KEY,NA
 public,dd_user,deletion_protection,boolean,,,NA
 public,dd_user,deputy_no,character varying,100,,Lorem
 public,dd_user,deputy_uid,bigint,,,NA
-public,dd_user,email,character varying,60,,Email
+public,dd_user,email,character varying,60,,NA
 public,dd_user,firstname,character varying,100,,FirstName
 public,dd_user,id,integer,,PRIMARY KEY,NA
 public,dd_user,job_title,character varying,150,,Lorem
@@ -272,6 +272,7 @@ public,money_short_category,report_id,integer,,FOREIGN KEY,NA
 public,money_short_category,type_id,character varying,255,,NA
 public,money_transaction,amount,numeric,,,NA
 public,money_transaction,bank_account_id,integer,,FOREIGN KEY,NA
+public,money_transaction,category,character varying,255,,NA
 public,money_transaction,deleted_at,timestamp without time zone,,,NA
 public,money_transaction,description,text,,,Lorem
 public,money_transaction,id,integer,,PRIMARY KEY,NA

@@ -50,9 +50,9 @@ func getSqlUpdateStatement(table common.Table, thisTablesDetails []common.LeftJo
 			}
 		}
 		if consistentFieldFromLeftJoin {
-			sqlQuery += fmt.Sprintf(" %s = CASE WHEN NULLIF(proc.%s, '') IS NULL THEN proc.%s ELSE COALESCE(%s.%s, anon.%s) END,", field.Column, field.Column, field.Column, consistentDetail.TableName, consistentDetail.FieldName, field.Column)
+			sqlQuery += fmt.Sprintf(" %s = CASE WHEN NULLIF(pub2.%s, '') IS NULL THEN pub2.%s ELSE COALESCE(%s.%s, anon.%s) END,", field.Column, field.Column, field.Column, consistentDetail.TableName, consistentDetail.FieldName, field.Column)
 		} else {
-			sqlQuery += fmt.Sprintf(" %s = CASE WHEN NULLIF(proc.%s, '') IS NULL THEN proc.%s ELSE anon.%s END,", field.Column, field.Column, field.Column, field.Column)
+			sqlQuery += fmt.Sprintf(" %s = CASE WHEN NULLIF(pub2.%s, '') IS NULL THEN pub2.%s ELSE anon.%s END,", field.Column, field.Column, field.Column, field.Column)
 		}
 	}
 	sqlQuery = sqlQuery[:len(sqlQuery)-1] // Remove the trailing comma
@@ -75,18 +75,12 @@ func getSqlUpdateStatement(table common.Table, thisTablesDetails []common.LeftJo
 }
 
 func UpdateAsyncOriginalTables(db *sql.DB, tableDetails []common.Table, chunkSize int, leftJoins []common.LeftJoinsDetails) error {
-	// Create a channel to control the number of concurrent goroutines
-	concurrency := 5
-	semaphore := make(chan struct{}, concurrency)
-
-	// Create a channel to signal when all updates are done
-	done := make(chan struct{})
-
+	concurrency := 4
+	semaphore := make(chan struct{}, concurrency) // Create a channel for concurrent goroutines
+	done := make(chan struct{})                   // Create a channel to signal when all updates are done
 	var wg sync.WaitGroup
-	// Launch a goroutine to close the done channel when all updates are done
-	go func() {
+	go func() { // Launch a goroutine to close the done channel when all updates are done
 		defer close(done)
-
 		wg.Add(len(tableDetails))
 		for range tableDetails {
 			<-done
@@ -95,20 +89,16 @@ func UpdateAsyncOriginalTables(db *sql.DB, tableDetails []common.Table, chunkSiz
 		wg.Wait() // Wait for all tables to finish processing
 	}()
 
-	// Iterate over each table
+	// Iterate over each table, launch a process for each and update the public schema tables in chunks
 	for _, table := range tableDetails {
-		// Acquire a token from the semaphore
-		semaphore <- struct{}{}
+		semaphore <- struct{}{} // Acquire a token from the semaphore
 
-		// Launch a goroutine to process the table
-		go func(table common.Table) {
+		go func(table common.Table) { // Launch a goroutine to process the table
 			defer func() {
 				// Release the token back to the semaphore
 				<-semaphore
 				done <- struct{}{} // Signal that this table's processing is done
 			}()
-
-			// var leftJoinSqlLinesFields []string
 
 			leftJoinSqlLinesField, thisTablesDetails := getLeftJoinsSql(table, leftJoins)
 
@@ -119,7 +109,10 @@ func UpdateAsyncOriginalTables(db *sql.DB, tableDetails []common.Table, chunkSiz
 
 				sqlQuery := getSqlUpdateStatement(table, thisTablesDetails, chunkSize, offset, leftJoinSqlLinesField)
 
-				// Execute the update query
+				if table.TableName == "deputy" {
+					fmt.Print(sqlQuery + "\n\n")
+				}
+
 				_, err := db.Exec(sqlQuery)
 				if err != nil {
 					fmt.Println(err) // Handle error
@@ -134,7 +127,7 @@ func UpdateAsyncOriginalTables(db *sql.DB, tableDetails []common.Table, chunkSiz
 	return nil
 }
 
-//  PRINT FOR QUERY
+//  DEBUGGING QUERY - Add the below to the UpdateAsyncOriginalTables function to see what the SQL is doing
 // if table.TableName == "named_deputy" {
 // 	fmt.Print(sqlQuery + "\n\n")
 // }

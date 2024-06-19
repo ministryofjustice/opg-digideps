@@ -49,6 +49,10 @@ locals {
             value = "yes"
           },
           {
+            name  = "ANONYMISE",
+            value = "no"
+          },
+          {
             name  = "ANON_PATH",
             value = "anonymisation/"
           },

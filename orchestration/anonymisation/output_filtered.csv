@@ -1,9 +1,7 @@
 Schema,Table,Field,Field_Type,Field_Length,Constraint,FakerType
-public,account,account_type,character varying,125,,Lorem
-public,account,bank_name,character varying,500,,Lorem
 public,account,id,integer,,PRIMARY KEY,NA
 public,account,meta,text,,,Lorem
-public,account,sort_code,character varying,6,,Lorem
+public,account,sort_code,character varying,6,,StringNumber
 public,action,do_you_expect_decisions_details,text,,,Lorem
 public,action,do_you_have_concerns_details,text,,,Lorem
 public,action,id,integer,,PRIMARY KEY,NA
@@ -13,7 +11,6 @@ public,asset,county,character varying,75,,Lorem
 public,asset,description,text,,,Lorem
 public,asset,id,integer,,PRIMARY KEY,NA
 public,asset,occupants,character varying,550,,Lorem
-public,asset,owned,character varying,15,,Lorem
 public,asset,postcode,character varying,10,,PostCode
 public,asset,title,character varying,100,,Lorem
 public,asset,type,character varying,255,,Lorem
@@ -75,7 +72,6 @@ public,dd_user,address4,character varying,200,,Lorem
 public,dd_user,address5,character varying,200,,Lorem
 public,dd_user,address_postcode,character varying,10,,PostCode
 public,dd_user,deputy_no,character varying,100,,Lorem
-public,dd_user,email,character varying,60,,Email
 public,dd_user,firstname,character varying,100,,FirstName
 public,dd_user,id,integer,,PRIMARY KEY,NA
 public,dd_user,job_title,character varying,150,,Lorem
@@ -134,7 +130,6 @@ public,mental_capacity,has_capacity_changed_details,text,,,Lorem
 public,mental_capacity,id,integer,,PRIMARY KEY,NA
 public,migrations,version,character varying,1024,PRIMARY KEY,NA
 public,money_short_category,id,integer,,PRIMARY KEY,NA
-public,money_transaction,category,character varying,255,,Lorem
 public,money_transaction,description,text,,,Lorem
 public,money_transaction,id,integer,,PRIMARY KEY,NA
 public,money_transaction,meta,text,,,Lorem

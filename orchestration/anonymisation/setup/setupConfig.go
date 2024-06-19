@@ -75,12 +75,11 @@ func ReadConfigData(filename string) ([]common.TableColumn, []common.LeftJoinsDe
 	for {
 		record, err := reader.Read()
 		if err != nil {
+			fmt.Print(err)
 			break
 		}
-		fmt.Print(record[6])
 
 		if len(record[6]) > 0 {
-			fmt.Print("JIMMY")
 			leftJoin := parseJoinString(record[6], record[1], record[2])
 			leftJoins = append(leftJoins, leftJoin)
 		}

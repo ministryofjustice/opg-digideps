@@ -113,18 +113,12 @@ func GenerateFakeData(db *sql.DB, tableDetails []common.Table, chunkSize int) er
 }
 
 func GenerateAsyncFakeData(db *sql.DB, tableDetails []common.Table, chunkSize int) error {
-	// Create a channel to control the number of concurrent goroutines
-	concurrency := 5
-	semaphore := make(chan struct{}, concurrency)
-
-	// Create a channel to signal when all updates are done
-	done := make(chan struct{})
-
+	concurrency := 4
+	semaphore := make(chan struct{}, concurrency) // Create a channel for concurrent goroutines
+	done := make(chan struct{})                   // Create a channel to signal when all updates are done
 	var wg sync.WaitGroup
-	// Launch a goroutine to close the done channel when all updates are done
-	go func() {
+	go func() { // Launch a goroutine to close the done channel when all updates are done
 		defer close(done)
-
 		wg.Add(len(tableDetails))
 		for range tableDetails {
 			<-done
@@ -143,12 +137,20 @@ func GenerateAsyncFakeData(db *sql.DB, tableDetails []common.Table, chunkSize in
 				<-semaphore
 				done <- struct{}{} // Signal that this table's processing is done
 			}()
-			numChunks := int(math.Ceil(float64(table.RowCount) / float64(chunkSize)))
+			remainingRows := int(table.RowCount) - int(table.ExistingRowCount)
+			numChunks := int(math.Ceil(float64(remainingRows) / float64(chunkSize)))
 
 			for i := 0; i < numChunks; i++ {
-				common.LogInformation(common.GetCurrentFuncName(), fmt.Sprintf("Table %s.%s, chunk %d of %d has had fake data inserted", "anon", table.TableName, i+1, numChunks))
+				var rowsThisChunk int
+				if (i + 1) == numChunks {
+					rowsThisChunk = remainingRows % chunkSize
+				} else {
+					rowsThisChunk = chunkSize
+				}
+
+				common.LogInformation(common.GetCurrentFuncName(), fmt.Sprintf("Table %s.%s, chunk %d of %d has had fake data inserted. Rows this chunk: %d", "anon", table.TableName, i+1, numChunks, rowsThisChunk))
 				var rows [][]common.FakedData
-				for j := 0; j < chunkSize; j++ {
+				for j := 0; j < rowsThisChunk; j++ {
 					var fakedColumns []common.FakedData
 					for _, col := range table.FieldNames {
 						fakedValue := ""

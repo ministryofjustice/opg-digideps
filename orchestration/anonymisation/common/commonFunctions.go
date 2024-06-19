@@ -48,6 +48,20 @@ func GetEnvWithDefault(env string, defaultValue string) string {
 	}
 }
 
+func ConvertToBool(value int) bool {
+	var valueAsBool bool
+	if value == 0 {
+		valueAsBool = false
+	} else if value == 1 {
+		valueAsBool = true
+	} else {
+		fmt.Println("Invalid value for boolean conversion - default to False")
+		return false
+	}
+
+	return valueAsBool
+}
+
 func RemoveDuplicateStr(strSlice []string) []string {
 	allKeys := make(map[string]bool)
 	list := []string{}

@@ -11,10 +11,11 @@ type TableColumn struct {
 }
 
 type Table struct {
-	TableName  string
-	PkColumn   TableColumn
-	FieldNames []TableColumn
-	RowCount   int
+	TableName        string
+	PkColumn         TableColumn
+	FieldNames       []TableColumn
+	RowCount         int
+	ExistingRowCount int
 }
 
 type FakedData struct {

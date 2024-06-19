@@ -286,6 +286,6 @@ class ProfUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return ['dev'];
+        return ['dev', 'local'];
     }
 }

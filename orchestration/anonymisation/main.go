@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
@@ -19,6 +18,9 @@ const DefaultChunkSize = 100
 
 func main() {
 	ChunkSize, _ := strconv.Atoi(common.GetEnvWithDefault("CHUNK_SIZE", "100"))
+	TruncateInt, _ := strconv.Atoi(common.GetEnvWithDefault("TRUNCATE", "1"))
+	TruncateBool := common.ConvertToBool(TruncateInt)
+
 	// Replace these with your PostgreSQL connection details
 	path := common.GetEnvWithDefault("ANON_PATH", "")
 	host := common.GetEnvWithDefault("POSTGRES_HOST", "127.0.0.1")
@@ -58,17 +60,17 @@ func main() {
 	err = setup.OutputToCSV(columnsFiltered, fmt.Sprintf("%soutput_filtered.csv", path))
 	common.CheckError(err)
 
-	// // ===== Initialisation of schemas and tables =====
-	err = initialisation.CreateSchemaIfNotExists(db, "processing", true)
+	// ===== Initialisation of schemas and tables =====
+	err = initialisation.CreateSchemaIfNotExists(db, "processing", TruncateBool)
 	common.CheckError(err)
 
-	err = initialisation.CreateSchemaIfNotExists(db, "anon", true)
+	err = initialisation.CreateSchemaIfNotExists(db, "anon", TruncateBool)
 	common.CheckError(err)
 
 	tableDetails, err := initialisation.CreateTables(db, columnsFiltered, "processing")
 	common.CheckError(err)
 
-	_, err = initialisation.CreateTables(db, columnsFiltered, "anon")
+	_, err = initialisation.CreateTables(db, columnsFiltered, "anon") //Only need tableDetails once
 	common.CheckError(err)
 
 	tableDetails, err = initialisation.CopySourceTablesToProcessing(db, tableDetails, true)
@@ -85,10 +87,4 @@ func main() {
 	end := time.Now()
 	duration := end.Sub(start)
 	fmt.Printf("===== Time taken: %s ======\n", duration)
-
-	for _, lj := range leftJoins {
-		lj2, _ := json.MarshalIndent(lj, "", "\t")
-		fmt.Println(string(lj2))
-	}
-
 }

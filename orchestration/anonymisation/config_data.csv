@@ -1,10 +1,11 @@
 Schema,Table,Field,Field_Type,Constraint,FakerType,Consistent_Field
-public,account,bank_name,character varying,,NA
-public,account,account_number,character varying,,StringNumber
-public,account,sort_code,character varying,,StringNumber
-public,account,account_type,character varying,,NA
+public,account,bank_name,character varying,,NA,
+public,account,account_number,character varying,,StringNumber,
+public,account,sort_code,character varying,,StringNumber,
+public,account,account_type,character varying,,NA,
 public,client,case_number,character varying,,NA,
 public,dd_user,address_country,character varying,,NA,
+public,dd_user,email,character varying,,NA,
 public,pre_registration,client_case_number,character varying,,NA,
 public,account,account_number,character varying,,NA,
 public,action,do_you_expect_decisions,character varying,,NA,
@@ -13,7 +14,7 @@ public,asset,has_charges,character varying,,NA,
 public,asset,has_mortgage,character varying,,NA,
 public,asset,is_rented_out,character varying,,NA,
 public,asset,is_subject_equity_rel,character varying,,NA,
-public,asset,owned,character varying,,NA
+public,asset,owned,character varying,,NA,
 public,lifestyle,does_client_undertake_social_activities,character varying,,NA,
 public,odr_account,account_number,character varying,,NA,
 public,odr_asset,has_charges,character varying,,NA,
@@ -59,7 +60,7 @@ public,odr,paid_for_anything,character varying,,NA,
 public,odr_account,is_joint_account,character varying,,NA,
 public,report,action_more_info,character varying,,NA,
 public,report,gifts_exist,character varying,,NA,
-public,money_transaction,category,character varying,,NA
+public,money_transaction,category,character varying,,NA,
 public,report,money_transactions_short_in_exist,character varying,,NA,
 public,report,money_transactions_short_out_exist,character varying,,NA,
 public,report,paid_for_anything,character varying,,NA,
@@ -71,6 +72,6 @@ public,odr,has_debts,character varying,,NA,
 public,report,has_debts,character varying,,NA,
 public,money_short_category,type_id,character varying,,NA,
 public,client,lastname,character varying,,LastName,client.case_number#pre_registration.client_case_number~client_lastname
-public,named_deputy,firstname,character varying,,FirstName,named_deputy.id#client.named_deputy_id#client.id#deputy_case.client_id#deputy_case.user_id#dd_user.id~firstname
-public,named_deputy,lastname,character varying,,LastName,named_deputy.id#client.named_deputy_id#client.id#deputy_case.client_id#deputy_case.user_id#dd_user.id~lastname
+public,deputy,firstname,character varying,,FirstName,deputy.user_id#dd_user.id~firstname
+public,deputy,lastname,character varying,,LastName,deputy.user_id#dd_user.id~lastname
 public,pre_registration,deputy_firstname,character varying,,FirstName,pre_registration.client_case_number#client.case_number#client.id#deputy_case.client_id#deputy_case.user_id#dd_user.id~firstname

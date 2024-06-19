@@ -10,7 +10,6 @@ func getLeftJoinsSql(table common.Table, leftJoinsDetails []common.LeftJoinsDeta
 	var thisTablesUpdateFields []common.LeftJoinsDetails
 	for _, field := range table.FieldNames {
 		for _, leftJoinsDetail := range leftJoinsDetails {
-
 			if field.Table == leftJoinsDetail.SourceTable && field.Column == leftJoinsDetail.SourceField {
 
 				thisTablesUpdateFields = append(thisTablesUpdateFields, leftJoinsDetail)
@@ -30,6 +29,5 @@ func getLeftJoinsSql(table common.Table, leftJoinsDetails []common.LeftJoinsDeta
 	}
 
 	leftJoinStringsDeduped := common.RemoveDuplicateStr(leftJoinStrings)
-
 	return leftJoinStringsDeduped, thisTablesUpdateFields
 }
