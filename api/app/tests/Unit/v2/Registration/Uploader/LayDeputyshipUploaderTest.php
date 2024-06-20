@@ -110,8 +110,6 @@ class LayDeputyshipUploaderTest extends TestCase
             ->willReturn([]);
 
         $return = $this->sut->upload($collection);
-        
-        print_r($return);
 
         $this->assertEquals(3, $return['added']);
         $this->assertCount(0, $return['errors']);
@@ -223,8 +221,8 @@ class LayDeputyshipUploaderTest extends TestCase
         $faker = Factory::create();
 
         return (new LayDeputyshipDto())
-            ->setCaseNumber((string) $faker->randomNumber(8))
-            ->setDeputyUid((string) $faker->randomNumber(8))
+            ->setCaseNumber('case-'.$count)
+            ->setDeputyUid('depnum-'.$count)
             ->setCourtOrderUid($faker->randomNumber(8));
     }
 

@@ -50,7 +50,7 @@ class PreRegistration
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
         $this->hybrid = $row['Hybrid'] ?? null;
-        $this->courtOrderUid = intval($row['CourtOrderUid']) ?? 0;
+        $this->courtOrderUid = isset($row['CourtOrderUid']) ? intval($row['CourtOrderUid']) : 0;
 
         $this->updatedAt = null;
     }

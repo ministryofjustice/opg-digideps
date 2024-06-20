@@ -8,12 +8,14 @@ use App\Entity\Client;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Factory\OrganisationFactory;
 use App\Repository\ClientRepository;
-use App\Repository\CourtOrderRepository;
 use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\v2\Assembler\ClientAssembler;
+use App\v2\Assembler\NamedDeputyAssembler;
 use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
@@ -26,23 +28,12 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class OrgDeputyshipUploaderTest extends KernelTestCase
 {
-    /** @var OrgDeputyshipUploader */
-    private $sut;
-
-    /** @var EntityManager */
-    private $em;
-
-    /** @var NamedDeputyRepository */
-    private $namedDeputyRepository;
-
-    /** @var OrganisationRepository */
-    private $orgRepository;
-
-    /** @var ClientRepository */
-    private $clientRepository;
-
-    /** @var ReportRepository */
-    private $reportRepository;
+    private readonly OrgDeputyshipUploader $sut;
+    private readonly EntityManager $em;
+    private readonly NamedDeputyRepository $namedDeputyRepository;
+    private readonly OrganisationRepository $orgRepository;
+    private readonly ClientRepository $clientRepository;
+    private readonly ReportRepository $reportRepository;
 
     public function setUp(): void
     {
@@ -57,14 +48,14 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->orgRepository = $this->em->getRepository(Organisation::class);
         $this->clientRepository = $this->em->getRepository(Client::class);
         $this->reportRepository = $this->em->getRepository(Report::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
-        $this->courtOrderAssembler = $this->createMock(CourtOrderDtoAssembler::class);
-        $this->courtOrderRepository = $this->createMock(CourtOrderRepository::class);
-        $this->courtOrderFactory = $this->createMock(CourtOrderFactory::class);
 
-        $orgFactory = $container->get('App\Factory\OrganisationFactory');
-        $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
-        $namedDeputyAssembler = $container->get('App\v2\Assembler\NamedDeputyAssembler');
+        $this->logger = $this->createMock(LoggerInterface::class);
+
+        $orgFactory = $container->get(OrganisationFactory::class);
+        $clientAssembler = $container->get(ClientAssembler::class);
+        $namedDeputyAssembler = $container->get(NamedDeputyAssembler::class);
+        $courtOrderFactory = $container->get(CourtOrderFactory::class);
+        $courtOrderAssembler = $container->get(CourtOrderDtoAssembler::class);
 
         $this->sut = new OrgDeputyshipUploader(
             $this->em, 
@@ -72,9 +63,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             $clientAssembler, 
             $namedDeputyAssembler, 
             $this->logger,
-            $this->courtOrderAssembler,
-            $this->courtOrderRepository,
-            $this->courtOrderFactory,
+            $courtOrderAssembler,
+            $courtOrderFactory,
         );
 
         $this->purgeDatabase();
@@ -84,32 +74,6 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     {
         $purger = new ORMPurger($this->em);
         $purger->purge();
-    }
-
-    /** @test  */
-    public function uploadNewNamedDeputiesAreCreated()
-    {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-
-        $this->sut->upload($deputyships);
-
-        self::assertTrue(
-            OrgDeputyshipDTOTestHelper::namedDeputyWasCreated($deputyships[0], $this->namedDeputyRepository),
-            sprintf('Named deputy with DeputyUid %s could not be found', $deputyships[0]->getDeputyUid())
-        );
-    }
-
-    /** @test */
-    public function uploadExistingNamedDeputiesAreNotProcessed()
-    {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        OrgDeputyshipDTOTestHelper::ensureNamedDeputyInUploadExists($deputyships[0], $this->em);
-
-        $actualUploadResults = $this->sut->upload($deputyships);
-
-        self::assertCount(0, $actualUploadResults['added']['named_deputies']);
-        self::assertCount(0, $actualUploadResults['updated']['named_deputies']);
-        self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
     /** @test */

@@ -54,7 +54,6 @@ class OrgDeputyshipUploader
         private readonly NamedDeputyAssembler $namedDeputyAssembler,
         private readonly LoggerInterface $logger,
         private readonly CourtOrderDtoAssembler $courtOrderAssembler,
-        private readonly CourtOrderRepository $courtOrderRepository,
         private readonly CourtOrderFactory $courtOrderFactory,
     ) {
     }
@@ -88,20 +87,7 @@ class OrgDeputyshipUploader
 
                 $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
 
-                if ($courtOrder = $this->courtOrderRepository->findCourtOrderByUid($deputyshipDto->getCourtOrderUid())) {
-                    if ($courtOrder->getOrderType() !== $deputyshipDto->getHybrid()) {
-                        $courtOrder->setOrderType($deputyshipDto->getHybrid());
-                    }
-
-                    $courtOrder->setActive(true);
-                    $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
-                } else {
-                    $courtOrder = $this->createCourtOrderEntity($deputyshipDto);
-                    
-                    $this->added['court_orders'][] = $deputyshipDto->getCourtOrderUid();
-                }
-                
-                $this->persistCourtOrderEntity($courtOrder);
+                $this->handleCourtOrder($deputyshipDto);
 
                 $this->skipArchivedClients();
                 $this->handleNamedDeputy($deputyshipDto);
@@ -114,7 +100,7 @@ class OrgDeputyshipUploader
             } catch (\Throwable $e) {
                 $message = str_replace(PHP_EOL, '', $e->getMessage());
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $message);
-
+                echo $message;
                 $this->logger->notice($message);
                 $uploadResults['errors']['messages'][] = $message;
 
@@ -204,7 +190,7 @@ class OrgDeputyshipUploader
 
             $this->currentOrganisation = $organisation;
 
-            $this->added['organisations'][] = $organisation;
+            $this->added['organisations'][] = $organisation->getId();
         }
     }
 
@@ -217,7 +203,7 @@ class OrgDeputyshipUploader
         if (is_null($this->client)) {
             $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
 
-            $this->added['clients'][] = $dto->getCaseNumber();
+            $this->added['clients'][] = $this->client->getCaseNumber();
         } else {
             if (is_null($this->client->getCourtDate())) {
                 $this->client->setCourtDate($dto->getCourtDate());
@@ -451,17 +437,26 @@ class OrgDeputyshipUploader
         }
     }
 
-    private function createCourtOrderEntity(OrgDeputyshipDto $layDeputyshipDto): CourtOrderDto
+    private function handleCourtOrder(OrgDeputyshipDto $deputyshipDto): void
     {
-        return $this->courtOrderAssembler->assembleFromDto($layDeputyshipDto);
-    }
+        if ($courtOrder = $this->em->getRepository(CourtOrder::class)->findCourtOrderByUid($deputyshipDto->getCourtOrderUid())) {
+            if ($courtOrder->getOrderType() !== $deputyshipDto->getHybrid()) {
+                $courtOrder->setOrderType($deputyshipDto->getHybrid());
+            }
 
-    private function persistCourtOrderEntity(CourtOrder|CourtOrderDto $courtOrder): void
-    {
+            $courtOrder->setActive(true);
+            $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+        } else {
+            $courtOrder = $this->courtOrderAssembler->assembleFromDto($deputyshipDto);
+
+            $this->added['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+        }
+
         $courtOrderEntity = (!$courtOrder instanceof CourtOrder)?
             $this->courtOrderFactory->createFromDto($courtOrder):
             $courtOrder;
 
         $this->em->persist($courtOrderEntity);
+        $this->em->flush();
     }
 }

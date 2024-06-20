@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\Tests\Unit\v2\Registration\TestHelpers;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ClientRepository;
+use App\Repository\CourtOrderRepository;
 use App\Repository\NamedDeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
+use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
@@ -174,6 +177,11 @@ class OrgDeputyshipDTOTestHelper
         return $client->getReports()->first()->getType() == $reportType;
     }
 
+    public static function courtOrderWasCreated(OrgDeputyshipDto $orgDeputyship, CourtOrderRepository $courtOrderRepo)
+    {
+        return $courtOrderRepo->findCourtOrderByUid($orgDeputyship->getCourtOrderUid()) instanceof CourtOrder;
+    }
+
     public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo)
     {
         $report = $reportRepo->findOneBy(['client' => $client]);
@@ -257,6 +265,20 @@ class OrgDeputyshipDTOTestHelper
         $em->flush();
 
         return $client;
+    }
+    
+    public static function ensureCourtOrderInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    {
+        $courtOrder = new CourtOrder([
+            'CourtOrderUid' => $dto->getCourtOrderUid(),
+            'Type' => 'SINGLE',
+            'Active' => true,
+        ]);
+        
+        $em->persist($courtOrder);
+        $em->flush();
+        
+        return $courtOrder;
     }
 
     public static function ensureAReportExistsAndIsAssociatedWithClient(

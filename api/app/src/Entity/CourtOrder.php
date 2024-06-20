@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */

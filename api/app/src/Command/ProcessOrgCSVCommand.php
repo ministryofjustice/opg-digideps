@@ -71,12 +71,14 @@ class ProcessOrgCSVCommand extends Command
             'named_deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
+            'court_orders' => 0,
         ],
         'updated' => [
             'clients' => 0,
             'named_deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
+            'court_orders' => 0,
         ],
         'skipped' => 0,
     ];
