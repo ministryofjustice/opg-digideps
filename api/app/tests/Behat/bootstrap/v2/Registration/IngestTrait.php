@@ -130,6 +130,12 @@ trait IngestTrait
                 $this->reports['added']['found'],
                 'Count of entities based on UIDs - reports'
             );
+
+            $this->assertIntEqualsInt(
+                $this->courtOrders['added']['expected'],
+                $this->courtOrders['added']['found'],
+                'Count of entities based on UIDs - Court Orders'
+            );
         } else {            
             $this->assertIntEqualsInt(
                 $this->preRegistration['expected'], 
@@ -137,12 +143,6 @@ trait IngestTrait
                 'Count of entities based on UIDs - Pre-registration'
             );
         }
-        
-        $this->assertIntEqualsInt(
-            $this->courtOrders['expected'],
-            $this->courtOrders['found'],
-            'Count of entities based on UIDs - Court Orders'
-        );
     }
 
     /**
@@ -195,11 +195,11 @@ trait IngestTrait
                 ],
                 [
                     'added' => [
-                        'dataType' => sprintf('reports added: %u', $this->courtOrders['added']['expected']),
+                        'dataType' => sprintf('court_orders added: %u', $this->courtOrders['added']['expected']),
                         'message' => 'Asserting Court Orders added on the Command output is incorrect'
                     ],
                     'updated' => [
-                        'dataType' => sprintf('reports updated: %u', $this->courtOrders['updated']['expected']),
+                        'dataType' => sprintf('court_orders updated: %u', $this->courtOrders['updated']['expected']),
                         'message' => 'Asserting Court Orders updated on the Command output is incorrect'
                     ]
                 ],
@@ -313,6 +313,7 @@ trait IngestTrait
         $this->expectedNamedDeputyName = $newNamedDeputy;
 
         $this->namedDeputies['added']['expected'] = 1;
+        $this->courtOrders['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
@@ -353,6 +354,7 @@ trait IngestTrait
     public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingNamedDeputy(string $address)
     {
         $this->namedDeputies['added']['expected'] = 1;
+        $this->courtOrders['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
         
@@ -402,7 +404,7 @@ trait IngestTrait
         $this->namedDeputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001', 75123468759);
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
@@ -622,7 +624,7 @@ trait IngestTrait
      */
     public function iUploadCsvWith1ValidAnd1InvalidRow(int $entitiesSkipped, int $newEntitiesCount)
     {
-        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname'];
+        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname', 'CourtOrderUid'];
         $this->preRegistration['expected'] = $newEntitiesCount;
         $this->skipped['expected'] = $entitiesSkipped;
 
@@ -779,7 +781,7 @@ trait IngestTrait
         $this->namedDeputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008', 25123468757);
 
         $this->em->clear();
 

@@ -79,7 +79,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $courtOrder = new CourtOrder([
             'CourtOrderUid' => $deputyships[0]->getCourtOrderUid(),
-            'Type' => 'SINGLE',
+            'Type' => $deputyships[0]->getHybrid(),
             'Active' => true,
         ]);
         $this->courtOrderFactory
@@ -199,7 +199,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $courtOrder = new CourtOrder([
             'CourtOrderUid' => $deputyships[0]->getCourtOrderUid(),
-            'Type' => 'SINGLE',
+            'Type' => $deputyships[0]->getHybrid(),
             'Active' => true,
         ]);
         $this->courtOrderFactory

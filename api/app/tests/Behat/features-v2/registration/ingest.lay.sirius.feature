@@ -17,7 +17,7 @@ Feature: Lay CSV data ingestion - sirius source data
     @super-admin
     Scenario: Uploading a Lay CSV that contains deputies with missing required information alongside valid deputy rows
         Given a csv has been uploaded to the sirius bucket with the file 'lay-1-row-missing-all-required-1-valid-row.csv'
-        When I run the lay CSV command the file has 1 row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and 1 valid row
+        When I run the lay CSV command the file has 1 row with missing values for 'caseNumber, clientLastname, deputyUid, deputySurname and CourtOrderUid' and 1 valid row
         Then the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be in the command output
 

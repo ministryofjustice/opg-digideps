@@ -382,27 +382,51 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
-    public function createProfAdminNotStarted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
-    {
-        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
+    public function createProfAdminNotStarted(
+        BeforeScenarioScope $scenario = null, 
+        string $namedDeputyEmail = null, 
+        string $caseNumber = null, 
+        string $deputyUid = null,
+        int $courtOrderUid = null,
+    ) {
+        $userDetails = $this->fixtureHelper->createProfAdminNotStarted(
+            $this->testRunId, 
+            $namedDeputyEmail, 
+            $caseNumber, 
+            $deputyUid, 
+            $courtOrderUid
+        );
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareNotStartedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-health-welfare-completed
      */
-    public function createProfAdminCompleted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
-    {
-        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
+    public function createProfAdminCompleted(
+        BeforeScenarioScope $scenario = null, 
+        string $namedDeputyEmail = null, 
+        string $caseNumber = null, 
+        string $deputyUid = null,
+        int $courtOrderUid = null,
+    ) {
+        $userDetails = $this->fixtureHelper->createProfAdminCompleted(
+            $this->testRunId, 
+            $namedDeputyEmail, 
+            $caseNumber, 
+            $deputyUid,
+            $courtOrderUid
+        );
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareCompletedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-health-welfare-submitted
      */
-    public function createProfAdminSubmitted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
+    public function createProfAdminSubmitted(BeforeScenarioScope $scenario = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
+        $userDetails = $this->fixtureHelper->createProfAdminSubmitted(
+            $this->testRunId,
+        );
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareSubmittedDetails = new UserDetails($userDetails);
     }
 
@@ -544,9 +568,14 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
      */
-    public function createPfaHighNotStartedLegacyPasswordHash(BeforeScenarioScope $scenario = null, string $caseNumber = null)
-    {
-        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
+    public function createPfaHighNotStartedLegacyPasswordHash(
+        BeforeScenarioScope $scenario = null, 
+        string $caseNumber = null
+    ) {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash(
+            $this->testRunId, 
+            $caseNumber
+        );
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
     }
 
@@ -590,7 +619,11 @@ class BaseFeatureContext extends MinkContext
     {
         $rndKey = mt_rand(0, 99999);
 
-        return $this->fixtureHelper->createDataForAnalytics('a_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
+        return $this->fixtureHelper->createDataForAnalytics(
+            'a_'.$rndKey.$runNumber, 
+            $timeAgo, 
+            $satisfactionScore
+        );
     }
 
     public function createAdditionalDataForUserSearchTests()

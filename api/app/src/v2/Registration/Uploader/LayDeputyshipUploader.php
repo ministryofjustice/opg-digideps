@@ -70,7 +70,9 @@ class LayDeputyshipUploader
                             $courtOrder->setOrderType($layDeputyshipDto->getHybrid());
                         }
 
-                        $courtOrder->setActive(true);
+                        if (!$courtOrder->isActive()) {
+                            $courtOrder->setActive(true);
+                        }
                     } else {
                         $courtOrder = $this->createCourtOrderEntity($layDeputyshipDto);
                     }

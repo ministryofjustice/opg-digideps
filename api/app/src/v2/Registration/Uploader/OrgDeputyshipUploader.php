@@ -444,8 +444,10 @@ class OrgDeputyshipUploader
                 $courtOrder->setOrderType($deputyshipDto->getHybrid());
             }
 
-            $courtOrder->setActive(true);
-            $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+            if (!$courtOrder->isActive()) {
+                $courtOrder->setActive(true);
+                $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+            }
         } else {
             $courtOrder = $this->courtOrderAssembler->assembleFromDto($deputyshipDto);
 
