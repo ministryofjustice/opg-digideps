@@ -91,6 +91,7 @@ CMD confd -onetime -backend env \
 
 FROM application as production
 COPY client/docker/app/health-check.sh /usr/local/bin/health-check.sh
+RUN chmod +x /usr/local/bin/health-check.sh
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 

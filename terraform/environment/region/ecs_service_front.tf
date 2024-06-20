@@ -120,8 +120,8 @@ locals {
       }],
       healthCheck = {
         command : [
-          "CMD-SHELL",
-          "curl -f http://127.0.0.1:80/health-check || exit 1"
+          "CMD",
+          "/usr/local/bin/health-check.sh"
         ],
         interval = 30,
         timeout  = 5,

@@ -29,4 +29,5 @@ echo "Restore complete"
 if [ "${ANONYMISE}" == "yes" ]; then
 	echo "Anonymising data..."
 	./anonymisation/anonymise
-echo "Data Anonymised"
+	echo "Data Anonymised"
+fi
