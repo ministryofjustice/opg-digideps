@@ -6,13 +6,13 @@ namespace App\Tests\Unit\v2\Registration\Uploader;
 
 use App\Entity\Client;
 use App\Entity\CourtOrder;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Factory\OrganisationFactory;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Assembler\ClientAssembler;
-use App\v2\Assembler\NamedDeputyAssembler;
+use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
 use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
@@ -29,14 +29,14 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     private readonly CourtOrderFactory $courtOrderFactory;
     private readonly OrganisationFactory $orgFactory;
     private readonly ClientAssembler $clientAssembler;
-    private readonly NamedDeputyAssembler $namedDeputyAssembler;
+    private readonly DeputyAssembler $deputyAssembler;
 
     public function setUp(): void
     {
         $this->emMock = \Mockery::mock(EntityManager::class);
         $this->orgFactory = \Mockery::mock(OrganisationFactory::class);
         $this->clientAssembler = \Mockery::mock(ClientAssembler::class);
-        $this->namedDeputyAssembler = \Mockery::mock(NamedDeputyAssembler::class);
+        $this->deputyAssembler = \Mockery::mock(DeputyAssembler::class);
         $this->logger = \Mockery::mock(LoggerInterface::class);
         $this->courtOrderAssembler = \Mockery::mock(CourtOrderDtoAssembler::class);
         $this->courtOrderFactory = \Mockery::mock(CourtOrderFactory::class);
@@ -45,7 +45,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             $this->emMock,
             $this->orgFactory,
             $this->clientAssembler,
-            $this->namedDeputyAssembler,
+            $this->deputyAssembler,
             $this->logger,
             $this->courtOrderAssembler,
             $this->courtOrderFactory,
@@ -53,7 +53,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadNewNamedDeputiesAreCreated()
+    public function uploadNewDeputiesAreCreated()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -99,18 +99,18 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             ->with(['deputyUid' => $deputyships[0]->getDeputyUid()])
             ->andReturn(null);
 
-        $namedDeputy = new NamedDeputy();
-        $namedDeputy->setId($deputyships[0]->getDeputyUid());
+        $deputy = new Deputy();
+        $deputy->setId($deputyships[0]->getDeputyUid());
 
-        $this->namedDeputyAssembler
+        $this->deputyAssembler
             ->shouldReceive('assembleFromOrgDeputyshipDto')
             ->with($deputyships[0])
-            ->andReturn($namedDeputy);
+            ->andReturn($deputy);
 
         $this->emMock
             ->shouldReceive('persist')
             ->once()
-            ->with($namedDeputy)
+            ->with($deputy)
             ->shouldReceive('flush')
             ->once();
 
@@ -165,7 +165,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $reportId = $client->getCaseNumber() . '-' . $deputyships[0]->getReportEndDate()->format('Y-m-d');
 
         self::assertEquals($deputyships[0]->getCaseNumber(), $result['added']['clients'][0]);
-        self::assertEquals($deputyships[0]->getDeputyUid(), $result['added']['named_deputies'][0]);
+        self::assertEquals($deputyships[0]->getDeputyUid(), $result['added']['deputies'][0]);
         self::assertEquals($reportId, $result['added']['reports'][0]);
         self::assertEquals($orgId, $result['added']['organisations'][0]);
         self::assertEquals($deputyships[0]->getCourtOrderUid(), $result['added']['court_orders'][0]);
@@ -173,7 +173,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /** @test */
-    public function uploadExistingNamedDeputiesAreNotProcessed()
+    public function uploadExistingDeputiesAreNotProcessed()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -214,8 +214,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             ->shouldReceive('flush')
             ->once();
 
-        $namedDeputy = new NamedDeputy();
-        $namedDeputy
+        $deputy = new Deputy();
+        $deputy
             ->setId($deputyships[0]->getDeputyUid())
             ->setAddress1($deputyships[0]->getDeputyAddress1())
             ->setAddress2($deputyships[0]->getDeputyAddress2())
@@ -230,12 +230,12 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->emMock
             ->shouldReceive('getRepository->findOneBy')
             ->with(['deputyUid' => $deputyships[0]->getDeputyUid()])
-            ->andReturn($namedDeputy);
+            ->andReturn($deputy);
 
         $this->emMock
             ->shouldReceive('persist')
             ->once()
-            ->with($namedDeputy)
+            ->with($deputy)
             ->shouldReceive('flush')
             ->once();
 
@@ -288,8 +288,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $result = $this->sut->upload($deputyships);
 
-        self::assertEmpty($result['added']['named_deputies']);
-        self::assertEmpty($result['updated']['named_deputies']);
+        self::assertEmpty($result['added']['deputies']);
+        self::assertEmpty($result['updated']['deputies']);
         self::assertEmpty($result['errors']['messages']);
     }
 }
