@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
-use App\Entity\User;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
@@ -136,7 +135,7 @@ class BaseFeatureContext extends MinkContext
         $this->application->setCatchExceptions(true);
         $this->application->setAutoExit(true);
         $this->output = new BufferedOutput();
-        
+
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {
@@ -164,7 +163,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
-    public function createPfaHighNotStarted(BeforeScenarioScope $scenario = null, string $caseNumber = null)
+    public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -205,7 +204,7 @@ class BaseFeatureContext extends MinkContext
         $userDetails = $this->fixtureHelper->createProfPfaLowAssetsNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
     }
-    
+
     /**
      * @BeforeScenario @lay-pfa-low-completed
      */
@@ -223,7 +222,7 @@ class BaseFeatureContext extends MinkContext
         $userDetails = $this->fixtureHelper->createProfPfaLowAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
     }
-    
+
     /**
      * @BeforeScenario @lay-health-welfare-not-started
      */
@@ -263,9 +262,11 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-submitted
      */
-    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, string $testRunId = null)
+    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, ?string $testRunId = null)
     {
-        $userDetails = new UserDetails($this->fixtureHelper->createLayCombinedHighAssetsSubmitted($testRunId ?: $this->testRunId));
+        $userDetails = new UserDetails(
+            $this->fixtureHelper->createLayCombinedHighAssetsSubmitted($testRunId ?: $this->testRunId)
+        );
         $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = $userDetails;
 
         return $userDetails;
@@ -384,14 +385,14 @@ class BaseFeatureContext extends MinkContext
      */
     public function createProfAdminNotStarted(
         BeforeScenarioScope $scenario = null, 
-        string $namedDeputyEmail = null, 
+        string $deputyEmail = null, 
         string $caseNumber = null, 
         string $deputyUid = null,
         int $courtOrderUid = null,
     ) {
         $userDetails = $this->fixtureHelper->createProfAdminNotStarted(
             $this->testRunId, 
-            $namedDeputyEmail, 
+            $deputyEmail, 
             $caseNumber, 
             $deputyUid, 
             $courtOrderUid
@@ -404,14 +405,14 @@ class BaseFeatureContext extends MinkContext
      */
     public function createProfAdminCompleted(
         BeforeScenarioScope $scenario = null, 
-        string $namedDeputyEmail = null, 
+        string $deputyEmail = null, 
         string $caseNumber = null, 
         string $deputyUid = null,
         int $courtOrderUid = null,
     ) {
         $userDetails = $this->fixtureHelper->createProfAdminCompleted(
             $this->testRunId, 
-            $namedDeputyEmail, 
+            $deputyEmail, 
             $caseNumber, 
             $deputyUid,
             $courtOrderUid
@@ -635,7 +636,7 @@ class BaseFeatureContext extends MinkContext
     {
         $this->fixtureHelper->createDataForAdminUserTests('edit');
     }
-    
+
     public function expireDocumentFromUnSubmittedDeputyReport(string $storageReference): void
     {
         $this->fixtureHelper->deleteFilesFromS3($storageReference);

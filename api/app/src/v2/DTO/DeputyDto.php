@@ -8,53 +8,78 @@ class DeputyDto
     private $id;
 
     /** @var string */
+    private $deputyUid;
+
+    /** @var string */
     private $firstName;
 
     /** @var string */
     private $lastName;
 
     /** @var string */
-    private $email;
+    private $email1;
 
     /** @var string */
-    private $roleName;
-
-    /** @var string|null */
-    private $address1;
-
-    /** @var string|null */
-    private $address2;
-
-    /** @var string|null */
-    private $address3;
+    private $email2;
 
     /** @var string */
-    private $addressPostcode;
-
-    /** @var string|null */
-    private $addressCountry;
-
-    /** @var bool */
-    private $ndrEnabled;
-
-    /** @var bool */
-    private $active;
-
-    /** @var string */
-    private $jobTitle;
+    private $email3;
 
     /** @var string */
     private $phoneMain;
 
-    /** @var \DateTime */
-    private $lastLoggedIn;
+    /** @var string */
+    private $phoneAlterrnative;
 
-    /** @var array */
-    private $clients;
+    /** @var string */
+    private $address1;
+
+    /** @var string */
+    private $address2;
+
+    /** @var string */
+    private $address3;
+
+    /** @var string */
+    private $address4;
+
+    /** @var string */
+    private $address5;
+
+    /** @var string */
+    private $addressPostcode;
+
+    /** @var string */
+    private $addressCountry;
 
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setId(int $id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): string
+    {
+        return $this->deputyUid;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setDeputyUid(string $deputyUid)
+    {
+        $this->deputyUid = $deputyUid;
+
+        return $this;
     }
 
     public function getFirstName(): string
@@ -63,194 +88,101 @@ class DeputyDto
     }
 
     /**
-     * @return string
+     * @return $this
      */
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoleName(): ?string
-    {
-        return $this->roleName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddressPostcode(): ?string
-    {
-        return $this->addressPostcode;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getNdrEnabled(): ?bool
-    {
-        return $this->ndrEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @return string
-     */
-    public function getJobTitle(): ?string
-    {
-        return $this->jobTitle;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhoneMain(): ?string
-    {
-        return $this->phoneMain;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastLoggedIn(): ?\DateTime
-    {
-        return $this->lastLoggedIn;
-    }
-
-    /**
-     * @return array
-     */
-    public function getClients(): ?array
-    {
-        return $this->clients;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id): DeputyDto
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime $lastLoggedIn
-     *
-     * @return DeputyDto
-     */
-    public function setLastLoggedIn($lastLoggedIn)
-    {
-        $this->lastLoggedIn = $lastLoggedIn;
-
-        return $this;
-    }
-
-    /**
-     * @param string $firstName
-     */
-    public function setFirstName($firstName): DeputyDto
+    public function setFirstName(string $firstName)
     {
         $this->firstName = $firstName;
 
         return $this;
     }
 
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
     /**
-     * @param string $lastName
+     * @return $this
      */
-    public function setLastName($lastName): DeputyDto
+    public function setLastName(string $lastName)
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * @param string $email
-     */
-    public function setEmail($email): DeputyDto
+    public function getEmail1(): string
     {
-        $this->email = strtolower($email);
+        return $this->email1;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setEmail1(string $email1)
+    {
+        $this->email1 = $email1;
 
         return $this;
     }
 
-    /**
-     * @param string $roleName
-     */
-    public function setRoleName($roleName): DeputyDto
+    public function getEmail2(): ?string
     {
-        $this->roleName = $roleName;
+        return $this->email2;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setEmail2(string $email2)
+    {
+        $this->email2 = $email2;
 
         return $this;
     }
 
-    /**
-     * @param string $addressPostcode
-     */
-    public function setAddressPostcode($addressPostcode): DeputyDto
+    public function getEmail3(): ?string
     {
-        $this->addressPostcode = $addressPostcode;
+        return $this->email3;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setEmail3(string $email3)
+    {
+        $this->email3 = $email3;
 
         return $this;
     }
 
-    /**
-     * @param bool $ndrEnabled
-     */
-    public function setNdrEnabled($ndrEnabled): DeputyDto
+    public function getPhoneMain(): ?string
     {
-        $this->ndrEnabled = $ndrEnabled;
-
-        return $this;
-    }
-
-    public function setActive(bool $active): DeputyDto
-    {
-        $this->active = $active;
-
-        return $this;
+        return $this->phoneMain;
     }
 
     /**
-     * @param string $jobTitle
+     * @return $this
      */
-    public function setJobTitle($jobTitle): DeputyDto
-    {
-        $this->jobTitle = $jobTitle;
-
-        return $this;
-    }
-
-    /**
-     * @param string $phoneMain
-     */
-    public function setPhoneMain($phoneMain): DeputyDto
+    public function setPhoneMain(string $phoneMain)
     {
         $this->phoneMain = $phoneMain;
 
         return $this;
     }
 
-    public function setClients(array $clients): DeputyDto
+    public function getPhoneAlterrnative(): ?string
     {
-        $this->clients = $clients;
+        return $this->phoneAlterrnative;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setPhoneAlterrnative(string $phoneAlterrnative)
+    {
+        $this->phoneAlterrnative = $phoneAlterrnative;
 
         return $this;
     }
@@ -260,7 +192,10 @@ class DeputyDto
         return $this->address1;
     }
 
-    public function setAddress1(?string $address1): DeputyDto
+    /**
+     * @return $this
+     */
+    public function setAddress1(string $address1)
     {
         $this->address1 = $address1;
 
@@ -272,7 +207,10 @@ class DeputyDto
         return $this->address2;
     }
 
-    public function setAddress2(?string $address2): DeputyDto
+    /**
+     * @return $this
+     */
+    public function setAddress2(string $address2)
     {
         $this->address2 = $address2;
 
@@ -284,9 +222,57 @@ class DeputyDto
         return $this->address3;
     }
 
-    public function setAddress3(?string $address3): DeputyDto
+    /**
+     * @return $this
+     */
+    public function setAddress3(string $address3)
     {
         $this->address3 = $address3;
+
+        return $this;
+    }
+
+    public function getAddress4(): ?string
+    {
+        return $this->address4;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAddress4(string $address4)
+    {
+        $this->address4 = $address4;
+
+        return $this;
+    }
+
+    public function getAddress5(): ?string
+    {
+        return $this->address5;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAddress5(string $address5)
+    {
+        $this->address5 = $address5;
+
+        return $this;
+    }
+
+    public function getAddressPostcode(): ?string
+    {
+        return $this->addressPostcode;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAddressPostcode(string $addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
 
         return $this;
     }
@@ -296,7 +282,10 @@ class DeputyDto
         return $this->addressCountry;
     }
 
-    public function setAddressCountry(?string $addressCountry): DeputyDto
+    /**
+     * @return $this
+     */
+    public function setAddressCountry(string $addressCountry)
     {
         $this->addressCountry = $addressCountry;
 

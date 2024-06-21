@@ -34,7 +34,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:
@@ -46,11 +46,18 @@ jobs:
           echo ${build_identifier}
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
         with:
           prerelease: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: "minor"
+      - name: show build identifier and tag
+        id: show
+        env:
+          BUILD: ${{ steps.variables.outputs.build_identifier }}
+          TAG: ${{ steps.semver_tag.outputs.created_tag }}
+        run: |
+          echo "Build Identifier: ${BUILD}"
+          echo "Container Tag: ${TAG}"
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'
         with:
@@ -85,7 +92,7 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
@@ -150,7 +157,7 @@ jobs:
     with:
       workspace: development
       terraform_path: account
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
     secrets: inherit
 
@@ -165,15 +172,16 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
+      pull_request_path: true
     secrets: inherit
 
   ecr_scan_results:
     name: ecr scan results
     uses: ./.github/workflows/_ecr-scanning.yml
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
     needs:
       - terraform_apply_environment
       - workflow_variables
@@ -340,30 +348,30 @@ jobs:
       - name: workflow ended successfully
         run: |
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
-    name: notify of result
+    name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: True
+      success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: false
+      success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
     secrets: inherit

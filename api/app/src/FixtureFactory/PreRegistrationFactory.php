@@ -49,7 +49,7 @@ class PreRegistrationFactory
 
     public function createCoDeputy(string $caseNumber, int $courtOrderUid, array $data): PreRegistration
     {
-        $deputyUid = (string) mt_rand(1, 999999999);
+        $deputyUid = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($caseNumber)

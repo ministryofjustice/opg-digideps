@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
-use App\Entity\Client;
 
 class OrgService
 {
@@ -28,13 +27,13 @@ class OrgService
         'errors' => [],
         'added' => [
             'clients' => 0,
-            'named_deputies' => 0,
+            'deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
         ],
         'updated' => [
             'clients' => 0,
-            'named_deputies' => 0,
+            'deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
         ],
@@ -146,7 +145,6 @@ class OrgService
         if (!empty($output['skipped'])) {
             $this->output['skipped'] += $output['skipped'];
         }
-
     }
 
     /**
@@ -166,9 +164,9 @@ class OrgService
         }
 
         $flashAddedMessage = sprintf(
-            'Added %d clients, %d named deputies, %d reports and %d organisations. Skipped %s archived clients. Go to users tab to enable them.',
+            'Added %d clients, %d deputies, %d reports and %d organisations. Skipped %s archived clients. Go to users tab to enable them.',
             $this->output['added']['clients'],
-            $this->output['added']['named_deputies'],
+            $this->output['added']['deputies'],
             $this->output['added']['reports'],
             $this->output['added']['organisations'],
             $this->output['skipped'],
@@ -180,9 +178,9 @@ class OrgService
         );
 
         $flashUpdatedMessage = sprintf(
-            'Updated details for %d clients, %d named deputies, %d reports and %d organisations.',
+            'Updated details for %d clients, %d deputies, %d reports and %d organisations.',
             $this->output['updated']['clients'],
-            $this->output['updated']['named_deputies'],
+            $this->output['updated']['deputies'],
             $this->output['updated']['reports'],
             $this->output['updated']['organisations']
         );
@@ -215,7 +213,7 @@ class OrgService
                 $this->dispatchOrgCreatedEvent($organisation);
             }
 
-            foreach($upload['changeOrg'] as $orgChange){
+            foreach ($upload['changeOrg'] as $orgChange) {
                 $this->dispatchDeputyChangingOrganisationEvent($orgChange['deputyId'], $orgChange['previousOrgId'], $orgChange['newOrgId'], $orgChange['clientId']);
             }
 
@@ -226,12 +224,6 @@ class OrgService
         }
     }
 
-    /**
-     * @param mixed  $data
-     * @param string $redirectUrl
-     *
-     * @return StreamedResponse
-     */
     public function process(mixed $data, string $redirectUrl): StreamedResponse
     {
         $chunks = array_chunk($data, self::CHUNK_SIZE);
@@ -274,7 +266,7 @@ class OrgService
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 
-    private function dispatchDeputyChangingOrganisationEvent( int $deputyId, int $previousOrgId, int $newOrgId, int $clientIds)
+    private function dispatchDeputyChangingOrganisationEvent(int $deputyId, int $previousOrgId, int $newOrgId, int $clientIds)
     {
         $trigger = AuditEvents::TRIGGER_DEPUTY_CHANGED_ORG;
 
@@ -288,5 +280,4 @@ class OrgService
 
         $this->eventDispatcher->dispatch($deputyChangedOrganisationEvent, DeputyChangedOrgEvent::NAME);
     }
-
 }

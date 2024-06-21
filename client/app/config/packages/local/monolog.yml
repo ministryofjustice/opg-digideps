@@ -1,0 +1,20 @@
+monolog:
+  channels: ["verbose"]
+  handlers:
+    main:
+      type: stream
+      path: php://stderr
+      level: warning
+      formatter: opg_line_formatter
+      channels: ["!translation", "!verbose"]
+      bubble: false
+    csv:
+      type: stream
+      path: php://stderr
+      level: notice
+      formatter: opg_line_formatter
+      channels: ["verbose"]
+      bubble: false
+    audit:
+      type: service
+      id: App\Service\Audit\AwsAuditLogHandler

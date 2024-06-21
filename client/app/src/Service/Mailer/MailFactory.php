@@ -8,7 +8,6 @@ use App\Entity as EntityDir;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Model as ModelDir;
 use App\Model\Email;
 use App\Model\FeedbackReport;
 use App\Service\IntlService;
@@ -123,7 +122,7 @@ class MailFactory
     }
 
     /**
-     * @return \App\Model\Email
+     * @return Email
      */
     public function createActivationEmail(User $user)
     {
@@ -136,7 +135,7 @@ class MailFactory
             ]),
         ]);
 
-        $email = (new ModelDir\Email())
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
@@ -147,9 +146,9 @@ class MailFactory
     }
 
     /**
-     * @return \App\Model\Email
+     * @return Email
      */
-    public function createInvitationEmail(User $user, string $deputyName = null)
+    public function createInvitationEmail(User $user, ?string $deputyName = null)
     {
         $area = $this->getUserArea($user);
 
@@ -164,7 +163,7 @@ class MailFactory
             $parameters['deputyName'] = $deputyName;
         }
 
-        $email = (new ModelDir\Email())
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
@@ -210,7 +209,7 @@ class MailFactory
             'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
         ]);
 
-        return (new ModelDir\Email())
+        return (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
@@ -229,11 +228,9 @@ class MailFactory
     }
 
     /**
-     * @param array     $response
-     * @param bool      $isPostSubmission
-     * @param User|null $user
+     * @param array $response
      *
-     * @return ModelDir\Email
+     * @return Email
      */
     public function createGeneralFeedbackEmail($response)
     {
@@ -247,7 +244,7 @@ class MailFactory
             'subject' => $this->translate('feedbackForm.subject'),
         ];
 
-        return (new ModelDir\Email())
+        return (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
@@ -267,7 +264,7 @@ class MailFactory
             'subject' => $this->translate('feedbackForm.subject'),
         ];
 
-        return (new ModelDir\Email())
+        return (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->emailParams['feedback_send_to_address'])
@@ -275,9 +272,9 @@ class MailFactory
             ->setParameters($notifyParams);
     }
 
-    public function createUpdateClientDetailsEmail(Client $client): ModelDir\Email
+    public function createUpdateClientDetailsEmail(Client $client): Email
     {
-        $email = (new ModelDir\Email())
+        $email = (new Email())
           ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
           ->setFromName($this->translator->trans('client.fromName', [], 'email'))
           ->setSubject($this->translator->trans('client.subject', [], 'email'))
@@ -302,9 +299,9 @@ class MailFactory
         return $email;
     }
 
-    public function createUpdateDeputyDetailsEmail(User $deputy): ModelDir\Email
+    public function createUpdateDeputyDetailsEmail(User $deputy): Email
     {
-        $email = (new ModelDir\Email())
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('client.fromName', [], 'email'))
             ->setSubject($this->translator->trans('client.subject', [], 'email'))
@@ -333,14 +330,14 @@ class MailFactory
     }
 
     /**
-     * @return ModelDir\Email
+     * @return Email
      *
      * @throws \Exception
      */
-    public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, EntityDir\Report\Report $newReport)
+    public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, Report $newReport)
     {
-        /** @var ModelDir\Email $email */
-        $email = (new ModelDir\Email())
+        /** @var Email $email */
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email'))
             ->setToEmail($user->getEmail())
@@ -370,7 +367,7 @@ class MailFactory
         return $email;
     }
 
-    private function buildOrgIntroText(EntityDir\Client $client): string
+    private function buildOrgIntroText(Client $client): string
     {
         return $this->translator->trans(
             'caseDetails',
@@ -380,14 +377,14 @@ class MailFactory
     }
 
     /**
-     * @return ModelDir\Email
+     * @return Email
      *
      * @throws \Exception
      */
     public function createNdrSubmissionConfirmationEmail(User $user, EntityDir\Ndr\Ndr $ndr, Report $report)
     {
-        /** @var ModelDir\Email $email */
-        $email = (new ModelDir\Email())
+        /** @var Email $email */
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email'))
             ->setToEmail($user->getEmail())
@@ -415,7 +412,7 @@ class MailFactory
 
     public function createProcessOrgCSVEmail(string $adminEmail, array $output): Email
     {
-        $email = (new ModelDir\Email())
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('processOrgCSV.fromName', [], 'email'))
             ->setToEmail($adminEmail)
@@ -425,12 +422,12 @@ class MailFactory
 
         $notifyParams = [
             'addedClients' => $output['added']['clients'],
-            'addedDeputies' => $output['added']['named_deputies'],
+            'addedDeputies' => $output['added']['deputies'],
             'addedReports' => $output['added']['reports'],
             'addedOrganisations' => $output['added']['organisations'],
             'skipped' => $output['skipped'],
             'updatedClient' => $output['updated']['clients'],
-            'updatedDeputies' => $output['updated']['named_deputies'],
+            'updatedDeputies' => $output['updated']['deputies'],
             'updatedReports' => $output['updated']['reports'],
             'updatedOrganisations' => $output['updated']['organisations'],
             'isError' => $isError,
@@ -443,7 +440,7 @@ class MailFactory
 
     public function createProcessLayCSVEmail(string $adminEmail, array $output): Email
     {
-        $email = (new ModelDir\Email())
+        $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('processLayCSV.fromName', [], 'email'))
             ->setToEmail($adminEmail)

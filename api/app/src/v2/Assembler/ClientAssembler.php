@@ -5,9 +5,9 @@ namespace App\v2\Assembler;
 use App\Entity\Client;
 use App\v2\Assembler\Report\ReportAssemblerInterface;
 use App\v2\DTO\ClientDto;
-use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\v2\DTO\OrganisationDto;
+use App\v2\DTO\UserDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
@@ -20,8 +20,8 @@ class ClientAssembler
     /** @var NdrAssembler */
     private $ndrDtoAssembler;
 
-    /** @var NamedDeputyAssembler */
-    private $namedDeputyAssembler;
+    /** @var DeputyAssembler */
+    private $deputyAssembler;
 
     /**
      * ClientAssembler constructor.
@@ -29,21 +29,21 @@ class ClientAssembler
     public function __construct(
         ReportAssemblerInterface $reportDtoAssembler,
         NdrAssembler $ndrDtoAssembler,
-        NamedDeputyAssembler $namedDeputyDtoAssembler
+        DeputyAssembler $deputyDtoAssembler
     ) {
         $this->reportDtoAssembler = $reportDtoAssembler;
         $this->ndrDtoAssembler = $ndrDtoAssembler;
-        $this->namedDeputyAssembler = $namedDeputyDtoAssembler;
+        $this->deputyAssembler = $deputyDtoAssembler;
     }
 
     /**
      * @return ClientDto
      */
-    public function assembleFromArray(array $data, OrganisationDto $orgDto = null)
+    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null)
     {
         $dto = new ClientDto();
 
-        $exclude = ['ndr', 'reports', 'namedDeputy'];
+        $exclude = ['ndr', 'reports', 'deputy'];
         $this->setPropertiesFromData($dto, $data, $exclude);
 
         if (isset($data['ndr']) && is_array($data['ndr'])) {
@@ -59,8 +59,8 @@ class ClientAssembler
             $dto->setOrganisation($orgDto);
         }
 
-        if (isset($data['namedDeputy']) && is_array($data['namedDeputy'])) {
-            $dto->setNamedDeputy($this->assembleClientNamedDeputy($data['namedDeputy']));
+        if (isset($data['deputy']) && is_array($data['deputy'])) {
+            $dto->setDeputy($this->assembleClientDeputy($data['deputy']));
         }
 
         if (isset($data['users']) && is_array($data['users'])) {
@@ -105,9 +105,9 @@ class ClientAssembler
         return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
 
-    private function assembleClientNamedDeputy(array $namedDeputy)
+    private function assembleClientDeputy(array $deputy)
     {
-        return $this->namedDeputyAssembler->assembleFromArray($namedDeputy);
+        return $this->deputyAssembler->assembleFromArray($deputy);
     }
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
@@ -137,7 +137,7 @@ class ClientAssembler
         $dtos = [];
 
         foreach ($deputies as $deputy) {
-            $dto = new DeputyDto();
+            $dto = new UserDto();
             $this->setPropertiesFromData($dto, $deputy, ['clients']);
             $dtos[] = $dto;
         }

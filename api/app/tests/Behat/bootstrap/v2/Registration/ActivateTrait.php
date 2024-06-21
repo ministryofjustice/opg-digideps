@@ -43,12 +43,13 @@ trait ActivateTrait
 
         $this->newUsers += [$this->testRunId => ['type' => $typeOfUser, 'email' => $this->faker->safeEmail()]];
 
+        $firstName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputyFirstname() : $this->faker->firstName();
         $lastName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
         $postCode = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
         $roleName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
 
         $this->fillInField('admin_email', $this->getUserForTestRun()['email']);
-        $this->fillInField('admin_firstname', $this->faker->firstName());
+        $this->fillInField('admin_firstname', $firstName);
         $this->fillInField('admin_lastname', $lastName);
         $this->fillInField('admin_addressPostcode', $postCode);
 
@@ -258,7 +259,7 @@ trait ActivateTrait
 
         $this->visitFrontendPath('/register');
 
-        $this->fillInField('self_registration_firstname', 'Brian');
+        $this->fillInField('self_registration_firstname', $this->existingPreRegistration->getDeputyFirstname());
         $this->fillInField('self_registration_lastname', $this->existingPreRegistration->getDeputySurname());
         $this->fillInField('self_registration_email_first', $this->getUserForTestRun()['email']);
         $this->fillInField('self_registration_email_second', $this->getUserForTestRun()['email']);

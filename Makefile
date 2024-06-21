@@ -63,26 +63,26 @@ down-app: ##@application Tears down the app
 	docker-compose down -v --remove-orphans
 
 integration-tests: up-app reset-database reset-fixtures ##@integration-tests Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app integration-tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml up -d load-balancer
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app integration-tests
+	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml up -d load-balancer
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
 integration-tests-rerun: reset-fixtures ##@integration-tests Rerun integration tests (requires you to have run integration-tests previously), argument in format: tag=your_tag
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
 integration-tests-tag: reset-fixtures ##@integration-tests Rerun integration tests with a tag (requires you to have run integration-tests previously)
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @$(tag)
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @$(tag)
 
 integration-tests-parallel: reset-fixtures ##@integration-tests Rerun the integration tests in parallel (requires you to have run integration-tests previously)
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2_sequential
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --tags @v2_sequential
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
 
 integration-tests-browserkit: reset-fixtures ##@integration-tests Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
 
 ifdef suite
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
 else
-	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
+	APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans integration-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
 endif
 
 client-unit-tests: ##@unit-tests Run the client unit tests
@@ -127,11 +127,11 @@ redis-clear: ##@database Clears out all the data from redis (session related tok
 
 cache-clear: ##@application Clear the cache of the application
 	docker-compose exec api-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api-app sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.behat.yml exec api-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec frontend-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.behat.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker-compose exec admin-app sh -c "rm -rf var/cache/*" && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec admin-app sh -c "rm -rf var/cache/*" && \
+	docker-compose -f docker-compose.yml -f docker-compose.behat.yml exec admin-app sh -c "rm -rf var/cache/*" && \
 	echo "Cache reset"
 
 enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)
@@ -170,17 +170,17 @@ composer-client: ##@application Drops you into the frontend container with compo
 	docker-compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app composer ${COMPOSER_ARGS}
 
 test-js: ##@javascript Run JS tests
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run node-js --build --rm run test
+	docker-compose -f docker-compose.yml -f docker-compose.behat.yml run node-js --build --rm run test
 
 TEST:='all'
 test-js-single: ##@javascript Allows you to do make test-js-single TEST='Currency Formatting' to run tests whose describe matches the string
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run node-js --build --rm run test -- -t ${TEST}
+	docker-compose -f docker-compose.yml -f docker-compose.behat.yml run node-js --build --rm run test -- -t ${TEST}
 
 build-js: ##@javascript Build JS resources
 	docker-compose run resources --build --rm
 
 lint-js: ##@javascript Lint JS resources
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml run node-js --build --rm run fix
+	docker-compose -f docker-compose.yml -f docker-compose.behat.yml run node-js --build --rm run fix
 
 smoke-tests: ##@smoke-tests Run smoke tests (requires app to be up)
 	docker-compose build orchestration

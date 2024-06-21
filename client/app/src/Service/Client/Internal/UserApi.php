@@ -31,6 +31,7 @@ class UserApi
     protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
+    protected const CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
 
     /** @var RestClientInterface */
     protected $restClient;
@@ -87,9 +88,6 @@ class UserApi
         );
     }
 
-    /**
-     * @return mixed
-     */
     public function getByEmail(string $email, array $jmsGroups = [])
     {
         return $this->restClient->get(
@@ -99,9 +97,6 @@ class UserApi
         );
     }
 
-    /**
-     * @return mixed
-     */
     public function getByEmailOrgAdmins(string $email, array $jmsGroups = [])
     {
         return $this->restClient->get(
@@ -132,8 +127,6 @@ class UserApi
 
     /**
      * @param array $jmsGroups
-     *
-     * @return mixed
      */
     public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
     {
@@ -181,9 +174,6 @@ class UserApi
         );
     }
 
-    /**
-     * @param string $type
-     */
     public function activate(string $email)
     {
         $activatedUser = $this->recreateToken($email);
@@ -249,14 +239,17 @@ class UserApi
         return $createdCoDeputy;
     }
 
-    /**
-     * @param $token
-     *
-     * @return mixed
-     */
     public function agreeTermsUse($token)
     {
         return $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
+    }
+
+    public function clearRegistrationToken(string $token)
+    {
+        return $this->restClient->apiCall(
+            'put',
+            sprintf(self::CLEAR_REGISTRATION_TOKEN_ENDPOINT, $token),
+            null, 'raw', [], false);
     }
 
     private function dispatchAdminManagerCreatedEvent(User $createdUser)
@@ -264,7 +257,7 @@ class UserApi
         $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED;
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $adminManagerCreatedEvent = new adminManagerCreatedEvent(
+        $adminManagerCreatedEvent = new AdminManagerCreatedEvent(
             $trigger,
             $currentUser,
             $createdUser

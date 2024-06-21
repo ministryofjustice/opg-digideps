@@ -1,0 +1,5 @@
+jms_serializer:
+  profiler: false
+  metadata:
+    cache: none
+    debug: true
