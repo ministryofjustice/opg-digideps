@@ -76,7 +76,6 @@ resource "aws_wafv2_web_acl" "main" {
           }
           name = "CrossSiteScripting_BODY"
         }
-
       }
     }
     visibility_config {
@@ -87,8 +86,29 @@ resource "aws_wafv2_web_acl" "main" {
   }
 
   rule {
-    name     = "AllowSpecificURIs"
+    name     = "BlockSpecificIPs"
     priority = 20
+
+    action {
+      block {}
+    }
+
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.blocked_ips.arn
+      }
+    }
+
+    visibility_config {
+      sampled_requests_enabled   = true
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockSpecificIPs"
+    }
+  }
+
+  rule {
+    name     = "AllowSpecificURIs"
+    priority = 25
 
     action {
       allow {}
@@ -116,7 +136,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   rule {
     name     = "BlockSpecificURIs"
-    priority = 25
+    priority = 30
 
     action {
       block {}
@@ -277,4 +297,14 @@ data "aws_iam_policy_document" "waf_cloudwatch_log_encryption_kms" {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
     }
   }
+}
+
+# WAF IP set
+resource "aws_wafv2_ip_set" "blocked_ips" {
+  name               = "BlockedIPs"
+  description        = "IPs to block using the WAF"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = []
+  tags               = var.default_tags
 }

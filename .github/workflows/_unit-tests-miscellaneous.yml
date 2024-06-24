@@ -1,0 +1,33 @@
+name: "[Tests] Miscellaneous Unit Tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  miscellaneous-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
+
+      - name: run unit tests
+        id: unit-tests-synchronisation
+        run: go test
+        working-directory: lambdas/functions/synchronisation
+
+      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: "3.11"
+
+      - name: install python requirements
+        id: python-requirements
+        run: pip3 install -r requirements.txt
+        working-directory: lambdas/functions/block_ips_lambda
+
+      - name: run unit tests
+        id: unit-tests-block-ips
+        run: python -m unittest tests/*_tests.py
+        working-directory: lambdas/functions/block_ips_lambda
