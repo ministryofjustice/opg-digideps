@@ -14,7 +14,8 @@ environments = {
     "backup": "238302996107",
 }
 
-key_alias = "alias/digideps-ca-db-backup"
+key_alias_remote = "alias/digideps-ca-db-backup"
+key_alias_local = "alias/aws/rds"
 
 
 class SnapshotManagement:
@@ -76,10 +77,11 @@ class SnapshotManagement:
         self.DBClusterParameterGroup = "default.aurora-postgresql10"
         self.DBSubnetGroup = "private"
         self.Engine = "aurora-postgresql"
-        self.EngineVersion = "13.7"
+        self.EngineVersion = "13.12"
         self.VpcSecurityGroups = None
         self.StorageEncrypted = True
         self.KmsKeyId = None
+        self.KmsKeyIdLocal = None
         self.Capacity = None
         self.EngineMode = "serverless"
         self.HttpEndpointEnabled = False
@@ -119,11 +121,13 @@ class SnapshotManagement:
             "1900-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"
         )
 
+        self.KmsKeyIdLocal = self.get_kms_key(key_alias_local)
+
         if self.PointInTimeRecovery == no_point_in_time_argument_set:
             if self.SnapshotIdentifier is not None:
                 if self.restore_from_remote:
                     self.create_backup_client_session()
-                    self.get_kms_key()
+                    self.KmsKeyId = self.get_kms_key(key_alias_remote)
                     self.share_snapshot_with_digideps()
                     self.copy_snapshot_to_manual_digideps()
                 self.restore_from_snapshot()
@@ -236,10 +240,11 @@ class SnapshotManagement:
                 Engine=self.Engine,
                 EngineVersion=self.EngineVersion,
                 VpcSecurityGroupIds=self.VpcSecurityGroups,
+                AutoMinorVersionUpgrade=self.AutoMinorVersionUpgrade,
                 DBSubnetGroupName=self.DBSubnetGroup,
                 DeletionProtection=self.DeletionProtection,
                 EngineMode=self.EngineMode,
-                KmsKeyId=self.KmsKeyId,
+                KmsKeyId=self.KmsKeyIdLocal,
                 Tags=self.TagList,
             )
         else:
@@ -252,9 +257,10 @@ class SnapshotManagement:
                 VpcSecurityGroupIds=self.VpcSecurityGroups,
                 DBSubnetGroupName=self.DBSubnetGroup,
                 EnableCloudwatchLogsExports=["postgresql"],
+                AutoMinorVersionUpgrade=self.AutoMinorVersionUpgrade,
                 DeletionProtection=self.DeletionProtection,
                 EngineMode=self.EngineMode,
-                KmsKeyId=self.KmsKeyId,
+                KmsKeyId=self.KmsKeyIdLocal,
                 Tags=self.TagList,
             )
 
@@ -282,6 +288,12 @@ class SnapshotManagement:
             VpcSecurityGroupIds=self.VpcSecurityGroups,
             DBSubnetGroupName=self.DBSubnetGroup,
             RestoreToTime=self.PointInTimeRecovery,
+            ServerlessV2ScalingConfiguration=self.serverless_v2_config,
+            EnableCloudwatchLogsExports=["postgresql"],
+            DeletionProtection=self.DeletionProtection,
+            EngineMode=self.EngineMode,
+            KmsKeyId=self.KmsKeyIdLocal,
+            Tags=self.TagList,
         )
 
         self.command_response("Restore from PIT", response)
@@ -374,9 +386,9 @@ class SnapshotManagement:
 
         self.wait_on_instances_deleted(temp_instances=False)
 
-    def get_kms_key(self):
+    def get_kms_key(self, key_alias):
         response = self.client_kms.describe_key(KeyId=str(key_alias))
-        self.KmsKeyId = response["KeyMetadata"]["Arn"]
+        return response["KeyMetadata"]["Arn"]
 
     def apply_overrides(self):
         self.MultiAZ = (

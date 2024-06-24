@@ -111,9 +111,9 @@ jobs:
       - api_unit_tests_3
     secrets: inherit
 
-  synchronisation_unit_tests:
+  miscellaneous_unit_tests:
     name: client unit tests
-    uses: ./.github/workflows/_unit-tests-synchronise-lambda.yml
+    uses: ./.github/workflows/_unit-tests-miscellaneous.yml
     needs:
       - workflow_variables
       - docker_build_scan_push
@@ -138,7 +138,7 @@ jobs:
       - workflow_variables
       - terraform_apply_account_development
       - docker_build_scan_push
-      - synchronisation_unit_tests
+      - miscellaneous_unit_tests
       - client_unit_tests
       - api_unit_tests_1
       - api_unit_tests_2
