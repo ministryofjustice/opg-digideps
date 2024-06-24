@@ -46,6 +46,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenTeamMember);
     }
 
+    /** @test */
     public function addUserToOrganisation(): void
     {
         $url = '/user/details';
