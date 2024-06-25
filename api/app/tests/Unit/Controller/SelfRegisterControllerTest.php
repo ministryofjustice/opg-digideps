@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Controller;
 use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\User;
+use Faker\Factory;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
@@ -50,10 +51,13 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function savesValidUserToDb()
     {
+        $faker = Factory::create();
+        $caseNumber = $faker->randomNumber(8);
+        
         $preRegistration = $this->generatePreRegistration(
-            '12345678',
+            $caseNumber,
             'Cross-Tolley',
-            'DEP0011',
+            $faker->randomNumber(8),
             'Zac',
             'Tolley'
         );
@@ -73,7 +77,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
-                'case_number' => '12345678',
+                'case_number' => $caseNumber,
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
@@ -92,7 +96,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $this->assertEquals('John', $theClient->getFirstname());
         $this->assertEquals('Cross-Tolley', $theClient->getLastname());
-        $this->assertEquals('12345678', $theClient->getCaseNumber());
+        $this->assertEquals($caseNumber, $theClient->getCaseNumber());
     }
 
     /**
@@ -142,7 +146,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $preRegistration = $this->generatePreRegistration(
             '12345678',
             'Cross-Tolley',
-            'DEP0011',
+            (Factory::create())->randomNumber(8),
             'Zac',
             'Tolley'
         );
@@ -198,7 +202,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $preRegistration = $this->generatePreRegistration(
             '97643164',
             'Douglas',
-            'DEP00199',
+            (Factory::create())->randomNumber(8),
             'John',
             'Murphy'
         );
@@ -349,7 +353,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $preRegistration = $this->generatePreRegistration(
             '97643164',
             'Douglas',
-            'DEP00199',
+            (Factory::create())->randomNumber(8),
             'John',
             'Murphy'
         );
@@ -428,7 +432,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $preRegistration = $this->generatePreRegistration(
             '97643164',
             'Douglas',
-            'DEP00199',
+            (Factory::create())->randomNumber(8),
             'Zac',
             'Murphy');
 
