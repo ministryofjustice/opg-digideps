@@ -12,7 +12,6 @@ use App\Entity\User;
 use App\Service\CarbonBusinessDaysService;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
-use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -136,8 +135,6 @@ class Report implements ReportInterface
     // Decisions
     public const SIGNIFICANT_DECISION_MADE = 'Yes';
     public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
-
-    public ?CarbonBusinessDaysService $carbonBusinessDaysService;
 
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
@@ -531,7 +528,6 @@ class Report implements ReportInterface
         $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
 
-        $this->carbonBusinessDaysService = null;
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
@@ -616,15 +612,13 @@ class Report implements ReportInterface
         // due date set to 8 weeks (40 business days) after the end date unless lay reports where end date is beyond
         // 13/11/19. Then it is 15 days (DDLS-208)
 
-        $this->carbonBusinessDaysService = new CarbonBusinessDaysService();
-
         if ($this->isLayReport() && $this->getEndDate()->format('Ymd') >= '20191113') {
-            $dueDateSet = Carbon::parse($this->endDate)->addBusinessDays('15')->format('Y-m-d H:i:s');
+            $dueDateSet = CarbonBusinessDaysService::addBusinessDays($this->endDate);
 
             // convert date time string into a date time object
             $this->dueDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dueDateSet);
         } else {
-            $dueDateSet = Carbon::parse($this->endDate)->addBusinessDays('40')->format('Y-m-d H:i:s');
+            $dueDateSet = CarbonBusinessDaysService::addBusinessDays($this->endDate);
 
             // convert date time string into a date time object
             $this->dueDate = \DateTime::createFromFormat('Y-m-d H:i:s', $dueDateSet);
