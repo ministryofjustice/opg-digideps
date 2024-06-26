@@ -118,15 +118,6 @@ locals {
         hostPort      = 9000,
         protocol      = "tcp"
       }],
-      healthCheck = {
-        command : [
-          "CMD",
-          "/usr/local/bin/health-check.sh"
-        ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
-      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
