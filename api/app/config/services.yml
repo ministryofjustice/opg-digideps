@@ -334,6 +334,12 @@ services:
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 
+    opg_json_formatter:
+        class: App\Logger\OpgJsonFormatter
+
+    opg_line_formatter:
+        class: App\Logger\OpgLineFormatter
+
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
         arguments: ["@em"]

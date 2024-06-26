@@ -246,13 +246,15 @@ trait SelfRegistrationTrait
     public function oneOfTheLayDeputiesRegistersToDeputiseForAClientWithValidDetails()
     {
         $this->userEmail = 'brian@mcduck.co.uk';
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $firstName = 'Brian';
+        $lastName = 'McDuck';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail, 'deputyName' => $firstName.$lastName]);
         $this->deputyUid = '35672419';
 
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
-            'Brian',
-            'McDuck',
+            $firstName,
+            $lastName,
             $this->userEmail,
             'B73',
             'Billy',
@@ -288,8 +290,12 @@ trait SelfRegistrationTrait
         $this->getCurrentUrl();
         $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
 
+        $coDeputyFirstName = 'Liam';
+        $coDeputyLastName = 'Mcquack';
         $this->coDeputyEmail = 'liam@mcquack.co.uk';
 
+        $this->fillInField('co_deputy_invite_firstname', $coDeputyFirstName);
+        $this->fillInField('co_deputy_invite_lastname', $coDeputyLastName);
         $this->fillInField('co_deputy_invite_email', $this->coDeputyEmail);
         $this->pressButton('co_deputy_invite_submit');
     }
@@ -568,8 +574,12 @@ trait SelfRegistrationTrait
         $this->getCurrentUrl();
         $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
 
+        $coDeputyFirstName = 'Bill';
+        $coDeputyLastName = 'Fish';
         $this->coDeputyEmail = 'bill@fish.co.uk';
 
+        $this->fillInField('co_deputy_invite_firstname', $coDeputyFirstName);
+        $this->fillInField('co_deputy_invite_lastname', $coDeputyLastName);
         $this->fillInField('co_deputy_invite_email', $this->coDeputyEmail);
         $this->pressButton('co_deputy_invite_submit');
     }
@@ -622,5 +632,25 @@ trait SelfRegistrationTrait
         $this->assertStringEqualsString('Y73', $coDeputy->getAddressPostcode(), 'Asserting Postcode is the same');
         $this->assertStringEqualsString('GB', $coDeputy->getAddressCountry(), 'Asserting Address Country is the same');
         $this->assertStringEqualsString('01789432876', $coDeputy->getPhoneMain(), 'Asserting Main Phone is the same');
+    }
+
+    /**
+     * @Given /^I search for the co-deputy using their email address$/
+     */
+    public function iSearchForTheCoDeputyUsingTheirEmailAddress()
+    {
+        $this->iAmOnAdminUsersSearchPage();
+        $this->fillField('admin_q', $this->coDeputyEmail);
+        $this->pressButton('Search');
+    }
+
+    /**
+     * @Then /^the co\-deputy should appear in the search results$/
+     */
+    public function theCoDeputyShouldAppearInTheSearchResults()
+    {
+        $xpath = '//table[@class="table-govuk-body-s"]/tbody';
+        $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
+        $this->assertStringContainsString($this->coDeputyEmail, $userResultsTable, 'Results on page');
     }
 }

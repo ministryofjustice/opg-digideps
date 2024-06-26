@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+        bind:
+            $fixtureParams: "%fixtures%"
+            $symfonyEnvironment: "%kernel.environment%"
+
+    App\Tests\Behat\:
+        resource: "../tests/Behat/bootstrap/*"
