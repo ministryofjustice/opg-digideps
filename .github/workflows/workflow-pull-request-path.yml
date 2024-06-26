@@ -147,7 +147,6 @@ jobs:
     uses: ./.github/workflows/_unit-tests-miscellaneous.yml
     needs:
       - workflow_variables
-      - docker_build_scan_push
 
   terraform_plan_account_development:
     name: account plan terraform development
