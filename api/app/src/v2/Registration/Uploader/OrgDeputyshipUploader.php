@@ -437,26 +437,39 @@ class OrgDeputyshipUploader
 
     private function handleCourtOrder(OrgDeputyshipDto $deputyshipDto): void
     {
-        if ($courtOrder = $this->em->getRepository(CourtOrder::class)->findCourtOrderByUid($deputyshipDto->getCourtOrderUid())) {
+        $push = false;
+        if ($courtOrder = $this->em
+            ->getRepository(CourtOrder::class)
+            ->findCourtOrderByUid($deputyshipDto->getCourtOrderUid())
+        ) {
             if ($courtOrder->getOrderType() !== $deputyshipDto->getHybrid()) {
                 $courtOrder->setOrderType($deputyshipDto->getHybrid());
+                $push = true;
             }
 
             if (!$courtOrder->isActive()) {
                 $courtOrder->setActive(true);
+                $push = true;
+            }
+            
+            if ($push) {
                 $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
             }
         } else {
-            $courtOrder = $this->courtOrderAssembler->assembleFromDto($deputyshipDto);
-
-            $this->added['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+            if (!in_array($deputyshipDto->getCourtOrderUid(), $this->added['court_orders'])) {
+                $courtOrder = $this->courtOrderAssembler->assembleFromDto($deputyshipDto);
+                $push = true;
+                $this->added['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+            }
         }
 
-        $courtOrderEntity = (!$courtOrder instanceof CourtOrder)?
-            $this->courtOrderFactory->createFromDto($courtOrder):
-            $courtOrder;
+        if ($push) {
+            $courtOrderEntity = (!$courtOrder instanceof CourtOrder)?
+                $this->courtOrderFactory->createFromDto($courtOrder):
+                $courtOrder;
 
-        $this->em->persist($courtOrderEntity);
-        $this->em->flush();
+            $this->em->persist($courtOrderEntity);
+            $this->em->flush();
+        }
     }
 }

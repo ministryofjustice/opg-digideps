@@ -173,9 +173,12 @@ class ProcessLayCSVCommand extends Command
 
             foreach ($chunks as $index => $chunk) {
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
-                $this->courtOrderUids = array_merge($this->courtOrderUids, $result['court_orders']);
+
+                if (!empty($result['court_orders'])) {
+                    $this->courtOrderUids = array_merge($this->courtOrderUids, $result['court_orders']);
+                }
+    
                 $this->storeOutput($result);
             }
 

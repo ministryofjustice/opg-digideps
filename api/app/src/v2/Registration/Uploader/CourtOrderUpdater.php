@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 
 class CourtOrderUpdater
 {
-    private int $currentCourtOrderUID;
+    private ?int $currentCourtOrderUID = null;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
