@@ -52,7 +52,25 @@ class ReportTest extends KernelTestCase
         $endDate = new \DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
-        $this->assertEquals('2019-02-25', $report->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2019-02-26', $report->getDueDate()->format('Y-m-d'));
+    }
+
+    public function testDueDateAccountsForBankHolidaysForProfs()
+    {
+        $startDate = new \DateTime('2023-04-23');
+        $endDate = new \DateTime('2024-04-22');
+
+        $report = new Report($this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
+        $this->assertEquals('2024-06-19', $report->getDueDate()->format('Y-m-d'));
+    }
+
+    public function testDueDateAccountsForBankHolidaysForLays()
+    {
+        $startDate = new \DateTime('2023-04-23');
+        $endDate = new \DateTime('2024-04-22');
+
+        $report = new Report($this->client, Report::LAY_PFA_LOW_ASSETS_TYPE, $startDate, $endDate, false);
+        $this->assertEquals('2024-05-14', $report->getDueDate()->format('Y-m-d'));
     }
 
     public static function constructorProvider()
@@ -440,14 +458,14 @@ class ReportTest extends KernelTestCase
     public function reportTypesWithEndDateProvider()
     {
         return [
-            // lay pre-changover (56 daye)
-            ['102', '2019-11-12', '2020-01-07'],
-            // lay post cchangeover (21 days)
+            // lay pre-changover (40 days)
+            ['102', '2019-11-12', '2020-01-10'],
+            // lay post cchangeover (15 days)
             ['102', '2019-11-13', '2019-12-04'],
-            // non-lay pre changover (56 days)
-            ['102-5', '2019-11-12', '2020-01-07'],
-            // non lay post changeover (56 days)
-            ['102-5', '2019-11-13', '2020-01-08'],
+            // non-lay pre changover (40 days)
+            ['102-5', '2019-11-12', '2020-01-10'],
+            // non lay post changeover (40 days)
+            ['102-5', '2019-11-13', '2020-01-13'],
         ];
     }
 

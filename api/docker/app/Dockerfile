@@ -28,7 +28,7 @@ RUN apk --no-cache add \
     php81-pecl-redis
 RUN apk update && apk upgrade
 # Install necessary PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-install pdo pdo_pgsql opcache calendar
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
 RUN apk add --no-cache autoconf build-base

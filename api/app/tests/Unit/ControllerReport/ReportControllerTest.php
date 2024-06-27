@@ -440,7 +440,7 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('2016-01-01', $data['start_date']);
         $this->assertEquals('2016-11-30', $data['end_date']);
-        $this->assertEquals('2017-01-25', $data['due_date']);
+        $this->assertEquals('2017-01-30', $data['due_date']);
 
         // repeat test with new end date beyond 13th November 2019
         // assert put new end date
@@ -460,7 +460,7 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('2019-01-01', $data['start_date']);
         $this->assertEquals('2019-11-30', $data['end_date']);
-        $this->assertEquals('2019-12-21', $data['due_date']);
+        $this->assertEquals('2019-12-20', $data['due_date']);
     }
 
     public function testDebts()
@@ -622,7 +622,7 @@ class ReportControllerTest extends AbstractTestController
     public function testMoneyInLowAssetDoesNotExist()
     {
         $reportId = self::$report103->getId();
-        
+
         $url = '/report/'.$reportId;
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -655,10 +655,10 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'reason_for_no_money_in' => 'No money in',
             ]])['data'];
-        
+
         self::fixtures()->clear();
         $report = self::fixtures()->getReportById(self::$report103->getId());
-        
+
         $moneyInSectionStateStatusShort = self::fixtures()->getReportFreshSectionStatus($report, Report::SECTION_MONEY_IN_SHORT)['state'];
 
         $this->assertEquals('No money in', $report->getReasonForNoMoneyIn());
@@ -686,7 +686,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('incomplete', $moneyOutSectionStateStatus);
     }
 
-    
     public function testMoneyCategories()
     {
         $url = '/report/'.self::$report103->getId();
