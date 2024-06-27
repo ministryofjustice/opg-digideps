@@ -443,24 +443,6 @@ trait IngestTrait
     }
 
     /**
-     * @When I run the lay CSV command the file has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number :caseNumber and 1 valid row
-     */
-    public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
-    {
-        $this->clients['added']['expected'] = 1;
-        $this->organisations['added']['expected'] = 1;
-        $this->deputies['added']['expected'] = 1;
-        $this->reports['added']['expected'] = 1;
-        $this->courtOrders['added']['expected'] = 1;
-        $this->errors['count'] = 1;
-        $this->errors['messages'][] = 'Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail';
-
-        $this->createProfAdminNotStarted();
-
-        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
-    }
-
-    /**
      * @Then I should see an alert showing the row was skipped on the :type csv upload page
      */
     public function iShouldSeeAnAlertShowingRowSkipped(string $type)

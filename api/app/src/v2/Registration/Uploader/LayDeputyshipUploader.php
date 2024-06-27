@@ -22,11 +22,11 @@ use Psr\Log\LoggerInterface;
 
 class LayDeputyshipUploader
 {
-    /** @var array */
-    private $reportsUpdated = [];
+    private array $reportsUpdated = [];
 
-    /** @var array */
-    private $preRegEntriesByCaseNumber = [];
+    private array $preRegEntriesByCaseNumber = [];
+
+    private array $courtOrderUids = [];
 
     /** @var int */
     public const MAX_UPLOAD = 10000;
@@ -51,7 +51,7 @@ class LayDeputyshipUploader
         $this->preRegEntriesByCaseNumber = [];
         $added = 0;
         $errors = [];
-        $courtOrderUids = [];
+        $this->courtOrderUids = [];
 
         try {
             $this->em->beginTransaction();
@@ -63,21 +63,7 @@ class LayDeputyshipUploader
                         $layDeputyshipDto
                     );
 
-                    if ($courtOrder = $this->courtOrderRepository->findCourtOrderByUid(
-                        $layDeputyshipDto->getCourtOrderUid()
-                    )) {
-                        if ($courtOrder->getOrderType() !== $layDeputyshipDto->getHybrid()) {
-                            $courtOrder->setOrderType($layDeputyshipDto->getHybrid());
-                        }
-
-                        if (!$courtOrder->isActive()) {
-                            $courtOrder->setActive(true);
-                        }
-                    } else {
-                        $courtOrder = $this->createCourtOrderEntity($layDeputyshipDto);
-                    }
-
-                    $this->persistCourtOrderEntity($courtOrder);
+                    $this->courtOrderHandling($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException|CourtOrderCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
@@ -86,8 +72,6 @@ class LayDeputyshipUploader
                     $errors[] = $message;
                     continue;
                 }
-
-                $courtOrderUids[] = $layDeputyshipDto->getCourtOrderUid();
             }
 
             $this
@@ -106,7 +90,7 @@ class LayDeputyshipUploader
             'report_update_count' => count($this->reportsUpdated),
             'cases_with_updated_reports' => $this->reportsUpdated,
             'source' => 'sirius',
-            'court_orders' => $courtOrderUids,
+            'court_orders' => $this->courtOrderUids,
         ];
     }
 
@@ -196,17 +180,34 @@ class LayDeputyshipUploader
         $this->em->clear();
     }
 
-    private function createCourtOrderEntity(LayDeputyshipDto $layDeputyshipDto): CourtOrderDto
+    private function courtOrderHandling(LayDeputyshipDto $layDeputyshipDto): void
     {
-        return $this->courtOrderAssembler->assembleFromDto($layDeputyshipDto);
-    }
+        $push = false;
+        if ($courtOrder = $this->courtOrderRepository->findCourtOrderByUid($layDeputyshipDto->getCourtOrderUid())) {
+            if ($courtOrder->getOrderType() !== $layDeputyshipDto->getHybrid()) {
+                $courtOrder->setOrderType($layDeputyshipDto->getHybrid());
+                $push = true;
+            }
 
-    private function persistCourtOrderEntity(CourtOrder|CourtOrderDto $courtOrder): void
-    {
-        $courtOrderEntity = (!$courtOrder instanceof CourtOrder)? 
-            $this->courtOrderFactory->createFromDto($courtOrder):
-            $courtOrder;
+            if (!$courtOrder->isActive()) {
+                $courtOrder->setActive(true);
+                $push = true;
+            }
+        } else {
+            if (!in_array($layDeputyshipDto->getCourtOrderUid(), $this->courtOrderUids)) {
+                $courtOrder = $this->courtOrderAssembler->assembleFromDto($layDeputyshipDto);
+                $push = true;
+            }
+        }
 
-        $this->em->persist($courtOrderEntity);
+        if ($push) {
+            $courtOrderEntity = (!$courtOrder instanceof CourtOrder)?
+                $this->courtOrderFactory->createFromDto($courtOrder):
+                $courtOrder;
+
+            $this->em->persist($courtOrderEntity);
+        }
+
+        $this->courtOrderUids[] = $layDeputyshipDto->getCourtOrderUid();
     }
 }

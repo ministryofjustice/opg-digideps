@@ -28,7 +28,7 @@ class CSVDeputyshipProcessing
     ) {
     }
 
-    public function layProcessing(array $data, ?int $chunkId)
+    public function layProcessing(array $data, ?int $chunkId): array
     {
         $assembler = $this->layFactory->create();
         $uploadCollection = $assembler->assembleFromArray($data);
@@ -64,7 +64,7 @@ class CSVDeputyshipProcessing
         return $result;
     }
 
-    public function orgProcessing(array $data)
+    public function orgProcessing(array $data): array
     {
         $rowCount = count($data);
 
@@ -83,6 +83,9 @@ class CSVDeputyshipProcessing
         return $this->orgUploader->upload($dtos);
     }
 
+    /**
+     * @param array<int> $courtOrderUids
+     */
     public function courtOrdersActiveSwitch(array $courtOrderUids): void
     {
         $this->courtOrderUpdater->upload($courtOrderUids);
