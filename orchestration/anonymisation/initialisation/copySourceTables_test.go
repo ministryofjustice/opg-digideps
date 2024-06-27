@@ -42,6 +42,9 @@ func TestCopySourceTablesToProcessing(t *testing.T) {
 		mock.ExpectQuery("SELECT COUNT\\(\\*\\) FROM processing.test_table").
 			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
 
+		mock.ExpectQuery("SELECT COUNT\\(\\*\\) FROM anon.test_table").
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
+
 		// Call the function
 		result, err := CopySourceTablesToProcessing(db, tables, true)
 		assert.NoError(t, err)
