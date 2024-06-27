@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecs"
+	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/aws/aws-sdk-go/service/rds"
 )
 
@@ -97,6 +98,19 @@ func turnOff(sess *session.Session, rdsClusterID string, ecsClusterName string) 
 		}
 		fmt.Printf("Set desired count to 0 for service: %s\n", *serviceArn)
 	}
+
+	lambdaSvc := lambda.New(sess)
+	_, err = lambdaSvc.UpdateFunctionConfiguration(&lambda.UpdateFunctionConfigurationInput{
+		FunctionName: aws.String("slack-notifier"),
+		Environment: &lambda.Environment{
+			Variables: map[string]*string{
+				"PAUSE_NOTIFICATIONS": aws.String("1"),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func turnOn(sess *session.Session, rdsClusterID string, ecsClusterName string) {
@@ -152,5 +166,18 @@ func turnOn(sess *session.Session, rdsClusterID string, ecsClusterName string) {
 				fmt.Printf("Skipping service: %s\n", *service.ServiceName)
 			}
 		}
+	}
+
+	lambdaSvc := lambda.New(sess)
+	_, err = lambdaSvc.UpdateFunctionConfiguration(&lambda.UpdateFunctionConfigurationInput{
+		FunctionName: aws.String("slack-notifier"),
+		Environment: &lambda.Environment{
+			Variables: map[string]*string{
+				"PAUSE_NOTIFICATIONS": aws.String("0"),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
 	}
 }

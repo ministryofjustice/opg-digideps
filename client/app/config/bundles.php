@@ -11,7 +11,7 @@ return [
     App\App::class => ['all' => true],
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     Snc\RedisBundle\SncRedisBundle::class => ['all' => true],
-    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'dev_with_debug' => true, 'test' => true],
-    Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'dev_with_debug' => true, 'test' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'dev_with_debug' => true, 'test' => true, 'local' => true],
+    Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'dev_with_debug' => true, 'test' => true, 'local' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
 ];
