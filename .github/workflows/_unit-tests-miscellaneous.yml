@@ -12,7 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
-      - name: run unit tests
-        id: unit-tests
+
+      - name: run unit tests synchronisation
+        id: unit-tests-synchronisation
         run: go test
         working-directory: lambdas/functions/synchronisation
+
+      - name: run unit tests in anonymisation
+        id: unit-tests-anonymisation
+        run: go test ./...
+        working-directory: orchestration/anonymisation
