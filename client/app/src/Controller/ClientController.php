@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationFailedEvent;
@@ -12,6 +13,7 @@ use App\Exception\RestClientException;
 use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
@@ -30,6 +32,7 @@ class ClientController extends AbstractController
     public function __construct(
         private UserApi $userApi,
         private ClientApi $clientApi,
+        private DeputyApi $deputyApi,
         private RestClient $restClient,
         private PreRegistrationApi $preRegistrationApi,
         private ObservableEventDispatcher $eventDispatcher,
@@ -160,6 +163,9 @@ class ClientController extends AbstractController
                 /** @var User $currentUser */
                 $currentUser = $this->getUser();
 
+                $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
+                $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
+
                 $url = $currentUser->isNdrEnabled()
                     ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
@@ -236,5 +242,18 @@ class ClientController extends AbstractController
             'client_validated' => $client_validated,
             'client' => $client,
         ];
+    }
+
+    private function updateClientWithDeputy($deputyId = 0, $clientId = 0)
+    {
+        // $existingDeputy = $this->restClient->get('deputy/'.$deputyResponse['id'], 'Deputy', ['deputy']);
+        // $existingDeputy = $this->deputyApi->getDeputyById($deputyId);
+        // $existingClient = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'report-id', 'current-report']);
+
+        // $updatedClient = clone $existingClient;
+        // $existingClient->setDeputy($existingDeputy);
+        // $updatedClient->setOrganisation(new Organisation());
+        // file_put_contents('php://stderr', print_r($existingClient, TRUE));
+        $this->clientApi->updateDeputy($existingClient);
     }
 }
