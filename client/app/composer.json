@@ -39,7 +39,7 @@
         "predis/predis": "^1.1.1",
         "ramsey/uuid": "^4.2",
         "sensio/framework-extra-bundle": "^6.0",
-        "snc/redis-bundle": "^3.5.2",
+        "snc/redis-bundle": "^4.0.0",
         "symfony/asset": "^5.4.0",
         "symfony/cache": "^5.4.0",
         "symfony/config": "^5.4.0",
