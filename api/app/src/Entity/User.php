@@ -93,6 +93,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         50 => PreRegistration::REALM_PROF,
     ];
 
+    public const SELF_REGISTER = 'SELF_REGISTER';
+    public const ADMIN_INVITE = 'ADMIN_INVITE';
+    public const ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
+    public const CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
+    public const UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
+
     /**
      * @var int
      *
@@ -354,7 +360,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @JMS\Type("App\Entity\Deputy")
      * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
      */
-    private Deputy|null $deputy;
+    private ?Deputy $deputy;
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="pre_register_validated", type="datetime", nullable=true)
+     */
+    private $preRegisterValidatedDate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="registration_route", type="string", length=30, nullable=false, options = { "default": "UNKNOWN" })
+     */
+    private $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
 
     /**
      * Constructor.
@@ -1377,5 +1405,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    /**
+     * Set preRegisterValidatedDate.
+     *
+     * @param \DateTime $preRegisterValidatedDate
+     */
+    public function setPreRegisterValidatedDate($preRegisterValidatedDate): User
+    {
+        $this->preRegisterValidatedDate = $preRegisterValidatedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get preRegisterValidatedDate.
+     *
+     * @return ?\DateTime
+     */
+    public function getPreRegisterValidatedDate(): ?\DateTime
+    {
+        return $this->preRegisterValidatedDate;
+    }
+
+    public function getRegistrationRoute(): string
+    {
+        return $this->registrationRoute;
+    }
+
+    /**
+     * @param string $registrationRoute
+     */
+    public function setRegistrationRoute($registrationRoute): User
+    {
+        $this->registrationRoute = $registrationRoute;
+
+        return $this;
     }
 }

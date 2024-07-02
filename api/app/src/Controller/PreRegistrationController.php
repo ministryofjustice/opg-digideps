@@ -85,6 +85,7 @@ class PreRegistrationController extends RestController
         if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
             $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setDeputyUid($verificationService->getLastMatchedDeputyNumbers()[0]);
+            $user->setPreRegisterValidatedDate(new \DateTime());
             $this->em->persist($user);
             $this->em->flush();
         } else {

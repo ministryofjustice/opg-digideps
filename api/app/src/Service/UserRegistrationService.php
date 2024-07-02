@@ -77,6 +77,8 @@ class UserRegistrationService
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             $user->setDeputyNo($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setDeputyUid($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
+            $user->setPreRegisterValidatedDate(new \DateTime('now'));
+            $user->setRegistrationRoute(User::SELF_REGISTER);
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);

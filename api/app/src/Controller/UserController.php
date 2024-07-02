@@ -136,6 +136,11 @@ class UserController extends RestController
             $user->setRegistrationDate($registrationDate);
         }
 
+        if (!empty($data['pre_register_validated_date'])) {
+            $preRegisterValidateDate = new \DateTime($data['pre_register_validated_date']);
+            $user->setPreRegisterValidatedDate($preRegisterValidateDate);
+        }
+
         return $user;
     }
 
