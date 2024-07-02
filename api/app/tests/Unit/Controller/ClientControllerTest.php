@@ -316,7 +316,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testUpdateDeputy()
     {
-        $url = '/client/'.self::$client2->getId().'/update-deputy'.self::$deputy3->getId();
+        $url = '/client/'.self::$client2->getId().'/update-deputy/'.self::$deputy3->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -326,7 +326,6 @@ class ClientControllerTest extends AbstractTestController
         $client = self::fixtures()->clear()->getRepo('Client')->find($return['data']['clientId']);
 
         $this->assertInstanceOf('App\Entity\Client', $client);
-        $this->assertEquals(1, count($client->getDeputy()));
         $this->assertInstanceOf('App\Entity\Deputy', $client->getDeputy());
     }
 }

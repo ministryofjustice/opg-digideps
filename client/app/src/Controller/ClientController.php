@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationFailedEvent;
@@ -242,18 +241,5 @@ class ClientController extends AbstractController
             'client_validated' => $client_validated,
             'client' => $client,
         ];
-    }
-
-    private function updateClientWithDeputy($deputyId = 0, $clientId = 0)
-    {
-        // $existingDeputy = $this->restClient->get('deputy/'.$deputyResponse['id'], 'Deputy', ['deputy']);
-        // $existingDeputy = $this->deputyApi->getDeputyById($deputyId);
-        // $existingClient = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'report-id', 'current-report']);
-
-        // $updatedClient = clone $existingClient;
-        // $existingClient->setDeputy($existingDeputy);
-        // $updatedClient->setOrganisation(new Organisation());
-        // file_put_contents('php://stderr', print_r($existingClient, TRUE));
-        $this->clientApi->updateDeputy($existingClient);
     }
 }
