@@ -7,6 +7,7 @@ COPY sleep_mode sleep_mode
 RUN cd sleep_mode && go build -o environment_status main.go
 
 FROM alpine:3.20
+RUN apk update && apk upgrade
 
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_HOST **None**

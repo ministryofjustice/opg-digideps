@@ -11,27 +11,18 @@ import (
 func parseJoinString(joinString string, sourceTable string, sourceColumn string) common.LeftJoinsDetails {
 	parts := strings.Split(joinString, "~")
 	fieldName := parts[1]
-	fmt.Print(fieldName + "\n\n")
+
+	if fieldName == "" {
+		fmt.Printf("WARNING - Join string %s badly formatted", joinString)
+	}
+
 	joins := strings.Split(parts[0], "#")
-
-	fmt.Print(joins)
-
 	tableName := strings.Split(joins[len(joins)-1], ".")[0]
-	fmt.Print(tableName + "\n\n")
 
 	var leftJoins []common.LeftJoin
 	for i := 0; i+1 < len(joins); i += 2 {
-		fmt.Print(joins[i])
-		fmt.Print("\n\n")
-		fmt.Print(joins[i+1])
-		fmt.Print("\n\n")
 		leftParts := strings.Split(joins[i], ".")
 		rightParts := strings.Split(joins[i+1], ".")
-
-		fmt.Print(leftParts)
-		fmt.Print("\n\n")
-		fmt.Print(rightParts)
-		fmt.Print("\n\n")
 
 		leftJoin := common.LeftJoin{
 			LeftColumn:  leftParts[1],

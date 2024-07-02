@@ -1,0 +1,24 @@
+name: "[Tests] Miscellaneous Unit Tests"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+
+jobs:
+  miscellaneous-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+
+      - name: run unit tests synchronisation
+        id: unit-tests-synchronisation
+        run: go test
+        working-directory: lambdas/functions/synchronisation
+
+      - name: run unit tests in anonymisation
+        id: unit-tests-anonymisation
+        run: go test ./...
+        working-directory: orchestration/anonymisation

@@ -1,5 +1,7 @@
 package common
 
+import "database/sql"
+
 type TableColumn struct {
 	Schema       string
 	Table        string
@@ -47,3 +49,9 @@ type LeftJoinsDetails struct {
 	TableName   string
 	LeftJoins   []LeftJoin
 }
+
+type DBHelper interface {
+	DropAllTables(db *sql.DB, schemaName string) error
+}
+
+type RealDBHelper struct{}
