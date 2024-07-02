@@ -39,11 +39,15 @@ def query_cloudwatch_logs(log_group_name, log_stream_prefix):
     query_id = response["queryId"]
 
     # Wait for the query to complete
+    seconds_waiting = 0
+    seconds_to_sleep = 1
+    ten_minutes = 600
     while True:
         query_status = cloudwatch_logs.get_query_results(queryId=query_id)
-        if query_status["status"] == "Complete":
+        if query_status["status"] == "Complete" or seconds_waiting > ten_minutes:
             break
-        time.sleep(1)
+        time.sleep(seconds_to_sleep)
+        seconds_waiting += seconds_to_sleep
 
     # Process each query result
     log_records = []
