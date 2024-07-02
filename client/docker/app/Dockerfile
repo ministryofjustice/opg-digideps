@@ -12,7 +12,7 @@ COPY client/app/src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.27-fpm-alpine3.18 as base
+FROM php:8.1.28-fpm-alpine3.20 as base
 WORKDIR /var/www
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
