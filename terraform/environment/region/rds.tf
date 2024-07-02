@@ -7,7 +7,6 @@ module "api_aurora" {
   cluster_identifier     = "api"
   ca_cert_identifier     = "rds-ca-rsa2048-g1"
   db_subnet_group_name   = var.account.db_subnet_group
-  deletion_protection    = var.account.deletion_protection ? true : false
   database_name          = "api"
   engine_version         = var.account.psql_engine_version
   master_username        = "digidepsmaster"
@@ -17,6 +16,7 @@ module "api_aurora" {
   kms_key_id             = data.aws_kms_key.rds.arn
   skip_final_snapshot    = var.account.deletion_protection ? false : true
   vpc_security_group_ids = [module.api_rds_security_group.id]
+  deletion_protection    = var.account.deletion_protection ? true : false
   tags                   = var.default_tags
   log_group              = aws_cloudwatch_log_group.api_cluster.name
 }
