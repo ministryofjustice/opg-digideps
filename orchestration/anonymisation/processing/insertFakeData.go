@@ -44,6 +44,7 @@ func insertSqlChunk(db *sql.DB, tableName string, rows [][]common.FakedData) err
 
 	// Combine value sets
 	query += strings.Join(valueSets, ",\n")
+	// fmt.Print(query)
 
 	_, err := db.Exec(query)
 	if err != nil {
@@ -153,13 +154,3 @@ func GenerateAsyncFakeData(db *sql.DB, tableDetailsCollection []common.Table, ch
 	wg.Wait()
 	return nil
 }
-
-// fmt.Print(table.TableName,)
-// fmt.Print(fmt.Sprintf("\nNum of chunks: %d\n", numChunks))
-// fmt.Print(fmt.Sprintf("\nChunk size: %d\n", chunkSize))
-// fmt.Print(fmt.Sprintf("\nRemaining Rows: %d\n", remainingRows))
-
-// fmt.Print(fmt.Sprintf("\n\nTable %s.%s, chunk %d of %d has had fake data inserted. Rows this chunk: %d\n\n", "anon", table.TableName, i+1, numChunks, rowsThisChunk))
-// fmt.Print(common.GetCurrentFuncName())
-// currentTime := time.Now()
-// fmt.Print(currentTime)

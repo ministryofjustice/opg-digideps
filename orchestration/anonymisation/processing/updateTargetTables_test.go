@@ -56,6 +56,8 @@ func TestGetSqlUpdateStatement(t *testing.T) {
 	}
 }
 
+// No mocks here as I want to actually check the final query looks how I expect.
+// We want to see results of sql update statement and the left joins functions combined.
 func TestUpdateOriginalTable(t *testing.T) {
 	// Set up the mock database
 	db, mock, err := sqlmock.New()

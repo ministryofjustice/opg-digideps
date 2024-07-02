@@ -21,7 +21,7 @@ func TestDropAllTables(t *testing.T) {
 	}
 	defer db.Close()
 
-	schema := "anon"
+	schema := "public"
 
 	// Mock the query for fetching table names
 	query := fmt.Sprintf("SELECT table_name FROM information_schema.tables WHERE table_schema = '%s'", schema)
