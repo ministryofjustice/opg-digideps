@@ -4,6 +4,7 @@ namespace App\Tests\Unit;
 
 use App\Entity as EntityDir;
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
@@ -69,6 +70,26 @@ class Fixtures
         $this->em->persist($user);
 
         return $user;
+    }
+
+    /**
+     * @return Deputy
+     */
+    public function createDeputy(array $settersMap = [])
+    {
+        // add clent, cot, report, needed for assets
+        $deputy = new Deputy();
+        $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
+        $deputy->setFirstname('name'.time());
+        $deputy->setLastname('surname'.time());
+
+        foreach ($settersMap as $k => $v) {
+            $deputy->$k($v);
+        }
+
+        $this->em->persist($deputy);
+
+        return $deputy;
     }
 
     /**
@@ -523,7 +544,7 @@ class Fixtures
     /**
      * @param string $deputyNo
      *
-     * @return EntityDir\Deputy
+     * @return Deputy
      */
     public function findDeputyByNumber($deputyNo)
     {
