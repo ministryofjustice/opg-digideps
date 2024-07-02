@@ -34,7 +34,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b80ff79f1755d06ba70441c368a6fe801f5f3a62 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:
@@ -142,7 +142,7 @@ jobs:
     secrets: inherit
 
   miscellaneous_unit_tests:
-    name: client unit tests
+    name: miscellaneous unit tests
     uses: ./.github/workflows/_unit-tests-miscellaneous.yml
     needs:
       - workflow_variables
