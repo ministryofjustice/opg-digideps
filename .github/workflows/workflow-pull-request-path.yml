@@ -136,6 +136,7 @@ jobs:
     uses: ./.github/workflows/_codecov.yml
     needs:
       - client_unit_tests
+      - miscellaneous_unit_tests
       - api_unit_tests_1
       - api_unit_tests_2
       - api_unit_tests_3
@@ -146,7 +147,6 @@ jobs:
     uses: ./.github/workflows/_unit-tests-miscellaneous.yml
     needs:
       - workflow_variables
-      - docker_build_scan_push
 
   terraform_plan_account_development:
     name: account plan terraform development
