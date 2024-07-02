@@ -5,7 +5,7 @@ resource "aws_ecs_task_definition" "checklist_sync" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.checklist_sync_container}]"
-  task_role_arn            = aws_iam_role.front.arn
+  task_role_arn            = aws_iam_role.document_sync.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = var.default_tags
 }
