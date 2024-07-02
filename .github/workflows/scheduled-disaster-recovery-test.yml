@@ -48,7 +48,7 @@ jobs:
         id: restore
         run: |
           export TEN_MINS_AGO=$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')
-          python database_restore.py \
+          python3 database_restore.py \
           --environment preproduction \
           --cluster_from api-integration \
           --pitr "${TEN_MINS_AGO}"

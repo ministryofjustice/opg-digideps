@@ -1,12 +1,16 @@
 package initialisation
 
 import (
-	// "database/sql"
+	"database/sql"
 	"fmt"
+	"regexp"
 	"testing"
+
+	"anonymisation/common"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestDropAllTables(t *testing.T) {
@@ -40,106 +44,115 @@ func TestDropAllTables(t *testing.T) {
 	}
 }
 
-// TODO - Fix the below tests
+// MockDBHelper is a mock of DBHelper interface
+type MockDBHelper struct {
+	mock.Mock
+}
 
-// var dropAllTablesMock = func(db *sql.DB, schema string) error {
-// 	return nil
-// }
+func (m *MockDBHelper) DropAllTables(db *sql.DB, schemaName string) error {
+	args := m.Called(db, schemaName)
+	return args.Error(0)
+}
 
-// func TestCreateSchemaIfNotExists(t *testing.T) {
-// 	// Initialize the mock database
-// 	db, mock, err := sqlmock.New()
-// 	if err != nil {
-// 		t.Fatalf("An error '%s' was not expected when opening a stub database connection", err)
-// 	}
-// 	defer db.Close()
+func TestCreateSchemaIfNotExists(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
 
-// 	schemaName := "testschema"
-// 	dropTables := true
+	dbHelper := &MockDBHelper{}
 
-// 	// Mock the query for checking if the schema exists
-// 	mock.ExpectQuery("SELECT EXISTS\\(SELECT schema_name FROM information_schema.schemata WHERE schema_name = \\$1\\)").
-// 		WithArgs(schemaName).
-// 		WillReturnRows(sqlmock.NewRows([]string{"exists"}).AddRow(false))
+	t.Run("Schema does not exist, create schema", func(t *testing.T) {
+		mock.ExpectQuery("SELECT EXISTS\\(SELECT schema_name FROM information_schema.schemata WHERE schema_name = \\$1\\)").
+			WithArgs("test_schema").
+			WillReturnRows(sqlmock.NewRows([]string{"exists"}).AddRow(false))
 
-// 	// Mock the execution of the create schema statement
-// 	mock.ExpectExec(fmt.Sprintf("CREATE SCHEMA %s", schemaName)).
-// 		WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec("CREATE SCHEMA test_schema").
+			WillReturnResult(sqlmock.NewResult(1, 1))
 
-// 	// Temporarily replace the dropAllTables function with a mock
-// 	originalDropAllTables := dropAllTables
-// 	dropAllTables = dropAllTablesMock
-// 	defer func() { dropAllTables = originalDropAllTables }()
+		err = CreateSchemaIfNotExists(db, "test_schema", false, dbHelper)
+		assert.NoError(t, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 
-// 	// Call the function
-// 	err = CreateSchemaIfNotExists(db, schemaName, dropTables)
+	t.Run("Schema exists, do not create schema", func(t *testing.T) {
+		mock.ExpectQuery("SELECT EXISTS\\(SELECT schema_name FROM information_schema.schemata WHERE schema_name = \\$1\\)").
+			WithArgs("test_schema").
+			WillReturnRows(sqlmock.NewRows([]string{"exists"}).AddRow(true))
 
-// 	// Assert that no errors occurred
-// 	assert.NoError(t, err)
+		err = CreateSchemaIfNotExists(db, "test_schema", false, dbHelper)
+		assert.NoError(t, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 
-// 	// Ensure all expectations were met
-// 	if err := mock.ExpectationsWereMet(); err != nil {
-// 		t.Errorf("There were unfulfilled expectations: %s", err)
-// 	}
-// }
+	t.Run("Schema exists, drop tables", func(t *testing.T) {
+		mock.ExpectQuery("SELECT EXISTS\\(SELECT schema_name FROM information_schema.schemata WHERE schema_name = \\$1\\)").
+			WithArgs("test_schema").
+			WillReturnRows(sqlmock.NewRows([]string{"exists"}).AddRow(true))
 
-// func TestCreateSchemaIfExists(t *testing.T) {
-// 	// Initialize the mock database
-// 	db, mock, err := sqlmock.New()
-// 	if err != nil {
-// 		t.Fatalf("An error '%s' was not expected when opening a stub database connection", err)
-// 	}
-// 	defer db.Close()
+		dbHelper.On("DropAllTables", db, "test_schema").Return(nil)
 
-// 	schemaName := "testschema"
-// 	dropTables := false
+		err = CreateSchemaIfNotExists(db, "test_schema", true, dbHelper)
+		assert.NoError(t, err)
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+}
 
-// 	// Mock the query for checking if the schema exists
-// 	mock.ExpectQuery("SELECT EXISTS\\(SELECT schema_name FROM information_schema.schemata WHERE schema_name = \\$1\\)").
-// 		WithArgs(schemaName).
-// 		WillReturnRows(sqlmock.NewRows([]string{"exists"}).AddRow(true))
+func TestCreateTables(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
 
-// 	// Call the function
-// 	err = CreateSchemaIfNotExists(db, schemaName, dropTables)
+	tests := []struct {
+		name         string
+		columns      []common.TableColumn
+		schema       string
+		expectedSQLs []string
+		expectError  bool
+	}{
+		{
+			name: "Create table with primary key and columns",
+			columns: []common.TableColumn{
+				{Table: "test_table", Column: "id", ColumnType: "INTEGER", Constraint: "PRIMARY KEY"},
+				{Table: "test_table", Column: "name", ColumnType: "character varying", ColumnLength: "255"},
+				{Table: "test_table", Column: "age", ColumnType: "INTEGER"},
+			},
+			schema:       "public",
+			expectedSQLs: []string{"CREATE TABLE IF NOT EXISTS public.test_table (ppk_id SERIAL PRIMARY KEY, id INTEGER, name character varying(255), age INTEGER, anonymised bool)"},
+			expectError:  false,
+		},
+		{
+			name: "Create processing table with only primary key",
+			columns: []common.TableColumn{
+				{Table: "test_table", Column: "id", ColumnType: "INTEGER", Constraint: "PRIMARY KEY"},
+				{Table: "test_table", Column: "name", ColumnType: "character varying", ColumnLength: "255"},
+				{Table: "test_table", Column: "age", ColumnType: "INTEGER"},
+			},
+			schema:       "processing",
+			expectedSQLs: []string{"CREATE TABLE IF NOT EXISTS processing.test_table (ppk_id SERIAL PRIMARY KEY, id INTEGER, anonymised bool)"},
+			expectError:  false,
+		},
+	}
 
-// 	// Assert that no errors occurred
-// 	assert.NoError(t, err)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for _, expectedSQL := range tt.expectedSQLs {
+				mock.ExpectExec(regexp.QuoteMeta(expectedSQL)).WillReturnResult(sqlmock.NewResult(0, 1))
+			}
 
-// 	// Ensure all expectations were met
-// 	if err := mock.ExpectationsWereMet(); err != nil {
-// 		t.Errorf("There were unfulfilled expectations: %s", err)
-// 	}
-// }
+			tableDetails, err := CreateTables(db, tt.columns, tt.schema)
 
-// func TestCreateSchemaIfNotExistsWithDropTables(t *testing.T) {
-// 	// Initialize the mock database
-// 	db, mock, err := sqlmock.New()
-// 	if err != nil {
-// 		t.Fatalf("An error '%s' was not expected when opening a stub database connection", err)
-// 	}
-// 	defer db.Close()
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.NotEmpty(t, tableDetails)
+			}
 
-// 	schemaName := "testschema"
-// 	dropTables := true
-
-// 	// Mock the query for checking if the schema exists
-// 	mock.ExpectQuery("SELECT EXISTS\\(SELECT schema_name FROM information_schema.schemata WHERE schema_name = \\$1\\)").
-// 		WithArgs(schemaName).
-// 		WillReturnRows(sqlmock.NewRows([]string{"exists"}).AddRow(true))
-
-// 	// Temporarily replace the dropAllTables function with a mock
-// 	originalDropAllTables := dropAllTables
-// 	dropAllTables = dropAllTablesMock
-// 	defer func() { dropAllTables = originalDropAllTables }()
-
-// 	// Call the function
-// 	err = CreateSchemaIfNotExists(db, schemaName, dropTables)
-
-// 	// Assert that no errors occurred
-// 	assert.NoError(t, err)
-
-// 	// Ensure all expectations were met
-// 	if err := mock.ExpectationsWereMet(); err != nil {
-// 		t.Errorf("There were unfulfilled expectations: %s", err)
-// 	}
-// }
+			if err := mock.ExpectationsWereMet(); err != nil {
+				t.Errorf("there were unfulfilled expectations: %s", err)
+			}
+		})
+	}
+}

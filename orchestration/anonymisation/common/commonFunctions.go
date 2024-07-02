@@ -16,9 +16,12 @@ func CheckError(err error) {
 
 func LogInformation(function string, message string) {
 	currentTime := time.Now()
-
-	timeFormatted := currentTime.Format("15:04.000")
-	fmt.Printf("%s - %s - %s\n\n", timeFormatted, function, message)
+	timeFormatted, err := safeFormatTime(currentTime)
+	if err != nil {
+		fmt.Println("Error formatting time:", err)
+	} else {
+		fmt.Printf("%s - %s - %s\n\n", timeFormatted, function, message)
+	}
 }
 
 func GetCurrentFuncName() string {
@@ -72,4 +75,16 @@ func RemoveDuplicateStr(strSlice []string) []string {
 		}
 	}
 	return list
+}
+
+func safeFormatTime(t time.Time) (string, error) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from panic:", r)
+		}
+	}()
+	if t.IsZero() {
+		return "00:00.000", nil
+	}
+	return t.Format("04:05.000"), nil
 }
