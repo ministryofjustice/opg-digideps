@@ -56,6 +56,9 @@ jobs:
           - svc_name: "synchronise-lambda"
             sub_folder: "lambdas/functions/synchronisation"
             docker_file: "Dockerfile"
+          - svc_name: "test"
+            sub_folder: "."
+            docker_file: "squid/Dockerfile"
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 

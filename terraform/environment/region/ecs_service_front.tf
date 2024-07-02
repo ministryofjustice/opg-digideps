@@ -138,7 +138,34 @@ locals {
           { name = "NGINX_APP_NAME", value = "frontend" },
           { name = "ROLE", value = "front" },
           { name = "SESSION_PREFIX", value = "dd_front" },
+          { name = "http_proxy", value = "http://squid:3128" },
+          { name = "JIMTEST", value = "ORIGINAL" }
       ])
     }
   )
+  #  front_squid = jsonencode(
+  #    {
+  #      cpu         = 0,
+  #      essential   = true,
+  #      image       = local.images.squid-proxy,
+  #      mountPoints = [],
+  #      name        = "squid",
+  #      portMappings = [{
+  #        name          = "squid-port",
+  #        containerPort = 3128,
+  #        hostPort      = 3128,
+  #        protocol      = "tcp"
+  #      }],
+  #      volumesFrom = [],
+  #      logConfiguration = {
+  #        logDriver = "awslogs",
+  #        options = {
+  #          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+  #          awslogs-region        = "eu-west-1",
+  #          awslogs-stream-prefix = "${aws_iam_role.front.name}.squid"
+  #        }
+  #      },
+  #      environment = []
+  #    }
+  #  )
 }

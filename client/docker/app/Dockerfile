@@ -60,6 +60,8 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
     && chown www-data /tmp/commonpasswords.txt
 
 FROM base as application
+COPY squid/certs/myca.pem /usr/local/share/ca-certificates/myca.crt
+RUN update-ca-certificates
 COPY --chown=www-data:www-data --from=composer /app/app app
 COPY --chown=www-data:www-data --from=composer /app/vendor/bin bin
 COPY --chown=www-data:www-data --from=composer /app/vendor vendor

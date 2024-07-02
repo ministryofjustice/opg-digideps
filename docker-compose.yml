@@ -36,6 +36,8 @@ services:
 
   frontend-app:
     container_name: opg-digideps-frontend-app
+    #    cap_add:
+    #      - NET_ADMIN
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
@@ -50,9 +52,14 @@ services:
       - mock-notify-api
       - pact-mock
       - file-scanner-rest
+      - squid
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
+      http_proxy: http://squid:3128
+      #      https_proxy: http://squid:3130
+      JIMTEST: ORIGINAL
+
     env_file:
       - ./client/app/frontend.env
     restart: always
@@ -159,6 +166,14 @@ services:
       dockerfile: ./file-scanner/Dockerfile
     ports:
       - 8085:8080
+
+  squid:
+    build:
+      context: .
+      dockerfile: ./squid/Dockerfile
+  #    ports:
+  #      - 3128:3128
+  #      - 3129:3129
 
   orchestration:
     build: ./orchestration
