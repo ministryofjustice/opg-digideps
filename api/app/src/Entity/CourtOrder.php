@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -61,6 +61,13 @@ class CourtOrder
      */
     private $active;
 
+    public function __construct(array $row)
+    {
+        $this->courtOrderUid = $row['CourtOrderUid'];
+        $this->type = $row['Type'];
+        $this->active = $row['Active'];
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -85,12 +92,12 @@ class CourtOrder
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
         return $this->type;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $type): CourtOrder
     {
         $this->type = $type;
 

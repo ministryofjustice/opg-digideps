@@ -45,6 +45,7 @@ class PreRegistrationFactory
             'OrderType' => $dto->getOrderType(),
             'CoDeputy' => $dto->getIsCoDeputy() ? 'yes' : 'no',
             'Hybrid' => $dto->getHybrid(),
+            'CourtOrderUid' => $dto->getCourtOrderUid(),
         ];
     }
 

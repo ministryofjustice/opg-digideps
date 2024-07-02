@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Registration;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
@@ -31,7 +32,12 @@ trait IngestTrait
         'added' => ['expected' => 0, 'found' => 0],
         'updated' => ['expected' => 0, 'found' => 0],
     ];
-
+    
+    private array $courtOrders = [
+        'added' => ['expected' => 0, 'found' => 0],
+        'updated' => ['expected' => 0, 'found' => 0]
+    ];
+    
     private array $errors = [
         'count' => 0,
         'messages' => [],
@@ -89,6 +95,7 @@ trait IngestTrait
         $this->deputies['added']['expected'] = intval($hash[0]['deputies']);
         $this->organisations['added']['expected'] = intval($hash[0]['organisations']);
         $this->reports['added']['expected'] = intval($hash[0]['reports']);
+        $this->courtOrders['added']['expected'] = intval($hash[0]['court_orders']);
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
@@ -120,6 +127,12 @@ trait IngestTrait
                 $this->reports['added']['expected'],
                 $this->reports['added']['found'],
                 'Count of entities based on UIDs - reports'
+            );
+
+            $this->assertIntEqualsInt(
+                $this->courtOrders['added']['expected'],
+                $this->courtOrders['added']['found'],
+                'Count of entities based on UIDs - Court Orders'
             );
         } else {
             $this->assertIntEqualsInt(
@@ -177,6 +190,16 @@ trait IngestTrait
                         'dataType' => sprintf('reports updated: %u', $this->reports['updated']['expected']),
                         'message' => 'Asserting Reports updated on the Command output is incorrect',
                     ],
+                ],
+                [
+                    'added' => [
+                        'dataType' => sprintf('court_orders added: %u', $this->courtOrders['added']['expected']),
+                        'message' => 'Asserting Court Orders added on the Command output is incorrect'
+                    ],
+                    'updated' => [
+                        'dataType' => sprintf('court_orders updated: %u', $this->courtOrders['updated']['expected']),
+                        'message' => 'Asserting Court Orders updated on the Command output is incorrect'
+                    ]
                 ],
             ];
 
@@ -245,12 +268,14 @@ trait IngestTrait
             $this->entityUids['sirius_case_numbers'][] = $row['Case'] ?? '';
             $this->entityUids['deputy_uids'][] = $row['DeputyUid'] ?? '';
             $this->entityUids['org_email_identifiers'][] = $email;
+            $this->entityUids['court_orders'][] = $row['CourtOrderUid'] ?? '';
         }
 
         $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
         $this->entityUids['sirius_case_numbers'] = array_unique($this->entityUids['sirius_case_numbers']);
         $this->entityUids['deputy_uids'] = array_unique($this->entityUids['deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
+        $this->entityUids['court_orders'] = array_unique($this->entityUids['court_orders']);
     }
 
     private function countCreatedEntities()
@@ -261,6 +286,7 @@ trait IngestTrait
         $deputies = $this->em->getRepository(Deputy::class)->findBy(['deputyUid' => $this->entityUids['deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
+        $courtOrders = $this->em->getRepository(CourtOrder::class)->findBy(['courtOrderUid' => $this->entityUids['court_orders']]);
 
         $reports = [];
         foreach ($clients as $client) {
@@ -274,6 +300,7 @@ trait IngestTrait
         $this->organisations['added']['found'] = count($orgs);
         $this->preRegistration['found'] = count($preRegistrations);
         $this->reports['added']['found'] = count($reports);
+        $this->courtOrders['added']['found'] = count($courtOrders);
     }
 
     /**
@@ -284,6 +311,7 @@ trait IngestTrait
         $this->expectedDeputyName = $newDeputy;
 
         $this->deputies['added']['expected'] = 1;
+        $this->courtOrders['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
@@ -324,6 +352,7 @@ trait IngestTrait
     public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingDeputy(string $address)
     {
         $this->deputies['added']['expected'] = 1;
+        $this->courtOrders['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
@@ -373,7 +402,7 @@ trait IngestTrait
         $this->deputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001', 75123468759);
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
@@ -388,6 +417,7 @@ trait IngestTrait
         $this->deputies['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
         $this->deputies['updated']['expected'] = 1;
+        $this->courtOrders['added']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
 
@@ -410,23 +440,6 @@ trait IngestTrait
             $currentReport->getType(),
             'Comparing expected report type to actual report type'
         );
-    }
-
-    /**
-     * @When I run the lay CSV command the file has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number :caseNumber and 1 valid row
-     */
-    public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
-    {
-        $this->clients['added']['expected'] = 1;
-        $this->organisations['added']['expected'] = 1;
-        $this->deputies['added']['expected'] = 1;
-        $this->reports['added']['expected'] = 1;
-        $this->errors['count'] = 1;
-        $this->errors['messages'][] = 'Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail';
-
-        $this->createProfAdminNotStarted();
-
-        $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
     /**
@@ -465,6 +478,7 @@ trait IngestTrait
                 'ClientSurname',
                 'ClientDateOfBirth',
                 'ClientPostcode',
+                'CourtOrderUid',
                 'DeputyUid',
                 'DeputyType',
                 'DeputyEmail',
@@ -481,6 +495,7 @@ trait IngestTrait
             $requiredColumns = [
                 'Case',
                 'ClientSurname',
+                'CourtOrderUid',
                 'DeputyUid',
                 'DeputySurname',
                 'DeputyPostcode',
@@ -587,7 +602,7 @@ trait IngestTrait
      */
     public function iUploadCsvWith1ValidAnd1InvalidRow(int $entitiesSkipped, int $newEntitiesCount)
     {
-        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname'];
+        $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname', 'CourtOrderUid'];
         $this->preRegistration['expected'] = $newEntitiesCount;
         $this->skipped['expected'] = $entitiesSkipped;
 
@@ -744,7 +759,7 @@ trait IngestTrait
         $this->deputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008', 25123468757);
 
         $this->em->clear();
 
@@ -878,6 +893,7 @@ trait IngestTrait
         $this->clients['added']['expected'] = 2;
         $this->deputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
+        $this->courtOrders['added']['expected'] = 2;
         $this->organisations['added']['expected'] = 1;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
@@ -952,6 +968,7 @@ trait IngestTrait
         $this->deputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
+        $this->courtOrders['added']['expected'] = 1;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
@@ -1002,6 +1019,7 @@ trait IngestTrait
         $this->clients['added']['expected'] = 2;
         $this->deputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
+        $this->courtOrders['added']['expected'] = 2;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
@@ -1017,6 +1035,7 @@ trait IngestTrait
         $this->clients['added']['expected'] = 2;
         $this->deputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
+        $this->courtOrders['added']['expected'] = 2;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 

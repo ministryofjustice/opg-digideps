@@ -22,6 +22,7 @@ class OrgDeputyshipDto
     private string $organisationName;
     private string $reportType;
     private ?string $hybrid;
+    private ?int $courtOrderUid;
 
     private ?string $clientAddress3;
     private ?string $clientAddress4;
@@ -361,6 +362,18 @@ class OrgDeputyshipDto
     public function setHybrid(?string $hybrid): self
     {
         $this->hybrid = $hybrid;
+
+        return $this;
+    }
+
+    public function getCourtOrderUid(): ?int
+    {
+        return $this->courtOrderUid;
+    }
+
+    public function setCourtOrderUid(?int $courtOrderUid): OrgDeputyshipDto
+    {
+        $this->courtOrderUid = $courtOrderUid;
 
         return $this;
     }

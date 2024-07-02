@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Helpers;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
@@ -21,6 +22,8 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
 use Aws\S3\S3ClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
+use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FixtureHelper
@@ -30,6 +33,7 @@ class FixtureHelper
     private ClientTestHelper $clientTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
     private DeputyTestHelper $deputyTestHelper;
+    private Generator $faker;
 
     private string $testRunId = '';
     private string $orgName = 'Test Org';
@@ -37,18 +41,20 @@ class FixtureHelper
     public const S3_BUCKETNAME = 'S3_BUCKETNAME';
 
     public function __construct(
-        private EntityManagerInterface $em,
+        private readonly EntityManagerInterface $em,
         private array $fixtureParams,
-        private UserPasswordHasherInterface $hasher,
+        private readonly UserPasswordHasherInterface $hasher,
         private string $symfonyEnvironment,
-        private PreRegistrationFactory $preRegistrationFactory,
-        private S3ClientInterface $s3Client,
+        private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly S3ClientInterface $s3Client,
     ) {
         $this->userTestHelper = new UserTestHelper();
         $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
+        
+        $this->faker = Factory::create();
     }
 
     public static function buildUserDetails(User $user)
@@ -298,6 +304,12 @@ class FixtureHelper
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
         $ndr = $this->reportTestHelper->generateNdr($this->em, $deputy, $client);
 
+        $courtOrder = new CourtOrder([
+            'CourtOrderUid' => $this->faker->randomNumber(8),
+            'Type' => 'SINGLE',
+            'Active' => true,
+        ]);
+
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
         }
@@ -308,6 +320,7 @@ class FixtureHelper
 
         $this->em->persist($ndr);
         $this->em->persist($client);
+        $this->em->persist($courtOrder);
     }
 
     private function addOrgClientsDeputyAndReportsToOrgDeputy(
@@ -320,7 +333,8 @@ class FixtureHelper
         ?int $satisfactionScore = null,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null
+        ?string $deputyUid = null,
+        ?int $courtOrderUid = null,
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $user, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
@@ -329,6 +343,12 @@ class FixtureHelper
         $client->addReport($report);
         $client->setOrganisation($organisation);
         $client->setDeputy($deputy);
+        
+        $courtOrder = new CourtOrder([
+            'CourtOrderUid' => $courtOrderUid ?? $this->faker->randomNumber(8),
+            'Type' => 'SINGLE',
+            'Active' => true,
+        ]);
 
         $organisation->addClient($client);
         $organisation->addUser($user);
@@ -351,6 +371,7 @@ class FixtureHelper
         $this->em->persist($client);
         $this->em->persist($report);
         $this->em->persist($organisation);
+        $this->em->persist($courtOrder);
 
         if ($submitted and isset($satisfactionScore)) {
             $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
@@ -369,6 +390,11 @@ class FixtureHelper
     {
         $client = clone $this->em->getRepository(Client::class)->find($clientId);
         $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
+        $courtOrder = new CourtOrder([
+            'CourtOrderUid' => $this->faker->randomNumber(8),
+            'Type' => 'SINGLE',
+            'Active' => true,
+        ]);
 
         if (!$sameFirstName) {
             $client->setFirstName($client->getFirstName().'ABC');
@@ -377,7 +403,7 @@ class FixtureHelper
         if (!$sameLastName) {
             $client->setLastname($client->getLastName().'ABC');
         }
-
+        $this->em->persist($courtOrder);
         $this->em->persist($client);
         $this->em->flush();
 
@@ -910,7 +936,8 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null
+        ?string $deputyUid = null,
+        ?int $courtOrderUid = null,
     ) {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -921,7 +948,8 @@ class FixtureHelper
             false,
             $deputyEmail,
             $caseNumber,
-            $deputyUid
+            $deputyUid,
+            $courtOrderUid
         );
 
         return self::buildOrgUserDetails($user);
@@ -931,7 +959,8 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyNumber = null,
+        ?int $courtOrderUid = null
     ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -942,7 +971,8 @@ class FixtureHelper
             false,
             $deputyEmail,
             $caseNumber,
-            $deputyNumber
+            $deputyNumber,
+            $courtOrderUid
         );
 
         return self::buildOrgUserDetails($user);
@@ -950,9 +980,6 @@ class FixtureHelper
 
     public function createProfAdminSubmitted(
         string $testRunId,
-        ?string $deputyEmail = null,
-        ?string $caseNumber = null,
-        ?string $deputyNumber = null
     ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -1075,6 +1102,7 @@ class FixtureHelper
             null,
             null,
             null,
+            null,
             $startDate,
             $satisfactionScore
         );
@@ -1086,6 +1114,7 @@ class FixtureHelper
             Report::PA_HW_TYPE,
             true,
             true,
+            null,
             null,
             null,
             null,
@@ -1217,6 +1246,7 @@ class FixtureHelper
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
+        ?int $courtOrderUid = null,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null
     ) {
@@ -1245,7 +1275,8 @@ class FixtureHelper
             $satisfactionScore,
             $deputyEmail,
             $caseNumber,
-            $deputyUid
+            $deputyUid,
+            $courtOrderUid
         );
 
         $this->setPassword($user);

@@ -66,7 +66,8 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)
             ->setReportType($reportType)
-            ->setHybrid($row['Hybrid']);
+            ->setHybrid($row['Hybrid'])
+            ->setCourtOrderUid((int)$row['CourtOrderUid']);
     }
 
     public function processDate(string $date): ?\DateTime

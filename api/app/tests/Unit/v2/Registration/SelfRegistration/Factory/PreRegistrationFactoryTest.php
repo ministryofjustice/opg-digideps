@@ -103,6 +103,7 @@ class PreRegistrationFactoryTest extends TestCase
             ->setOrderType('pfa')
             ->setOrderDate(new \DateTime('2011-06-14'))
             ->setIsCoDeputy(false)
-            ->setHybrid('hybrid');
+            ->setHybrid('hybrid')
+            ->setCourtOrderUid(123);
     }
 }

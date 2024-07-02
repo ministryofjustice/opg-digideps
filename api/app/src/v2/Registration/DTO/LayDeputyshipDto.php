@@ -23,6 +23,7 @@ class LayDeputyshipDto
     private ?string $orderType;
     private ?string $typeOfReport;
     private ?string $hybrid;
+    private ?int $courtOrderUid;
 
     public function getCaseNumber(): string
     {
@@ -224,6 +225,18 @@ class LayDeputyshipDto
     public function setHybrid(?string $hybrid): LayDeputyshipDto
     {
         $this->hybrid = $hybrid;
+
+        return $this;
+    }
+
+    public function getCourtOrderUid(): ?int
+    {
+        return $this->courtOrderUid;
+    }
+
+    public function setCourtOrderUid(?int $courtOrderUid): LayDeputyshipDto
+    {
+        $this->courtOrderUid = $courtOrderUid;
 
         return $this;
     }

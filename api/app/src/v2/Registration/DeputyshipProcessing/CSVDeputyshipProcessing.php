@@ -8,6 +8,7 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
+use App\v2\Registration\Uploader\CourtOrderUpdater;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Psr\Log\LoggerInterface;
@@ -17,16 +18,17 @@ class CSVDeputyshipProcessing
     protected const MAX_UPLOAD_BATCH_SIZE = 10000;
 
     public function __construct(
-        private LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
-        private LayDeputyshipUploader $layUploader,
-        private OrgDeputyshipUploader $orgUploader,
-        private SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
-        private RestFormatter $restFormatter,
-        private LoggerInterface $verboseLogger
+        private readonly LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
+        private readonly LayDeputyshipUploader $layUploader,
+        private readonly OrgDeputyshipUploader $orgUploader,
+        private readonly CourtOrderUpdater $courtOrderUpdater,
+        private readonly SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
+        private readonly RestFormatter $restFormatter,
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
-    public function layProcessing(array $data, ?int $chunkId)
+    public function layProcessing(array $data, ?int $chunkId): array
     {
         $assembler = $this->layFactory->create();
         $uploadCollection = $assembler->assembleFromArray($data);
@@ -62,7 +64,7 @@ class CSVDeputyshipProcessing
         return $result;
     }
 
-    public function orgProcessing(array $data)
+    public function orgProcessing(array $data): array
     {
         $rowCount = count($data);
 
@@ -79,5 +81,13 @@ class CSVDeputyshipProcessing
         $dtos = $orgAssembler->assembleMultipleDtosFromArray($data);
 
         return $this->orgUploader->upload($dtos);
+    }
+
+    /**
+     * @param array<int> $courtOrderUids
+     */
+    public function courtOrdersActiveSwitch(array $courtOrderUids): void
+    {
+        $this->courtOrderUpdater->upload($courtOrderUids);
     }
 }

@@ -41,6 +41,7 @@ class ProcessOrgCSVCommand extends Command
         'ReportType',
         'OrderType',
         'Hybrid',
+        'CourtOrderUid',
     ];
 
     private const OPTIONAL_COLUMNS = [
@@ -54,7 +55,6 @@ class ProcessOrgCSVCommand extends Command
         'DeputyAddress3',
         'DeputyAddress4',
         'DeputyAddress5',
-        'CourtOrderUid',
     ];
 
     private const UNEXPECTED_COLUMNS = [
@@ -71,15 +71,22 @@ class ProcessOrgCSVCommand extends Command
             'deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
+            'court_orders' => 0,
         ],
         'updated' => [
             'clients' => 0,
             'deputies' => 0,
             'reports' => 0,
             'organisations' => 0,
+            'court_orders' => 0,
         ],
         'skipped' => 0,
     ];
+
+    /**
+     * @var array<int> 
+     */
+    private array $courtOrderUids = [];
 
     private OutputInterface $cliOutput;
 
@@ -144,6 +151,7 @@ class ProcessOrgCSVCommand extends Command
 
                 return Command::SUCCESS;
             }
+            $this->csvProcessing->courtOrdersActiveSwitch($this->courtOrderUids);
 
             $this->cliOutput->writeln(
                 sprintf(
@@ -191,9 +199,14 @@ class ProcessOrgCSVCommand extends Command
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
-                $upload = $this->csvProcessing->orgProcessing($chunk);
+                $result = $this->csvProcessing->orgProcessing($chunk);
+                $this->courtOrderUids = array_merge(
+                    $this->courtOrderUids, 
+                    $result['added']['court_orders'], 
+                    $result['updated']['court_orders']
+                );
 
-                $this->storeOutput($upload);
+                $this->storeOutput($result);
                 $this->verboseLogger->notice(sprintf('Successfully processed chunk: %d', $index));
             }
 

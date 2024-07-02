@@ -42,10 +42,7 @@ class ProcessLayCSVCommand extends Command
         'OrderType',
         'CoDeputy',
         'Hybrid',
-    ];
-
-    private const OPTIONAL_COLUMNS = [
-        'CourtOrderUid'
+        'CourtOrderUid',
     ];
 
     protected const UNEXPECTED_COLUMNS = [
@@ -58,6 +55,8 @@ class ProcessLayCSVCommand extends Command
         'skipped' => 0,
         'errors' => [],
     ];
+
+    private array $courtOrderUids = [];
 
     private OutputInterface $cliOutput;
 
@@ -124,6 +123,8 @@ class ProcessLayCSVCommand extends Command
                 return Command::SUCCESS;
             }
 
+            $this->csvProcessing->courtOrdersActiveSwitch($this->courtOrderUids);
+
             $this->cliOutput->writeln(
                 sprintf(
                     '%s - success - Finished processing LayCSV. Output: %s',
@@ -151,7 +152,6 @@ class ProcessLayCSVCommand extends Command
         try {
             return (new CsvToArray($fileName, false, false))
                 ->setExpectedColumns(self::EXPECTED_COLUMNS)
-                ->setOptionalColumns(self::OPTIONAL_COLUMNS)
                 ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
         } catch (\RuntimeException $e) {
@@ -173,8 +173,12 @@ class ProcessLayCSVCommand extends Command
 
             foreach ($chunks as $index => $chunk) {
                 $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
+
+                if (!empty($result['court_orders'])) {
+                    $this->courtOrderUids = array_merge($this->courtOrderUids, $result['court_orders']);
+                }
+    
                 $this->storeOutput($result);
             }
 

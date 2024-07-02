@@ -50,6 +50,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             ['OrderType'],
             ['CoDeputy'],
             ['Hybrid'],
+            ['CourtOrderUid']
         ];
     }
 
@@ -123,6 +124,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'MadeDate' => '2011-06-14',
             'OrderType' => 'pfa',
             'Hybrid' => 'SINGLE',
+            'CourtOrderUid' => 123
         ];
     }
 }

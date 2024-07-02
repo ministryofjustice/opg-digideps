@@ -6,22 +6,39 @@ namespace App\v2\Registration\Uploader;
 
 use App\Entity\Client;
 use App\Entity\Deputy;
+use App\Entity\CourtOrder;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
+use App\Repository\CourtOrderRepository;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\DeputyAssembler;
+use App\v2\Registration\Assembler\CourtOrderDtoAssembler;
+use App\v2\Registration\DTO\CourtOrderDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use App\v2\Registration\SelfRegistration\Factory\CourtOrderFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class OrgDeputyshipUploader
 {
-    private array $added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
-    private array $updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
+    private array $added = [
+        'clients' => [],
+        'deputies' => [],
+        'reports' => [],
+        'organisations' => [],
+        'court_orders' => []
+    ];
+    private array $updated = [
+        'clients' => [],
+        'deputies' => [],
+        'reports' => [],
+        'organisations' => [],
+        'court_orders' => []
+    ];
     private array $changeOrg = [];
 
     private ?Organisation $currentOrganisation = null;
@@ -33,7 +50,9 @@ class OrgDeputyshipUploader
         private readonly OrganisationFactory $orgFactory,
         private readonly ClientAssembler $clientAssembler,
         private readonly DeputyAssembler $deputyAssembler,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly CourtOrderDtoAssembler $courtOrderAssembler,
+        private readonly CourtOrderFactory $courtOrderFactory,
     ) {
     }
 
@@ -65,6 +84,8 @@ class OrgDeputyshipUploader
                 $this->handleDtoErrors($deputyshipDto);
 
                 $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
+
+                $this->handleCourtOrder($deputyshipDto);
 
                 $this->skipArchivedClients();
                 $this->handleDeputy($deputyshipDto);
@@ -167,7 +188,7 @@ class OrgDeputyshipUploader
 
             $this->currentOrganisation = $organisation;
 
-            $this->added['organisations'][] = $organisation;
+            $this->added['organisations'][] = $organisation->getId();
         }
     }
 
@@ -180,7 +201,7 @@ class OrgDeputyshipUploader
         if (is_null($this->client)) {
             $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
 
-            $this->added['clients'][] = $dto->getCaseNumber();
+            $this->added['clients'][] = $this->client->getCaseNumber();
         } else {
             if (is_null($this->client->getCourtDate())) {
                 $this->client->setCourtDate($dto->getCourtDate());
@@ -354,8 +375,13 @@ class OrgDeputyshipUploader
 
     private function resetDeputyshipUploaderObjects()
     {
-        $this->added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
-        $this->updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
+        $this->updated = $this->added = [
+            'clients' => [],
+            'deputies' => [],
+            'reports' => [],
+            'organisations' => [],
+            'court_orders' => []
+        ];
         $this->changeOrg = [];
         $this->currentOrganisation = null;
         $this->deputy = null;
@@ -406,6 +432,44 @@ class OrgDeputyshipUploader
             );
 
             throw new ClientIsArchivedException($message);
+        }
+    }
+
+    private function handleCourtOrder(OrgDeputyshipDto $deputyshipDto): void
+    {
+        $push = false;
+        if ($courtOrder = $this->em
+            ->getRepository(CourtOrder::class)
+            ->findCourtOrderByUid($deputyshipDto->getCourtOrderUid())
+        ) {
+            if ($courtOrder->getOrderType() !== $deputyshipDto->getHybrid()) {
+                $courtOrder->setOrderType($deputyshipDto->getHybrid());
+                $push = true;
+            }
+
+            if (!$courtOrder->isActive()) {
+                $courtOrder->setActive(true);
+                $push = true;
+            }
+            
+            if ($push) {
+                $this->updated['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+            }
+        } else {
+            if (!in_array($deputyshipDto->getCourtOrderUid(), $this->added['court_orders'])) {
+                $courtOrder = $this->courtOrderAssembler->assembleFromDto($deputyshipDto);
+                $push = true;
+                $this->added['court_orders'][] = $deputyshipDto->getCourtOrderUid();
+            }
+        }
+
+        if ($push) {
+            $courtOrderEntity = (!$courtOrder instanceof CourtOrder)?
+                $this->courtOrderFactory->createFromDto($courtOrder):
+                $courtOrder;
+
+            $this->em->persist($courtOrderEntity);
+            $this->em->flush();
         }
     }
 }

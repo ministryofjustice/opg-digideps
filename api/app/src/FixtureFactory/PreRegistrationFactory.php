@@ -21,6 +21,7 @@ class PreRegistrationFactory
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
         $deputyNumber = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
+        $courtOrderNumber = intval(str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT));
         $reportType = 'ndr' == $data['reportType'] ? 'OPG102' : $data['reportType'];
 
         $dto = (new LayDeputyshipDto())
@@ -40,12 +41,13 @@ class PreRegistrationFactory
             ->setTypeOfReport($reportType ?? 'OPG102')
             ->setOrderType($data['orderType'] ?? 'PFA')
             ->setIsCoDeputy($data['createCoDeputy'] ?? false)
-            ->setHybrid($data['hybrid'] ?? null);
+            ->setHybrid($data['hybrid'] ?? null)
+            ->setCourtOrderUid($courtOrderNumber);
 
         return $this->preRegistrationFactory->createFromDto($dto);
     }
 
-    public function createCoDeputy(string $caseNumber, array $data): PreRegistration
+    public function createCoDeputy(string $caseNumber, int $courtOrderUid, array $data): PreRegistration
     {
         $deputyUid = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
 
@@ -67,7 +69,8 @@ class PreRegistrationFactory
             ->setIsCoDeputy(true)
             ->setOrderType($data['orderType'] ?? 'PFA')
             ->setTypeOfReport($data['reportType'])
-            ->setHybrid($data['hybrid'] ?? null);
+            ->setHybrid($data['hybrid'] ?? null)
+            ->setCourtOrderUid($courtOrderUid);
 
         return $this->preRegistrationFactory->createFromDto($dto);
     }
