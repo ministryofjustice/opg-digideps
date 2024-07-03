@@ -35,7 +35,17 @@ func dropAllTables(db *sql.DB, schema string) error {
 	return nil
 }
 
-func CreateSchemaIfNotExists(db *sql.DB, schemaName string, dropTables bool) error {
+type DBHelper interface {
+	DropAllTables(db *sql.DB, schemaName string) error
+}
+
+type RealDBHelper struct{}
+
+func (r *RealDBHelper) DropAllTables(db *sql.DB, schemaName string) error {
+	return dropAllTables(db, schemaName)
+}
+
+func CreateSchemaIfNotExists(db *sql.DB, schemaName string, dropTables bool, dbHelper ...DBHelper) error {
 	var exists bool
 	err := db.QueryRow("SELECT EXISTS(SELECT schema_name FROM information_schema.schemata WHERE schema_name = $1)", schemaName).Scan(&exists)
 	if err != nil {
@@ -51,8 +61,14 @@ func CreateSchemaIfNotExists(db *sql.DB, schemaName string, dropTables bool) err
 		common.LogInformation(common.GetCurrentFuncName(), fmt.Sprintf("Schema %s already exists", schemaName))
 	}
 
-	if dropTables {
-		err := dropAllTables(db, schemaName)
+	if dropTables { // this is a variadic var to be overwritten for tests
+		var helper DBHelper
+		if len(dbHelper) > 0 {
+			helper = dbHelper[0]
+		} else {
+			helper = &RealDBHelper{}
+		}
+		err := helper.DropAllTables(db, schemaName)
 		if err != nil {
 			return nil
 		}
