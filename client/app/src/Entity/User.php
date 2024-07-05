@@ -78,6 +78,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public const ACTIVATE_TOKEN_EXPIRE_HOURS = 48;
     public const PASSWORD_TOKEN_EXPIRE_HOURS = 1;
 
+    public const SELF_REGISTER = 'SELF_REGISTER';
+    public const ADMIN_INVITE = 'ADMIN_INVITE';
+    public const ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
+    public const CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
+    public const UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
@@ -400,6 +406,24 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var bool
      */
     private $createdByCaseManager;
+
+    /**
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @var \DateTime|null
+     */
+    private $preRegisterValidatedDate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"user"})
+     */
+    private $registrationRoute;
 
     public function __construct()
     {
@@ -1392,5 +1416,40 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         }
 
         return $standardsLink;
+    }
+
+    /**
+     * @return User
+     */
+    public function setPreRegisterValidatedDate(?\DateTime $preRegisterValidatedDate = null)
+    {
+        $this->preRegisterValidatedDate = $preRegisterValidatedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get preRegisterValidatedDate.
+     *
+     * @return ?\DateTime
+     */
+    public function getPreRegisterValidatedDate(): ?\DateTime
+    {
+        return $this->preRegisterValidatedDate;
+    }
+
+    public function getRegistrationRoute(): string
+    {
+        return $this->registrationRoute;
+    }
+
+    /**
+     * @param string $registrationRoute
+     */
+    public function setRegistrationRoute($registrationRoute): User
+    {
+        $this->registrationRoute = $registrationRoute;
+
+        return $this;
     }
 }

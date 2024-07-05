@@ -98,6 +98,7 @@ class CoDeputyController extends AbstractController
 
                     $user->setActive(true);
                     $user->setRegistrationDate(new \DateTime());
+                    $user->setPreRegisterValidatedDate(new \DateTime());
 
                     if ($mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
