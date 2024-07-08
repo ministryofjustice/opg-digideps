@@ -248,19 +248,19 @@ resource "aws_cloudwatch_event_target" "db_analyse_command" {
   }
 }
 
-# Checklist sync to sirius (in production we have permanent container)
+# File sync to Sirius (in production we have permanent container)
 
-resource "aws_cloudwatch_event_rule" "checklist_sync" {
+resource "aws_cloudwatch_event_rule" "sirius_files_sync" {
   count               = local.environment == "production02" ? 0 : 1
-  name                = "checklist-sync-${terraform.workspace}"
+  name                = "sirius-files-sync-${terraform.workspace}"
   schedule_expression = "rate(24 hours)"
   tags                = var.default_tags
 }
 
-resource "aws_cloudwatch_event_target" "checklist_sync" {
+resource "aws_cloudwatch_event_target" "sirius_files_sync" {
   count     = local.environment == "production02" ? 0 : 1
-  target_id = "checklist-sync-${terraform.workspace}"
-  rule      = aws_cloudwatch_event_rule.checklist_sync[0].name
+  target_id = "sirius-files-sync-${terraform.workspace}"
+  rule      = aws_cloudwatch_event_rule.sirius_files_sync[0].name
   arn       = aws_ecs_cluster.main.arn
   role_arn  = aws_iam_role.events_task_runner.arn
 

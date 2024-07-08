@@ -28,6 +28,7 @@ locals {
   events_task_role_list = [
     aws_iam_role.front.arn,
     aws_iam_role.api.arn,
+    aws_iam_role.sirius_files_sync.arn,
     aws_iam_role.performance_data.arn,
     data.aws_iam_role.sync.arn,
     aws_iam_role.sleep_mode.arn,
