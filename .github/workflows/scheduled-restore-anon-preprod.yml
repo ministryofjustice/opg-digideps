@@ -1,0 +1,47 @@
+name: "[Scheduled] Restore and Anonymise Preproduction"
+
+on:
+  schedule:
+    # 8pm every day except Sundays
+    - cron: "0 20 * * 0-6"
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  restore_to_preproduction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+
+      - name: restore to preproduction
+        uses: ./.github/workflows/_run-task.yml
+        with:
+          workspace: preproduction
+          account_name: preproduction
+          task_name: "restore_from_production"
+          timeout: "3600"
+        secrets: inherit
+
+  slack_notify_failure:
+    name: notify of failure
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - terraform_environment_cleanup
+    with:
+      success: no
+      branch: main
+      account: 454262938596
+      scheduled_task: "Restore and Anonymise Preproduction"
+    secrets: inherit

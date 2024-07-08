@@ -49,7 +49,7 @@ locals {
           },
           {
             name  = "ANONYMISE",
-            value = "no"
+            value = "yes"
           },
           {
             name  = "ANON_PATH",
