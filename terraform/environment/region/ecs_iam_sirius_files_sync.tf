@@ -4,6 +4,28 @@ resource "aws_iam_role" "sirius_files_sync" {
   tags               = var.default_tags
 }
 
+# ===== assume role policy (not the standard role one we use for most roles)
+data "aws_iam_policy_document" "task_role_assume_policy" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      identifiers = ["ecs-tasks.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+
+  statement {
+    sid       = "allowAssumeAccess"
+    effect    = "Allow"
+    resources = ["arn:aws:iam::${var.account.sirius_api_account}:role/integrations-ci"]
+    actions = [
+      "sts:AssumeRole"
+    ]
+  }
+}
+
 # ======= S3 PERMISSIONS ===== (Use same policy doc as the front container for S3)
 resource "aws_iam_role_policy" "sirius_files_sync_s3" {
   name   = "sirius-files-sync-s3.${local.environment}"
@@ -27,15 +49,6 @@ data "aws_iam_policy_document" "sirius_files_sync_invoke_api_gateway" {
       "execute-api:ManageConnections"
     ]
     resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius_api_account}:*"]
-  }
-
-  statement {
-    sid       = "allowAssumeAccess"
-    effect    = "Allow"
-    resources = ["arn:aws:iam::${var.account.sirius_api_account}:role/integrations-ci"]
-    actions = [
-      "sts:AssumeRole"
-    ]
   }
 }
 
