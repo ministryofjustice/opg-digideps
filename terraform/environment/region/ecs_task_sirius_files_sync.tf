@@ -14,12 +14,26 @@ resource "aws_ecs_service" "sirius_files_sync" {
   name                    = aws_ecs_task_definition.sirius_files_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.sirius_files_sync.arn
-  desired_count           = local.environment == "production02" ? 1 : 0
+  desired_count           = local.environment != "production02" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
+  wait_for_steady_state   = true
   tags                    = var.default_tags
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "sirius-files-sync"
+      port_name      = "sirius-files-sync-port"
+      client_alias {
+        dns_name = "sirius-files-sync"
+        port     = 80
+      }
+    }
+  }
 
   network_configuration {
     security_groups  = [module.sirius_files_sync_service_security_group.id]
@@ -39,15 +53,29 @@ resource "aws_ecs_service" "sirius_files_sync" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    aws_ecs_service.front,
+    aws_ecs_service.api,
+    aws_ecs_service.htmltopdf,
+    aws_ecs_service.scan
+  ]
 }
 
 locals {
-  script_name = local.environment == "production02" ? "scripts/document_and_checklist_continuous.sh" : "scripts/document_and_checklist_one_off.sh"
+  script_name    = local.environment != "production02" ? "scripts/document_and_checklist_continuous.sh" : "scripts/document_and_checklist_one_off.sh"
+  script_command = local.environment != "production02" ? ["sh", local.script_name, "-d"] : ["sh", local.script_name]
   sirius_files_sync_container = jsonencode(
     {
-      name    = "sirius-files-sync",
+      name = "sirius-files-sync",
+      portMappings = [{
+        name          = "sirius-files-sync-port",
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }],
       image   = local.images.client,
-      command = ["sh", local.script_name, "-d"],
+      command = local.script_command,
       logConfiguration = {
         logDriver = "awslogs",
         options = {
