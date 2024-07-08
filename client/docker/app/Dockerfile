@@ -18,7 +18,18 @@ ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
 RUN apk update && apk upgrade
-RUN apk add --no-cache su-exec libzip-dev unzip php81-pecl-igbinary php81-pecl-redis php81-pecl-imagick gmp gmp-dev
+RUN apk add --no-cache \
+    su-exec \
+    libzip-dev \
+    unzip \
+    php81-pecl-igbinary \
+    php81-pecl-redis \
+    php81-pecl-imagick  \
+    gmp \
+    gmp-dev \
+    libheif \
+    libde265 \
+    ffmpeg
 
 # Install necessary PHP extensions
 RUN docker-php-ext-install pcntl zip opcache gmp

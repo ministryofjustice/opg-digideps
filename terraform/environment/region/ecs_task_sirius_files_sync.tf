@@ -21,6 +21,19 @@ resource "aws_ecs_service" "sirius_files_sync" {
   propagate_tags          = "SERVICE"
   tags                    = var.default_tags
 
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+    service {
+      discovery_name = "sirius-files-sync"
+      port_name      = "sirius-files-sync-port"
+      client_alias {
+        dns_name = "sirius-files-sync"
+        port     = 80
+      }
+    }
+  }
+
   network_configuration {
     security_groups  = [module.sirius_files_sync_service_security_group.id]
     subnets          = data.aws_subnet.private[*].id
@@ -42,12 +55,19 @@ resource "aws_ecs_service" "sirius_files_sync" {
 }
 
 locals {
-  script_name = local.environment == "production02" ? "scripts/document_and_checklist_continuous.sh" : "scripts/document_and_checklist_one_off.sh"
+  script_name    = local.environment == "production02" ? "scripts/document_and_checklist_continuous.sh" : "scripts/document_and_checklist_one_off.sh"
+  script_command = local.environment == "production02" ? ["sh", local.script_name, "-d"] : ["sh", local.script_name]
   sirius_files_sync_container = jsonencode(
     {
-      name    = "sirius-files-sync",
+      name = "sirius-files-sync",
+      portMappings = [{
+        name          = "sirius-files-sync-port",
+        containerPort = 80,
+        hostPort      = 80,
+        protocol      = "tcp"
+      }],
       image   = local.images.client,
-      command = ["sh", local.script_name, "-d"],
+      command = local.script_command,
       logConfiguration = {
         logDriver = "awslogs",
         options = {
