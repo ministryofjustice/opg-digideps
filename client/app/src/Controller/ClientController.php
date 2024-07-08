@@ -160,7 +160,7 @@ class ClientController extends AbstractController
                 }
 
                 /** @var User $currentUser */
-                $currentUser = $this->getUser();
+                $currentUser = $this->userApi->getUserWithData();
 
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
