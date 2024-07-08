@@ -220,6 +220,7 @@ class UserController extends AbstractController
 
             //            this is the final step for Org users so registration has succeeded
             if ($user->isDeputyOrg()) {
+                $user->setPreRegisterValidatedDate(new \DateTime());
                 $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
             }
             $request->getSession()->remove('login-context');
