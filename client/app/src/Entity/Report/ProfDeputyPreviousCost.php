@@ -10,7 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @AppAssert\EndDateNotBeforeStartDate(groups={"prof-deputy-prev-costs"})
- * @AppAssert\EndDateNotGreaterThanTwelveMonths(groups={"prof-deputy-prev-costs"})
+ *
+ * @AppAssert\EndDateNotGreaterThanFifteenMonths(groups={"prof-deputy-prev-costs"})
  */
 class ProfDeputyPreviousCost implements StartEndDateComparableInterface
 {
@@ -22,23 +23,27 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     private $id;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
      * @Assert\NotBlank(message="profDeputyPreviousCost.startDate.notBlank", groups={"prof-deputy-prev-costs"})
+     *
      * @Assert\Type(type="DateTimeInterface",message="profDeputyPreviousCost.startDate.notValid", groups={"prof-deputy-prev-costs"})
      */
     private $startDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
      * @Assert\NotBlank(message="profDeputyPreviousCost.endDate.notBlank", groups={"prof-deputy-prev-costs"})
+     *
      * @Assert\Type(type="DateTimeInterface",message="profDeputyPreviousCost.endDate.notValid", groups={"prof-deputy-prev-costs"})
      */
     private $endDate;
@@ -47,9 +52,11 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
      * @var string
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
      * @Assert\NotBlank(message="profDeputyPreviousCost.amount.notBlank", groups={"prof-deputy-prev-costs"})
+     *
      * @Assert\Range(min=0.01, max=10000000, notInRangeMessage="profDeputyPreviousCost.amount.notInRangeMessage", groups={"prof-deputy-prev-costs"})
      */
     private $amount;
@@ -71,7 +78,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -79,7 +86,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     }
 
     /**
-     * @param DateTime $startDate
+     * @param \DateTime $startDate
      *
      * @return ProfDeputyPreviousCost
      */
@@ -91,7 +98,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -99,7 +106,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     }
 
     /**
-     * @param DateTime $endDate
+     * @param \DateTime $endDate
      *
      * @return ProfDeputyPreviousCost
      */

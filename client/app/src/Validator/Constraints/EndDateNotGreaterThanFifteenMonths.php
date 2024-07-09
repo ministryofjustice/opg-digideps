@@ -7,12 +7,12 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class EndDateNotGreaterThanTwelveMonths extends Constraint
+class EndDateNotGreaterThanFifteenMonths extends Constraint
 {
     /**
      * @var string
      */
-    public $message = 'report.endDate.greaterThan12Months';
+    public $message = 'report.endDate.greaterThan15Months';
 
     /**
      * @return array|string
