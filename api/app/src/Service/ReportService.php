@@ -19,6 +19,7 @@ use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
+use App\Factory\ReportEntityFactory;
 use App\Repository\ReportRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -43,7 +44,8 @@ class ReportService
 
     public function __construct(
         private EntityManagerInterface $em,
-        private ReportRepository $reportRepository
+        private ReportRepository $reportRepository,
+        private ReportEntityFactory $reportEntityFactory
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
@@ -298,7 +300,7 @@ class ReportService
         $endDate = clone $startDate;
         $endDate->modify('+12 months -1 day');
 
-        $newReport = new Report(
+        $newReport = $this->reportEntityFactory->create(
             $client,
             $newReportType, // report comes from casrec, or last year report, if not found
             $startDate,

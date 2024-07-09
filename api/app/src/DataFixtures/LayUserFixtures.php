@@ -5,8 +5,8 @@ namespace App\DataFixtures;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Factory\ReportEntityFactory;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -104,6 +104,10 @@ class LayUserFixtures extends AbstractDataFixture
         ],
     ];
 
+    public function __construct(private ReportEntityFactory $reportEntityFactory)
+    {
+    }
+
     public function doLoad(ObjectManager $manager)
     {
         // Add users from array
@@ -195,7 +199,7 @@ class LayUserFixtures extends AbstractDataFixture
             $endDate = $client->getExpectedReportEndDate();
             $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
-            $report = new Report($client, $type, $startDate, $endDate);
+            $report = $this->reportEntityFactory->create($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
         }

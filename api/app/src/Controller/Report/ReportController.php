@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
+use App\Factory\ReportEntityFactory;
 use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
@@ -63,7 +64,8 @@ class ReportController extends RestController
         EntityManagerInterface $em,
         AuthService $authService,
         RestFormatter $formatter,
-        ParameterStoreService $parameterStoreService
+        ParameterStoreService $parameterStoreService,
+        ReportEntityFactory $reportEntityFactory
     ) {
         $this->updateHandlers = $updateHandlers;
         $this->repository = $repository;
@@ -72,6 +74,7 @@ class ReportController extends RestController
         $this->authService = $authService;
         $this->formatter = $formatter;
         $this->parameterStoreService = $parameterStoreService;
+        $this->reportEntityFactory = $reportEntityFactory;
     }
 
     /**
@@ -99,7 +102,7 @@ class ReportController extends RestController
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
+        $report = $this->reportEntityFactory->create($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
@@ -343,7 +346,7 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
             // end date could be updated automatically with a listener, but better not to overload
             // the default behaviour until the logic is 100% clear
-            $report->updateDueDateBasedOnEndDate();
+            $this->reportEntityFactory->updateDueDateBasedOnEndDate($report);
         }
 
         if (array_key_exists('report_seen', $data)) {
@@ -429,7 +432,7 @@ class ReportController extends RestController
                 Report::SECTION_MONEY_IN,
             ]);
         }
-      
+
         if (array_key_exists('money_out_exists', $data)) {
             $report->setMoneyOutExists($data['money_out_exists']);
             $report->updateSectionsStatusCache([
