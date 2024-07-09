@@ -1,11 +1,11 @@
 resource "aws_iam_role" "sirius_files_sync" {
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
+  assume_role_policy = data.aws_iam_policy_document.sirius_files_task_role_assume_policy.json
   name               = "sirius-files-sync.${local.environment}"
   tags               = var.default_tags
 }
 
 # ===== assume role policy (not the standard role one we use for most roles)
-data "aws_iam_policy_document" "task_role_assume_policy" {
+data "aws_iam_policy_document" "sirius_files_task_role_assume_policy" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -17,12 +17,15 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
   }
 
   statement {
-    sid       = "allowAssumeAccess"
-    effect    = "Allow"
-    resources = ["arn:aws:iam::${var.account.sirius_api_account}:role/integrations-ci"]
-    actions = [
-      "sts:AssumeRole"
-    ]
+    sid    = "assumeIntegrationCI"
+    effect = "Allow"
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${var.account.sirius_api_account}:role/integrations-ci"
+      ]
+    }
+    actions = ["sts:AssumeRole"]
   }
 }
 
