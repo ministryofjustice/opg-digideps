@@ -334,6 +334,12 @@ services:
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 
+    opg_json_formatter:
+        class: App\Logger\OpgJsonFormatter
+
+    opg_line_formatter:
+        class: App\Logger\OpgLineFormatter
+
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
         arguments: ["@em"]
@@ -403,3 +409,22 @@ services:
 
     App\Service\Audit\LocalAuditLogHandler:
         class: App\Service\Audit\LocalAuditLogHandler
+
+    Http\Adapter\Guzzle7\Client:
+        class: Http\Adapter\Guzzle7\Client
+
+    GuzzleHttp\Client:
+        arguments:
+            $config:
+                timeout: 30
+                allow_redirects: false
+
+    App\Service\BankHolidaysAPIService:
+        class: App\Service\BankHolidaysAPIService
+        arguments:
+            $httpClient: '@GuzzleHttp\Client'
+
+    App\Service\CarbonBusinessDaysService:
+        class: App\Service\CarbonBusinessDaysService
+        arguments:
+            $bankHolidaysAPIService: '@App\Service\BankHolidaysAPIService'

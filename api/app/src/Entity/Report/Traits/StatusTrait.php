@@ -21,7 +21,6 @@ trait StatusTrait
      * @var string
      *
      * @JMS\Exclude()
-     *
      * @ORM\Column(name="status_cached", type="text", nullable=true)
      */
     private $sectionStatusesCached;
@@ -35,10 +34,9 @@ trait StatusTrait
      * value: STATUS_* constant
      *
      * @JMS\Exclude()
-     *
      * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
      */
-    private $reportStatusCached;
+    public $reportStatusCached;
 
     /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>].
@@ -105,7 +103,6 @@ trait StatusTrait
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Groups({
      *     "status",
      *     "report-status",
