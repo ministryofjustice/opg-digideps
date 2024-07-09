@@ -13,6 +13,7 @@ class ClientControllerTest extends AbstractTestController
     private static $deputy2;
     private static $client2;
     private static $report2;
+    private static $deputy3;
 
     private static $tokenAdmin;
     private static $tokenDeputy;
@@ -77,6 +78,9 @@ class ClientControllerTest extends AbstractTestController
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
         self::$report2 = self::fixtures()->createReport(self::$client2);
+
+        // deputy 2
+        self::$deputy3 = self::fixtures()->createDeputy();
 
         // pa
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
@@ -308,5 +312,20 @@ class ClientControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertCount(3, $data);
+    }
+
+    public function testUpdateDeputy()
+    {
+        $url = '/client/'.self::$client2->getId().'/update-deputy/'.self::$deputy3->getId();
+
+        $return = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [],
+        ]);
+        $client = self::fixtures()->clear()->getRepo('Client')->find($return['data']['clientId']);
+
+        $this->assertInstanceOf('App\Entity\Client', $client);
+        $this->assertInstanceOf('App\Entity\Deputy', $client->getDeputy());
     }
 }

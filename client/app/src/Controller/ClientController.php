@@ -12,6 +12,7 @@ use App\Exception\RestClientException;
 use App\Form\ClientType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
@@ -30,6 +31,7 @@ class ClientController extends AbstractController
     public function __construct(
         private UserApi $userApi,
         private ClientApi $clientApi,
+        private DeputyApi $deputyApi,
         private RestClient $restClient,
         private PreRegistrationApi $preRegistrationApi,
         private ObservableEventDispatcher $eventDispatcher,
@@ -158,7 +160,10 @@ class ClientController extends AbstractController
                 }
 
                 /** @var User $currentUser */
-                $currentUser = $this->getUser();
+                $currentUser = $this->userApi->getUserWithData();
+
+                $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
+                $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
                 $url = $currentUser->isNdrEnabled()
                     ? $this->generateUrl('ndr_index')
