@@ -23,7 +23,7 @@ class EndDateNotGreaterThanFifteenMonthsValidator extends ConstraintValidator
         $fifteenMonthsFromStart = clone $startDate;
         $fifteenMonthsFromStart->add(new \DateInterval('P1Y3M'));
 
-        if ($fifteenMonthsFromStart < $endDate) {
+        if ($endDate > $fifteenMonthsFromStart) {
             $this->context
                 ->buildViolation($constraint->message)
                 ->atPath('endDate')->addViolation();
