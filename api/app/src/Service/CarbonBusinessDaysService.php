@@ -2,22 +2,31 @@
 
 namespace App\Service;
 
-use Carbon\Carbon;
 use Cmixin\BusinessDay;
+use GuzzleHttp\Exception\GuzzleException;
 
 class CarbonBusinessDaysService
 {
     private string $baseList;
 
-    public function __construct(string $baseList = 'gb-engwales')
-    {
+    /**
+     * @throws GuzzleException
+     */
+    public function __construct(
+        private readonly BankHolidaysAPIService $bankHolidaysAPIService,
+        string $baseList = 'gb-engwales'
+    ) {
         $this->baseList = $baseList;
         $this->load();
     }
 
-    private function load(): void
+    /**
+     * @throws GuzzleException
+     */
+    public function load(): void
     {
-        BusinessDay::enable(['Carbon\Carbon', 'Carbon\CarbonImmutable'], $this->baseList);
-        Carbon::setHolidaysRegion($this->baseList);
+        $additionalHolidays = $this->bankHolidaysAPIService->getBankHolidays();
+
+        BusinessDay::enable('Carbon\Carbon', $this->baseList, $additionalHolidays);
     }
 }
