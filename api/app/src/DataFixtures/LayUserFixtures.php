@@ -3,10 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Factory\ReportEntityFactory;
+use App\Repository\DeputyRepository;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -104,8 +106,14 @@ class LayUserFixtures extends AbstractDataFixture
         ],
     ];
 
-    public function __construct(private ReportEntityFactory $reportEntityFactory)
-    {
+    private Deputy $deputy;
+
+    private array $deputyUids = [];
+
+    public function __construct(
+        private DeputyRepository $deputyRepository,
+        private ReportEntityFactory $reportEntityFactory
+    ) {
     }
 
     public function doLoad(ObjectManager $manager)
@@ -144,6 +152,22 @@ class LayUserFixtures extends AbstractDataFixture
 
         $manager->persist($user);
 
+        if (!in_array($data['deputyUid'], $this->deputyUids)) {
+            $this->deputyUids[] = $data['deputyUid'];
+            $this->deputy = (new Deputy())
+                ->setFirstname($data['id'])
+                ->setLastname('User '.$iteration)
+                ->setDeputyUid($data['deputyUid'])
+                ->setEmail1(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
+                ->setPhoneMain('07911111111111')
+                ->setAddress1('ABC Road')
+                ->setAddressPostcode('AB1 2CD')
+                ->setAddressCountry('GB')
+                ->setUser($user);
+
+            $manager->persist($this->deputy);
+        }
+
         // Create PreRegistration record for lay deputies
 
         $preRegistrationData = [
@@ -179,7 +203,8 @@ class LayUserFixtures extends AbstractDataFixture
             ->setAddress('ABC Road')
             ->setPostcode('AB1 2CD')
             ->setCountry('GB')
-            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'))
+            ->setDeputy($this->deputy);
 
         $manager->persist($client);
         $user->addClient($client);

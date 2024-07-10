@@ -6,11 +6,12 @@ variable "DEFAULT_ROLE" {
 variable "accounts" {
   type = map(
     object({
-      account_id      = string
-      name            = string
-      db_subnet_group = string
-      ec_subnet_group = string
-      environments    = set(string)
+      account_id         = string
+      name               = string
+      ip_block_workspace = string
+      db_subnet_group    = string
+      ec_subnet_group    = string
+      environments       = set(string)
       dns_firewall = object({
         enabled         = bool
         domains_allowed = list(string)
