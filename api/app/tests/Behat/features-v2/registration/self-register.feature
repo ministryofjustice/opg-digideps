@@ -45,8 +45,8 @@ Feature: Lay Deputy Self Registration
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
 
-    @super-admin
-    Scenario: A Co-deputy can register for the service
+    @admin
+    Scenario: A Co-deputy can register for the service and is searchable in admin
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
         When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
         And one of the Lay Deputies registers to deputise for a client with valid details
@@ -56,6 +56,10 @@ Feature: Lay Deputy Self Registration
         Then they should be able to register to deputise for a client with valid details
         Then the co-deputy details should be saved to the co-deputy's account
         And they should be on the Lay homepage
+        Given an admin user accesses the admin app
+        When I visit the admin Search Users page
+        And I search for the co-deputy using their email address
+        Then the co-deputy should appear in the search results
 
     @super-admin
     Scenario: A Lay user with the same verification details cannot be uniquely identified

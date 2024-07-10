@@ -43,7 +43,6 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
-     *
      * @Template("@App/CoDeputy/verification.html.twig")
      */
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
@@ -152,7 +151,6 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
-     *
      * @Template("@App/CoDeputy/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -211,7 +209,6 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
-     *
      * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
      * @return array|RedirectResponse
@@ -233,10 +230,15 @@ class CoDeputyController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $formEmail = $form->getData()->getEmail();
+                $firstName = $existingCoDeputy->getFirstName();
+                $lastName = $existingCoDeputy->getLastName();
 
-                // email was updated on the fly
-                if ($formEmail != $email) {
+                $formEmail = $form->getData()->getEmail();
+                $formFirstName = $form->getData()->getFirstName();
+                $formLastName = $form->getData()->getLastName();
+
+                // firstname, lastname or email were updated on the fly
+                if ($formEmail != $email || $formFirstName != $firstName || $formLastName != $lastName) {
                     $this->restClient->put('codeputy/'.$existingCoDeputy->getId(), $form->getData(), []);
                 }
 

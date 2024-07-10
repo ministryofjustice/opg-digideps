@@ -29,7 +29,6 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("{count}", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function countMld(Request $request)
@@ -45,21 +44,22 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("add", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function add(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'email' => 'notEmpty',
+            'firstname' => 'notEmpty',
+            'lastname' => 'notEmpty',
         ]);
 
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
         $newUser = new User();
 
-        $newUser->setFirstname('');
-        $newUser->setLastname('');
+        $newUser->setFirstname($data['firstname']);
+        $newUser->setLastname($data['lastname']);
         $newUser->setEmail($data['email']);
         $newUser->recreateRegistrationToken();
         $newUser->setRoleName(User::ROLE_LAY_DEPUTY);
@@ -73,7 +73,6 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("{id}", methods={"PUT"})
-     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
@@ -92,6 +91,8 @@ class CoDeputyController extends RestController
         if (!empty($data['email'])) {
             $originalUser = clone $user;
             $user->setEmail($data['email']);
+            $user->setFirstname($data['firstname']);
+            $user->setLastname($data['lastname']);
             $this->userService->editUser($originalUser, $user);
         }
 
@@ -104,7 +105,6 @@ class CoDeputyController extends RestController
      * Borrows heavily from CasRecController:addBulk.
      *
      * @Route("{mldupgrade}", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upgradeToMld(Request $request)
