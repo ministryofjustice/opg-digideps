@@ -12,13 +12,25 @@ COPY client/app/src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.27-fpm-alpine3.18 as base
+FROM php:8.1.28-fpm-alpine3.19 as base
 WORKDIR /var/www
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
-RUN apk add --no-cache su-exec libzip-dev unzip php81-pecl-igbinary php81-pecl-redis php81-pecl-imagick gmp gmp-dev
 RUN apk update && apk upgrade
+RUN apk add --no-cache \
+    su-exec \
+    libzip-dev \
+    unzip \
+    php81-pecl-igbinary \
+    php81-pecl-redis \
+    php81-pecl-imagick  \
+    gmp \
+    gmp-dev \
+    libheif \
+    libde265 \
+    ffmpeg
+
 # Install necessary PHP extensions
 RUN docker-php-ext-install pcntl zip opcache gmp
 RUN docker-php-ext-enable opcache
