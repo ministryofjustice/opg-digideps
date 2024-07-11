@@ -92,12 +92,10 @@ class ReportSubmissionService
     public function generateReportDocuments(ReportInterface $report)
     {
         $this->generateReportPdf($report);
-
         if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
             if (!empty($report->getGifts()) || !empty($report->getExpenses()) || !empty($report->getMoneyTransactionsIn())
                 || !empty($report->getMoneyTransactionsOut())) {
                 $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
-
                 $this->fileUploader->uploadFileAndPersistDocument(
                     $report,
                     $csvContent,

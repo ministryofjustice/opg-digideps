@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "admin_s3" {
 
 resource "aws_iam_role_policy" "admin_query_ssm" {
   name   = "admin-query-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.front_query_ssm.json
+  policy = data.aws_iam_policy_document.sirius_files_sync_query_ssm.json
   role   = aws_iam_role.admin.id
 }
 
