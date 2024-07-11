@@ -30,6 +30,7 @@ class ReportSubmissionController extends RestController
     ];
 
     private static array $jmsGroups = [
+        'report-id',
         'report-submission',
         'report-type',
         'report-client',
@@ -61,7 +62,7 @@ class ReportSubmissionController extends RestController
      */
     public function getAll(Request $request)
     {
-        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        $repo = $this->getRepository(ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findByFiltersWithCounts(
             $request->get('status'),
@@ -85,7 +86,7 @@ class ReportSubmissionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->findOneByIdUnfiltered($id);
+        $ret = $this->getRepository(ReportSubmission::class)->findOneByIdUnfiltered($id);
 
         $this->formatter->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
 
@@ -103,7 +104,7 @@ class ReportSubmissionController extends RestController
     public function update(Request $request, $reportSubmissionId)
     {
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
-        $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
+        $reportSubmission = $this->findEntityBy(ReportSubmission::class, $reportSubmissionId);
 
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -130,7 +131,7 @@ class ReportSubmissionController extends RestController
         }
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
-        $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
+        $reportSubmission = $this->findEntityBy(ReportSubmission::class, $reportSubmissionId);
 
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -155,9 +156,9 @@ class ReportSubmissionController extends RestController
             throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
-        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        $repo = $this->getRepository(ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
-        $ret = $repo->findDownloadableOlderThan(new \DateTime(EntityDir\Report\ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
+        $ret = $repo->findDownloadableOlderThan(new \DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
 
         $this->formatter->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
 
@@ -177,7 +178,7 @@ class ReportSubmissionController extends RestController
         }
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
-        $reportSubmission = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
+        $reportSubmission = $this->getRepository(ReportSubmission::class)->find($id);
         $reportSubmission->setDownloadable(false);
         foreach ($reportSubmission->getDocuments() as $document) {
             $document->setStorageReference(null);
@@ -227,7 +228,7 @@ class ReportSubmissionController extends RestController
     public function getPreRegistrationData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
-        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
+        $repo = $this->getRepository(ReportSubmission::class);
 
         $fromDate = $request->get('fromDate') ? new \DateTime($request->get('fromDate')) : null;
         $toDate = $request->get('toDate') ? new \DateTime($request->get('toDate')) : null;

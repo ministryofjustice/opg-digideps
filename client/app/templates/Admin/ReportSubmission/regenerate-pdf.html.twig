@@ -1,0 +1,13 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-documents" %}
+{% set transOptions = {} %}
+
+{% block htmlTitle %}{{ 'page.regeneratePdf.title' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.regeneratePdf.title' | trans }}{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <p class="govuk-body">{{ 'page.regeneratePdf.message'| trans  }}<b>{{ reportId }}</b></p>
+{% endblock %}

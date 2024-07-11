@@ -113,14 +113,15 @@ class ReportSubmissionService
      *
      * @param Report $report
      */
-    private function generateReportPdf(ReportInterface $report)
+    public function generateReportPdf(ReportInterface $report, bool $overwrite = false): void
     {
         // store PDF (with summary info) as a document
         $this->fileUploader->uploadFileAndPersistDocument(
             $report,
             $this->getPdfBinaryContent($report, true),
             $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
-            true
+            true,
+            $overwrite
         );
     }
 
@@ -139,7 +140,11 @@ class ReportSubmissionService
             'showSummary' => $showSummary,
         ]);
 
-        return $this->htmltopdf->getPdfFromHtml($html);
+        if (false === ($pdf = $this->htmltopdf->getPdfFromHtml($html))) {
+            $this->logger->error(sprintf('html_to_pdf_generation - failure - Error with pdf generation on report id: %d', $report->getId()));
+        }
+
+        return $pdf;
     }
 
     /**

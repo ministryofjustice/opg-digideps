@@ -257,7 +257,6 @@ class SnapshotManagement:
                 VpcSecurityGroupIds=self.VpcSecurityGroups,
                 DBSubnetGroupName=self.DBSubnetGroup,
                 EnableCloudwatchLogsExports=["postgresql"],
-                AutoMinorVersionUpgrade=self.AutoMinorVersionUpgrade,
                 DeletionProtection=self.DeletionProtection,
                 EngineMode=self.EngineMode,
                 KmsKeyId=self.KmsKeyIdLocal,
@@ -309,6 +308,7 @@ class SnapshotManagement:
                 DBInstanceIdentifier=instance_id,
                 AvailabilityZone=instance["AvailabilityZone"],
                 DBInstanceClass=instance["DBInstanceClass"],
+                AutoMinorVersionUpgrade=False,
                 Engine=self.Engine,
             )
             self.command_response("Create instance", response)
