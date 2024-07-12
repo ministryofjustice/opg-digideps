@@ -59,7 +59,7 @@ To develop with Terraform, you must have the following installed:
 
 - Docker
 - Make
-- terraform-docs
+- IDE plugin for HCL/terraform
 - jq
 - aws-vault for credentials handling (optional)
 - direnv (to set shell exports, see .envrc) (optional)

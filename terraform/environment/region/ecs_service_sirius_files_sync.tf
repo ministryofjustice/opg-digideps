@@ -1,70 +1,34 @@
-locals {
-  document_sync_sg_rules = {
-    ecr     = local.common_sg_rules.ecr
-    logs    = local.common_sg_rules.logs
-    s3      = local.common_sg_rules.s3
-    ssm     = local.common_sg_rules.ssm
-    ecr_api = local.common_sg_rules.ecr_api
-    secrets = local.common_sg_rules.secrets
-    api = {
-      port        = 80
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.api_service_security_group.id
-    }
-    api_gateway = {
-      port        = 443
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
-    }
-    mock_sirius_integration = {
-      port        = 8080
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.mock_sirius_integration_security_group.id
-    }
-  }
-  document_sync_scheduled = local.environment == "production02" ? 0 : 1
-}
-
-module "document_sync_service_security_group" {
-  source      = "./modules/security_group"
-  description = "Document Sync Service"
-  rules       = local.document_sync_sg_rules
-  name        = "document-sync-service"
-  tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
-  environment = local.environment
-}
-
-resource "aws_ecs_task_definition" "document_sync" {
-  family                   = "document-sync-${local.environment}"
+resource "aws_ecs_task_definition" "sirius_files_sync" {
+  family                   = "sirius-files-sync-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.document_sync_container}]"
-  task_role_arn            = aws_iam_role.front.arn
+  container_definitions    = "[${local.sirius_files_sync_container}]"
+  task_role_arn            = aws_iam_role.sirius_files_sync.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   tags                     = var.default_tags
 }
 
-resource "aws_ecs_service" "document_sync" {
-  name                    = aws_ecs_task_definition.document_sync.family
+resource "aws_ecs_service" "sirius_files_sync" {
+  name                    = aws_ecs_task_definition.sirius_files_sync.family
   cluster                 = aws_ecs_cluster.main.id
-  task_definition         = aws_ecs_task_definition.document_sync.arn
+  task_definition         = aws_ecs_task_definition.sirius_files_sync.arn
+  desired_count           = local.environment == "production02" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
+  wait_for_steady_state   = true
   tags                    = var.default_tags
 
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
+  }
+
   network_configuration {
-    security_groups  = [module.document_sync_service_security_group.id]
+    security_groups  = [module.sirius_files_sync_service_security_group.id]
     subnets          = data.aws_subnet.private[*].id
     assign_public_ip = false
   }
@@ -81,20 +45,27 @@ resource "aws_ecs_service" "document_sync" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    aws_ecs_service.front,
+    aws_ecs_service.api,
+    aws_ecs_service.htmltopdf,
+    aws_ecs_service.scan
+  ]
 }
 
 locals {
-  document_sync_container = jsonencode(
+  sirius_files_sync_container = jsonencode(
     {
-      name    = "document-sync",
+      name    = "sirius-files-sync",
       image   = local.images.client,
-      command = ["sh", "scripts/documentsync.sh", "-d"],
+      command = ["sh", "scripts/document_and_checklist_continuous.sh", "-d"],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "document-sync"
+          awslogs-stream-prefix = "sirius-files-sync"
         }
       },
       secrets = [
@@ -118,7 +89,7 @@ locals {
         },
         {
           name  = "ROLE",
-          value = "document_sync"
+          value = "front"
         },
         {
           name  = "S3_BUCKETNAME",
@@ -150,7 +121,7 @@ locals {
         },
         {
           name  = "EMAIL_SEND_INTERNAL",
-          value = var.account.is_production == 1 ? "true" : "false"
+          value = "true"
         },
         {
           name  = "GA_DEFAULT",
@@ -169,11 +140,63 @@ locals {
           value = local.parameter_prefix
         },
         {
+          name  = "HTMLTOPDF_ADDRESS",
+          value = "http://htmltopdf:8080"
+        },
+        {
           name  = "WORKSPACE",
           value = local.environment
         }
       ]
     }
-
   )
+}
+
+locals {
+  sirius_files_sync_sg_rules = {
+    ecr     = local.common_sg_rules.ecr
+    logs    = local.common_sg_rules.logs
+    s3      = local.common_sg_rules.s3
+    ssm     = local.common_sg_rules.ssm
+    ecr_api = local.common_sg_rules.ecr_api
+    secrets = local.common_sg_rules.secrets
+    api = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
+    api_gateway = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
+    }
+    pdf = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.htmltopdf_security_group.id
+    }
+    mock_sirius_integration = {
+      port        = 8080
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.mock_sirius_integration_security_group.id
+    }
+  }
+}
+
+module "sirius_files_sync_service_security_group" {
+  source      = "./modules/security_group"
+  description = "Sirius Files Sync Service"
+  rules       = local.sirius_files_sync_sg_rules
+  name        = "sirius-files-sync-service"
+  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
 }

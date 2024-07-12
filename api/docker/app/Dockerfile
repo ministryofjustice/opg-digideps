@@ -12,7 +12,7 @@ COPY api/app/src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.27-fpm-alpine3.18 as base
+FROM php:8.1.28-fpm-alpine3.19 as base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
