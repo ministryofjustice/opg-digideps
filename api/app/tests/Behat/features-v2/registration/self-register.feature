@@ -3,15 +3,15 @@ Feature: Lay Deputy Self Registration
 
     @super-admin
     Scenario: A Lay user entering an invalid case number cannot self register
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows.csv'
-        When I run the lay CSV command the file contains 3 new pre-registration entities
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
+        When I run the lay CSV command the file contains 4 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with an invalid case number
         Then I should see an 'invalid case number' error
 
     @super-admin
     Scenario: A Lay user entering an valid case number and invalid case details cannot self register
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows.csv'
-        When I run the lay CSV command the file contains 3 new pre-registration entities
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
+        When I run the lay CSV command the file contains 4 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with a valid case number and invalid case details
         And I should see an 'invalid deputy firstname' error
         And I should see an 'invalid deputy lastname' error
@@ -91,3 +91,10 @@ Feature: Lay Deputy Self Registration
         When I invite a Co-Deputy to the service who is already registered
         Then they shouldn't be able to register to deputise for a client with already registered details
         And they should see a 'deputy already linked to case number' error
+
+    @super-admin
+    Scenario: A Lay user entering an invalid reporting period
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
+        When I run the lay CSV command the file contains 4 new pre-registration entities
+        And a Lay Deputy registers to deputise for a client with valid details but invalid reporting period
+        Then I should see an 'invalid reporting period' error

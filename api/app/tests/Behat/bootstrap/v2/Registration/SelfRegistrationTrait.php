@@ -16,6 +16,7 @@ trait SelfRegistrationTrait
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
     private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
     private string $deputyAlreadyLinkedToCaseNumberError = 'You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0115 934 2700.';
+    private string $reportingPeriodGreaterThanFifteenMonths = 'Check the end date: your reporting period cannot be more than 15 months';
     private string $userEmail;
     private string $coDeputyEmail;
     private string $deputyUid;
@@ -405,8 +406,8 @@ trait SelfRegistrationTrait
         $this->fillInField('report_startDate_month', '01');
         $this->fillInField('report_startDate_year', '2016');
         $this->fillInField('report_endDate_day', '31');
-        $this->fillInField('report_endDate_month', '12');
-        $this->fillInField('report_endDate_year', '2016');
+        $this->fillInField('report_endDate_month', '03');
+        $this->fillInField('report_endDate_year', '2017');
         $this->pressButton('report_save');
     }
 
@@ -652,5 +653,60 @@ trait SelfRegistrationTrait
         $xpath = '//table[@class="table-govuk-body-s"]/tbody';
         $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $this->assertStringContainsString($this->coDeputyEmail, $userResultsTable, 'Results on page');
+    }
+
+    /**
+     * @Given a Lay Deputy registers to deputise for a client with valid details but invalid reporting period
+     */
+    public function aLayDeputyRegistersToDeputiseForAClientWithValidDetailsButInvalidReportingPeriod()
+    {
+        $this->userEmail = 'stuart@cole.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $this->deputyUid = '19371940';
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Stuart',
+            'Cole',
+            $this->userEmail,
+            'B73',
+            'Billy',
+            'Jones',
+            '4444444T',
+        );
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $this->userEmail);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillUserDetailsAndSubmit();
+
+        $this->fillClientDetailsAndSubmit();
+
+        $this->fillInInvalidReportDetailsAndSubmit();
+    }
+
+    private function fillInInvalidReportDetailsAndSubmit(): void
+    {
+        $this->fillInField('report_startDate_day', '01');
+        $this->fillInField('report_startDate_month', '01');
+        $this->fillInField('report_startDate_year', '2016');
+        $this->fillInField('report_endDate_day', '01');
+        $this->fillInField('report_endDate_month', '04');
+        $this->fillInField('report_endDate_year', '2017');
+        $this->pressButton('report_save');
+    }
+
+    /**
+     * @Then I should see an 'invalid reporting period' error
+     */
+    public function iShouldSeeReportingPeriodGreaterThanFifteenMonthsError()
+    {
+        $this->assertOnErrorMessage($this->reportingPeriodGreaterThanFifteenMonths);
     }
 }
