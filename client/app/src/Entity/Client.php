@@ -1022,8 +1022,8 @@ class Client
      */
     public function getDeputy()
     {
-        if (!is_null($this->deputies[0])) {
-            return $this->deputies[0];
+        if (!is_null(reset($this->deputies))) {
+            return reset($this->deputies);
         }
 
         if ($this->getDeletedAt() instanceof \DateTime) {
