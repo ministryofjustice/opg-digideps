@@ -58,11 +58,11 @@ class Client
     private $users = [];
 
     /**
-     * @JMS\Type("App\Entity\Deputy")
+     * @JMS\Type("array<App\Entity\Deputy>")
      *
-     * @var Deputy|null
+     * @var Deputy[]
      */
-    private $deputy;
+    private $deputies;
 
     /**
      * @JMS\Type("array<App\Entity\Report\Report>")
@@ -307,6 +307,7 @@ class Client
     {
         $this->users = [];
         $this->reports = [];
+        $this->deputies = [];
     }
 
     /**
@@ -319,7 +320,8 @@ class Client
 
     public function setDeputy(Deputy $deputy): self
     {
-        $this->deputy = $deputy;
+        $this->deputies = [];
+        $this->deputies[] = $deputy;
 
         return $this;
     }
@@ -1020,8 +1022,8 @@ class Client
      */
     public function getDeputy()
     {
-        if (!is_null($this->deputy)) {
-            return $this->deputy;
+        if (!is_null($this->deputies[0])) {
+            return $this->deputies[0];
         }
 
         if ($this->getDeletedAt() instanceof \DateTime) {

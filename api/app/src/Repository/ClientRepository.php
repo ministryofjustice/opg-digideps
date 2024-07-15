@@ -96,7 +96,7 @@ class ClientRepository extends ServiceEntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c, r, ndr, o, nd, u FROM App\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.deputy nd LEFT JOIN c.organisation o LEFT JOIN c.users u WHERE c.id = ?1')
+            ->createQuery('SELECT c, r, ndr, o, nd, u FROM App\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.deputies nd LEFT JOIN c.organisation o LEFT JOIN c.users u WHERE c.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();

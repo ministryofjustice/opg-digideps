@@ -260,7 +260,7 @@ class Client implements ClientInterface
     private $clientContacts;
 
     /**
-     * @JMS\Groups({"client-deputies"})
+     * @JMS\Groups({"client-deputies", "report-submitted-by", "client-deputy"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Deputy>")
      *
@@ -304,6 +304,7 @@ class Client implements ClientInterface
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
+        $this->deputies = new ArrayCollection();
     }
 
     /**
@@ -824,9 +825,9 @@ class Client implements ClientInterface
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
 
-    public function getDeputy(): ?Deputy
+    public function getDeputy()
     {
-        return $this->deputy;
+        return $this->deputies->first();
     }
 
     /**
@@ -834,7 +835,8 @@ class Client implements ClientInterface
      */
     public function setDeputy(?Deputy $deputy)
     {
-        $this->deputy = $deputy;
+        $this->deputies->clear();
+        $this->deputies->add($deputy);
 
         return $this;
     }
