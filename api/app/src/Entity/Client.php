@@ -260,20 +260,18 @@ class Client implements ClientInterface
     private $clientContacts;
 
     /**
-     * Holds the deputy the client belongs to
-     * Loaded from the CSV upload.
+     * @JMS\Groups({"client-deputies"})
      *
-     * @var Deputy|null
+     * @JMS\Type("ArrayCollection<App\Entity\Deputy>")
      *
-     * @JMS\Groups({"report-submitted-by", "client-deputy"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EXTRA_LAZY")
      *
-     * @JMS\Type("App\Entity\Deputy")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinTable(name="client_deputy",
+     *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
+     *         inverseJoinColumns={@ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="CASCADE")}
+     *     )
      */
-    private $deputy;
+    private $deputies;
 
     /**
      * @var \DateTime|null

@@ -39,14 +39,11 @@ class Deputy
     private $id;
 
     /**
-     * Holds the deputy the client belongs to
-     * Loaded from the CSV upload.
+     * @JMS\Groups({"deputy-clients"})
      *
-     * @JMS\Exclude
+     * @JMS\Type("ArrayCollection<App\Entity\Client>")
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
-     *
-     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Client", mappedBy="deputies", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $clients;
 
@@ -222,7 +219,7 @@ class Deputy
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private User|null $user;
+    private ?User $user;
 
     /**
      * @return int
