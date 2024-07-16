@@ -21,6 +21,9 @@ class ReportEntityFactory
     ) {
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function create(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true): Report
     {
         $this->endDate = $endDate;

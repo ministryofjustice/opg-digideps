@@ -8,6 +8,7 @@ use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
 use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
+use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -78,8 +79,9 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
     private function prepareReport(string $reportOrNdr, bool $withClientBenefitsCheck = false)
     {
         $em = static::getContainer()->get('em');
-        $reportTestHelper = new ReportTestHelper();
+        $reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
 
+        $reportTestHelper = new ReportTestHelper($reportEntityFactory);
         $user = (new UserTestHelper())->createAndPersistUser($em);
         $client = (new ClientTestHelper())->generateClient($em);
 

@@ -29,6 +29,7 @@ use App\Entity\User;
 use App\Factory\ReportEntityFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use GuzzleHttp\Exception\GuzzleException;
 
 class ReportTestHelper
 {
@@ -37,14 +38,14 @@ class ReportTestHelper
     }
 
     /**
-     * @return Report
+     * @throws GuzzleException
      */
-    public function generateReport(EntityManager $em, Client $client = null, string $type = null, \DateTime $startDate = null, \DateTime $endDate = null)
+    public function generateReport(EntityManager $em, Client $client = null, string $type = null, \DateTime $startDate = null, \DateTime $endDate = null): Report
     {
-        $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
-        $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
-        $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
+        $client = $client ?: (new ClientTestHelper())->generateClient($em);
+        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        $startDate = $startDate ?: new \DateTime('2 years ago');
+        $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
         $report = $this->reportEntityFactory->create($client, $type, $startDate, $endDate);
         $this->completeBankAccounts($report, $em);

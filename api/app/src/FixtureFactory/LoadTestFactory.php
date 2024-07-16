@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\FixtureFactory;
 
+use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 
 class LoadTestFactory
 {
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
+    public function __construct(
+        private EntityManager $em,
+        private ReportEntityFactory $reportEntityFactory
+    ) {
     }
 
     /**
@@ -26,7 +26,7 @@ class LoadTestFactory
         $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
 
         $userTestHelper = new UserTestHelper();
-        $reportTestHelper = new ReportTestHelper();
+        $reportTestHelper = new ReportTestHelper($this->reportEntityFactory);
         $clientTestHelper = new ClientTestHelper();
 
         foreach (range(1, $recordsToMake) as $index) {

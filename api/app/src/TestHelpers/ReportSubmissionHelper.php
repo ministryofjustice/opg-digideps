@@ -6,11 +6,17 @@ namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\Report\ReportSubmission;
+use App\Factory\ReportEntityFactory;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ReportSubmissionHelper extends KernelTestCase
 {
+    public function __construct(private ReportEntityFactory $reportEntityFactory)
+    {
+        parent::__construct();
+    }
+
     /**
      * @return ReportSubmission
      *
@@ -20,7 +26,7 @@ class ReportSubmissionHelper extends KernelTestCase
     public function generateAndPersistReportSubmission(EntityManager $em)
     {
         $client = new Client();
-        $report = (new ReportTestHelper())->generateReport($em, $client, null, new \DateTime());
+        $report = (new ReportTestHelper($this->reportEntityFactory))->generateReport($em, $client, null, new \DateTime());
         $client->addReport($report);
         $user = (new UserTestHelper())->createAndPersistUser($em, $client);
         $reportSubmission = (new ReportSubmission($report, $user))->setCreatedOn(new \DateTime());
@@ -53,7 +59,7 @@ class ReportSubmissionHelper extends KernelTestCase
     {
         $client = $lastSubmission->getReport()->getClient();
 
-        $report = (new ReportTestHelper())->generateReport(
+        $report = (new ReportTestHelper($this->reportEntityFactory))->generateReport(
             $em,
             $client,
             $lastSubmission->getReport()->getType(),

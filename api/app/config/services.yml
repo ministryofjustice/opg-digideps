@@ -428,3 +428,8 @@ services:
         class: App\Service\CarbonBusinessDaysService
         arguments:
             $bankHolidaysAPIService: '@App\Service\BankHolidaysAPIService'
+
+    App\Factory\ReportEntityFactory:
+        class: App\Factory\ReportEntityFactory
+        arguments:
+            $carbonBusinessDaysService: '@App\Service\CarbonBusinessDaysService'

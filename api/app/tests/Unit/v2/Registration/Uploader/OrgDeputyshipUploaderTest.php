@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Factory\ReportEntityFactory;
 use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
@@ -59,8 +60,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $orgFactory = $container->get('App\Factory\OrganisationFactory');
         $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
         $deputyAssembler = $container->get('App\v2\Assembler\DeputyAssembler');
+        $reportEntityFactory = $container->get(ReportEntityFactory::class);
 
-        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $deputyAssembler, $this->logger);
+        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $deputyAssembler, $this->logger, $reportEntityFactory);
 
         $this->purgeDatabase();
     }

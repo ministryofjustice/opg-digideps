@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Controller;
 
+use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 
@@ -86,10 +87,10 @@ class SatisfactionControllerTest extends AbstractTestController
 
     private function prepareReport()
     {
-        $reportTestHelper = new ReportTestHelper();
         $em = static::getContainer()->get('em');
+        $reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
 
-        $report = $reportTestHelper->generateReport($em);
+        $report = (new ReportTestHelper($reportEntityFactory))->generateReport($em);
         $client = (new ClientTestHelper())->generateClient($em);
 
         $report->setClient($client);
