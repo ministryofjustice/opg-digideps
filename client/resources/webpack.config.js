@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const tag = (new Date()).getTime()
 
 const outputDirWithTimestamp = path.resolve(__dirname, 'public/assets/' + tag)
-const baseOutputDir = path.resolve(__dirname, 'public/assets')
+const fallbackOutputDir = path.resolve(__dirname, 'public/assets/fallback')
 
 module.exports = {
   entry: {
@@ -103,7 +103,7 @@ module.exports = {
             const cleanFileName = file.split('?')[0]
 
             const sourcePath = path.join(outputDirWithTimestamp, cleanFileName)
-            const destPath = path.join(baseOutputDir, cleanFileName)
+            const destPath = path.join(fallbackOutputDir, cleanFileName)
 
             // Ensure the directory exists
             fs.mkdirSync(path.dirname(destPath), { recursive: true })
