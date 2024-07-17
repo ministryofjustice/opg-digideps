@@ -32,6 +32,9 @@ server {
         location ~* \.(css|jpg|png|ico|jpeg|woff2|woff)$ {
             expires    24h;
             access_log off;
+
+            # Support static assets having a version ID in the path.
+            # rewrite ^/assets/([0-9]+)/(.*) /assets/$2  break;
         }
 
         try_files $uri /index.php$is_args$args;
