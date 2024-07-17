@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Controller;
 
+use App\Factory\ReportEntityFactory;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
@@ -48,9 +49,10 @@ abstract class AbstractTestController extends WebTestCase
 
         /** @var EntityManager $em */
         $em = static::getContainer()->get('em');
+        $reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
         $this->jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
 
-        self::$fixtures = new Fixtures($em);
+        self::$fixtures = new Fixtures($em, $reportEntityFactory);
 
         $em->clear();
 

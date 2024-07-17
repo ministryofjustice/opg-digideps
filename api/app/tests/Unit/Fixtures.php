@@ -9,6 +9,7 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
+use App\Factory\ReportEntityFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
@@ -19,14 +20,10 @@ class Fixtures
 {
     public const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
+    public function __construct(
+        private EntityManager $em,
+        private ReportEntityFactory $reportEntityFactory
+    ) {
     }
 
     public function getEntityManager()
@@ -203,7 +200,7 @@ class Fixtures
         array $settersMap = []
     ) {
         // should be created via ReportService, but this is a fixture, so better to keep it simple
-        $report = new Report(
+        $report = $this->reportEntityFactory->create(
             $client,
             empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
             empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],

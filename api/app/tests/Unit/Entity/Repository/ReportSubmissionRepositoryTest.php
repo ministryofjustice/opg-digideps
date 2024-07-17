@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Repository;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
+use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\TestHelpers\ReportTestHelper;
 use Doctrine\ORM\EntityManager;
@@ -22,7 +23,9 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->reportSubmissionHelper = (new ReportSubmissionHelper());
+        $this->reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
+
+        $this->reportSubmissionHelper = (new ReportSubmissionHelper($this->reportEntityFactory));
     }
 
     /**
@@ -33,7 +36,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived($isArchived);
 
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = new ReportTestHelper($this->reportEntityFactory);
 
         $docs = array_map(function ($status) use ($reportHelper) {
             $report = $reportHelper->generateReport($this->entityManager);
@@ -73,7 +76,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived(false);
 
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = new ReportTestHelper($this->reportEntityFactory);
 
         $statuses = [null, null];
         $docs = array_map(function ($status) use ($reportHelper) {
