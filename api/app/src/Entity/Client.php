@@ -825,9 +825,9 @@ class Client implements ClientInterface
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
 
-    public function getDeputy()
+    public function getDeputy(): ?Deputy
     {
-        return $this->deputies->first();
+        return $this->deputies->first() ?: null;
     }
 
     /**
