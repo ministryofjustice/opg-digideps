@@ -1022,7 +1022,7 @@ class Client
      */
     public function getDeputy()
     {
-        if (!is_null(reset($this->deputies))) {
+        if (!reset($this->deputies)) {
             return reset($this->deputies);
         }
 
