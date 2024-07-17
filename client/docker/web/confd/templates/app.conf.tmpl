@@ -22,21 +22,21 @@ server {
     location ~* \.(zip|gz|lzh|tar|rar|7z|swp|bak|git|ht|exe|dll|py|msi|bin|sh|bat|xml|apk|jar|log|sql|conf|cfg|ini|tmp|doc|xls|rtf|env|js)$ {
         location ~ (common|application|jquery\.min)\.js {
            expires    24h;
-           access_log off;
+           access_log on;
+           rewrite	^/assets/([0-9]+)/(.*) /assets/fallback/$2 break;
         }
         return 403;
     }
 
+    location ~* \.(css|jpg|png|ico|jpeg|woff2|woff)$ {
+        expires    24h;
+        access_log off;
+
+        # Support static assets having a version ID in the path.
+        rewrite	^/assets/([0-9]+)/(.*) /assets/fallback/$2 break;
+    }
+
     location / {
-        # cache static assets for specified time period
-        location ~* \.(css|jpg|png|ico|jpeg|woff2|woff)$ {
-            expires    24h;
-            access_log off;
-
-            # Support static assets having a version ID in the path.
-            # rewrite ^/assets/([0-9]+)/(.*) /assets/$2  break;
-        }
-
         try_files $uri /index.php$is_args$args;
     }
 
