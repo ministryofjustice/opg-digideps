@@ -10,6 +10,7 @@ use App\Entity\Satisfaction;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\User;
 use App\Service\ReportService;
+use App\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -524,6 +525,7 @@ class Report implements ReportInterface
         $this->client = $client;
         $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->dueDate = ReportService::updateDueDateBasedOnEndDate($this->endDate, $this->isLayReport());
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
             throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
@@ -568,6 +570,15 @@ class Report implements ReportInterface
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
+
+        // set sections as notStarted when a new report is created
+        $statusCached = [];
+        foreach ($this->getAvailableSections() as $sectionId) {
+            $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
+
+        $this->setSectionStatusesCached($statusCached);
+        $this->reportStatusCached = Report::STATUS_NOT_STARTED;
     }
 
     /**

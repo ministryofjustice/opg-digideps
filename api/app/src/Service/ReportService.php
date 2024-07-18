@@ -19,8 +19,8 @@ use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use App\Repository\ReportRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,11 +45,12 @@ class ReportService
     public function __construct(
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
-        private ReportEntityFactory $reportEntityFactory
+        private CarbonBusinessDaysService $carbonBusinessDaysService
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
+        $this->carbonBusinessDaysService->load();
     }
 
     /**
@@ -300,7 +301,7 @@ class ReportService
         $endDate = clone $startDate;
         $endDate->modify('+12 months -1 day');
 
-        $newReport = $this->reportEntityFactory->create(
+        $newReport = new Report(
             $client,
             $newReportType, // report comes from casrec, or last year report, if not found
             $startDate,
@@ -455,5 +456,23 @@ class ReportService
         $endOfToday = new \DateTime('today midnight');
 
         return $endDate <= $endOfToday;
+    }
+
+    public static function updateDueDateBasedOnEndDate(\DateTime $endDate, bool $isLayReport)
+    {
+        // due date set to 8 weeks (40 business days) after the end date unless lay reports where end date is beyond
+        // 13/11/19. Then it is 15 days (DDLS-208)
+
+        if ($isLayReport && $endDate->format('Ymd') >= '20191113') {
+            $dueDateSet = Carbon::parse($endDate)->addBusinessDays('15')->format('Y-m-d H:i:s');
+
+            // convert date time string into a date time object
+            return \DateTime::createFromFormat('Y-m-d H:i:s', $dueDateSet);
+        } else {
+            $dueDateSet = Carbon::parse($endDate)->addBusinessDays('40')->format('Y-m-d H:i:s');
+
+            // convert date time string into a date time object
+            return \DateTime::createFromFormat('Y-m-d H:i:s', $dueDateSet);
+        }
     }
 }
