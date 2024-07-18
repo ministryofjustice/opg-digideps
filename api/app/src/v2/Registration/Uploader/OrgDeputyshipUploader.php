@@ -10,7 +10,6 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
-use App\Factory\ReportEntityFactory;
 use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\DeputyAssembler;
@@ -35,7 +34,6 @@ class OrgDeputyshipUploader
         private readonly ClientAssembler $clientAssembler,
         private readonly DeputyAssembler $deputyAssembler,
         private readonly LoggerInterface $logger,
-        private ReportEntityFactory $reportEntityFactory
     ) {
     }
 
@@ -338,7 +336,7 @@ class OrgDeputyshipUploader
         //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
         //            }
         } else {
-            $report = $this->reportEntityFactory->create(
+            $report = new Report(
                 $this->client,
                 $dto->getReportType(),
                 $dto->getReportStartDate(),

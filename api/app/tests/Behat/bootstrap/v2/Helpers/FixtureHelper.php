@@ -12,7 +12,6 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use App\FixtureFactory\PreRegistrationFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
@@ -44,10 +43,9 @@ class FixtureHelper
         private string $symfonyEnvironment,
         private PreRegistrationFactory $preRegistrationFactory,
         private S3ClientInterface $s3Client,
-        private ReportEntityFactory $reportEntityFactory
     ) {
         $this->userTestHelper = new UserTestHelper();
-        $this->reportTestHelper = new ReportTestHelper($this->reportEntityFactory);
+        $this->reportTestHelper = new ReportTestHelper();
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();

@@ -8,7 +8,6 @@ use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
-use App\Factory\ReportEntityFactory;
 use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
@@ -16,7 +15,6 @@ use App\Repository\ReportRepository;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
-use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
@@ -60,9 +58,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $orgFactory = $container->get('App\Factory\OrganisationFactory');
         $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
         $deputyAssembler = $container->get('App\v2\Assembler\DeputyAssembler');
-        $reportEntityFactory = $container->get(ReportEntityFactory::class);
 
-        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $deputyAssembler, $this->logger, $reportEntityFactory);
+        $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $deputyAssembler, $this->logger);
 
         $this->purgeDatabase();
     }

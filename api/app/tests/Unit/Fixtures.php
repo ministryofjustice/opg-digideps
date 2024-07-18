@@ -4,12 +4,10 @@ namespace App\Tests\Unit;
 
 use App\Entity as EntityDir;
 use App\Entity\Client;
-use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
@@ -20,10 +18,14 @@ class Fixtures
 {
     public const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
-    public function __construct(
-        private EntityManager $em,
-        private ReportEntityFactory $reportEntityFactory
-    ) {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
     }
 
     public function getEntityManager()
@@ -67,26 +69,6 @@ class Fixtures
         $this->em->persist($user);
 
         return $user;
-    }
-
-    /**
-     * @return Deputy
-     */
-    public function createDeputy(array $settersMap = [])
-    {
-        // add clent, cot, report, needed for assets
-        $deputy = new Deputy();
-        $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
-        $deputy->setFirstname('name'.time());
-        $deputy->setLastname('surname'.time());
-
-        foreach ($settersMap as $k => $v) {
-            $deputy->$k($v);
-        }
-
-        $this->em->persist($deputy);
-
-        return $deputy;
     }
 
     /**
@@ -200,7 +182,7 @@ class Fixtures
         array $settersMap = []
     ) {
         // should be created via ReportService, but this is a fixture, so better to keep it simple
-        $report = $this->reportEntityFactory->create(
+        $report = new Report(
             $client,
             empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
             empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
@@ -541,7 +523,7 @@ class Fixtures
     /**
      * @param string $deputyNo
      *
-     * @return Deputy
+     * @return EntityDir\Deputy
      */
     public function findDeputyByNumber($deputyNo)
     {

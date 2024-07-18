@@ -5,15 +5,16 @@ namespace App\FixtureFactory;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use App\v2\Fixture\ReportSection;
 
 class ReportFactory
 {
-    public function __construct(
-        private ReportSection $reportSection,
-        private ReportEntityFactory $reportEntityFactory,
-    ) {
+    /** @var ReportSection */
+    private $reportSection;
+
+    public function __construct(ReportSection $reportSection)
+    {
+        $this->reportSection = $reportSection;
     }
 
     /**
@@ -34,7 +35,7 @@ class ReportFactory
         $startDate = $client->getExpectedReportStartDate($client->getCourtDate()->format('Y'));
         $endDate = $client->getExpectedReportEndDate($client->getCourtDate()->format('Y'));
 
-        $report = $this->reportEntityFactory->create($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate);
 
         if (isset($data['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $data['reportStatus']) {
             $this->reportSection->completeReport($report);

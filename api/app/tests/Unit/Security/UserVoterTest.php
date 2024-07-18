@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -33,11 +32,10 @@ class UserVoterTest extends KernelTestCase
     {
         self::bootKernel();
         $em = static::getContainer()->get('em');
-        $reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
 
         $userTestHelper = new UserTestHelper();
         $clientTestHelp = new ClientTestHelper();
-        $reportTestHelper = new ReportTestHelper($reportEntityFactory);
+        $reportTestHelper = new ReportTestHelper();
 
         $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
 

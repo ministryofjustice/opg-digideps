@@ -3,7 +3,6 @@
 namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use App\Repository\UserRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
@@ -78,10 +77,8 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindActiveLaysInLastYear()
     {
-        $reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
-
         $userHelper = new UserTestHelper();
-        $reportHelper = new ReportTestHelper($reportEntityFactory);
+        $reportHelper = new ReportTestHelper();
         $clientHelper = new ClientTestHelper();
 
         $clientOne = $clientHelper->generateClient($this->em);

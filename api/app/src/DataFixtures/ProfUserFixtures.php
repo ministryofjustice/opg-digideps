@@ -8,7 +8,6 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use App\Factory\ReportEntityFactory;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -147,7 +146,6 @@ class ProfUserFixtures extends AbstractDataFixture
         private OrganisationRepository $orgRepository,
         private OrganisationFactory $orgFactory,
         private DeputyRepository $deputyRepository,
-        private ReportEntityFactory $reportEntityFactory
     ) {
     }
 
@@ -269,7 +267,7 @@ class ProfUserFixtures extends AbstractDataFixture
         $endDate = $client->getExpectedReportEndDate();
         $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
-        $report = $this->reportEntityFactory->create($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate);
 
         $manager->persist($report);
     }

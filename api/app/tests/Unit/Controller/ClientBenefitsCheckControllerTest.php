@@ -6,7 +6,6 @@ namespace App\Tests\Unit\Controller;
 
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 
@@ -144,10 +143,9 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
     private function prepareReport(bool $withClientBenefitsCheck = false)
     {
-        $reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
         $em = static::getContainer()->get('em');
 
-        $reportTestHelper = new ReportTestHelper($reportEntityFactory);
+        $reportTestHelper = new ReportTestHelper();
         $report = $reportTestHelper->generateReport($em);
         $client = (new ClientTestHelper())->generateClient($em);
 

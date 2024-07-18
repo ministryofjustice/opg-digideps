@@ -26,17 +26,12 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
 use App\Entity\User;
-use App\Factory\ReportEntityFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Exception\GuzzleException;
 
 class ReportTestHelper
 {
-    public function __construct(private ReportEntityFactory $reportEntityFactory)
-    {
-    }
-
     /**
      * @throws GuzzleException
      */
@@ -47,7 +42,7 @@ class ReportTestHelper
         $startDate = $startDate ?: new \DateTime('2 years ago');
         $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = $this->reportEntityFactory->create($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate);
         $this->completeBankAccounts($report, $em);
 
         return $report;
