@@ -59,12 +59,12 @@ class ClientAssembler
             $dto->setOrganisation($orgDto);
         }
 
-        if (isset($data['deputy']) && is_array($data['deputy'])) {
-            $dto->setDeputy($this->assembleClientDeputy($data['deputy']));
+        if (isset($data['deputies']) && is_array($data['deputies'])) {
+            $dto->setDeputies($this->assembleClientDeputies($data['deputies']));
         }
 
         if (isset($data['users']) && is_array($data['users'])) {
-            $dto->setDeputies($this->assembleClientDeputies($data['users']));
+            $dto->setUsers($this->assembleClientUsers($data['users']));
         }
 
         return $dto;
@@ -105,9 +105,15 @@ class ClientAssembler
         return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
 
-    private function assembleClientDeputy(array $deputy)
+    private function assembleClientDeputies(array $deputies)
     {
-        return $this->deputyAssembler->assembleFromArray($deputy);
+        $dtos = [];
+
+        foreach ($deputies as $deputy) {
+            $dtos[] = $this->deputyAssembler->assembleFromArray($deputy);
+        }
+
+        return $dtos;
     }
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
@@ -132,13 +138,13 @@ class ClientAssembler
         return $client;
     }
 
-    private function assembleClientDeputies(array $deputies)
+    private function assembleClientUsers(array $users)
     {
         $dtos = [];
 
-        foreach ($deputies as $deputy) {
+        foreach ($users as $user) {
             $dto = new UserDto();
-            $this->setPropertiesFromData($dto, $deputy, ['clients']);
+            $this->setPropertiesFromData($dto, $user, ['clients']);
             $dtos[] = $dto;
         }
 

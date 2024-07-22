@@ -39,11 +39,11 @@ class ClientDto
     /** @var Organisation */
     private $organisation;
 
-    /** @var DeputyDto */
-    private $deputy;
+    /** @var DeputyDto[] */
+    private $deputies;
 
     /** @var array */
-    private $deputies;
+    private $users;
 
     /**
      * @return int
@@ -134,11 +134,11 @@ class ClientDto
     }
 
     /**
-     * @return DeputyDto
+     * @return DeputyDto[]
      */
-    public function getDeputy()
+    public function getDeputies()
     {
-        return $this->deputy;
+        return $this->deputies;
     }
 
     /**
@@ -270,9 +270,9 @@ class ClientDto
     /**
      * @return $this
      */
-    public function setDeputy(DeputyDto $deputy)
+    public function setDeputies(array $deputies)
     {
-        $this->deputy = $deputy;
+        $this->deputies = $deputies;
 
         return $this;
     }
@@ -280,14 +280,14 @@ class ClientDto
     /**
      * @return array
      */
-    public function getDeputies()
+    public function getUsers()
     {
-        return $this->deputies;
+        return $this->users;
     }
 
-    public function setDeputies(array $deputies): ClientDto
+    public function setUsers(array $users): ClientDto
     {
-        $this->deputies = $deputies;
+        $this->users = $users;
 
         return $this;
     }

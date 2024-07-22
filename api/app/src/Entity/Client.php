@@ -836,7 +836,9 @@ class Client implements ClientInterface
     public function setDeputy(?Deputy $deputy)
     {
         $this->deputies->clear();
-        $this->deputies->add($deputy);
+        if ($deputy) {
+            $this->deputies->add($deputy);
+        }
 
         return $this;
     }
