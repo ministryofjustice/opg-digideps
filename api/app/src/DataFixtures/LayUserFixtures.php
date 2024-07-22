@@ -9,7 +9,7 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\DeputyRepository;
-use App\Service\CarbonBusinessDaysService;
+use App\Service\ReportService;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -113,9 +113,8 @@ class LayUserFixtures extends AbstractDataFixture
 
     public function __construct(
         private DeputyRepository $deputyRepository,
-        private CarbonBusinessDaysService $businessDaysService
+        private ReportService $reportService
     ) {
-        $this->businessDaysService->load();
     }
 
     public function doLoad(ObjectManager $manager)

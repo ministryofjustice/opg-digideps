@@ -5,7 +5,7 @@ namespace App\FixtureFactory;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Service\CarbonBusinessDaysService;
+use App\Service\ReportService;
 use App\v2\Fixture\ReportSection;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -13,9 +13,8 @@ class ReportFactory
 {
     public function __construct(
         private ReportSection $reportSection,
-        private CarbonBusinessDaysService $businessDaysService
+        private ReportService $reportService
     ) {
-        $this->businessDaysService->load();
     }
 
     /**

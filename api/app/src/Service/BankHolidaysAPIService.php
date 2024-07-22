@@ -24,7 +24,7 @@ class BankHolidaysAPIService
     {
         $request = new Request('GET', self::BANK_HOLIDAYS_ENDPOINT);
 
-        $response = $this->httpClient->send($request, ['connect_timeout' => 1, 'timeout' => 3]);
+        $response = $this->httpClient->send($request, ['connect_timeout' => 5, 'timeout' => 5]);
 
         $jsonDecoded = json_decode((string) $response->getBody(), true);
 

@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class ReportService
 {
@@ -42,6 +43,9 @@ class ReportService
      */
     private $bankAccountRepository;
 
+    /**
+     * @throws GuzzleException
+     */
     public function __construct(
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
