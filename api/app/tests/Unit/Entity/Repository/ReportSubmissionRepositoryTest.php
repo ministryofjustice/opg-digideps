@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Repository;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
-use App\Factory\ReportEntityFactory;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\TestHelpers\ReportTestHelper;
 use Doctrine\ORM\EntityManager;
@@ -23,9 +22,11 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->reportEntityFactory = static::getContainer()->get(ReportEntityFactory::class);
+        // Retrieve service in order to load Carbon package and
+        // method called each time new instance of report is created
+        static::getContainer()->get('App\Service\ReportService');
 
-        $this->reportSubmissionHelper = (new ReportSubmissionHelper($this->reportEntityFactory));
+        $this->reportSubmissionHelper = (new ReportSubmissionHelper());
     }
 
     /**
@@ -36,7 +37,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived($isArchived);
 
-        $reportHelper = new ReportTestHelper($this->reportEntityFactory);
+        $reportHelper = new ReportTestHelper();
 
         $docs = array_map(function ($status) use ($reportHelper) {
             $report = $reportHelper->generateReport($this->entityManager);
@@ -76,7 +77,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived(false);
 
-        $reportHelper = new ReportTestHelper($this->reportEntityFactory);
+        $reportHelper = new ReportTestHelper();
 
         $statuses = [null, null];
         $docs = array_map(function ($status) use ($reportHelper) {

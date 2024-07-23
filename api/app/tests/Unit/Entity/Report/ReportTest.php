@@ -33,6 +33,13 @@ class ReportTest extends KernelTestCase
 
     public function setUp(): void
     {
+        $kernel = self::bootKernel();
+        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
+
+        // Retrieve service in order to load Carbon package and
+        // method called each time new instance of report is created
+        static::getContainer()->get('App\Service\ReportService');
+
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
         $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
@@ -41,14 +48,11 @@ class ReportTest extends KernelTestCase
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
         $this->expense1 = m::mock(Expense::class, ['getAmount' => 2]);
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
-
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
     }
 
     public function testDueDate()
     {
-        $startDate = new \DateTime('2017-01-01');
+        $startDate = new \DateTime('2017-12-30');
         $endDate = new \DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
@@ -518,8 +522,6 @@ class ReportTest extends KernelTestCase
         $startDate = $startDate->modify('-1 year');
 
         $report = new Report($client, $type, $startDate, $endDate);
-
-        $report->updateDueDateBasedOnEndDate();
 
         $this->assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
         $this->assertEquals($endDate, $report->getEndDate());
