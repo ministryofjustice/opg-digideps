@@ -35,6 +35,13 @@
                         <a href="{{ path('admin_document_download', { submissionId: reportSubmission.id, documentId: document.id }) }}">
                             {{- 'page.postactions.download' | trans -}}
                         </a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            {% if document.isReportPdf and report.id is not null and report.id != '' %}
+                                <a href="{{ path('admin_regenerate_pdf', { id: report.id }) }}">
+                                    {{- 'page.postactions.regenerate' | trans -}}
+                                </a>
+                            {% endif %}
+                        {% endif %}
                     </td>
                     <td class="govuk-table__cell govuk-!-font-size-14">
                         {{ _self.syncStatus(document.synchronisationStatus, document) }}
