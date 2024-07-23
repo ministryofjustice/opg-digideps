@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Service\Stats\Query;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
+use App\Service\ReportService;
 use App\Service\Stats\Query\SatisfactionQuery;
 use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -21,6 +22,9 @@ class SatisfactionQueryTest extends WebTestCase
         self::$em = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+
+        // Required to load Carbon package and method called each time new instance of report is created
+        static::getContainer()->get(ReportService::class);
 
         // Clear up old data
         $scores = self::$em
