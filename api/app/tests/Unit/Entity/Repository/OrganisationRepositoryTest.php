@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Entity\Repository;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Repository\OrganisationRepository;
+use App\Service\ReportService;
 use App\Tests\Unit\Fixtures;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +26,8 @@ class OrganisationRepositoryTest extends WebTestCase
      * @var EntityManagerInterface
      */
     private $em;
+
+    private ReportService $reportService;
 
     /** @test */
     public function testGetAllArray()
@@ -175,7 +178,9 @@ class OrganisationRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->fixtures = new Fixtures($this->em);
+        $this->reportService = static::getContainer()->get(ReportService::class);
+
+        $this->fixtures = new Fixtures($this->em, $this->reportService);
 
         $metaClass = self::prophesize(ClassMetadata::class);
         $metaClass->name = Organisation::class;

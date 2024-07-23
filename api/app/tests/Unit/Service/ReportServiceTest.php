@@ -16,6 +16,7 @@ use App\Repository\BankAccountRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
+use App\Service\BankHolidaysAPIService;
 use App\Service\CarbonBusinessDaysService;
 use App\Service\ReportService;
 use Cmixin\BusinessDay;
@@ -62,11 +63,9 @@ class ReportServiceTest extends TestCase
             ->setOwned(AssetProperty::OWNED_FULLY);
 
         // mock carbonBusinessDayService
-        $this->carbonBusinessDaysService = m::mock(CarbonBusinessDaysService::class);
-        $this->carbonBusinessDaysService->shouldReceive('load')->andReturn();
-
-        // load mixin in order to make 'addBusinessDays' method available
-        BusinessDay::enable('Carbon\Carbon', 'gb-engwales');
+        $this->bankHolidayAPIService = m::mock(BankHolidaysAPIService::class);
+        $this->bankHolidayAPIService->shouldReceive('getBankHolidays')->andReturn([]);
+        $this->carbonBusinessDaysService = new CarbonBusinessDaysService($this->bankHolidayAPIService);
 
         $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
 
@@ -140,7 +139,6 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
             return $report instanceof EntityDir\Report\ReportSubmission;
         }));
-        $this->carbonBusinessDaysService->shouldReceive('load')->andReturn();
 
         // clonePersistentResources should be called
         $reportService->shouldReceive('clonePersistentResources')->with(\Mockery::type(Report::class), $report);
@@ -148,7 +146,6 @@ class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy(true);
 
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime('2016-01-15'));
-        $this->report->setSectionStatusesCached([Report::STATUS_NOT_STARTED]);
 
         // assert current report
         $this->assertTrue($report->getSubmitted());
