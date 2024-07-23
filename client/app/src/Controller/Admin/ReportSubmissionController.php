@@ -83,10 +83,6 @@ class ReportSubmissionController extends AbstractController
         $ret = $this->restClient->get('/report-submission?'.http_build_query($currentFilters), 'array');
         $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class.'[]', $ret['records']);
 
-        foreach ($records as $reportSubmission) {
-            $report = $reportSubmission->getReport();
-        }
-
         $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
             return $s->isDownloadable();
         }));

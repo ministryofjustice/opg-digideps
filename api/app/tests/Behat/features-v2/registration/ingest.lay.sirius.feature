@@ -3,8 +3,8 @@ Feature: Lay CSV data ingestion - sirius source data
 
     @super-admin
     Scenario: Uploading a Lay CSV that contains new pre-registration entities only
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows.csv'
-        When I run the lay CSV command the file contains 3 new pre-registration entities
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
+        When I run the lay CSV command the file contains 4 new pre-registration entities
         Then the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be in the command output
 
@@ -28,7 +28,7 @@ Feature: Lay CSV data ingestion - sirius source data
         Then the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be in the command output
 
-# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process. 
+# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
 # Currently throws critical error
 #    @super-admin
 #    Scenario: Uploading a Lay CSV that has missing required columns
