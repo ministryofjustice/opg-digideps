@@ -22,7 +22,7 @@ server {
     location ~* \.(zip|gz|lzh|tar|rar|7z|swp|bak|git|ht|exe|dll|py|msi|bin|sh|bat|xml|apk|jar|log|sql|conf|cfg|ini|tmp|doc|xls|rtf|env|js)$ {
         location ~ (common|application|jquery\.min)\.js {
            expires    24h;
-           access_log on;
+           access_log off;
            rewrite	^/assets/([0-9]+)/(.*) /assets/fallback/$2 break;
         }
         return 403;

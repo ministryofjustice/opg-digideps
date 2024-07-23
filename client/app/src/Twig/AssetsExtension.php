@@ -46,13 +46,9 @@ class AssetsExtension extends AbstractExtension
             $assetRoot = $this->projectDir.'/public/assets';
             $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_ASCENDING), ['..', '.']);
 
-            file_put_contents('php://stderr', print_r($assetContents, true));
-
             // set the value to the folder we find.
             $this->tag = array_values($assetContents)[0];
         }
-        file_put_contents('php://stderr', print_r(' JIMMY ', true));
-        file_put_contents('php://stderr', print_r($this->tag, true));
 
         return $this->tag;
     }

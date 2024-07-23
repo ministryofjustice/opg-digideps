@@ -35,7 +35,7 @@ RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#TCPSocket .*$/TCPSocket 3310/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/freshclam.conf
 
-RUN freshclam
+RUN freshclam --quiet
 
 COPY file-scanner/entrypoint.sh /usr/bin/
 COPY scripts/hardening/harden.sh /harden.sh

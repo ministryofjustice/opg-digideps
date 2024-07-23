@@ -19,7 +19,7 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 	echo "Recreating the public schema"
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema public cascade; create schema public;"
 	echo "Recreating the ddls145 schema"
-	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema ddls145 cascade; create schema ddls145;"
+	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema ddls145 cascade;"
 fi
 
 echo "Restoring ${LATEST_BACKUP}"
