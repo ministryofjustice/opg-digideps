@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 /**
  * @Route("/admin")
@@ -63,7 +62,9 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/ReportSubmission/index.html.twig")
      *
      * @return array<mixed>|Response
@@ -80,7 +81,6 @@ class ReportSubmissionController extends AbstractController
 
         $currentFilters = self::getFiltersFromRequest($request);
         $ret = $this->restClient->get('/report-submission?'.http_build_query($currentFilters), 'array');
-
         $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class.'[]', $ret['records']);
 
         $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
@@ -119,6 +119,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download", name="admin_documents_download", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function downloadDocuments(Request $request): Response
@@ -132,7 +133,7 @@ class ReportSubmissionController extends AbstractController
             try {
                 [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
 
                 return $this->redirectToRoute('admin_documents_download_ready');
@@ -147,6 +148,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
@@ -169,7 +171,7 @@ class ReportSubmissionController extends AbstractController
 
         try {
             $contents = $this->s3Storage->retrieve($document->getStorageReference());
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $filename = $document->getFileName();
             throw $this->createNotFoundException("Document '${$filename}' could not be retrieved");
         }
@@ -184,7 +186,9 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/ReportSubmission/download-ready.html.twig")
      *
      * @return array<mixed>
@@ -243,7 +247,7 @@ class ReportSubmissionController extends AbstractController
                         $fileName = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
 
                         return $this->documentDownloader->generateDownloadResponse($fileName);
-                    } catch (Throwable $e) {
+                    } catch (\Throwable $e) {
                         $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
 
                         return $this->redirectToRoute('admin_documents');

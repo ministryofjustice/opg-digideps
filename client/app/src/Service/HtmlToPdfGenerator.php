@@ -67,9 +67,16 @@ class HtmlToPdfGenerator
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        $result = curl_exec($ch);
+        $httpCode = 0;
+        $count = 0;
+        while (200 != $httpCode and $count < 3) {
+            $pdfBody = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            ++$count;
+        }
+
         curl_close($ch);
 
-        return $result;
+        return $pdfBody;
     }
 }

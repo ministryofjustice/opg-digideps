@@ -311,6 +311,27 @@ class ReportController extends AbstractController
     }
 
     /**
+     * Generate and upload the.
+     *
+     * @Route("regenerate-pdf", name="admin_regenerate_pdf", methods={"GET"})
+     *
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @Template("@App/Admin/ReportSubmission/regenerate-pdf.html.twig")
+     *
+     * @return array
+     */
+    public function regeneratePDF(int $id, ReportSubmissionService $reportSubmissionService)
+    {
+        $report = $this->reportApi->getReport($id, self::$reportGroupsAll);
+        $reportSubmissionService->generateReportPdf($report, true);
+
+        return [
+            'reportId' => $id,
+        ];
+    }
+
+    /**
      * @Route("manage", name="admin_report_manage")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
