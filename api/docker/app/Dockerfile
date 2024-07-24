@@ -93,6 +93,8 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
+RUN curl -o /tmp/bank-holidays.json https://www.gov.uk/bank-holidays.json
+
 FROM application as ci-tests
 # We use this setup for certain commands as part of the CI processing of unit tests
 CMD confd -onetime -backend env \

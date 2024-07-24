@@ -421,8 +421,6 @@ services:
 
     App\Service\BankHolidaysAPIService:
         class: App\Service\BankHolidaysAPIService
-        arguments:
-            $httpClient: '@GuzzleHttp\Client'
 
     App\Service\CarbonBusinessDaysService:
         class: App\Service\CarbonBusinessDaysService
