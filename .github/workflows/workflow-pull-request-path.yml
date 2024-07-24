@@ -44,6 +44,15 @@ jobs:
           echo "branch_formatted=$(echo ${BRANCH})" >> $GITHUB_OUTPUT
           echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
           echo ${build_identifier}
+      - name: Generate build output using Markdown
+        env:
+          PARSED_BRANCH: ${{ steps.variables.outputs.branch_formatted }}
+          BUILD_IDENTIFIER: ${{ steps.variables.outputs.build_identifier }}
+        run: |
+          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${PARSED_BRANCH}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Identifier: ${BUILD_IDENTIFIER}" >> $GITHUB_STEP_SUMMARY
       - name: generate semver tag and release
         id: semver_tag
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
