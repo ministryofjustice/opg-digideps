@@ -17,7 +17,7 @@ jobs:
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
 
       - name: download resources artifact
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: web-distribution
           path: client/resources/public
@@ -68,13 +68,13 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: archive pact results
-        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # pin@v3.1.0
         with:
           name: pact.json
           path: pact.json
 
       - name: archive test results
-        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # pin@v3.1.0
         with:
           name: client-unit-tests
           path: client-unit-tests.xml
