@@ -93,6 +93,7 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
+# output dates to tmp folder to use with Carbon Business Days service for setting due dates
 RUN curl -o /tmp/bank-holidays.json https://www.gov.uk/bank-holidays.json
 
 FROM application as ci-tests

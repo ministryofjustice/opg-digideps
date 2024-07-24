@@ -25,6 +25,7 @@ class CarbonBusinessDaysService
      */
     public function load(): void
     {
+        // Plug the gaps for adhoc days as BusinessDay doesn't account for these
         $additionalHolidays = $this->bankHolidaysAPIService->getBankHolidays();
 
         BusinessDay::enable('Carbon\Carbon', $this->baseList, $additionalHolidays);
