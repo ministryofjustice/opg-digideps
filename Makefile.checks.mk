@@ -10,7 +10,7 @@ checks: check-compose check-terraform check-secrets lint-terraform ##@checks Pre
 
 check-compose: ##@checks Check compose file is valid
 	@echo "Validating docker-compose"
-	@docker-compose config -q
+	@docker compose config -q
 
 check-secrets: ##@checks Check for secrets or sensitive strings
 	@echo "Checking for secrets or sensitive strings"
