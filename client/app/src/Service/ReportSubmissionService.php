@@ -92,12 +92,10 @@ class ReportSubmissionService
     public function generateReportDocuments(ReportInterface $report)
     {
         $this->generateReportPdf($report);
-
         if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
             if (!empty($report->getGifts()) || !empty($report->getExpenses()) || !empty($report->getMoneyTransactionsIn())
                 || !empty($report->getMoneyTransactionsOut())) {
                 $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
-
                 $this->fileUploader->uploadFileAndPersistDocument(
                     $report,
                     $csvContent,
@@ -113,14 +111,15 @@ class ReportSubmissionService
      *
      * @param Report $report
      */
-    private function generateReportPdf(ReportInterface $report)
+    public function generateReportPdf(ReportInterface $report, bool $overwrite = false): void
     {
         // store PDF (with summary info) as a document
         $this->fileUploader->uploadFileAndPersistDocument(
             $report,
             $this->getPdfBinaryContent($report, true),
             $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
-            true
+            true,
+            $overwrite
         );
     }
 
@@ -139,7 +138,11 @@ class ReportSubmissionService
             'showSummary' => $showSummary,
         ]);
 
-        return $this->htmltopdf->getPdfFromHtml($html);
+        if (false === ($pdf = $this->htmltopdf->getPdfFromHtml($html))) {
+            $this->logger->error(sprintf('html_to_pdf_generation - failure - Error with pdf generation on report id: %d', $report->getId()));
+        }
+
+        return $pdf;
     }
 
     /**
