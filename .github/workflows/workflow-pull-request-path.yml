@@ -356,19 +356,19 @@ jobs:
     steps:
       - name: workflow ended successfully
         run: |
-          export PUBLIC_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+          export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
           export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
           export SERVICE_ADMIN_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.admin.digideps.opg.service.justice.gov.uk"
 
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Public Frontend URL: ${FRONTEND_URL}"
+          echo "Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
           echo "Service Frontend URL: ${SERVICE_FRONTEND_URL}"
           echo "Service Admin URL: ${SERVICE_ADMIN_URL}"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
 
           echo "### Environment Details" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Public Frontend URL: ${FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Public Frontend URL: ${PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Service Admin URL: ${SERVICE_ADMIN_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}" >> $GITHUB_STEP_SUMMARY
