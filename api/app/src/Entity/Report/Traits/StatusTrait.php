@@ -36,7 +36,7 @@ trait StatusTrait
      * @JMS\Exclude()
      * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
      */
-    public $reportStatusCached;
+    private $reportStatusCached;
 
     /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>].

@@ -145,7 +145,7 @@ class ProfUserFixtures extends AbstractDataFixture
     public function __construct(
         private OrganisationRepository $orgRepository,
         private OrganisationFactory $orgFactory,
-        private DeputyRepository $deputyRepository,
+        private DeputyRepository $deputyRepository
     ) {
     }
 

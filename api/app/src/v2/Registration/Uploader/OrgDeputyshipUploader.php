@@ -33,7 +33,7 @@ class OrgDeputyshipUploader
         private readonly OrganisationFactory $orgFactory,
         private readonly ClientAssembler $clientAssembler,
         private readonly DeputyAssembler $deputyAssembler,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $logger
     ) {
     }
 
