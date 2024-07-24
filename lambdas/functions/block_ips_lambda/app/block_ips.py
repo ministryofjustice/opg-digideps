@@ -102,10 +102,10 @@ def filter_logs(logs):
             filtered_logs[ip]["2xx_or_3xx_not_root"] += 1
 
     ips = []
+    # We have slightly higher threshold for non suffixed in case they mistype a url
+    # In both cases if they hit a valid endpoint in the time then we don't block them
     for ip, value in filtered_logs.items():
-        if value["404_with_suffix"] > 10 and value["2xx_or_3xx_not_root"] < 5:
-            ips.append(ip)
-        elif value["404_without_suffix"] > 5 and value["2xx_or_3xx_not_root"] < 1:
+        if value["404_without_suffix"] > 5 and value["2xx_or_3xx_not_root"] < 1:
             ips.append(ip)
         elif value["404_with_suffix"] > 1 > value["2xx_or_3xx_not_root"]:
             ips.append(ip)
