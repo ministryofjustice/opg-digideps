@@ -44,7 +44,7 @@ class AssetsExtension extends AbstractExtension
         if (!$this->tag) {
             // List the files in the web/assets folder
             $assetRoot = $this->projectDir.'/public/assets';
-            $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_DESCENDING), ['..', '.']);
+            $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_ASCENDING), ['..', '.']);
 
             // set the value to the folder we find.
             $this->tag = array_values($assetContents)[0];

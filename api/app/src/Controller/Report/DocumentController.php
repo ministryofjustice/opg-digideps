@@ -59,7 +59,7 @@ class DocumentController extends RestController
             'file_name' => 'notEmpty',
             'storage_reference' => 'notEmpty',
         ]);
-        $document = new EntityDir\Report\Document($report);
+        $document = new Document($report);
         $document->setCreatedBy($this->getUser());
         $document->setFileName($data['file_name']);
         $document->setStorageReference($data['storage_reference']);
@@ -71,6 +71,59 @@ class DocumentController extends RestController
 
         $this->em->persist($document);
         $report->updateSectionsStatusCache($this->sectionIds);
+        $this->em->flush();
+
+        return ['id' => $document->getId()];
+    }
+
+    /**
+     * @Route("/document/{reportType}/{reportId}/overwrite", requirements={
+     *     "reportId":"\d+",
+     *     "reportType" = "(report|ndr)"
+     * }, methods={"POST"})
+     *
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function overwriteReportPdf(Request $request, $reportType, $reportId)
+    {
+        if ('report' === $reportType) {
+            /** @var EntityDir\Report\Report $report */
+            $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        } else {
+            /** @var EntityDir\Report\Report $report */
+            $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
+        }
+
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        // hydrate and persist
+        $data = $this->formatter->deserializeBodyContent($request, [
+            'file_name' => 'notEmpty',
+            'storage_reference' => 'notEmpty',
+        ]);
+
+        $reportPdfDocument = null;
+
+        foreach ($report->getDocuments() as $document) {
+            if ($document->isReportPdf()) {
+                $reportPdfDocument = $document;
+                break;
+            }
+        }
+
+        if (!$reportPdfDocument) {
+            return [];
+        }
+
+        $reportPdfDocument->setCreatedBy($this->getUser());
+        $reportPdfDocument->setFileName($data['file_name']);
+        $reportPdfDocument->setStorageReference($data['storage_reference']);
+        $reportPdfDocument->setIsReportPdf($data['is_report_pdf']);
+        $reportPdfDocument->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+        $reportPdfDocument->setSynchronisationError(null);
+        $reportPdfDocument->resetSyncAttempts();
+
+        $this->em->persist($reportPdfDocument);
         $this->em->flush();
 
         return ['id' => $document->getId()];
@@ -90,7 +143,7 @@ class DocumentController extends RestController
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         /* @var $document EntityDir\Report\Document */
-        $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
+        $document = $this->findEntityBy(Document::class, $id);
 
         $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
@@ -112,7 +165,7 @@ class DocumentController extends RestController
     public function delete($id)
     {
         /** @var $document EntityDir\Report\Document */
-        $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
+        $document = $this->findEntityBy(Document::class, $id);
         $report = $document->getReport();
 
         // enable if the check above is removed and the note is available for editing for the whole team
