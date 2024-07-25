@@ -35,6 +35,13 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 
+      - name: Generate build output using Markdown
+        run: |
+          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: main" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Identifier: main" >> $GITHUB_STEP_SUMMARY
+
       - name: generate semver tag and release
         id: semver_tag
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
