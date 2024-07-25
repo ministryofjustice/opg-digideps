@@ -11,7 +11,6 @@ use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
 use App\Service\Client\RestClient;
 use App\Service\File\Storage\StorageInterface;
 use App\Service\Time\DateTimeProvider;
-use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
@@ -61,8 +60,9 @@ class S3FileUploader
      *
      * @return Document
      */
-    public function uploadFileAndPersistDocument(ReportInterface $report, string $body, string $fileName, bool $isReportPdf)
-    {
+    public function uploadFileAndPersistDocument(
+        ReportInterface $report, string $body, string $fileName, bool $isReportPdf, bool $overwrite = false
+    ) {
         $storageReference = sprintf(
             'dd_doc_%s_%s%s',
             $report->getId(),
@@ -79,7 +79,12 @@ class S3FileUploader
             ->setIsReportPdf($isReportPdf);
 
         $reportType = $report instanceof Report ? 'report' : 'ndr';
-        $response = $this->persistDocument($reportType, intval($report->getId()), $document);
+
+        if ($overwrite) {
+            $response = $this->persistDocumentOverwrite($reportType, intval($report->getId()), $document);
+        } else {
+            $response = $this->persistDocument($reportType, intval($report->getId()), $document);
+        }
 
         $document->setId($response['id'] ?? null);
 
@@ -91,16 +96,21 @@ class S3FileUploader
         return $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
     }
 
+    private function persistDocumentOverwrite(string $reportType, int $reportId, Document $document)
+    {
+        return $this->restClient->post("/document/{$reportType}/{$reportId}/overwrite", $document, ['document']);
+    }
+
     /**
      * Removes a file from S3.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function removeFileFromS3(Document $document)
     {
         $storageReference = $document->getStorageReference();
         if (empty($storageReference)) {
-            throw new Exception('Document could not be removed. No Reference.');
+            throw new \Exception('Document could not be removed. No Reference.');
         }
 
         $this->s3Storage->removeFromS3($storageReference);
