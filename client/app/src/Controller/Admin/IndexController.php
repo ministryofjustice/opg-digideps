@@ -60,15 +60,13 @@ class IndexController extends AbstractController
         private readonly S3Client $s3,
         private readonly LayDeputyshipApi $layDeputyshipApi,
         private readonly OrgService $orgService,
-        private readonly string $workspace
+        private readonly string $workspace,
     ) {
     }
 
     /**
      * @Route("/", name="admin_homepage")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/index.html.twig")
      */
     public function indexAction(Request $request): array
@@ -107,9 +105,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/addUser.html.twig")
      */
     public function addUserAction(Request $request): array|RedirectResponse
@@ -144,9 +140,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
-     *
      * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @Template("@App/Admin/Index/viewUser.html.twig")
      *
      * @return User[]|Response
@@ -162,9 +156,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/editUser.html.twig")
      *
      * @throws \Throwable
@@ -252,7 +244,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
@@ -279,15 +270,17 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
      *
      * @param int $id
      */
     public function deleteConfirmAction($id): array
     {
+        // check if deputy completed user research form, if yes null user_id on user research form
+        $this->restClient->put('/user-research/'.$id, intval($id));
+        // delete user research response entry if present
+
         /** @var User $userToDelete */
         $userToDelete = $this->restClient->get("user/{$id}", 'User');
 
@@ -298,7 +291,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param int $id
@@ -329,9 +321,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/upload", name="admin_upload")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
      * @Template("@App/Admin/Index/upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router): array|RedirectResponse
@@ -365,9 +355,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
-     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      *
      * @throws \Exception
@@ -445,9 +433,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
-     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
      *
      * @throws \Exception
@@ -517,7 +503,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
-     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger): Response

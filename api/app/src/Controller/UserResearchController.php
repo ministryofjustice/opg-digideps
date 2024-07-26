@@ -35,7 +35,6 @@ class UserResearchController extends RestController
 
     /**
      * @Route("/user-research", name="create_user_research", methods={"POST"})
-     *
      * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')")
      */
     public function create(Request $request)
@@ -60,7 +59,6 @@ class UserResearchController extends RestController
 
     /**
      * @Route("/user-research", name="get_user_research", methods={"GET"})
-     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function getAll(Request $request)
@@ -81,5 +79,14 @@ class UserResearchController extends RestController
         } catch (\Throwable $e) {
             throw new \RuntimeException(sprintf('There was a problem getting user research responses: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    /**
+     * @Route("/user-research/{id}", name="user_research_find_by_id", methods={"PUT"})
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     */
+    public function findByUserIdAndNullify(int $id): void
+    {
+        $this->userResearchResponseRepository->findByUserId($id);
     }
 }
