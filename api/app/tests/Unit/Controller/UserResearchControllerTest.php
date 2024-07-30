@@ -171,4 +171,25 @@ class UserResearchControllerTest extends AbstractTestController
             ],
         ];
     }
+
+    public function testDeletePermittedForSuperAdmin()
+    {
+        $url = '/user-research/delete';
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenSuperAdmin,
+        ]);
+    }
+
+    public function testDeleteNotPermittedForAdmin()
+    {
+        $url = '/user-research/delete';
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+    }
 }
