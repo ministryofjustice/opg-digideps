@@ -51,7 +51,6 @@ class UserResearchResponseRepository extends ServiceEntityRepository
 
     public function findByUserId(int $id)
     {
-        // this needs work as it assumes the user has completed the user research form
         $qb = $this->createQueryBuilder('ur')
             ->update(UserResearchResponse::class, 'ur')
             ->set('ur.user', ':null')->setParameter('null', null)

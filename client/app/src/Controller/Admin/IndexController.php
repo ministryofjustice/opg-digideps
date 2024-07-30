@@ -288,9 +288,7 @@ class IndexController extends AbstractController
      */
     public function deleteConfirmAction($id): array
     {
-        // check if deputy completed user research form, if yes null user_id on user research form
         $this->restClient->put('/user-research/'.$id, intval($id));
-        // delete user research response entry if present
         $this->restClient->delete('/user-research/delete');
 
         /** @var User $userToDelete */
