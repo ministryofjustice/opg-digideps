@@ -64,7 +64,7 @@ class UserResearchResponseRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('ur')
             ->delete(UserResearchResponse::class, 'ur')
-            ->where('ur.user = :null')->setParameter('null', null);
+            ->where('ur.user is null');
 
         return $qb->getQuery()->execute();
     }
