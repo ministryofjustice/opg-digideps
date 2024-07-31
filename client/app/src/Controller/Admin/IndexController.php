@@ -289,7 +289,6 @@ class IndexController extends AbstractController
     public function deleteConfirmAction($id): array
     {
         $this->restClient->put('/user-research/'.$id, intval($id));
-        $this->restClient->delete('/user-research/delete');
 
         /** @var User $userToDelete */
         $userToDelete = $this->restClient->get("user/{$id}", 'User');

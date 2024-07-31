@@ -58,13 +58,4 @@ class UserResearchResponseRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->execute();
     }
-
-    public function deleteByNullUserId()
-    {
-        $qb = $this->createQueryBuilder('ur')
-            ->delete(UserResearchResponse::class, 'ur')
-            ->where('ur.user is null');
-
-        return $qb->getQuery()->execute();
-    }
 }

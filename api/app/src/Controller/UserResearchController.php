@@ -92,14 +92,4 @@ class UserResearchController extends RestController
     {
         $this->userResearchResponseRepository->findByUserId($id);
     }
-
-    /**
-     * @Route("/user-research/delete", name="delete_user_research", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
-    public function deleteNullifiedUserId(): void
-    {
-        $this->userResearchResponseRepository->deleteByNullUserId();
-    }
 }
