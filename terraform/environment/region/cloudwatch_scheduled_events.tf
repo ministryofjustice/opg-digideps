@@ -390,7 +390,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_off" {
 resource "aws_cloudwatch_event_rule" "delete_null_user_research_ids" {
   name                = "delete-null-user-research-ids-${local.environment}"
   description         = "Delete null user research ids in ${terraform.workspace}"
-  schedule_expression = "cron(0 1 * * *)"
+  schedule_expression = "cron(0 1 ? * * *)"
   tags                = var.default_tags
 }
 
