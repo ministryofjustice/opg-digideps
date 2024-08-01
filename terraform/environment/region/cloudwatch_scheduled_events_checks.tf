@@ -299,3 +299,32 @@ resource "aws_cloudwatch_event_target" "org_csv_processing_check" {
     }
   )
 }
+
+# Delete null user ids in user research
+
+resource "aws_cloudwatch_event_rule" "delete_null_user_research_ids_check" {
+  name                = "check-delete-null-user-research-ids-${terraform.workspace}"
+  description         = "Delete null user research ids in ${terraform.workspace}"
+  schedule_expression = local.sync_service_cron_schedule
+  is_enabled          = var.account.is_production == 1 ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "delete_null_user_research_ids_check" {
+  target_id = "check-delete-null-user-research-ids-${terraform.workspace}"
+  arn       = data.aws_lambda_function.slack_lambda.arn
+  rule      = aws_cloudwatch_event_rule.delete_null_user_research_ids_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "delete_null_user_research_ids_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["delete_null_user_research_ids"],
+        search-timespan            = local.sync_service_schedule
+        bank-holidays              = "true"
+        channel-identifier-absent  = "team",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "team"
+      }
+    }
+  )
+}
