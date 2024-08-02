@@ -266,4 +266,45 @@ class PreRegistrationControllerTest extends AbstractTestController
             $this->assertEquals(462, $e->getCode());
         }
     }
+
+    public function testVerifySameDeputyCannotSignUp()
+    {
+        $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '1234567t']);
+
+        $this->buildAndPersistPreRegistrationEntity('1234567t', 'SINGLE', 'test', 'deputy');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        self::$tokenDeputy = $this->loginAsDeputy();
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        // Testing with lowercase t
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '1234567t',
+                'lastname' => 'deputy',
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 425,
+        ]);
+
+        // Testing with uppercase T
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '1234567T',
+                'lastname' => 'deputy',
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 425,
+        ]);
+    }
 }
