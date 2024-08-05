@@ -32,9 +32,9 @@ and you can be added to the team on the browser stack website.
 `./behat/BrowserStackLocal-osx --daemon "start" --key <your_key>`
 
 - This starts the tunnel and you can then run against different browsers by specifying the browser:
-    - `docker-compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test --profile v2-tests-browserstack-chrome --tags @js-basic-check`
-    - `docker-compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test --profile v2-tests-browserstack-firefox --tags @js-basic-check`
-    - `docker-compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test --profile v2-tests-browserstack-ie11 --tags @js-basic-check`
+    - `docker compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test --profile v2-tests-browserstack-chrome --tags @js-basic-check`
+    - `docker compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test --profile v2-tests-browserstack-firefox --tags @js-basic-check`
+    - `docker compose -f docker-compose.yml -f docker-compose.behat.yml run --rm test --profile v2-tests-browserstack-ie11 --tags @js-basic-check`
 
 - To see detailed output of your runs including screenshots, videos and logs then go to the `automate` tab again
 and search for your run.
