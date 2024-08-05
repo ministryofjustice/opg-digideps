@@ -13,16 +13,28 @@ resource "aws_iam_role_policy" "admin_s3" {
 #tfsec:ignore:aws-iam-no-policy-wildcards - wildcards for objects in individual buckets not overly permissive
 data "aws_iam_policy_document" "admin_s3" {
   statement {
-    sid    = "AllAdminActionsCalledOnS3Bucket"
+    sid    = "AdminS3BucketGet"
     effect = "Allow"
     actions = [
-      "s3:GetObject",
+      "s3:GetObject"
     ]
     resources = [
       module.pa_uploads.arn,
       "${module.pa_uploads.arn}/*",
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
+    ]
+  }
+
+  statement {
+    sid    = "AdminS3BucketPut"
+    effect = "Allow"
+    actions = [
+      "s3:PutObject"
+    ]
+    resources = [
+      module.pa_uploads.arn,
+      "${module.pa_uploads.arn}/*"
     ]
   }
 }

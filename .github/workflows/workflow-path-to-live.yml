@@ -193,9 +193,8 @@ jobs:
     with:
       workspace: integration
       account_name: preproduction
-      task_name: "integration_test_v2"
+      task_name: "reset_database"
       timeout: "500"
-      override: "sh,./tests/Behat/reset-db.sh"
     secrets: inherit
 
   integration_tests_1:
