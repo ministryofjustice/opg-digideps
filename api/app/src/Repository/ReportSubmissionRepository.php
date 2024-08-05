@@ -131,6 +131,61 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function findAllReportSubmissionsRawSql(
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null
+    ) {
+        $fromDateStrFormatted = $fromDate->format('Ymd');
+        $toDateStrFormatted = $toDate->format('Ymd');
+
+        $submittedReportsQuery = "
+SELECT
+    r0_.id AS report_submission_id,
+    COALESCE(c3_.case_number, c5_.case_number) AS case_number,
+    r0_.created_on AS created_on,
+    now() as scan_date,
+    d1_.id AS document_id
+FROM report_submission r0_
+LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
+LEFT JOIN report r2_ ON r0_.report_id = r2_.id
+LEFT JOIN client c3_ ON r2_.client_id = c3_.id
+LEFT JOIN odr o4_ ON r0_.ndr_id = o4_.id
+LEFT JOIN client c5_ ON o4_.client_id = c5_.id
+LEFT JOIN document d6_ ON r0_.id = d6_.report_submission_id
+WHERE r0_.created_on >= '$fromDateStrFormatted' AND r0_.created_on <= '$toDateStrFormatted'
+  AND (r0_.created_on >= r2_.submit_date OR r0_.created_on >= o4_.submit_date)
+  AND (r2_.submitted = true OR o4_.submitted = true)
+  AND (r2_.submit_date IS NOT NULL OR o4_.submit_date IS NOT NULL)
+ORDER BY r0_.id DESC;";
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $docStmt = $conn->prepare($submittedReportsQuery);
+        $result = $docStmt->executeQuery();
+
+        // Get all queued documents
+        $results = $result->fetchAllAssociative();
+        $now = new \DateTime();
+        $ret = [];
+        foreach ($results as $row) {
+            $created_on = new \DateTime($row['created_on']);
+            $data = [];
+            $data['id'] = $row['report_submission_id'];
+            $data['case_number'] = $row['case_number'];
+            $data['date_received'] = $created_on->format('Y-m-d');
+            $data['scan_date'] = $now->format('Y-m-d');
+            $data['document_id'] = $row['document_id'];
+            $data['document_type'] = 'Reports';
+            $data['form_type'] = 'Reports General';
+            $ret[] = $data;
+        }
+
+        return $ret;
+    }
+
+    /**
      * @param string $orderBy default createdOn
      * @param string $order   default ASC
      *
