@@ -131,16 +131,14 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
-     * @param string    $orderBy  default createdOn
-     * @param string    $order    default ASC
+     * @param string $orderBy default createdOn
+     * @param string $order   default ASC
      *
      * @return array
      */
     public function findAllReportSubmissions(
-        \DateTime $fromDate = null,
-        \DateTime $toDate = null,
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null,
         $orderBy = 'createdOn',
         $order = 'ASC'
     ) {
@@ -171,6 +169,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
         $this->_em->getFilters()->enable('softdeleteable');
 
+        $sql = $qbSelect->getQuery()->getSQL();
+        file_put_contents('php://stderr', print_r($sql, true));
+
         return $qbSelect->getQuery()->getResult();
     }
 
@@ -179,7 +180,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      *
      * @return \DateTime
      */
-    private function determineCreatedFromDate(\DateTime $date = null)
+    private function determineCreatedFromDate(?\DateTime $date = null)
     {
         $dateFormat = (1 == date('N')) ? 'last Friday midnight' : 'yesterday midnight';
 
@@ -189,7 +190,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     /**
      * @return \DateTime
      */
-    private function determineCreatedToDate(\DateTime $date = null)
+    private function determineCreatedToDate(?\DateTime $date = null)
     {
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
