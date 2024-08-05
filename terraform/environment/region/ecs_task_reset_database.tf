@@ -18,7 +18,7 @@ locals {
     {
       name    = "reset-database",
       image   = local.images.api,
-      command = ["sh", "scripts/reset_db_fixtures.sh"],
+      command = ["sh", "tests/Behat/reset-db.sh"],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -37,7 +37,7 @@ locals {
           valueFrom = data.aws_secretsmanager_secret.api_secret.arn
         }
       ],
-      environment = local.api_base_variables
+      environment = concat(local.api_base_variables, local.api_service_variables)
     }
   )
 }
