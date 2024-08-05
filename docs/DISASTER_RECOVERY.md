@@ -38,7 +38,7 @@ All of our measures to restore the service fall within the 48 hours specified by
 
 This process can be vastly simplified if you use our automated restore container:
 
-Run `docker-compose -f docker-compose.commands.yml up dr-restore` to see a help file
+Run `docker compose -f docker-compose.commands.yml up dr-restore` to see a help file
 
 You can then run various options. Some examples below:
 
@@ -48,7 +48,7 @@ and you're willing to accept a small loss of data that would happen in the inter
 Remediation: Restore to a time before the query was run.
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run dr-restore \
+docker compose -f docker-compose.commands.yml run dr-restore \
 python3 database_restore.py --cluster_from api-ddpb4341 --pitr '2022-01-01 09:10:00'
 ```
 
@@ -58,7 +58,7 @@ so can no longer do a point in time recovery.
 Remediation: Restore from an existing snapshot in the environment.
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run -rm dr-restore \
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
 python3 database_restore.py \
 --cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30
 ```
@@ -69,7 +69,7 @@ You have managed to rebuild prod using terraform and need latest data.
 Remediation: Restore from an existing snapshot in backup account (use the name of snapshot stored in backup).
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run -rm dr-restore \
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
 python3 database_restore.py \
 --cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30 --restore_from_remote True
 ```
@@ -80,7 +80,7 @@ another instance and see if the data was ok at a point in time without affecting
 Remediation: Restore from an existing DB to a point in time into another cluster.
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run -rm dr-restore \
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
 python3 database_restore.py \
 --cluster_from api-ddpb9999 --cluster_to api-new_test_cluster --pitr '2022-01-01 09:10:00'
 ```

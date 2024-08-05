@@ -1,5 +1,5 @@
-#docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
-#This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
+#docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker compose up.
+#This file won't be merged when using docker compose -f docker-compose.yml up (or using any other compose file).
 services:
   resources:
     volumes:
