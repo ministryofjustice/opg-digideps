@@ -13,9 +13,9 @@ Environment variables can be set in a number of ways.
 1) Directly in the container (ie `export MY_VAR=foo`).
 We wouldn't normally do this but it is useful to mention and can be used for debugging
 2) In .env files (ie frontend.env). They can be loaded in and created as environment variables
-in your docker-compose file under the heading `env_file`
+in your docker compose file under the heading `env_file`
 3) In environment variables in the docker-compose file under the heading `environment`
-4) Passed in as command line as part of docker-compose run command with `-e`
+4) Passed in as command line as part of docker compose run command with `-e`
 5) Set as part of terraform task definition under heading `environment`
 
 Please understand that when these are set, what it actually means is that they will be available in
