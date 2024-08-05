@@ -227,6 +227,7 @@ class ReportSubmissionController extends RestController
      */
     public function getPreRegistrationData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
+        //        $startTime = microtime(true);
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(ReportSubmission::class);
 
@@ -236,13 +237,29 @@ class ReportSubmissionController extends RestController
         $fromDateTime = $fromDate ? $fromDate->setTime(0, 0) : null;
         $toDateTime = $toDate ? $toDate->setTime(23, 59, 59) : null;
 
-        $ret = $repo->findAllReportSubmissions(
+        $startTime = microtime(true);
+        $ret = $repo->findAllReportSubmissionsRawSql(
             $fromDateTime,
-            $toDateTime,
-            $request->get('orderBy', 'createdOn'),
-            $request->get('order', 'ASC')
+            $toDateTime
         );
+        $endTime = microtime(true);
+        file_put_contents('php://stderr', print_r('WholeQuery: '.($endTime - $startTime).' ms ', true));
 
-        return $reportSubmissionSummaryTransformer->transform($ret);
+        //        $startTime = microtime(true);
+        //        $ret = $repo->findAllReportSubmissions(
+        //            $fromDateTime,
+        //            $toDateTime,
+        //            $request->get('orderBy', 'createdOn'),
+        //            $request->get('order', 'ASC')
+        //        );
+        //        $endTime = microtime(true);
+        //        file_put_contents('php://stderr', print_r('ActualQuery: '.($endTime - $startTime).' ms ', true));
+        //
+        //        $startTime = microtime(true);
+        //        $rsst = $reportSubmissionSummaryTransformer->transform($ret);
+        //        $endTime = microtime(true);
+        //        file_put_contents('php://stderr', print_r('Transformer: '.($endTime - $startTime).' ms ', true));
+
+        return $ret;
     }
 }
