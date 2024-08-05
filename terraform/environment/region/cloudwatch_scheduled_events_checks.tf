@@ -306,7 +306,6 @@ resource "aws_cloudwatch_event_rule" "delete_null_user_research_ids_check" {
   name                = "check-delete-null-user-research-ids-${terraform.workspace}"
   description         = "Delete null user research ids in ${terraform.workspace}"
   schedule_expression = "cron(30 6 ? * * *)"
-  is_enabled          = var.account.is_production == 1 ? false : true
 }
 
 resource "aws_cloudwatch_event_target" "delete_null_user_research_ids_check" {
