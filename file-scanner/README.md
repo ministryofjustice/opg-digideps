@@ -4,7 +4,7 @@
 
 From root or the repo run just the clamav container:
 ```bash
-docker-compose up -d file-scanner-rest
+docker compose up -d file-scanner-rest
 ```
 
 From this folder, test that service detects common test virus signature:
