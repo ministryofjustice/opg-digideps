@@ -32,7 +32,7 @@
         "jolicode/slack-php-api": "^4.4",
         "lcobucci/jwt": "^4.1",
         "league/mime-type-detection": "^1.5",
-        "monolog/monolog": "^1.25.1",
+        "monolog/monolog": "^3.0.0",
         "nyholm/psr7": "^1.4",
         "orbitale/imagemagick-php": "^v3.2",
         "php-http/guzzle7-adapter": "^1.0",

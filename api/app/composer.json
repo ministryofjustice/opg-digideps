@@ -31,7 +31,7 @@
         "jms/serializer-bundle": "^5.0.0",
         "lcobucci/jwt": "^4.1",
         "league/csv": "^9.5",
-        "monolog/monolog": "^1.25.1",
+        "monolog/monolog": "^3.0.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "predis/predis": "^1.1.1",
         "ramsey/uuid": "^4.2",
