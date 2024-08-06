@@ -28,7 +28,7 @@ RUN apk --no-cache add \
     php81-pecl-redis
 RUN apk update && apk upgrade
 # Install necessary PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-install pdo pdo_pgsql opcache calendar
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
 RUN apk add --no-cache autoconf build-base
@@ -92,6 +92,9 @@ RUN chmod 544 /var/www/tests/Behat/run-tests-parallel.sh
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
+
+# output dates to tmp folder to use with Carbon Business Days service for setting due dates
+RUN curl -o /tmp/bank-holidays.json https://www.gov.uk/bank-holidays.json
 
 FROM application as ci-tests
 # We use this setup for certain commands as part of the CI processing of unit tests

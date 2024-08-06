@@ -11,6 +11,8 @@ use App\Entity\Report\Report;
 use App\Factory\ClientBenefitsCheckFactory;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
+use App\Service\BankHolidaysAPIService;
+use App\Service\CarbonBusinessDaysService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -59,6 +61,10 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         $this->moneyAmount = 100.5;
         $this->moneyAmountDontKnow = null;
         $this->whoReceivedMoney = 'Some organisation';
+
+        // Call service to load addBusinessDays function required on instantiation of report entity
+        $bankHolidayAPIService = $this->getMockBuilder(BankHolidaysAPIService::class)->disableOriginalConstructor()->getMock();
+        new CarbonBusinessDaysService($bankHolidayAPIService);
     }
 
     /** @test */
