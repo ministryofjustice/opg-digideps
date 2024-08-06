@@ -3,10 +3,8 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <title>OPG Report</title>
-        <style media="screen, print">
-            {{ 'stylesheets/formatted-report.css' | assetSource | raw }}
-            {{ 'stylesheets/fonts.css' | assetSource | raw }}
-        </style>
+        <link href="formatted-report.css" rel="stylesheet" type="text/css">
+        <link href="fonts.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         {% include '@App/Admin/Client/Report/Formatted/checklist_formatted_body.html.twig' %}

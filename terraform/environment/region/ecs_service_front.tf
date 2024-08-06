@@ -60,7 +60,12 @@ resource "aws_ecs_service" "front" {
     rollback = false
   }
 
-  depends_on = [aws_lb_listener.front_https]
+  depends_on = [
+    aws_lb_listener.front_https,
+    aws_ecs_service.api,
+    aws_ecs_service.htmltopdf,
+    aws_ecs_service.scan
+  ]
 }
 
 locals {

@@ -12,7 +12,6 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use App\Service\Time\DateTimeProvider;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -27,6 +26,8 @@ class ClientApi
 
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
+
+    private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
 
     /** @var RestClient */
     private $restClient;
@@ -87,7 +88,7 @@ class ClientApi
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function generateClientProfileLink(Client $client)
     {
@@ -110,7 +111,7 @@ class ClientApi
             'Client entity missing current report when trying to generate client profile link'
         );
 
-        throw new Exception('Unable to generate client profile link.');
+        throw new \Exception('Unable to generate client profile link.');
     }
 
     /**
@@ -130,8 +131,8 @@ class ClientApi
                 'ndr',
                 'report',
                 'status',
-                'client-named-deputy',
-                'named-deputy',
+                'client-deputy',
+                'deputy',
                 'client-organisations',
                 'organisation',
             ]
@@ -155,8 +156,8 @@ class ClientApi
                 'ndr',
                 'report',
                 'status',
-                'client-named-deputy',
-                'named-deputy',
+                'client-deputy',
+                'deputy',
                 'client-organisations',
                 'organisation',
             ]
@@ -204,5 +205,12 @@ class ClientApi
     public function create(Client $client)
     {
         return $this->restClient->post(self::CREATE_CLIENT, $client);
+    }
+
+    public function updateDeputy(int $clientId, int $deputyId)
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        return $this->restClient->put(sprintf(self::UPDATE_CLIENT_DEPUTY, $clientId, $deputyId), $currentUser);
     }
 }

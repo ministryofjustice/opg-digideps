@@ -94,3 +94,30 @@ submitMoreDocumentsConfirm:
   dateAttached: Date attached
   deleteDocument: Remove
   submitButton: Send documents
+
+reUploadPage:
+  pageTitle: Re-upload documents
+  supportingDocuments: Supporting document
+  selectHeading: 1. Select the documents that need to be re-uploaded
+  selectHelp: Please select 'Choose files' below to find your files.
+  selectHint1: You only need to upload documents if we have asked you to.
+  selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 15MB.
+  uploadHeading: 2. Re-upload the documents to your report
+  noDocuments: No documents
+  documentList: Attached documents to submit with report
+  missingFiles: Documents to remove and re-upload
+  filename: File name
+  dateAttached: Date attached
+  deleteDocument: Remove
+  continueToSubmit: Continue to send documents
+  pleaseWait: The file is being uploaded.
+  successUploadedHeader: Files uploaded
+  successUploaded: Your uploaded files are now attached to this report and listed below
+  uploadHint: |
+    If the file takes more than 5 minutes to upload, please refresh the page and try again.
+    To stop uploading the file, just refresh the page.
+  reUploadLabel: Re-upload file
+  reUploadErrorMessage: Some of your documents have now expired, please remove and re-upload the document(s) marked below.
+  removeDocumentAction: |
+    The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed. Please ensure that you re-upload the documents before you save and continue.
+  uploadDocumentReminder: Please remember to re-upload your document(s) before you save and continue.

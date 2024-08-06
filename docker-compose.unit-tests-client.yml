@@ -1,4 +1,3 @@
-version: "3.2"
 services:
   # Client Unit Test Requirements
   client-unit-tests:
@@ -10,7 +9,7 @@ services:
     depends_on:
       - pact-mock
     environment:
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey

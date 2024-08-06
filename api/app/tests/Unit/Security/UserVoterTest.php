@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\ReportService;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -30,12 +31,15 @@ class UserVoterTest extends KernelTestCase
 
     public function deleteUserProvider()
     {
+        self::bootKernel();
+        $em = static::getContainer()->get('em');
+
+        // Required to load Carbon package and method called when new instance of report is created in ReportTestHelper
+        static::getContainer()->get(ReportService::class);
+
         $userTestHelper = new UserTestHelper();
         $clientTestHelp = new ClientTestHelper();
         $reportTestHelper = new ReportTestHelper();
-
-        self::bootKernel();
-        $em = static::getContainer()->get('em');
 
         $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
 

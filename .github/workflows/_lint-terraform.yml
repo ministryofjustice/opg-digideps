@@ -20,34 +20,26 @@ jobs:
           - folder: "environment"
           - folder: "account"
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 
-      - name: parse terraform version
-        id: tf_version_setup
-        run: |
-          if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
-            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
-            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
-          fi
-        working-directory: terraform/${{ matrix.folder }}
-
-      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.6
+        with:
+          terraform_directory: terraform/${{ matrix.folder }}
 
       - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
         with:
-          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
-      - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 900
           aws-region: eu-west-1
-          role-duration-seconds: 1800
-          role-session-name: OPGDigidepsLintTerraformAction
 
       - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
         with:

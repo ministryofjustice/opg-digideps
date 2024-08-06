@@ -25,13 +25,13 @@
             </dd>
         </div>
 
-        {% if namedDeputy %}
+        {% if deputy %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key govuk-!-padding-1">
-                    {{ 'namedDeputy' | trans({}, 'common') }}:
+                    {{ 'deputy' | trans({}, 'common') }}:
                 </dt>
                 <dd class="govuk-summary-list__value govuk-!-padding-1">
-                    {{ namedDeputy.fullName }}
+                    {{ deputy.fullName }}
                 </dd>
             </div>
         {% endif %}

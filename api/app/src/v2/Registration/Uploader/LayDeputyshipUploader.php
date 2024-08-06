@@ -55,7 +55,7 @@ class LayDeputyshipUploader
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
-                    $message = sprintf('ERROR IN LINE: %s',  $message);
+                    $message = sprintf('ERROR IN LINE: %s', $message);
                     $this->logger->error($message);
                     $errors[] = $message;
                     continue;
@@ -121,7 +121,13 @@ class LayDeputyshipUploader
 
                 // For Dual Cases, deputy uid needs to match for the report type to be updated
                 if (PreRegistration::DUAL_TYPE == $preRegistration->getHybrid()) {
-                    if ($currentActiveReport->getClient()->getUsers()[0]->getDeputyNo() == $preRegistration->getDeputyUid()) {
+                    $existingDeputyUid = $currentActiveReport->getClient()->getUsers()[0]->getDeputyNo();
+
+                    if (empty($existingDeputyUid)) {
+                        $existingDeputyUid = $currentActiveReport->getClient()->getUsers()[0]->getDeputyUid();
+                    }
+
+                    if ($existingDeputyUid == $preRegistration->getDeputyUid()) {
                         if ($currentActiveReport->getType() != $determinedReportType) {
                             $currentActiveReport->setType($determinedReportType);
                             $this->reportsUpdated[] = $reportCaseNumber;

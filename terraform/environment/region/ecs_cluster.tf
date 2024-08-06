@@ -69,6 +69,10 @@ locals {
       value = "https://${var.front_fully_qualified_domain_name}"
     },
     {
+      name  = "APP_ENV",
+      value = var.account.app_env
+    },
+    {
       name  = "JWT_HOST",
       value = "https://${var.front_fully_qualified_domain_name}"
     },
@@ -156,6 +160,9 @@ locals {
     }
   ]
 
+  fis_template_variables = var.account.fault_injection_experiments_enabled ? [
+    { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id }
+  ] : []
 
   frontend_base_variables = [
     { name = "ADMIN_HOST", value = "https://${var.admin_fully_qualified_domain_name}" },

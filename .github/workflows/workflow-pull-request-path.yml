@@ -34,7 +34,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:
@@ -44,13 +44,29 @@ jobs:
           echo "branch_formatted=$(echo ${BRANCH})" >> $GITHUB_OUTPUT
           echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
           echo ${build_identifier}
+      - name: Generate build output using Markdown
+        env:
+          PARSED_BRANCH: ${{ steps.variables.outputs.branch_formatted }}
+          BUILD_IDENTIFIER: ${{ steps.variables.outputs.build_identifier }}
+        run: |
+          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${PARSED_BRANCH}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Identifier: ${BUILD_IDENTIFIER}" >> $GITHUB_STEP_SUMMARY
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
         with:
           prerelease: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: "minor"
+      - name: show build identifier and tag
+        id: show
+        env:
+          BUILD: ${{ steps.variables.outputs.build_identifier }}
+          TAG: ${{ steps.semver_tag.outputs.created_tag }}
+        run: |
+          echo "Build Identifier: ${BUILD}"
+          echo "Container Tag: ${TAG}"
       - uses: actions/labeler@main
         if: github.event_name == 'pull_request'
         with:
@@ -85,7 +101,7 @@ jobs:
       - workflow_variables
       - build_web_resources
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
     secrets: inherit
@@ -129,17 +145,17 @@ jobs:
     uses: ./.github/workflows/_codecov.yml
     needs:
       - client_unit_tests
+      - miscellaneous_unit_tests
       - api_unit_tests_1
       - api_unit_tests_2
       - api_unit_tests_3
     secrets: inherit
 
-  synchronisation_unit_tests:
-    name: client unit tests
-    uses: ./.github/workflows/_unit-tests-synchronise-lambda.yml
+  miscellaneous_unit_tests:
+    name: miscellaneous unit tests
+    uses: ./.github/workflows/_unit-tests-miscellaneous.yml
     needs:
       - workflow_variables
-      - docker_build_scan_push
 
   terraform_plan_account_development:
     name: account plan terraform development
@@ -150,8 +166,8 @@ jobs:
     with:
       workspace: development
       terraform_path: account
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      oidc_credentials: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
+      account_name: development
     secrets: inherit
 
   terraform_apply_environment:
@@ -165,15 +181,16 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       terraform_path: environment
       apply: true
-      container_version: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
-      oidc_credentials: true
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
+      account_name: development
+      pull_request_path: true
     secrets: inherit
 
   ecr_scan_results:
     name: ecr scan results
     uses: ./.github/workflows/_ecr-scanning.yml
     with:
-      tag: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}
+      tag: ${{ needs.workflow_variables.outputs.version_tag }}
     needs:
       - terraform_apply_environment
       - workflow_variables
@@ -188,7 +205,7 @@ jobs:
     with:
       replicas: 10
       acu: 16
-      account: 248804316466
+      account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
     secrets: inherit
 
@@ -200,9 +217,23 @@ jobs:
       - terraform_apply_environment
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      task_name: "integration_test_v2"
+      account_name: development
+      task_name: "reset_database"
       timeout: "500"
-      override: "sh,./tests/Behat/reset-db.sh"
+    secrets: inherit
+
+  smoke_tests:
+    name: smoke tests
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "smoke_tests"
+      timeout: "900"
     secrets: inherit
 
   integration_tests_1:
@@ -214,6 +245,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
@@ -228,6 +260,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
@@ -242,6 +275,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
@@ -256,6 +290,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
@@ -270,6 +305,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
@@ -284,6 +320,7 @@ jobs:
       - scale_services_up
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
@@ -304,7 +341,7 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account: 248804316466
+      account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
     secrets: inherit
 
@@ -318,31 +355,44 @@ jobs:
     steps:
       - name: workflow ended successfully
         run: |
+          export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+          export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
+          export SERVICE_ADMIN_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.admin.digideps.opg.service.justice.gov.uk"
+
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.build_identifier }}-${{ needs.workflow_variables.outputs.version_tag }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+          echo "Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
+          echo "Service Frontend URL: ${SERVICE_FRONTEND_URL}"
+          echo "Service Admin URL: ${SERVICE_ADMIN_URL}"
+          echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
+
+          echo "### Environment Details" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Public Frontend URL: ${PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Service Admin URL: ${SERVICE_ADMIN_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}" >> $GITHUB_STEP_SUMMARY
 
   slack_notify_success:
-    name: notify of result
+    name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: True
+      success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: false
+      success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
     secrets: inherit

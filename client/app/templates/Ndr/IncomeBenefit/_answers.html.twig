@@ -1,6 +1,6 @@
 {% set translationDomain = "ndr-income-benefits" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
 
 <h2 class="govuk-heading-l">{{ 'stepPage.pageTitle.stateBenefits' | trans(transOptions) }}</h2>
 

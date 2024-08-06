@@ -19,3 +19,57 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
     prevent_destroy = false
   }
 }
+
+# INFO - Table used for working out which IP addresses should be blocked on our WAF
+resource "aws_dynamodb_table" "blocked_ips_table" {
+  name         = "BlockedIPs"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "IP" # Set IP as the primary key
+
+  attribute {
+    name = "IP"
+    type = "S"
+  }
+
+  attribute {
+    name = "TimeoutExpiry"
+    type = "N"
+  }
+
+  attribute {
+    name = "BlockCounter"
+    type = "N"
+  }
+
+  attribute {
+    name = "UpdatedAt"
+    type = "N"
+  }
+
+  global_secondary_index {
+    name            = "TimeoutExpiryIndex"
+    hash_key        = "TimeoutExpiry"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "BlockCounterIndex"
+    hash_key        = "BlockCounter"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "UpdatedAtIndex"
+    hash_key        = "UpdatedAt"
+    projection_type = "ALL"
+  }
+
+  ttl {
+    attribute_name = "ExpiresTTL"
+    enabled        = true
+  }
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}

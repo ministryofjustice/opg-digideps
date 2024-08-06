@@ -2,18 +2,17 @@
 
 namespace App\Entity\Report;
 
+use App\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Table(name="money_transaction_short")
- *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity
- *
  * @ORM\InheritanceType("SINGLE_TABLE")
- *
  * @ORM\DiscriminatorColumn(name="type", type="string")
- *
  * @ORM\DiscriminatorMap({
  *      "in"   = "App\Entity\Report\MoneyTransactionShortIn",
  *      "out"  = "App\Entity\Report\MoneyTransactionShortOut"
@@ -21,17 +20,15 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class MoneyTransactionShort implements MoneyTransactionInterface
 {
+    use IsSoftDeleteableEntity;
+
     /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
-     *
      * @ORM\Id
-     *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="money_transaction_short_id_seq", allocationSize=1, initialValue=1)
-     *
      * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      */
     private $id;
@@ -40,7 +37,6 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
      * @var Report
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransactionsShort")
-     *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -49,9 +45,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
      * @var float
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
-     *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
     private $amount;
@@ -60,7 +54,6 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
      * @var string
      *
      * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -69,9 +62,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
      * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
      * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
-     *
      * @ORM\Column(name="date", type="date", nullable=true, options={ "default": null })
      */
     private $date;

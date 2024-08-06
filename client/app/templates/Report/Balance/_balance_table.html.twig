@@ -3,7 +3,7 @@
 {% set showBalanceCalculations = report.status.bankAccountsState['state'] != 'not-started' %}
 
 {% set transOptions = {
-    '%client%': report.client.firstname | e,
+    '%client%': report.client.firstname | striptags,
     '%moreless%': report.totalsOffset < 0 ? "less" : "more"
 } %}
 

@@ -17,6 +17,7 @@ class Client
 
     /**
      * @JMS\Type("integer")
+     *
      * @JMS\Groups({"edit", "pa-edit", "client-id"})
      *
      * @var int
@@ -25,9 +26,11 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit", "pa-client"})
+     *
      * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
@@ -36,9 +39,11 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy", "lay-deputy-client-edit", "pa-client"})
+     *
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy", "pa-client"})
      *
      * @var string
@@ -53,11 +58,11 @@ class Client
     private $users = [];
 
     /**
-     * @JMS\Type("App\Entity\NamedDeputy")
+     * @JMS\Type("App\Entity\Deputy")
      *
-     * @var NamedDeputy|null
+     * @var Deputy|null
      */
-    private $namedDeputy;
+    private $deputy;
 
     /**
      * @JMS\Type("array<App\Entity\Report\Report>")
@@ -89,9 +94,11 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "client-case-number"})
      *
      * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"lay-deputy-client", "verify-codeputy"})
+     *
      * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1", groups={"lay-deputy-client", "verify-codeputy"})
      * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2", groups={"lay-deputy-client", "verify-codeputy"})
      *
@@ -101,22 +108,28 @@ class Client
 
     /**
      * @JMS\Accessor(setter="setCourtDateWithoutTime")
+     *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
      *
      * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     *
      * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     *
      * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $courtDate;
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
@@ -125,6 +138,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
@@ -135,6 +149,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
@@ -145,6 +160,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
@@ -155,6 +171,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
@@ -165,9 +182,11 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.postcode.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     *
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
@@ -176,6 +195,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit"})
      *
      * @var string
@@ -184,6 +204,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
@@ -194,9 +215,11 @@ class Client
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"pa-edit", "client-email"})
      *
      * @Assert\Email( message="client.email.invalid", groups={"pa-client"})
+     *
      * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
      *
      * @var string
@@ -205,11 +228,12 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @JMS\Groups({"pa-edit"})
      *
      * @Assert\LessThan("today", groups={"pa-client"}, message="client.dateOfBirth.lessThan")
      *
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     private $dateOfBirth;
 
@@ -217,6 +241,7 @@ class Client
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<App\Entity\Note>")
+     *
      * @JMS\Groups({"notes"})
      */
     private $notes;
@@ -225,6 +250,7 @@ class Client
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<App\Entity\ClientContact>")
+     *
      * @JMS\Groups({"clientcontacts"})
      */
     private $clientContacts;
@@ -233,6 +259,7 @@ class Client
      * @var int
      *
      * @JMS\Type("integer")
+     *
      * @JMS\Groups({"total-report-count"})
      */
     private $totalReportCount;
@@ -252,23 +279,26 @@ class Client
     private $unsubmittedReportsCount;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @JMS\Groups({"checklist-information"})
      */
     private $expectedReportStartDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     *
      * @JMS\Groups({"checklist-information"})
      */
     private $expectedReportEndDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
+     *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $archivedAt;
@@ -287,20 +317,9 @@ class Client
         return $this->users;
     }
 
-    /**
-     * @return NamedDeputy|null
-     */
-    public function getNamedDeputy()
+    public function setDeputy(Deputy $deputy): self
     {
-        return $this->namedDeputy;
-    }
-
-    /**
-     * @return Client
-     */
-    public function setNamedDeputy(NamedDeputy $namedDeputy): self
-    {
-        $this->namedDeputy = $namedDeputy;
+        $this->deputy = $deputy;
 
         return $this;
     }
@@ -379,7 +398,7 @@ class Client
     /**
      * @param Report $report
      *
-     * @return \App\Entity\Client
+     * @return Client
      */
     public function addReport($report)
     {
@@ -391,7 +410,7 @@ class Client
     /**
      * @param Report[] $reports
      *
-     * @return \App\Entity\Client
+     * @return Client
      */
     public function setReports($reports)
     {
@@ -410,8 +429,6 @@ class Client
 
     /**
      * @param Report $currentReport
-     *
-     * @return Client
      */
     public function setCurrentReport($currentReport): self
     {
@@ -481,8 +498,8 @@ class Client
 
     public function setCourtDateWithoutTime($courtDate = null)
     {
-        $this->courtDate = ($courtDate instanceof DateTime) ?
-                new DateTime($courtDate->format('Y-m-d')) : null;
+        $this->courtDate = ($courtDate instanceof \DateTime) ?
+                new \DateTime($courtDate->format('Y-m-d')) : null;
     }
 
     /**
@@ -566,7 +583,7 @@ class Client
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getCourtDate()
     {
@@ -574,7 +591,7 @@ class Client
     }
 
     /**
-     * @param DateTime|null $courtDate
+     * @param \DateTime|null $courtDate
      *
      * @return Client
      */
@@ -595,8 +612,6 @@ class Client
 
     /**
      * @param string $address
-     *
-     * @return Client
      */
     public function setAddress($address): self
     {
@@ -747,7 +762,7 @@ class Client
     }
 
     /**
-     * @return DateTime|null $dateOfBirth
+     * @return \DateTime|null $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -755,11 +770,9 @@ class Client
     }
 
     /**
-     * @param DateTime $dateOfBirth
-     *
-     * @return \App\Entity\Client
+     * @return Client
      */
-    public function setDateOfBirth(DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
 
@@ -774,7 +787,7 @@ class Client
         if (!$this->dateOfBirth) {
             return;
         }
-        $to = new DateTime('today');
+        $to = new \DateTime('today');
 
         return $this->dateOfBirth->diff($to)->y;
     }
@@ -915,7 +928,7 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getExpectedReportStartDate()
     {
@@ -923,7 +936,7 @@ class Client
     }
 
     /**
-     * @param DateTime $expectedReportStartDate
+     * @param \DateTime $expectedReportStartDate
      */
     public function setExpectedReportStartDate($expectedReportStartDate)
     {
@@ -933,7 +946,7 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getExpectedReportEndDate()
     {
@@ -941,7 +954,7 @@ class Client
     }
 
     /**
-     * @param DateTime $expectedReportEndDate
+     * @param \DateTime $expectedReportEndDate
      *
      * @return $this
      */
@@ -953,7 +966,7 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getArchivedAt()
     {
@@ -961,7 +974,7 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getActiveFrom()
     {
@@ -969,7 +982,7 @@ class Client
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getActiveTo()
     {
@@ -1003,12 +1016,12 @@ class Client
     }
 
     /**
-     * @return NamedDeputy|User|null
+     * @return Deputy|User|null
      */
     public function getDeputy()
     {
-        if (!is_null($this->getNamedDeputy())) {
-            return $this->getNamedDeputy();
+        if (!is_null($this->deputy)) {
+            return $this->deputy;
         }
 
         if ($this->getDeletedAt() instanceof \DateTime) {

@@ -83,6 +83,12 @@
         {% for flashMessage in app.session.flashbag.get('fixture') %}
             {{ macros.notification('fixture', flashMessage) }}
         {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('courtOrderFixture') %}
+            {{ macros.notification('courtOrderFixture', flashMessage) }}
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('preRegFixture') %}
+            {{ macros.notification('preRegFixture', flashMessage) }}
+        {% endfor %}
     {% endblock %}
 
     {% block errors %}

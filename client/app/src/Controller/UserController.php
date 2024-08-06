@@ -95,16 +95,6 @@ class UserController extends AbstractController
             ]);
         }
 
-        // PA must agree to terms before activating the account
-        // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if (
-            $isActivatePage
-            && $user->hasRoleOrgNamed()
-            && !$user->getAgreeTermsUse()
-        ) {
-            return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
-        }
-
         // define form and template that differs depending on the action (activate or password-reset)
         if ($isActivatePage) {
             $passwordMismatchMessage = $this->translator->trans('password.validation.passwordMismatch', [], 'user-activate');
@@ -138,8 +128,16 @@ class UserController extends AbstractController
             // set password for user
             $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-password', $data, 'array', [], false);
 
+            if ($user->hasAdminRole()) {
+                $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-registration-date', null, 'array', [], false);
+                $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-active', null, 'array', [], false);
+
+                $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::ADMIN);
+            }
+
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);
+            $this->userApi->clearRegistrationToken($token);
 
             if ($isActivatePage) {
                 $request->getSession()->set('login-context', 'password-create');
@@ -161,6 +159,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
+     *
      * @Template("@App/User/activateLinkSend.html.twig")
      */
     public function activateLinkSendAction(string $token): Response
@@ -175,6 +174,7 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
+     *
      * @Template("@App/User/activateLinkSent.html.twig")
      */
     public function activateLinkSentAction(string $token): array
@@ -196,6 +196,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/user/details", name="user_details")
+     *
      * @Template("@App/User/details.html.twig")
      */
     public function detailsAction(Request $request, Redirector $redirector)
@@ -218,7 +219,11 @@ class UserController extends AbstractController
             }
 
             //            this is the final step for Org users so registration has succeeded
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+            if ($user->isDeputyOrg()) {
+                $user->setPreRegisterValidatedDate(new \DateTime());
+                $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
+            }
+            $request->getSession()->remove('login-context');
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
             return $this->redirect($redirector->getHomepageRedirect());
@@ -235,6 +240,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/password-managing/forgotten", name="password_forgotten")
+     *
      * @Template("@App/User/passwordForgotten.html.twig")
      **/
     public function passwordForgottenAction(Request $request)
@@ -263,6 +269,7 @@ class UserController extends AbstractController
      * @return array<mixed>
      *
      * @Route("/password-managing/sent", name="password_sent")
+     *
      * @Template("@App/User/passwordSent.html.twig")
      */
     public function passwordSentAction(): array
@@ -274,6 +281,7 @@ class UserController extends AbstractController
      * @return array<mixed>|Response
      *
      * @Route("/register", name="register")
+     *
      * @Template("@App/User/register.html.twig")
      */
     public function registerAction(Request $request)
@@ -340,11 +348,19 @@ class UserController extends AbstractController
                         if (true == $decodedError['matching_errors']['deputy_lastname']) {
                             $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
+                        if (true == $decodedError['matching_errors']['deputy_firstname']) {
+                            $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
+                        }
                         if (true == $decodedError['matching_errors']['deputy_postcode']) {
                             $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
 
                         break;
+
+                    case 462:
+                        $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
+                        break;
+
                     default:
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
@@ -370,36 +386,8 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/agree-terms-use/{token}", name="user_agree_terms_use")
-     */
-    public function agreeTermsUseAction(Request $request, string $token): Response
-    {
-        $user = $this->restClient->loadUserByToken($token);
-
-        $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->userApi->agreeTermsUse($token);
-
-            return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
-        }
-
-        if (EntityDir\User::ROLE_PA_NAMED == $user->getRoleName()) {
-            $view = '@App/User/agreeTermsUsePa.html.twig';
-        } elseif (EntityDir\User::ROLE_PROF_NAMED == $user->getRoleName()) {
-            $view = '@App/User/agreeTermsUseProf.html.twig';
-        } else {
-            throw new \RuntimeException('terms page not implemented');
-        }
-
-        return $this->render($view, [
-            'user' => $user,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
+     *
      * @Security("is_granted('ROLE_ORG')")
      */
     public function updatedTermsUseAction(Request $request, string $token): Response
@@ -410,6 +398,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
+            $this->userApi->clearRegistrationToken($token);
 
             return $this->redirectToRoute('org_dashboard');
         }

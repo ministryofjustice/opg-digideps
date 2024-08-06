@@ -16,7 +16,7 @@
         <h3 class="left">Deputy details</h3>
 
         {# for PROF users, deputy is always the named deputy #}
-        {% set deputy = submittedBy.isDeputyOrg and client.getNamedDeputy ? client.getNamedDeputy : submittedBy %}
+        {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
         <dl class="labelvalue cl">
             <dt class="label">First names</dt>
             <dd class="value behat-region-deputy-firstname">{{ deputy.firstname}}</dd>

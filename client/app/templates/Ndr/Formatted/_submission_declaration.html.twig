@@ -1,4 +1,5 @@
 {% set translationDomain = "ndr-declaration" %}
+{% set standardsLink = app.user.getStandardsLink %}
 {% trans_default_domain translationDomain %}
 {% if ndr.submitted %}
 
@@ -9,7 +10,10 @@
         <p class="label">{{ 'page.descriptionPara01' | trans }}</p>
         <p class="label">{{ 'page.descriptionPara02' | trans }}</p>
         <p class="label">{{ 'page.descriptionPara03' | trans }}</p>
-        <p class="label">{{ 'page.descriptionPara04' | trans }}</p>
+        <p class="label">{{ 'page.descriptionPara04.pre' | trans }}
+            <a href= '{{ standardsLink }}' class="govuk-link" rel="noreferrer noopener" target="_blank">{{ 'page.descriptionPara04.link' | trans }}</a>
+            {{ 'page.descriptionPara04.post' | trans }}
+        </p>
 
         <dl class="labelvalue">
             <dt class="label">{{ 'declaration' | trans }}</dt>

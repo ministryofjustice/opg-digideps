@@ -19,7 +19,7 @@ trait FixturesTrait
     public array $sameLastNameUserDetails = [];
     public ?UserDetails $twoReportsUserDetails = null;
     public ?UserDetails $oneReportsUserDetails = null;
-    
+
     public ?UserDetails $interactingWithUserDetails = null;
     private UserTestHelper $userTestHelper;
 
@@ -218,29 +218,28 @@ trait FixturesTrait
     public function theUserHasPermissionsAndAnotherUserExistsWithinTheSameOrganisation(string $adminPermissions)
     {
         $setExistingUserFixture = $this->setExistingUser($adminPermissions);
-        
+
         $existingUser = $this->interactingWithUserDetails = $setExistingUserFixture;
         $emailIdentifier = $existingUser->getOrganisationEmailIdentifier();
-        
+
         $newUserEmail = sprintf('%s-%s@t.uk', substr(User::ROLE_PROF_TEAM_MEMBER, 5), $this->testRunId);
-        
+
         $newUser = $this->fixtureHelper->createAndPersistUser(User::ROLE_PROF_TEAM_MEMBER, $newUserEmail);
-        
+
         $organisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($emailIdentifier);
-        
+
         $organisation->addUser($newUser);
-        
+
         $this->em->persist($organisation);
         $this->em->flush();
     }
-    
-    private function setExistingUser(string $adminPermissions){
-        
-        if($adminPermissions === 'admin'){
+
+    private function setExistingUser(string $adminPermissions)
+    {
+        if ('admin' === $adminPermissions) {
             return $this->profAdminCombinedHighNotStartedDetails;
         } else {
             return $this->profTeamDeputyNotStartedHealthWelfareDetails;
         }
     }
-
 }

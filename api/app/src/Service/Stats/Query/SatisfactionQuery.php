@@ -27,6 +27,7 @@ class SatisfactionQuery extends Query
             END deputyType,
             COALESCE(report_type, 'none') reportType,
             s.score val
-        FROM satisfaction s";
+        FROM satisfaction s
+        WHERE (s.report_id IS NOT NULL OR s.ndr_id IS NOT NULL)";
     }
 }

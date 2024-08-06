@@ -19,8 +19,8 @@ on:
       push_to_ecr:
         description: "Whether to push to ECR"
         required: false
-        default: "true"
-        type: string
+        default: true
+        type: boolean
 
 jobs:
   docker_build_scan_push:
@@ -42,7 +42,7 @@ jobs:
             sub_folder: "."
             docker_file: "api/docker/app/Dockerfile"
           - svc_name: "sync"
-            sub_folder: "sync"
+            sub_folder: "orchestration"
             docker_file: "Dockerfile"
           - svc_name: "htmltopdf"
             sub_folder: "."
@@ -57,7 +57,7 @@ jobs:
             sub_folder: "lambdas/functions/synchronisation"
             docker_file: "Dockerfile"
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
@@ -70,7 +70,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # pin@v3.0.8
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -84,7 +84,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
@@ -92,12 +92,12 @@ jobs:
           aws-region: eu-west-1
 
       - name: download resources artifact
-        uses: actions/download-artifact@bb3fa7fd35ab8113a980912eb9f59b846d14e3ff
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: web-distribution
           path: client/resources/public
         if: |
-          (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver')
+          (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver' || matrix.svc_name == 'htmltopdf')
 
       - name: build docker image
         env:
@@ -155,7 +155,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@f986655ecef85e2a62d24a84b084653c5374a452 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@c63052874af2ca5497434ed1bac4df2c2392703f # pin@v1.5.1
         with:
           registries: 311462405659
 
@@ -172,7 +172,7 @@ jobs:
           IMAGE_TAG: ${{ inputs.tag }}
           IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
-          export IMAGE_TAG_DEV="development-$(echo $IMAGE_TAG | awk -F'-' '{print $2}')"
+          export IMAGE_TAG_DEV="development-${IMAGE_TAG}"
           docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
 
       - name: tag and push container
@@ -186,5 +186,6 @@ jobs:
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
           if [[ "${BRANCH_NAME}" == "main" ]]; then
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
+            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
           fi
           docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME

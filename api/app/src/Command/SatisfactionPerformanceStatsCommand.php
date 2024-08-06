@@ -66,7 +66,7 @@ class SatisfactionPerformanceStatsCommand extends Command
                     '_timestamp' => $statsStartDate.'T00:00:00+00:00',
                     'service' => 'deputy-reporting',
                     'channel' => 'digital',
-                    'count' => $satisfactionScoreRow,
+                    'count' => intval($satisfactionScoreRow),
                     'dataType' => str_replace('-', '_', $satisfactionScoreKey),
                     'period' => 'month',
                 ];

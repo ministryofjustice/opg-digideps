@@ -18,6 +18,7 @@ class RespondentsQuery extends Query
     {
         return 'SELECT
             s.created_at date
-        FROM satisfaction s';
+        FROM satisfaction s
+        WHERE (s.report_id IS NOT NULL OR s.ndr_id IS NOT NULL)';
     }
 }

@@ -11,25 +11,34 @@ jobs:
   client-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
 
       - name: download resources artifact
-        uses: actions/download-artifact@bb3fa7fd35ab8113a980912eb9f59b846d14e3ff
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: web-distribution
           path: client/resources/public
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # pin@v3.0.8
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-client-unit-tests-build-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-client-unit-tests-build
+
+      - name: check for raw tags in twig templates
+        run: |
+          if [[ $(grep -r '|.*raw' | wc -l) -gt 0 ]]
+            then
+            echo "Check failed: 'raw' tags found in twig templates. Remove them ..."
+            exit 1
+          fi
+        working-directory: client/app/templates
 
       - name: build docker image
         run: |
@@ -44,14 +53,14 @@ jobs:
       - name: run client unit tests
         id: unit-tests
         run: |
-          APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d --no-deps client-unit-tests pact-mock
+          APP_ENV=dev APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d --no-deps client-unit-tests pact-mock
           sleep 3
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chown root /tmp/commonpasswords.txt
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests sh scripts/client-unit-tests.sh
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chown root /tmp/commonpasswords.txt
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests sh scripts/client-unit-tests.sh
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
           docker cp "client-unit-tests-app:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml down
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml down
 
       - name: Move cache
         run: |
@@ -59,13 +68,13 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: archive pact results
-        uses: actions/upload-artifact@1eb3cb2b3e0f29609092a73eb033bb759a334595 # pin@v3.1.0
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # pin@v3.1.0
         with:
           name: pact.json
           path: pact.json
 
       - name: archive test results
-        uses: actions/upload-artifact@1eb3cb2b3e0f29609092a73eb033bb759a334595 # pin@v3.1.0
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # pin@v3.1.0
         with:
           name: client-unit-tests
           path: client-unit-tests.xml

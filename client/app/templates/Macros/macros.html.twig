@@ -231,8 +231,43 @@
             <div class="opg-alert opg-alert--success">
                 {{ _self.icon('tick', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body govuk-!-margin-bottom-0">{{ message | raw }}</p>
+                    <div class="behat-region-alert-message opg-alert__message">
+                        <p class="govuk-body govuk-!-margin-bottom-0">{{ message }}</p>
+                    </div>
                 </div>
+            </div>
+        {% elseif alertType == 'preRegFixture' %}
+            <div class="opg-alert opg-alert--success">
+                {{ _self.icon('tick', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    <p class="govuk-body">Created PreRegistration {% if message.coDeputyLastName is defined %} entries {% else %} entry {% endif %}</p>
+                    <p class="govuk-body">{{ 'alert.instructions' | trans({}, 'admin-fixtures') }}</p>
+                    <ul>
+                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{message.caseNumber}}</strong></li>
+                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.clientLastName' | trans({}, 'admin-fixtures') }}: <strong>{{message.clientLastName}}</strong></li>
+                        <br/>
+                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{message.deputyFirstName}}</strong></li>
+                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{message.deputyLastName}}</strong></li>
+                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ message.deputyPostCode }}</strong></li>
+                        {% if message.coDeputyLastName is defined %}
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyFirstName }}</strong></li>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyLastName }}</strong></li>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyPostCode }}</strong></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% elseif alertType == 'courtOrderFixture' %}
+            <div class="opg-alert opg-alert--success">
+                {{ _self.icon('tick', 'opg-alert__icon') }}
+                <p class="govuk-body">Created fixture {{ message.deputies|length > 1 ? 'deputies' : 'deputy' }}:</p>
+                <p class="govuk-body">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{ message.caseNumber}}</strong></p>
+
+                <ul>
+                    {% for deputy in message.deputies %}
+                        <li>{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ deputy.email }}</strong></li>
+                    {% endfor %}
+                </ul>
             </div>
         {% elseif alertType == 'important' %}
             <div class="opg-alert opg-alert--important">

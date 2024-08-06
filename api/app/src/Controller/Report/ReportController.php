@@ -63,7 +63,7 @@ class ReportController extends RestController
         EntityManagerInterface $em,
         AuthService $authService,
         RestFormatter $formatter,
-        ParameterStoreService $parameterStoreService
+        ParameterStoreService $parameterStoreService,
     ) {
         $this->updateHandlers = $updateHandlers;
         $this->repository = $repository;
@@ -343,7 +343,9 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
             // end date could be updated automatically with a listener, but better not to overload
             // the default behaviour until the logic is 100% clear
-            $report->updateDueDateBasedOnEndDate();
+
+            // update due date if reporting period changes
+            $report->setDueDate(ReportService::updateDueDateBasedOnEndDate($report->getEndDate(), $report->isLayReport()));
         }
 
         if (array_key_exists('report_seen', $data)) {
@@ -429,7 +431,7 @@ class ReportController extends RestController
                 Report::SECTION_MONEY_IN,
             ]);
         }
-      
+
         if (array_key_exists('money_out_exists', $data)) {
             $report->setMoneyOutExists($data['money_out_exists']);
             $report->updateSectionsStatusCache([

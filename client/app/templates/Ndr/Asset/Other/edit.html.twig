@@ -11,7 +11,7 @@
     {% set assetTitle = asset.title | lcfirst %}
 {% endif %}
 
-{% set transOptions = {'%client%': ndr.client.firstname | e, '%assetTitle%': assetTitle } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags, '%assetTitle%': assetTitle } %}
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'editPage.pageTitle' | trans(transOptions) }}{% endblock %}

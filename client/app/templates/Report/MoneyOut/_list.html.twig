@@ -2,7 +2,7 @@
 
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
@@ -55,22 +55,26 @@
     {% endif %}
 </dl>
 
-{% if (report.moneyOutExists == 'Yes') and (report.moneyTransactionsOut | length > 0) %}
+{% if report.moneyOutExists == 'Yes' %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            <h2 class="govuk-heading-l">{{ 'summaryPage.moneyOut.listOfMoneyOuts' | trans(transOptions) }}</h2>
-        </div>
-        <div class="govuk-grid-column-one-half text--right">
-            {% if not hideEditLink  %}
-                <a href="{{ path('money_out_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
-                    <strong>
-                        <span class="icon icon-plus"></span>
-                        {{ 'summaryPage.moneyOut.addPayment' | trans(transOptions) }}
-                    </strong>
-                </a>
+        {% if report.moneyTransactionsOut | length > 0 %}
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-l">{{ 'summaryPage.moneyOut.listOfMoneyOuts' | trans(transOptions) }}
+                </h2>
+            </div>
+        {% endif %}
+        <div class="govuk-grid-column-two-half text--right">
+            {% if not hideEditLink %}
+            <a href="{{ path('money_out_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                <strong>
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.moneyOut.addPayment' | trans(transOptions) }}
+                </strong>
+            </a>
             {% endif %}
         </div>
     </div>
+{% endif %}
 
     {% for groupId, groupData in report.groupMoneyTransactionsByGroup(report.moneyTransactionsOut) %}
         <h3 class="govuk-heading-m">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
@@ -153,8 +157,9 @@
         </table>
     {% endfor %}
 
-    {# Total money in #}
-    <div class="govuk-heading-m text--right">
-        {{ 'summaryPage.moneyOut.totalValue' | trans({ '%value%': (report.moneyOutTotal | money_format) }) }}
-    </div>
-{% endif %}
+    {% if (report.moneyOutExists == 'Yes') and (report.moneyTransactionsOut | length > 0) %}
+        {# Total money out #}
+        <div class="govuk-heading-m text--right">
+            {{ 'summaryPage.moneyOut.totalValue' | trans({ '%value%': (report.moneyOutTotal | money_format) }) }}
+        </div>
+    {% endif %}

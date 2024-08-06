@@ -26,6 +26,7 @@
             <directory>./EventListener</directory>
             <directory>./EventSubscriber</directory>
             <directory>./Form</directory>
+            <directory>./Logger</directory>
             <directory>./Mapper</directory>
             <directory>./Model</directory>
             <directory>./Resolver</directory>

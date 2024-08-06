@@ -12,7 +12,10 @@ page:
       intro: "I am submitting this report as either:"
       option1: "a deputy, and on behalf of any other deputies named in the court order (unless I have stated otherwise and provided reasons)"
       option2: "someone authorised by the named deputies, and confirm they are aware of the contents of this report"
-  declarationTerms04: "I confirm I have had regard to the Mental Capacity Act 2005, its Code of Practice and the court order in this case. I understand the duties and obligations placed on me."
+  declarationTerms04:
+    pre: "I confirm I have had regard to the Mental Capacity Act 2005, its Code of Practice, the "
+    link: "Deputy standards (opens in new tab)"
+    post: ", and the court order in this case. I understand the duties and obligations placed on me."
   reportSubmittedFlashMessage: "The report has been submitted."
   goBackLink: "Go back to make changes to the report"
 agree:

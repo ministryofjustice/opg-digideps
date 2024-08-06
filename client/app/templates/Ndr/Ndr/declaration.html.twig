@@ -3,6 +3,7 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "ndr-declaration" %}
+{% set standardsLink = app.user.getStandardsLink %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -36,7 +37,10 @@
         <p class="govuk-body">{{ 'page.descriptionPara01' | trans }}</p>
         <p class="govuk-body">{{ 'page.descriptionPara02' | trans }}</p>
         <p class="govuk-body">{{ 'page.descriptionPara03' | trans }}</p>
-        <p class="govuk-body">{{ 'page.descriptionPara04' | trans }}</p>
+        <p class="govuk-body">{{ 'page.descriptionPara04.pre' | trans }}
+            <a href= '{{ standardsLink }}' class="govuk-link" rel="noreferrer noopener" target="_blank">{{ 'page.descriptionPara04.link' | trans }}</a>
+            {{ 'page.descriptionPara04.post' | trans }}
+        </p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

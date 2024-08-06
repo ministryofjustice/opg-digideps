@@ -403,7 +403,7 @@ trait ReportSubmissionTrait
         $report = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
         $this->em->refresh($report);
         $document = $report->getDeputyDocuments()->first();
-        var_dump(count($report->getDocuments()));
+
         $document->setFileName('good-heic.heic');
 
         $this->em->persist($document);

@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 
 {% set page = 'checklistPage' %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags } %}
 {% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}

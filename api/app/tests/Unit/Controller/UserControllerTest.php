@@ -92,6 +92,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('s', $user->getLastname());
         $this->assertEquals('n.s@example.org', $user->getEmail());
         $this->assertEquals($loggedInUser->getId(), $user->getCreatedBy()->getId(), sprintf('The User that created this user was not as expected. Wanted user with ID: %s, Got: %g', $this->loggedInUserId, $user->getCreatedBy() ? $user->getCreatedBy()->getId() : null));
+        $this->assertEquals(User::ADMIN_INVITE, $user->getRegistrationRoute());
     }
 
     public function testUpdateAuth()

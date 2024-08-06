@@ -1,0 +1,124 @@
+name: "[Scheduled] Run test restores on Integration"
+
+on:
+  schedule:
+    # 2pm every Saturday
+    - cron: "0 14 * * 6"
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  restore_to_point_in_time:
+    runs-on: ubuntu-latest
+    name: restore to a point in time
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+
+      - name: install python
+        uses: actions/setup-python@04c1311429f7be71707d8ab66c7af8a14e54b938 # pin@v4.2.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
+        with:
+          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-preproduction"
+          role-session-name: github-actions-terraform-run-task
+          role-duration-seconds: 7200
+          aws-region: eu-west-1
+
+      - name: install requirements
+        id: requirements
+        run: pip install -r requirements.txt
+        working-directory: disaster-recovery/restore
+
+      - name: restore to a point in time
+        id: restore
+        run: |
+          export TEN_MINS_AGO=$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')
+          python3 database_restore.py \
+          --environment preproduction \
+          --cluster_from api-integration \
+          --pitr "${TEN_MINS_AGO}"
+        working-directory: disaster-recovery/restore
+
+  restore_from_remote_backup:
+    runs-on: ubuntu-latest
+    name: restore from cross account backup
+    needs:
+      - restore_to_point_in_time
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+
+      - name: install python
+        uses: actions/setup-python@04c1311429f7be71707d8ab66c7af8a14e54b938 # pin@v4.2.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
+        with:
+          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-preproduction"
+          role-session-name: github-actions-terraform-run-task
+          role-duration-seconds: 7200
+          aws-region: eu-west-1
+
+      - name: install requirements
+        id: requirements
+        run: pip install -r requirements.txt
+        working-directory: disaster-recovery/restore
+
+      - name: get latest integration snapshot id
+        id: snapshot
+        run: |
+          export SNAPSHOT_ID=$(python get_cross_acct_snapshot.py)
+          echo "snapshot_id=${SNAPSHOT_ID}" >> $GITHUB_OUTPUT
+        working-directory: disaster-recovery/restore
+
+      - name: restore from remote backup
+        id: restore
+        env:
+          SNAPSHOT_ID: ${{ steps.snapshot.outputs.snapshot_id }}
+        run: |
+          python database_restore.py \
+          --environment preproduction \
+          --cluster_from api-integration \
+          --restore_from_remote True \
+          --snapshot_id ${SNAPSHOT_ID}
+        working-directory: disaster-recovery/restore
+
+  slack_notify_success:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - restore_from_remote_backup
+    with:
+      success: yes
+      branch: integration
+      account: 248804316466
+    secrets: inherit
+
+  slack_notify_failure:
+    name: notify of failure
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - restore_from_remote_backup
+    with:
+      success: no
+      branch: integration
+      account: 248804316466
+    secrets: inherit

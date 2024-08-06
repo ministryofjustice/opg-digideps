@@ -1,6 +1,6 @@
 {% set translationDomain = "ndr-actions" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+{% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
 
 
 <h2 class="govuk-heading-l">{{ 'stepPage.gifts.pageTitle' | trans(transOptions) }}</h2>

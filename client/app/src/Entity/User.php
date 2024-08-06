@@ -78,9 +78,14 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public const ACTIVATE_TOKEN_EXPIRE_HOURS = 48;
     public const PASSWORD_TOKEN_EXPIRE_HOURS = 1;
 
+    public const SELF_REGISTER = 'SELF_REGISTER';
+    public const ADMIN_INVITE = 'ADMIN_INVITE';
+    public const ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
+    public const CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
+    public const UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
+
     /**
      * @JMS\Type("integer")
-     *
      * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
      *
      * @var int
@@ -89,18 +94,14 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add",
-     *     "admin_add_user", "ad_add_user", "admin_edit_user"})
-     *
+     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user", "codeputy", "codeputy_invite"})
      * @Assert\NotBlank( message="user.firstname.notBlankOtherUser",
      *     groups={"org_team_add", "user_details_org", "admin_add_user", "ad_add_user", "user_details_basic", "codeputy",
-     *     "user_details_full", "verify-codeputy", "admin_edit_user"
+     *     "user_details_full", "verify-codeputy", "admin_edit_user", "codeputy_invite"
      * } )
-     *
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
-     *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org",
-     *             "org_team_add", "verify-codeputy", "admin_edit_user"} )
+     * groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org",
+     * "org_team_add", "verify-codeputy", "admin_edit_user", "codeputy_invite"} )
      *
      * @var string
      */
@@ -108,15 +109,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user"})
-     *
+     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user", "codeputy", "codeputy_invite"})
      * @Assert\NotBlank(message="user.lastname.notBlankOtherUser",
      *     groups={"admin_add_user","ad_add_user","user_details_basic","user_details_full","org_team_add",
-     *     "user_details_org", "verify-codeputy", "admin_edit_user"
+     *     "user_details_org", "verify-codeputy", "admin_edit_user", "codeputy_invite"
      * } )
-     *
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user", "codeputy_invite"} )
      *
      * @var string
      */
@@ -124,15 +122,10 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"admin_add_user", "ad_add_user", "org_team_add", "user_details_full", "user_details_org", "codeputy", "admin_edit_user"})
-     *
      * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_org", "org_team_add", "password_reset", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"} )
-     *
      * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"},   )
-     *
      * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"} )
-     *
      * @EmailSameDomain( message="user.email.invalidDomain", groups={"email_same_domain"})
      *
      * @var string
@@ -141,15 +134,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password", "user_change_password"} )
-     *
      * @Assert\Length( min=14, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password", "user_change_password"} )
-     *
      * @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password", "user_change_password" } )
      * @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password", "user_change_password" } )
      * @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
-     *
      * @CommonPassword(message="user.password.notCommonPassword", groups={"user_set_password", "user_change_password"})
      *
      * @var string
@@ -172,9 +161,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"admin_add_user", "ad_add_user", "org_team_add", "user_details_org"})
-     *
      * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
      * @Assert\NotBlank( message="user.role.notBlankPa", groups={"org_team_role_name"} )
      *
@@ -191,7 +178,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
      * @JMS\Groups({"user"})
      *
      * @var \DateTime|null
@@ -200,7 +186,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"registrationToken"})
      *
      * @var string|null
@@ -209,7 +194,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
      * @JMS\Groups({"registrationToken"})
      *
      * @var \DateTime|null
@@ -225,11 +209,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     *
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
@@ -238,9 +219,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string|null
@@ -249,9 +228,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string|null
@@ -260,9 +237,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string|null
@@ -271,9 +246,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string|null
@@ -282,11 +255,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org", "admin_add_user", "ad_add_user", "admin_edit_user"})
-     *
      * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy", "admin_edit_user"} )
-     *
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy", "admin_edit_user", "admin_add_user"} )
      *
      * @var string
@@ -295,9 +265,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
@@ -306,11 +274,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "user_details_org", "org_team_add"})
-     *
      * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     *
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_org", "org_team_add", "verify-codeputy"} )
      *
      * @var string
@@ -319,9 +284,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
-     *
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
      *
      * @var string|null
@@ -330,7 +293,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
      * @JMS\Groups({"lastLoggedIn"})
      *
      * @var \DateTime|null
@@ -345,8 +307,14 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $deputyNo;
 
     /**
-     * @JMS\Type("boolean")
+     * @var int
      *
+     * @JMS\Type("integer")
+     */
+    private $deputyUid;
+
+    /**
+     * @JMS\Type("boolean")
      * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
      *
      * @var bool|null
@@ -357,16 +325,13 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var bool|null
      *
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"ad_managed", "ad_add_user"})
      */
     private $adManaged;
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_org", "org_team_add"})
-     *
      * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_org"} )
      *
      * @var string|null
@@ -377,9 +342,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var bool
      *
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"agree_terms_use", "update_terms_use"})
-     *
      * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
      */
     private $agreeTermsUse;
@@ -400,7 +363,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("array<App\Entity\Organisation>")
-     *
      * @JMS\Groups({"user_organisations"})
      *
      * @var ArrayCollection
@@ -409,7 +371,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("int")
-     *
      * @JMS\Groups({"user"})
      *
      * @var int
@@ -418,14 +379,12 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
      **/
     private ?string $authToken = null;
 
     /**
      * @JMS\Type("App\Entity\User")
-     *
      * @JMS\Groups({"user"})
      *
      * @var User
@@ -434,7 +393,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("bool")
-     *
      * @JMS\Groups({"user"})
      *
      * @var bool
@@ -443,12 +401,29 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("bool")
-     *
      * @JMS\Groups({"user"})
      *
      * @var bool
      */
     private $createdByCaseManager;
+
+    /**
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @var \DateTime|null
+     */
+    private $preRegisterValidatedDate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"user"})
+     */
+    private $registrationRoute;
 
     public function __construct()
     {
@@ -546,7 +521,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @return string $password
      */
-    public function getPassword(): null|string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -616,11 +591,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param \DateTime $registrationDate
-     *
      * @return User
      */
-    public function setRegistrationDate(\DateTime $registrationDate = null)
+    public function setRegistrationDate(?\DateTime $registrationDate = null)
     {
         $this->registrationDate = $registrationDate;
 
@@ -893,10 +866,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->lastLoggedIn;
     }
 
-    /**
-     * @param \DateTime $lastLoggedIn
-     */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
     }
@@ -910,13 +880,23 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @param mixed $deputyNo
-     *
      * @return $this
      */
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): ?int
+    {
+        return $this->deputyUid;
+    }
+
+    public function setDeputyUid(?int $deputyUid): User
+    {
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }
@@ -1419,6 +1399,56 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function setAuthToken(?string $authToken): User
     {
         $this->authToken = $authToken;
+
+        return $this;
+    }
+
+    public function getStandardsLink(): string
+    {
+        $standardsLink = '';
+
+        if ($this->isLayDeputy()) {
+            $standardsLink = 'https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies';
+        } elseif ($this->isDeputyPa()) {
+            $standardsLink = 'https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-public-authority-deputies/guidance-for-public-authority-deputies';
+        } elseif ($this->isDeputyProf()) {
+            $standardsLink = 'https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-professional-deputies/guidance-for-professional-deputies';
+        }
+
+        return $standardsLink;
+    }
+
+    /**
+     * @return User
+     */
+    public function setPreRegisterValidatedDate(?\DateTime $preRegisterValidatedDate = null)
+    {
+        $this->preRegisterValidatedDate = $preRegisterValidatedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get preRegisterValidatedDate.
+     *
+     * @return ?\DateTime
+     */
+    public function getPreRegisterValidatedDate(): ?\DateTime
+    {
+        return $this->preRegisterValidatedDate;
+    }
+
+    public function getRegistrationRoute(): string
+    {
+        return $this->registrationRoute;
+    }
+
+    /**
+     * @param string $registrationRoute
+     */
+    public function setRegistrationRoute($registrationRoute): User
+    {
+        $this->registrationRoute = $registrationRoute;
 
         return $this;
     }

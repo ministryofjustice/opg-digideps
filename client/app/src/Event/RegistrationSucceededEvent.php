@@ -9,21 +9,23 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class RegistrationSucceededEvent extends Event
 {
-    public const NAME = 'registration.succeeded';
+    public const DEPUTY = 'deputy.registration.succeeded';
 
-    public function __construct(private User $registeredDeputy)
+    public const ADMIN = 'admin.registration.succeeded';
+
+    public function __construct(private User $registeredUser)
     {
-        $this->setRegisteredDeputy($this->registeredDeputy);
+        $this->setRegisteredUser($this->registeredUser);
     }
 
-    public function getRegisteredDeputy(): User
+    public function getRegisteredUser(): User
     {
-        return $this->registeredDeputy;
+        return $this->registeredUser;
     }
 
-    public function setRegisteredDeputy(User $registeredDeputy): self
+    public function setRegisteredUser(User $registeredUser): self
     {
-        $this->registeredDeputy = $registeredDeputy;
+        $this->registeredUser = $registeredUser;
 
         return $this;
     }

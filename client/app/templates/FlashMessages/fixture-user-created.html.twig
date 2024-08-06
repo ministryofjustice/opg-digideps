@@ -1,8 +1,0 @@
-<p class="govuk-body">Created fixture {{ deputies|length > 1 ? 'deputies' : 'deputy' }}:</p>
-<p class="govuk-body">Case number: <strong>{{ caseNumber }}</strong></p>
-
-<ul>
-    {% for deputy in deputies %}
-        <li>Email: <strong>{{ deputy.email }}</strong></li>
-    {% endfor %}
-</ul>

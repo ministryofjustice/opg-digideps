@@ -2,10 +2,11 @@ name: "[Scheduled] Cleanup PR Workspaces"
 
 on:
   schedule:
-    # 10pm every day except Sundays
+    # 9pm every day except Sundays
     - cron: "0 21 * * 0-6"
 
 permissions:
+  id-token: write
   contents: read
   security-events: none
   pull-requests: none
@@ -21,24 +22,17 @@ jobs:
   terraform_environment_cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 
-      - name: parse terraform version
-        id: tf_version_setup
-        run: |
-          if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
-            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
-            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
-          fi
-        working-directory: terraform/environment
-
-      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-
-      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.6
         with:
-          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_directory: terraform/environment
+
+      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
       - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
@@ -46,7 +40,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
           role-session-name: github-actions-terraform
@@ -55,7 +49,7 @@ jobs:
 
       - name: install workspace manager
         run: |
-          wget https://github.com/TomTucka/terraform-workspace-manager/releases/download/v0.3.0/terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.2/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
           sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
           sudo chmod +x /usr/local/bin/terraform-workspace-manager
 
@@ -68,3 +62,30 @@ jobs:
           unset TF_WORKSPACE
           ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
         working-directory: terraform/environment
+
+      - name: install python
+        uses: actions/setup-python@04c1311429f7be71707d8ab66c7af8a14e54b938 # pin@v4.2.0
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: clean up old task definitions
+        env:
+          REGION: eu-west-1
+        run: |
+          pip install -r requirements.txt
+          python cleanup_task_definitions.py
+        working-directory: scripts/pipeline/cleanup_task_definitions
+
+  slack_notify_failure:
+    name: notify of failure
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - terraform_environment_cleanup
+    with:
+      success: no
+      branch: main
+      account: 454262938596
+      scheduled_task: "Environment Cleanup"
+    secrets: inherit

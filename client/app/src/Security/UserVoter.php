@@ -10,16 +10,15 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
-    const DELETE_USER = 'delete-user';
-    const EDIT_USER = 'edit-user';
-    const ADD_USER = 'add-user';
-    const CAN_ADD_USER = 'can-add-user';
+    public const DELETE_USER = 'delete-user';
+    public const EDIT_USER = 'edit-user';
+    public const ADD_USER = 'add-user';
+    public const CAN_ADD_USER = 'can-add-user';
 
     /**
      * Does this voter support the attribute?
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -40,7 +39,6 @@ class UserVoter extends Voter
      * Vote on whether to grant attribute permission on subject.
      *
      * @param string $attribute
-     * @param mixed  $subject
      *
      * @return bool
      */
@@ -147,9 +145,9 @@ class UserVoter extends Voter
             case User::ROLE_PA:
             case User::ROLE_PA_NAMED:
                 if (
-                    $subject->hasAdminRole() ||
-                    $subject->isLayDeputy() ||
-                    $subject->isDeputyProf()
+                    $subject->hasAdminRole()
+                    || $subject->isLayDeputy()
+                    || $subject->isDeputyProf()
                 ) {
                     return false;
                 }
@@ -158,9 +156,9 @@ class UserVoter extends Voter
             case User::ROLE_PROF:
             case User::ROLE_PROF_NAMED:
                 if (
-                    $subject->hasAdminRole() ||
-                    $subject->isLayDeputy() ||
-                    $subject->isDeputyPa()
+                    $subject->hasAdminRole()
+                    || $subject->isLayDeputy()
+                    || $subject->isDeputyPa()
                 ) {
                     return false;
                 }
@@ -168,11 +166,11 @@ class UserVoter extends Voter
                 return true;
             case User::ROLE_PA_ADMIN:
                 if (
-                    $subject->hasAdminRole() ||
-                    $subject->isLayDeputy() ||
-                    $subject->isPaNamedDeputy() ||
-                    $subject->isPaTopRole() ||
-                    $subject->isDeputyProf()
+                    $subject->hasAdminRole()
+                    || $subject->isLayDeputy()
+                    || $subject->isPaNamedDeputy()
+                    || $subject->isPaTopRole()
+                    || $subject->isDeputyProf()
                 ) {
                     return false;
                 }
@@ -180,11 +178,11 @@ class UserVoter extends Voter
                 return true;
             case User::ROLE_PROF_ADMIN:
                 if (
-                    $subject->hasAdminRole() ||
-                    $subject->isLayDeputy() ||
-                    $subject->isProfNamedDeputy() ||
-                    $subject->isProfTopRole() ||
-                    $subject->isDeputyPa()
+                    $subject->hasAdminRole()
+                    || $subject->isLayDeputy()
+                    || $subject->isProfNamedDeputy()
+                    || $subject->isProfTopRole()
+                    || $subject->isDeputyPa()
                 ) {
                     return false;
                 }

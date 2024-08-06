@@ -4,8 +4,8 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
-use App\Entity\NamedDeputy;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\RegistrationSucceededEvent;
@@ -24,6 +24,7 @@ use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
+use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
@@ -51,7 +52,7 @@ class ReportController extends AbstractController
         'balance-state',
         'client',
         'client-benefits-check',
-        'client-named-deputy',
+        'client-deputy',
         'contact',
         'debt',
         'debts',
@@ -104,7 +105,8 @@ class ReportController extends AbstractController
         private PreRegistrationApi $preRegistrationApi,
         private FormFactoryInterface $formFactory,
         private TranslatorInterface $translator,
-        private ObservableEventDispatcher $eventDispatcher
+        private ObservableEventDispatcher $eventDispatcher,
+        private S3Storage $s3Storage
     ) {
     }
 
@@ -230,7 +232,7 @@ class ReportController extends AbstractController
             $this->restClient->post('report', $form->getData());
 
             $user = $this->userApi->getUserWithData();
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::NAME);
+            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
 
             return $this->redirect($this->generateUrl('homepage'));
         }
@@ -245,7 +247,7 @@ class ReportController extends AbstractController
      *
      * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore)
+    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore, Request $request)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -262,8 +264,8 @@ class ReportController extends AbstractController
         /** @var Client */
         $client = $this->generateClient($user, $clientId);
 
-        /** @var NamedDeputy */
-        $namedDeputy = $client->getNamedDeputy();
+        /** @var Deputy */
+        $deputy = $client->getDeputy();
 
         $activeReportId = null;
         if ($user->isDeputyOrg()) {
@@ -294,7 +296,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'namedDeputy' => $namedDeputy,
+            'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
@@ -346,8 +348,8 @@ class ReportController extends AbstractController
         if ($user->isLayDeputy()) {
             $jms[] = 'client-users';
         } elseif ($user->isDeputyOrg()) {
-            $jms[] = 'client-named-deputy';
-            $jms[] = 'named-deputy';
+            $jms[] = 'client-deputy';
+            $jms[] = 'deputy';
         }
 
         return $jms;
@@ -371,7 +373,7 @@ class ReportController extends AbstractController
             throw new ReportNotSubmittableException($message);
         }
 
-        $deputy = $report->getClient()->getNamedDeputy();
+        $deputy = $report->getClient()->getDeputy();
 
         if (is_null($deputy)) {
             $deputy = $this->userApi->getUserWithData();
@@ -442,7 +444,7 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Report/Report/review.html.twig")
      *
-     * @return array
+     * @return RedirectResponse
      *
      * @throws \Exception
      */
@@ -462,6 +464,15 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
+        if (!$report->isSubmitted()) {
+            // Redirect deputy to doc re-upload page if docs do not exist in S3
+            $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
+
+            if (!empty($documentsNotInS3)) {
+                return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            }
+        }
+
         return [
             'user' => $this->getUser(),
             'report' => $report,
@@ -469,6 +480,38 @@ class ReportController extends AbstractController
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
         ];
+    }
+
+    private function checkIfDocumentsExistInS3($report)
+    {
+        // Retrieve document storage reference numbers and store in array
+        $documentIds = [];
+        foreach ($report->getDeputyDocuments() as $document) {
+            $documentIds[] = $document->getId();
+        }
+
+        $documentStorageReferences = [];
+        foreach ($documentIds as $documentId) {
+            $documentStorageReferences[] = $this->restClient->get(
+                sprintf('document/%s', $documentId),
+                'Report\Document',
+                ['document-storage-reference']
+            )->getStorageReference();
+        }
+
+        // call Document Service and check if documents exist in the S3 bucket
+        $documentsNotInS3 = [];
+
+        // loop through references and check if they exist in S3, as soon as a file is not found in S3 redirect to re-uploads page
+        if (!empty($documentStorageReferences)) {
+            foreach ($documentStorageReferences as $docStorageReference) {
+                if (!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
+                    $documentsNotInS3[] = $docStorageReference;
+                }
+            }
+        }
+
+        return $documentsNotInS3;
     }
 
     /**

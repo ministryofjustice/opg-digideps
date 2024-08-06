@@ -60,7 +60,10 @@ resource "aws_ecs_service" "admin" {
     rollback = false
   }
 
-  depends_on = [aws_lb_listener.admin]
+  depends_on = [
+    aws_lb_listener.admin,
+    aws_ecs_service.api
+  ]
 }
 
 locals {

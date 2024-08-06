@@ -7,8 +7,8 @@ Feature: Money Out
         And I visit the report overview page
         Then I should see "money-out" as "not started"
         When I view and start the money out report section
-        And I confirm "Yes" to taking money out on the clients behalf 
-        Then I select from the money out payment options  
+        And I confirm "Yes" to taking money out on the clients behalf
+        Then I select from the money out payment options
         And I try to save and continue without adding a payment
         Then I should see correct money out validation message
 
@@ -89,3 +89,33 @@ Feature: Money Out
         And I confirm "No" to taking money out on the clients behalf
         And I enter a reason for no money out
         Then I should see the expected results on money out summary page
+
+
+    @lay-pfa-high-not-started
+    Scenario: Transaction items over £1k are restored when user accidentally changes answer to reporting no money out
+        Given a Lay Deputy has not started a report
+        When I view and start the money out report section
+        And I confirm "Yes" to taking money out on the clients behalf
+        Then I select from the money out payment options
+        And I add the Fees charged by a solicitor, accountant or other professional payment
+        Then the money out summary page should contain "1" money in values
+        When I edit the money out exist summary section
+        And I confirm "No" to taking money out on the clients behalf
+        And I enter a reason for no money out
+        Then the money out summary page should contain "no" money in values
+        Then I edit the money out exist summary section
+        And I confirm "Yes" to taking money out on the clients behalf
+        Then the money out summary page should contain "1" money in values
+
+    @lay-pfa-high-not-started
+    Scenario: A user adds a transaction item and then removes it and reports to having no money out then adds a new transaction item
+        Given a Lay Deputy has not started a report
+        When I view and start the money out report section
+        And I confirm "Yes" to taking money out on the clients behalf
+        Then I select from the money out payment options
+        And I add the Fees charged by a solicitor, accountant or other professional payment
+        Then the money out summary page should contain "1" money in values
+        When I delete the money out transaction item from the summary page
+        Then the money out summary page should contain "no" money in values
+        When I add a new money out payment
+        Then the money out summary page should contain "1" money in values

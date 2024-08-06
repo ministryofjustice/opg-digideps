@@ -16,14 +16,15 @@ class SearchType extends AbstractType
             ->add('role_name', FormTypes\ChoiceType::class, [
                 'choices' => array_flip([
                     '' => 'ALL ROLES',
-                    User::ROLE_SUPER_ADMIN => 'Super admin',
+                    User::ROLE_SUPER_ADMIN => 'Super Admin',
+                    User::ROLE_ADMIN_MANAGER => 'Admin Manager',
                     User::ROLE_ADMIN => 'Admin',
                     User::ROLE_LAY_DEPUTY => 'Lay Deputy',
                     User::ROLE_AD => 'Assisted Digital',
-                    'ROLE_PA%' => 'All Public Authority deputies',
-                    User::ROLE_PA_NAMED => 'Public Authority deputies (named) ',
+                    'ROLE_PA%' => 'All Public Authority Deputies',
+                    User::ROLE_PA_NAMED => 'Public Authority Deputies (Named) ',
                     'ROLE_PROF%' => 'All Professional Deputies',
-                    User::ROLE_PROF_NAMED => 'Professional Deputies (named)',
+                    User::ROLE_PROF_NAMED => 'Professional Deputies (Named)',
                 ]),
             ])
             ->add('ndr_enabled', FormTypes\CheckboxType::class)

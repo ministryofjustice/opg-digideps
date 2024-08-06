@@ -79,14 +79,11 @@ class MoneyOutShortController extends AbstractController
 
             if ('Yes' === $answer) {
                 $report->setReasonForNoMoneyOut(null);
-
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyOut']);
 
                 return $this->redirectToRoute('money_out_short_category', ['reportId' => $reportId, 'from' => 'does_money_out_short_exist']);
             } else {
-
                 $this->cleanDataIfAnswerIsChangedFromYesToNo($report);
-
                 $this->restClient->put('report/'.$reportId, $report, ['moneyShortCategoriesOut']);
 
                 return $this->redirectToRoute('no_money_out_short_exists', ['reportId' => $reportId, 'from' => 'does_money_out_short_exist']);
@@ -105,8 +102,8 @@ class MoneyOutShortController extends AbstractController
     private function cleanDataIfAnswerIsChangedFromYesToNo($report): void
     {
         // selected categories in money short category table are set to false
-        foreach($report->getMoneyShortCategoriesOut() as $shortCategories) {
-            if($shortCategories->isPresent()) {
+        foreach ($report->getMoneyShortCategoriesOut() as $shortCategories) {
+            if ($shortCategories->isPresent()) {
                 $shortCategories->setPresent(false);
             }
         }
@@ -209,10 +206,33 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
         $fromSummaryPage = 'summary' == $request->get('from');
 
+        // retrieve soft deleted transaction ids if present and store money out short ids only
+        $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction-short/get-soft-delete', 'array');
+
+        $softDeletedMoneyOutShortTransactionIds = [];
+        foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
+            if ('out' == $softDeletedTransactionId['type']) {
+                $softDeletedMoneyOutShortTransactionIds[] = $softDeletedTransactionId['id'];
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
+
             $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-out-exist']);
+
+            // undelete items if they exist
+            if ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($softDeletedMoneyOutShortTransactionIds)) {
+                foreach ($softDeletedMoneyOutShortTransactionIds as $transactionId) {
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$transactionId, ['transactionSoftDelete']);
+                }
+
+                return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
+            } elseif ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($data->getMoneyTransactionsShortOut()) && 'summary' == $fromSummaryPage) {
+                return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
+            }
+
             switch ($data->getMoneyTransactionsShortOutExist()) {
                 case 'yes':
                     return $this->redirectToRoute('money_out_short_add', ['reportId' => $reportId, 'from' => 'exist']);
@@ -365,27 +385,6 @@ class MoneyOutShortController extends AbstractController
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
-    {
-        $fromPage = $request->get('from');
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutShortState()['state'] && 'skip-step' != $fromPage) {
-            return $this->redirectToRoute('money_out_short', ['reportId' => $reportId]);
-        }
-
-        return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
-            'report' => $report,
-            'status' => $report->getStatus(),
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/money-out-short/new_summary", name="money_out_short_new_summary")
-     * @Template("@App/Report/MoneyOutShort/new_summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function newSummaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

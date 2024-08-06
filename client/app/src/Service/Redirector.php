@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity as EntityDir;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -13,31 +12,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class Redirector
 {
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authChecker;
-
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var string
-     */
-    protected $env;
-
     /**
      * Routes the user can be redirected to, if accessed before timeout.
      *
@@ -59,25 +33,18 @@ class Redirector
 
     /**
      * Redirector constructor.
-     *
-     * @param $env
      */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authChecker,
-        RouterInterface $router,
-        Session $session,
-        $env
+        protected TokenStorageInterface $tokenStorage,
+        protected AuthorizationCheckerInterface $authChecker,
+        protected RouterInterface $router,
+        protected Session $session,
+        protected string $env
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authChecker = $authChecker;
-        $this->router = $router;
-        $this->session = $session;
-        $this->env = $env;
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     private function getLoggedUser()
     {
@@ -91,9 +58,13 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            return $this->router->generate('admin_homepage');
-        } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
+        if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
+            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
+                return $this->router->generate('user_details');
+            } else {
+                return $this->router->generate('admin_homepage');
+            }
+        } elseif ($this->authChecker->isGranted(User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
             if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
@@ -101,7 +72,7 @@ class Redirector
             } else {
                 return $this->router->generate('org_dashboard');
             }
-        } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
+        } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
             return $this->router->generate('access_denied');
@@ -115,14 +86,14 @@ class Redirector
      *
      * @return bool|string
      */
-    public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
+    public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
             $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
-        //none of these corrections apply to admin
+        // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
@@ -155,7 +126,7 @@ class Redirector
     /**
      * @return string
      */
-    private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(User $user, $enabledLastAccessedUrl = false)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -215,10 +186,10 @@ class Redirector
     {
         if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');
             }
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
+            if ($this->authChecker->isGranted(User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');
             }
 
@@ -226,7 +197,7 @@ class Redirector
         }
 
         // PROF and PA redirect to org homepage
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ORG)) {
+        if ($this->authChecker->isGranted(User::ROLE_ORG)) {
             return $this->router->generate('org_dashboard');
         }
 

@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Registration;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\Console\Input\ArrayInput;
 
@@ -18,42 +17,41 @@ trait IngestTrait
 {
     private array $clients = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
-    private array $namedDeputies = [
+    private array $deputies = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
     private array $organisations = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
     private array $reports = [
         'added' => ['expected' => 0, 'found' => 0],
-        'updated' => ['expected' => 0, 'found' => 0]
+        'updated' => ['expected' => 0, 'found' => 0],
     ];
-    
+
     private array $errors = [
-        "count" => 0,
-        "messages" => []
+        'count' => 0,
+        'messages' => [],
     ];
 
     private array $preRegistration = ['expected' => 0, 'found' => 0];
-    
-    
+
     private array $skipped = ['expected' => 0, 'found' => 0];
     private array $expectedMissingDTOProperties = [];
     public array $entityUids = [
         'client_case_numbers' => [],
-        'named_deputy_uids' => [],
+        'deputy_uids' => [],
         'org_email_identifiers' => [],
         'sirius_case_numbers' => [],
     ];
 
     private ?\DateTime $expectedClientCourtDate = null;
 
-    private string $expectedNamedDeputyName = '';
-    private string $expectedNamedDeputyAddress = '';
+    private string $expectedDeputyName = '';
+    private string $expectedDeputyAddress = '';
     private string $expectedReportType = '';
     private string $expectedCaseNumberAssociatedWithError = '';
     private string $expectedUnexpectedColumn = '';
@@ -61,7 +59,7 @@ trait IngestTrait
 
     private $clientBeforeCsvUpload;
     private $clientAfterCsvUpload;
-    
+
     /**
      * @Given a csv has been uploaded to the sirius bucket with the file :fileName
      */
@@ -72,7 +70,7 @@ trait IngestTrait
         $this->csvFileName = $fileName;
         $filePath = sprintf('%s/fixtures/sirius-csvs/%s', dirname(__DIR__, 3), $this->csvFileName);
         $fileBody = file_get_contents($filePath);
-        
+
         $this->s3->store($this->csvFileName, $fileBody);
     }
 
@@ -88,7 +86,7 @@ trait IngestTrait
         }
 
         $this->clients['added']['expected'] = intval($hash[0]['clients']);
-        $this->namedDeputies['added']['expected'] = intval($hash[0]['named_deputies']);
+        $this->deputies['added']['expected'] = intval($hash[0]['deputies']);
         $this->organisations['added']['expected'] = intval($hash[0]['organisations']);
         $this->reports['added']['expected'] = intval($hash[0]['reports']);
 
@@ -100,32 +98,32 @@ trait IngestTrait
      */
     public function theNewEntitiesShouldBeAddedToTheDatabase(string $type)
     {
-//        $this->iAmOnCorrectUploadPage($type);
+        //        $this->iAmOnCorrectUploadPage($type);
 
         if (in_array(strtolower($type), ['org', 'pa'])) {
             $this->assertIntEqualsInt(
-                $this->clients['added']['expected'], 
+                $this->clients['added']['expected'],
                 $this->clients['added']['found'],
                 'Count of entities based on UIDs - clients'
             );
             $this->assertIntEqualsInt(
-                $this->namedDeputies['added']['expected'], 
-                $this->namedDeputies['added']['found'],
-                'Count of entities based on UIDs - named deputies'
+                $this->deputies['added']['expected'],
+                $this->deputies['added']['found'],
+                'Count of entities based on UIDs - deputies'
             );
             $this->assertIntEqualsInt(
-                $this->organisations['added']['expected'], 
+                $this->organisations['added']['expected'],
                 $this->organisations['added']['found'],
                 'Count of entities based on UIDs - organisations'
             );
             $this->assertIntEqualsInt(
-                $this->reports['added']['expected'], 
+                $this->reports['added']['expected'],
                 $this->reports['added']['found'],
                 'Count of entities based on UIDs - reports'
             );
-        } else {            
+        } else {
             $this->assertIntEqualsInt(
-                $this->preRegistration['expected'], 
+                $this->preRegistration['expected'],
                 $this->preRegistration['found'],
                 'Count of entities based on UIDs - Pre-registration'
             );
@@ -143,45 +141,45 @@ trait IngestTrait
                 [
                     'added' => [
                         'dataType' => sprintf('clients added: %u', $this->clients['added']['expected']),
-                        'message' => 'Asserting Org Clients added on the Command output is incorrect'
+                        'message' => 'Asserting Org Clients added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('clients updated: %u', $this->clients['updated']['expected']),
-                        'message' => 'Asserting Org Clients updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Org Clients updated on the Command output is incorrect',
+                    ],
                 ],
                 [
                     'added' => [
-                        'dataType' => sprintf('named_deputies added: %u', $this->namedDeputies['added']['expected']),
-                        'message' => 'Asserting Org Named Deputies added on the Command output is incorrect'
+                        'dataType' => sprintf('deputies added: %u', $this->deputies['added']['expected']),
+                        'message' => 'Asserting Org Deputies added on the Command output is incorrect',
                     ],
                     'updated' => [
-                        'dataType' => sprintf('named_deputies updated: %u', $this->namedDeputies['updated']['expected']),
-                        'message' => 'Asserting Org Named Deputies updated on the Command output is incorrect'
-                    ]
+                        'dataType' => sprintf('deputies updated: %u', $this->deputies['updated']['expected']),
+                        'message' => 'Asserting Org Deputies updated on the Command output is incorrect',
+                    ],
                 ],
                 [
                     'added' => [
                         'dataType' => sprintf('organisations added: %u', $this->organisations['added']['expected']),
-                        'message' => 'Asserting Organisations added on the Command output is incorrect'
+                        'message' => 'Asserting Organisations added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('organisations updated: %u', $this->organisations['updated']['expected']),
-                        'message' => 'Asserting Organisations updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Organisations updated on the Command output is incorrect',
+                    ],
                 ],
                 [
                     'added' => [
                         'dataType' => sprintf('reports added: %u', $this->reports['added']['expected']),
-                        'message' => 'Asserting Reports added on the Command output is incorrect'
+                        'message' => 'Asserting Reports added on the Command output is incorrect',
                     ],
                     'updated' => [
                         'dataType' => sprintf('reports updated: %u', $this->reports['updated']['expected']),
-                        'message' => 'Asserting Reports updated on the Command output is incorrect'
-                    ]
+                        'message' => 'Asserting Reports updated on the Command output is incorrect',
+                    ],
                 ],
             ];
-            
+
             foreach ($processedStats as $type) {
                 $this->assertStringContainsString(
                     $type['added']['dataType'],
@@ -198,7 +196,7 @@ trait IngestTrait
 
             if ($this->errors['count'] >= 1) {
                 $this->assertStringContainsString(
-                    (string)$this->errors['count'],
+                    (string) $this->errors['count'],
                     $output,
                     'Asserting expected amount of errors during ingestion is incorrect'
                 );
@@ -211,7 +209,7 @@ trait IngestTrait
             }
         } else {
             $this->assertStringContainsString(
-                sprintf('%u added.', $this->preRegistration['expected']), 
+                sprintf('%u added.', $this->preRegistration['expected']),
                 $output,
                 'Asserting users added to pre-registration table via Command is incorrect'
             );
@@ -245,13 +243,13 @@ trait IngestTrait
 
             $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
             $this->entityUids['sirius_case_numbers'][] = $row['Case'] ?? '';
-            $this->entityUids['named_deputy_uids'][] = $row['DeputyUid'] ?? '';
+            $this->entityUids['deputy_uids'][] = $row['DeputyUid'] ?? '';
             $this->entityUids['org_email_identifiers'][] = $email;
         }
 
         $this->entityUids['client_case_numbers'] = array_unique($this->entityUids['client_case_numbers']);
         $this->entityUids['sirius_case_numbers'] = array_unique($this->entityUids['sirius_case_numbers']);
-        $this->entityUids['named_deputy_uids'] = array_unique($this->entityUids['named_deputy_uids']);
+        $this->entityUids['deputy_uids'] = array_unique($this->entityUids['deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
     }
 
@@ -260,7 +258,7 @@ trait IngestTrait
         $this->em->clear();
 
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
-        $namedDeputies = $this->em->getRepository(NamedDeputy::class)->findBy(['deputyUid' => $this->entityUids['named_deputy_uids']]);
+        $deputies = $this->em->getRepository(Deputy::class)->findBy(['deputyUid' => $this->entityUids['deputy_uids']]);
         $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
 
@@ -272,20 +270,20 @@ trait IngestTrait
         }
 
         $this->clients['added']['found'] = count($clients);
-        $this->namedDeputies['added']['found'] = count($namedDeputies);
+        $this->deputies['added']['found'] = count($deputies);
         $this->organisations['added']['found'] = count($orgs);
         $this->preRegistration['found'] = count($preRegistrations);
         $this->reports['added']['found'] = count($reports);
     }
 
     /**
-     * @When I run the lay CSV command the file has a new named deputy :newNamedDeputy within the same org as the clients existing name deputy
+     * @When I run the lay CSV command the file has a new named deputy :newDeputy within the same org as the clients existing name deputy
      */
-    public function iUploadAnOrgCsvThatHasANewMadeDateAndNamedDeputyWithinTheSameOrgAsTheClientsExistingNameDeputy(string $newNamedDeputy)
+    public function iUploadAnOrgCsvThatHasANewMadeDateAndDeputyWithinTheSameOrgAsTheClientsExistingDeputy(string $newDeputy)
     {
-        $this->expectedNamedDeputyName = $newNamedDeputy;
+        $this->expectedDeputyName = $newDeputy;
 
-        $this->namedDeputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
@@ -298,7 +296,7 @@ trait IngestTrait
     {
         $filePath = sprintf('sirius-csvs/%s', $this->csvFileName);
         $this->extractUidsFromCsv($filePath);
-        
+
         $type = (str_starts_with($this->csvFileName, 'lay-')) ? 'lay' : 'org';
 
         $this->runCSVCommand($type, $this->csvFileName);
@@ -308,28 +306,28 @@ trait IngestTrait
     /**
      * @Then the clients named deputy should be updated
      */
-    public function theClientsNamedDeputyShouldBeUpdated()
+    public function theClientsDeputyShouldBeUpdated()
     {
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId());
 
         $this->assertStringEqualsString(
-            $this->expectedNamedDeputyName,
-            sprintf('%s %s', $client->getNamedDeputy()->getFirstName(), $client->getNamedDeputy()->getLastName()),
-            'Comparing expected named deputy full name to client named deputy full name'
+            $this->expectedDeputyName,
+            sprintf('%s %s', $client->getDeputy()->getFirstName(), $client->getDeputy()->getLastName()),
+            'Comparing expected deputy full name to client deputy full name'
         );
     }
 
     /**
      * @When I run the lay CSV command the file has a new address :address for an existing named deputy
      */
-    public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingNamedDeputy(string $address)
+    public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingDeputy(string $address)
     {
-        $this->namedDeputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
-        
-        $this->expectedNamedDeputyAddress = $address;
+
+        $this->expectedDeputyAddress = $address;
 
         $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
 
@@ -339,29 +337,29 @@ trait IngestTrait
     /**
      * @Then the named deputy's address should be updated
      */
-    public function theNamedDeputiesAddressShouldBeUpdated()
+    public function theDeputiesAddressShouldBeUpdated()
     {
         $this->em->clear();
 
-        $namedDeputy = $this->em
+        $deputy = $this->em
             ->getRepository(Client::class)
             ->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId())
-            ->getNamedDeputy();
+            ->getDeputy();
 
-        $actualNamedDeputiesAddress = sprintf(
+        $actualDeputiesAddress = sprintf(
             '%s, %s, %s, %s, %s, %s',
-            $namedDeputy->getAddress1(),
-            $namedDeputy->getAddress2(),
-            $namedDeputy->getAddress3(),
-            $namedDeputy->getAddress4(),
-            $namedDeputy->getAddress5(),
-            $namedDeputy->getAddressPostcode()
+            $deputy->getAddress1(),
+            $deputy->getAddress2(),
+            $deputy->getAddress3(),
+            $deputy->getAddress4(),
+            $deputy->getAddress5(),
+            $deputy->getAddressPostcode()
         );
 
         $this->assertStringEqualsString(
-            $this->expectedNamedDeputyAddress,
-            $actualNamedDeputiesAddress,
-            'Comparing expected named deputy address to actual named deputy address'
+            $this->expectedDeputyAddress,
+            $actualDeputiesAddress,
+            'Comparing expected deputy address to actual deputy address'
         );
     }
 
@@ -372,7 +370,7 @@ trait IngestTrait
     {
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->namedDeputies['updated']['expected'] = 1;
+        $this->deputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
@@ -387,9 +385,9 @@ trait IngestTrait
     {
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->namedDeputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
-        $this->namedDeputies['updated']['expected'] = 1;
+        $this->deputies['updated']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
 
@@ -421,10 +419,10 @@ trait IngestTrait
     {
         $this->clients['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
-        $this->namedDeputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->errors['count'] = 1;
-        $this->errors['messages'][] = "Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail";
+        $this->errors['messages'][] = 'Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail';
 
         $this->createProfAdminNotStarted();
 
@@ -453,7 +451,6 @@ trait IngestTrait
         }
 
         $this->uploadCsvAndCountCreatedEntities($fileName);
-
     }
 
     /**
@@ -461,8 +458,6 @@ trait IngestTrait
      */
     public function iShouldSeeErrorShowingMissingColumns(string $userType)
     {
-
-
         if ('org' === strtolower($userType)) {
             $requiredColumns = [
                 'Case',
@@ -577,7 +572,6 @@ trait IngestTrait
      */
     public function theClientsReportTypeShouldBeUpdated()
     {
-
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
 
@@ -614,9 +608,9 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has a new named deputy in a new organisation for an existing client
      */
-    public function iUploadCsvThatHasNewNamedDeputyAndOrgForExistingClient()
+    public function iUploadCsvThatHasNewDeputyAndOrgForExistingClient()
     {
-        $this->namedDeputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
@@ -633,8 +627,8 @@ trait IngestTrait
             throw new BehatException('Existing Client not found with case number "1919191t"');
         }
 
-        if (is_null($existingClient->getNamedDeputy())) {
-            throw new BehatException('Existing client has no associated Named Deputy');
+        if (is_null($existingClient->getDeputy())) {
+            throw new BehatException('Existing client has no associated Deputy');
         }
 
         if (is_null($existingClient->getOrganisation())) {
@@ -642,7 +636,7 @@ trait IngestTrait
         }
 
         $this->clientBeforeCsvUpload = $existingClient;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -659,28 +653,28 @@ trait IngestTrait
     /**
      * @Then the named deputy associated with the client should be updated to the new named deputy
      */
-    public function namedDeputyAssociatedWitClientShouldBeUpdatedToNewNamedDeputy()
+    public function deputyAssociatedWitClientShouldBeUpdatedToNewDeputy()
     {
-        $namedDeputyAfterUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+        $deputyAfterUpload = $this->clientAfterCsvUpload->getDeputy();
 
-        if (is_null($namedDeputyAfterUpload)) {
-            throw new BehatException('A named deputy is not associated with client after CSV upload');
+        if (is_null($deputyAfterUpload)) {
+            throw new BehatException('A deputy is not associated with client after CSV upload');
         }
 
-        $deputyUid = $this->entityUids['named_deputy_uids'][0];
+        $deputyUid = $this->entityUids['deputy_uids'][0];
 
-        $namedDeputyWithCsvDeputyUid = $this->em
-            ->getRepository(NamedDeputy::class)
+        $deputyWithCsvDeputyUid = $this->em
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
-        if (is_null($namedDeputyWithCsvDeputyUid)) {
-            throw new BehatException(sprintf('Named deputy with deputy uid "%s" not found', $deputyUid));
+        if (is_null($deputyWithCsvDeputyUid)) {
+            throw new BehatException(sprintf('Deputy with deputy uid "%s" not found', $deputyUid));
         }
 
         $this->assertEntitiesAreTheSame(
-            $namedDeputyWithCsvDeputyUid,
-            $namedDeputyAfterUpload,
-            'Comparing named deputy with deputy no from CSV against named deputy associated with client after CSV upload'
+            $deputyWithCsvDeputyUid,
+            $deputyAfterUpload,
+            'Comparing deputy with deputy no from CSV against deputy associated with client after CSV upload'
         );
     }
 
@@ -747,7 +741,7 @@ trait IngestTrait
     {
         $this->organisations['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
-        $this->namedDeputies['updated']['expected'] = 1;
+        $this->deputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
         $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
@@ -813,48 +807,48 @@ trait IngestTrait
     /**
      * @Then the named deputy's address should be updated to :address
      */
-    public function theNamedDeputiesAddressShouldBeUpdatedTo(string $address)
+    public function theDeputiesAddressShouldBeUpdatedTo(string $address)
     {
-        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+        $DeputyAfterCsvUpload = $this->clientAfterCsvUpload->getDeputy();
 
-        if (is_null($namedDeputyAfterCsvUpload)) {
-            throw new BehatException('A named deputy is not associated with client after CSV upload');
+        if (is_null($DeputyAfterCsvUpload)) {
+            throw new BehatException('A deputy is not associated with client after CSV upload');
         }
 
-        $actualNamedDeputiesAddress = sprintf(
+        $actualDeputiesAddress = sprintf(
             '%s, %s, %s, %s, %s, %s',
-            $namedDeputyAfterCsvUpload->getAddress1(),
-            $namedDeputyAfterCsvUpload->getAddress2(),
-            $namedDeputyAfterCsvUpload->getAddress3(),
-            $namedDeputyAfterCsvUpload->getAddress4(),
-            $namedDeputyAfterCsvUpload->getAddress5(),
-            $namedDeputyAfterCsvUpload->getAddressPostcode()
+            $DeputyAfterCsvUpload->getAddress1(),
+            $DeputyAfterCsvUpload->getAddress2(),
+            $DeputyAfterCsvUpload->getAddress3(),
+            $DeputyAfterCsvUpload->getAddress4(),
+            $DeputyAfterCsvUpload->getAddress5(),
+            $DeputyAfterCsvUpload->getAddressPostcode()
         );
 
         $this->assertStringEqualsString(
             $address,
-            $actualNamedDeputiesAddress,
-            'Comparing named deputy address associated with client after CSV upload against step address'
+            $actualDeputiesAddress,
+            'Comparing deputy address associated with client after CSV upload against step address'
         );
     }
 
     /**
      * @Then the named deputy associated with the client should remain the same
      */
-    public function namedDeputyAssociatedWitClientShouldRemainTheSame()
+    public function deputyAssociatedWitClientShouldRemainTheSame()
     {
         $this->em->clear();
 
-        $namedDeputyAfterCsvUpload = $this->clientAfterCsvUpload->getNamedDeputy();
+        $deputyAfterCsvUpload = $this->clientAfterCsvUpload->getDeputy();
 
-        if (is_null($namedDeputyAfterCsvUpload)) {
-            throw new BehatException('A named deputy is not associated with client after CSV upload');
+        if (is_null($deputyAfterCsvUpload)) {
+            throw new BehatException('A deputy is not associated with client after CSV upload');
         }
 
         $this->assertEntitiesAreTheSame(
-            $this->clientBeforeCsvUpload->getNamedDeputy(),
-            $namedDeputyAfterCsvUpload,
-            'Comparing named deputy associated with client before CSV upload against named deputy associated with client after CSV upload'
+            $this->clientBeforeCsvUpload->getDeputy(),
+            $deputyAfterCsvUpload,
+            'Comparing deputy associated with client before CSV upload against deputy associated with client after CSV upload'
         );
     }
 
@@ -879,13 +873,13 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file contains two rows with the same named deputy at two different addresses with different deputy uids
      */
-    public function iUploadCsvWithOneNamedDeputyOnTwoLinesWithDifferentAddresses()
+    public function iUploadCsvWithOneDeputyOnTwoLinesWithDifferentAddresses()
     {
         $this->clients['added']['expected'] = 2;
-        $this->namedDeputies['added']['expected'] = 2;
+        $this->deputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
         $this->organisations['added']['expected'] = 1;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -894,7 +888,7 @@ trait IngestTrait
     /**
      * @Then there should be two named deputies created
      */
-    public function shouldBeTwoNamedDeputiesWithSeparateAddresses()
+    public function shouldBeTwoDeputiesWithSeparateAddresses()
     {
         $client1 = $this->em
             ->getRepository(Client::class)
@@ -913,16 +907,16 @@ trait IngestTrait
         }
 
         $this->assertEntitiesAreNotTheSame(
-            $client1->getNamedDeputy(),
-            $client2->getNamedDeputy(),
-            'Comparing named deputies of clients created during CSV upload'
+            $client1->getDeputy(),
+            $client2->getDeputy(),
+            'Comparing deputies of clients created during CSV upload'
         );
     }
 
     /**
      * @Then the named deputy for case number :caseNumber should have the address :fullAddress
      */
-    public function namedDeputyForCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress)
+    public function deputyForCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress)
     {
         $client = $this->em
             ->getRepository(Client::class)
@@ -932,20 +926,20 @@ trait IngestTrait
             throw new BehatException(sprintf('Client not found with case number "%s"', $caseNumber));
         }
 
-        $actualNamedDeputiesAddress = sprintf(
+        $actualDeputiesAddress = sprintf(
             '%s, %s, %s, %s, %s, %s',
-            $client->getNamedDeputy()->getAddress1(),
-            $client->getNamedDeputy()->getAddress2(),
-            $client->getNamedDeputy()->getAddress3(),
-            $client->getNamedDeputy()->getAddress4(),
-            $client->getNamedDeputy()->getAddress5(),
-            $client->getNamedDeputy()->getAddressPostcode()
+            $client->getDeputy()->getAddress1(),
+            $client->getDeputy()->getAddress2(),
+            $client->getDeputy()->getAddress3(),
+            $client->getDeputy()->getAddress4(),
+            $client->getDeputy()->getAddress5(),
+            $client->getDeputy()->getAddressPostcode()
         );
 
         $this->assertStringEqualsString(
             $fullAddress,
-            $actualNamedDeputiesAddress,
-            'Comparing address defined in step against actual named deputy address'
+            $actualDeputiesAddress,
+            'Comparing address defined in step against actual deputy address'
         );
     }
 
@@ -955,10 +949,10 @@ trait IngestTrait
     public function iUploadAnOrgCSVThatHasAnOrganisationNameButMissingDeputyFirstAndLastName($name)
     {
         $this->clients['added']['expected'] = 1;
-        $this->namedDeputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
-        
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -967,26 +961,26 @@ trait IngestTrait
     /**
      * @Then the named deputy :firstOrLast name should be :expectedName
      */
-    public function theNamedDeputyNameShouldBe($firstOrLast, $expectedName)
+    public function theDeputyNameShouldBe($firstOrLast, $expectedName)
     {
         $expectedName = 'empty' === $expectedName ? '' : $expectedName;
 
-        $namedDeputyUid = $this->entityUids['named_deputy_uids'][0];
+        $deputyUid = $this->entityUids['deputy_uids'][0];
 
-        $namedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
-            ->findOneBy(['deputyUid' => $namedDeputyUid]);
+        $deputy = $this->em
+            ->getRepository(Deputy::class)
+            ->findOneBy(['deputyUid' => $deputyUid]);
 
-        if (is_null($namedDeputy)) {
-            throw new BehatException(sprintf('Could not find a named deputy with UID "%s"', $namedDeputyUid));
+        if (is_null($deputy)) {
+            throw new BehatException(sprintf('Could not find a deputy with UID "%s"', $deputyUid));
         }
 
         switch ($firstOrLast) {
             case 'first':
-                $actualName = $namedDeputy->getFirstname();
+                $actualName = $deputy->getFirstname();
                 break;
             case 'last':
-                $actualName = $namedDeputy->getLastname();
+                $actualName = $deputy->getLastname();
                 break;
             default:
                 throw new BehatException(sprintf('Can only match on firstName or lastName, "%s" provided.', $firstOrLast));
@@ -995,7 +989,7 @@ trait IngestTrait
         $matched = $actualName === $expectedName;
 
         if (!$matched) {
-            throw new BehatException(sprintf('The named deputy "%s" name did not match. Wanted "%s", got "%s".', $firstOrLast, $expectedName, $actualName));
+            throw new BehatException(sprintf('The deputy "%s" name did not match. Wanted "%s", got "%s".', $firstOrLast, $expectedName, $actualName));
         }
     }
 
@@ -1006,7 +1000,7 @@ trait IngestTrait
     {
         $this->organisations['added']['expected'] = 2;
         $this->clients['added']['expected'] = 2;
-        $this->namedDeputies['added']['expected'] = 2;
+        $this->deputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
@@ -1021,7 +1015,7 @@ trait IngestTrait
     {
         $this->organisations['added']['expected'] = 2;
         $this->clients['added']['expected'] = 2;
-        $this->namedDeputies['added']['expected'] = 2;
+        $this->deputies['added']['expected'] = 2;
         $this->reports['added']['expected'] = 2;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
@@ -1029,15 +1023,13 @@ trait IngestTrait
         $this->em->clear();
     }
 
-
-
     /**
      * @Given I run the lay CSV command the file that updates the person deputy with an org name and the org deputy with a person name
      */
     public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName()
     {
-        $this->namedDeputies['updated']['expected'] = 2;
-        
+        $this->deputies['updated']['expected'] = 2;
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -1050,8 +1042,8 @@ trait IngestTrait
     {
         $this->organisations['added']['expected'] = 3;
         $this->clients['updated']['expected'] = 1;
-        $this->namedDeputies['updated']['expected'] = 1;
-        
+        $this->deputies['updated']['expected'] = 1;
+
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
 
         $this->em->clear();
@@ -1060,20 +1052,20 @@ trait IngestTrait
     /**
      * @Then the named deputy with deputy UID :deputyUid should have the full name :fullName
      */
-    public function theNamedDeputyWithDeputyUIDShouldHaveTheFullName($deputyUid, $fullName)
+    public function theDeputyWithDeputyUIDShouldHaveTheFullName($deputyUid, $fullName)
     {
-        $namedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
+        $deputy = $this->em
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
-        if (is_null($namedDeputy)) {
-            throw new BehatException(sprintf('Could not find a named deputy with UID "%s"', $deputyUid));
+        if (is_null($deputy)) {
+            throw new BehatException(sprintf('Could not find a deputy with UID "%s"', $deputyUid));
         }
 
-        if (!empty($namedDeputy->getLastname())) {
-            $actualName = sprintf('%s %s', $namedDeputy->getFirstname(), $namedDeputy->getLastname());
+        if (!empty($deputy->getLastname())) {
+            $actualName = sprintf('%s %s', $deputy->getFirstname(), $deputy->getLastname());
         } else {
-            $actualName = $namedDeputy->getFirstname();
+            $actualName = $deputy->getFirstname();
         }
 
         $nameMatches = $actualName === $fullName;
@@ -1086,17 +1078,17 @@ trait IngestTrait
     /**
      * @Then the named deputy with deputy UID :deputyUid should have the email :email
      */
-    public function theNamedDeputyWithDeputyUIDShouldHaveTheEmail($deputyUid, $email)
+    public function theDeputyWithDeputyUIDShouldHaveTheEmail($deputyUid, $email)
     {
-        $namedDeputy = $this->em
-            ->getRepository(NamedDeputy::class)
+        $deputy = $this->em
+            ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
-        if (is_null($namedDeputy)) {
-            throw new BehatException(sprintf('Could not find a named deputy with UID "%s"', $deputyUid));
+        if (is_null($deputy)) {
+            throw new BehatException(sprintf('Could not find a deputy with UID "%s"', $deputyUid));
         }
 
-        $actualEmail = $namedDeputy->getEmail1();
+        $actualEmail = $deputy->getEmail1();
 
         $emailMatches = $actualEmail === $email;
 
@@ -1114,13 +1106,13 @@ trait IngestTrait
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
-    
+
     protected function runCSVCommand(string $type, string $fileName)
     {
-        $command = ($type === 'lay') ? 
-            'digideps:api:process-lay-csv': 
+        $command = ('lay' === $type) ?
+            'digideps:api:process-lay-csv' :
             'digideps:api:process-org-csv';
-        
+
         $input = new ArrayInput([
             'command' => $command,
             'csv-filename' => $fileName,

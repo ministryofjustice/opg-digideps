@@ -38,7 +38,7 @@ Feature: Money in High Assets
     And I have 'Dividends' to report on
     And I enter a valid amount
     And I dont add another item
-    Then the money in summary page should contain the money in values I added
+    Then the money in summary page should contain "2" money in values
     When I follow link back to report overview page
     Then I should see "money-in" as "2 items"
 
@@ -47,10 +47,10 @@ Feature: Money in High Assets
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
     And I confirm "Yes" to adding money in on the clients behalf
-    And I have 'Dividends' to report on
+    And I have 'Income from property rental' to report on
     And I enter a valid amount
     And I dont add another item
-    Then the money in summary page should contain the money in values I added
+    Then the money in summary page should contain "1" money in values
     When I edit the money in value
     Then the money in summary page should contain the edited value
     When I follow link back to report overview page
@@ -61,13 +61,13 @@ Feature: Money in High Assets
     Given a Lay Deputy has not started a report
     When I view and start the money in report section
     And I confirm "Yes" to adding money in on the clients behalf
-    And I have 'Dividends' to report on
+    And I have 'Attendance Allowance' to report on
     And I enter a valid amount
     And I dont add another item
-    Then the money in summary page should contain the money in values I added
+    Then the money in summary page should contain "1" money in values
     When I add another single item of income
     And I dont add another item
-    Then the money in summary page should contain the added value
+    Then the money in summary page should contain "2" money in values
 
 @lay-pfa-high-not-started
   Scenario: A user submits multiple items of income forms with valid values
@@ -80,7 +80,7 @@ Feature: Money in High Assets
     And I have a 'State pension' to report on
     And I enter a valid amount
     And I dont add another item
-    Then the money in summary page should contain the money in values I added
+    Then the money in summary page should contain "2" money in values
 
 @lay-pfa-high-not-started
   Scenario: A user submits a single item of income form with valid values then removes the item
@@ -101,4 +101,36 @@ Feature: Money in High Assets
     When I view and start the money in report section
     And I confirm "No" to adding money in on the clients behalf
     And I enter a reason for no money in
-    Then the money in summary page should contain the money in values I added
+    Then the money in summary page should contain "no" money in values
+
+@lay-pfa-high-not-started
+Scenario: Transaction items over £1k are restored when user accidentally changes answer to reporting no money in
+    Given a Lay Deputy has not started a report
+    When I view and start the money in report section
+    And I confirm "Yes" to adding money in on the clients behalf
+    And I have 'Dividends' to report on
+    And I enter a valid amount
+    And I dont add another item
+    Then the money in summary page should contain "1" money in values
+    When I edit the money in exist summary section
+    And I confirm "No" to adding money in on the clients behalf
+    And I enter a reason for no money in
+    Then the money in summary page should contain "no" money in values
+    Then I edit the money in exist summary section
+    And I confirm "Yes" to adding money in on the clients behalf
+    Then the money in summary page should contain "1" money in values
+
+@lay-pfa-high-not-started
+Scenario: A user adds a transaction item and then removes it and reports to having no money in then adds a new transaction
+    Given a Lay Deputy has not started a report
+    When I view and start the money in report section
+    And I confirm "Yes" to adding money in on the clients behalf
+    And I have 'Dividends' to report on
+    And I enter a valid amount
+    And I dont add another item
+    Then the money in summary page should contain "1" money in values
+    When I delete the transaction item from the summary page
+    Then the money in summary page should contain "no" money in values
+    And I add a new transaction item
+    And I dont add another item
+    Then the money in summary page should contain "1" money in values

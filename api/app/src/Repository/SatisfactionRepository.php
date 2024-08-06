@@ -17,8 +17,8 @@ class SatisfactionRepository extends ServiceEntityRepository
      * @return array
      */
     public function findAllSatisfactionSubmissions(
-        \DateTime $fromDate = null,
-        \DateTime $toDate = null
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null
     ) {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(

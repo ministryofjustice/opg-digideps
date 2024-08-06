@@ -50,6 +50,7 @@ trait MoneyOutSectionTrait
     ];
 
     private array $moneyTypeCategoriesCompleted = [];
+    private array $moneyOutTransaction = [];
 
     /**
      * @When I view and start the money out report section
@@ -224,7 +225,10 @@ trait MoneyOutSectionTrait
         $this->chooseOption('account[category]', $radioPaymentValue, 'addPayment-'.$translatedPaymentValue, $translatedPaymentValue);
         $this->pressButton('Save and continue');
 
-        $this->fillInPaymentDetails($translatedPaymentValue, $this->faker->sentence(rand(5, 50)), mt_rand(0, 999));
+        $paymentAmount = mt_rand(0, 999);
+        $this->fillInPaymentDetails($translatedPaymentValue, $this->faker->sentence(rand(5, 50)), $paymentAmount);
+
+        $this->moneyOutTransaction[] = [$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'] => $paymentAmount];
     }
 
     private function fillInPaymentDetails(string $translatedPaymentValue, string $paymentDescription = null, int $paymentAmount = null)
@@ -290,5 +294,81 @@ trait MoneyOutSectionTrait
 
         $this->fillInField('reason_for_no_money[reasonForNoMoneyOut]', 'No money out', 'reasonForNoMoneyOut');
         $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then /^the money out summary page should contain "([^"]*)" money in values$/
+     */
+    public function theMoneyOutSummaryPageShouldContainMoneyInValues($arg1)
+    {
+        $this->iAmOnMoneyOutSummaryPage();
+
+        $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+
+        if ('no' == $arg1) {
+            $this->assertIsNull($transactionItemTableRows, 'Transaction items are not rendered');
+
+            $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
+        } else {
+            $this->assertPageContainsText('Payments you\'ve already told us about');
+
+            foreach ($this->moneyOutTransaction as $transactionItems) {
+                foreach ($transactionItems as $moneyType => $value) {
+                    $this->assertElementContainsText('main', $moneyType);
+                    $this->assertElementContainsText('main', '£'.number_format($value, 2));
+                }
+            }
+            $this->expectedResultsDisplayedSimplified();
+        }
+    }
+
+    /**
+     * @When /^I edit the money out exist summary section$/
+     */
+    public function iEditTheMoneyOutExistSummarySection()
+    {
+        $this->iAmOnMoneyOutSummaryPage();
+
+        // clean data to correctly track expected results when user edits answers.
+        $this->removeSection('moneyOutExists');
+        $this->removeSection('addPayment-'.$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant']);
+        $this->removeSection('reasonForNoMoneyOut');
+
+        $urlRegex = sprintf('/%s\/.*\/money-out\/exist\?from\=summary$/', $this->reportUrlPrefix);
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
+     * @When /^I delete the money out transaction item from the summary page$/
+     */
+    public function iDeleteTheMoneyOutTransactionItemFromTheSummaryPage()
+    {
+        $this->iAmOnMoneyOutSummaryPage();
+
+        $formSectionName = 'addPayment-'.$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'];
+
+        $this->removeAnswerFromSection(
+            'account[category]',
+            $formSectionName,
+            true,
+            'Yes, remove payment'
+        );
+
+        foreach ($this->moneyOutTransaction[0] as $moneyType => $value) {
+            $this->subtractFromGrandTotal($value);
+        }
+
+        $this->moneyOutTransaction = [];
+    }
+
+    /**
+     * @When /^I add a new money out payment$/
+     */
+    public function iAddANewMoneyOutPayment()
+    {
+        $this->clickLink('Add a payment');
+
+        $this->iSelectFromTheMoneyOutPaymentOptions();
+        $this->iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPayment();
     }
 }

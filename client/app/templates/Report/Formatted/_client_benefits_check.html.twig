@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 
 {% set transOptions = {
-    '%client%': report.client.firstname | e,
+    '%client%': report.client.firstname | striptags,
 } %}
 
 <div class="section break-before" id="client-benefits-check-section">

@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace App\Service\Audit;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Model\Email;
 use App\Service\Mailer\MailFactory;
 use App\Service\Time\DateTimeProvider;
-use DateTime;
-use Exception;
-use ReflectionClass;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Throwable;
 
 final class AuditEvents
 {
@@ -39,6 +33,7 @@ final class AuditEvents
     public const EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
     public const EVENT_EMAIL_SENT = 'EMAIL_SENT';
     public const EVENT_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
+    public const EVENT_ADMIN_USER_REGISTER_SUCCEEDED = 'ADMIN_USER_REGISTER_SUCCEEDED';
 
     public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
     public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
@@ -57,6 +52,7 @@ final class AuditEvents
     public const TRIGGER_UNSUBMIT_REPORT = 'UNSUBMIT_REPORT';
     public const TRIGGER_RESUBMIT_REPORT = 'RESUBMIT_REPORT';
     public const TRIGGER_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
+    public const TRIGGER_ADMIN_USER_REGISTER_ATTEMPT = 'ADMIN_USER_REGISTER_ATTEMPT';
 
     /**
      * @var DateTimeProvider
@@ -69,22 +65,22 @@ final class AuditEvents
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function clientDischarged(
         string $trigger,
         string $caseNumber,
         string $dischargedBy,
         string $deputyName,
-        ?DateTime $deputyshipStartDate
+        ?\DateTime $deputyshipStartDate
     ): array {
         $event = [
             'trigger' => $trigger,
             'case_number' => $caseNumber,
             'discharged_by' => $dischargedBy,
             'deputy_name' => $deputyName,
-            'discharged_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
-            'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(DateTime::ATOM) : null,
+            'discharged_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
+            'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(\DateTime::ATOM) : null,
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DELETED);
@@ -102,7 +98,7 @@ final class AuditEvents
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
             'email_changed_to' => $emailChangedTo,
-            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'changed_by' => $changedBy,
             'subject_full_name' => $subjectFullName,
             'subject_role' => $subjectRole,
@@ -122,7 +118,7 @@ final class AuditEvents
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
             'email_changed_to' => $emailChangedTo,
-            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'changed_by' => $changedByEmail,
             'subject_full_name' => $subjectFullName,
             'subject_role' => 'CLIENT',
@@ -132,7 +128,7 @@ final class AuditEvents
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function roleChanged(string $trigger, string $changedFrom, string $changedTo, string $changedByEmail, string $userChangedEmail): array
     {
@@ -141,7 +137,7 @@ final class AuditEvents
             'role_changed_from' => $changedFrom,
             'role_changed_to' => $changedTo,
             'changed_by' => $changedByEmail,
-            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'user_changed' => $userChangedEmail,
         ];
 
@@ -151,13 +147,13 @@ final class AuditEvents
     /**
      * @return array|string[]
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function userDeleted(string $trigger, string $deletedBy, string $subjectFullName, string $subjectEmail, string $subjectRole): array
     {
         $event = [
             'trigger' => $trigger,
-            'deleted_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'deleted_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'deleted_by' => $deletedBy,
             'subject_full_name' => $subjectFullName,
             'subject_email' => $subjectEmail,
@@ -178,7 +174,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
     {
@@ -187,7 +183,7 @@ final class AuditEvents
             'added_user_email' => $addedUser->getEmail(),
             'organisation_identifier' => $organisation->getEmailIdentifier(),
             'organisation_id' => $organisation->getId(),
-            'added_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'added_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'added_by' => $addedBy->getEmail(),
         ];
 
@@ -202,7 +198,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
     {
@@ -212,7 +208,7 @@ final class AuditEvents
             'removed_user_name' => $removedUser->getFullName(),
             'organisation_identifier' => $organisation->getEmailIdentifier(),
             'organisation_id' => $organisation->getId(),
-            'removed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'removed_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'removed_by' => $removedBy->getEmail(),
         ];
 
@@ -225,7 +221,7 @@ final class AuditEvents
      *
      * @return array|string[]
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger)
     {
@@ -255,7 +251,7 @@ final class AuditEvents
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function csvUploaded(
         string $trigger,
@@ -264,7 +260,7 @@ final class AuditEvents
         $event = [
             'trigger' => $trigger,
             'role_type' => $roleType,
-            'changed_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'changed_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_CSV_UPLOADED);
@@ -288,7 +284,7 @@ final class AuditEvents
             'organisation_name' => $organisation['name'],
             'organisation_identifier' => $organisation['email_identifier'],
             'organisation_status' => $organisation['is_activated'],
-            'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'created_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ORG_CREATED);
@@ -297,9 +293,9 @@ final class AuditEvents
     public function selfRegistrationFailed(array $failureData, string $errorMessage): array
     {
         $event = [
-                'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
-                'message' => $errorMessage,
-            ] + $failureData;
+            'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
+            'message' => $errorMessage,
+        ] + $failureData;
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_FAILED);
     }
@@ -307,15 +303,27 @@ final class AuditEvents
     public function selfRegistrationSucceeded(User $registeredUser): array
     {
         $event = [
-                'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
-                'registered_user_email' => $registeredUser->getEmail(),
-                'user_role' => $registeredUser->getRoleName(),
-                'has_multi_deputy_order' => $registeredUser->getIsCoDeputy(),
-                'created_by_case_manager' => $registeredUser->isCreatedByCaseManager(),
-                'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
-            ];
+            'trigger' => AuditEvents::TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT,
+            'registered_user_email' => $registeredUser->getEmail(),
+            'user_role' => $registeredUser->getRoleName(),
+            'has_multi_deputy_order' => $registeredUser->getIsCoDeputy(),
+            'created_by_case_manager' => $registeredUser->isCreatedByCaseManager(),
+            'created_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
+        ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_USER_SELF_REGISTER_SUCCEEDED);
+    }
+
+    public function adminRegistrationSucceeded(User $registeredUser): array
+    {
+        $event = [
+            'trigger' => AuditEvents::TRIGGER_ADMIN_USER_REGISTER_ATTEMPT,
+            'registered_user_email' => $registeredUser->getEmail(),
+            'user_role' => $registeredUser->getRoleName(),
+            'created_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
+        ];
+
+        return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_USER_REGISTER_SUCCEEDED);
     }
 
     /**
@@ -335,7 +343,7 @@ final class AuditEvents
             'admin_user_first_name' => $createdAdminManager->getFirstname(),
             'admin_user_last_name' => $createdAdminManager->getLastname(),
             'admin_user_email' => $createdAdminManager->getEmail(),
-            'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'created_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_CREATED);
@@ -358,7 +366,7 @@ final class AuditEvents
             'admin_user_first_name' => $deletedAdminManager->getFirstname(),
             'admin_user_last_name' => $deletedAdminManager->getLastname(),
             'admin_user_email' => $deletedAdminManager->getEmail(),
-            'created_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'created_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_DELETED);
@@ -369,43 +377,41 @@ final class AuditEvents
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_SENT);
     }
 
-    public function emailNotSent(Email $email, User|string|null $loggedInUser, Throwable $error): array
+    public function emailNotSent(Email $email, User|string|null $loggedInUser, \Throwable $error): array
     {
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT) + ['error_message' => $error->getMessage()];
     }
 
     private function buildEmailEvent(Email $email, User|string|null $loggedInUser)
     {
-        $class = new ReflectionClass(MailFactory::class);
+        $class = new \ReflectionClass(MailFactory::class);
         $constants = array_flip($class->getConstants());
 
         $templateName = $constants[$email->getTemplate()];
 
         return [
-            'logged_in_user_email' => ($loggedInUser == "anon." ) ? "user not signed in" : $loggedInUser?->getEmail(),
+            'logged_in_user_email' => ('anon.' == $loggedInUser) ? 'user not signed in' : $loggedInUser?->getEmail(),
             'recipient_email' => $email->getToEmail(),
             'template_name' => $templateName,
             'notify_template_id' => $email->getTemplate(),
             'email_parameters' => $email->getParameters(),
             'from_address_id' => $email->getFromEmailNotifyID(),
-            'sent_on' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'sent_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
     }
 
     /**
-     * @param string $trigger , what caused the event
-     * @param int $deputyId , deputyId
-     * @param int $previousOrgId , previous deputy organisation
-     * @param int $newOrgId , new deputy organisation
-     * @param int $clientId , the client that moved across with deputy
+     * @param string $trigger       , what caused the event
+     * @param int    $deputyId      , deputyId
+     * @param int    $previousOrgId , previous deputy organisation
+     * @param int    $newOrgId      , new deputy organisation
+     * @param int    $clientId      , the client that moved across with deputy
      */
-
     public function deputyChangedOrganisationEvent(string $trigger, int $deputyId, int $previousOrgId, int $newOrgId, int $clientId): array
     {
-
         $event = [
             'trigger' => $trigger,
-            'date_deputy_changed' => $this->dateTimeProvider->getDateTime()->format(DateTime::ATOM),
+            'date_deputy_changed' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
             'deputy_id' => $deputyId,
             'organisation_moved_from' => $previousOrgId,
             'organisation_moved_to' => $newOrgId,

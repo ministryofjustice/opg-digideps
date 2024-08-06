@@ -1,0 +1,14 @@
+{
+  "name": "smoke",
+  "version": "1.0.0",
+  "description": "Smoke tests for Digideps",
+  "author": "OPG",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-fis": "^3.535.0",
+    "@aws-sdk/client-secrets-manager": "^3.525.0",
+    "puppeteer": "^22.12.1",
+    "puppeteer-cluster": "^0.24.0"
+  }
+}

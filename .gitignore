@@ -9,6 +9,8 @@
 .phpunit.result.cache
 .php_cs.cache
 .php-cs-fixer.cache
+ecs-helper
+opg-ecs-helper_*.tar.gz
 
 # Common vendor folders
 bin/
@@ -40,7 +42,9 @@ log/pact.log
 **/client/resources/public/images
 **/client/resources/public/*.png
 **/client/resources/public/*.ico
-
+lambdas/functions/block_ips_lambda/block_ips.zip
+ecs-helper
+opg-ecs-helper_*.tar.gz
 
 # Lambda specific
 **lambda*.zip

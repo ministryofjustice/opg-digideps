@@ -17,12 +17,17 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
     {
         // Set all user passwords
         $userRepository = $manager->getRepository(User::class);
-        $users = $userRepository->findAll('');
+        $users = $userRepository->findAll();
 
         $password = $this->container->getParameter('fixtures')['account_password'];
 
+        $passwordHash = null;
         foreach ($users as $user) {
-            $user->setPassword($this->passwordHasher->hashPassword($user, $password));
+            if (!$passwordHash) {
+                // Re-use the same password hash for all users for efficiency purposes
+                $passwordHash = $this->passwordHasher->hashPassword($user, $password);
+            }
+            $user->setPassword($passwordHash);
             $manager->persist($user);
         }
 
@@ -36,6 +41,6 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
 
     protected function getEnvironments()
     {
-        return ['dev', 'test'];
+        return ['dev', 'test', 'local'];
     }
 }

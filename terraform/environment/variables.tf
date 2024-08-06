@@ -50,6 +50,9 @@ variable "accounts" {
       associate_alb_with_waf_web_acl_enabled = bool
       fargate_spot                           = bool
       secondary_region_enabled               = bool
+      fault_injection_experiments_enabled    = bool
+      sleep_mode_enabled                     = bool
+      waf_ip_blocking_enabled                = bool
     })
   )
 }

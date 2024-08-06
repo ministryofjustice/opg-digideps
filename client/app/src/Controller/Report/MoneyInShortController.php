@@ -38,7 +38,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
-     *
      * @Template("@App/Report/MoneyInShort/start.html.twig")
      *
      * @return array|RedirectResponse
@@ -58,7 +57,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/exist", name="does_money_in_short_exist")
-     *
      * @Template("@App/Report/MoneyInShort/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -81,14 +79,11 @@ class MoneyInShortController extends AbstractController
 
             if ('Yes' === $answer) {
                 $report->setReasonForNoMoneyIn(null);
-
                 $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
 
                 return $this->redirectToRoute('money_in_short_category', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
             } else {
-
                 $this->cleanDataIfAnswerIsChangedFromYesToNo($report);
-
                 $this->restClient->put('report/'.$reportId, $report, ['moneyShortCategoriesIn']);
 
                 return $this->redirectToRoute('no_money_in_short_exists', ['reportId' => $reportId, 'from' => 'does_money_in_short_exist']);
@@ -106,16 +101,14 @@ class MoneyInShortController extends AbstractController
 
     private function cleanDataIfAnswerIsChangedFromYesToNo($report): void
     {
-
         // selected categories in money short category table are set to false
-        foreach($report->getMoneyShortCategoriesIn() as $shortCategories) {
-            if($shortCategories->isPresent()) {
+        foreach ($report->getMoneyShortCategoriesIn() as $shortCategories) {
+            if ($shortCategories->isPresent()) {
                 $shortCategories->setPresent(false);
             }
         }
 
         // all transactions are deleted from 'money transaction short' table if present
-
         $reportId = $report->getId();
 
         if ($report->getMoneyTransactionsShortInExist()) {
@@ -127,7 +120,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/no-money-in-short-exists", name="no_money_in_short_exists")
-     *
      * @Template("@App/Report/MoneyInShort/noMoneyInShortToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -160,7 +152,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
-     *
      * @Template("@App/Report/MoneyInShort/category.html.twig")
      *
      * @return array|RedirectResponse
@@ -199,7 +190,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/oneOffPaymentsExist", name="money_in_short_one_off_payments_exist")
-     *
      * @Template("@App/Report/MoneyInShort/oneOffPaymentsExist.html.twig")
      *
      * @return array|RedirectResponse
@@ -215,10 +205,34 @@ class MoneyInShortController extends AbstractController
         $form->handleRequest($request);
         $fromSummaryPage = 'summary' == $request->get('from');
 
+        // retrieve soft deleted transaction ids if present and store money in short ids only
+        $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction-short/get-soft-delete', 'array');
+
+        $softDeletedMoneyInShortTransactionIds = [];
+        foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
+            if ('in' == $softDeletedTransactionId['type']) {
+                $softDeletedMoneyInShortTransactionIds[] = $softDeletedTransactionId['id'];
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
+
             $this->restClient->put('report/'.$reportId, $data, ['money-transactions-short-in-exist']);
+
+            if ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($softDeletedMoneyInShortTransactionIds)) {
+                // undelete items if they exist
+                foreach ($softDeletedMoneyInShortTransactionIds as $transactionId) {
+                    $this->restClient->put('/report/'.$reportId.'/money-transaction-short/soft-delete/'.$transactionId, ['transactionSoftDelete']);
+                }
+
+                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
+            } elseif ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($data->getMoneyTransactionsShortIn()) && 'summary' == $fromSummaryPage) {
+                // covers scenarios where deputy clicks edit link from summary change but chooses not to change answer
+                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
+            }
+
             switch ($data->getMoneyTransactionsShortInExist()) {
                 case 'yes':
                     return $this->redirectToRoute('money_in_short_add', ['reportId' => $reportId]);
@@ -236,7 +250,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
-     *
      * @Template("@App/Report/MoneyInShort/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -267,7 +280,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
-     *
      * @Template("@App/Report/MoneyInShort/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -296,7 +308,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
-     *
      * @Template("@App/Report/MoneyInShort/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -327,7 +338,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
-     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
@@ -367,7 +377,6 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
-     *
      * @Template("@App/Report/MoneyInShort/summary.html.twig")
      *
      * @return array|RedirectResponse

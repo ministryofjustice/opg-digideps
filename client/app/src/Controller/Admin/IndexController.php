@@ -16,7 +16,6 @@ use App\Service\Client\Internal\LayDeputyshipApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\CsvUploader;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
@@ -67,7 +66,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/", name="admin_homepage")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/index.html.twig")
      */
     public function indexAction(Request $request): array
@@ -82,6 +83,12 @@ class IndexController extends AbstractController
             'order_by' => 'registrationDate',
             'sort_order' => 'DESC',
         ];
+
+        $user = $this->userApi->getUserWithData();
+
+        if (!$user->getActive()) {
+            $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-active', null, 'array', [], false);
+        }
 
         $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
@@ -100,20 +107,20 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     * @Template("@App/Admin/Index/addUser.html.twig")
      *
-     * @return array|RedirectResponse
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Index/addUser.html.twig")
      */
     public function addUserAction(Request $request): array|RedirectResponse
     {
-        $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
+        $form = $this->createForm(FormDir\Admin\AddUserType::class, new User());
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // add user
             try {
-                if (!$this->isGranted(EntityDir\User::ROLE_SUPER_ADMIN) && EntityDir\User::ROLE_SUPER_ADMIN == $form->getData()->getRoleName()) {
+                if (!$this->isGranted(User::ROLE_SUPER_ADMIN) && User::ROLE_SUPER_ADMIN == $form->getData()->getRoleName()) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
@@ -137,7 +144,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Admin/Index/viewUser.html.twig")
      *
      * @return User[]|Response
@@ -153,10 +162,10 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     * @Template("@App/Admin/Index/editUser.html.twig")
      *
-     * @return array|Response
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Index/editUser.html.twig")
      *
      * @throws \Throwable
      */
@@ -243,11 +252,10 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param string $id
-     *
-     * @return RedirectResponse
      */
     public function editNdrAction(Request $request, $id): RedirectResponse
     {
@@ -271,16 +279,16 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
      *
      * @param int $id
-     *
-     * @return array
      */
     public function deleteConfirmAction($id): array
     {
-        /** @var EntityDir\User $userToDelete */
+        /** @var User $userToDelete */
         $userToDelete = $this->restClient->get("user/{$id}", 'User');
 
         $this->denyAccessUnlessGranted(UserVoter::DELETE_USER, $userToDelete, 'Unable to delete this user');
@@ -290,11 +298,10 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @param int $id
-     *
-     * @return RedirectResponse
      */
     public function deleteAction($id): RedirectResponse
     {
@@ -322,7 +329,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/upload", name="admin_upload")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Index/upload.html.twig")
      */
     public function uploadAction(Request $request, RouterInterface $router): array|RedirectResponse
@@ -356,7 +365,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/pre-registration-upload", name="pre_registration_upload")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Index/uploadUsers.html.twig")
      *
      * @throws \Exception
@@ -434,14 +445,15 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Index/uploadOrgUsers.html.twig")
      *
      * @throws \Exception
      */
     public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
-
         $processForm = $this->createForm(FormDir\ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
@@ -505,6 +517,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      **/
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger): Response

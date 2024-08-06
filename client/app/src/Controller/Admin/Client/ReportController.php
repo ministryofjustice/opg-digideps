@@ -90,7 +90,7 @@ class ReportController extends AbstractController
         'documents',
         'report-prof-service-fees',
         'prof-service-fees',
-        'client-named-deputy',
+        'client-deputy',
         'client-benefits-check',
         'client-benefits-check-state',
     ];
@@ -308,6 +308,27 @@ class ReportController extends AbstractController
         $response->sendHeaders();
 
         return $response;
+    }
+
+    /**
+     * Generate and upload the.
+     *
+     * @Route("regenerate-pdf", name="admin_regenerate_pdf", methods={"GET"})
+     *
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @Template("@App/Admin/ReportSubmission/regenerate-pdf.html.twig")
+     *
+     * @return array
+     */
+    public function regeneratePDF(int $id, ReportSubmissionService $reportSubmissionService)
+    {
+        $report = $this->reportApi->getReport($id, self::$reportGroupsAll);
+        $reportSubmissionService->generateReportPdf($report, true);
+
+        return [
+            'reportId' => $id,
+        ];
     }
 
     /**

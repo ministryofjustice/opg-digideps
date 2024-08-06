@@ -3,13 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
+use App\Service\ReportService;
 use Doctrine\Persistence\ObjectManager;
 
 class PAUserFixtures extends AbstractDataFixture
@@ -21,7 +22,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'id' => 'PA-102-Named',
                     'email' => '@pa102s.gov.uk',
                     'roleName' => 'ROLE_PA_NAMED',
-                    'isNamedDeputy' => true,
+                    'isDeputy' => true,
                     'orgName' => 'PA 102 Org',
                     'count' => 1,
                 ],
@@ -29,14 +30,14 @@ class PAUserFixtures extends AbstractDataFixture
                     'id' => 'PA-102-Admin',
                     'email' => '@pa102s.gov.uk',
                     'roleName' => 'ROLE_PA_ADMIN',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
                 [
                     'id' => 'PA-102-Member',
                     'email' => '@pa102s.gov.uk',
                     'roleName' => 'ROLE_PA_TEAM_MEMBER',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
             ],
@@ -47,7 +48,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'caseNumber' => '81111000',
                     'reportType' => 'OPG102',
                     'orderType' => 'pfa',
-                    'namedDeputyUid' => '700781111000',
+                    'deputyUid' => '700781111000',
                     'count' => 10,
                 ],
                 [
@@ -55,7 +56,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'caseNumber' => '82222000',
                     'reportType' => 'OPG102',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700781111000',
+                    'deputyUid' => '700781111000',
                     'count' => 10,
                 ],
             ],
@@ -66,7 +67,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'id' => 'PA-103-Named',
                     'email' => '@pa103s.gov.uk',
                     'roleName' => 'ROLE_PA_NAMED',
-                    'isNamedDeputy' => true,
+                    'isDeputy' => true,
                     'orgName' => 'PA 103 Org',
                     'count' => 1,
                 ],
@@ -74,14 +75,14 @@ class PAUserFixtures extends AbstractDataFixture
                     'id' => 'PA-103-Admin',
                     'email' => '@pa103s.gov.uk',
                     'roleName' => 'ROLE_PA_ADMIN',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
                 [
                     'id' => 'PA-103-Member',
                     'email' => '@pa103s.gov.uk',
                     'roleName' => 'ROLE_PA_TEAM_MEMBER',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
             ],
@@ -91,7 +92,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'caseNumber' => '83333000',
                     'reportType' => 'OPG103',
                     'orderType' => 'pfa',
-                    'namedDeputyUid' => '700783333000',
+                    'deputyUid' => '700783333000',
                     'count' => 10,
                 ],
                 [
@@ -99,7 +100,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'caseNumber' => '84444000',
                     'reportType' => 'OPG103',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700783333000',
+                    'deputyUid' => '700783333000',
                     'count' => 10,
                 ],
             ],
@@ -110,7 +111,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'id' => 'PA-104-Named',
                     'email' => '@pa104s.gov.uk',
                     'roleName' => 'ROLE_PA_NAMED',
-                    'isNamedDeputy' => true,
+                    'isDeputy' => true,
                     'orgName' => 'PA 104 Org',
                     'count' => 1,
                 ],
@@ -118,14 +119,14 @@ class PAUserFixtures extends AbstractDataFixture
                     'id' => 'PA-104-Admin',
                     'email' => '@pa104s.gov.uk',
                     'roleName' => 'ROLE_PA_ADMIN',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
                 [
                     'id' => 'PA-104-Member',
                     'email' => '@pa104s.gov.uk',
                     'roleName' => 'ROLE_PA_TEAM_MEMBER',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
             ],
@@ -135,7 +136,7 @@ class PAUserFixtures extends AbstractDataFixture
                     'caseNumber' => '85555000',
                     'reportType' => 'OPG104',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700785555000',
+                    'deputyUid' => '700785555000',
                     'count' => 10,
                 ],
             ],
@@ -145,14 +146,15 @@ class PAUserFixtures extends AbstractDataFixture
     public function __construct(
         private OrganisationRepository $orgRepository,
         private OrganisationFactory $orgFactory,
-        private NamedDeputyRepository $namedDeputyRepository
+        private DeputyRepository $deputyRepository,
+        private ReportService $reportService
     ) {
     }
 
     public function doLoad(ObjectManager $manager)
     {
         // Loop through data sets.
-        // Creates users, clients, organisation and named deputies
+        // Creates users, clients, organisation and deputies
         foreach ($this->fixtureData as $data) {
             $this->createFixture($data, $manager);
         }
@@ -162,16 +164,16 @@ class PAUserFixtures extends AbstractDataFixture
 
     private function createFixture($data, $manager)
     {
-        $namedDeputyData = null;
+        $deputyData = null;
         $organisation = null;
         // Create number of users for each user type
         foreach ($data['users'] as $userData) {
             for ($i = 1; $i <= $userData['count']; ++$i) {
                 $fullEmail = $userData['id'].'-'.$i.$userData['email'];
 
-                // Set the $namedDeputyData when we are processing the named deputy
-                if (null === $namedDeputyData) {
-                    $namedDeputyData = $userData['isNamedDeputy'] ? $userData : null;
+                // Set the $deputyData when we are processing the deputy
+                if (null === $deputyData) {
+                    $deputyData = $userData['isDeputy'] ? $userData : null;
                 }
 
                 // Create user
@@ -199,17 +201,17 @@ class PAUserFixtures extends AbstractDataFixture
                 // Create client
                 $client = $this->createClient($clientData, $i);
 
-                $namedDeputy = $this->namedDeputyRepository->findOneBy(['deputyUid' => $clientData['namedDeputyUid']]);
-                if (null === $namedDeputy) {
-                    // Create named deputy if they don't exist
-                    $namedDeputy = $this->createNamedDeputy($namedDeputyData, $clientData);
+                $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $clientData['deputyUid']]);
+                if (null === $deputy) {
+                    // Create deputy if they don't exist
+                    $deputy = $this->createDeputy($deputyData, $clientData);
 
-                    $manager->persist($namedDeputy);
-                    $manager->flush($namedDeputy);
+                    $manager->persist($deputy);
+                    $manager->flush($deputy);
                 }
 
-                // Set the named deputy on the client
-                $client->setNamedDeputy($namedDeputy);
+                // Set the deputy on the client
+                $client->setDeputy($deputy);
 
                 // Add the client to the organisation
                 $organisation->addClient($client);
@@ -272,13 +274,13 @@ class PAUserFixtures extends AbstractDataFixture
         $manager->persist($report);
     }
 
-    private function createNamedDeputy(mixed $namedDeputyData, mixed $clientData)
+    private function createDeputy(mixed $deputyData, mixed $clientData)
     {
-        return (new NamedDeputy())
-            ->setFirstname($namedDeputyData['id'])
-            ->setLastname('Named Deputy')
-            ->setDeputyUid($clientData['namedDeputyUid'])
-            ->setEmail1($namedDeputyData['id'].$namedDeputyData['email'])
+        return (new Deputy())
+            ->setFirstname($deputyData['id'])
+            ->setLastname('Deputy')
+            ->setDeputyUid($clientData['deputyUid'])
+            ->setEmail1($deputyData['id'].$deputyData['email'])
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
             ->setAddressCountry('GB');
@@ -286,6 +288,6 @@ class PAUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return ['dev'];
+        return ['dev', 'local'];
     }
 }

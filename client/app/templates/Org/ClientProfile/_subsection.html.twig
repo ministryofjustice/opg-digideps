@@ -2,7 +2,7 @@
 {# @param client App\Entity\Client #}
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': client.firstname | e } %}
+{% set transOptions = {'%client%': client.firstname | striptags } %}
 {% set sectionId = sectionId | default(null) %}
 {% set sectionNeedsAttention = report.isSectionFlaggedForAttention(sectionId) %}
 
@@ -27,6 +27,8 @@
         <span class="opg-overview-section__status govuk-tag opg-tag--small {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
             {% if state.state == 'done' or customiseAllLabels | default(false) %}
                 {{ (subSection ~ '.label.' ~ state.state) | trans({'%count%': state.nOfRecords}) }}
+            {% elseif state.state == 'low-assets-done' %}
+                {{ (subSection ~ '.label.' ~ state.state) | trans }}
             {% else %}
                 {{ ('labels.' ~ state.state) | trans }}
             {% endif %}

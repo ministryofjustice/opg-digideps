@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import time
 import urllib
@@ -82,7 +83,7 @@ def check_log_format(log_string):
     return bool(match)
 
 
-def search_log_group(log_group, log_entries, search_timespan):
+def log_event_search_by_log_entries(log_group, log_entries, search_timespan):
     # Initialize AWS CloudWatch Logs client
     client = boto3.client("logs")
 
@@ -167,6 +168,194 @@ def is_bank_holiday():
         return False  # Unable to determine if today is a bank holiday
 
 
+def build_search_condition(search_term, method):
+    if "*" in search_term:
+        search_term_parts = search_term.split("/")
+        final_search_term = next(
+            part for part in search_term_parts if part != "*" and len(part) > 1
+        )
+        return (
+            f"(request_uri like '/{final_search_term}' and request_method = '{method}')"
+        )
+    else:
+        return f"(request_uri = '{search_term}' and request_method = '{method}')"
+
+
+def create_query_string(search_terms_and_methods):
+    query = """
+        fields request_uri
+        | filter request_uri like 'dummy-non-existent-value'"""
+
+    for search_terms_and_method in search_terms_and_methods:
+        search_term_string = search_terms_and_method["search_term"]
+        method = search_terms_and_method["method"]
+        search_terms = search_term_string.split("|")
+        for search_term in search_terms:
+            query += f"\nor {build_search_condition(search_term, method)}"
+
+    return query
+
+
+def get_terms_and_methods(log_entries):
+    term_and_method_pairs = []
+    for log_entry in log_entries:
+        term_and_method_pairs.append(
+            {
+                "search_term": log_entry["search1"],
+                "method": log_entry["method1"],
+                "name": log_entry["name"],
+                "search_elem": 1,
+            }
+        )
+        term_and_method_pairs.append(
+            {
+                "search_term": log_entry["search2"],
+                "method": log_entry["method2"],
+                "name": log_entry["name"],
+                "search_elem": 2,
+            }
+        )
+    return term_and_method_pairs
+
+
+def run_log_insights_query(query, log_group, timespan):
+    client = boto3.client("logs")
+    response = client.start_query(
+        logGroupName=log_group,
+        startTime=int(timespan["start_time"]),
+        endTime=int(timespan["end_time"]),
+        queryString=query,
+    )
+    # Get the query ID for fetching results
+    query_id = response["queryId"]
+    # Wait for the query to complete
+    while True:
+        query_status = client.get_query_results(queryId=query_id)
+        if query_status["status"] == "Complete":
+            break
+        time.sleep(1)
+
+    return query_status["results"]
+
+
+def json_load_dicts(raw_dicts):
+    dicts = []
+    for raw_dict in raw_dicts:
+        dictionary = json.loads(raw_dict)
+        dicts.append(dictionary)
+    return dicts
+
+
+def get_uri_list_from_results(results):
+    uris = []
+    for result in results:
+        for result_part in result:
+            if result_part["field"] == "request_uri":
+                uris.append(result_part["value"])
+    return uris
+
+
+def get_uri_counts(uri_list, search_terms_and_methods):
+    uri_counts = {}
+    for uri in uri_list:
+        for search_term_and_method in search_terms_and_methods:
+            search_term = search_term_and_method["search_term"]
+            terms = search_term.split("|")
+            for term in terms:
+                base_term = term.replace("/*", "")
+                if base_term in uri:
+                    uri_counts[search_term] = uri_counts.get(search_term, 0) + 1
+
+    return uri_counts
+
+
+def create_assertions(assertion_dicts, uri_counts):
+    assertions = []
+    for assertion_dict in assertion_dicts:
+        assertion = {
+            "name": assertion_dict["name"],
+            "search1_count": int(uri_counts.get(assertion_dict["search1"], 0)),
+            "search2_count": int(uri_counts.get(assertion_dict["search2"], 0)),
+            "total_count": 0,
+            "threshold_pct": int(assertion_dict["percentage_threshold"]),
+            "threshold_count": int(assertion_dict["count_threshold"]),
+            "passed": True,
+        }
+        assertion["total_count"] = (
+            assertion["search1_count"] + assertion["search2_count"]
+        )
+        threshold_pct = assertion["threshold_pct"]
+
+        if threshold_pct != 0:
+            threshold_pct_result = assertion["search1_count"] * (threshold_pct / 100)
+        else:
+            threshold_pct_result = 0
+
+        percent_threshold_met = (
+            True if assertion["search2_count"] > threshold_pct_result else False
+        )
+        count_threshold_met = (
+            True if assertion["total_count"] >= assertion["threshold_count"] else False
+        )
+
+        if not percent_threshold_met and count_threshold_met:
+            assertion["passed"] = False
+        else:
+            assertion["passed"] = True
+
+        assertions.append(assertion)
+        logger.info(assertion)
+
+    return assertions
+
+
+def create_payload(assertions, channel):
+    failed_assertions = []
+    main_body = ""
+    for assertion in assertions:
+        if not assertion["passed"]:
+            failed_assertions.append(assertion)
+            main_body = f"{main_body}\n\n{assertion}"
+
+    with open("cloudwatch_business_failure.txt", "r") as file:
+        template_text = file.read()
+
+    formatted_text = template_text.format(
+        main_body=main_body,
+    )
+
+    if len(failed_assertions) > 0:
+        payload = {"text": formatted_text, "channel": channel}
+    else:
+        print("Business issues check complete. No issues found. Exiting ...")
+        exit(0)
+
+    return payload
+
+
+def cloudwatch_business_event(event):
+    job_name = event["job-name"]
+    logger.info(f"Attempting to process scheduled event for job {job_name}")
+
+    log_group = event["log-group"]
+    assertion_dicts_raw = event["log-entries"]
+    search_timespan = event["search-timespan"]
+    channel_identifier_failure = event["channel-identifier-failure"]
+
+    timespan = parse_human_time_span(search_timespan)
+    assertion_dicts = json_load_dicts(assertion_dicts_raw)
+    search_terms_and_methods = get_terms_and_methods(assertion_dicts)
+    query = create_query_string(search_terms_and_methods)
+    logger.info(query)
+    results = run_log_insights_query(query, log_group, timespan)
+    uri_list = get_uri_list_from_results(results)
+    uri_counts = get_uri_counts(uri_list, search_terms_and_methods)
+    assertions = create_assertions(assertion_dicts, uri_counts)
+    payload = create_payload(assertions, channel_identifier_failure)
+
+    return payload
+
+
 def cloudwatch_event(event):
     job_name = event["job-name"]
     logger.info(f"Attempting to process scheduled event for job {job_name}")
@@ -190,7 +379,7 @@ def cloudwatch_event(event):
         )
         return ""
     logger.info(f"Starting log search for {job_name}")
-    template_values_collection = search_log_group(
+    template_values_collection = log_event_search_by_log_entries(
         log_group, log_entries, search_timespan
     )
     status_emoji = ""
@@ -325,10 +514,10 @@ def github_actions_message(message):
 
     path_to_live = True if "Path to live" in workflow_name else False
 
-    status_emoji = ":white_check_mark:" if success == "true" else ":x:"
-    success_string = "Success" if success == "true" else "Failure"
+    status_emoji = ":white_check_mark:" if success == "yes" else ":x:"
+    success_string = "Success" if success == "yes" else "Failure"
     workflow_type = "Digideps Live Release" if path_to_live else "Digideps Workflow"
-    extra_emoji = ":rocket:" if path_to_live and success == "true" else ""
+    extra_emoji = ":rocket:" if path_to_live and success == "yes" else ""
 
     if scheduled_task != "":
         with open("github_actions_scheduled_task.txt", "r") as file:
@@ -377,7 +566,10 @@ def generate_message(event):
         payload = github_actions_message(message)
     elif "scheduled-event-detail" in event:
         message = event["scheduled-event-detail"]
-        payload = cloudwatch_event(message)
+        if "business_functionality_" in message["job-name"]:
+            payload = cloudwatch_business_event(message)
+        else:
+            payload = cloudwatch_event(message)
     else:
         logger.warning("Unknown event. No actions performed")
 
@@ -415,6 +607,10 @@ def send_message(payload):
 
 def lambda_handler(event, context):
     payload = generate_message(event)
-    response = send_message(payload)
 
+    pause_notifications = os.getenv("PAUSE_NOTIFICATIONS", "0")
+    if pause_notifications == "1":
+        return 0
+
+    response = send_message(payload)
     return response

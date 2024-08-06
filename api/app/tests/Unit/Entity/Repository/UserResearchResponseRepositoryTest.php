@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Repository\UserResearchResponseRepository;
+use App\Service\ReportService;
 use App\Tests\Unit\Fixtures;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -20,7 +21,9 @@ class UserResearchResponseRepositoryTest extends KernelTestCase
     {
         $kernel = self::bootKernel();
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->fixtures = new Fixtures($this->em);
+        $reportService = $kernel->getContainer()->get(ReportService::class);
+
+        $this->fixtures = new Fixtures($this->em, $reportService);
 
         $this->sut = $this->em->getRepository(UserResearchResponse::class);
     }

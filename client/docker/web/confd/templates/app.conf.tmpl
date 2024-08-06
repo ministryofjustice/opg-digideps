@@ -17,15 +17,26 @@ server {
     client_max_body_size 0;
     client_body_timeout 240s;
 
-    location / {
-        root    /public;
-
-        # cache static assets for 90 days
-        location ~* \.(css|jpg|js|png|ico|jpeg|woff2|woff)$ {
-            expires    90d;
-            access_log off;
+    # block potentially sensitive files in case they were accidentally added to web root
+    # using a 403 to match status returned by WAF for bad filenames
+    location ~* \.(zip|gz|lzh|tar|rar|7z|swp|bak|git|ht|exe|dll|py|msi|bin|sh|bat|xml|apk|jar|log|sql|conf|cfg|ini|tmp|doc|xls|rtf|env|js)$ {
+        location ~ (common|application|jquery\.min)\.js {
+           expires    24h;
+           access_log off;
+           rewrite	^/assets/([0-9]+)/(.*) /assets/fallback/$2 break;
         }
+        return 403;
+    }
 
+    location ~* \.(css|jpg|png|ico|jpeg|woff2|woff|map)$ {
+        expires    24h;
+        access_log off;
+
+        # Support static assets having a version ID in the path.
+        rewrite	^/assets/([0-9]+)/(.*) /assets/fallback/$2 break;
+    }
+
+    location / {
         try_files $uri /index.php$is_args$args;
     }
 

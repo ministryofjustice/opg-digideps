@@ -9,6 +9,7 @@ twig:
     #       Set Google Analytics IDs as global twig var - see parameters.yml
     ga: "%ga%"
   debug: "%kernel.debug%"
+  autoescape: "html"
   strict_variables: "%kernel.debug%"
   form_themes:
     - "@App/Form/fields.html.twig"

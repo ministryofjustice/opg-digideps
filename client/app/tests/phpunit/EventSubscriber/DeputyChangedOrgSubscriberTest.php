@@ -9,7 +9,7 @@ use App\EventSubscriber\DeputyChangedOrgSubscriber;
 use App\Service\Audit\AuditEvents;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ClientHelpers;
-use App\TestHelpers\NamedDeputyHelper;
+use App\TestHelpers\DeputyHelper;
 use App\TestHelpers\OrganisationHelpers;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -43,8 +43,8 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         //      Client record currently in database
         $client = ClientHelpers::createClient();
         $clientOrg = OrganisationHelpers::createActivatedOrganisation();
-        $namedDeputy = NamedDeputyHelper::createNamedDeputy();
-        $client->setNamedDeputy($namedDeputy);
+        $deputy = DeputyHelper::createDeputy();
+        $client->setDeputy($deputy);
         $client->setOrganisation($clientOrg);
 
         $deputyId = $client->getDeputy()->getId();

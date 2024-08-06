@@ -8,6 +8,8 @@
 
 - Process to be tested every 6 months - 1 year (or when team make significant changes)
 
+- Process runs weekly against one of our test environments to make sure it continues to work
+
 - Database split over availability zones so that it will failover to another zone if current zone goes down
 
 - Redis split over availability zones so that it will failover to another zone if current zone goes down.
@@ -36,51 +38,51 @@ All of our measures to restore the service fall within the 48 hours specified by
 
 This process can be vastly simplified if you use our automated restore container:
 
-Run `docker-compose -f docker-compose.commands.yml up dr-restore` to see a help file
+Run `docker compose -f docker-compose.commands.yml up dr-restore` to see a help file
 
 You can then run various options. Some examples below:
 
 Title: Restore from point in time to the same instance
-Example disaster: An update was run directly on database that had huge unintended consequences 
+Example disaster: An update was run directly on database that had huge unintended consequences
 and you're willing to accept a small loss of data that would happen in the intervening time.
 Remediation: Restore to a time before the query was run.
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run dr-restore \
-python3 disaster_recovery.py --cluster_from api-ddpb4341 --pitr '2022-01-01 09:10:00' 
+docker compose -f docker-compose.commands.yml run dr-restore \
+python3 database_restore.py --cluster_from api-ddpb4341 --pitr '2022-01-01 09:10:00'
 ```
 
 Title: Restore from a snapshot
-Example disaster: You have somehow managed to destroy all the data whilst building a database 
+Example disaster: You have somehow managed to destroy all the data whilst building a database
 so can no longer do a point in time recovery.
 Remediation: Restore from an existing snapshot in the environment.
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run -rm dr-restore \
-python3 disaster_recovery.py \
---cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30 
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 database_restore.py \
+--cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30
 ```
 
 Title: Restore from a snapshot in backup account
-Example disaster: Account was compromised and all the snapshots and DBs were deleted. 
+Example disaster: Account was compromised and all the snapshots and DBs were deleted.
 You have managed to rebuild prod using terraform and need latest data.
 Remediation: Restore from an existing snapshot in backup account (use the name of snapshot stored in backup).
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run -rm dr-restore \
-python3 disaster_recovery.py \
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 database_restore.py \
 --cluster_from api-ddpb9999 --snapshot_id api-9999-2022-01-01-12-30 --restore_from_remote True
 ```
 
 Title: Restore to a different cluster
-Example disaster: You have no idea when something bad happened to the data and want to go back in time on 
+Example disaster: You have no idea when something bad happened to the data and want to go back in time on
 another instance and see if the data was ok at a point in time without affecting your main DB operation.
 Remediation: Restore from an existing DB to a point in time into another cluster.
 ```
 aws-vault exec identity --duration=2h -- \
-docker-compose -f docker-compose.commands.yml run -rm dr-restore \
-python3 disaster_recovery.py \
---cluster_from api-ddpb9999 --cluster_to api-new_test_cluster --pitr '2022-01-01 09:10:00' 
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 database_restore.py \
+--cluster_from api-ddpb9999 --cluster_to api-new_test_cluster --pitr '2022-01-01 09:10:00'
 ```
 
 | Disaster                                                                                                           | Severity | Likelihood | Recovery                                                                                                                                                                                                                       |

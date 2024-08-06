@@ -4,10 +4,12 @@ namespace App\Tests\Unit;
 
 use App\Entity as EntityDir;
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
+use App\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
@@ -18,14 +20,10 @@ class Fixtures
 {
     public const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
+    public function __construct(
+        private EntityManager $em,
+        private ReportService $reportService
+    ) {
     }
 
     public function getEntityManager()
@@ -51,12 +49,12 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\User
+     * @return User
      */
     public function createUser(array $settersMap = [])
     {
         // add clent, cot, report, needed for assets
-        $user = new EntityDir\User();
+        $user = new User();
         $user->setEmail('temp'.microtime(true).rand(100, 99999).'@temp.com');
         $user->setPassword('temp@temp.com');
         $user->setFirstname('name'.time());
@@ -72,12 +70,32 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Client
+     * @return Deputy
      */
-    public function createClient(EntityDir\User $user = null, array $settersMap = [])
+    public function createDeputy(array $settersMap = [])
     {
         // add clent, cot, report, needed for assets
-        $client = new EntityDir\Client();
+        $deputy = new Deputy();
+        $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
+        $deputy->setFirstname('name'.time());
+        $deputy->setLastname('surname'.time());
+
+        foreach ($settersMap as $k => $v) {
+            $deputy->$k($v);
+        }
+
+        $this->em->persist($deputy);
+
+        return $deputy;
+    }
+
+    /**
+     * @return Client
+     */
+    public function createClient(?User $user = null, array $settersMap = [])
+    {
+        // add clent, cot, report, needed for assets
+        $client = new Client();
         $client->setEmail('temp@temp.com');
         foreach ($settersMap as $k => $v) {
             $client->$k($v);
@@ -95,7 +113,7 @@ class Fixtures
     /**
      * @return EntityDir\Ndr\Ndr
      */
-    public function createNdr(EntityDir\Client $client, array $settersMap = [])
+    public function createNdr(Client $client, array $settersMap = [])
     {
         $ndr = new EntityDir\Ndr\Ndr($client);
 
@@ -137,7 +155,7 @@ class Fixtures
      *
      * @throws ORMException
      */
-    public function createReportSubmission(Report $report = null, User $user = null)
+    public function createReportSubmission(?Report $report = null, ?User $user = null)
     {
         if (is_null($user)) {
             $user = $this->createUser(['setRoleName' => User::ROLE_LAY_DEPUTY, 'setRegistrationDate' => new \DateTime(), 'setPhoneMain' => '01211234567']);
@@ -178,13 +196,13 @@ class Fixtures
     }
 
     public function createReport(
-        EntityDir\Client $client,
+        Client $client,
         array $settersMap = []
     ) {
         // should be created via ReportService, but this is a fixture, so better to keep it simple
-        $report = new EntityDir\Report\Report(
+        $report = new Report(
             $client,
-            empty($settersMap['setType']) ? EntityDir\Report\Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
+            empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
             empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
             empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
         );
@@ -201,7 +219,7 @@ class Fixtures
     /**
      * @return EntityDir\Report\BankAccount
      */
-    public function createAccount(EntityDir\Report\Report $report, array $settersMap = [])
+    public function createAccount(Report $report, array $settersMap = [])
     {
         $ret = new EntityDir\Report\BankAccount();
         $ret->setReport($report);
@@ -241,7 +259,7 @@ class Fixtures
     /**
      * @return EntityDir\Report\Contact
      */
-    public function createContact(EntityDir\Report\Report $report, array $settersMap = [])
+    public function createContact(Report $report, array $settersMap = [])
     {
         $contact = new EntityDir\Report\Contact();
         $contact->setReport($report);
@@ -258,7 +276,7 @@ class Fixtures
     /**
      * @return EntityDir\Report\VisitsCare
      */
-    public function createVisitsCare(EntityDir\Report\Report $report, array $settersMap = [])
+    public function createVisitsCare(Report $report, array $settersMap = [])
     {
         $sg = new EntityDir\Report\VisitsCare();
         $sg->setReport($report);
@@ -292,7 +310,7 @@ class Fixtures
     /**
      * @return EntityDir\Report\Asset
      */
-    public function createAsset($type, EntityDir\Report\Report $report, array $settersMap = [])
+    public function createAsset($type, Report $report, array $settersMap = [])
     {
         $asset = EntityDir\Report\Asset::factory($type);
         $asset->setReport($report);
@@ -338,7 +356,7 @@ class Fixtures
     /**
      * @return EntityDir\Report\Expense
      */
-    public function createReportExpense($type, EntityDir\Report\Report $report, array $settersMap = [])
+    public function createReportExpense($type, Report $report, array $settersMap = [])
     {
         $record = new EntityDir\Report\Expense($report);
         foreach ($settersMap as $k => $v) {
@@ -352,7 +370,7 @@ class Fixtures
     /**
      * @return EntityDir\Report\Decision
      */
-    public function createDecision(EntityDir\Report\Report $report, array $settersMap = [])
+    public function createDecision(Report $report, array $settersMap = [])
     {
         $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
@@ -370,7 +388,7 @@ class Fixtures
     /**
      * @return EntityDir\Note
      */
-    public function createNote(EntityDir\Client $client, EntityDir\User $createdBy, $cat, $title, $content)
+    public function createNote(Client $client, User $createdBy, $cat, $title, $content)
     {
         $note = new EntityDir\Note($client, $cat, $title, $content);
         $note->setCreatedBy($createdBy);
@@ -398,7 +416,7 @@ class Fixtures
      */
     public function createOrganisation(string $name, string $identifier, bool $isActive): Organisation
     {
-        $org = new EntityDir\Organisation();
+        $org = new Organisation();
         $org->setName($name);
         $org->setEmailIdentifier($identifier);
         $org->setIsActivated($isActive);
@@ -507,13 +525,13 @@ class Fixtures
     /**
      * @return array
      */
-    public function getReportFreshSectionStatus(EntityDir\Report\Report $report, string $section)
+    public function getReportFreshSectionStatus(Report $report, string $section)
     {
         return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }
 
     /**
-     * @return EntityDir\User
+     * @return User
      */
     public function findUserByEmail(string $email)
     {
@@ -523,11 +541,11 @@ class Fixtures
     /**
      * @param string $deputyNo
      *
-     * @return EntityDir\NamedDeputy
+     * @return EntityDir\Deputy
      */
-    public function findNamedDeputyByNumber($deputyNo)
+    public function findDeputyByNumber($deputyNo)
     {
-        return $this->getRepo('NamedDeputy')->findOneBy(['deputyNo' => $deputyNo]);
+        return $this->getRepo('Deputy')->findOneBy(['deputyNo' => $deputyNo]);
     }
 
     public function getConnection()

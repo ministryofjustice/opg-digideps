@@ -53,7 +53,7 @@ variable "admin_fully_qualified_domain_name" {
 }
 
 module "allow_list" {
-  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v2.3.2"
+  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.0.1"
 }
 
 data "aws_ip_ranges" "route53_healthchecks_ips" {
@@ -66,7 +66,7 @@ locals {
   front_allow_list   = length(var.account["front_allow_list"]) > 0 ? var.account["front_allow_list"] : local.default_allow_list
 
   backup_account_id       = "238302996107"
-  cross_account_role_name = "cross-acc-db-backup.digideps-production"
+  cross_account_role_name = var.account.name == "production" ? "cross-acc-db-backup.digideps-production" : "cross-acc-db-backup.digideps-development"
 
   route53_healthchecker_ips = data.aws_ip_ranges.route53_healthchecks_ips.cidr_blocks
 

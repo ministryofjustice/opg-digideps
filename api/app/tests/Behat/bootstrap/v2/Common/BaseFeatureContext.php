@@ -9,6 +9,7 @@ use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use Aws\S3\S3Client;
 use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -83,6 +84,8 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profAdminDeputyHealthWelfareNotStartedDetails;
     public UserDetails $profAdminDeputyHealthWelfareCompletedDetails;
     public UserDetails $profAdminDeputyHealthWelfareSubmittedDetails;
+    public UserDetails $profAdminDeputyNotStartedPfaLowAssetsDetails;
+    public UserDetails $profAdminDeputyCompletedPfaLowAssetsDetails;
 
     public UserDetails $profAdminCombinedHighNotStartedDetails;
     public UserDetails $profAdminCombinedHighCompletedDetails;
@@ -124,14 +127,15 @@ class BaseFeatureContext extends MinkContext
         protected readonly ReportTestHelper $reportTestHelper,
         protected readonly ParameterStoreService $parameterStoreService,
         protected readonly KernelInterface $kernel,
-        protected readonly S3Storage $s3
+        protected readonly S3Storage $s3,
+        protected readonly S3Client $s3Client
     ) {
         // Required so we can run tests against commands
         $this->application = new Application($kernel);
         $this->application->setCatchExceptions(true);
         $this->application->setAutoExit(true);
         $this->output = new BufferedOutput();
-        
+
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {
@@ -159,7 +163,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
-    public function createPfaHighNotStarted(BeforeScenarioScope $scenario = null, string $caseNumber = null)
+    public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -193,12 +197,30 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * @BeforeScenario @prof-pfa-low-not-started
+     */
+    public function createProfPfaLowNotStarted()
+    {
+        $userDetails = $this->fixtureHelper->createProfPfaLowAssetsNotStarted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
+    }
+
+    /**
      * @BeforeScenario @lay-pfa-low-completed
      */
     public function createPfaLowCompleted()
     {
         $userDetails = $this->fixtureHelper->createLayPfaLowAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
+    }
+
+    /**
+     * @BeforeScenario @prof-pfa-low-completed
+     */
+    public function createProfPfaLowCompleted()
+    {
+        $userDetails = $this->fixtureHelper->createProfPfaLowAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->profAdminDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
     }
 
     /**
@@ -240,7 +262,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-submitted
      */
-    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, string $testRunId = null)
+    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, ?string $testRunId = null)
     {
         $userDetails = new UserDetails($this->fixtureHelper->createLayCombinedHighAssetsSubmitted($testRunId ?: $this->testRunId));
         $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = $userDetails;
@@ -359,27 +381,27 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
-    public function createProfAdminNotStarted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
+    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
+        $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $deputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareNotStartedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-health-welfare-completed
      */
-    public function createProfAdminCompleted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
+    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
+        $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $deputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareCompletedDetails = new UserDetails($userDetails);
     }
 
     /**
      * @BeforeScenario @prof-admin-health-welfare-submitted
      */
-    public function createProfAdminSubmitted(BeforeScenarioScope $scenario = null, string $namedDeputyEmail = null, string $caseNumber = null, string $deputyUid = null)
+    public function createProfAdminSubmitted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
     {
-        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $namedDeputyEmail, $caseNumber, $deputyUid);
+        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $deputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareSubmittedDetails = new UserDetails($userDetails);
     }
 
@@ -521,7 +543,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
      */
-    public function createPfaHighNotStartedLegacyPasswordHash(BeforeScenarioScope $scenario = null, string $caseNumber = null)
+    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -578,5 +600,10 @@ class BaseFeatureContext extends MinkContext
     public function createAdditionalDataForUserEditTests()
     {
         $this->fixtureHelper->createDataForAdminUserTests('edit');
+    }
+
+    public function expireDocumentFromUnSubmittedDeputyReport(string $storageReference): void
+    {
+        $this->fixtureHelper->deleteFilesFromS3($storageReference);
     }
 }

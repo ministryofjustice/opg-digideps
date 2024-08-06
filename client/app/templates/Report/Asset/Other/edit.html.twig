@@ -12,7 +12,7 @@
     {% set assetTitle = asset.title | lcfirst %}
 {% endif %}
 
-{% set transOptions = {'%client%': report.client.firstname | e, '%assetTitle%': assetTitle } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags, '%assetTitle%': assetTitle } %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}

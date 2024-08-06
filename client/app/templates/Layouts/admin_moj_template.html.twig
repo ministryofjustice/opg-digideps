@@ -113,7 +113,12 @@
                                 ) }}
                             </li>
                             <li class="moj-primary-navigation__item">
-                                {{ _self.navLink('admin_metrics', 'nav.adminStats', navSection == 'metrics') }}
+                                {{ _self.navLink(
+                                    'admin_metrics',
+                                    'nav.adminStats',
+                                    navSection == 'metrics',
+                                    'behat-link-admin-analytics'
+                                ) }}
                             </li>
                         {% elseif is_granted('ROLE_AD') %}
                             <li class="moj-primary-navigation__item">

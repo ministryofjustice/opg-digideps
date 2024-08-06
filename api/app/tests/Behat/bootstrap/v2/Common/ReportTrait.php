@@ -225,6 +225,19 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Professional Admin has not started a Pfa Low Assets report
+     */
+    public function aProfDeputyHasNotStartedAPfaLowAssetsReport()
+    {
+        if (empty($this->profAdminDeputyNotStartedPfaLowAssetsDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->profAdminDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profAdminDeputyNotStartedPfaLowAssetsDetails;
+    }
+
+    /**
      * @Given a Lay Deputy has completed a Pfa Low Assets report
      */
     public function aLayDeputyHasCompletedAPfaLowAssetsReport()
@@ -235,6 +248,19 @@ trait ReportTrait
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
         $this->interactingWithUserDetails = $this->layDeputyCompletedPfaLowAssetsDetails;
+    }
+
+    /**
+     * @Given a Professional Admin has completed a Pfa Low Assets report
+     */
+    public function aProfAdminDeputyHasCompletedAPfaLowAssetsReport()
+    {
+        if (empty($this->profAdminDeputyCompletedPfaLowAssetsDetails)) {
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedPfaLowAssetsDetails');
+        }
+
+        $this->loginToFrontendAs($this->profAdminDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->profAdminDeputyCompletedPfaLowAssetsDetails;
     }
 
     /**

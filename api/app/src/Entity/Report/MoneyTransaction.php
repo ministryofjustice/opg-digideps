@@ -3,17 +3,20 @@
 namespace App\Entity\Report;
 
 use App\Entity\Report\Traits\HasBankAccountTrait;
+use App\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Table(name="money_transaction")
- *
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\Entity
  */
 class MoneyTransaction implements MoneyTransactionInterface
 {
     use HasBankAccountTrait;
+    use IsSoftDeleteableEntity;
 
     /**
      * Static list of possible money transaction categories.
@@ -121,13 +124,9 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
-     *
      * @ORM\Id
-     *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="transaction_id_seq", allocationSize=1, initialValue=1)
-     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      */
     private $id;
@@ -136,7 +135,6 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var Report
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransactions")
-     *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -148,7 +146,6 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
      * @ORM\Column(name="category", type="string", length=255, nullable=false)
      */
     private $category;
@@ -157,9 +154,7 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var float
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
     private $amount;
@@ -168,7 +163,6 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -282,9 +276,7 @@ class MoneyTransaction implements MoneyTransactionInterface
      * Get the group based on the category.
      *
      * @JMS\VirtualProperty
-     *
      * @JMS\SerializedName("group")
-     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @return string in/out
@@ -305,9 +297,7 @@ class MoneyTransaction implements MoneyTransactionInterface
      * Get the type (in/out) based on the category.
      *
      * @JMS\VirtualProperty
-     *
      * @JMS\SerializedName("type")
-     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @return string in/out

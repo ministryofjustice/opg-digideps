@@ -12,6 +12,11 @@ resource "aws_lambda_function" "slack_lambda" {
   layers        = [aws_lambda_layer_version.lambda_layer.arn]
   depends_on    = [aws_cloudwatch_log_group.slack_lambda]
   timeout       = 300
+  environment {
+    variables = {
+      PAUSE_NOTIFICATIONS = "0"
+    }
+  }
   tracing_config {
     mode = "Active"
   }

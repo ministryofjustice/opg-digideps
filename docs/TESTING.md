@@ -179,8 +179,8 @@ Non-production environments don't send emails to avoid data leakage, confusion a
 The sync process between production and preproduction is handled as part of the pipeline using AWS tasks. To test locally run the sync service with the following commands:
 
 ```sh
-docker-compose run --rm sync ./backup.sh
-docker-compose run --rm sync ./restore.sh
+docker compose run --rm sync ./backup.sh
+docker compose run --rm sync ./restore.sh
 ```
 
 ## PHPStan
@@ -190,8 +190,8 @@ docker-compose run --rm sync ./restore.sh
 You can also run PHPStan manually. Note that you need to run it against each container separately, and can specify which paths (in this example "src" and "tests" to analyse).
 
 ```sh
-docker-compose run --rm api bin/phpstan analyse src tests --memory-limit=0 --level=max
-docker-compose run --rm frontend bin/phpstan analyse src tests --memory-limit=0 --level=max
+docker compose run --rm api bin/phpstan analyse src tests --memory-limit=0 --level=max
+docker compose run --rm frontend bin/phpstan analyse src tests --memory-limit=0 --level=max
 ```
 
 [mockery]: http://docs.mockery.io/en/latest/
@@ -233,3 +233,9 @@ To set this up in PHPStorm, you should perform the following steps:
 3)
    - That's all there is to it. Now you can switch between contexts for running your tests by going to PHPStorm->Settings…->PHP and changing the interpreter
    - When you have the correct interpreter for your tests, you can click on the green arrow icon by individual tests to run them individually
+
+## Smoke tests
+Smoke tests run as part of our pipeline to check that their aren't any environmental issues outside
+of the scope of our unit and integration tests in production.
+
+Please read this [confluence documentation](https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/3778215945/Smoke+Tests) for more information on this.

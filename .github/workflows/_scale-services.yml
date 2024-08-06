@@ -13,7 +13,7 @@ on:
         description: "Max ACU allowed for serverless v2"
         required: true
         type: string
-      account:
+      account_id:
         description: "Account to use"
         required: true
         type: string
@@ -21,22 +21,20 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
         with:
           fetch-depth: "0"
 
       - name: install aws cli
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@2119c3b07593cce0acbcee3240f1787eebcf4697 # pin@v1.7.0
+      - name: configure OIDC AWS credentials for scaling services
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::${{ inputs.account }}:role/digideps-ci
+          role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-scale-infra"
+          role-session-name: github-actions-scale-infra
           role-duration-seconds: 1800
-          role-session-name: OPGDigidepsScaleServices
+          aws-region: eu-west-1
 
       - name: scale services
         env:
