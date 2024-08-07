@@ -17,8 +17,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Users.
  *
  * @ORM\Table(name="dd_user", indexes={
- *     @ORM\Index(name="deputy_no_idx", columns={"deputy_no"}),
- *     @ORM\Index(name="created_by_id", columns={"created_by_id"})
+ *     @ORM\Index(name="deputy_no_idx", columns={"deputy_no"})
+ *     @ORM\Index(name="created_by_idx", columns={"created_by_id"}),
  * })
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
@@ -342,8 +342,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var User|null
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="user")
+     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id", onDelete="SET NULL")
      * @JMS\Type("App\Entity\User")
      * @JMS\Groups({"user", "created-by"})
      * @JMS\MaxDepth(3)
@@ -1038,7 +1038,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param bool $adManaged
      */
-    public function setAdManaged(bool $adManaged)
+    public function setAdManaged(?bool $adManaged)
     {
         $this->adManaged = $adManaged;
     }
@@ -1056,7 +1056,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return User
      */
-    public function setJobTitle($jobTitle)
+    public function setJobTitle(?string $jobTitle)
     {
         $this->jobTitle = $jobTitle;
 
@@ -1071,7 +1071,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->agreeTermsUse;
     }
 
-    public function setAgreeTermsUse(bool $agreeTermsUse): User
+    public function setAgreeTermsUse(?bool $agreeTermsUse): User
     {
         $this->agreeTermsUse = $agreeTermsUse;
 
@@ -1416,7 +1416,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
-    public function getUserIdentifier(): string
+    public function getUserIdentifier(): ?string
     {
         return $this->email;
     }
@@ -1465,7 +1465,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return User
      */
-    public function setIsPrimary($primary)
+    public function setIsPrimary($primary): User
     {
         $this->isPrimary = $primary;
 
@@ -1477,7 +1477,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return bool
      */
-    public function getIsPrimary()
+    public function getIsPrimary(): bool
     {
         return $this->isPrimary;
     }
