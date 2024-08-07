@@ -120,7 +120,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
             ->shouldReceive('flush')->twice()
-            ->shouldReceive('persist')->with($mockUser)->twice()
+            ->shouldReceive('persist')->with($mockUser)->once()
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
@@ -199,7 +199,7 @@ class UserRegistrationServiceTest extends TestCase
         $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
-            ->shouldReceive('persist')->with($mockUser)->twice()
+            ->shouldReceive('persist')->with($mockUser)->once()
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 

@@ -146,12 +146,8 @@ class UserRegistrationService
             $this->em->persist($user);
             $this->em->flush();
 
-            // Add the user to the client an save it
-            /* @var Client $client */
+            // Add the user to the client then save
             $client->addUser($user);
-            $user->setCreatedBy($user);
-
-            $this->em->persist($user);
             $this->em->persist($client);
             $this->em->flush();
 
