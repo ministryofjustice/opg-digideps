@@ -32,7 +32,7 @@ class UserRegistrationService
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
         $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber($selfRegisterData->getCaseNumber());
+        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($selfRegisterData->getCaseNumber());
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {

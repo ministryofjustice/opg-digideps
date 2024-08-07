@@ -33,10 +33,10 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock(PreRegistrationVerificationService::class);
-        $mockCasrecVerificationService->shouldIgnoreMissing();
+        $mockPreRegVerificationService = m::mock(PreRegistrationVerificationService::class);
+        $mockPreRegVerificationService->shouldIgnoreMissing();
 
-        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
     }
 
     /**
@@ -124,10 +124,10 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
-        $mockCasrecVerificationService->shouldIgnoreMissing(true);
+        $mockPreRegVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
+        $mockPreRegVerificationService->shouldIgnoreMissing(true);
 
-        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -161,12 +161,12 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
-        $mockCasrecVerificationService->shouldIgnoreMissing(true);
+        $mockPreRegVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
+        $mockPreRegVerificationService->shouldIgnoreMissing(true);
 
         $this->expectException(ORMInvalidArgumentException::class);
 
-        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -203,12 +203,12 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
-        $mockCasrecVerificationService->shouldIgnoreMissing(true);
+        $mockPreRegVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
+        $mockPreRegVerificationService->shouldIgnoreMissing(true);
 
         $this->expectException(ORMInvalidArgumentException::class);
 
-        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -282,7 +282,7 @@ class UserRegistrationServiceTest extends TestCase
         self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof \DateTime);
     }
 
-    public function testUserCannotRegisterIfDeputyExists()
+    public function testUserCannotRegisterIfClientExistsWithDeputies()
     {
         $data = new SelfRegisterData();
         $data->setFirstname('Zac');
@@ -298,7 +298,7 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $clientRepo = m::mock(ClientRepository::class)
-            ->shouldReceive('findOneByCaseNumber')->andReturn($client)
+            ->shouldReceive('findByCaseNumber')->andReturn($client)
             ->getMock();
 
         $userRepo = m::mock(UserRepository::class)
@@ -310,14 +310,53 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
             ->getMock();
 
-        $casrecVerificationService = m::mock(PreRegistrationVerificationService::class)
+        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
         self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
-        $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
+        $this->userRegistrationService->selfRegisterUser($data);
+    }
+
+    public function testUserCannotRegisterIfClientExistsWithDeputiesCaseNumberWithT()
+    {
+        $data = new SelfRegisterData();
+        $data->setFirstname('Zac');
+        $data->setLastname('Tolley');
+        $data->setEmail('zac@thetolleys.com');
+        $data->setClientLastname('Cross-Tolley');
+        $data->setCaseNumber('1234123T');
+
+        $client = m::mock(Client::class)
+            ->shouldReceive('hasDeputies')->andReturn(true)
+            ->shouldReceive('getOrganisation')->andReturn(null)
+            ->shouldReceive('getCaseNumber')->andReturn('1234123t')
+            ->getMock();
+
+        $clientRepo = m::mock(ClientRepository::class)
+            ->shouldReceive('findByCaseNumber')->andReturn($client)
+            ->getMock();
+
+        $userRepo = m::mock(UserRepository::class)
+            ->shouldReceive('findOneByEmail')->andReturn(null)
+            ->getMock();
+
+        $em = m::mock(EntityManager::class)
+            ->shouldReceive('getRepository')->with('App\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
+            ->getMock();
+
+        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
+            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
+            ->getMock();
+
+        self::expectException(\RuntimeException::class);
+        self::expectExceptionMessage('User registration: Case number 1234123t already used');
+
+        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
@@ -337,7 +376,7 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $clientRepo = m::mock(ClientRepository::class)
-            ->shouldReceive('findOneByCaseNumber')->andReturn($client)
+            ->shouldReceive('findByCaseNumber')->andReturn($client)
             ->getMock();
 
         $userRepo = m::mock(UserRepository::class)
@@ -349,14 +388,14 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
             ->getMock();
 
-        $casrecVerificationService = m::mock(PreRegistrationVerificationService::class)
+        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
         self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
-        $this->userRegistrationService = new UserRegistrationService($em, $casrecVerificationService);
+        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
     }
 

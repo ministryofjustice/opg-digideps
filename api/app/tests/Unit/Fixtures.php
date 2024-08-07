@@ -9,6 +9,7 @@ use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
+use App\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
@@ -19,14 +20,10 @@ class Fixtures
 {
     public const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
+    public function __construct(
+        private EntityManager $em,
+        private ReportService $reportService
+    ) {
     }
 
     public function getEntityManager()
@@ -544,7 +541,7 @@ class Fixtures
     /**
      * @param string $deputyNo
      *
-     * @return Deputy
+     * @return EntityDir\Deputy
      */
     public function findDeputyByNumber($deputyNo)
     {

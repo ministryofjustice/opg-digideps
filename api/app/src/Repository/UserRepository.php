@@ -120,7 +120,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             if (1 === count($searchTerms)) {
                 $this->addBroadMatchFilter($searchTerm, $includeClients);
             } else {
-                $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1], $includeClients);
+                $this->addFullNameBestMatchFilter($searchTerms[0], $searchTerms[1], $includeClients);
             }
         }
 
@@ -145,16 +145,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @return string
      */
-    public function addFullNameExactMatchFilter(string $firstName, string $lastname, bool $includeClients)
+    public function addFullNameBestMatchFilter(string $firstName, string $otherName, bool $includeClients)
     {
-        $nameBasedQuery = '(lower(u.firstname) = :firstname AND lower(u.lastname) = :lastname)';
+        $nameBasedQuery = '(lower(u.firstname) LIKE :firstname AND (lower(u.firstname) LIKE :othername OR lower(u.lastname) LIKE :othername))';
 
         if ($includeClients) {
-            $nameBasedQuery .= ' OR (lower(c.firstname) = :firstname AND lower(c.lastname) = :lastname)';
+            $nameBasedQuery .= ' OR (lower(c.firstname) LIKE :firstname AND (lower(c.firstname) LIKE :othername OR lower(c.lastname) LIKE :othername))';
         }
 
-        $this->qb->setParameter('firstname', strtolower($firstName));
-        $this->qb->setParameter('lastname', strtolower($lastname));
+        $this->qb->setParameter('firstname', '%'.strtolower($firstName.'%'));
+        $this->qb->setParameter('othername', '%'.strtolower($otherName.'%'));
 
         $this->qb->andWhere($nameBasedQuery);
     }

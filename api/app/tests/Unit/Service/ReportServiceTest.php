@@ -16,7 +16,10 @@ use App\Repository\BankAccountRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
+use App\Service\BankHolidaysAPIService;
+use App\Service\CarbonBusinessDaysService;
 use App\Service\ReportService;
+use Cmixin\BusinessDay;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -43,6 +46,8 @@ class ReportServiceTest extends TestCase
      * @var Report
      */
     private $report;
+    private CarbonBusinessDaysService $carbonBusinessDaysService;
+    private BusinessDay $businessDaysService;
 
     public function setUp(): void
     {
@@ -56,7 +61,14 @@ class ReportServiceTest extends TestCase
         $this->asset1 = (new AssetProperty())
             ->setAddress('SW1')
             ->setOwned(AssetProperty::OWNED_FULLY);
+
+        // mock carbonBusinessDayService
+        $this->bankHolidayAPIService = m::mock(BankHolidaysAPIService::class);
+        $this->bankHolidayAPIService->shouldReceive('getBankHolidays')->andReturn([]);
+        $this->carbonBusinessDaysService = new CarbonBusinessDaysService($this->bankHolidayAPIService);
+
         $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
+
         $this->report
             ->setNoAssetToAdd(false)
             ->addAsset($this->asset1)
@@ -99,7 +111,7 @@ class ReportServiceTest extends TestCase
             }
         });
 
-        $this->sut = new ReportService($this->em, $this->reportRepo);
+        $this->sut = new ReportService($this->em, $this->reportRepo, $this->carbonBusinessDaysService);
     }
 
     public function testSubmitInvalid()
@@ -114,7 +126,7 @@ class ReportServiceTest extends TestCase
         $report = $this->report;
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo, $this->carbonBusinessDaysService])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -132,6 +144,7 @@ class ReportServiceTest extends TestCase
         $reportService->shouldReceive('clonePersistentResources')->with(\Mockery::type(Report::class), $report);
 
         $report->setAgreedBehalfDeputy(true);
+
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime('2016-01-15'));
 
         // assert current report
@@ -159,7 +172,7 @@ class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo, $this->carbonBusinessDaysService])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -217,7 +230,8 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo, $this->carbonBusinessDaysService])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -289,7 +303,7 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo, $this->carbonBusinessDaysService])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -321,7 +335,7 @@ class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy(true);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo, $this->carbonBusinessDaysService])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -450,7 +464,7 @@ class ReportServiceTest extends TestCase
         $em->getRepository(Asset::class)->willReturn($assetRepository->reveal());
         $em->getRepository(BankAccount::class)->willReturn($bankAccountRepository->reveal());
 
-        $sut = new ReportService($em->reveal(), $reportRepository->reveal());
+        $sut = new ReportService($em->reveal(), $reportRepository->reveal(), $this->carbonBusinessDaysService);
 
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
@@ -492,7 +506,7 @@ class ReportServiceTest extends TestCase
     {
         $user = $this->user->setActive(null);
 
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo, $this->carbonBusinessDaysService])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');

@@ -409,3 +409,20 @@ services:
 
     App\Service\Audit\LocalAuditLogHandler:
         class: App\Service\Audit\LocalAuditLogHandler
+
+    Http\Adapter\Guzzle7\Client:
+        class: Http\Adapter\Guzzle7\Client
+
+    GuzzleHttp\Client:
+        arguments:
+            $config:
+                timeout: 30
+                allow_redirects: false
+
+    App\Service\BankHolidaysAPIService:
+        class: App\Service\BankHolidaysAPIService
+
+    App\Service\CarbonBusinessDaysService:
+        class: App\Service\CarbonBusinessDaysService
+        arguments:
+            $bankHolidaysAPIService: '@App\Service\BankHolidaysAPIService'
