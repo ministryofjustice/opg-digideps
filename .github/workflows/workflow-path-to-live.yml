@@ -388,24 +388,11 @@ jobs:
       timeout: "700"
     secrets: inherit
 
-  restore_to_preproduction:
-    name: restore to preproduction
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - backup_production
-    with:
-      workspace: preproduction
-      account_name: preproduction
-      task_name: "restore_from_production"
-      timeout: "700"
-    secrets: inherit
-
   end_of_workflow:
     name: end of workflow
     runs-on: ubuntu-latest
     needs:
-      - restore_to_preproduction
+      - backup_production
       - codecov
       - workflow_variables
     steps:
