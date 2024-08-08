@@ -73,13 +73,15 @@ class UserRegistrationService
             $selfRegisterData->getLastname(),
             $user->getAddressPostcode()
         );
-
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             $user->setDeputyNo($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setDeputyUid($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setPreRegisterValidatedDate(new \DateTime('now'));
             $user->setRegistrationRoute(User::SELF_REGISTER);
-            $user->setIsPrimary(true);
+
+            if ($this->preRegistrationVerificationService->isSingleDeputyAccount()) {
+                $user->setIsPrimary(true);
+            }
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
@@ -124,8 +126,17 @@ class UserRegistrationService
      *
      * @throws \RuntimeException
      */
-    public function retrieveCoDeputyUid()
+    public function retrieveCoDeputyUid($selfRegisterData)
     {
+//        $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
+//        if (!$user) {
+//            throw new \RuntimeException('User registration: not found', 421);
+//        }
+//
+//        if($this->preRegistrationVerificationService->isSingleDeputyAccount()){
+//            $user->setIsPrimary(true);
+//        }
+
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             return $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
         } else {
