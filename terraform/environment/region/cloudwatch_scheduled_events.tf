@@ -366,21 +366,19 @@ resource "aws_cloudwatch_event_target" "sleep_mode_off" {
 }
 
 # Block malicious IPs on the WAF
+data "aws_lambda_function" "block_ips_lambda" {
+  function_name = "block-ips"
+}
 
-# TODO - Uncomment this as second part of DDLS-206
-#data "aws_lambda_function" "block_ips_lambda" {
-#  function_name = "block-ips"
-#}
-#
-#resource "aws_cloudwatch_event_rule" "block_ips" {
-#  name                = "block-ips-${terraform.workspace}"
-#  description         = "Execute the blocking of malicious IPs for ${terraform.workspace}"
-#  schedule_expression = "rate(5 minutes)"
-#  is_enabled          = var.account.waf_ip_blocking_enabled
-#}
-#
-#resource "aws_cloudwatch_event_target" "block_ips" {
-#  target_id = "block-ips-${terraform.workspace}"
-#  arn       = data.aws_lambda_function.block_ips_lambda.arn
-#  rule      = aws_cloudwatch_event_rule.block_ips.name
-#}
+resource "aws_cloudwatch_event_rule" "block_ips" {
+  name                = "block-ips-${terraform.workspace}"
+  description         = "Execute the blocking of malicious IPs for ${terraform.workspace}"
+  schedule_expression = "rate(5 minutes)"
+  is_enabled          = var.account.waf_ip_blocking_enabled
+}
+
+resource "aws_cloudwatch_event_target" "block_ips" {
+  target_id = "block-ips-${terraform.workspace}"
+  arn       = data.aws_lambda_function.block_ips_lambda.arn
+  rule      = aws_cloudwatch_event_rule.block_ips.name
+}
