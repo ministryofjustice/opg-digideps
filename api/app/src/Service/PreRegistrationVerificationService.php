@@ -77,6 +77,14 @@ class PreRegistrationVerificationService
         return count($crMatches) > 1;
     }
 
+    public function isSingleDeputyAccount(): bool
+    {
+        $deputyUid = $this->getLastMatchedDeputyNumbers();
+        $existingDeputyAccounts = $this->preRegistrationRepository->findBy(['deputyUid' => $deputyUid]);
+
+        return !(count($existingDeputyAccounts) > 1);
+    }
+
     /**
      * @return PreRegistration[]
      */

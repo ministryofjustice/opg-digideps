@@ -109,7 +109,14 @@ class SelfRegisterController extends RestController
 
         try {
             $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
-            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid();
+            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid($selfRegisterData);
+
+            $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
+            if (!$user) {
+                throw new \RuntimeException('User registration: not found', 421);
+            }
+
+            $existingDeputyAccounts = $this->em->getRepository('App\Entity\User')->findBy(['deputyUid' => $coDeputyUid])['deputyUid'];
 
             $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
             if (!empty($existingDeputyCase)) {
@@ -122,7 +129,7 @@ class SelfRegisterController extends RestController
             throw $e;
         }
 
-        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid];
+        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid, $existingDeputyAccounts];
     }
 
     public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)

@@ -47,7 +47,6 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
-     *
      * @Template("@App/CoDeputy/verification.html.twig")
      */
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
@@ -99,6 +98,10 @@ class CoDeputyController extends AbstractController
                     $user->setActive(true);
                     $user->setRegistrationDate(new \DateTime());
                     $user->setPreRegisterValidatedDate(new \DateTime());
+
+                    if (!$coDeputyVerificationData['$existingDeputyAccounts']) {
+                        $user->setIsPrimary(true);
+                    }
 
                     if ($mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
@@ -159,7 +162,6 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
-     *
      * @Template("@App/CoDeputy/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -218,7 +220,6 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
-     *
      * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
      * @return array|RedirectResponse
