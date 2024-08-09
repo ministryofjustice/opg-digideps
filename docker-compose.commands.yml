@@ -15,3 +15,15 @@ services:
     build:
       context: ./disaster-recovery/backup
       dockerfile: Dockerfile
+
+  zap-admin:
+    image: softwaresecurityproject/zap-stable
+    volumes:
+      - "./zap/:/zap/wrk/"
+    command: bash -c "zap.sh -cmd -addonupdate -addoninstall pscanrules -addoninstall pscanrulesBeta -addoninstall pscanrulesAlpha -addoninstall ascanrules -addoninstall ascanrulesBeta -addoninstall ascanrulesAlpha; zap.sh -cmd -autorun /zap/wrk/zap-digideps-admin.yaml"
+
+  zap-front:
+    image: softwaresecurityproject/zap-stable
+    volumes:
+      - "./zap/:/zap/wrk/"
+    command: bash -c "zap.sh -cmd -addonupdate -addoninstall pscanrules -addoninstall pscanrulesBeta -addoninstall pscanrulesAlpha -addoninstall ascanrules -addoninstall ascanrulesBeta -addoninstall ascanrulesAlpha; zap.sh -cmd -autorun /zap/wrk/zap-digideps-front.yaml"

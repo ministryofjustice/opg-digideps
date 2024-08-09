@@ -62,3 +62,6 @@ api/tests/coverage/
 #cache grinds
 client/app/cachegrind/*/cachegrind*
 api/cachegrind/*/cachegrind*
+
+#Zap
+zap/ModernReport/

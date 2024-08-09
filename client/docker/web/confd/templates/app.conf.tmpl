@@ -7,11 +7,10 @@ server {
     ## Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
     add_header Referrer-Policy           "same-origin" always;
-    add_header Content-Security-Policy   "default-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; script-src 'self' https://*.google-analytics.com https://*.googletagmanager.com; style-src 'self';" always;
+    add_header Content-Security-Policy   "default-src 'self'; img-src 'self' data: https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://region1.google-analytics.com https://www.google-analytics.com https://www.analytics.google.com https://www.googletagmanager.com; script-src 'self' https://region1.google-analytics.com https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self';" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options    "nosniff" always;
     add_header Permissions-Policy        "geolocation=()" always;
-    add_header X-Frame-Options "deny";
 
     # This is handled by PHP
     client_max_body_size 0;
