@@ -29,6 +29,7 @@ framework:
     cookie_httponly: true
     # set this only HTTPS environments to force cookie only to be sent over HTTPS (when true, login won't work on non-HTTPS domains)
     cookie_secure: "%session_cookie_secure%"
+    cookie_samesite: strict
   fragments: ~
   http_method_override: true
   serializer:

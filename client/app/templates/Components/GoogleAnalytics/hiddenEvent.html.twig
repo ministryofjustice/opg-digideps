@@ -1,3 +1,3 @@
 {% if (ga is defined) and (app.user is defined) and (dt is defined) %}
-    <img src="http://www.google-analytics.com/collect?v=1&t=pageview&tid={{ ga.default }}&uid={{ app.user.id }}&dl={{ app.request.uri | url_encode }}&dt={{ dt }}&z={{ random(1, 99999999) }}">
+    <img src="https://www.google-analytics.com/collect?v=1&t=pageview&tid={{ ga.default }}&uid={{ app.user.id }}&dl={{ app.request.uri | url_encode }}&dt={{ dt }}&z={{ random(1, 99999999) }}">
 {% endif %}

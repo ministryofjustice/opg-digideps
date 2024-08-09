@@ -79,12 +79,12 @@ jobs:
   - parameters:
       context: "Digideps"
       user: "admin"
+      maxScanDurationInMins: 30
       threadPerHost: 5
     policyDefinition:
       defaultStrength: "High"
       defaultThreshold: "Low"
-    name: "activeScan"
-    type: "activeScan"
+      rules: []
   - parameters:
       maxDuration: 10
     name: "passiveScan-wait"

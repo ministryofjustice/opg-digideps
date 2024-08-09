@@ -183,10 +183,10 @@ lint-js: ##@javascript Lint JS resources
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml run node-js --build --rm run fix
 
 zap-admin: up-app reset-database reset-fixtures ##@zap Run ZAP against local admin
-	docker compose -f docker-compose.yml -f docker-compose.dev.yml up zap-admin
+	docker compose -f docker-compose.yml -f docker-compose.commands.yml up zap-admin
 
 zap-front: up-app reset-database reset-fixtures ##@zap Run ZAP against local frontend
-	docker compose -f docker-compose.yml -f docker-compose.dev.yml up zap-front
+	docker compose -f docker-compose.yml -f docker-compose.commands.yml up zap-front
 
 smoke-tests: ##@smoke-tests Run smoke tests (requires app to be up)
 	docker compose build orchestration

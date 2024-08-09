@@ -204,6 +204,18 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
+        //         $submittedToken = $request->request->get('_csrf_token');
+        //
+        //         if ($submittedToken) {
+        //             file_put_contents('php://stderr', print_r('CSRF token submitted: ' . $submittedToken, TRUE));
+        //         } else {
+        //             file_put_contents('php://stderr', print_r('No CSRF token submitted.', TRUE));
+        //         }
+        //
+        //         // You might also log this or debug further to see if it's valid
+        //         $isTokenValid = $this->isCsrfTokenValid('logout', $submittedToken);
+        //         file_put_contents('php://stderr', print_r('Is CSRF token valid? ' . ($isTokenValid ? 'Yes' : 'No'), TRUE));
+
         // Handled as automatically as part of Symfony security component
     }
 

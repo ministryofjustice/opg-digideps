@@ -77,6 +77,21 @@ jobs:
     name: "passiveScan-wait"
     type: "passiveScan-wait"
   - parameters:
+      context: "Digideps"
+      user: "admin"
+      maxScanDurationInMins: 30
+      threadPerHost: 5
+    policyDefinition:
+      defaultStrength: "High"
+      defaultThreshold: "Low"
+      rules: []
+    name: "activeScan"
+    type: "activeScan"
+  - parameters:
+      maxDuration: 10
+    name: "passiveScan-wait"
+    type: "passiveScan-wait"
+  - parameters:
       template: "modern"
       theme: "console"
       reportDir: "/zap/wrk/ModernReport"
