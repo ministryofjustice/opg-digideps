@@ -64,19 +64,40 @@ env:
     progressToStdout: true
   vars: {}
 jobs:
-  - parameters:
+  - name: "spider"
+    type: "spider"
+    parameters:
       context: "Digideps"
       user: "admin"
       url: "http://frontend-webserver"
       maxDepth: 10
       maxParseSizeBytes: 26214400
-    name: "spider"
-    type: "spider"
-  - parameters:
-      maxDuration: 10
-    name: "passiveScan-wait"
+
+  - name: "passiveScan-wait"
     type: "passiveScan-wait"
-  - parameters:
+    parameters:
+      maxDuration: 10
+
+  - name: "activeScan"
+    type: "activeScan"
+    parameters:
+      context: "Digideps"
+      user: "admin"
+      maxScanDurationInMins: 30
+      threadPerHost: 5
+    policyDefinition:
+      defaultStrength: "High"
+      defaultThreshold: "Low"
+      rules: []
+
+  - name: "passiveScan-wait"
+    type: "passiveScan-wait"
+    parameters:
+      maxDuration: 10
+
+  - name: "Modern Report"
+    type: "report"
+    parameters:
       template: "modern"
       theme: "console"
       reportDir: "/zap/wrk/ModernReport"
@@ -101,5 +122,3 @@ jobs:
       - "params"
       - "chart"
       - "statistics"
-    name: "Modern Report"
-    type: "report"

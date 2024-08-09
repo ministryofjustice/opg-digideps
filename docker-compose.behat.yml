@@ -40,15 +40,3 @@ services:
       target: testing
     environment:
       NODE_ENV: production
-
-  zap-admin:
-    image: owasp/zap2docker-stable
-    volumes:
-      - "./zap/:/zap/wrk/"
-    command: bash -c "zap.sh -cmd -addonupdate -addoninstall pscanrules -addoninstall pscanrulesBeta -addoninstall pscanrulesAlpha -addoninstall ascanrules -addoninstall ascanrulesBeta -addoninstall ascanrulesAlpha; zap.sh -cmd -autorun /zap/wrk/zap-digideps-admin.yaml"
-
-  zap-front:
-    image: owasp/zap2docker-stable
-    volumes:
-      - "./zap/:/zap/wrk/"
-    command: bash -c "zap.sh -cmd -addonupdate -addoninstall pscanrules -addoninstall pscanrulesBeta -addoninstall pscanrulesAlpha -addoninstall ascanrules -addoninstall ascanrulesBeta -addoninstall ascanrulesAlpha; zap.sh -cmd -autorun /zap/wrk/zap-digideps-front.yaml"
