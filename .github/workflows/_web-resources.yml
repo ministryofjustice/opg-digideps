@@ -11,16 +11,16 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
       - name: create nvmrc file
         run: grep "FROM node:" Dockerfile | awk -F' ' '{print $2}' | sed 's/^node:\(.*\)-.*/\1/' > .nvmrc
         working-directory: client/docker/resources
-      - uses: actions/setup-node@25b062c917b0c75f8b47d8469aff6c94ffd89abb # pin@v3.6.0
+      - uses: actions/setup-node@26961cf329f22f6837d5f54c3efd76b480300ace # pin@v3.6.0
         with:
           node-version-file: "client/docker/resources/.nvmrc"
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@a2ed59d39b352305bdd2f628719a53b2cc4f9613 # pin@v3.0.8
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -46,7 +46,7 @@ jobs:
           NODE_ENV=production npm run build
         working-directory: client/resources
       - name: archive dist
-        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb # pin@v3.1.0
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # pin@v3.1.0
         with:
           name: web-distribution
           path: client/resources/public

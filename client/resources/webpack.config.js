@@ -6,6 +6,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const tag = (new Date()).getTime()
 
+const outputDirWithTimestamp = path.resolve(__dirname, 'public/assets/' + tag)
+const fallbackOutputDir = path.resolve(__dirname, 'public/assets/fallback')
+
 module.exports = {
   entry: {
     application: './assets/scss/application.scss',
@@ -61,7 +64,7 @@ module.exports = {
   },
   output: {
     filename: 'javascripts/[name].js',
-    path: path.resolve(__dirname, 'public/assets/' + tag)
+    path: outputDirWithTimestamp
   },
   plugins: [
     {
@@ -92,12 +95,23 @@ module.exports = {
     }),
     {
       apply: function (compiler) {
-        // Copy CSS file into main assets folder
-        compiler.hooks.afterEmit.tap('CopyOutputPlugin', () => {
-          fs.copyFileSync(
-            path.resolve(__dirname, 'public/assets/' + tag + '/stylesheets/application.css'),
-            path.resolve(__dirname, 'public/images/application.css')
-          )
+        compiler.hooks.afterEmit.tapAsync('CopyOutputPlugin', (compilation, callback) => {
+          const files = Object.keys(compilation.assets)
+
+          files.forEach(file => {
+            // Remove query strings from file names
+            const cleanFileName = file.split('?')[0]
+
+            const sourcePath = path.join(outputDirWithTimestamp, cleanFileName)
+            const destPath = path.join(fallbackOutputDir, cleanFileName)
+
+            // Ensure the directory exists
+            fs.mkdirSync(path.dirname(destPath), { recursive: true })
+
+            fs.copyFileSync(sourcePath, destPath)
+          })
+
+          callback()
         })
       }
     }

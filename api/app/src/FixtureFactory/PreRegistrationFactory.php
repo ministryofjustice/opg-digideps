@@ -20,7 +20,7 @@ class PreRegistrationFactory
     public function create(array $data): PreRegistration
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
-        $deputyNumber = str_pad((string) rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        $deputyNumber = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
         $reportType = 'ndr' == $data['reportType'] ? 'OPG102' : $data['reportType'];
 
         $dto = (new LayDeputyshipDto())
@@ -47,7 +47,7 @@ class PreRegistrationFactory
 
     public function createCoDeputy(string $caseNumber, array $data): PreRegistration
     {
-        $deputyUid = (string) mt_rand(1, 999999999);
+        $deputyUid = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($caseNumber)

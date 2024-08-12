@@ -1,0 +1,77 @@
+name: "[Manual] Spin up Development environment"
+
+on: workflow_dispatch
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  latest_deployed_image:
+    name: get latest deployed image
+    uses: ./.github/workflows/_latest-deployed-image.yml
+    with:
+      workspace: training
+      terraform_path: environment
+      account_name: preproduction
+    secrets: inherit
+
+  terraform_apply_development:
+    name: development environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - latest_deployed_image
+    with:
+      workspace: development
+      terraform_path: environment
+      apply: true
+      account_name: development
+      container_version: ${{ needs.latest_deployed_image.outputs.image_tag }}
+      pull_request_path: true
+    secrets: inherit
+
+  reset_database:
+    name: reset development database
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - terraform_apply_development
+    with:
+      workspace: development
+      account_name: development
+      task_name: "reset_database"
+      timeout: "500"
+    secrets: inherit
+
+  slack_notify_success:
+    name: notify of success
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - reset_database
+    with:
+      success: yes
+      branch: main
+      account: 515688267891
+      scheduled_task: "Development Environment Spun Up"
+    secrets: inherit
+
+  slack_notify_failure:
+    name: notify of failure
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - reset_database
+    with:
+      success: no
+      branch: main
+      account: 515688267891
+      scheduled_task: "Development Environment Spun Up"
+    secrets: inherit

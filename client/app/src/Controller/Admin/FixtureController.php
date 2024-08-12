@@ -17,7 +17,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
@@ -55,7 +54,9 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/", name="admin_fixtures")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Fixtures/index.html.twig")
      */
     public function fixtures()
@@ -65,7 +66,9 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/court-orders", name="admin_fixtures_court_orders")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
      */
     public function courtOrdersAction(Request $request)
@@ -137,9 +140,8 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @param KernelInterface $kernel
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId): JsonResponse
     {
@@ -158,6 +160,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createAdmin", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function createAdmin(Request $request)
@@ -181,6 +184,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/getUserIDByEmail/{email}", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function getUserIDByEmail(string $email)
@@ -203,6 +207,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createUser", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createUser(Request $request)
@@ -228,6 +233,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/deleteUser", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
     public function deleteUser(Request $request)
@@ -247,6 +253,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createClientAttachDeputy", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createClientAndAttachToDeputy(Request $request)
@@ -283,6 +290,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/createClientAttachOrgs", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function createClientAndAttachToOrg(Request $request)
@@ -307,7 +315,7 @@ class FixtureController extends AbstractController
                             'postCode' => $request->query->get('postCode'),
                             'caseNumber' => $request->query->get('caseNumber'),
                             'orgEmailIdentifier' => $request->query->get('orgEmailIdentifier'),
-                            'namedDeputyEmail' => $request->query->get('namedDeputyEmail'),
+                            'deputyEmail' => $request->query->get('deputyEmail'),
                         ]
                     )
                 );
@@ -320,6 +328,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/user-registration-token", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
     public function getUserRegistrationToken(Request $request)
@@ -336,10 +345,10 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/create-pre-registration", name="pre_registration_fixture", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @Template("@App/Admin/Fixtures/preRegistration.html.twig")
      *
-     * @param KernelInterface $kernel
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @Template("@App/Admin/Fixtures/preRegistration.html.twig")
      *
      * @return array
      */
@@ -373,6 +382,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/unsubmit-report/{reportId}", name="unsubmit_report_fixture", methods={"GET", "POST"})
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return void
@@ -395,6 +405,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return Response
@@ -423,6 +434,7 @@ class FixtureController extends AbstractController
 
     /**
      * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return Response

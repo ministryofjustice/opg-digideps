@@ -34,19 +34,12 @@ locals {
       target_type = "security_group_id"
       target      = module.front_service_security_group.id
     }
-    document_sync = {
+    sirius_file_sync = {
       port        = 80
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.document_sync_service_security_group.id
-    }
-    checklist_sync = {
-      port        = 80
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.checklist_sync_service_security_group.id
+      target      = module.sirius_files_sync_service_security_group.id
     }
   }
 }

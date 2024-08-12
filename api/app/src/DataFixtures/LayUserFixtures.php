@@ -3,10 +3,13 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\DeputyRepository;
+use App\Service\ReportService;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -104,6 +107,16 @@ class LayUserFixtures extends AbstractDataFixture
         ],
     ];
 
+    private Deputy $deputy;
+
+    private array $deputyUids = [];
+
+    public function __construct(
+        private DeputyRepository $deputyRepository,
+        private ReportService $reportService
+    ) {
+    }
+
     public function doLoad(ObjectManager $manager)
     {
         // Add users from array
@@ -125,6 +138,7 @@ class LayUserFixtures extends AbstractDataFixture
             ->setFirstname($data['id'])
             ->setLastname('User '.$iteration)
             ->setDeputyNo($data['deputyUid'])
+            ->setDeputyUid($data['deputyUid'])
             ->setEmail(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
@@ -138,6 +152,22 @@ class LayUserFixtures extends AbstractDataFixture
             ->setAgreeTermsUse(true);
 
         $manager->persist($user);
+
+        if (!in_array($data['deputyUid'], $this->deputyUids)) {
+            $this->deputyUids[] = $data['deputyUid'];
+            $this->deputy = (new Deputy())
+                ->setFirstname($data['id'])
+                ->setLastname('User '.$iteration)
+                ->setDeputyUid($data['deputyUid'])
+                ->setEmail1(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
+                ->setPhoneMain('07911111111111')
+                ->setAddress1('ABC Road')
+                ->setAddressPostcode('AB1 2CD')
+                ->setAddressCountry('GB')
+                ->setUser($user);
+
+            $manager->persist($this->deputy);
+        }
 
         // Create PreRegistration record for lay deputies
 
@@ -174,7 +204,8 @@ class LayUserFixtures extends AbstractDataFixture
             ->setAddress('ABC Road')
             ->setPostcode('AB1 2CD')
             ->setCountry('GB')
-            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'))
+            ->setDeputy($this->deputy);
 
         $manager->persist($client);
         $user->addClient($client);
@@ -212,6 +243,6 @@ class LayUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return ['dev'];
+        return ['dev', 'local'];
     }
 }

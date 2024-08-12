@@ -104,9 +104,6 @@ class ReportRepository extends ServiceEntityRepository
         return $ret;
     }
 
-    /**
-     * @return mixed
-     */
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
     {
         $caseNumbers = array_map('strtolower', $caseNumbers);
@@ -252,7 +249,7 @@ DQL;
         return $query->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 
-    public function getBenefitsResponseMetrics(string $startDate = null, string $endDate = null, string $deputyType = null): array
+    public function getBenefitsResponseMetrics(?string $startDate = null, ?string $endDate = null, ?string $deputyType = null): array
     {
         $caseStatement = "CASE
         WHEN r.type IN ('103', '102', '104', '103-4', '102-4') THEN 'Lay'
@@ -268,7 +265,7 @@ END deputy_type";
             ->addSelect($caseStatement)
             ->leftJoin('b.report', 'r')
             ->leftJoin('r.client', 'c')
-            ->leftJoin('c.namedDeputy', 'nd');
+            ->leftJoin('c.deputy', 'd');
 
         if ($startDate && $endDate) {
             $startDate = new \DateTime($startDate);
@@ -300,8 +297,8 @@ END deputy_type";
     }
 
     public function getAllReportedImbalanceMetrics(
-        \DateTime $fromDate = null,
-        \DateTime $toDate = null
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null
     ) {
         if (is_null($fromDate) || is_null($toDate)) {
             $fromDate = new \DateTime('first day of last month');

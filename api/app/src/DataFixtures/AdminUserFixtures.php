@@ -82,6 +82,6 @@ class AdminUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return ['dev'];
+        return ['dev', 'local'];
     }
 }

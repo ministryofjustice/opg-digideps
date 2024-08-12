@@ -1,0 +1,272 @@
+Schema,Table,Field,Field_Type,Field_Length,Constraint,FakerType
+public,account,id,integer,,PRIMARY KEY,NA
+public,account,meta,text,,,Lorem
+public,account,sort_code,character varying,6,,StringNumber
+public,action,do_you_expect_decisions_details,text,,,Lorem
+public,action,do_you_have_concerns_details,text,,,Lorem
+public,action,id,integer,,PRIMARY KEY,NA
+public,asset,address,character varying,200,,Lorem
+public,asset,address2,character varying,200,,Lorem
+public,asset,county,character varying,75,,Lorem
+public,asset,description,text,,,Lorem
+public,asset,id,integer,,PRIMARY KEY,NA
+public,asset,occupants,character varying,550,,Lorem
+public,asset,postcode,character varying,10,,PostCode
+public,asset,title,character varying,100,,Lorem
+public,asset,type,character varying,255,,Lorem
+public,checklist,final_decision,character varying,30,,Lorem
+public,checklist,id,integer,,PRIMARY KEY,NA
+public,checklist,lodging_summary,text,,,Lorem
+public,checklist,opg_uuid,character varying,36,,Lorem
+public,checklist,synchronisation_error,text,,,Lorem
+public,checklist,synchronisation_status,character varying,255,,Lorem
+public,checklist_information,id,integer,,PRIMARY KEY,NA
+public,checklist_information,information,text,,,Lorem
+public,client,address,character varying,200,,Lorem
+public,client,address2,character varying,200,,Lorem
+public,client,address3,character varying,200,,Lorem
+public,client,address4,character varying,200,,Lorem
+public,client,address5,character varying,200,,Lorem
+public,client,country,character varying,10,,Lorem
+public,client,email,character varying,60,,Email
+public,client,firstname,character varying,50,,FirstName
+public,client,id,integer,,PRIMARY KEY,NA
+public,client,lastname,character varying,50,,LastName
+public,client,phone,character varying,20,,PhoneNumber
+public,client,postcode,character varying,10,,PostCode
+public,client_benefits_check,do_others_receive_money_on_clients_behalf,character varying,255,,Lorem
+public,client_benefits_check,dont_know_money_explanation,text,,,Lorem
+public,client_benefits_check,id,uuid,,PRIMARY KEY,NA
+public,client_benefits_check,never_checked_explanation,text,,,Lorem
+public,client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
+public,client_contact,address1,character varying,200,,Lorem
+public,client_contact,address2,character varying,200,,Lorem
+public,client_contact,address3,character varying,200,,Lorem
+public,client_contact,address4,character varying,200,,Lorem
+public,client_contact,address5,character varying,200,,Lorem
+public,client_contact,address_country,character varying,10,,Lorem
+public,client_contact,address_postcode,character varying,10,,PostCode
+public,client_contact,email,character varying,60,,Email
+public,client_contact,firstname,character varying,100,,FirstName
+public,client_contact,id,integer,,PRIMARY KEY,NA
+public,client_contact,job_title,character varying,150,,Lorem
+public,client_contact,lastname,character varying,100,,LastName
+public,client_contact,org_name,character varying,150,,Lorem
+public,client_contact,phone,character varying,20,,PhoneNumber
+public,contact,address,character varying,200,,Lorem
+public,contact,address2,character varying,200,,Lorem
+public,contact,contact_name,character varying,255,,Lorem
+public,contact,country,character varying,10,,Lorem
+public,contact,county,character varying,200,,Lorem
+public,contact,explanation,text,,,Lorem
+public,contact,id,integer,,PRIMARY KEY,NA
+public,contact,phone1,character varying,20,,PhoneNumber
+public,contact,postcode,character varying,10,,PostCode
+public,contact,relationship,character varying,100,,Lorem
+public,court_order,id,integer,,PRIMARY KEY,NA
+public,court_order,type,character varying,10,,Lorem
+public,dd_user,address1,character varying,200,,Lorem
+public,dd_user,address2,character varying,200,,Lorem
+public,dd_user,address3,character varying,200,,Lorem
+public,dd_user,address4,character varying,200,,Lorem
+public,dd_user,address5,character varying,200,,Lorem
+public,dd_user,address_postcode,character varying,10,,PostCode
+public,dd_user,deputy_no,character varying,100,,Lorem
+public,dd_user,firstname,character varying,100,,FirstName
+public,dd_user,id,integer,,PRIMARY KEY,NA
+public,dd_user,job_title,character varying,150,,Lorem
+public,dd_user,lastname,character varying,100,,LastName
+public,dd_user,password,character varying,100,,Lorem
+public,dd_user,phone_alternative,character varying,20,,PhoneNumber
+public,dd_user,phone_main,character varying,20,,PhoneNumber
+public,dd_user,registration_token,character varying,100,,Lorem
+public,dd_user,role_name,character varying,50,,Lorem
+public,dd_user,salt,character varying,100,,Lorem
+public,debt,debt_type_id,character varying,255,,Lorem
+public,debt,id,integer,,PRIMARY KEY,NA
+public,debt,more_details,text,,,Lorem
+public,decision,client_involved_details,text,,,Lorem
+public,decision,description,text,,,Lorem
+public,decision,id,integer,,PRIMARY KEY,NA
+public,deputy,address1,character varying,200,,Lorem
+public,deputy,address2,character varying,200,,Lorem
+public,deputy,address3,character varying,200,,Lorem
+public,deputy,address4,character varying,200,,Lorem
+public,deputy,address5,character varying,200,,Lorem
+public,deputy,address_country,character varying,10,,Lorem
+public,deputy,address_postcode,character varying,10,,PostCode
+public,deputy,deputy_uid,character varying,20,,Lorem
+public,deputy,email1,character varying,60,,Email
+public,deputy,email2,character varying,60,,Email
+public,deputy,email3,character varying,60,,Email
+public,deputy,firstname,character varying,100,,FirstName
+public,deputy,id,integer,,PRIMARY KEY,NA
+public,deputy,lastname,character varying,100,,LastName
+public,deputy,phone_alternative,character varying,20,,PhoneNumber
+public,deputy,phone_main,character varying,20,,PhoneNumber
+public,deputy_case,client_id,integer,,PRIMARY KEY,NA
+public,deputy_case,user_id,integer,,PRIMARY KEY,NA
+public,document,filename,character varying,255,,Lorem
+public,document,id,integer,,PRIMARY KEY,NA
+public,document,storage_reference,character varying,512,,Lorem
+public,document,synchronisation_error,text,,,Lorem
+public,document,synchronisation_status,character varying,255,,Lorem
+public,expense,explanation,text,,,Lorem
+public,expense,id,integer,,PRIMARY KEY,NA
+public,fee,fee_type_id,character varying,255,,Lorem
+public,fee,id,integer,,PRIMARY KEY,NA
+public,fee,more_details,text,,,Lorem
+public,gift,explanation,text,,,Lorem
+public,gift,id,integer,,PRIMARY KEY,NA
+public,income_received_on_clients_behalf,id,uuid,,PRIMARY KEY,NA
+public,income_received_on_clients_behalf,money_type,character varying,255,,Lorem
+public,income_received_on_clients_behalf,who_received_money,character varying,255,,Lorem
+public,lifestyle,activity_details_no,text,,,Lorem
+public,lifestyle,activity_details_yes,text,,,Lorem
+public,lifestyle,care_appointments,text,,,Lorem
+public,lifestyle,id,integer,,PRIMARY KEY,NA
+public,mental_capacity,has_capacity_changed,character varying,25,,Lorem
+public,mental_capacity,has_capacity_changed_details,text,,,Lorem
+public,mental_capacity,id,integer,,PRIMARY KEY,NA
+public,migrations,version,character varying,1024,PRIMARY KEY,NA
+public,money_short_category,id,integer,,PRIMARY KEY,NA
+public,money_transaction,description,text,,,Lorem
+public,money_transaction,id,integer,,PRIMARY KEY,NA
+public,money_transaction,meta,text,,,Lorem
+public,money_transaction_short,description,text,,,Lorem
+public,money_transaction_short,id,integer,,PRIMARY KEY,NA
+public,money_transaction_short,type,character varying,255,,Lorem
+public,money_transfer,description,character varying,75,,Lorem
+public,money_transfer,id,integer,,PRIMARY KEY,NA
+public,note,category,character varying,100,,Lorem
+public,note,content,text,,,Lorem
+public,note,id,integer,,PRIMARY KEY,NA
+public,note,title,character varying,150,,Lorem
+public,odr,action_give_gifts_to_client_details,text,,,Lorem
+public,odr,action_more_info_details,text,,,Lorem
+public,odr,agreed_behalf_deputy,character varying,50,,Lorem
+public,odr,agreed_behalf_deputy_explanation,text,,,Lorem
+public,odr,debt_management,text,,,Lorem
+public,odr,expect_compensation_damages,text,,,Lorem
+public,odr,expect_compensation_damages_details,text,,,Lorem
+public,odr,id,integer,,PRIMARY KEY,NA
+public,odr,receive_other_income,text,,,Lorem
+public,odr,receive_other_income_details,text,,,Lorem
+public,odr,receive_state_pension,text,,,Lorem
+public,odr_account,account_type,character varying,125,,Lorem
+public,odr_account,bank_name,character varying,500,,Lorem
+public,odr_account,id,integer,,PRIMARY KEY,NA
+public,odr_account,sort_code,character varying,6,,Lorem
+public,odr_asset,address,character varying,200,,Lorem
+public,odr_asset,address2,character varying,200,,Lorem
+public,odr_asset,county,character varying,75,,Lorem
+public,odr_asset,description,text,,,Lorem
+public,odr_asset,id,integer,,PRIMARY KEY,NA
+public,odr_asset,occupants,character varying,550,,Lorem
+public,odr_asset,owned,character varying,15,,Lorem
+public,odr_asset,postcode,character varying,10,,PostCode
+public,odr_asset,title,character varying,100,,Lorem
+public,odr_asset,type,character varying,255,,Lorem
+public,odr_client_benefits_check,do_others_receive_money_on_clients_behalf,character varying,255,,Lorem
+public,odr_client_benefits_check,dont_know_money_explanation,text,,,Lorem
+public,odr_client_benefits_check,id,uuid,,PRIMARY KEY,NA
+public,odr_client_benefits_check,never_checked_explanation,text,,,Lorem
+public,odr_client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
+public,odr_debt,debt_type_id,character varying,255,,Lorem
+public,odr_debt,id,integer,,PRIMARY KEY,NA
+public,odr_debt,more_details,text,,,Lorem
+public,odr_expense,explanation,text,,,Lorem
+public,odr_expense,id,integer,,PRIMARY KEY,NA
+public,odr_income_one_off,has_more_details,character varying,255,,Lorem
+public,odr_income_one_off,id,integer,,PRIMARY KEY,NA
+public,odr_income_one_off,more_details,character varying,255,,Lorem
+public,odr_income_one_off,type_id,character varying,255,,Lorem
+public,odr_income_received_on_clients_behalf,id,uuid,,PRIMARY KEY,NA
+public,odr_income_received_on_clients_behalf,money_type,character varying,255,,Lorem
+public,odr_income_received_on_clients_behalf,who_received_money,character varying,255,,Lorem
+public,odr_income_state_benefit,has_more_details,character varying,255,,Lorem
+public,odr_income_state_benefit,id,integer,,PRIMARY KEY,NA
+public,odr_income_state_benefit,more_details,character varying,255,,Lorem
+public,odr_income_state_benefit,type_id,character varying,255,,Lorem
+public,odr_visits_care,does_client_receive_paid_care,text,,,Lorem
+public,odr_visits_care,how_is_care_funded,character varying,255,,Lorem
+public,odr_visits_care,how_often_contact_client,text,,,Lorem
+public,odr_visits_care,id,integer,,PRIMARY KEY,NA
+public,odr_visits_care,plan_move_residence_details,text,,,Lorem
+public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
+public,organisation,email_identifier,character varying,256,,Email
+public,organisation,id,integer,,PRIMARY KEY,NA
+public,organisation,name,character varying,256,,Lorem
+public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
+public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,pre_registration,client_lastname,character varying,50,,LastName
+public,pre_registration,deputy_address_1,character varying,255,,Lorem
+public,pre_registration,deputy_address_2,character varying,255,,Lorem
+public,pre_registration,deputy_address_3,character varying,255,,Lorem
+public,pre_registration,deputy_address_4,character varying,255,,Lorem
+public,pre_registration,deputy_address_5,character varying,255,,Lorem
+public,pre_registration,deputy_firstname,character varying,100,,FirstName
+public,pre_registration,deputy_lastname,character varying,100,,LastName
+public,pre_registration,deputy_postcode,character varying,10,,PostCode
+public,pre_registration,deputy_uid,character varying,100,,Lorem
+public,pre_registration,hybrid,character varying,6,,Lorem
+public,pre_registration,id,integer,,PRIMARY KEY,NA
+public,pre_registration,order_type,character varying,255,,Lorem
+public,pre_registration,type_of_report,character varying,10,,Lorem
+public,prof_deputy_estimate_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_estimate_cost,more_details,text,,,Lorem
+public,prof_deputy_estimate_cost,prof_deputy_estimate_cost_type_id,character varying,255,,Lorem
+public,prof_deputy_interim_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_other_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_other_cost,more_details,text,,,Lorem
+public,prof_deputy_other_cost,prof_deputy_other_cost_type_id,character varying,255,,Lorem
+public,prof_deputy_prev_cost,id,integer,,PRIMARY KEY,NA
+public,prof_service_fee,assessed_or_fixed,character varying,255,,Lorem
+public,prof_service_fee,fee_type_id,character varying,255,,Lorem
+public,prof_service_fee,id,integer,,PRIMARY KEY,NA
+public,prof_service_fee,other_fee_details,character varying,255,,Lorem
+public,prof_service_fee,payment_received,character varying,255,,Lorem
+public,prof_service_fee,service_type_id,character varying,255,,Lorem
+public,report,action_more_info_details,text,,,Lorem
+public,report,agreed_behalf_deputy,character varying,50,,Lorem
+public,report,agreed_behalf_deputy_explanation,text,,,Lorem
+public,report,balance_mismatch_explanation,text,,,Lorem
+public,report,current_prof_payments_received,character varying,255,,Lorem
+public,report,debt_management,text,,,Lorem
+public,report,id,integer,,PRIMARY KEY,NA
+public,report,money_in_exists,text,,,Lorem
+public,report,money_out_exists,text,,,Lorem
+public,report,prof_dc_estimate_hc,character varying,10,,Lorem
+public,report,prof_dc_estimate_more_info_details,text,,,Lorem
+public,report,prof_dc_how_charged,character varying,10,,Lorem
+public,report,prof_dc_scco_reason_beyond_estimate,text,,,Lorem
+public,report,prof_fees_estimate_scco_reason,text,,,Lorem
+public,report,reason_for_no_contacts,text,,,Lorem
+public,report,reason_for_no_decisions,text,,,Lorem
+public,report,reason_for_no_fees,text,,,Lorem
+public,report,reason_for_no_money_in,text,,,Lorem
+public,report,reason_for_no_money_out,text,,,Lorem
+public,report,report_status_cached,character varying,20,,Lorem
+public,report,significant_decisions_made,text,,,Lorem
+public,report,status_cached,text,,,Lorem
+public,report,type,character varying,10,,Lorem
+public,report,unsubmitted_sections_list,text,,,Lorem
+public,report,wish_to_provide_documentation,character varying,255,,Lorem
+public,report_submission,id,integer,,PRIMARY KEY,NA
+public,report_submission,opg_uuid,character varying,36,,Lorem
+public,research_type,id,uuid,,PRIMARY KEY,NA
+public,review_checklist,decision,character varying,30,,Lorem
+public,review_checklist,id,integer,,PRIMARY KEY,NA
+public,safeguarding,does_client_receive_paid_care,text,,,Lorem
+public,safeguarding,how_is_care_funded,character varying,255,,Lorem
+public,safeguarding,how_often_contact_client,text,,,Lorem
+public,safeguarding,id,integer,,PRIMARY KEY,NA
+public,safeguarding,who_is_doing_the_caring,text,,,Lorem
+public,satisfaction,comments,text,,,Lorem
+public,satisfaction,deputy_role,character varying,50,,Lorem
+public,satisfaction,id,integer,,PRIMARY KEY,NA
+public,satisfaction,report_type,character varying,9,,Lorem
+public,setting,content,text,,,Lorem
+public,setting,id,character varying,64,PRIMARY KEY,NA
+public,user_research_response,deputyship_length,character varying,255,,Lorem
+public,user_research_response,id,uuid,,PRIMARY KEY,NA

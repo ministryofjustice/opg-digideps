@@ -35,7 +35,9 @@ alert:
   caseNumber: Case number
   email: Email
   clientLastName: Client Last Name
+  deputyFirstName: Deputy First Name
   deputyLastName: Deputy Last Name
   deputyPostCode: Deputy Postal Code
+  coDeputyFirstName: Co-Deputy First Name
   coDeputyLastName: Co-Deputy Last Name
   coDeputyPostCode: Co-Deputy Postal Code

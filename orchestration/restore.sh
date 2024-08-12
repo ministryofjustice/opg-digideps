@@ -18,6 +18,8 @@ gzip -d dump.sql.gz
 if [ "${DROP_PUBLIC}" == "yes" ]; then
 	echo "Recreating the public schema"
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema public cascade; create schema public;"
+	echo "Recreating the ddls145 schema"
+	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema ddls145 cascade;"
 fi
 
 echo "Restoring ${LATEST_BACKUP}"
@@ -25,3 +27,9 @@ echo "Restoring ${LATEST_BACKUP}"
 psql -v ON_ERROR_STOP=1 $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
 echo "Restore complete"
+
+if [ "${ANONYMISE}" == "yes" ]; then
+	echo "Anonymising data..."
+	./anonymisation/anonymise
+	echo "Data Anonymised"
+fi

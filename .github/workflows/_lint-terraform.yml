@@ -20,11 +20,11 @@ jobs:
           - folder: "environment"
           - folder: "account"
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.6
         with:
           terraform_directory: terraform/${{ matrix.folder }}
 
@@ -34,7 +34,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
         with:
           role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
           role-session-name: github-actions-terraform

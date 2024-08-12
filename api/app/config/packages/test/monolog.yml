@@ -5,11 +5,11 @@ monolog:
             type: stream
             path: "%log_path%"
             level: warning
-            formatter: line_formatter
+            formatter: opg_line_formatter
             channels: ["!verbose"]
         csv:
             type: stream
             path: "%log_path%"
             level: notice
-            formatter: logstash_formatter
+            formatter: opg_json_formatter
             channels: ["verbose"]

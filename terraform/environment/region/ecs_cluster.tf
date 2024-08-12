@@ -69,6 +69,10 @@ locals {
       value = "https://${var.front_fully_qualified_domain_name}"
     },
     {
+      name  = "APP_ENV",
+      value = var.account.app_env
+    },
+    {
       name  = "JWT_HOST",
       value = "https://${var.front_fully_qualified_domain_name}"
     },

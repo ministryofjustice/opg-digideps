@@ -25,7 +25,19 @@ jobs:
     with:
       workspace: training
       account_name: preproduction
-      task_name: "integration_test_v2"
+      task_name: "reset_database"
       timeout: "500"
-      override: "sh,./tests/Behat/reset-db.sh"
+    secrets: inherit
+
+  slack_notify_failure:
+    name: notify of failure
+    uses: ./.github/workflows/_slack-notification.yml
+    if: ${{ failure() }}
+    needs:
+      - reset_database
+    with:
+      success: no
+      branch: main
+      account: 515688267891
+      scheduled_task: "Reset Training Environment"
     secrets: inherit

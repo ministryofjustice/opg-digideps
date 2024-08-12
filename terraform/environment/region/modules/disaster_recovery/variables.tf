@@ -3,11 +3,6 @@ variable "default_tags" {
   type        = map(string)
 }
 
-variable "default_role" {
-  description = "The default role to be assumed for resources."
-  type        = string
-}
-
 variable "environment" {
   description = "The environment in which the resources are being deployed."
   type        = string
@@ -65,6 +60,7 @@ variable "aws_vpc_id" {
 }
 
 variable "task_role_assume_policy" {
+  type        = any
   description = "The IAM policy document for task role assumption."
 }
 

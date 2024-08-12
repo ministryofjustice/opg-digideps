@@ -1,0 +1,566 @@
+Schema,Table,Field,Field_Type,Field_Length,Constraint,FakerType
+public,account,account_number,character varying,4,,NA
+public,account,account_type,character varying,125,,NA
+public,account,bank_name,character varying,500,,NA
+public,account,closing_balance,numeric,,,NA
+public,account,created_at,timestamp without time zone,,,NA
+public,account,id,integer,,PRIMARY KEY,NA
+public,account,is_closed,boolean,,,NA
+public,account,is_joint_account,character varying,3,,NA
+public,account,meta,text,,,Lorem
+public,account,opening_balance,numeric,,,NA
+public,account,report_id,integer,,FOREIGN KEY,NA
+public,account,sort_code,character varying,6,,StringNumber
+public,account,updated_at,timestamp without time zone,,,NA
+public,action,do_you_expect_decisions,character varying,4,,NA
+public,action,do_you_expect_decisions_details,text,,,Lorem
+public,action,do_you_have_concerns,character varying,4,,NA
+public,action,do_you_have_concerns_details,text,,,Lorem
+public,action,id,integer,,PRIMARY KEY,NA
+public,action,report_id,integer,,FOREIGN KEY,NA
+public,asset,address,character varying,200,,Lorem
+public,asset,address2,character varying,200,,Lorem
+public,asset,asset_value,numeric,,,NA
+public,asset,county,character varying,75,,Lorem
+public,asset,created_at,timestamp without time zone,,,NA
+public,asset,description,text,,,Lorem
+public,asset,has_charges,character varying,4,,NA
+public,asset,has_mortgage,character varying,4,,NA
+public,asset,id,integer,,PRIMARY KEY,NA
+public,asset,is_rented_out,character varying,4,,NA
+public,asset,is_subject_equity_rel,character varying,4,,NA
+public,asset,mortgage_outstanding,numeric,,,NA
+public,asset,occupants,character varying,550,,Lorem
+public,asset,owned,character varying,15,,NA
+public,asset,owned_percentage,numeric,,,NA
+public,asset,postcode,character varying,10,,PostCode
+public,asset,rent_agreement_end_date,timestamp without time zone,,,NA
+public,asset,rent_income_month,numeric,,,NA
+public,asset,report_id,integer,,FOREIGN KEY,NA
+public,asset,title,character varying,100,,Lorem
+public,asset,type,character varying,255,,Lorem
+public,asset,updated_at,timestamp without time zone,,,NA
+public,asset,valuation_date,date,,,NA
+public,checklist,accounts_balance,character varying,3,,NA
+public,checklist,assets_declared_and_managed,character varying,3,,NA
+public,checklist,bond_adequate,character varying,3,,NA
+public,checklist,bond_order_match_sirius,character varying,3,,NA
+public,checklist,care_arrangements,character varying,3,,NA
+public,checklist,case_worker_satisified,character varying,3,,NA
+public,checklist,client_benefits_checked,character varying,3,,NA
+public,checklist,consultations_satisfactory,character varying,3,,NA
+public,checklist,contact_details_upto_date,character varying,3,,NA
+public,checklist,debts_managed,character varying,3,,NA
+public,checklist,decisions_satisfactory,character varying,3,,NA
+public,checklist,deputy_charge_allowed_by_court,character varying,3,,NA
+public,checklist,deputy_full_name_accurate_in_sirius,character varying,3,,NA
+public,checklist,final_decision,character varying,30,,Lorem
+public,checklist,future_significant_decisions,character varying,3,,NA
+public,checklist,has_deputy_overcharged_from_previous_estimates,character varying,3,,NA
+public,checklist,has_deputy_raised_concerns,character varying,3,,NA
+public,checklist,id,integer,,PRIMARY KEY,NA
+public,checklist,last_modified_by,integer,,FOREIGN KEY,NA
+public,checklist,last_modified_on,timestamp without time zone,,,NA
+public,checklist,lodging_summary,text,,,Lorem
+public,checklist,money_movements_acceptable,character varying,3,,NA
+public,checklist,next_billing_estimate_satisfactory,character varying,3,,NA
+public,checklist,open_closing_balances_match,character varying,3,,NA
+public,checklist,opg_uuid,character varying,36,,Lorem
+public,checklist,payments_match_cost_certificate,character varying,3,,NA
+public,checklist,prof_costs_reasonable_and_proportionate,character varying,3,,NA
+public,checklist,report_id,integer,,FOREIGN KEY,NA
+public,checklist,reporting_period_accurate,character varying,3,,NA
+public,checklist,satisfied_with_health_and_lifestyle,character varying,3,,NA
+public,checklist,satisfied_with_pa_expenses,character varying,3,,NA
+public,checklist,submitted_by,integer,,FOREIGN KEY,NA
+public,checklist,submitted_on,timestamp without time zone,,,NA
+public,checklist,synchronisation_error,text,,,Lorem
+public,checklist,synchronisation_status,character varying,255,,Lorem
+public,checklist,synchronisation_time,timestamp without time zone,,,NA
+public,checklist,synchronised_by,integer,,FOREIGN KEY,NA
+public,checklist_information,checklist_id,integer,,FOREIGN KEY,NA
+public,checklist_information,created_by,integer,,FOREIGN KEY,NA
+public,checklist_information,created_on,timestamp without time zone,,,NA
+public,checklist_information,id,integer,,PRIMARY KEY,NA
+public,checklist_information,information,text,,,Lorem
+public,client,address,character varying,200,,Lorem
+public,client,address2,character varying,200,,Lorem
+public,client,address3,character varying,200,,Lorem
+public,client,address4,character varying,200,,Lorem
+public,client,address5,character varying,200,,Lorem
+public,client,archived_at,timestamp without time zone,,,NA
+public,client,case_number,character varying,20,,NA
+public,client,country,character varying,10,,Lorem
+public,client,court_date,date,,,NA
+public,client,created_at,timestamp without time zone,,,NA
+public,client,date_of_birth,date,,,NA
+public,client,deleted_at,timestamp without time zone,,,NA
+public,client,deputy_id,integer,,FOREIGN KEY,NA
+public,client,email,character varying,60,,Email
+public,client,firstname,character varying,50,,FirstName
+public,client,id,integer,,PRIMARY KEY,NA
+public,client,lastname,character varying,50,,LastName
+public,client,organisation_id,integer,,FOREIGN KEY,NA
+public,client,phone,character varying,20,,PhoneNumber
+public,client,postcode,character varying,10,,PostCode
+public,client,updated_at,timestamp without time zone,,,NA
+public,client_benefits_check,created_at,timestamp without time zone,,,NA
+public,client_benefits_check,date_last_checked_entitlement,timestamp without time zone,,,NA
+public,client_benefits_check,do_others_receive_money_on_clients_behalf,character varying,255,,Lorem
+public,client_benefits_check,dont_know_money_explanation,text,,,Lorem
+public,client_benefits_check,id,uuid,,PRIMARY KEY,NA
+public,client_benefits_check,never_checked_explanation,text,,,Lorem
+public,client_benefits_check,report_id,integer,,FOREIGN KEY,NA
+public,client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
+public,client_contact,address1,character varying,200,,Lorem
+public,client_contact,address2,character varying,200,,Lorem
+public,client_contact,address3,character varying,200,,Lorem
+public,client_contact,address4,character varying,200,,Lorem
+public,client_contact,address5,character varying,200,,Lorem
+public,client_contact,address_country,character varying,10,,Lorem
+public,client_contact,address_postcode,character varying,10,,PostCode
+public,client_contact,client_id,integer,,FOREIGN KEY,NA
+public,client_contact,created_by,integer,,FOREIGN KEY,NA
+public,client_contact,created_on,timestamp without time zone,,,NA
+public,client_contact,email,character varying,60,,Email
+public,client_contact,firstname,character varying,100,,FirstName
+public,client_contact,id,integer,,PRIMARY KEY,NA
+public,client_contact,job_title,character varying,150,,Lorem
+public,client_contact,lastname,character varying,100,,LastName
+public,client_contact,org_name,character varying,150,,Lorem
+public,client_contact,phone,character varying,20,,PhoneNumber
+public,contact,address,character varying,200,,Lorem
+public,contact,address2,character varying,200,,Lorem
+public,contact,contact_name,character varying,255,,Lorem
+public,contact,country,character varying,10,,Lorem
+public,contact,county,character varying,200,,Lorem
+public,contact,created_at,timestamp without time zone,,,NA
+public,contact,explanation,text,,,Lorem
+public,contact,id,integer,,PRIMARY KEY,NA
+public,contact,phone1,character varying,20,,PhoneNumber
+public,contact,postcode,character varying,10,,PostCode
+public,contact,relationship,character varying,100,,Lorem
+public,contact,report_id,integer,,FOREIGN KEY,NA
+public,contact,updated_at,timestamp without time zone,,,NA
+public,court_order,active,boolean,,,NA
+public,court_order,court_order_uid,bigint,,,NA
+public,court_order,created_at,timestamp without time zone,,,NA
+public,court_order,id,integer,,PRIMARY KEY,NA
+public,court_order,type,character varying,10,,Lorem
+public,court_order,updated_at,timestamp without time zone,,,NA
+public,dd_user,active,boolean,,,NA
+public,dd_user,ad_managed,boolean,,,NA
+public,dd_user,address1,character varying,200,,Lorem
+public,dd_user,address2,character varying,200,,Lorem
+public,dd_user,address3,character varying,200,,Lorem
+public,dd_user,address4,character varying,200,,Lorem
+public,dd_user,address5,character varying,200,,Lorem
+public,dd_user,address_country,character varying,10,,NA
+public,dd_user,address_postcode,character varying,10,,PostCode
+public,dd_user,agree_terms_use,boolean,,,NA
+public,dd_user,agree_terms_use_date,timestamp without time zone,,,NA
+public,dd_user,codeputy_client_confirmed,boolean,,,NA
+public,dd_user,created_at,timestamp without time zone,,,NA
+public,dd_user,created_by_id,integer,,FOREIGN KEY,NA
+public,dd_user,deletion_protection,boolean,,,NA
+public,dd_user,deputy_no,character varying,100,,Lorem
+public,dd_user,deputy_uid,bigint,,,NA
+public,dd_user,email,character varying,60,,NA
+public,dd_user,firstname,character varying,100,,FirstName
+public,dd_user,id,integer,,PRIMARY KEY,NA
+public,dd_user,job_title,character varying,150,,Lorem
+public,dd_user,last_logged_in,timestamp without time zone,,,NA
+public,dd_user,lastname,character varying,100,,LastName
+public,dd_user,odr_enabled,boolean,,,NA
+public,dd_user,password,character varying,100,,Lorem
+public,dd_user,phone_alternative,character varying,20,,PhoneNumber
+public,dd_user,phone_main,character varying,20,,PhoneNumber
+public,dd_user,registration_date,timestamp without time zone,,,NA
+public,dd_user,registration_token,character varying,100,,Lorem
+public,dd_user,role_name,character varying,50,,Lorem
+public,dd_user,salt,character varying,100,,Lorem
+public,dd_user,token_date,timestamp without time zone,,,NA
+public,dd_user,updated_at,timestamp without time zone,,,NA
+public,debt,amount,numeric,,,NA
+public,debt,debt_type_id,character varying,255,,Lorem
+public,debt,has_more_details,boolean,,,NA
+public,debt,id,integer,,PRIMARY KEY,NA
+public,debt,more_details,text,,,Lorem
+public,debt,report_id,integer,,FOREIGN KEY,NA
+public,decision,client_involved_boolean,boolean,,,NA
+public,decision,client_involved_details,text,,,Lorem
+public,decision,created_at,timestamp without time zone,,,NA
+public,decision,description,text,,,Lorem
+public,decision,id,integer,,PRIMARY KEY,NA
+public,decision,report_id,integer,,FOREIGN KEY,NA
+public,decision,updated_at,timestamp without time zone,,,NA
+public,deputy,address1,character varying,200,,Lorem
+public,deputy,address2,character varying,200,,Lorem
+public,deputy,address3,character varying,200,,Lorem
+public,deputy,address4,character varying,200,,Lorem
+public,deputy,address5,character varying,200,,Lorem
+public,deputy,address_country,character varying,10,,Lorem
+public,deputy,address_postcode,character varying,10,,PostCode
+public,deputy,created_at,timestamp without time zone,,,NA
+public,deputy,deputy_uid,character varying,20,,Lorem
+public,deputy,email1,character varying,60,,Email
+public,deputy,email2,character varying,60,,Email
+public,deputy,email3,character varying,60,,Email
+public,deputy,firstname,character varying,100,,FirstName
+public,deputy,id,integer,,PRIMARY KEY,NA
+public,deputy,lastname,character varying,100,,LastName
+public,deputy,phone_alternative,character varying,20,,PhoneNumber
+public,deputy,phone_main,character varying,20,,PhoneNumber
+public,deputy,updated_at,timestamp without time zone,,,NA
+public,deputy,user_id,integer,,FOREIGN KEY,NA
+public,deputy_case,client_id,integer,,PRIMARY KEY,NA
+public,deputy_case,client_id,integer,,FOREIGN KEY,NA
+public,deputy_case,user_id,integer,,FOREIGN KEY,NA
+public,deputy_case,user_id,integer,,PRIMARY KEY,NA
+public,document,created_by,integer,,FOREIGN KEY,NA
+public,document,created_on,timestamp without time zone,,,NA
+public,document,filename,character varying,255,,Lorem
+public,document,id,integer,,PRIMARY KEY,NA
+public,document,is_report_pdf,boolean,,,NA
+public,document,ndr_id,integer,,FOREIGN KEY,NA
+public,document,report_id,integer,,FOREIGN KEY,NA
+public,document,report_submission_id,integer,,FOREIGN KEY,NA
+public,document,storage_reference,character varying,512,,Lorem
+public,document,sync_attempts,integer,,,NA
+public,document,synchronisation_error,text,,,Lorem
+public,document,synchronisation_status,character varying,255,,Lorem
+public,document,synchronisation_time,timestamp without time zone,,,NA
+public,document,synchronised_by,integer,,FOREIGN KEY,NA
+public,expense,amount,numeric,,,NA
+public,expense,bank_account_id,integer,,FOREIGN KEY,NA
+public,expense,explanation,text,,,Lorem
+public,expense,id,integer,,PRIMARY KEY,NA
+public,expense,report_id,integer,,FOREIGN KEY,NA
+public,fee,amount,numeric,,,NA
+public,fee,fee_type_id,character varying,255,,Lorem
+public,fee,id,integer,,PRIMARY KEY,NA
+public,fee,more_details,text,,,Lorem
+public,fee,report_id,integer,,FOREIGN KEY,NA
+public,gift,amount,numeric,,,NA
+public,gift,bank_account_id,integer,,FOREIGN KEY,NA
+public,gift,explanation,text,,,Lorem
+public,gift,id,integer,,PRIMARY KEY,NA
+public,gift,report_id,integer,,FOREIGN KEY,NA
+public,income_received_on_clients_behalf,amount,numeric,,,NA
+public,income_received_on_clients_behalf,client_benefits_check_id,uuid,,FOREIGN KEY,NA
+public,income_received_on_clients_behalf,created_at,timestamp without time zone,,,NA
+public,income_received_on_clients_behalf,id,uuid,,PRIMARY KEY,NA
+public,income_received_on_clients_behalf,money_type,character varying,255,,Lorem
+public,income_received_on_clients_behalf,who_received_money,character varying,255,,Lorem
+public,lifestyle,activity_details_no,text,,,Lorem
+public,lifestyle,activity_details_yes,text,,,Lorem
+public,lifestyle,care_appointments,text,,,Lorem
+public,lifestyle,does_client_undertake_social_activities,character varying,4,,NA
+public,lifestyle,id,integer,,PRIMARY KEY,NA
+public,lifestyle,report_id,integer,,FOREIGN KEY,NA
+public,mental_capacity,has_capacity_changed,character varying,25,,Lorem
+public,mental_capacity,has_capacity_changed_details,text,,,Lorem
+public,mental_capacity,id,integer,,PRIMARY KEY,NA
+public,mental_capacity,mental_assessment_date,date,,,NA
+public,mental_capacity,report_id,integer,,FOREIGN KEY,NA
+public,migrations,executed_at,timestamp without time zone,,,NA
+public,migrations,execution_time,integer,,,NA
+public,migrations,version,character varying,1024,PRIMARY KEY,NA
+public,money_short_category,id,integer,,PRIMARY KEY,NA
+public,money_short_category,present,boolean,,,NA
+public,money_short_category,report_id,integer,,FOREIGN KEY,NA
+public,money_short_category,type_id,character varying,255,,NA
+public,money_transaction,amount,numeric,,,NA
+public,money_transaction,bank_account_id,integer,,FOREIGN KEY,NA
+public,money_transaction,category,character varying,255,,NA
+public,money_transaction,deleted_at,timestamp without time zone,,,NA
+public,money_transaction,description,text,,,Lorem
+public,money_transaction,id,integer,,PRIMARY KEY,NA
+public,money_transaction,meta,text,,,Lorem
+public,money_transaction,report_id,integer,,FOREIGN KEY,NA
+public,money_transaction_short,amount,numeric,,,NA
+public,money_transaction_short,date,date,,,NA
+public,money_transaction_short,deleted_at,timestamp without time zone,,,NA
+public,money_transaction_short,description,text,,,Lorem
+public,money_transaction_short,id,integer,,PRIMARY KEY,NA
+public,money_transaction_short,report_id,integer,,FOREIGN KEY,NA
+public,money_transaction_short,type,character varying,255,,Lorem
+public,money_transfer,amount,numeric,,,NA
+public,money_transfer,description,character varying,75,,Lorem
+public,money_transfer,from_account_id,integer,,FOREIGN KEY,NA
+public,money_transfer,id,integer,,PRIMARY KEY,NA
+public,money_transfer,report_id,integer,,FOREIGN KEY,NA
+public,money_transfer,to_account_id,integer,,FOREIGN KEY,NA
+public,note,category,character varying,100,,Lorem
+public,note,client_id,integer,,FOREIGN KEY,NA
+public,note,content,text,,,Lorem
+public,note,created_by,integer,,FOREIGN KEY,NA
+public,note,created_on,timestamp without time zone,,,NA
+public,note,id,integer,,PRIMARY KEY,NA
+public,note,last_modified_by,integer,,FOREIGN KEY,NA
+public,note,last_modified_on,timestamp without time zone,,,NA
+public,note,title,character varying,150,,Lorem
+public,odr,action_give_gifts_to_client,character varying,3,,NA
+public,odr,action_give_gifts_to_client_details,text,,,Lorem
+public,odr,action_more_info,character varying,3,,NA
+public,odr,action_more_info_details,text,,,Lorem
+public,odr,action_property_buy,character varying,3,,NA
+public,odr,action_property_maintenance,character varying,3,,NA
+public,odr,action_property_selling_rent,character varying,3,,NA
+public,odr,agreed_behalf_deputy,character varying,50,,Lorem
+public,odr,agreed_behalf_deputy_explanation,text,,,Lorem
+public,odr,client_id,integer,,FOREIGN KEY,NA
+public,odr,debt_management,text,,,Lorem
+public,odr,expect_compensation_damages,text,,,Lorem
+public,odr,expect_compensation_damages_details,text,,,Lorem
+public,odr,has_debts,character varying,5,,NA
+public,odr,id,integer,,PRIMARY KEY,NA
+public,odr,no_asset_to_add,boolean,,,NA
+public,odr,paid_for_anything,character varying,3,,NA
+public,odr,receive_other_income,text,,,Lorem
+public,odr,receive_other_income_details,text,,,Lorem
+public,odr,receive_state_pension,text,,,Lorem
+public,odr,start_date,timestamp without time zone,,,NA
+public,odr,submit_date,timestamp without time zone,,,NA
+public,odr,submitted,boolean,,,NA
+public,odr,submitted_by,integer,,FOREIGN KEY,NA
+public,odr_account,account_number,character varying,4,,NA
+public,odr_account,account_type,character varying,125,,Lorem
+public,odr_account,balance_on_cod,numeric,,,NA
+public,odr_account,bank_name,character varying,500,,Lorem
+public,odr_account,created_at,timestamp without time zone,,,NA
+public,odr_account,id,integer,,PRIMARY KEY,NA
+public,odr_account,is_joint_account,character varying,3,,NA
+public,odr_account,odr_id,integer,,FOREIGN KEY,NA
+public,odr_account,sort_code,character varying,6,,Lorem
+public,odr_account,updated_at,timestamp without time zone,,,NA
+public,odr_asset,address,character varying,200,,Lorem
+public,odr_asset,address2,character varying,200,,Lorem
+public,odr_asset,asset_value,numeric,,,NA
+public,odr_asset,county,character varying,75,,Lorem
+public,odr_asset,created_at,timestamp without time zone,,,NA
+public,odr_asset,description,text,,,Lorem
+public,odr_asset,has_charges,character varying,4,,NA
+public,odr_asset,has_mortgage,character varying,4,,NA
+public,odr_asset,id,integer,,PRIMARY KEY,NA
+public,odr_asset,is_rented_out,character varying,4,,NA
+public,odr_asset,is_subject_equity_rel,character varying,4,,NA
+public,odr_asset,mortgage_outstanding,numeric,,,NA
+public,odr_asset,occupants,character varying,550,,Lorem
+public,odr_asset,odr_id,integer,,FOREIGN KEY,NA
+public,odr_asset,owned,character varying,15,,Lorem
+public,odr_asset,owned_percentage,numeric,,,NA
+public,odr_asset,postcode,character varying,10,,PostCode
+public,odr_asset,rent_agreement_end_date,timestamp without time zone,,,NA
+public,odr_asset,rent_income_month,numeric,,,NA
+public,odr_asset,title,character varying,100,,Lorem
+public,odr_asset,type,character varying,255,,Lorem
+public,odr_asset,updated_at,timestamp without time zone,,,NA
+public,odr_asset,valuation_date,date,,,NA
+public,odr_client_benefits_check,created_at,timestamp without time zone,,,NA
+public,odr_client_benefits_check,date_last_checked_entitlement,timestamp without time zone,,,NA
+public,odr_client_benefits_check,do_others_receive_money_on_clients_behalf,character varying,255,,Lorem
+public,odr_client_benefits_check,dont_know_money_explanation,text,,,Lorem
+public,odr_client_benefits_check,id,uuid,,PRIMARY KEY,NA
+public,odr_client_benefits_check,ndr_id,integer,,FOREIGN KEY,NA
+public,odr_client_benefits_check,never_checked_explanation,text,,,Lorem
+public,odr_client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
+public,odr_debt,amount,numeric,,,NA
+public,odr_debt,debt_type_id,character varying,255,,Lorem
+public,odr_debt,has_more_details,boolean,,,NA
+public,odr_debt,id,integer,,PRIMARY KEY,NA
+public,odr_debt,more_details,text,,,Lorem
+public,odr_debt,odr_id,integer,,FOREIGN KEY,NA
+public,odr_expense,amount,numeric,,,NA
+public,odr_expense,explanation,text,,,Lorem
+public,odr_expense,id,integer,,PRIMARY KEY,NA
+public,odr_expense,odr_id,integer,,FOREIGN KEY,NA
+public,odr_income_one_off,has_more_details,character varying,255,,Lorem
+public,odr_income_one_off,id,integer,,PRIMARY KEY,NA
+public,odr_income_one_off,more_details,character varying,255,,Lorem
+public,odr_income_one_off,odr_id,integer,,FOREIGN KEY,NA
+public,odr_income_one_off,present,boolean,,,NA
+public,odr_income_one_off,type_id,character varying,255,,Lorem
+public,odr_income_received_on_clients_behalf,amount,numeric,,,NA
+public,odr_income_received_on_clients_behalf,client_benefits_check_id,uuid,,FOREIGN KEY,NA
+public,odr_income_received_on_clients_behalf,created_at,timestamp without time zone,,,NA
+public,odr_income_received_on_clients_behalf,id,uuid,,PRIMARY KEY,NA
+public,odr_income_received_on_clients_behalf,money_type,character varying,255,,Lorem
+public,odr_income_received_on_clients_behalf,who_received_money,character varying,255,,Lorem
+public,odr_income_state_benefit,has_more_details,character varying,255,,Lorem
+public,odr_income_state_benefit,id,integer,,PRIMARY KEY,NA
+public,odr_income_state_benefit,more_details,character varying,255,,Lorem
+public,odr_income_state_benefit,odr_id,integer,,FOREIGN KEY,NA
+public,odr_income_state_benefit,present,boolean,,,NA
+public,odr_income_state_benefit,type_id,character varying,255,,Lorem
+public,odr_visits_care,do_you_live_with_client,character varying,4,,NA
+public,odr_visits_care,does_client_have_a_care_plan,character varying,4,,NA
+public,odr_visits_care,does_client_receive_paid_care,text,,,Lorem
+public,odr_visits_care,how_is_care_funded,character varying,255,,Lorem
+public,odr_visits_care,how_often_contact_client,text,,,Lorem
+public,odr_visits_care,id,integer,,PRIMARY KEY,NA
+public,odr_visits_care,odr_id,integer,,FOREIGN KEY,NA
+public,odr_visits_care,plan_move_residence,character varying,4,,NA
+public,odr_visits_care,plan_move_residence_details,text,,,Lorem
+public,odr_visits_care,when_was_care_plan_last_reviewed,date,,,NA
+public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
+public,organisation,deleted_at,timestamp without time zone,,,NA
+public,organisation,email_identifier,character varying,256,,Email
+public,organisation,id,integer,,PRIMARY KEY,NA
+public,organisation,is_activated,boolean,,,NA
+public,organisation,name,character varying,256,,Lorem
+public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
+public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
+public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,organisation_user,user_id,integer,,FOREIGN KEY,NA
+public,pre_registration,client_case_number,character varying,20,,NA
+public,pre_registration,client_lastname,character varying,50,,LastName
+public,pre_registration,created_at,timestamp without time zone,,,NA
+public,pre_registration,deputy_address_1,character varying,255,,Lorem
+public,pre_registration,deputy_address_2,character varying,255,,Lorem
+public,pre_registration,deputy_address_3,character varying,255,,Lorem
+public,pre_registration,deputy_address_4,character varying,255,,Lorem
+public,pre_registration,deputy_address_5,character varying,255,,Lorem
+public,pre_registration,deputy_firstname,character varying,100,,FirstName
+public,pre_registration,deputy_lastname,character varying,100,,LastName
+public,pre_registration,deputy_postcode,character varying,10,,PostCode
+public,pre_registration,deputy_uid,character varying,100,,Lorem
+public,pre_registration,hybrid,character varying,6,,Lorem
+public,pre_registration,id,integer,,PRIMARY KEY,NA
+public,pre_registration,is_co_deputy,boolean,,,NA
+public,pre_registration,ndr,boolean,,,NA
+public,pre_registration,order_date,timestamp without time zone,,,NA
+public,pre_registration,order_type,character varying,255,,Lorem
+public,pre_registration,type_of_report,character varying,10,,Lorem
+public,pre_registration,updated_at,timestamp without time zone,,,NA
+public,prof_deputy_estimate_cost,amount,numeric,,,NA
+public,prof_deputy_estimate_cost,has_more_details,boolean,,,NA
+public,prof_deputy_estimate_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_estimate_cost,more_details,text,,,Lorem
+public,prof_deputy_estimate_cost,prof_deputy_estimate_cost_type_id,character varying,255,,Lorem
+public,prof_deputy_estimate_cost,report_id,integer,,FOREIGN KEY,NA
+public,prof_deputy_interim_cost,amount,numeric,,,NA
+public,prof_deputy_interim_cost,date,timestamp without time zone,,,NA
+public,prof_deputy_interim_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_interim_cost,report_id,integer,,FOREIGN KEY,NA
+public,prof_deputy_other_cost,amount,numeric,,,NA
+public,prof_deputy_other_cost,has_more_details,boolean,,,NA
+public,prof_deputy_other_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_other_cost,more_details,text,,,Lorem
+public,prof_deputy_other_cost,prof_deputy_other_cost_type_id,character varying,255,,Lorem
+public,prof_deputy_other_cost,report_id,integer,,FOREIGN KEY,NA
+public,prof_deputy_prev_cost,amount,numeric,,,NA
+public,prof_deputy_prev_cost,end_date,timestamp without time zone,,,NA
+public,prof_deputy_prev_cost,id,integer,,PRIMARY KEY,NA
+public,prof_deputy_prev_cost,report_id,integer,,FOREIGN KEY,NA
+public,prof_deputy_prev_cost,start_date,timestamp without time zone,,,NA
+public,prof_service_fee,amount_charged,numeric,,,NA
+public,prof_service_fee,amount_received,numeric,,,NA
+public,prof_service_fee,assessed_or_fixed,character varying,255,,Lorem
+public,prof_service_fee,fee_type_id,character varying,255,,Lorem
+public,prof_service_fee,id,integer,,PRIMARY KEY,NA
+public,prof_service_fee,other_fee_details,character varying,255,,Lorem
+public,prof_service_fee,payment_received,character varying,255,,Lorem
+public,prof_service_fee,payment_received_date,timestamp without time zone,,,NA
+public,prof_service_fee,report_id,integer,,FOREIGN KEY,NA
+public,prof_service_fee,service_type_id,character varying,255,,Lorem
+public,report,action_more_info,character varying,3,,NA
+public,report,action_more_info_details,text,,,Lorem
+public,report,agreed_behalf_deputy,character varying,50,,Lorem
+public,report,agreed_behalf_deputy_explanation,text,,,Lorem
+public,report,balance_mismatch_explanation,text,,,Lorem
+public,report,client_id,integer,,FOREIGN KEY,NA
+public,report,created_at,timestamp without time zone,,,NA
+public,report,current_prof_payments_received,character varying,255,,Lorem
+public,report,debt_management,text,,,Lorem
+public,report,due_date,date,,,NA
+public,report,end_date,date,,,NA
+public,report,gifts_exist,character varying,3,,NA
+public,report,has_debts,character varying,5,,NA
+public,report,id,integer,,PRIMARY KEY,NA
+public,report,money_in_exists,text,,,Lorem
+public,report,money_out_exists,text,,,Lorem
+public,report,money_transactions_short_in_exist,character varying,3,,NA
+public,report,money_transactions_short_out_exist,character varying,3,,NA
+public,report,no_asset_to_add,boolean,,,NA
+public,report,no_transfers_to_add,boolean,,,NA
+public,report,paid_for_anything,character varying,3,,NA
+public,report,previous_prof_fees_estimate_given,character varying,3,,NA
+public,report,prof_dc_estimate_hc,character varying,10,,Lorem
+public,report,prof_dc_estimate_management_cost,double precision,,,NA
+public,report,prof_dc_estimate_more_info,character varying,3,,NA
+public,report,prof_dc_estimate_more_info_details,text,,,Lorem
+public,report,prof_dc_fixed_cost_amount,numeric,,,NA
+public,report,prof_dc_has_interim,character varying,3,,NA
+public,report,prof_dc_has_previous,character varying,3,,NA
+public,report,prof_dc_how_charged,character varying,10,,Lorem
+public,report,prof_dc_scco_amount,numeric,,,NA
+public,report,prof_dc_scco_reason_beyond_estimate,text,,,Lorem
+public,report,prof_fees_estimate_scco_reason,text,,,Lorem
+public,report,reason_for_no_contacts,text,,,Lorem
+public,report,reason_for_no_decisions,text,,,Lorem
+public,report,reason_for_no_fees,text,,,Lorem
+public,report,reason_for_no_money_in,text,,,Lorem
+public,report,reason_for_no_money_out,text,,,Lorem
+public,report,report_seen,boolean,,,NA
+public,report,report_status_cached,character varying,20,,Lorem
+public,report,significant_decisions_made,text,,,Lorem
+public,report,start_date,date,,,NA
+public,report,status_cached,text,,,Lorem
+public,report,submit_date,timestamp without time zone,,,NA
+public,report,submitted,boolean,,,NA
+public,report,submitted_by,integer,,FOREIGN KEY,NA
+public,report,type,character varying,10,,Lorem
+public,report,un_submit_date,timestamp without time zone,,,NA
+public,report,unsubmitted_sections_list,text,,,Lorem
+public,report,updated_at,timestamp without time zone,,,NA
+public,report,wish_to_provide_documentation,character varying,255,,Lorem
+public,report_submission,archived,boolean,,,NA
+public,report_submission,archived_by,integer,,FOREIGN KEY,NA
+public,report_submission,created_by,integer,,FOREIGN KEY,NA
+public,report_submission,created_on,timestamp without time zone,,,NA
+public,report_submission,downloadable,boolean,,,NA
+public,report_submission,id,integer,,PRIMARY KEY,NA
+public,report_submission,ndr_id,integer,,FOREIGN KEY,NA
+public,report_submission,opg_uuid,character varying,36,,Lorem
+public,report_submission,report_id,integer,,FOREIGN KEY,NA
+public,research_type,id,uuid,,PRIMARY KEY,NA
+public,research_type,in_person,boolean,,,NA
+public,research_type,phone,boolean,,,NA
+public,research_type,surveys,boolean,,,NA
+public,research_type,video_call,boolean,,,NA
+public,review_checklist,answers,json,,,NA
+public,review_checklist,decision,character varying,30,,Lorem
+public,review_checklist,id,integer,,PRIMARY KEY,NA
+public,review_checklist,last_modified_by,integer,,FOREIGN KEY,NA
+public,review_checklist,last_modified_on,timestamp without time zone,,,NA
+public,review_checklist,report_id,integer,,FOREIGN KEY,NA
+public,review_checklist,submitted_by,integer,,FOREIGN KEY,NA
+public,review_checklist,submitted_on,timestamp without time zone,,,NA
+public,safeguarding,do_you_live_with_client,character varying,4,,NA
+public,safeguarding,does_client_have_a_care_plan,character varying,4,,NA
+public,safeguarding,does_client_receive_paid_care,text,,,Lorem
+public,safeguarding,how_is_care_funded,character varying,255,,Lorem
+public,safeguarding,how_often_contact_client,text,,,Lorem
+public,safeguarding,id,integer,,PRIMARY KEY,NA
+public,safeguarding,report_id,integer,,FOREIGN KEY,NA
+public,safeguarding,when_was_care_plan_last_reviewed,date,,,NA
+public,safeguarding,who_is_doing_the_caring,text,,,Lorem
+public,satisfaction,comments,text,,,Lorem
+public,satisfaction,created_at,timestamp without time zone,,,NA
+public,satisfaction,deputy_role,character varying,50,,Lorem
+public,satisfaction,id,integer,,PRIMARY KEY,NA
+public,satisfaction,ndr_id,integer,,FOREIGN KEY,NA
+public,satisfaction,report_id,integer,,FOREIGN KEY,NA
+public,satisfaction,report_type,character varying,9,,Lorem
+public,satisfaction,score,integer,,,NA
+public,setting,content,text,,,Lorem
+public,setting,enabled,boolean,,,NA
+public,setting,id,character varying,64,PRIMARY KEY,NA
+public,user_research_response,created_at,timestamp without time zone,,,NA
+public,user_research_response,deputyship_length,character varying,255,,Lorem
+public,user_research_response,has_access_to_video_call_device,boolean,,,NA
+public,user_research_response,id,uuid,,PRIMARY KEY,NA
+public,user_research_response,researchtype_id,uuid,,FOREIGN KEY,NA
+public,user_research_response,satisfaction_id,integer,,FOREIGN KEY,NA
+public,user_research_response,user_id,integer,,FOREIGN KEY,NA

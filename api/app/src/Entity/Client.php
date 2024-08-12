@@ -260,20 +260,20 @@ class Client implements ClientInterface
     private $clientContacts;
 
     /**
-     * Holds the named deputy the client belongs to
+     * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
-     * @var NamedDeputy|null
+     * @var Deputy|null
      *
-     * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "client-deputy"})
      *
-     * @JMS\Type("App\Entity\NamedDeputy")
+     * @JMS\Type("App\Entity\Deputy")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\NamedDeputy", inversedBy="clients", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
      *
-     * @ORM\JoinColumn(name="named_deputy_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $namedDeputy;
+    private $deputy;
 
     /**
      * @var \DateTime|null
@@ -467,7 +467,7 @@ class Client implements ClientInterface
      *
      * @return Client
      */
-    public function setCourtDate(\DateTime $courtDate = null)
+    public function setCourtDate(?\DateTime $courtDate = null)
     {
         $this->courtDate = $courtDate;
 
@@ -580,7 +580,7 @@ class Client implements ClientInterface
     /**
      * @param Report[] $reports
      *
-     * @return \App\Entity\Client
+     * @return Client
      */
     public function setReports($reports)
     {
@@ -669,7 +669,7 @@ class Client implements ClientInterface
         return $this->ndr;
     }
 
-    public function setNdr(Ndr $ndr = null)
+    public function setNdr(?Ndr $ndr = null)
     {
         $this->ndr = $ndr;
     }
@@ -773,16 +773,13 @@ class Client implements ClientInterface
     /**
      * @return $this
      */
-    public function setDateOfBirth(\DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getNotes()
     {
         return $this->notes;
@@ -800,9 +797,6 @@ class Client implements ClientInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getClientContacts()
     {
         return $this->clientContacts;
@@ -832,17 +826,17 @@ class Client implements ClientInterface
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
 
-    public function getNamedDeputy(): ?NamedDeputy
+    public function getDeputy(): ?Deputy
     {
-        return $this->namedDeputy;
+        return $this->deputy;
     }
 
     /**
      * @return Client
      */
-    public function setNamedDeputy(?NamedDeputy $namedDeputy)
+    public function setDeputy(?Deputy $deputy)
     {
-        $this->namedDeputy = $namedDeputy;
+        $this->deputy = $deputy;
 
         return $this;
     }
@@ -953,7 +947,7 @@ class Client implements ClientInterface
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    public function setArchivedAt(\DateTime $archivedAt = null)
+    public function setArchivedAt(?\DateTime $archivedAt = null)
     {
         $this->archivedAt = $archivedAt;
     }
@@ -1027,8 +1021,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param Organisation $organisation
-     *
      * @return $this
      */
     public function setOrganisation(?Organisation $organisation)

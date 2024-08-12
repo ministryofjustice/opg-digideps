@@ -35,7 +35,7 @@ class IndexController extends AbstractController
         private TranslatorInterface $translator,
         private RouterInterface $router,
         private string $environment,
-        private ParameterBagInterface $params
+        private ParameterBagInterface $params,
     ) {
     }
 
@@ -52,8 +52,8 @@ class IndexController extends AbstractController
 
         // deputy homepage with links to register and login
         return $this->render('@App/Index/index.html.twig', [
-                'environment' => $this->environment,
-            ]);
+            'environment' => $this->environment,
+        ]);
     }
 
     /**
@@ -68,7 +68,6 @@ class IndexController extends AbstractController
     public function loginAction(Request $request, AuthenticationUtils $authenticationUtils)
     {
         $form = $this->createForm(FormDir\LoginType::class);
-
         $vars = [
             'isAdmin' => 'admin' === $this->environment,
         ];
@@ -108,8 +107,8 @@ class IndexController extends AbstractController
             $session->set('loggedOutFrom', null); // avoid display the message at next page reload
 
             return $this->render('@App/Index/login-from-logout.html.twig', [
-                    'form' => $form->createView(),
-                ] + $vars);
+                'form' => $form->createView(),
+            ] + $vars);
         } elseif ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
             $session->set('loggedOutFrom', null); // avoid display the message at next page reload
             $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
@@ -120,8 +119,8 @@ class IndexController extends AbstractController
         $snSetting = $this->restClient->get('setting/service-notification', 'Setting', [], ['addAuthToken' => false]);
 
         return $this->render('@App/Index/login.html.twig', [
-                'form' => $form->createView(),
-                'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
+            'form' => $form->createView(),
+            'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
         ] + $vars);
     }
 

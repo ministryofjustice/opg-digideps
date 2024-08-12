@@ -1,4 +1,5 @@
 # Sirius Lay CSV Ingestion
+
 resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
@@ -36,6 +37,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 }
 
 # Sirius Org CSV Ingestion
+
 resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
@@ -246,64 +248,6 @@ resource "aws_cloudwatch_event_target" "db_analyse_command" {
   }
 }
 
-# Checklist sync to sirius (in production we have permanent container)
-
-resource "aws_cloudwatch_event_rule" "checklist_sync" {
-  count               = local.document_sync_scheduled
-  name                = "checklist-sync-${terraform.workspace}"
-  schedule_expression = "rate(24 hours)"
-  tags                = var.default_tags
-}
-
-resource "aws_cloudwatch_event_target" "checklist_sync" {
-  count     = local.document_sync_scheduled
-  target_id = "checklist-sync-${terraform.workspace}"
-  rule      = aws_cloudwatch_event_rule.checklist_sync[0].name
-  arn       = aws_ecs_cluster.main.arn
-  role_arn  = aws_iam_role.events_task_runner.arn
-
-  ecs_target {
-    task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.checklist_sync.arn
-    launch_type         = "FARGATE"
-    platform_version    = "1.4.0"
-    network_configuration {
-      subnets          = data.aws_subnet.private[*].id
-      assign_public_ip = false
-      security_groups  = [module.checklist_sync_service_security_group.id]
-    }
-  }
-}
-
-# Document sync to sirius (in production we have permanent container)
-
-resource "aws_cloudwatch_event_rule" "document_sync" {
-  count               = local.document_sync_scheduled
-  name                = "document-sync-${terraform.workspace}"
-  schedule_expression = "rate(24 hours)"
-  tags                = var.default_tags
-}
-
-resource "aws_cloudwatch_event_target" "document_sync" {
-  count     = local.document_sync_scheduled
-  target_id = "document-sync-${terraform.workspace}"
-  rule      = aws_cloudwatch_event_rule.document_sync[0].name
-  arn       = aws_ecs_cluster.main.arn
-  role_arn  = aws_iam_role.events_task_runner.arn
-
-  ecs_target {
-    task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.document_sync.arn
-    launch_type         = "FARGATE"
-    platform_version    = "1.4.0"
-    network_configuration {
-      subnets          = data.aws_subnet.private[*].id
-      assign_public_ip = false
-      security_groups  = [module.document_sync_service_security_group.id]
-    }
-  }
-}
-
 # Extract Satisfaction Scores
 
 resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats" {
@@ -342,3 +286,101 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
     }
   )
 }
+
+# Sleep mode - Turn on environment
+
+resource "aws_cloudwatch_event_rule" "sleep_mode_on" {
+  name                = "sleep-mode-on-${local.environment}"
+  description         = "Sleep mode - turn on environment ${terraform.workspace}"
+  schedule_expression = "cron(0 07,23 * * ? *)"
+  tags                = var.default_tags
+  is_enabled          = var.account.sleep_mode_enabled ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "sleep_mode_on" {
+  rule     = aws_cloudwatch_event_rule.sleep_mode_on.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = module.sleep_mode.task_definition_arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.sleep_mode_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "sleep-mode",
+          "command" : ["./environment_status", "-action=ON"]
+        }
+      ]
+    }
+  )
+}
+
+# Sleep mode - Turn off environment
+
+resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
+  name                = "sleep-mode-off-${local.environment}"
+  description         = "Sleep mode - turn off environment ${terraform.workspace}"
+  schedule_expression = "cron(0 02,20 * * ? *)"
+  tags                = var.default_tags
+  is_enabled          = var.account.sleep_mode_enabled ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "sleep_mode_off" {
+  rule     = aws_cloudwatch_event_rule.sleep_mode_off.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = module.sleep_mode.task_definition_arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.sleep_mode_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "sleep-mode",
+          "command" : ["./environment_status", "-action=OFF"]
+        }
+      ]
+    }
+  )
+}
+
+# Block malicious IPs on the WAF
+
+# TODO - Uncomment this as second part of DDLS-206
+#data "aws_lambda_function" "block_ips_lambda" {
+#  function_name = "block-ips"
+#}
+#
+#resource "aws_cloudwatch_event_rule" "block_ips" {
+#  name                = "block-ips-${terraform.workspace}"
+#  description         = "Execute the blocking of malicious IPs for ${terraform.workspace}"
+#  schedule_expression = "rate(5 minutes)"
+#  is_enabled          = var.account.waf_ip_blocking_enabled
+#}
+#
+#resource "aws_cloudwatch_event_target" "block_ips" {
+#  target_id = "block-ips-${terraform.workspace}"
+#  arn       = data.aws_lambda_function.block_ips_lambda.arn
+#  rule      = aws_cloudwatch_event_rule.block_ips.name
+#}

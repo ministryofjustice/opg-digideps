@@ -44,7 +44,7 @@ class PreRegistrationController extends RestController
     }
 
     /**
-     * Verify Deputy & Client last names, Postcode, and Case Number.
+     * Verify Deputy first and last names, Client last name, Postcode, and Case Number.
      *
      * @Route("/verify", methods={"POST"})
      */
@@ -55,7 +55,7 @@ class PreRegistrationController extends RestController
         $user = $this->getUser();
 
         $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findOneByCaseNumber($clientData['case_number']);
+        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($clientData['case_number']);
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
@@ -77,14 +77,20 @@ class PreRegistrationController extends RestController
         $verified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
+            $user->getFirstname(),
             $user->getLastname(),
             $user->getAddressPostcode()
         );
 
         if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
             $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
+            $user->setDeputyUid($verificationService->getLastMatchedDeputyNumbers()[0]);
+            $user->setPreRegisterValidatedDate(new \DateTime());
             $this->em->persist($user);
             $this->em->flush();
+        } else {
+            // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
+            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
         }
 
         return ['verified' => $verified];

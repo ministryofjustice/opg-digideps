@@ -249,8 +249,8 @@ services:
         class: App\Repository\DocumentRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\NamedDeputyRepository:
-        class: App\Repository\NamedDeputyRepository
+    App\Repository\DeputyRepository:
+        class: App\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\NdrRepository:
@@ -334,6 +334,12 @@ services:
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 
+    opg_json_formatter:
+        class: App\Logger\OpgJsonFormatter
+
+    opg_line_formatter:
+        class: App\Logger\OpgLineFormatter
+
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
         arguments: ["@em"]
@@ -346,8 +352,8 @@ services:
         class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
         arguments: ["@em"]
 
-    PlainDeputyAssembler:
-        class: App\v2\Assembler\DeputyAssembler
+    PlainUserAssembler:
+        class: App\v2\Assembler\UserAssembler
 
     App\v2\Assembler\Report\ReportSummaryAssembler: ~
     App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'
@@ -403,3 +409,20 @@ services:
 
     App\Service\Audit\LocalAuditLogHandler:
         class: App\Service\Audit\LocalAuditLogHandler
+
+    Http\Adapter\Guzzle7\Client:
+        class: Http\Adapter\Guzzle7\Client
+
+    GuzzleHttp\Client:
+        arguments:
+            $config:
+                timeout: 30
+                allow_redirects: false
+
+    App\Service\BankHolidaysAPIService:
+        class: App\Service\BankHolidaysAPIService
+
+    App\Service\CarbonBusinessDaysService:
+        class: App\Service\CarbonBusinessDaysService
+        arguments:
+            $bankHolidaysAPIService: '@App\Service\BankHolidaysAPIService'

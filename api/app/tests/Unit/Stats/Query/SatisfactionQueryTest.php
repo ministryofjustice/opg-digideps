@@ -2,7 +2,10 @@
 
 namespace App\Tests\Unit\Service\Stats\Query;
 
+use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
+use App\Service\ReportService;
 use App\Service\Stats\Query\SatisfactionQuery;
 use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -19,6 +22,9 @@ class SatisfactionQueryTest extends WebTestCase
         self::$em = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+
+        // Required to load Carbon package and method called each time new instance of report is created
+        static::getContainer()->get(ReportService::class);
 
         // Clear up old data
         $scores = self::$em
@@ -59,7 +65,7 @@ class SatisfactionQueryTest extends WebTestCase
         ]));
 
         $this->assertCount(1, $result);
-        $this->assertEquals(53, $result[0]['amount']);
+        $this->assertEquals(63, $result[0]['amount']);
     }
 
     public function testReturnsSatisfactionAverageByDeputyType()
@@ -72,7 +78,7 @@ class SatisfactionQueryTest extends WebTestCase
         ]));
 
         // Assert an array result for each deputy type submitted.
-        $this->assertCount(4, $result);
+        $this->assertCount(3, $result);
 
         // Assert correct amount is returned for each deputy type.
         foreach ($result as $metric) {
@@ -85,9 +91,6 @@ class SatisfactionQueryTest extends WebTestCase
                     break;
                 case 'prof':
                     $this->assertEquals(63, $metric['amount']);
-                    break;
-                case 'none':
-                    $this->assertEquals(17, $metric['amount']);
                     break;
             }
         }
@@ -103,7 +106,7 @@ class SatisfactionQueryTest extends WebTestCase
         ]));
 
         // Assert an array result for each report type submitted
-        $this->assertCount(7, $result);
+        $this->assertCount(6, $result);
 
         // Assert correct amount is returned for each report type
         foreach ($result as $metric) {
@@ -126,9 +129,6 @@ class SatisfactionQueryTest extends WebTestCase
                 case '103-5':
                     $this->assertEquals(50, $metric['amount']);
                     break;
-                case 'none':
-                    $this->assertEquals(17, $metric['amount']);
-                    break;
             }
         }
     }
@@ -139,7 +139,19 @@ class SatisfactionQueryTest extends WebTestCase
             ->setScore($score);
 
         if (isset($reportType)) {
+            $client = new Client();
+
+            $report = new Report(
+                $client,
+                $reportType,
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
+            );
+            self::$em->persist($client);
+            self::$em->persist($report);
+
             $satisfaction->setReportType($reportType);
+            $satisfaction->setReport($report);
         }
 
         if (isset($deputyType)) {

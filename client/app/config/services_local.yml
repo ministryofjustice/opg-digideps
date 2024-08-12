@@ -1,0 +1,22 @@
+services:
+  data_collector.apiCollectorss:
+    class: App\Service\ApiCollector
+    arguments: ["@rest_client"]
+    tags:
+      - {
+          name: data_collector,
+          template: "@App/Manage/api-collector",
+          id: "api-collector",
+        }
+  data_collector.CssClassCollector:
+    class: App\Service\CssClassCollector
+    tags:
+      - {
+          name: data_collector,
+          template: "@App/Manage/css-class-collector",
+          id: "css-class-collector",
+        }
+    public: false
+
+  Alphagov\Notifications\Client:
+    alias: App\Service\Mailer\NotifyClientMock

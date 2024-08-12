@@ -95,6 +95,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         50 => PreRegistration::REALM_PROF,
     ];
 
+    public const SELF_REGISTER = 'SELF_REGISTER';
+    public const ADMIN_INVITE = 'ADMIN_INVITE';
+    public const ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
+    public const CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
+    public const UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
+
     /**
      * @var int
      *
@@ -148,7 +154,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
+     * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
      *
      * @JMS\Type("string")
      *
@@ -298,6 +304,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $deputyNo;
 
     /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
+     */
+    private $deputyUid;
+
+    /**
      * @var bool
      *
      * @JMS\Type("boolean")
@@ -399,6 +416,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="deletion_protection", type="boolean", nullable=true, options = { "default": null })
      */
     private $deletionProtection;
+
+    /**
+     * @JMS\Type("App\Entity\Deputy")
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
+     */
+    private ?Deputy $deputy;
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="pre_register_validated", type="datetime", nullable=true)
+     */
+    private $preRegisterValidatedDate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="registration_route", type="string", length=30, nullable=false, options = { "default": "UNKNOWN" })
+     */
+    private $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     *
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="is_primary", type="boolean", nullable=false, options = { "default": false })
+     */
+    private $isPrimary = false;
 
     /**
      * Constructor.
@@ -732,9 +789,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoleName()
     {
         return $this->roleName;
@@ -763,7 +817,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return;
     }
 
-    public function getPassword(): null|string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -884,10 +938,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastLoggedIn;
     }
 
-    /**
-     * @param \DateTime $lastLoggedIn
-     */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
@@ -918,6 +969,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): ?int
+    {
+        return $this->deputyUid;
+    }
+
+    public function setDeputyUid(?int $deputyUid): User
+    {
+        $this->deputyUid = $deputyUid;
 
         return $this;
     }
@@ -1368,6 +1431,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getDeputy(): ?Deputy
+    {
+        return $this->deputy;
+    }
+
+    public function setDeputy(?Deputy $deputy): User
+    {
+        $this->deputy = $deputy;
+
+        return $this;
+    }
+
     /**
      * Check if a user registration was before today.
      */
@@ -1424,5 +1499,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    /**
+     * Set preRegisterValidatedDate.
+     *
+     * @param \DateTime $preRegisterValidatedDate
+     */
+    public function setPreRegisterValidatedDate($preRegisterValidatedDate): User
+    {
+        $this->preRegisterValidatedDate = $preRegisterValidatedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get preRegisterValidatedDate.
+     *
+     * @return ?\DateTime
+     */
+    public function getPreRegisterValidatedDate(): ?\DateTime
+    {
+        return $this->preRegisterValidatedDate;
+    }
+
+    public function getRegistrationRoute(): string
+    {
+        return $this->registrationRoute;
+    }
+
+    /**
+     * @param string $registrationRoute
+     */
+    public function setRegistrationRoute($registrationRoute): User
+    {
+        $this->registrationRoute = $registrationRoute;
+
+        return $this;
+    }
+
+    /**
+     * Set primary.
+     *
+     * @param bool $primary
+     *
+     * @return User
+     */
+    public function setIsPrimary($primary)
+    {
+        $this->isPrimary = (bool) $primary;
+
+        return $this;
+    }
+
+    /**
+     * Get primary.
+     *
+     * @return bool
+     */
+    public function getIsPrimary()
+    {
+        return $this->isPrimary;
     }
 }

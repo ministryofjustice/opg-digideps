@@ -220,6 +220,7 @@ class UserController extends AbstractController
 
             //            this is the final step for Org users so registration has succeeded
             if ($user->isDeputyOrg()) {
+                $user->setPreRegisterValidatedDate(new \DateTime());
                 $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
             }
             $request->getSession()->remove('login-context');
@@ -347,11 +348,19 @@ class UserController extends AbstractController
                         if (true == $decodedError['matching_errors']['deputy_lastname']) {
                             $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
+                        if (true == $decodedError['matching_errors']['deputy_firstname']) {
+                            $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
+                        }
                         if (true == $decodedError['matching_errors']['deputy_postcode']) {
                             $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
 
                         break;
+
+                    case 462:
+                        $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
+                        break;
+
                     default:
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }

@@ -3,6 +3,8 @@ module "restore_from_production" {
   name   = "restore-from-production"
 
   cluster_name          = aws_ecs_cluster.main.name
+  cpu                   = 2048
+  memory                = 4096
   container_definitions = "[${local.restore_from_production_container}]"
   tags                  = var.default_tags
   environment           = local.environment
@@ -44,6 +46,14 @@ locals {
           {
             name  = "DROP_PUBLIC",
             value = "yes"
+          },
+          {
+            name  = "ANONYMISE",
+            value = "no"
+          },
+          {
+            name  = "ANON_PATH",
+            value = "anonymisation/"
           }
       ])
     }

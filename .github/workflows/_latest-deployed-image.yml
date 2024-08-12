@@ -9,6 +9,10 @@ on:
         description: "Terraform workspace"
         required: true
         type: string
+      account_name:
+        description: "Terraform account name"
+        required: true
+        type: string
     outputs:
       image_tag:
         description: "The latest version image tag"
@@ -19,7 +23,7 @@ jobs:
     outputs:
       image_tag: ${{ steps.export_tag.outputs.image_tag }}
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
         with:
           fetch-depth: "0"
 
@@ -41,10 +45,10 @@ jobs:
           terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
           terraform_wrapper: false
 
-      - name: configure OIDC AWS credentials for slack notification
-        uses: aws-actions/configure-aws-credentials@b140ab7b246475139f89894ebae4ba00bd5b374e
+      - name: configure OIDC AWS credentials for latest deployment
+        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
         with:
-          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-preproduction
+          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}
           role-session-name: github-actions-slack-notifier
           role-duration-seconds: 900
           aws-region: eu-west-1

@@ -3,12 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
-use App\Entity\NamedDeputy;
+use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Factory\OrganisationFactory;
-use App\Repository\NamedDeputyRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
 
@@ -21,7 +21,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'id' => 'Prof-102-Named',
                     'email' => '@prof102s.gov.uk',
                     'roleName' => 'ROLE_PROF_NAMED',
-                    'isNamedDeputy' => true,
+                    'isDeputy' => true,
                     'orgName' => 'Prof 102 Org',
                     'count' => 1,
                 ],
@@ -29,14 +29,14 @@ class ProfUserFixtures extends AbstractDataFixture
                     'id' => 'Prof-102-Admin',
                     'email' => '@prof102s.gov.uk',
                     'roleName' => 'ROLE_PROF_ADMIN',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
                 [
                     'id' => 'Prof-102-Member',
                     'email' => '@prof102s.gov.uk',
                     'roleName' => 'ROLE_PROF_TEAM_MEMBER',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
             ],
@@ -47,7 +47,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'caseNumber' => '71111000',
                     'reportType' => 'OPG102',
                     'orderType' => 'pfa',
-                    'namedDeputyUid' => '700771111000',
+                    'deputyUid' => '700771111000',
                     'count' => 10,
                 ],
                 [
@@ -55,7 +55,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'caseNumber' => '72222000',
                     'reportType' => 'OPG102',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700771111000',
+                    'deputyUid' => '700771111000',
                     'count' => 10,
                 ],
             ],
@@ -66,7 +66,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'id' => 'Prof-103-Named',
                     'email' => '@prof103s.gov.uk',
                     'roleName' => 'ROLE_PROF_NAMED',
-                    'isNamedDeputy' => true,
+                    'isDeputy' => true,
                     'orgName' => 'Prof 103 Org',
                     'count' => 1,
                 ],
@@ -74,14 +74,14 @@ class ProfUserFixtures extends AbstractDataFixture
                     'id' => 'Prof-103-Admin',
                     'email' => '@prof103s.gov.uk',
                     'roleName' => 'ROLE_PROF_ADMIN',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
                 [
                     'id' => 'Prof-103-Member',
                     'email' => '@prof103s.gov.uk',
                     'roleName' => 'ROLE_PROF_TEAM_MEMBER',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
             ],
@@ -91,7 +91,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'caseNumber' => '73333000',
                     'reportType' => 'OPG103',
                     'orderType' => 'pfa',
-                    'namedDeputyUid' => '700773333000',
+                    'deputyUid' => '700773333000',
                     'count' => 10,
                 ],
                 [
@@ -99,7 +99,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'caseNumber' => '74444000',
                     'reportType' => 'OPG103',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700773333000',
+                    'deputyUid' => '700773333000',
                     'count' => 10,
                 ],
             ],
@@ -110,7 +110,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'id' => 'Prof-104-Named',
                     'email' => '@prof104s.gov.uk',
                     'roleName' => 'ROLE_PROF_NAMED',
-                    'isNamedDeputy' => true,
+                    'isDeputy' => true,
                     'orgName' => 'Prof 104 Org',
                     'count' => 1,
                 ],
@@ -118,14 +118,14 @@ class ProfUserFixtures extends AbstractDataFixture
                     'id' => 'Prof-104-Admin',
                     'email' => '@prof104s.gov.uk',
                     'roleName' => 'ROLE_PROF_ADMIN',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
                 [
                     'id' => 'Prof-104-Member',
                     'email' => '@prof104s.gov.uk',
                     'roleName' => 'ROLE_PROF_TEAM_MEMBER',
-                    'isNamedDeputy' => false,
+                    'isDeputy' => false,
                     'count' => 2,
                 ],
             ],
@@ -135,7 +135,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     'caseNumber' => '75555000',
                     'reportType' => 'OPG104',
                     'orderType' => 'hw',
-                    'namedDeputyUid' => '700775555000',
+                    'deputyUid' => '700775555000',
                     'count' => 10,
                 ],
             ],
@@ -145,14 +145,14 @@ class ProfUserFixtures extends AbstractDataFixture
     public function __construct(
         private OrganisationRepository $orgRepository,
         private OrganisationFactory $orgFactory,
-        private NamedDeputyRepository $namedDeputyRepository
+        private DeputyRepository $deputyRepository
     ) {
     }
 
     public function doLoad(ObjectManager $manager)
     {
         // Loop through data sets.
-        // Creates users, clients, organisation and named deputies
+        // Creates users, clients, organisation and deputies
         foreach ($this->fixtureData as $data) {
             $this->createFixture($data, $manager);
         }
@@ -162,16 +162,16 @@ class ProfUserFixtures extends AbstractDataFixture
 
     private function createFixture($data, $manager)
     {
-        $namedDeputyData = null;
+        $deputyData = null;
         $organisation = null;
         // Create number of users for each user type
         foreach ($data['users'] as $userData) {
             for ($i = 1; $i <= $userData['count']; ++$i) {
                 $fullEmail = $userData['id'].'-'.$i.$userData['email'];
 
-                // Set the $namedDeputyData when we are processing the named deputy
-                if (null === $namedDeputyData) {
-                    $namedDeputyData = $userData['isNamedDeputy'] ? $userData : null;
+                // Set the $deputyData when we are processing the named deputy
+                if (null === $deputyData) {
+                    $deputyData = $userData['isDeputy'] ? $userData : null;
                 }
 
                 // Create user
@@ -199,17 +199,17 @@ class ProfUserFixtures extends AbstractDataFixture
                 // Create client
                 $client = $this->createClient($clientData, $i);
 
-                $namedDeputy = $this->namedDeputyRepository->findOneBy(['deputyUid' => $clientData['namedDeputyUid']]);
-                if (null === $namedDeputy) {
+                $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $clientData['deputyUid']]);
+                if (null === $deputy) {
                     // Create named deputy if they don't exist
-                    $namedDeputy = $this->createNamedDeputy($namedDeputyData, $clientData);
+                    $deputy = $this->createDeputy($deputyData, $clientData);
 
-                    $manager->persist($namedDeputy);
-                    $manager->flush($namedDeputy);
+                    $manager->persist($deputy);
+                    $manager->flush($deputy);
                 }
 
                 // Set the named deputy on the client
-                $client->setNamedDeputy($namedDeputy);
+                $client->setDeputy($deputy);
 
                 // Add the client to the organisation
                 $organisation->addClient($client);
@@ -272,13 +272,13 @@ class ProfUserFixtures extends AbstractDataFixture
         $manager->persist($report);
     }
 
-    private function createNamedDeputy(mixed $namedDeputyData, mixed $clientData)
+    private function createDeputy(mixed $deputyData, mixed $clientData)
     {
-        return (new NamedDeputy())
-            ->setFirstname($namedDeputyData['id'])
-            ->setLastname('Named Deputy')
-            ->setDeputyUid($clientData['namedDeputyUid'])
-            ->setEmail1($namedDeputyData['id'].$namedDeputyData['email'])
+        return (new Deputy())
+            ->setFirstname($deputyData['id'])
+            ->setLastname('Deputy')
+            ->setDeputyUid($clientData['deputyUid'])
+            ->setEmail1($deputyData['id'].$deputyData['email'])
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
             ->setAddressCountry('GB');
@@ -286,6 +286,6 @@ class ProfUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return ['dev'];
+        return ['dev', 'local'];
     }
 }

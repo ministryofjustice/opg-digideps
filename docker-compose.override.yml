@@ -1,7 +1,5 @@
-version: "3.2"
-
-#docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker-compose up.
-#This file won't be merged when using docker-compose -f docker-compose.yml up (or using any other compose file).
+#docker-compose.override.yml is loaded and merged with docker-compose.yml by default when calling docker compose up.
+#This file won't be merged when using docker compose -f docker-compose.yml up (or using any other compose file).
 services:
   resources:
     volumes:
@@ -75,6 +73,11 @@ services:
   mock-notify-api:
     volumes:
       - ./client/app/govuk-notifications.yaml:/tmp/govuk-notifications.yaml
+
+  orchestration:
+    volumes:
+      - ./orchestration/anonymisation/output_all.csv:/anonymisation/output_all.csv
+      - ./orchestration/anonymisation/output_filtered.csv:/anonymisation/output_filtered.csv
 
   aws:
     volumes:

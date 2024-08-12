@@ -79,6 +79,7 @@ class ClientController extends RestController
             $client->setCourtDate(new \DateTime($data['court_date']));
             $this->hydrateEntityWithArrayData($client, $data, [
                 'case_number' => 'setCaseNumber',
+                'deputy' => 'setDeputy',
             ]);
         }
 
@@ -233,5 +234,22 @@ class ClientController extends RestController
         return [
             'id' => $client->getId(),
         ];
+    }
+
+    /**
+     * @Route("/{id}/update-deputy/{deputyId}", methods={"PUT"}, requirements={"id":"\d+", "deputyId":"\d+"})
+     *
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
+     */
+    public function updateDeputyAction(Request $request, int $id, int $deputyId)
+    {
+        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        $deputy = $this->findEntityBy(EntityDir\Deputy::class, $deputyId);
+
+        $client->setDeputy($deputy);
+        $this->em->persist($client);
+        $this->em->flush();
+
+        return ['clientId' => $id, 'deputyId' => $deputyId];
     }
 }

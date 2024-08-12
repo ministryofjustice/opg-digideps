@@ -33,20 +33,28 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+
+      - name: Generate build output using Markdown
+        run: |
+          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: main" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Identifier: main" >> $GITHUB_STEP_SUMMARY
+
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
         with:
           prerelease: false
           default_bump: "minor"
+
       - name: show build identifier and tag
         id: show
         env:
-          BUILD: ${{ steps.variables.outputs.build_identifier }}
           TAG: ${{ steps.semver_tag.outputs.created_tag }}
         run: |
-          echo "Build Identifier: ${BUILD}"
+          echo "Build Identifier: main"
           echo "Container Tag: ${TAG}"
 
   build_web_resources:
@@ -110,12 +118,11 @@ jobs:
       - api_unit_tests_3
     secrets: inherit
 
-  synchronisation_unit_tests:
-    name: client unit tests
-    uses: ./.github/workflows/_unit-tests-synchronise-lambda.yml
+  miscellaneous_unit_tests:
+    name: miscellaneous unit tests
+    uses: ./.github/workflows/_unit-tests-miscellaneous.yml
     needs:
       - workflow_variables
-      - docker_build_scan_push
 
   terraform_apply_account_development:
     name: development account apply terraform
@@ -128,28 +135,6 @@ jobs:
       apply: true
       account_name: development
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
-    secrets: inherit
-
-  terraform_apply_development:
-    name: development environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_account_development
-      - docker_build_scan_push
-      - workflow_variables
-      - synchronisation_unit_tests
-      - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
-    with:
-      workspace: development
-      terraform_path: environment
-      apply: true
-      account_name: development
-      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_account_preproduction:
@@ -157,14 +142,19 @@ jobs:
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
-      - terraform_apply_development
+      - terraform_apply_account_development
+      - docker_build_scan_push
+      - miscellaneous_unit_tests
+      - client_unit_tests
+      - api_unit_tests_1
+      - api_unit_tests_2
+      - api_unit_tests_3
     with:
       workspace: preproduction
       terraform_path: account
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_integration:
@@ -179,7 +169,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   scale_services_up:
@@ -204,9 +193,8 @@ jobs:
     with:
       workspace: integration
       account_name: preproduction
-      task_name: "integration_test_v2"
+      task_name: "reset_database"
       timeout: "500"
-      override: "sh,./tests/Behat/reset-db.sh"
     secrets: inherit
 
   integration_tests_1:
@@ -330,7 +318,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_training:
@@ -345,7 +332,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_account_production:
@@ -360,7 +346,6 @@ jobs:
       apply: true
       account_name: production
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-      path_to_live: true
     secrets: inherit
 
   terraform_apply_production:
@@ -375,7 +360,6 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: production
-      path_to_live: true
     secrets: inherit
 
   smoke_tests_production:
@@ -432,26 +416,26 @@ jobs:
           echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
-    name: notify of result
+    name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: true
+      success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit
 
   slack_notify_failure:
-    name: notify of result
+    name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - workflow_variables
       - end_of_workflow
     with:
-      success: false
+      success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
     secrets: inherit

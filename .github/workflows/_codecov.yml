@@ -11,27 +11,31 @@ jobs:
   code_coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 # pin@v3
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
       - name: download artifact for client tests
-        uses: actions/download-artifact@87c55149d96e628cc2ef7e6fc2aab372015aec85
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: client-unit-tests
           path: ./
+
       - name: download artifact for api tests 1
-        uses: actions/download-artifact@87c55149d96e628cc2ef7e6fc2aab372015aec85
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: api-unit-tests-selection-1
           path: ./
+
       - name: download artifact for api tests 2
-        uses: actions/download-artifact@87c55149d96e628cc2ef7e6fc2aab372015aec85
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: api-unit-tests-selection-2
           path: ./
+
       - name: download artifact for api tests 3
-        uses: actions/download-artifact@87c55149d96e628cc2ef7e6fc2aab372015aec85
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: api-unit-tests-selection-3
           path: ./
+
       - name: service client codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -41,6 +45,7 @@ jobs:
           flags: client
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: service api codecov upload
         uses: codecov/codecov-action@v3
         with:

@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import time
 import urllib
@@ -513,10 +514,10 @@ def github_actions_message(message):
 
     path_to_live = True if "Path to live" in workflow_name else False
 
-    status_emoji = ":white_check_mark:" if success == "true" else ":x:"
-    success_string = "Success" if success == "true" else "Failure"
+    status_emoji = ":white_check_mark:" if success == "yes" else ":x:"
+    success_string = "Success" if success == "yes" else "Failure"
     workflow_type = "Digideps Live Release" if path_to_live else "Digideps Workflow"
-    extra_emoji = ":rocket:" if path_to_live and success == "true" else ""
+    extra_emoji = ":rocket:" if path_to_live and success == "yes" else ""
 
     if scheduled_task != "":
         with open("github_actions_scheduled_task.txt", "r") as file:
@@ -606,6 +607,10 @@ def send_message(payload):
 
 def lambda_handler(event, context):
     payload = generate_message(event)
-    response = send_message(payload)
 
+    pause_notifications = os.getenv("PAUSE_NOTIFICATIONS", "0")
+    if pause_notifications == "1":
+        return 0
+
+    response = send_message(payload)
     return response

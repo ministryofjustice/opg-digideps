@@ -7,6 +7,7 @@ use App\Form as FormDir;
 use App\Model\SelfRegisterData;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
@@ -23,6 +24,7 @@ class CoDeputyController extends AbstractController
 {
     private ClientApi $clientApi;
     private UserApi $userApi;
+    private DeputyApi $deputyApi;
     private RestClient $restClient;
     private TranslatorInterface $translator;
     private LoggerInterface $logger;
@@ -30,12 +32,14 @@ class CoDeputyController extends AbstractController
     public function __construct(
         ClientApi $clientApi,
         UserApi $userApi,
+        DeputyApi $deputyApi,
         RestClient $restClient,
         TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
         $this->clientApi = $clientApi;
         $this->userApi = $userApi;
+        $this->deputyApi = $deputyApi;
         $this->restClient = $restClient;
         $this->translator = $translator;
         $this->logger = $logger;
@@ -86,14 +90,22 @@ class CoDeputyController extends AbstractController
 
                 // validate against pre-registration data
                 try {
-                    $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
+                    $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
                     $user->setCoDeputyClientConfirmed(true);
+
+                    $user->setDeputyNo($coDeputyVerificationData['coDeputyUid']);
+                    $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
+
                     $user->setActive(true);
                     $user->setRegistrationDate(new \DateTime());
+                    $user->setPreRegisterValidatedDate(new \DateTime());
+
                     if ($mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
                     }
                     $this->restClient->put('user/'.$user->getId(), $user);
+
+                    $deputyResponse = $this->deputyApi->createDeputyFromUser($user);
 
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
@@ -119,6 +131,14 @@ class CoDeputyController extends AbstractController
 
                         case 425:
                             $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                            break;
+
+                        case 462:
+                            $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
+                            break;
+
+                        case 463:
+                            $form->addError(new FormError($translator->trans('formErrors.deputyAlreadyLinkedToCaseNumber', [], 'register')));
                             break;
 
                         default:
@@ -220,10 +240,15 @@ class CoDeputyController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $formEmail = $form->getData()->getEmail();
+                $firstName = $existingCoDeputy->getFirstName();
+                $lastName = $existingCoDeputy->getLastName();
 
-                // email was updated on the fly
-                if ($formEmail != $email) {
+                $formEmail = $form->getData()->getEmail();
+                $formFirstName = $form->getData()->getFirstName();
+                $formLastName = $form->getData()->getLastName();
+
+                // firstname, lastname or email were updated on the fly
+                if ($formEmail != $email || $formFirstName != $firstName || $formLastName != $lastName) {
                     $this->restClient->put('codeputy/'.$existingCoDeputy->getId(), $form->getData(), []);
                 }
 

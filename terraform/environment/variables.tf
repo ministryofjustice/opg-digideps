@@ -51,6 +51,8 @@ variable "accounts" {
       fargate_spot                           = bool
       secondary_region_enabled               = bool
       fault_injection_experiments_enabled    = bool
+      sleep_mode_enabled                     = bool
+      waf_ip_blocking_enabled                = bool
     })
   )
 }

@@ -21,13 +21,14 @@ class PreRegistrationVerificationService
 
     /**
      * Throw error 400 if preregistration has no record matching case number,
-     * client surname, deputy surname, and postcode (if set).
+     * client surname, deputy firstname and surname, and postcode (if set).
      */
-    public function validate(string $caseNumber, string $clientLastname, string $deputyLastname, ?string $deputyPostcode): bool
+    public function validate(string $caseNumber, string $clientLastname, string $deputyFirstname, string $deputyLastname, ?string $deputyPostcode): bool
     {
         $detailsToMatchOn = [
             'caseNumber' => $caseNumber,
             'clientLastname' => $clientLastname,
+            'deputyFirstname' => $deputyFirstname,
             'deputyLastname' => $deputyLastname,
         ];
 
@@ -102,7 +103,7 @@ class PreRegistrationVerificationService
      */
     private function checkOtherDetailsMatch(array $caseNumberMatches, $detailsToMatchOn)
     {
-        $matchingErrors = ['client_lastname' => false, 'deputy_lastname' => false, 'deputy_postcode' => false];
+        $matchingErrors = ['client_lastname' => false, 'deputy_firstname' => false, 'deputy_lastname' => false, 'deputy_postcode' => false];
 
         /** @var PreRegistration[] $clientLastnameMatches */
         $clientLastnameMatches = [];
@@ -132,12 +133,26 @@ class PreRegistrationVerificationService
             $deputyLastnameMatches = $clientLastnameMatches;
         }
 
+        /** @var PreRegistration[] $deputyFirstnameMatches */
+        $deputyFirstnameMatches = [];
+
+        foreach ($deputyLastnameMatches as $match) {
+            if ($this->normaliseName($match->getDeputyFirstname()) === $this->normaliseName($detailsToMatchOn['deputyFirstname'])) {
+                $deputyFirstnameMatches[] = $match;
+            }
+        }
+
+        if (0 === count($deputyFirstnameMatches)) {
+            $matchingErrors['deputy_firstname'] = true;
+            $deputyFirstnameMatches = $deputyLastnameMatches;
+        }
+
         if (isset($detailsToMatchOn['deputyPostcode'])) {
             $normalisedPostcode = DataNormaliser::normalisePostcode($detailsToMatchOn['deputyPostcode']);
             $preRegistrationByPostcode = [];
             $preRegistrationWithPostcodeCount = 0;
 
-            foreach ($deputyLastnameMatches as $match) {
+            foreach ($deputyFirstnameMatches as $match) {
                 $postcode = DataNormaliser::normalisePostcode($match->getDeputyPostCode());
 
                 if (!empty($match->getDeputyPostCode())) {
@@ -146,20 +161,20 @@ class PreRegistrationVerificationService
                 }
             }
 
-            if ($preRegistrationWithPostcodeCount < count($deputyLastnameMatches)) {
-                $deputyPostcodeMatches = $deputyLastnameMatches;
+            if ($preRegistrationWithPostcodeCount < count($deputyFirstnameMatches)) {
+                $deputyPostcodeMatches = $deputyFirstnameMatches;
             } else {
                 $deputyPostcodeMatches = array_key_exists($normalisedPostcode, $preRegistrationByPostcode) ? $preRegistrationByPostcode[$normalisedPostcode] : [];
             }
 
             if (0 === count($deputyPostcodeMatches)) {
                 $matchingErrors['deputy_postcode'] = true;
-                $deputyPostcodeMatches = $deputyLastnameMatches;
+                $deputyPostcodeMatches = $deputyFirstnameMatches;
             }
 
             $finalMatchingCases = $deputyPostcodeMatches;
         } else {
-            $finalMatchingCases = $deputyLastnameMatches;
+            $finalMatchingCases = $deputyFirstnameMatches;
         }
 
         if (in_array(true, $matchingErrors)) {

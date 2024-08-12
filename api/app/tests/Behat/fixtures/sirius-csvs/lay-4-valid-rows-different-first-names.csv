@@ -1,0 +1,5 @@
+Case,ClientSurname,DeputyUid,DeputyFirstname,DeputySurname,DeputyAddress1,DeputyAddress2,DeputyAddress3,DeputyAddress4,DeputyAddress5,DeputyPostcode,ReportType,MadeDate,OrderType,CoDeputy,Hybrid
+31313131,HUEY,19371937,Julie,DUCK,2 London Road,Padstow,Brentwood,Cornwall,,B1,OPG102,2011-04-14,pfa,no,SINGLE
+31313131,HUEY,19371938,Sam,DUCK,2 London Road,Padstow,Brentwood,Cornwall,,B1,OPG102,2011-04-15,pfa,no,SINGLE
+70777772,TUDOR,19355555,Bill,Trump,5 Birmingham Road,Padstow,Brentwood,Devon,,M1,OPG102,2011-04-14,pfa,no,SINGLE
+70777772,TUDOR,19355556,Stuart,Trump,5 Birmingham Road,Padstow,Brentwood,Devon,,M1,OPG102,2011-04-15,pfa,no,SINGLE

@@ -148,8 +148,8 @@ class PreRegistrationControllerTest extends AbstractTestController
         $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '12345678']);
 
-        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'codeputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'cotest', 'codeputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -173,12 +173,13 @@ class PreRegistrationControllerTest extends AbstractTestController
         ]);
     }
 
-    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputySurname = 'admin'): PreRegistration
+    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputyFirstname = 'test', string $deputySurname = 'admin'): PreRegistration
     {
         $preRegistration = new PreRegistration([
             'Case' => $case,
             'ClientSurname' => 'I should get deleted',
-            'DeputyUid' => 'Deputy No',
+            'DeputyUid' => '700571111000',
+            'DeputyFirstname' => $deputyFirstname,
             'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
             'DeputyPostcode' => 'SW1',
@@ -195,8 +196,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testDeputyUidSetWhenSingleMatchFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'test', 'deputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -206,6 +207,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyNo(null);
+        $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
         $this->fixtures()->clear();
@@ -221,13 +223,15 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $this->assertEquals('Deputy No', $loggedInUser->getDeputyNo());
+        $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
+        $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
+        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
     }
 
     public function testDeputyUidNotSetWhenMultipleMatchesFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('39393939', 'DUAL', 'test', 'deputy');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -237,6 +241,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyNo(null);
+        $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
         $this->fixtures()->clear();
@@ -246,12 +251,60 @@ class PreRegistrationControllerTest extends AbstractTestController
                 'case_number' => '39393939',
                 'lastname' => 'I should get deleted',
             ],
-            'mustSucceed' => true,
+            'mustSucceed' => false,
             'AuthToken' => self::$tokenDeputy,
         ]);
 
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $this->assertNull($loggedInUser->getDeputyNo());
+        try {
+            $this->assertNull($loggedInUser->getDeputyNo());
+            $this->assertEquals(0, $loggedInUser->getDeputyUid());
+        } catch (\RuntimeException $e) {
+            $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
+            $this->assertEquals($expectedErrorMessage, $e->getMessage());
+            $this->assertEquals(462, $e->getCode());
+        }
+    }
+
+    public function testVerifySameDeputyCannotSignUp()
+    {
+        $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '1234567t']);
+
+        $this->buildAndPersistPreRegistrationEntity('1234567t', 'SINGLE', 'test', 'deputy');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        self::$tokenDeputy = $this->loginAsDeputy();
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        // Testing with lowercase t
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '1234567t',
+                'lastname' => 'deputy',
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 425,
+        ]);
+
+        // Testing with uppercase T
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '1234567T',
+                'lastname' => 'deputy',
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 425,
+        ]);
     }
 }

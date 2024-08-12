@@ -20,6 +20,8 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
+    {{ form_input(form.firstname, 'form.firstName') }}
+    {{ form_input(form.lastname, 'form.lastName') }}
     {{ form_input(form.email,'form.email') }}
 
     {{ form_submit(form.submit,'form.submit', {
