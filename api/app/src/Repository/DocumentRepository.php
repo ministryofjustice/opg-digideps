@@ -156,6 +156,8 @@ WHERE
                 d.synchronisation_error LIKE 'Report PDF failed to sync%'
                 OR
                 d.synchronisation_error LIKE 'Document failed to sync after%'
+                OR
+                d.synchronisation_error LIKE '%OPGDATA-API-FORBIDDEN%'
             )
     ) OR
     (
@@ -247,7 +249,7 @@ AND d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '
         return $failedCounts[0];
     }
 
-    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, string $syncErrorMessage = null)
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
     {
         $idsString = implode(',', $reportSubmissionIds);
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;
