@@ -11,7 +11,7 @@ jobs:
   code_coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
       - name: download artifact for client tests
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
