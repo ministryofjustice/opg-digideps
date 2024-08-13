@@ -86,10 +86,9 @@ class SatisfactionControllerTest extends AbstractTestController
 
     private function prepareReport()
     {
-        $reportTestHelper = new ReportTestHelper();
         $em = static::getContainer()->get('em');
 
-        $report = $reportTestHelper->generateReport($em);
+        $report = (new ReportTestHelper())->generateReport($em);
         $client = (new ClientTestHelper())->generateClient($em);
 
         $report->setClient($client);

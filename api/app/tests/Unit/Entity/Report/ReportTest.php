@@ -33,6 +33,13 @@ class ReportTest extends KernelTestCase
 
     public function setUp(): void
     {
+        $kernel = self::bootKernel();
+        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
+
+        // Retrieve service in order to load Carbon package and
+        // method called each time new instance of report is created
+        static::getContainer()->get('App\Service\ReportService');
+
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
         $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
@@ -41,18 +48,33 @@ class ReportTest extends KernelTestCase
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
         $this->expense1 = m::mock(Expense::class, ['getAmount' => 2]);
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
-
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
     }
 
     public function testDueDate()
     {
-        $startDate = new \DateTime('2017-01-01');
+        $startDate = new \DateTime('2017-12-30');
         $endDate = new \DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
-        $this->assertEquals('2019-02-25', $report->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2019-02-26', $report->getDueDate()->format('Y-m-d'));
+    }
+
+    public function testDueDateAccountsForBankHolidaysForProfs()
+    {
+        $startDate = new \DateTime('2023-04-23');
+        $endDate = new \DateTime('2024-04-22');
+
+        $report = new Report($this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
+        $this->assertEquals('2024-06-19', $report->getDueDate()->format('Y-m-d'));
+    }
+
+    public function testDueDateAccountsForBankHolidaysForLays()
+    {
+        $startDate = new \DateTime('2023-04-23');
+        $endDate = new \DateTime('2024-04-22');
+
+        $report = new Report($this->client, Report::LAY_PFA_LOW_ASSETS_TYPE, $startDate, $endDate, false);
+        $this->assertEquals('2024-05-14', $report->getDueDate()->format('Y-m-d'));
     }
 
     public static function constructorProvider()
@@ -440,14 +462,14 @@ class ReportTest extends KernelTestCase
     public function reportTypesWithEndDateProvider()
     {
         return [
-            // lay pre-changover (56 daye)
-            ['102', '2019-11-12', '2020-01-07'],
-            // lay post cchangeover (21 days)
+            // lay pre-changover (40 days)
+            ['102', '2019-11-12', '2020-01-10'],
+            // lay post cchangeover (15 days)
             ['102', '2019-11-13', '2019-12-04'],
-            // non-lay pre changover (56 days)
-            ['102-5', '2019-11-12', '2020-01-07'],
-            // non lay post changeover (56 days)
-            ['102-5', '2019-11-13', '2020-01-08'],
+            // non-lay pre changover (40 days)
+            ['102-5', '2019-11-12', '2020-01-10'],
+            // non lay post changeover (40 days)
+            ['102-5', '2019-11-13', '2020-01-13'],
         ];
     }
 
@@ -500,8 +522,6 @@ class ReportTest extends KernelTestCase
         $startDate = $startDate->modify('-1 year');
 
         $report = new Report($client, $type, $startDate, $endDate);
-
-        $report->updateDueDateBasedOnEndDate();
 
         $this->assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
         $this->assertEquals($endDate, $report->getEndDate());
