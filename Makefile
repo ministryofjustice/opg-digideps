@@ -177,8 +177,7 @@ test-js-single: ##@javascript Allows you to do make test-js-single TEST='Currenc
 	docker compose -f docker-compose.yml -f docker-compose.behat.yml run node-js --build --rm run test -- -t ${TEST}
 
 build-js: ##@javascript Build JS resources
-	docker-compose build resources
-	docker-compose run --rm resources
+	docker compose run resources --build --rm
 
 lint-js: ##@javascript Lint JS resources
 	docker compose -f docker-compose.yml -f docker-compose.behat.yml run node-js --build --rm run fix
