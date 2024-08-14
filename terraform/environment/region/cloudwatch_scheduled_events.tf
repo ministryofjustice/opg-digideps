@@ -331,7 +331,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
 resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
   name                = "sleep-mode-off-${local.environment}"
   description         = "Sleep mode - turn off environment ${terraform.workspace}"
-  schedule_expression = "cron(0 02,20 * * ? *)"
+  schedule_expression = "cron(15 02,20 * * ? *)"
   tags                = var.default_tags
   is_enabled          = var.account.sleep_mode_enabled ? true : false
 }

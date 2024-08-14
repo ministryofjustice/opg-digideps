@@ -57,7 +57,7 @@ jobs:
             sub_folder: "lambdas/functions/synchronisation"
             docker_file: "Dockerfile"
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
@@ -70,7 +70,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
+        uses: actions/cache@57b8e405f0f6efe89131ba09709ce4bc33291a51 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -84,7 +84,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@55f725fcb586ca16a5ed5b0d75d464defbfa831b # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
@@ -155,7 +155,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@c63052874af2ca5497434ed1bac4df2c2392703f # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@39ac3bef607efa5abe379d87c67a1396d6e0049f # pin@v1.5.1
         with:
           registries: 311462405659
 

@@ -71,3 +71,15 @@ resource "aws_ssm_parameter" "flag_paper_reports" {
     ignore_changes = [value]
   }
 }
+
+resource "aws_ssm_parameter" "flag_multi_accounts" {
+  name  = "${local.feature_flag_prefix}multi-accounts"
+  type  = "String"
+  value = "0"
+
+  tags = var.default_tags
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
