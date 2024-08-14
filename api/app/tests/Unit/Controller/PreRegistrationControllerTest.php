@@ -226,6 +226,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
         $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
         self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
+        self::assertTrue($loggedInUser->getIsPrimary());
     }
 
     public function testDeputyUidNotSetWhenMultipleMatchesFound()

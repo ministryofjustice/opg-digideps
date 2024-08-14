@@ -128,15 +128,6 @@ class UserRegistrationService
      */
     public function retrieveCoDeputyUid($selfRegisterData)
     {
-//        $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
-//        if (!$user) {
-//            throw new \RuntimeException('User registration: not found', 421);
-//        }
-//
-//        if($this->preRegistrationVerificationService->isSingleDeputyAccount()){
-//            $user->setIsPrimary(true);
-//        }
-
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             return $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
         } else {

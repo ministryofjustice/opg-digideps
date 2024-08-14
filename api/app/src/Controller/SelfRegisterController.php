@@ -116,7 +116,8 @@ class SelfRegisterController extends RestController
                 throw new \RuntimeException('User registration: not found', 421);
             }
 
-            $existingDeputyAccounts = $this->em->getRepository('App\Entity\User')->findBy(['deputyUid' => $coDeputyUid])['deputyUid'];
+            // check if it's the primary account for the co-deputy
+            $existingDeputyAccounts = $this->em->getRepository('App\Entity\User')->findBy(['deputyUid' => $coDeputyUid]);
 
             $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
             if (!empty($existingDeputyCase)) {
@@ -129,7 +130,7 @@ class SelfRegisterController extends RestController
             throw $e;
         }
 
-        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid, $existingDeputyAccounts];
+        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
     }
 
     public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)
