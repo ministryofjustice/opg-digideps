@@ -10,8 +10,11 @@ server {
     add_header Content-Security-Policy   "default-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; script-src 'self' https://*.google-analytics.com https://*.googletagmanager.com; style-src 'self';" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options    "nosniff" always;
+    add_header X-Frame-Options "DENY";
     add_header Permissions-Policy        "geolocation=()" always;
-    add_header X-Frame-Options "deny";
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+    add_header Pragma "no-cache";
+    add_header Expires "0";
 
     # This is handled by PHP
     client_max_body_size 0;
