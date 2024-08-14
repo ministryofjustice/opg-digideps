@@ -499,7 +499,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser@example.com',
+                'email' => 'firstdeputyaccount@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -526,7 +526,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser2@example.com',
+                'email' => 'seconddeputyaccount@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'Jamie',
                 'client_lastname' => 'Jones',
@@ -565,7 +565,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'gooduser@example.com',
+                'email' => 'deputy@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -583,7 +583,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $coDeputy = $this->fixtures()->createUser();
         $coDeputy->setFirstName('Sue');
         $coDeputy->setLastName('Jones');
-        $coDeputy->setEmail('gooduser2@example.com');
+        $coDeputy->setEmail('codeputy@example.com');
         $coDeputy->setCreatedBy($deputy);
         $coDeputy->setRegistrationRoute('CO_DEPUTY_INVITE');
 
@@ -596,7 +596,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Sue',
                 'lastname' => 'Jones',
-                'email' => 'gooduser2@example.com',
+                'email' => 'codeputy@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
