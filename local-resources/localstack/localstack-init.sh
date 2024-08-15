@@ -30,6 +30,7 @@ awslocal s3api put-bucket-policy \
 awslocal ssm put-parameter --name "/local/flag/checklist-sync" --value "1" --type String --overwrite
 awslocal ssm put-parameter --name "/local/flag/document-sync" --value "1" --type String --overwrite
 awslocal ssm put-parameter --name "/local/flag/paper-reports" --value "0" --type String --overwrite
+awslocal ssm put-parameter --name "/local/flag/multi-accounts" --value "0" --type String --overwrite
 
 awslocal ssm put-parameter --name "/local/parameter/checklist-sync-row-limit" --value "100" --type String --overwrite
 awslocal ssm put-parameter --name "/local/parameter/document-sync-interval-minutes" --value "4" --type String --overwrite
