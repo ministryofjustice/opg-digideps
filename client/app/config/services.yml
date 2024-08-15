@@ -294,14 +294,6 @@ services:
     class: App\EventListener\LogoutListener
     arguments: ["@security.token_storage", "@rest_client", "@router"]
 
-  App\EventListener\ResponseNoCacheListener:
-    tags:
-      - {
-          name: kernel.event_listener,
-          event: kernel.response,
-          method: onKernelResponse,
-        }
-
   App\EventListener\UnauthorizedExceptionListener:
     tags:
       - {
@@ -322,14 +314,6 @@ services:
     arguments: ["@service_container"]
     tags:
       - { name: monolog.processor, method: processRecord }
-
-  App\EventListener\ResponseHeadersListener:
-    tags:
-      - {
-          name: kernel.event_listener,
-          event: kernel.response,
-          method: onKernelResponse,
-        }
 
   security.validator.d_user_password:
     class: App\Validator\Constraints\DUserPasswordValidator
