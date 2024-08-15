@@ -5,7 +5,6 @@ namespace App\Tests\Unit\Service\Stats\Query;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use App\Service\ReportService;
 use App\Service\Stats\Query\ClientsQuery;
 use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -22,9 +21,6 @@ class ClientsQueryTest extends WebTestCase
         self::$em = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
-
-        // Required to load Carbon package and method called each time new instance of report is created
-        static::getContainer()->get(ReportService::class);
 
         static::givenClientWithReportsOfType(['NDR', '102']);
         static::givenClientWithReportsOfType(['NDR', '102']);
