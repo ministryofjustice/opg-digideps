@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\ReportService;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -29,9 +28,7 @@ class UserRepositoryTest extends WebTestCase
     {
         $kernel = self::bootKernel();
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-        $reportService = static::getContainer()->get(ReportService::class);
-
-        $this->fixtures = new Fixtures($this->em, $reportService);
+        $this->fixtures = new Fixtures($this->em);
 
         $this->sut = $this->em->getRepository(User::class);
 
