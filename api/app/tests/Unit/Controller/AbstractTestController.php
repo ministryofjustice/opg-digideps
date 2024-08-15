@@ -49,9 +49,8 @@ abstract class AbstractTestController extends WebTestCase
         /** @var EntityManager $em */
         $em = static::getContainer()->get('em');
         $this->jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
-        $this->reportService = static::getContainer()->get('App\Service\ReportService');
 
-        self::$fixtures = new Fixtures($em, $this->reportService);
+        self::$fixtures = new Fixtures($em);
 
         $em->clear();
 

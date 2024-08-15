@@ -28,19 +28,18 @@ use App\Entity\ReportInterface;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use GuzzleHttp\Exception\GuzzleException;
 
 class ReportTestHelper
 {
     /**
-     * @throws GuzzleException
+     * @return Report
      */
-    public function generateReport(EntityManager $em, Client $client = null, string $type = null, \DateTime $startDate = null, \DateTime $endDate = null): Report
+    public function generateReport(EntityManager $em, Client $client = null, string $type = null, \DateTime $startDate = null, \DateTime $endDate = null)
     {
-        $client = $client ?: (new ClientTestHelper())->generateClient($em);
-        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ?: new \DateTime('2 years ago');
-        $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
+        $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
+        $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
+        $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
 
         $report = new Report($client, $type, $startDate, $endDate);
         $this->completeBankAccounts($report, $em);
@@ -260,7 +259,7 @@ class ReportTestHelper
             || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyInExists('Yes');
         }
-
+        
         $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
@@ -272,7 +271,7 @@ class ReportTestHelper
             || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyOutExists('Yes');
         }
-
+        
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
         $mt2 = (new MoneyTransaction($report))->setCategory('electricity')->setAmount(100);
@@ -315,7 +314,8 @@ class ReportTestHelper
     {
         if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) 
+        {
             $report->setMoneyInExists('No');
             $report->setReasonForNoMoneyIn('No money in');
         }
@@ -325,7 +325,8 @@ class ReportTestHelper
     {
         if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType())
+        {
             $report->setMoneyOutExists('No');
             $report->setReasonForNoMoneyOut('No money out');
         }

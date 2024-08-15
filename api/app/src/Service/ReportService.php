@@ -20,11 +20,9 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\ReportRepository;
-use Carbon\Carbon;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\GuzzleException;
 
 class ReportService
 {
@@ -43,18 +41,13 @@ class ReportService
      */
     private $bankAccountRepository;
 
-    /**
-     * @throws GuzzleException
-     */
     public function __construct(
         private EntityManagerInterface $em,
-        private ReportRepository $reportRepository,
-        private CarbonBusinessDaysService $carbonBusinessDaysService
+        private ReportRepository $reportRepository
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
-        $this->carbonBusinessDaysService->load();
     }
 
     /**
@@ -460,23 +453,5 @@ class ReportService
         $endOfToday = new \DateTime('today midnight');
 
         return $endDate <= $endOfToday;
-    }
-
-    public static function updateDueDateBasedOnEndDate(\DateTime $endDate, bool $isLayReport)
-    {
-        // due date set to 8 weeks (40 business days) after the end date unless lay reports where end date is beyond
-        // 13/11/19. Then it is 15 days (DDLS-208)
-
-        if ($isLayReport && $endDate->format('Ymd') >= '20191113') {
-            $dueDateSet = Carbon::parse($endDate)->addBusinessDays('15')->format('Y-m-d H:i:s');
-
-            // convert date time string into a date time object
-            return \DateTime::createFromFormat('Y-m-d H:i:s', $dueDateSet);
-        } else {
-            $dueDateSet = Carbon::parse($endDate)->addBusinessDays('40')->format('Y-m-d H:i:s');
-
-            // convert date time string into a date time object
-            return \DateTime::createFromFormat('Y-m-d H:i:s', $dueDateSet);
-        }
     }
 }
