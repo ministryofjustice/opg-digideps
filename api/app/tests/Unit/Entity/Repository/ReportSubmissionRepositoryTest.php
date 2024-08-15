@@ -22,10 +22,6 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        // Retrieve service in order to load Carbon package and
-        // method called each time new instance of report is created
-        static::getContainer()->get('App\Service\ReportService');
-
         $this->reportSubmissionHelper = (new ReportSubmissionHelper());
     }
 

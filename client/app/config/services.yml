@@ -294,6 +294,14 @@ services:
     class: App\EventListener\LogoutListener
     arguments: ["@security.token_storage", "@rest_client", "@router"]
 
+  App\EventListener\ResponseNoCacheListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.response,
+          method: onKernelResponse,
+        }
+
   App\EventListener\UnauthorizedExceptionListener:
     tags:
       - {

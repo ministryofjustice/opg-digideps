@@ -7,8 +7,6 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
-use App\Service\BankHolidaysAPIService;
-use App\Service\CarbonBusinessDaysService;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
@@ -144,10 +142,6 @@ class LayDeputyshipUploaderTest extends TestCase
                 ->method('getUsers')
                 ->willReturn([$deputy]);
         }
-
-        // Call service to load addBusinessDays function required on instantiation of report entity
-        $bankHolidayAPIService = $this->getMockBuilder(BankHolidaysAPIService::class)->disableOriginalConstructor()->getMock();
-        new CarbonBusinessDaysService($bankHolidayAPIService);
 
         // $existingClient = (new Client())->setCaseNumber('case-1');
         $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
