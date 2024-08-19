@@ -6,7 +6,6 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
-use App\Service\ReportService;
 use App\Service\Stats\Query\ReportsSubmittedQuery;
 use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -23,9 +22,6 @@ class ReportsSubmittedQueryTest extends WebTestCase
         self::$em = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
-
-        // Required to load Carbon package and method called each time new instance of report is created
-        static::getContainer()->get(ReportService::class);
 
         static::givenXreportSubmissionsOfTypeBelongToDeputy('4', '102', 'LAY');
         static::givenXreportSubmissionsOfTypeBelongToDeputy('2', '102', 'LAY');

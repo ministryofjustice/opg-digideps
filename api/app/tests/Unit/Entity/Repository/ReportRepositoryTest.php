@@ -11,7 +11,6 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use App\Repository\ReportRepository;
-use App\Service\ReportService;
 use App\Service\Search\ClientSearchFilter;
 use App\Tests\Unit\ApiBaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -221,8 +220,6 @@ class ReportRepositoryTest extends ApiBaseTestCase
      */
     private function buildReport(Client $client): Report
     {
-        static::getContainer()->get(ReportService::class);
-
         $startDate = new \DateTime('now', new \DateTimeZone('UTC'));
         $endDate = $startDate->add(new \DateInterval('P1D'));
         $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);

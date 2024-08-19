@@ -12,7 +12,6 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\DocumentRepository;
-use App\Service\ReportService;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -191,8 +190,6 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistReport(Client $client, bool $isNdr)
     {
-        static::getContainer()->get(ReportService::class);
-
         if ($isNdr) {
             $report = (new Ndr($client))->setStartDate($this->firstJulyAm);
         } else {
