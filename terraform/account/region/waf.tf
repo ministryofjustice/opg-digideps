@@ -310,7 +310,8 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
 
   lifecycle {
     ignore_changes = [
-      addresses
+      addresses,
+      description
     ]
   }
 }
