@@ -484,7 +484,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function testPrimaryFlagSetToFalseForSecondDeputyAccount()
+    public function testDeputiesNonPrimaryAccountSetToFalse()
     {
         $preRegistration1 = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
 
@@ -545,7 +545,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function testNoExistingDeputyAccountsAreIdentifiedForCoDeputy()
+    public function testNoExistingAccountsAreIdentifiedForCoDeputyWithSingleAccount()
     {
         $deputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
         $deputyPreRegistration->setIsCoDeputy(true);
