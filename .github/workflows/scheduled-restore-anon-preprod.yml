@@ -2,8 +2,8 @@ name: "[Scheduled] Restore and Anonymise Preproduction"
 
 on:
   schedule:
-    # 8pm every day except Sundays
-    - cron: "0 20 * * 0-6"
+    # 6.30pm every week day (Mon-Fri)
+    - cron: "30 18 * * 0-5"
 
 permissions:
   id-token: write
