@@ -12,7 +12,7 @@ import TableMultiSelect from './modules_new/TableMultiSelect'
 import ReturnHTML from './modules_new/ReturnHTML'
 import ShowHideContent from './modules_new/ShowHideContent'
 import { initAll as MOJFrontendAll } from '@ministryofjustice/frontend'
-import { initAll as GOVUKInitAll } from 'govuk-frontend'
+import { Accordion, Button, CharacterCount, Checkboxes, ErrorSummary, ExitThisPage, Header, NotificationBanner, PasswordInput, Radios, SkipLink, createAll } from 'govuk-frontend'
 import GoogleAnalyticsLinkTracking from './modules_new/GoogleAnalyticsLinkTracking'
 import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 import GoogleAnalyticsObject from './modules_new/GoogleAnalyticsObject'
@@ -70,6 +70,17 @@ window.addEventListener('DOMContentLoaded', () => {
     errorSummaries.focus()
   }
 
-  GOVUKInitAll()
+  createAll(Accordion)
+  createAll(Button)
+  createAll(CharacterCount)
+  createAll(Checkboxes)
+  createAll(ErrorSummary)
+  createAll(ExitThisPage)
+  createAll(Header)
+  createAll(NotificationBanner)
+  createAll(PasswordInput)
+  createAll(Radios)
+  createAll(SkipLink)
+
   MOJFrontendAll()
 })
