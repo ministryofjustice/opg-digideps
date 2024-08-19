@@ -1,6 +1,6 @@
 # start up the containers
 dd-start() {
-  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml up -d
+  docker compose -f $DD_DOCKER_DIR/docker-compose.yml up -d
 }
 
 # run command/bash into container
@@ -8,13 +8,13 @@ dd-start() {
 dd-exec() {
   CONTAINER=$1
   shift
-  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml exec ${CONTAINER} "$@"
+  docker compose -f $DD_DOCKER_DIR/docker-compose.yml exec ${CONTAINER} "$@"
 }
 
 # view logs inside container
 # e.g. `dd-tail-logs api`
 dd-tail-logs() {
-  COMPOSE_FILE=$DD_DOCKER_DIR/docker-compose.yml docker-compose logs -f $1
+  COMPOSE_FILE=$DD_DOCKER_DIR/docker-compose.yml docker compose logs -f $1
 }
 
 # IMPORT Digideps SQL snapshots, dropping the public schema first. e.g. dd-psql-import file.sql
@@ -50,7 +50,7 @@ dd-enable-debug()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-      APP_ENV=dev APP_DEBUG=1 docker-compose up -d --no-deps $i
+      APP_ENV=dev APP_DEBUG=1 docker compose up -d --no-deps $i
       echo "$i: debug mode enabled."
     done
 }
@@ -60,7 +60,7 @@ dd-disable-debug()
     containers=(frontend api admin)
     for i in "${containers[@]}"
     do
-       APP_ENV=dev APP_DEBUG=0 docker-compose up -d --no-deps $i
+       APP_ENV=dev APP_DEBUG=0 docker compose up -d --no-deps $i
        echo "$i: debug mode disabled."
     done
 }
@@ -112,7 +112,7 @@ dd-behat-run()
       dd-cache-clear;
     fi
 
-    time docker-compose -f $DD_DOCKER_DIR/docker-compose.behat.yml run --rm test $@
+    time docker compose -f $DD_DOCKER_DIR/docker-compose.behat.yml run --rm test $@
 
     # Re-enable dev mode
     dd-enable-debug
@@ -134,13 +134,13 @@ dd-phpstan() {
   else
     CONTAINER=$1
     shift
-    docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm ${CONTAINER} bin/phpstan analyse $@ --memory-limit=0 --level=max
+    docker compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm ${CONTAINER} bin/phpstan analyse $@ --memory-limit=0 --level=max
   fi
 }
 
 # phpunit
-alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit $@"
-alias dd-phpunit-api="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm api sh scripts/apiunittest.sh"
+alias dd-phpunit-frontend="docker compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit $@"
+alias dd-phpunit-api="docker compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm api sh scripts/apiunittest.sh"
 alias dd-phpunit="dd-phpunit-frontend;dd-phpunit-api"
 
 # phpunit + behat

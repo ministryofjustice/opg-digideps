@@ -34,7 +34,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:
@@ -44,6 +44,15 @@ jobs:
           echo "branch_formatted=$(echo ${BRANCH})" >> $GITHUB_OUTPUT
           echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
           echo ${build_identifier}
+      - name: Generate build output using Markdown
+        env:
+          PARSED_BRANCH: ${{ steps.variables.outputs.branch_formatted }}
+          BUILD_IDENTIFIER: ${{ steps.variables.outputs.build_identifier }}
+        run: |
+          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${PARSED_BRANCH}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Identifier: ${BUILD_IDENTIFIER}" >> $GITHUB_STEP_SUMMARY
       - name: generate semver tag and release
         id: semver_tag
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
@@ -209,9 +218,8 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "reset_database"
       timeout: "500"
-      override: "sh,./tests/Behat/reset-db.sh"
     secrets: inherit
 
   smoke_tests:
@@ -347,9 +355,22 @@ jobs:
     steps:
       - name: workflow ended successfully
         run: |
+          export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+          export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
+          export SERVICE_ADMIN_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.admin.digideps.opg.service.justice.gov.uk"
+
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
+          echo "Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
+          echo "Service Frontend URL: ${SERVICE_FRONTEND_URL}"
+          echo "Service Admin URL: ${SERVICE_ADMIN_URL}"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+
+          echo "### Environment Details" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Public Frontend URL: ${PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Service Admin URL: ${SERVICE_ADMIN_URL}" >> $GITHUB_STEP_SUMMARY
+          echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}" >> $GITHUB_STEP_SUMMARY
 
   slack_notify_success:
     name: notify of success

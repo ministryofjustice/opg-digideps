@@ -38,10 +38,8 @@ locals {
   events_dr_task_list = var.account.dr_backup ? [module.disaster_recovery_backup[0].task_definition_arn] : []
   events_task_list = [
     aws_ecs_task_definition.check_csv_uploaded.arn,
-    aws_ecs_task_definition.checklist_sync.arn,
     aws_ecs_task_definition.api.arn,
     aws_ecs_task_definition.api_high_memory.arn,
-    aws_ecs_task_definition.document_sync.arn,
     module.analyse.task_definition_arn,
     module.performance_data.task_definition_arn,
     module.sleep_mode.task_definition_arn

@@ -2,8 +2,8 @@ name: "[Scheduled] Update Training Environment"
 
 on:
   schedule:
-    # 8pm on Friday
-    - cron: "0 20 * * 5"
+    # 18.30pm on Friday
+    - cron: "30 18 * * 5"
 
 permissions:
   id-token: write
@@ -25,9 +25,8 @@ jobs:
     with:
       workspace: training
       account_name: preproduction
-      task_name: "integration_test_v2"
+      task_name: "reset_database"
       timeout: "500"
-      override: "sh,./tests/Behat/reset-db.sh"
     secrets: inherit
 
   slack_notify_failure:

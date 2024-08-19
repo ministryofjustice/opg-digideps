@@ -11,20 +11,20 @@ jobs:
   client-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
 
       - name: download resources artifact
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: web-distribution
           path: client/resources/public
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
+        uses: actions/cache@57b8e405f0f6efe89131ba09709ce4bc33291a51 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-client-unit-tests-build-${{ github.sha }}
@@ -53,14 +53,14 @@ jobs:
       - name: run client unit tests
         id: unit-tests
         run: |
-          APP_ENV=dev APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d --no-deps client-unit-tests pact-mock
+          APP_ENV=dev APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d --no-deps client-unit-tests pact-mock
           sleep 3
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chown root /tmp/commonpasswords.txt
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests sh scripts/client-unit-tests.sh
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chown root /tmp/commonpasswords.txt
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests sh scripts/client-unit-tests.sh
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T client-unit-tests chmod -R 777 tests/phpunit/coverage/client-unit-tests.xml
           docker cp "client-unit-tests-app:/var/www/tests/phpunit/coverage/client-unit-tests.xml" "./client-unit-tests.xml"
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml down
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml down
 
       - name: Move cache
         run: |
@@ -68,13 +68,13 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: archive pact results
-        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # pin@v3.1.0
         with:
           name: pact.json
           path: pact.json
 
       - name: archive test results
-        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # pin@v3.1.0
         with:
           name: client-unit-tests
           path: client-unit-tests.xml

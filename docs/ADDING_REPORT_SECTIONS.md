@@ -33,7 +33,7 @@ class Lifestyle
 * When all questions are mapped to properties, exec in to the api docker container and generate a new migration file using the Symfony console:
 
 ```
-> docker-compose exec api sh
+> docker compose exec api sh
 
 > php app/console doctrine:migrations:diff
 ```

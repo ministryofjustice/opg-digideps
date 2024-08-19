@@ -41,6 +41,6 @@ Drag the nginx.crt from your IDE window into the System folder of Keychain acces
 If your load-balancer is already up the make sure you rebuild it and bring it up again so that you get the new certs!
 
 ```
-docker-compose build --no-cache load-balancer
-docker-compose up -d load-balancer
+docker compose build --no-cache load-balancer
+docker compose up -d load-balancer
 ```

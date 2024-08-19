@@ -19,14 +19,14 @@ jobs:
   api-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
+        uses: actions/cache@57b8e405f0f6efe89131ba09709ce4bc33291a51 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: api-unit-tests-${{ inputs.branch_name }}-${{ github.sha }}
@@ -52,25 +52,25 @@ jobs:
       - name: setup local docker resources for unit tests
         id: unit-test-setup
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d localstack postgres redis-api
-          while [ $(docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests ls -alt
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d localstack postgres redis-api
+          while [ $(docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests ls -alt
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
 
       - name: run api unit tests
         env:
           SELECTION: ${{ inputs.selection }}
         id: unit-tests
         run: |
-          APP_ENV=test APP_DEBUG=0 docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d api-unit-tests
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 var
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests sh scripts/api_unit_test.sh ${SELECTION}
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 tests/coverage
+          APP_ENV=test APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d api-unit-tests
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 var
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests sh scripts/api_unit_test.sh ${SELECTION}
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 tests/coverage
           docker cp "api-unit-tests:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests-${SELECTION}.xml"
-          docker-compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml down
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml down
 
       - name: archive test results
-        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # pin@v3.1.0
         with:
           name: api-unit-tests-${{ inputs.selection }}
           path: api-unit-tests-${{ inputs.selection }}.xml

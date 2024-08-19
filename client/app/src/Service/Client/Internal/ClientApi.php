@@ -27,6 +27,8 @@ class ClientApi
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
 
+    private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
+
     /** @var RestClient */
     private $restClient;
 
@@ -203,5 +205,12 @@ class ClientApi
     public function create(Client $client)
     {
         return $this->restClient->post(self::CREATE_CLIENT, $client);
+    }
+
+    public function updateDeputy(int $clientId, int $deputyId)
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+
+        return $this->restClient->put(sprintf(self::UPDATE_CLIENT_DEPUTY, $clientId, $deputyId), $currentUser);
     }
 }

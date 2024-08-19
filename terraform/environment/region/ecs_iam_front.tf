@@ -32,47 +32,6 @@ data "aws_iam_policy_document" "front_s3" {
   }
 }
 
-resource "aws_iam_role_policy" "invoke_dep_rep_api" {
-  name   = "front-dep-rep-api.${local.environment}"
-  policy = data.aws_iam_policy_document.invoke_dep_rep_api.json
-  role   = aws_iam_role.front.id
-}
-
-data "aws_iam_policy_document" "invoke_dep_rep_api" {
-  statement {
-    sid    = "AllowInvokeOnDeputyReportingGateway"
-    effect = "Allow"
-    actions = [
-      "execute-api:Invoke",
-      "execute-api:ManageConnections"
-    ]
-    resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius_api_account}:*"]
-  }
-}
-
-resource "aws_iam_role_policy" "front_query_ssm" {
-  name   = "front-query-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.front_query_ssm.json
-  role   = aws_iam_role.front.id
-}
-
-data "aws_iam_policy_document" "front_query_ssm" {
-  statement {
-    sid    = "AllowQuerySSMParameters"
-    effect = "Allow"
-    actions = [
-      "ssm:GetParameter"
-    ]
-    resources = [
-      aws_ssm_parameter.checklist_sync_row_limit.arn,
-      aws_ssm_parameter.document_sync_row_limit.arn,
-      aws_ssm_parameter.flag_checklist_sync.arn,
-      aws_ssm_parameter.flag_document_sync.arn,
-      aws_ssm_parameter.flag_paper_reports.arn
-    ]
-  }
-}
-
 resource "aws_iam_role_policy" "front_query_secretsmanager" {
   name   = "front-query-secretsmanager.${local.environment}"
   policy = data.aws_iam_policy_document.front_query_secretsmanager.json
