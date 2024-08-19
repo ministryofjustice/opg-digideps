@@ -307,4 +307,10 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
   ip_address_version = "IPV4"
   addresses          = []
   tags               = var.default_tags
+
+  lifecycle {
+    ignore_changes = [
+      addresses
+    ]
+  }
 }
