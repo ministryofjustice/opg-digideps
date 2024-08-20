@@ -11,6 +11,25 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}
+    {% if app.session.get('notPrimaryAccount') == true %}
+
+        <div class="govuk-notification-banner" role="region"
+             aria-labelledby="govuk-notification-banner-title"
+             data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Important
+                </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+                <p class="govuk-notification-banner__heading">
+                    This account has been closed.<br />To find all your reports in one place, please log in to your other account for Complete the Deputy Report.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+
     {% if app.session.get('login-context') == 'password-create' %}
         {{ (page ~ '.pageTitleNewPassword') | trans }}
     {% elseif app.session.get('login-context') == 'password-update' %}
