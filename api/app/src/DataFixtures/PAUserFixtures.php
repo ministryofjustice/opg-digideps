@@ -10,7 +10,6 @@ use App\Entity\User;
 use App\Factory\OrganisationFactory;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
-use App\Service\ReportService;
 use Doctrine\Persistence\ObjectManager;
 
 class PAUserFixtures extends AbstractDataFixture
@@ -146,8 +145,7 @@ class PAUserFixtures extends AbstractDataFixture
     public function __construct(
         private OrganisationRepository $orgRepository,
         private OrganisationFactory $orgFactory,
-        private DeputyRepository $deputyRepository,
-        private ReportService $reportService
+        private DeputyRepository $deputyRepository
     ) {
     }
 
