@@ -106,7 +106,7 @@ class ReportController extends AbstractController
         private FormFactoryInterface $formFactory,
         private TranslatorInterface $translator,
         private ObservableEventDispatcher $eventDispatcher,
-        private S3Storage $s3Storage
+        private S3Storage $s3Storage,
     ) {
     }
 
@@ -128,8 +128,10 @@ class ReportController extends AbstractController
 
         // redirect back to log in page if signing in with non-primary account
         $primaryAccount = $user->getIsPrimary();
+        $session = $request->getSession();
+        $session->set('notPrimaryAccount', null);
+
         if (!$primaryAccount) {
-            $session = $request->getSession();
             $session->set('notPrimaryAccount', true);
 
             return $this->redirectToRoute('login');
