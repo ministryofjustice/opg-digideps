@@ -451,7 +451,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user","user_primary_account"})
      *
      * @ORM\Column(name="is_primary", type="boolean", nullable=false, options = { "default": false })
      */

@@ -40,9 +40,19 @@ class LogoutListener implements LogoutSuccessHandlerInterface
             $this->restClient->logout();
         }
 
-        $request->getSession()->set('loggedOutFrom', 'logoutPage');
+        $notPrimaryAccount = $request->query->get('notPrimaryAccount');
+        $primaryEmail = $request->query->get('primaryEmail');
+        if ($notPrimaryAccount && null != $primaryEmail) {
+            $response = new RedirectResponse($this->router->generate('login', ['notPrimaryAccount' => $notPrimaryAccount, 'primaryEmail' => $primaryEmail]));
+        } else {
+            $request->getSession()->set('loggedOutFrom', 'logoutPage');
 
-        $response = new RedirectResponse($this->router->generate('login'));
+            $response = new RedirectResponse(
+                $this->router->generate(
+                    'login'
+                )
+            );
+        }
 
         return $response;
     }

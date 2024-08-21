@@ -11,7 +11,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}
-    {% if app.session.get('notPrimaryAccount') == true %}
+    {% if notPrimaryAccount  == true %}
 
         <div class="govuk-notification-banner" role="region"
              aria-labelledby="govuk-notification-banner-title"
@@ -23,7 +23,7 @@
             </div>
             <div class="govuk-notification-banner__content">
                 <p class="govuk-notification-banner__heading">
-                    This account has been closed.<br />You can now access all of your reports in the same place from your account under [primary_email].
+                    This account has been closed.<br />You can now access all of your reports in the same place from your account under {{ primaryEmail }}.
                 </p>
             </div>
         </div>

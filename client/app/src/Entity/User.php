@@ -485,7 +485,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user","user_primary_account"})
      */
     private $isPrimary;
 

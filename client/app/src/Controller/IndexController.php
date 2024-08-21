@@ -103,9 +103,6 @@ class IndexController extends AbstractController
         /** @var SessionInterface */
         $session = $request->getSession();
 
-        // check if primary account
-        $notPrimaryAccount = $session->get('notPrimaryAccount');
-
         if ('logoutPage' === $session->get('loggedOutFrom')) {
             $session->set('loggedOutFrom', null); // avoid display the message at next page reload
 
@@ -123,8 +120,9 @@ class IndexController extends AbstractController
 
         return $this->render('@App/Index/login.html.twig', [
             'form' => $form->createView(),
-            'notPrimaryAccount' => $notPrimaryAccount,
             'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
+            'notPrimaryAccount' => $request->query->get('notPrimaryAccount'),
+            'primaryEmail' => $request->query->get('primaryEmail'),
         ] + $vars);
     }
 

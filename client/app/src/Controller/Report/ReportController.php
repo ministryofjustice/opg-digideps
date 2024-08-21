@@ -120,21 +120,18 @@ class ReportController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Request $request, Redirector $redirector)
+    public function indexAction(Redirector $redirector)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
-        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status', 'user_primary_account']);
 
         // redirect back to log in page if signing in with non-primary account
-        $primaryAccount = $user->getIsPrimary();
-        $session = $request->getSession();
-        $session->set('notPrimaryAccount', null);
 
-        if (!$primaryAccount) {
-            $session->set('notPrimaryAccount', true);
-
-            return $this->redirectToRoute('login');
+        if (!$user->getIsPrimary()) {
+            // 1. Sign out
+            // 2. Return primary email
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true, 'primaryEmail' => 'test']);
         }
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
