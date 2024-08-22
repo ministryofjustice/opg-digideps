@@ -36,3 +36,8 @@ jobs:
         id: unit-tests-anonymisation
         run: go test ./...
         working-directory: orchestration/anonymisation
+
+      - name: run additional package checks on client
+        id: package-checks-client
+        run: python audit-composer-packages.py
+        working-directory: scripts/package-audit

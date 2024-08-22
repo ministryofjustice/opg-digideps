@@ -1,0 +1,35 @@
+{
+  "repo-root": "../..",
+  "app-dir": "client/app",
+  "scan-dirs": ["src", "public", "config"],
+  "extensions": ["php", "yml"],
+  "package-file": "composer.json",
+  "lax-search-extensions": ["yml"],
+  "manual-in-use-checked":
+    [
+      {
+        "package": "aws/aws-sdk-php",
+        "usage-description": "services.yml for s3, request signing, ssm etc..",
+      },
+      {
+        "package": "fakerphp/faker",
+        "usage-description": "part of test case generation",
+      },
+      {
+        "package": "incenteev/composer-parameter-handler",
+        "usage-description": "part of package post-install from composer.json",
+      },
+      {
+        "package": "symfony/expression-language",
+        "usage-description": "for @Security component in sensio security",
+      },
+      {
+        "package": "twig/intl-extra",
+        "usage-description": "for format_currency in twig templates",
+      },
+      {
+        "package": "web-token/jwt-core",
+        "usage-description": "Jose Component Core JWKSet but is possible abandonware (replace with web-token/jwt-library)",
+      },
+    ],
+}
