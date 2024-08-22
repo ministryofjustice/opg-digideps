@@ -34,7 +34,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@55f725fcb586ca16a5ed5b0d75d464defbfa831b
+        uses: aws-actions/configure-aws-credentials@ead1e6af28a20f26cc47437fa7e4c8357409ef24
         with:
           role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
           role-session-name: github-actions-terraform
