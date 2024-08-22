@@ -24,12 +24,10 @@ class NotFoundExceptionListener
     {
         $exception = $event->getThrowable();
 
-        $html = $this->twig->render('bundles/TwigBundle/Exception/error404.html.twig', []);
-
         if ($exception instanceof NotFoundHttpException) {
             // Log as a warning instead of an error
             $this->logger->warning('Not found exception: '.$exception->getMessage());
-
+            $html = $this->twig->render('bundles/TwigBundle/Exception/error404.html.twig', []);
             $response = new Response($html, 404);
             $event->setResponse($response);
             $event->stopPropagation();

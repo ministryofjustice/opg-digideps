@@ -5,21 +5,20 @@ namespace App\FixtureFactory;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Service\ReportService;
 use App\v2\Fixture\ReportSection;
-use GuzzleHttp\Exception\GuzzleException;
 
 class ReportFactory
 {
-    public function __construct(
-        private ReportSection $reportSection,
-        private ReportService $reportService
-    ) {
+    /** @var ReportSection */
+    private $reportSection;
+
+    public function __construct(ReportSection $reportSection)
+    {
+        $this->reportSection = $reportSection;
     }
 
     /**
      * @throws \Exception
-     * @throws GuzzleException
      */
     public function create(array $data, Client $client): Report
     {

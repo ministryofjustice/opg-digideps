@@ -1,9 +1,9 @@
-name: "[Scheduled] Update Training Environment"
+name: "[Scheduled] Restore and Anonymise Preproduction"
 
 on:
   schedule:
-    # 18.30pm on Friday
-    - cron: "30 18 * * 5"
+    # 6.30pm every week day (Mon-Fri)
+    - cron: "30 18 * * 0-5"
 
 permissions:
   id-token: write
@@ -19,14 +19,14 @@ permissions:
   statuses: none
 
 jobs:
-  reset_database:
-    name: reset training database
+  restore_to_preproduction:
+    name: restore to preproduction
     uses: ./.github/workflows/_run-task.yml
     with:
-      workspace: training
+      workspace: preproduction
       account_name: preproduction
-      task_name: "reset_database"
-      timeout: "500"
+      task_name: "restore_from_production"
+      timeout: "3600"
     secrets: inherit
 
   slack_notify_failure:
@@ -34,10 +34,10 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
-      - reset_database
+      - restore_to_preproduction
     with:
       success: no
       branch: main
-      account: 515688267891
-      scheduled_task: "Reset Training Environment"
+      account: 454262938596
+      scheduled_task: "Restore and Anonymise Preproduction"
     secrets: inherit

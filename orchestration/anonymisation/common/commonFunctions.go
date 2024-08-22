@@ -86,5 +86,5 @@ func safeFormatTime(t time.Time) (string, error) {
 	if t.IsZero() {
 		return "00:00.000", nil
 	}
-	return t.Format("04:05.000"), nil
+	return t.UTC().Format("15:04:05"), nil
 }
