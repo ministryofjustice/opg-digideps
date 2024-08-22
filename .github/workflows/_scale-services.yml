@@ -29,7 +29,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure OIDC AWS credentials for scaling services
-        uses: aws-actions/configure-aws-credentials@55f725fcb586ca16a5ed5b0d75d464defbfa831b
+        uses: aws-actions/configure-aws-credentials@ead1e6af28a20f26cc47437fa7e4c8357409ef24
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-scale-infra"
           role-session-name: github-actions-scale-infra
