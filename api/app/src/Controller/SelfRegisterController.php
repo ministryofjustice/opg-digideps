@@ -109,12 +109,7 @@ class SelfRegisterController extends RestController
 
         try {
             $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
-            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid($selfRegisterData);
-
-            $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
-            if (!$user) {
-                throw new \RuntimeException('User registration: not found', 421);
-            }
+            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid();
 
             // check if it's the primary account for the co-deputy
             $existingDeputyAccounts = $this->em->getRepository('App\Entity\User')->findBy(['deputyUid' => $coDeputyUid]);

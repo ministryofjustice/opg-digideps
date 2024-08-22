@@ -214,7 +214,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'deputyPostcode' => 'ABC 123',
             ],
             'case_number_matches' => [
-                 [
+                [
                     'id' => 1,
                     'case_number' => '97643164',
                     'client_lastname' => 'Douglas',
@@ -464,7 +464,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, \DateTime $createdAt = null): PreRegistration
+    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, ?\DateTime $createdAt = null): PreRegistration
     {
         return new PreRegistration([
             'Case' => $caseNumber,
@@ -486,7 +486,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function testDeputiesNonPrimaryAccountSetToFalse()
     {
-        $preRegistration1 = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
+        $preRegistration1 = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019965', 'Zac', 'Tolley');
 
         $this->fixtures()->persist($preRegistration1);
         $this->fixtures()->flush($preRegistration1);
@@ -511,11 +511,11 @@ class SelfRegisterControllerTest extends AbstractTestController
         $id = $responseArray['data']['id'];
 
         $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
-        $this->assertEquals('700000019957', $user->getDeputyUid());
+        $this->assertEquals('700000019965', $user->getDeputyUid());
         $this->assertTrue($user->getIsPrimary());
 
         // second deputy account
-        $preRegistration2 = $this->generatePreRegistration('23456789', 'Jones', '700000019957', 'Zac', 'Tolley');
+        $preRegistration2 = $this->generatePreRegistration('23456789', 'Jones', '700000019965', 'Zac', 'Tolley');
 
         $this->fixtures()->persist($preRegistration2);
         $this->fixtures()->flush($preRegistration2);
@@ -538,7 +538,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $id = $responseArray['data']['id'];
 
         $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
-        $this->assertEquals('700000019957', $user->getDeputyUid());
+        $this->assertEquals('700000019965', $user->getDeputyUid());
         $this->assertFalse($user->getIsPrimary());
     }
 
@@ -547,7 +547,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function testNoExistingAccountsAreIdentifiedForCoDeputyWithSingleAccount()
     {
-        $deputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
+        $deputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019945', 'Zac', 'Tolley');
         $deputyPreRegistration->setIsCoDeputy(true);
 
         $coDeputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019958', 'Sue', 'Jones');
@@ -577,7 +577,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $deputyId = $responseArray['data']['id'];
         $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
 
-        $this->assertEquals('700000019957', $deputy->getDeputyUid());
+        $this->assertEquals('700000019945', $deputy->getDeputyUid());
         $this->assertTrue($deputy->getIsPrimary());
 
         $coDeputy = $this->fixtures()->createUser();

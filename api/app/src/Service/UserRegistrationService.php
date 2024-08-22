@@ -10,10 +10,13 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
 {
+    private string $selfRegisterCaseNumber;
+
     public function __construct(
         private EntityManagerInterface $em,
         private PreRegistrationVerificationService $preRegistrationVerificationService
     ) {
+        $this->selfRegisterCaseNumber = '';
     }
 
     /**
@@ -118,6 +121,9 @@ class UserRegistrationService
             $selfRegisterData->getPostcode()
         );
 
+        // store case number in class property to access in retrieveCoDeputyUid exception
+        $this->selfRegisterCaseNumber = $selfRegisterData->getCaseNumber();
+
         return true;
     }
 
@@ -126,13 +132,13 @@ class UserRegistrationService
      *
      * @throws \RuntimeException
      */
-    public function retrieveCoDeputyUid($selfRegisterData)
+    public function retrieveCoDeputyUid()
     {
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             return $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
-            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
+            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $this->selfRegisterCaseNumber)), 462);
         }
     }
 

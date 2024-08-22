@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\PreRegistration;
 use App\Repository\PreRegistrationRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -14,7 +15,7 @@ class PreRegistrationVerificationService
      */
     private array $lastMatchedPreRegistrationUsers;
 
-    public function __construct(private SerializerInterface $serializer, private PreRegistrationRepository $preRegistrationRepository)
+    public function __construct(private SerializerInterface $serializer, private PreRegistrationRepository $preRegistrationRepository, private UserRepository $userRepository)
     {
         $this->lastMatchedPreRegistrationUsers = [];
     }
@@ -79,10 +80,10 @@ class PreRegistrationVerificationService
 
     public function isSingleDeputyAccount(): bool
     {
-        $deputyUid = $this->getLastMatchedDeputyNumbers();
-        $existingDeputyAccounts = $this->preRegistrationRepository->findBy(['deputyUid' => $deputyUid]);
+        $deputyUid = $this->getLastMatchedDeputyNumbers()[0];
+        $existingDeputyAccounts = $this->userRepository->findBy(['deputyUid' => intval($deputyUid)]);
 
-        return !(count($existingDeputyAccounts) > 1);
+        return !$existingDeputyAccounts;
     }
 
     /**
