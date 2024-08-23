@@ -268,12 +268,11 @@ class UserApi
         $this->eventDispatcher->dispatch($adminManagerCreatedEvent, AdminManagerCreatedEvent::NAME);
     }
 
-    public function returnPrimaryEmail(int $deputyUid, array $jmsGroups = [])
+    public function returnPrimaryEmail(int $deputyUid)
     {
         return $this->restClient->get(
             sprintf(self::GET_PRIMARY_EMAIL, $deputyUid),
-            'User',
-            $jmsGroups
+            'array'
         );
     }
 }

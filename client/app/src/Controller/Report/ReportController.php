@@ -128,10 +128,7 @@ class ReportController extends AbstractController
 
         // redirect back to log out page if signing in with non-primary account with primary email
         if (!$user->getIsPrimary()) {
-            // 1. Sign out
-            // 2. Return primary email
-            $primaryUser = $this->userApi->returnPrimaryEmail($user->getDeputyUid(), ['user-clients', 'client', 'client-reports', 'report', 'status', 'user_primary_account']);
-            $primaryEmail = $primaryUser->getEmail();
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true, 'primaryEmail' => $primaryEmail]);
         }

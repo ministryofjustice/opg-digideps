@@ -408,18 +408,4 @@ SQL;
             'count' => $count,
         ];
     }
-
-    public function getPrimaryEmail($deputyUid)
-    {
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = true";
-
-        $query = $this
-            ->getEntityManager()
-            ->createQuery($dql)
-            ->setParameter('deputyUid', $deputyUid);
-
-        return $query->getResult();
-        // //        var_dump($result[0]['email']);
-        //        return $result[0];
-    }
 }

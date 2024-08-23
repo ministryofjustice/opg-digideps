@@ -635,7 +635,16 @@ class UserController extends RestController
      */
     public function getPrimaryEmail(int $deputyUid)
     {
-        //        /** @var User $user */
-        return $this->userRepository->getPrimaryEmail($deputyUid);
+        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
+
+        $userEmail = [];
+
+        foreach ($users as $user) {
+            if ($user->getIsPrimary()) {
+                $userEmail = $user->getEmail();
+            }
+        }
+
+        return $userEmail;
     }
 }
