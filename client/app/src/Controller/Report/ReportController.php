@@ -126,13 +126,16 @@ class ReportController extends AbstractController
         // due to the way
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status', 'user_primary_account']);
 
-        // redirect back to log in page if signing in with non-primary account
-
+        // redirect back to log out page if signing in with non-primary account with primary email
         if (!$user->getIsPrimary()) {
             // 1. Sign out
             // 2. Return primary email
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true, 'primaryEmail' => 'test']);
+            $primaryUser = $this->userApi->returnPrimaryEmail($user->getDeputyUid(), ['user-clients', 'client', 'client-reports', 'report', 'status', 'user_primary_account']);
+            $primaryEmail = $primaryUser->getEmail();
+
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true, 'primaryEmail' => $primaryEmail]);
         }
+
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
         if (is_string($route)) {

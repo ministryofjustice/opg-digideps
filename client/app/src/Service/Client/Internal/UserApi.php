@@ -33,6 +33,8 @@ class UserApi
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
     protected const CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
 
+    protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
+
     /** @var RestClientInterface */
     protected $restClient;
 
@@ -264,5 +266,14 @@ class UserApi
         );
 
         $this->eventDispatcher->dispatch($adminManagerCreatedEvent, AdminManagerCreatedEvent::NAME);
+    }
+
+    public function returnPrimaryEmail(int $deputyUid, array $jmsGroups = [])
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_PRIMARY_EMAIL, $deputyUid),
+            'User',
+            $jmsGroups
+        );
     }
 }

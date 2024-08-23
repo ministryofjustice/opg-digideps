@@ -353,6 +353,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var int
      *
      * @JMS\Type("integer")
+     *
+     * @JMS\Groups({"user"})
      */
     private $deputyUid;
 
