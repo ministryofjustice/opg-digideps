@@ -168,6 +168,7 @@ public,dd_user,deputy_uid,bigint,,,NA
 public,dd_user,email,character varying,60,,NA
 public,dd_user,firstname,character varying,100,,FirstName
 public,dd_user,id,integer,,PRIMARY KEY,NA
+public,dd_user,is_primary,boolean,,,NA
 public,dd_user,job_title,character varying,150,,Lorem
 public,dd_user,last_logged_in,timestamp without time zone,,,NA
 public,dd_user,lastname,character varying,100,,LastName
@@ -175,7 +176,9 @@ public,dd_user,odr_enabled,boolean,,,NA
 public,dd_user,password,character varying,100,,Lorem
 public,dd_user,phone_alternative,character varying,20,,PhoneNumber
 public,dd_user,phone_main,character varying,20,,PhoneNumber
+public,dd_user,pre_register_validated,timestamp without time zone,,,NA
 public,dd_user,registration_date,timestamp without time zone,,,NA
+public,dd_user,registration_route,character varying,30,,Lorem
 public,dd_user,registration_token,character varying,100,,Lorem
 public,dd_user,role_name,character varying,50,,Lorem
 public,dd_user,salt,character varying,100,,Lorem

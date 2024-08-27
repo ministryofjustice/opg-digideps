@@ -79,6 +79,7 @@ public,dd_user,lastname,character varying,100,,LastName
 public,dd_user,password,character varying,100,,Lorem
 public,dd_user,phone_alternative,character varying,20,,PhoneNumber
 public,dd_user,phone_main,character varying,20,,PhoneNumber
+public,dd_user,registration_route,character varying,30,,Lorem
 public,dd_user,registration_token,character varying,100,,Lorem
 public,dd_user,role_name,character varying,50,,Lorem
 public,dd_user,salt,character varying,100,,Lorem

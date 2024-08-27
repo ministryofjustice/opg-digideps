@@ -70,7 +70,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@57b8e405f0f6efe89131ba09709ce4bc33291a51 # pin@v3.0.8
+        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -84,7 +84,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@55f725fcb586ca16a5ed5b0d75d464defbfa831b # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ead1e6af28a20f26cc47437fa7e4c8357409ef24 # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
@@ -155,7 +155,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@39ac3bef607efa5abe379d87c67a1396d6e0049f # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@dd9f68fefdcebff7afef315476c0ad889e8897ff # pin@v1.5.1
         with:
           registries: 311462405659
 

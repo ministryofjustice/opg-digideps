@@ -323,14 +323,6 @@ services:
     tags:
       - { name: monolog.processor, method: processRecord }
 
-  App\EventListener\ResponseHeadersListener:
-    tags:
-      - {
-          name: kernel.event_listener,
-          event: kernel.response,
-          method: onKernelResponse,
-        }
-
   security.validator.d_user_password:
     class: App\Validator\Constraints\DUserPasswordValidator
     arguments: ["@security.token_storage", "@rest_client"]
