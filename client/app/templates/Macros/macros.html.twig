@@ -283,6 +283,12 @@
                     <p class="govuk-body govuk-!-margin-bottom-0">{{ message | nl2br }}</p>
                 </div>
             </div>
+        {% elseif alertType == 'nonPrimaryRedirect' %}
+            <div class="opg-alert opg-alert--important">
+                <p class="govuk-body"><strong>Important</strong></p>
+                    <p class="govuk-body"> {{ message.sentenceOne }}</p>
+                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong></p>
+            </div>
         {% else %}
             <div class="opg-alert">
                 <div class="behat-region-alert-message opg-alert__message">

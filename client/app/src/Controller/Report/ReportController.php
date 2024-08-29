@@ -130,7 +130,9 @@ class ReportController extends AbstractController
         if (!$user->getIsPrimary()) {
             $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true, 'primaryEmail' => $primaryEmail]);
+            $this->addFlash('nonPrimaryRedirect', ['sentenceOne' => 'This account has been closed.', 'sentenceTwo' => 'You can now access all of your reports in the same place from your account under', 'primaryEmail' => $primaryEmail]);
+
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
         // redirect if user has missing details or is on wrong page

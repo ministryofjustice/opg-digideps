@@ -89,6 +89,9 @@
         {% for flashMessage in app.session.flashbag.get('preRegFixture') %}
             {{ macros.notification('preRegFixture', flashMessage) }}
         {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('nonPrimaryRedirect') %}
+            {{ macros.notification('nonPrimaryRedirect', flashMessage) }}
+        {% endfor %}
     {% endblock %}
 
     {% block errors %}
