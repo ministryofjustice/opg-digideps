@@ -284,11 +284,26 @@
                 </div>
             </div>
         {% elseif alertType == 'nonPrimaryRedirect' %}
-            <div class="opg-alert opg-alert--important">
-                <p class="govuk-body"><strong>Important</strong></p>
-                    <p class="govuk-body"> {{ message.sentenceOne }}</p>
-                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong></p>
-            </div>
+{#            <div class="opg-alert opg-alert--important">#}
+{#                <p class="govuk-body"><strong>Important</strong></p>#}
+{#                    <p class="govuk-body"> {{ message.sentenceOne }}</p>#}
+{#                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong></p>#}
+{#            </div>#}
+                <div class="opg-alert opg-alert--important">
+                    <div class="govuk-notification-banner" role="region"
+                         aria-labelledby="govuk-notification-banner-title"
+                         data-module="govuk-notification-banner">
+                        <div class="govuk-notification-banner__header">
+                            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                                Important
+                            </h2>
+                        </div>
+                        <div class="govuk-notification-banner__content">
+                            <p class="govuk-body"> {{ message.sentenceOne }}</p>
+                            <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong></p>
+                        </div>
+                    </div>
+                </div>
         {% else %}
             <div class="opg-alert">
                 <div class="behat-region-alert-message opg-alert__message">
