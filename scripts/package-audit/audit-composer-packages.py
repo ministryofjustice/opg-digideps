@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import argparse
 
 
 def load_json_file(file_path):
@@ -123,7 +124,13 @@ def filter_manual_usage(packages, manual_usages):
 
 
 def main():
-    config = load_json_file("client.yml")
+    parser = argparse.ArgumentParser("Arguments")
+    parser.add_argument(
+        "config_file", help="Config file to use for our checks.", type=str
+    )
+    args = parser.parse_args()
+
+    config = load_json_file(args.config_file)
     search_dir = f"{config['repo-root']}/{config['app-dir']}"
 
     directories = [f"{search_dir}/{directory}" for directory in config["scan-dirs"]]
