@@ -19,9 +19,21 @@ permissions:
   statuses: none
 
 jobs:
+  backup_production:
+    name: backup production
+    uses: ./.github/workflows/_run-task.yml
+    with:
+      workspace: production02
+      account_name: production
+      task_name: "backup"
+      timeout: "700"
+    secrets: inherit
+
   restore_to_preproduction:
     name: restore to preproduction
     uses: ./.github/workflows/_run-task.yml
+    needs:
+      - backup_production
     with:
       workspace: preproduction
       account_name: preproduction
