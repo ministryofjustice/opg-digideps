@@ -121,7 +121,7 @@ class IndexController extends AbstractController
         return $this->render('@App/Index/login.html.twig', [
             'form' => $form->createView(),
             'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null,
-            'primaryEmail' => $request->query->get('primaryEmail'),
+            'notPrimaryAccount' => $request->query->get('notPrimaryAccount'),
         ] + $vars);
     }
 
