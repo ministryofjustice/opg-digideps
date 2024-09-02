@@ -487,7 +487,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user","user_primary_account"})
+     * @JMS\Groups({"user"})
      */
     private $isPrimary;
 
@@ -1496,8 +1496,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * Get preRegisterValidatedDate.
-     *
-     * @return ?\DateTime
      */
     public function getPreRegisterValidatedDate(): ?\DateTime
     {

@@ -41,7 +41,7 @@ class LogoutListener implements LogoutSuccessHandlerInterface
         }
 
         $notPrimaryAccount = $request->query->get('notPrimaryAccount');
-        //        $primaryEmail = $request->query->get('primaryEmail');
+
         if ($notPrimaryAccount) {
             $response = new RedirectResponse($this->router->generate('login', ['notPrimaryAccount' => $notPrimaryAccount]));
         } else {

@@ -451,7 +451,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user","user_primary_account"})
+     * @JMS\Groups({"user"})
      *
      * @ORM\Column(name="is_primary", type="boolean", nullable=false, options = { "default": false })
      */
@@ -1515,8 +1515,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get preRegisterValidatedDate.
-     *
-     * @return ?\DateTime
      */
     public function getPreRegisterValidatedDate(): ?\DateTime
     {
