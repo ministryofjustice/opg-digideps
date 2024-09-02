@@ -120,19 +120,29 @@ class ReportController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
-        // redirect back to log out page if signing in with non-primary account with primary email
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
 
-            $this->addFlash('nonPrimaryRedirect', ['sentenceOne' => 'This account has been closed.', 'sentenceTwo' => 'You can now access all of your reports in the same place from your account under', 'primaryEmail' => $primaryEmail]);
+        if ('1' == $isMultiClientFeatureEnabled) {
+            // redirect back to log out page if signing in with non-primary account with primary email
+            if (!$user->getIsPrimary()) {
+                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+                $this->addFlash('nonPrimaryRedirect',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                        'primaryEmail' => $primaryEmail,
+                    ]
+                );
+
+                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+            }
         }
 
         // redirect if user has missing details or is on wrong page
