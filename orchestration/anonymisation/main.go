@@ -20,8 +20,9 @@ func main() {
 	ChunkSize, _ := strconv.Atoi(common.GetEnvWithDefault("CHUNK_SIZE", "100"))
 	TruncateInt, _ := strconv.Atoi(common.GetEnvWithDefault("TRUNCATE", "1"))
 	TruncateBool := common.ConvertToBool(TruncateInt)
+	EmailSuffixToIgnore := "digital.justice.gov.uk"
 
-	// Replace these with your PostgreSQL connection details
+	// Replace these with env PostgreSQL connection details
 	path := common.GetEnvWithDefault("ANON_PATH", "")
 	host := common.GetEnvWithDefault("POSTGRES_HOST", "127.0.0.1")
 	user := common.GetEnvWithDefault("POSTGRES_USER", "api")
@@ -77,8 +78,13 @@ func main() {
 	common.CheckError(err)
 
 	// ===== Processing =====
-
 	err = processing.GenerateAsyncFakeData(db, tableDetails, ChunkSize)
+	common.CheckError(err)
+
+	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "email", "email", EmailSuffixToIgnore)
+	common.CheckError(err)
+
+	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "password", "email", EmailSuffixToIgnore)
 	common.CheckError(err)
 
 	err = processing.UpdateAsyncOriginalTables(db, tableDetails, ChunkSize, leftJoins)
