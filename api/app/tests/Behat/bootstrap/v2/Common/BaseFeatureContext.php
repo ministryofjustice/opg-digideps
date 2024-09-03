@@ -606,4 +606,20 @@ class BaseFeatureContext extends MinkContext
     {
         $this->fixtureHelper->deleteFilesFromS3($storageReference);
     }
+
+    /**
+     * @BeforeScenario @multi-feature-flag-enabled
+     */
+    public function theMultiAccountFeatureFlagIsSetToTrue(): void
+    {
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '1');
+    }
+
+    /**
+     * @AfterScenario @multi-feature-flag-enabled
+     */
+    public function theMultiAccountFeatureFlagIsSetToFalse(): void
+    {
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '0');
+    }
 }
