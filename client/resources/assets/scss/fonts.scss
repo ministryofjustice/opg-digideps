@@ -1,9 +1,9 @@
-@import "node_modules/govuk-frontend/dist/govuk/settings/all";
-@import "node_modules/govuk-frontend/dist/govuk/tools/all";
-@import "node_modules/govuk-frontend/dist/govuk/helpers/all";
+@import "node_modules/govuk-frontend/dist/govuk/settings/index";
+@import "node_modules/govuk-frontend/dist/govuk/tools/index";
+@import "node_modules/govuk-frontend/dist/govuk/helpers/index";
 
 @function add-suffix-and-url($filename) {
-  @return url("~govuk-frontend/dist/govuk/" + $govuk-fonts-path + $filename + "?inline");
+  @return url("~govuk-frontend/dist/govuk" + $govuk-fonts-path + $filename + "?inline");
 }
 
 $govuk-font-url-function: "add-suffix-and-url";
