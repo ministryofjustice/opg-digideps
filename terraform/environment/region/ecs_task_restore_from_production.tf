@@ -54,6 +54,10 @@ locals {
           {
             name  = "ANON_PATH",
             value = "anonymisation/"
+          },
+          {
+            name  = "CHUNK_SIZE",
+            value = "10000"
           }
       ])
     }
