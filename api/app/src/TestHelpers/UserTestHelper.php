@@ -41,7 +41,7 @@ class UserTestHelper extends TestCase
         return $user;
     }
 
-    public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null, ?bool $isPrimary = true)
+    public function createUser($isPrimary, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
     {
         $faker = Factory::create('en_GB');
 

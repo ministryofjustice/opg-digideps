@@ -1018,7 +1018,6 @@ class FixtureHelper
             false,
             false,
             false,
-            false,
             null,
             null,
             $caseNumber,
@@ -1028,7 +1027,7 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, ?bool $isPrimary, ?string $caseNumber = null): array
+    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, bool $isPrimary, ?string $caseNumber = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -1037,12 +1036,12 @@ class FixtureHelper
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
-            $isPrimary,
             false,
             null,
             null,
             $caseNumber,
             true,
+            $isPrimary
         );
 
         return self::buildUserDetails($user);
@@ -1187,12 +1186,12 @@ class FixtureHelper
         $reportType,
         $completed,
         $submitted,
-        bool $isPrimary,
         bool $ndr = false,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
-        bool $legacyPasswordHash = false
+        bool $legacyPasswordHash = false,
+        bool $isPrimary = true,
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1201,7 +1200,7 @@ class FixtureHelper
         $this->testRunId = $testRunId;
 
         $deputy = $this->userTestHelper
-            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary);
+            ->createUser($isPrimary, null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
 
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed, $submitted);

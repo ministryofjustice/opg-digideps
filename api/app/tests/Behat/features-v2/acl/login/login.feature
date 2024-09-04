@@ -40,8 +40,16 @@ Feature: Users logging into the service
 
     @lay-pfa-high-not-started-not-primary @multi-feature-flag-enabled
     Scenario: A user tries to login to the service with their non primary account
-        Given a Lay Deputy tries to login with their non-primary email address
-        And they get redirected back to the log in page
-        And a flash message should be displayed to the user
-        Then the user tries to access their clients report overview page
-        And they get redirected back to the log in page
+        Given a Lay Deputy has multiple client accounts
+        When a Lay Deputy tries to login with their "non-primary" email address
+        Then they get redirected back to the log in page
+        And a flash message should be displayed to the user with their primary email address
+        When the user tries to access their clients report overview page
+        Then they get redirected back to the log in page
+
+    @lay-pfa-high-not-started-not-primary @multi-feature-flag-enabled
+    Scenario: A user tries to login to the service with their primary account
+        Given a Lay Deputy has multiple client accounts
+        And a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Lay homepage
+        And when they log out they shouldn't see a flash message for non primary accounts

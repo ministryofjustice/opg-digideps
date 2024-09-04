@@ -9,6 +9,8 @@ use App\Tests\Behat\BehatException;
 
 trait AuthTrait
 {
+    private string $primaryEmailAddress;
+
     /**
      * @Given :email logs in
      */
@@ -315,12 +317,36 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^a Lay Deputy tries to login with their non\-primary email address$/
+     * @Given /^a Lay Deputy has multiple client accounts$/
      */
-    public function aLayDeputyTriesToLoginWithTheirNonPrimaryEmailAddress()
+    public function aDeputyHasMultipleClientAccounts()
     {
+        // create primary user
+        $primaryUser = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
+        $primaryUserId = $primaryUser->getUserId();
+
+        $nonPrimaryUserId = $this->layDeputyNotStartedPfaNotPrimaryUser->getUserId();
+        $nonPrimaryUserUid = $this->em->getRepository(User::class)->findOneBy(['id' => $nonPrimaryUserId])->getDeputyUid();
+
+        // set the same deputy uid for both accounts
+        $primaryUser = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId]);
+        $primaryUser->setDeputyUid($nonPrimaryUserUid);
+
+        $this->em->persist($primaryUser);
+        $this->em->flush();
+
+        $this->primaryEmailAddress = $primaryUser->getEmail();
+    }
+
+    /**
+     * @Given /^a Lay Deputy tries to login with their "([^"]*)" email address$/
+     */
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress($arg1)
+    {
+        $userEmail = 'non-primary' === $arg1 ? $this->layDeputyNotStartedPfaNotPrimaryUser->getUserEmail() : $this->primaryEmailAddress;
+
         $this->visitPath('/login');
-        $this->fillField('login_email', $this->layDeputyNotStartedPfaNotPrimaryUser->getUserEmail());
+        $this->fillField('login_email', $userEmail);
         $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
     }
@@ -334,23 +360,23 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^a flash message should be displayed to the user$/
+     * @Given /^a flash message should be displayed to the user with their primary email address$/
      */
-    public function aFlashMessageShouldBeDisplayedToTheUser()
+    public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
     {
-        $alertMessage = 'This account has been closed.';
+        $alertMessage = sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s', $this->primaryEmailAddress);
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
-        $alertDiv = $this->getSession()->getPage()->find('xpath', $xpath);
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 
-        if (is_null($alertDiv)) {
+        if (is_null($alertText)) {
             throw new BehatException('Could not find a div with class "govuk-notification-banner__content"');
         }
-        $alertHtml = $alertDiv->getHtml();
-        $alertMessageFound = str_contains($alertHtml, $alertMessage);
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
 
         if (!$alertMessageFound) {
-            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertHtml));
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
         }
     }
 
@@ -363,5 +389,20 @@ trait AuthTrait
 
         $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
         $this->visitPath($reportOverviewUrl);
+    }
+
+    /**
+     * @Given /^when they log out they shouldn't see a flash message for non primary accounts$/
+     *
+     * @throws BehatException
+     */
+    public function whenTheyLogOutTheyShouldnTSeeANonPrimaryFlashMessage()
+    {
+        $this->clickLink('Sign out');
+        $this->iAmOnPage('/login.*$/');
+        $this->assertPageContainsText('You are now signed out');
+
+        $this->assertPageNotContainsText('This account is closed');
+        $this->assertElementNotOnPage('govuk-notification-banner__content');
     }
 }
