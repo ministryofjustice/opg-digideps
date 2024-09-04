@@ -50,6 +50,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedPfaHighAssetsDetails;
+    public UserDetails $layDeputyNotStartedPfaNotPrimaryUser;
     public UserDetails $layDeputyCompletedPfaHighAssetsDetails;
     public UserDetails $layDeputySubmittedPfaHighAssetsDetails;
 
@@ -613,6 +614,15 @@ class BaseFeatureContext extends MinkContext
     public function theMultiAccountFeatureFlagIsSetToTrue(): void
     {
         $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '1');
+    }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-not-started-not-primary
+     */
+    public function createPfaHighNotStartedNonPrimaryUser(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null, ?bool $isPrimary = false)
+    {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, $isPrimary, $caseNumber);
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaNotPrimaryUser = new UserDetails($userDetails);
     }
 
     /**

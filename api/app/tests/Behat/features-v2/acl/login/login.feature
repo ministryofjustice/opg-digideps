@@ -36,3 +36,12 @@ Feature: Users logging into the service
             | change_password_password_second | DigidepsPass12345 |
         And I press "change_password_save"
         Then the form should be valid
+
+
+    @lay-pfa-high-not-started-not-primary @multi-feature-flag-enabled
+    Scenario: A user tries to login to the service with their non primary account
+        Given a Lay Deputy tries to login with their non-primary email address
+        And they get redirected back to the log in page
+        And a flash message should be displayed to the user
+        Then the user tries to access their clients report overview page
+        And they get redirected back to the log in page

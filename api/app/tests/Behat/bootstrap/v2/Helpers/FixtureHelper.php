@@ -1018,10 +1018,31 @@ class FixtureHelper
             false,
             false,
             false,
+            false,
             null,
             null,
             $caseNumber,
             true
+        );
+
+        return self::buildUserDetails($user);
+    }
+
+    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, ?bool $isPrimary, ?string $caseNumber = null): array
+    {
+        $user = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-pfa-high-assets-not-started',
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
+            false,
+            false,
+            $isPrimary,
+            false,
+            null,
+            null,
+            $caseNumber,
+            true,
         );
 
         return self::buildUserDetails($user);
@@ -1166,6 +1187,7 @@ class FixtureHelper
         $reportType,
         $completed,
         $submitted,
+        bool $isPrimary,
         bool $ndr = false,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
@@ -1179,7 +1201,7 @@ class FixtureHelper
         $this->testRunId = $testRunId;
 
         $deputy = $this->userTestHelper
-            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId));
+            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary);
 
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed, $submitted);
