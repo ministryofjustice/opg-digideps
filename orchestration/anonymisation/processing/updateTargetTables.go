@@ -7,6 +7,36 @@ import (
 	"sync"
 )
 
+func UpdateSelectedColumnsFromPublic(
+	db *sql.DB,
+	tableName string,
+	keyColumn string,
+	updateColumn string,
+	whereColumn string,
+	whereTerm string) error {
+	// Base query without the optional WHERE clause
+	query := fmt.Sprintf(`
+		UPDATE anon.%s AS anon
+		SET %s = pub.%s
+		FROM public.%s AS pub, processing.%s AS proc
+		WHERE proc.%s = pub.%s
+		AND proc.ppk_id = anon.ppk_id
+	`, tableName, updateColumn, updateColumn, tableName, tableName, keyColumn, keyColumn)
+
+	// Append the WHERE clause if whereTerm is not empty
+	if whereTerm != "" {
+		query += fmt.Sprintf(" AND pub.%s LIKE '%%%s%%'", whereColumn, whereTerm)
+	}
+	fmt.Print(query)
+	// Execute the update query
+	_, err := db.Exec(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func getSqlUpdateStatement(table common.Table, thisTablesDetails []common.LeftJoinsDetails, chunkSize int, offset int, leftJoinSqlLinesField []string) string {
 	sqlQuery := fmt.Sprintf("UPDATE public.%s pub1 SET", table.TableName)
 	for _, field := range table.FieldNames {

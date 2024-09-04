@@ -47,7 +47,7 @@
 
         <div class="push--bottom">
             {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
-                'legendClass' : 'govuk-label--s',
+                'legendClass' : 'govuk-fieldset__legend--s',
                 'legendText' : (page ~ '.form.label') | trans,
                 'formGroupClass': 'push--top'
             }) }}
@@ -62,7 +62,7 @@
 
         <div class="push--bottom">
             {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {
-                'legendClass' : 'govuk-label--s',
+                'legendClass' : 'govuk-fieldset__legend--s',
                 'legendText' : (page ~ '.form.assessedOrFixed.legend') | trans,
                 'formGroupClass': 'inline push--top'
             }) }}
@@ -81,7 +81,7 @@
             <div id="form-group-prof_service_fee_type_paymentReceived" class="govuk-form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
                     'useFormGroup': false,
-                    'legendClass' : 'govuk-label--s',
+                    'legendClass' : 'govuk-fieldset__legend--s',
                     'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
                     'items': [
                         {'dataTarget': 'was-payment-received'},

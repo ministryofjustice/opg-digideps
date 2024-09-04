@@ -131,22 +131,24 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
+     * @throws \Exception
      */
     public function findAllReportSubmissionsRawSql(
         ?\DateTime $fromDate = null,
         ?\DateTime $toDate = null
-    ) {
-        $fromDateStrFormatted = $fromDate->format('Ymd');
-        $toDateStrFormatted = $toDate->format('Ymd');
+    ): array {
+        $now = new \DateTime();
+        $fromDateStrFormatted = ($fromDate ?? $now)->format('Ymd').' 000000';
+        $toDateStrFormatted = ($toDate ?? $now)->format('Ymd').' 235959';
 
         $submittedReportsQuery = "
 SELECT
     r0_.id AS report_submission_id,
     COALESCE(c3_.case_number, c5_.case_number) AS case_number,
     r0_.created_on AS created_on,
-    now() as scan_date,
-    d1_.id AS document_id
+    now() AS scan_date,
+    d1_.id AS user_id,
+    d6_.filename AS filename
 FROM report_submission r0_
 LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
 LEFT JOIN report r2_ ON r0_.report_id = r2_.id
@@ -165,10 +167,16 @@ ORDER BY r0_.id DESC;";
         $docStmt = $conn->prepare($submittedReportsQuery);
         $result = $docStmt->executeQuery();
 
-        // Get all queued documents
-        $results = $result->fetchAllAssociative();
+        return $this->transformReportSubmissionsRawSql($result->fetchAllAssociative());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function transformReportSubmissionsRawSql(array $results): array
+    {
         $now = new \DateTime();
-        $ret = [];
+        $reportSubmissionsDetails = [];
         foreach ($results as $row) {
             $created_on = new \DateTime($row['created_on']);
             $data = [];
@@ -176,13 +184,13 @@ ORDER BY r0_.id DESC;";
             $data['case_number'] = $row['case_number'];
             $data['date_received'] = $created_on->format('Y-m-d');
             $data['scan_date'] = $now->format('Y-m-d');
-            $data['document_id'] = $row['document_id'];
+            $data['document_id'] = $row['filename'];
             $data['document_type'] = 'Reports';
             $data['form_type'] = 'Reports General';
-            $ret[] = $data;
+            $reportSubmissionsDetails[] = $data;
         }
 
-        return $ret;
+        return $reportSubmissionsDetails;
     }
 
     /**
@@ -194,8 +202,8 @@ ORDER BY r0_.id DESC;";
     public function findAllReportSubmissions(
         ?\DateTime $fromDate = null,
         ?\DateTime $toDate = null,
-        $orderBy = 'createdOn',
-        $order = 'ASC'
+        string $orderBy = 'createdOn',
+        string $order = 'ASC'
     ) {
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -223,9 +231,6 @@ ORDER BY r0_.id DESC;";
             ->orderBy('rs.'.$orderBy, $order);
 
         $this->_em->getFilters()->enable('softdeleteable');
-
-        $sql = $qbSelect->getQuery()->getSQL();
-        file_put_contents('php://stderr', print_r($sql, true));
 
         return $qbSelect->getQuery()->getResult();
     }

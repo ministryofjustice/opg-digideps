@@ -9,9 +9,9 @@ $small: 12;
 // Font-face is in `application.css` or inline in the PDF
 $govuk-include-default-font-face: false;
 
-@import "node_modules/govuk-frontend/govuk/settings/all";
-@import "node_modules/govuk-frontend/govuk/tools/all";
-@import "node_modules/govuk-frontend/govuk/helpers/all";
+@import "node_modules/govuk-frontend/dist/govuk/settings/index";
+@import "node_modules/govuk-frontend/dist/govuk/tools/index";
+@import "node_modules/govuk-frontend/dist/govuk/helpers/index";
 
 @import "measurements";
 @import "colours";
