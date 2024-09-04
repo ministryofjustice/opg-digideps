@@ -78,7 +78,7 @@ class OrgDeputyshipUploader
                 $message = str_replace(PHP_EOL, '', $e->getMessage());
                 $message = sprintf('Error for case %s: %s', $deputyshipDto->getCaseNumber(), $message);
 
-                $this->logger->notice($message);
+                $this->logger->warning($message);
                 $uploadResults['errors']['messages'][] = $message;
 
                 ++$uploadResults['errors']['count'];

@@ -8,7 +8,6 @@ use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
-use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -225,41 +224,20 @@ class ReportSubmissionController extends RestController
      *
      * @throws \Exception
      */
-    public function getPreRegistrationData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
+    public function getPreRegistrationData(Request $request): array
     {
-        //        $startTime = microtime(true);
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(ReportSubmission::class);
 
         $fromDate = $request->get('fromDate') ? new \DateTime($request->get('fromDate')) : null;
         $toDate = $request->get('toDate') ? new \DateTime($request->get('toDate')) : null;
 
-        $fromDateTime = $fromDate ? $fromDate->setTime(0, 0) : null;
-        $toDateTime = $toDate ? $toDate->setTime(23, 59, 59) : null;
+        $fromDateTime = $fromDate?->setTime(0, 0);
+        $toDateTime = $toDate?->setTime(23, 59, 59);
 
-        $startTime = microtime(true);
-        $ret = $repo->findAllReportSubmissionsRawSql(
+        return $repo->findAllReportSubmissionsRawSql(
             $fromDateTime,
             $toDateTime
         );
-        $endTime = microtime(true);
-        file_put_contents('php://stderr', print_r('WholeQuery: '.($endTime - $startTime).' ms ', true));
-
-        //        $startTime = microtime(true);
-        //        $ret = $repo->findAllReportSubmissions(
-        //            $fromDateTime,
-        //            $toDateTime,
-        //            $request->get('orderBy', 'createdOn'),
-        //            $request->get('order', 'ASC')
-        //        );
-        //        $endTime = microtime(true);
-        //        file_put_contents('php://stderr', print_r('ActualQuery: '.($endTime - $startTime).' ms ', true));
-        //
-        //        $startTime = microtime(true);
-        //        $rsst = $reportSubmissionSummaryTransformer->transform($ret);
-        //        $endTime = microtime(true);
-        //        file_put_contents('php://stderr', print_r('Transformer: '.($endTime - $startTime).' ms ', true));
-
-        return $ret;
     }
 }

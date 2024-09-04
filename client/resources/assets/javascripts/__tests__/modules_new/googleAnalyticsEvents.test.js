@@ -42,33 +42,33 @@ const setDocumentBody = () => {
                 <label class="govuk-label" for="email">
                     Enter your email address
                 </label>
-                <span class="govuk-error-message">
+                <p class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> Enter an email address in the correct format, like name@example.com
-                </span>
+                </p>
                 <input class="govuk-input" id="email" name="email" type="email" value="" inputmode="email" spellcheck="false" autocomplete="email">
             </div>
             <div class="govuk-form-group form-group--error">
                 <label class="govuk-label" for="email">
                     Confirm your email address
                 </label>
-                <span class="govuk-error-message">
+                <p class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> Your email address does not match
-                </span>
+                </p>
                 <input class="govuk-input" id="email" name="email" type="email" value="" inputmode="email" spellcheck="false" autocomplete="email">
             </div>
             <div class="govuk-form-group govuk-form-group--error">
                 <label class="govuk-label" for="show_hide_password">
                     Create a password
                 </label>
-                <span class="govuk-error-message">
+                <p class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> Password must be 8 characters or more
-                </span>
-                <span class="govuk-error-message">
+                </p>
+                <p class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> Password must include a number
-                </span>
-                <span class="govuk-error-message">
+                </p>
+                <p class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> Password must include a capital letter
-                </span>
+                </p>
                 <input class="govuk-input govuk-input moj-password-reveal__input govuk-input--width-20" id="show_hide_password" name="show_hide_password" type="password" value="">
                 <button class="govuk-button govuk-button--secondary moj-password-reveal__button" data-module="govuk-button" type="button" data-showpassword="Show" data-hidepassword="Hide">Show</button>
             </div>

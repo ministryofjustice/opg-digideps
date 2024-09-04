@@ -40,7 +40,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             $this->entityManager->persist($report);
             $this->entityManager->persist($report->getClient());
 
-            return ( new Document($report))
+            return (new Document($report))
                 ->setSynchronisationStatus($status)
                 ->setFileName('a file.pdf');
         }, $docStatuses);
@@ -62,7 +62,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
     {
         return [
             'One synced document' => [false, [Document::SYNC_STATUS_SUCCESS], true],
-            'Two documents, one synced' => [false, [Document::SYNC_STATUS_SUCCESS, DOCUMENT::SYNC_STATUS_PERMANENT_ERROR], false],
+            'Two documents, one synced' => [false, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_PERMANENT_ERROR], false],
             'Two synced documents' => [false, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], true],
             'Two synced documents, already archived' => [true, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], true],
         ];
@@ -81,7 +81,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             $this->entityManager->persist($report);
             $this->entityManager->persist($report->getClient());
 
-            return ( new Document($report))
+            return (new Document($report))
                 ->setFileName('a file.pdf');
         }, $statuses);
 
@@ -146,6 +146,45 @@ class ReportSubmissionRepositoryTest extends WebTestCase
 
         foreach ($todaysReportSubmissions as $rs) {
             self::assertNotContains($rs, $reportSubmissions);
+        }
+    }
+
+    /** @test */
+    public function findAllReportSubmissionsfindAllReportSubmissionsRawSqlWithPeriodProvided()
+    {
+        $today = new \DateTime();
+        $todayOneHourAgo = new \DateTime('-1 hour');
+        $yesterday = new \DateTime('-1 day');
+
+        $todaysReportSubmissionsIds = [];
+        foreach (range(1, 3) as $index) {
+            $reportSubmission = $this->reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $today);
+            $todaysReportSubmissionsIds[] = $reportSubmission->getId();
+        }
+
+        $yesterdaysReportSubmissionsIds = [];
+        foreach (range(1, 3) as $index) {
+            $reportSubmission = $this->reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $yesterday);
+            $yesterdaysReportSubmissionsIds[] = $reportSubmission->getId();
+        }
+
+        $reportSubmissions = $this->entityManager
+            ->getRepository(ReportSubmission::class)
+            ->findAllReportSubmissionsRawSql($yesterday, $todayOneHourAgo);
+
+        $actualReportSubmissionIds = [];
+        foreach ($reportSubmissions as $reportSubmission) {
+            $actualReportSubmissionIds[] = $reportSubmission['id'];
+        }
+
+        foreach ($yesterdaysReportSubmissionsIds as $rsid) {
+            self::assertContains($rsid, $actualReportSubmissionIds);
+        }
+
+        foreach ($todaysReportSubmissionsIds as $rsid) {
+            self::assertNotContains($rsid, $actualReportSubmissionIds);
         }
     }
 }
