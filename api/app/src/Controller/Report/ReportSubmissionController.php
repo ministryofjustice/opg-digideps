@@ -227,7 +227,6 @@ class ReportSubmissionController extends RestController
      */
     public function getPreRegistrationData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
-        //        $startTime = microtime(true);
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(ReportSubmission::class);
 
@@ -237,14 +236,12 @@ class ReportSubmissionController extends RestController
         $fromDateTime = $fromDate ? $fromDate->setTime(0, 0) : null;
         $toDateTime = $toDate ? $toDate->setTime(23, 59, 59) : null;
 
-        $startTime = microtime(true);
-        $ret = $repo->findAllReportSubmissionsRawSql(
+        $rsst = $repo->findAllReportSubmissionsRawSql(
             $fromDateTime,
             $toDateTime
         );
-        $endTime = microtime(true);
-        file_put_contents('php://stderr', print_r('WholeQuery: '.($endTime - $startTime).' ms ', true));
 
+        //
         //        $startTime = microtime(true);
         //        $ret = $repo->findAllReportSubmissions(
         //            $fromDateTime,
@@ -260,6 +257,9 @@ class ReportSubmissionController extends RestController
         //        $endTime = microtime(true);
         //        file_put_contents('php://stderr', print_r('Transformer: '.($endTime - $startTime).' ms ', true));
 
-        return $ret;
+        file_put_contents('php://stderr', print_r('JIIMMMMYMMY', true));
+        file_put_contents('php://stderr', print_r($rsst, true));
+
+        return $rsst;
     }
 }

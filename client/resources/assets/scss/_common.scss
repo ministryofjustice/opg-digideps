@@ -2,7 +2,7 @@ $path: "/images/";
 $govuk-assets-path: "./";
 $govuk-images-path: "/images/";
 $govuk-global-styles: true;
-@import "node_modules/govuk-frontend/govuk/all";
+@import "node_modules/govuk-frontend/dist/govuk/index";
 @import "~@ministryofjustice/frontend/moj/all";
 @import "govuk-elements";
 

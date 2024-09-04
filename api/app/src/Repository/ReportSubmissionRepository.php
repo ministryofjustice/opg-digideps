@@ -145,8 +145,9 @@ SELECT
     r0_.id AS report_submission_id,
     COALESCE(c3_.case_number, c5_.case_number) AS case_number,
     r0_.created_on AS created_on,
-    now() as scan_date,
-    d1_.id AS document_id
+    now() AS scan_date,
+    d1_.id AS user_id,
+    d6_.filename AS filename
 FROM report_submission r0_
 LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
 LEFT JOIN report r2_ ON r0_.report_id = r2_.id
@@ -170,13 +171,14 @@ ORDER BY r0_.id DESC;";
         $now = new \DateTime();
         $ret = [];
         foreach ($results as $row) {
+            file_put_contents('php://stderr', print_r($row, true));
             $created_on = new \DateTime($row['created_on']);
             $data = [];
             $data['id'] = $row['report_submission_id'];
             $data['case_number'] = $row['case_number'];
             $data['date_received'] = $created_on->format('Y-m-d');
             $data['scan_date'] = $now->format('Y-m-d');
-            $data['document_id'] = $row['document_id'];
+            $data['document_id'] = $row['filename'];
             $data['document_type'] = 'Reports';
             $data['form_type'] = 'Reports General';
             $ret[] = $data;

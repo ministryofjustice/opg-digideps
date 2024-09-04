@@ -69,12 +69,16 @@ class StatsController extends AbstractController
                 $reportSubmissionSummaries = $mapper->getBy($form->getData());
 
                 $startTime = microtime(true);
+
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
+
                 $endTime = microtime(true);
                 file_put_contents('php://stderr', print_r('TransformerClient: '.($endTime - $startTime).' ms ', true));
 
                 $startTime = microtime(true);
+
                 $builtResponse = $this->buildResponse($downloadableData);
+
                 $endTime = microtime(true);
                 file_put_contents('php://stderr', print_r('BuiltResponseClient: '.($endTime - $startTime).' ms ', true));
 
