@@ -17,7 +17,8 @@ const runSmoke = async () => {
   const browser = await puppeteer.launch(
     {
       executablePath: '/usr/bin/chromium-browser',
-      args: ['--no-sandbox', '--headless']
+      args: ['--no-sandbox', '--headless'],
+      protocolTimeout: 30000
     });
   const page = await browser.newPage();
 
