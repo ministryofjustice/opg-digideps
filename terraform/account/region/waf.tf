@@ -134,9 +134,34 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
+  dynamic "rule" {
+    for_each = var.account.name == "production" ? [1] : []
+    content {
+      name     = "RateLimitByIP"
+      priority = 30
+
+      action {
+        block {}
+      }
+
+      statement {
+        rate_based_statement {
+          limit              = 200
+          aggregate_key_type = "IP"
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "rateLimitRule"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
   rule {
     name     = "BlockSpecificURIs"
-    priority = 30
+    priority = 35
 
     action {
       block {}
