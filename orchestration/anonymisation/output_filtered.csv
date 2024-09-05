@@ -71,7 +71,7 @@ public,dd_user,address3,character varying,200,,Lorem
 public,dd_user,address4,character varying,200,,Lorem
 public,dd_user,address5,character varying,200,,Lorem
 public,dd_user,address_postcode,character varying,10,,PostCode
-public,dd_user,deputy_no,character varying,100,,Lorem
+public,dd_user,email,character varying,60,,Email
 public,dd_user,firstname,character varying,100,,FirstName
 public,dd_user,id,integer,,PRIMARY KEY,NA
 public,dd_user,job_title,character varying,150,,Lorem
@@ -79,10 +79,6 @@ public,dd_user,lastname,character varying,100,,LastName
 public,dd_user,password,character varying,100,,Lorem
 public,dd_user,phone_alternative,character varying,20,,PhoneNumber
 public,dd_user,phone_main,character varying,20,,PhoneNumber
-public,dd_user,registration_route,character varying,30,,Lorem
-public,dd_user,registration_token,character varying,100,,Lorem
-public,dd_user,role_name,character varying,50,,Lorem
-public,dd_user,salt,character varying,100,,Lorem
 public,debt,debt_type_id,character varying,255,,Lorem
 public,debt,id,integer,,PRIMARY KEY,NA
 public,debt,more_details,text,,,Lorem
@@ -197,7 +193,7 @@ public,odr_visits_care,plan_move_residence_details,text,,,Lorem
 public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
 public,organisation,email_identifier,character varying,256,,Email
 public,organisation,id,integer,,PRIMARY KEY,NA
-public,organisation,name,character varying,256,,Lorem
+public,organisation,name,character varying,256,,Organisation
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
 public,organisation_user,user_id,integer,,PRIMARY KEY,NA
 public,pre_registration,client_lastname,character varying,50,,LastName
@@ -235,8 +231,6 @@ public,report,balance_mismatch_explanation,text,,,Lorem
 public,report,current_prof_payments_received,character varying,255,,Lorem
 public,report,debt_management,text,,,Lorem
 public,report,id,integer,,PRIMARY KEY,NA
-public,report,money_in_exists,text,,,Lorem
-public,report,money_out_exists,text,,,Lorem
 public,report,prof_dc_estimate_hc,character varying,10,,Lorem
 public,report,prof_dc_estimate_more_info_details,text,,,Lorem
 public,report,prof_dc_how_charged,character varying,10,,Lorem
@@ -247,11 +241,6 @@ public,report,reason_for_no_decisions,text,,,Lorem
 public,report,reason_for_no_fees,text,,,Lorem
 public,report,reason_for_no_money_in,text,,,Lorem
 public,report,reason_for_no_money_out,text,,,Lorem
-public,report,report_status_cached,character varying,20,,Lorem
-public,report,significant_decisions_made,text,,,Lorem
-public,report,status_cached,text,,,Lorem
-public,report,type,character varying,10,,Lorem
-public,report,unsubmitted_sections_list,text,,,Lorem
 public,report,wish_to_provide_documentation,character varying,255,,Lorem
 public,report_submission,id,integer,,PRIMARY KEY,NA
 public,report_submission,opg_uuid,character varying,36,,Lorem

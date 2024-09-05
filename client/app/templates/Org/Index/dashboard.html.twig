@@ -42,25 +42,25 @@
                 <a class="govuk-tabs__tab" href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0">
                     {{ 'tabClients' | trans }}
                 </a>
-                <span class="govuk-tag">{{ counts.total }}</span>
+                <span class="govuk-tag govuk-tag--blue">{{ counts.total }}</span>
             </li>
             <li class="govuk-tabs__list-item {{ filters.status =='notStarted' ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab behat-link-tab-unstarted" href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
                     {{ 'notStarted' | trans({}, 'common') }}
                 </a>
-                <span class="govuk-tag opg-tag--not-started">{{ counts.notStarted }}</span>
+                <span class="govuk-tag govuk-tag--grey">{{ counts.notStarted }}</span>
             </li>
             <li class="govuk-tabs__list-item {{ filters.status =='notFinished' ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab behat-link-tab-in-progress" href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
                     {{ 'inProgress' | trans({}, 'common') }}
                 </a>
-                <span class="govuk-tag opg-tag--notice">{{ counts.notFinished }}</span>
+                <span class="govuk-tag govuk-tag--yellow">{{ counts.notFinished }}</span>
             </li>
             <li class="govuk-tabs__list-item {{ filters.status =='readyToSubmit' ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab behat-link-tab-ready" href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
                     {{ 'readyToSubmit' | trans({}, 'common') }}
                 </a>
-                <span class="govuk-tag opg-tag--success">{{ counts.readyToSubmit }}</span>
+                <span class="govuk-tag govuk-tag--green">{{ counts.readyToSubmit }}</span>
             </li>
         </ul>
     </div>
@@ -119,14 +119,14 @@
                 </td>
                 <td class="numeric">
                     {% if report.status.status == 'notStarted' %}
-                        <span class="govuk-tag opg-tag--not-started">{{ 'notStarted' | trans({}, 'common') }}</span>
+                        <span class="govuk-tag govuk-tag--grey">{{ 'notStarted' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'notFinished' %}
-                        <span class="govuk-tag opg-tag--notice">{{ 'notFinished' | trans({}, 'common') }}</span>
+                        <span class="govuk-tag govuk-tag--yellow">{{ 'notFinished' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'readyToSubmit' %}
                         {% if report.unSubmitDate is not empty and report.submitted == false %}
-                            <span class="govuk-tag opg-tag--warning">{{ 'changesNeeded' | trans({}, 'common') }}</span>
+                            <span class="govuk-tag govuk-tag--red">{{ 'changesNeeded' | trans({}, 'common') }}</span>
                         {% else  %}
-                            <span class="govuk-tag opg-tag--success">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
+                            <span class="govuk-tag govuk-tag--green">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
                         {% endif %}
                     {% endif %}
                 </td>

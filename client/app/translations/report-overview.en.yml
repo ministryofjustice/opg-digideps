@@ -73,12 +73,12 @@ decisions:
   subSectionTitle: "Decisions"
   subSectionDescription: "Tell us about the significant decisions you've made for %client%"
   label:
-    done: "{0} no decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
+    done: "{0} No decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
 contacts:
   subSectionTitle: "Contacts"
   subSectionDescription: Tell us who helped you make significant decisions as a deputy
   label:
-    done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
+    done: "{0} No contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
 heading.healthAndWelfare: "Health and welfare"
 visits_care:
@@ -96,7 +96,7 @@ deputy_expenses:
   subSectionTitle: "Deputy expenses"
   subSectionDescription: "Claim for things you paid for on %client%'s behalf"
   label:
-    done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+    done: "{0} No expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
 pa_fee_expense:
   subSectionTitle: "Deputy fees and expenses"
   subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
@@ -120,41 +120,41 @@ gifts:
   subSectionTitle: "Gifts"
   subSectionDescription: Tell us about gifts you've given to other people on %client%'s behalf
   label:
-    done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
+    done: "{0} No gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
 bank_accounts:
   subSectionTitle: "Accounts"
   subSectionTitleNotBalanced: "Accounts not balanced"
   subSectionDescription: "Add %client%'s bank, building society and savings accounts"
   label:
-    done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
+    done: "{0} No accounts | {1} 1 account | ]1,Inf[ %count% accounts"
     addReason: "Add reason"
 money_transfers:
   subSectionTitle: "Money transfers"
   subSectionDescription: "Provide details of money transferred between %client%'s accounts"
   label:
-    done: "{0} no transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
+    done: "{0} No transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
 money_in:
   subSectionTitle: "Money in"
   subSectionDescription: "Enter details of money paid into %client%'s accounts"
   label:
-    done: "{0} no money in | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} No money in | {1} 1 item | ]1,Inf[ %count% items"
 money_out:
   subSectionTitle: "Money out"
   subSectionDescription: "Enter details of money you've spent on %client%'s living and other costs"
   label:
-    done: "{0} no money out | {1} 1 item | ]1,Inf[ %count% items"
+    done: "{0} No money out | {1} 1 item | ]1,Inf[ %count% items"
 
 money_in_short:
   subSectionTitle: "Money in"
   subSectionDescription: "Tell us about money paid into %client%'s accounts"
   label:
-    done: "{0} no money in | {1} 1 item over £1,000 | ]1,Inf[ %count% items over £1,000"
+    done: "{0} No money in | {1} 1 item over £1,000 | ]1,Inf[ %count% items over £1,000"
     low-assets-done: "money in"
 money_out_short:
   subSectionTitle: "Money out"
   subSectionDescription: "Tell us about money you have spent on %client%'s living and welfare costs"
   label:
-    done: "{0} no money out | {1} 1 item over £1,000 | ]1,Inf[ %count% items over £1,000"
+    done: "{0} No money out | {1} 1 item over £1,000 | ]1,Inf[ %count% items over £1,000"
     low-assets-done: "money out"
 balance:
   subSectionTitle: "Accounts balance check"
@@ -173,7 +173,7 @@ assets:
   subSectionTitle: "Assets"
   subSectionDescription: "Tell us about %client%'s property, investments and other valuables"
   label:
-    done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
+    done: "{0} No assets | {1} 1 asset | ]1,Inf[ %count% assets"
 debts:
   subSectionTitle: "Debts"
   subSectionDescription: "Let us know about any debts %client% owes"
@@ -196,7 +196,7 @@ documents:
   subSectionTitle: "Supporting documents"
   subSectionDescription: "Provide documents to support your report, for example bank statements"
   label:
-    done: "{0} no documents | {1} 1 document | ]1,Inf[ %count% documents"
+    done: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
 
 client_benefits_check:
   subSectionTitle: "Benefits check and money others received"
