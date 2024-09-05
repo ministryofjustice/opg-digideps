@@ -135,6 +135,28 @@ resource "aws_wafv2_web_acl" "main" {
   }
 
   rule {
+    name     = "RateLimitByIP"
+    priority = 25
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 200
+        aggregate_key_type = "IP"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "rateLimitRule"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
     name     = "BlockSpecificURIs"
     priority = 30
 
