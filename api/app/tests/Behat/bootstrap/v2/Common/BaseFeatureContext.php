@@ -617,19 +617,21 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @lay-pfa-high-not-started-not-primary
-     */
-    public function createPfaHighNotStartedNonPrimaryUser(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null, ?bool $isPrimary = false)
-    {
-        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, $isPrimary, $caseNumber);
-        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaNotPrimaryUser = new UserDetails($userDetails);
-    }
-
-    /**
      * @AfterScenario @multi-feature-flag-enabled
      */
     public function theMultiAccountFeatureFlagIsSetToFalse(): void
     {
         $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '0');
+    }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-not-started-not-primary
+     */
+    public function createPfaHighNotStartedNonPrimaryUser(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null, ?bool $isPrimary = false)
+    {
+        $userDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, $isPrimary, $caseNumber));
+        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaNotPrimaryUser = $userDetails;
+
+        return $userDetails;
     }
 }

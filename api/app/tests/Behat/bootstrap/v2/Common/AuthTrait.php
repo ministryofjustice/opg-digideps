@@ -324,18 +324,20 @@ trait AuthTrait
         // create primary user
         $primaryUser = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
         $primaryUserId = $primaryUser->getUserId();
+        $primaryDeputyUid = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId])->getDeputyUid();
 
-        $nonPrimaryUserId = $this->layDeputyNotStartedPfaNotPrimaryUser->getUserId();
-        $nonPrimaryUserUid = $this->em->getRepository(User::class)->findOneBy(['id' => $nonPrimaryUserId])->getDeputyUid();
+        // create non-primary user
+        $nonPrimaryUser = $this->createPfaHighNotStartedNonPrimaryUser(null, $this->testRunId.mt_rand(1, 10000));
+        $nonPrimaryUserId = $nonPrimaryUser->getUserId();
 
         // set the same deputy uid for both accounts
-        $primaryUser = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId]);
-        $primaryUser->setDeputyUid($nonPrimaryUserUid);
+        $nonPrimaryUser = $this->em->getRepository(User::class)->findOneBy(['id' => $nonPrimaryUserId]);
+        $nonPrimaryUser->setDeputyUid($primaryDeputyUid);
 
-        $this->em->persist($primaryUser);
+        $this->em->persist($nonPrimaryUser);
         $this->em->flush();
 
-        $this->primaryEmailAddress = $primaryUser->getEmail();
+        $this->primaryEmailAddress = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId])->getEmail();
     }
 
     /**

@@ -38,7 +38,7 @@ Feature: Users logging into the service
         Then the form should be valid
 
 
-    @lay-pfa-high-not-started-not-primary @multi-feature-flag-enabled
+    @multi-feature-flag-enabled
     Scenario: A user tries to login to the service with their non primary account
         Given a Lay Deputy has multiple client accounts
         When a Lay Deputy tries to login with their "non-primary" email address
@@ -47,7 +47,7 @@ Feature: Users logging into the service
         When the user tries to access their clients report overview page
         Then they get redirected back to the log in page
 
-    @lay-pfa-high-not-started-not-primary @multi-feature-flag-enabled
+    @multi-feature-flag-enabled
     Scenario: A user tries to login to the service with their primary account
         Given a Lay Deputy has multiple client accounts
         And a Lay Deputy tries to login with their "primary" email address
