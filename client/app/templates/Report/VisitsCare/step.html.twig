@@ -59,7 +59,7 @@
 
             <div id="how-care-funded-wrapper" class="opg-indented-block js-hidden">
                 {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
-                    'legendClass' : 'govuk-label--s'
+                    'legendClass' : 'govuk-fieldset__legend--s'
                 }) }}
             </div>
         </div>
@@ -93,7 +93,7 @@
             <div id="when-care-plan-last-reviewed-wrapper" class="opg-indented-block  js-hidden">
                 {# legendClass is-not-working #}
                 {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
-                    'legendClass' : 'govuk-label--s',
+                    'legendClass' : 'govuk-fieldset__legend--s',
                     'showDay': 'false'
                 }) }}
             </div>

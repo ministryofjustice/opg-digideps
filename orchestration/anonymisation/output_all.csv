@@ -163,9 +163,9 @@ public,dd_user,codeputy_client_confirmed,boolean,,,NA
 public,dd_user,created_at,timestamp without time zone,,,NA
 public,dd_user,created_by_id,integer,,FOREIGN KEY,NA
 public,dd_user,deletion_protection,boolean,,,NA
-public,dd_user,deputy_no,character varying,100,,Lorem
+public,dd_user,deputy_no,character varying,100,,NA
 public,dd_user,deputy_uid,bigint,,,NA
-public,dd_user,email,character varying,60,,NA
+public,dd_user,email,character varying,60,,Email
 public,dd_user,firstname,character varying,100,,FirstName
 public,dd_user,id,integer,,PRIMARY KEY,NA
 public,dd_user,is_primary,boolean,,,NA
@@ -178,10 +178,10 @@ public,dd_user,phone_alternative,character varying,20,,PhoneNumber
 public,dd_user,phone_main,character varying,20,,PhoneNumber
 public,dd_user,pre_register_validated,timestamp without time zone,,,NA
 public,dd_user,registration_date,timestamp without time zone,,,NA
-public,dd_user,registration_route,character varying,30,,Lorem
-public,dd_user,registration_token,character varying,100,,Lorem
-public,dd_user,role_name,character varying,50,,Lorem
-public,dd_user,salt,character varying,100,,Lorem
+public,dd_user,registration_route,character varying,30,,NA
+public,dd_user,registration_token,character varying,100,,NA
+public,dd_user,role_name,character varying,50,,NA
+public,dd_user,salt,character varying,100,,NA
 public,dd_user,token_date,timestamp without time zone,,,NA
 public,dd_user,updated_at,timestamp without time zone,,,NA
 public,debt,amount,numeric,,,NA
@@ -411,7 +411,7 @@ public,organisation,deleted_at,timestamp without time zone,,,NA
 public,organisation,email_identifier,character varying,256,,Email
 public,organisation,id,integer,,PRIMARY KEY,NA
 public,organisation,is_activated,boolean,,,NA
-public,organisation,name,character varying,256,,Lorem
+public,organisation,name,character varying,256,,Organisation
 public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
 public,organisation_user,user_id,integer,,PRIMARY KEY,NA
@@ -481,8 +481,8 @@ public,report,end_date,date,,,NA
 public,report,gifts_exist,character varying,3,,NA
 public,report,has_debts,character varying,5,,NA
 public,report,id,integer,,PRIMARY KEY,NA
-public,report,money_in_exists,text,,,Lorem
-public,report,money_out_exists,text,,,Lorem
+public,report,money_in_exists,text,,,NA
+public,report,money_out_exists,text,,,NA
 public,report,money_transactions_short_in_exist,character varying,3,,NA
 public,report,money_transactions_short_out_exist,character varying,3,,NA
 public,report,no_asset_to_add,boolean,,,NA
@@ -506,16 +506,16 @@ public,report,reason_for_no_fees,text,,,Lorem
 public,report,reason_for_no_money_in,text,,,Lorem
 public,report,reason_for_no_money_out,text,,,Lorem
 public,report,report_seen,boolean,,,NA
-public,report,report_status_cached,character varying,20,,Lorem
-public,report,significant_decisions_made,text,,,Lorem
+public,report,report_status_cached,character varying,20,,NA
+public,report,significant_decisions_made,text,,,NA
 public,report,start_date,date,,,NA
-public,report,status_cached,text,,,Lorem
+public,report,status_cached,text,,,NA
 public,report,submit_date,timestamp without time zone,,,NA
 public,report,submitted,boolean,,,NA
 public,report,submitted_by,integer,,FOREIGN KEY,NA
-public,report,type,character varying,10,,Lorem
+public,report,type,character varying,10,,NA
 public,report,un_submit_date,timestamp without time zone,,,NA
-public,report,unsubmitted_sections_list,text,,,Lorem
+public,report,unsubmitted_sections_list,text,,,NA
 public,report,updated_at,timestamp without time zone,,,NA
 public,report,wish_to_provide_documentation,character varying,255,,Lorem
 public,report_submission,archived,boolean,,,NA
