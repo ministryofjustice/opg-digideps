@@ -486,35 +486,10 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function testDeputiesNonPrimaryAccountSetToFalse()
     {
-        $preRegistration1 = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019965', 'Zac', 'Tolley');
-
-        $this->fixtures()->persist($preRegistration1);
-        $this->fixtures()->flush($preRegistration1);
-
+        $this->generateDeputyPrimaryAccount();
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
-        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
-            'mustSucceed' => true,
-            'AuthToken' => $token,
-            'data' => [
-                'firstname' => 'Zac',
-                'lastname' => 'Tolley',
-                'email' => 'firstdeputyaccount@example.com',
-                'postcode' => 'SW1',
-                'client_firstname' => 'John',
-                'client_lastname' => 'Cross-Tolley',
-                'case_number' => '12345678',
-            ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
-        ]);
-
-        $id = $responseArray['data']['id'];
-
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
-        $this->assertEquals('700000019965', $user->getDeputyUid());
-        $this->assertTrue($user->getIsPrimary());
-
-        // second deputy account
+        // create second deputy account
         $preRegistration2 = $this->generatePreRegistration('23456789', 'Jones', '700000019965', 'Zac', 'Tolley');
 
         $this->fixtures()->persist($preRegistration2);
@@ -547,16 +522,9 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function testNoExistingAccountsAreIdentifiedForCoDeputyWithSingleAccount()
     {
-        $deputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019945', 'Zac', 'Tolley');
-        $deputyPreRegistration->setIsCoDeputy(true);
+        $this->generateDeputyAndCoDeputyPreRegistration(null);
 
-        $coDeputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019958', 'Sue', 'Jones');
-        $coDeputyPreRegistration->setIsCoDeputy(true);
-
-        $this->fixtures()->persist($coDeputyPreRegistration);
-        $this->fixtures()->persist($deputyPreRegistration);
-        $this->fixtures()->flush();
-
+        // deputy logs in ang registers
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
@@ -565,7 +533,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
-                'email' => 'deputy@example.com',
+                'email' => 'deputy1@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -576,14 +544,12 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $deputyId = $responseArray['data']['id'];
         $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
-
-        $this->assertEquals('700000019945', $deputy->getDeputyUid());
         $this->assertTrue($deputy->getIsPrimary());
 
         $coDeputy = $this->fixtures()->createUser();
         $coDeputy->setFirstName('Sue');
         $coDeputy->setLastName('Jones');
-        $coDeputy->setEmail('codeputy@example.com');
+        $coDeputy->setEmail('codeputy1@example.com');
         $coDeputy->setCreatedBy($deputy);
         $coDeputy->setRegistrationRoute('CO_DEPUTY_INVITE');
 
@@ -596,7 +562,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Sue',
                 'lastname' => 'Jones',
-                'email' => 'codeputy@example.com',
+                'email' => 'codeputy1@example.com',
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
@@ -607,5 +573,179 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $existingDeputyAccounts = $responseArray['data']['existingDeputyAccounts'];
         $this->assertEmpty($existingDeputyAccounts);
+    }
+
+    /**
+     * @test
+     */
+    public function testExistingAccountsAreIdentifiedForCoDeputyWithASecondAccount()
+    {
+        // first registered deputy account
+        $deputyPrimaryAccountUid = $this->generateDeputyPrimaryAccount();
+
+        // new deputy and co-deputy pre-registration (which will be the second account for co-deputy)
+        $this->generateDeputyAndCoDeputyPreRegistration($deputyPrimaryAccountUid);
+
+        // deputy logs in ang registers before inviting co-deputy
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'deputy2@example.com',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '12345678',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $deputyId = $responseArray['data']['id'];
+        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $this->assertTrue($deputy->getIsPrimary());
+
+        $coDeputy = $this->fixtures()->createUser();
+        $coDeputy->setFirstName('Sue');
+        $coDeputy->setLastName('Jones');
+        $coDeputy->setEmail('codeputy2@example.com');
+        $coDeputy->setCreatedBy($deputy);
+        $coDeputy->setRegistrationRoute('CO_DEPUTY_INVITE');
+
+        $this->fixtures()->persist($coDeputy);
+        $this->fixtures()->flush();
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister/verifycodeputy', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Sue',
+                'lastname' => 'Jones',
+                'email' => 'codeputy2@example.com',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '12345678',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $existingDeputyAccounts = $responseArray['data']['existingDeputyAccounts'];
+        $this->assertNotEmpty($existingDeputyAccounts);
+    }
+
+    /**
+     * @test
+     */
+    public function testCoDeputyIsUpdatedWithVerificationData()
+    {
+        $deputyPreRegistration = $this->generateDeputyAndCoDeputyPreRegistration(null);
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'deputy3@example.com',
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '12345678',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $deputyId = $responseArray['data']['id'];
+        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+
+        $this->assertEquals($deputyPreRegistration->getDeputyUid(), $deputy->getDeputyUid());
+        $this->assertTrue($deputy->getIsPrimary());
+
+        $coDeputy = $this->fixtures()->createUser();
+        $coDeputy->setFirstName('Sue');
+        $coDeputy->setLastName('Jones');
+        $coDeputy->setEmail('codeputy3@example.com');
+        $coDeputy->setCreatedBy($deputy);
+        $coDeputy->setRegistrationRoute('CO_DEPUTY_INVITE');
+
+        $this->fixtures()->persist($coDeputy);
+        $this->fixtures()->flush();
+
+        $responseArray = $this->assertJsonRequest('PUT', '/selfregister/updatecodeputy/'.$coDeputy->getId(), [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'verified' => true,
+                'coDeputyUid' => '700000019951',
+                'existingDeputyAccounts' => null,
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $response = $responseArray['data'];
+
+        $this->assertTrue($response['co_deputy_client_confirmed']);
+        $this->assertEquals('700000019951', $response['deputy_no']);
+        $this->assertEquals('700000019951', $response['deputy_uid']);
+        $this->assertNotEmpty($response['registration_date']);
+        $this->assertNotEmpty($response['pre_register_validated_date']);
+        $this->assertTrue($response['active']);
+        $this->assertTrue($response['is_primary']);
+    }
+
+    private function generateDeputyAndCoDeputyPreRegistration($deputyPrimaryUid)
+    {
+        $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+
+        $deputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', $deputyUid, 'Zac', 'Tolley');
+        $deputyPreRegistration->setIsCoDeputy(true);
+
+        if ($deputyPrimaryUid) {
+            $coDeputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', $deputyPrimaryUid, 'Sue', 'Jones');
+        } else {
+            $coDeputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+            $coDeputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', $coDeputyUid, 'Sue', 'Jones');
+        }
+        $coDeputyPreRegistration->setIsCoDeputy(true);
+
+        $this->fixtures()->persist($coDeputyPreRegistration);
+        $this->fixtures()->persist($deputyPreRegistration);
+        $this->fixtures()->flush();
+
+        return $deputyPreRegistration;
+    }
+
+    private function generateDeputyPrimaryAccount()
+    {
+        $casenumber = strval(mt_rand(10000000, 99999999));
+        $preRegistration = $this->generatePreRegistration($casenumber, 'Smith', '700000019965', 'Sue', 'Jones');
+
+        $this->fixtures()->persist($preRegistration);
+        $this->fixtures()->flush($preRegistration);
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Sue',
+                'lastname' => 'Jones',
+                'email' => sprintf('firstdeputyaccount%s@example.com', rand(1, 20)),
+                'postcode' => 'SW1',
+                'client_firstname' => 'John',
+                'client_lastname' => 'Smith',
+                'case_number' => $casenumber,
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        return $responseArray['data']['deputy_uid'];
     }
 }

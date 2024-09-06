@@ -47,6 +47,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
+     *
      * @Template("@App/CoDeputy/verification.html.twig")
      */
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
@@ -90,25 +91,14 @@ class CoDeputyController extends AbstractController
                 // validate against pre-registration data
                 try {
                     $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
-                    $user->setCoDeputyClientConfirmed(true);
 
-                    $user->setDeputyNo($coDeputyVerificationData['coDeputyUid']);
-                    $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
-
-                    $user->setActive(true);
-                    $user->setRegistrationDate(new \DateTime());
-                    $user->setPreRegisterValidatedDate(new \DateTime());
-
-                    if (!$coDeputyVerificationData['$existingDeputyAccounts']) {
-                        $user->setIsPrimary(true);
-                    }
+                    $updatedUser = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/'.$user->getId(), $coDeputyVerificationData, 'User', [], false);
 
                     if ($mainDeputy->isNdrEnabled()) {
-                        $user->setNdrEnabled(true);
+                        $updatedUser->setNdrEnabled(true);
                     }
-                    $this->restClient->put('user/'.$user->getId(), $user);
 
-                    $deputyResponse = $this->deputyApi->createDeputyFromUser($user);
+                    $this->restClient->put('user/'.$user->getId(), $updatedUser);
 
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
@@ -162,6 +152,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
+     *
      * @Template("@App/CoDeputy/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -220,6 +211,7 @@ class CoDeputyController extends AbstractController
 
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
+     *
      * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
      * @return array|RedirectResponse
