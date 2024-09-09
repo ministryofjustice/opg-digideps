@@ -8,6 +8,7 @@ use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
+use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -224,7 +225,7 @@ class ReportSubmissionController extends RestController
      *
      * @throws \Exception
      */
-    public function getPreRegistrationData(Request $request): array
+    public function getPreRegistrationData(Request $request, ReportSubmissionSummaryTransformer $reportSubmissionSummaryTransformer): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
         $repo = $this->getRepository(ReportSubmission::class);
@@ -232,12 +233,16 @@ class ReportSubmissionController extends RestController
         $fromDate = $request->get('fromDate') ? new \DateTime($request->get('fromDate')) : null;
         $toDate = $request->get('toDate') ? new \DateTime($request->get('toDate')) : null;
 
-        $fromDateTime = $fromDate?->setTime(0, 0);
-        $toDateTime = $toDate?->setTime(23, 59, 59);
+        $fromDateTime = $fromDate ? $fromDate->setTime(0, 0) : null;
+        $toDateTime = $toDate ? $toDate->setTime(23, 59, 59) : null;
 
-        return $repo->findAllReportSubmissionsRawSql(
+        $ret = $repo->findAllReportSubmissions(
             $fromDateTime,
-            $toDateTime
+            $toDateTime,
+            $request->get('orderBy', 'createdOn'),
+            $request->get('order', 'ASC')
         );
+
+        return $reportSubmissionSummaryTransformer->transform($ret);
     }
 }

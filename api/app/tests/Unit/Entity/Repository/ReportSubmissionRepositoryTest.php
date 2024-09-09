@@ -40,7 +40,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             $this->entityManager->persist($report);
             $this->entityManager->persist($report->getClient());
 
-            return (new Document($report))
+            return ( new Document($report))
                 ->setSynchronisationStatus($status)
                 ->setFileName('a file.pdf');
         }, $docStatuses);
@@ -62,7 +62,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
     {
         return [
             'One synced document' => [false, [Document::SYNC_STATUS_SUCCESS], true],
-            'Two documents, one synced' => [false, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_PERMANENT_ERROR], false],
+            'Two documents, one synced' => [false, [Document::SYNC_STATUS_SUCCESS, DOCUMENT::SYNC_STATUS_PERMANENT_ERROR], false],
             'Two synced documents' => [false, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], true],
             'Two synced documents, already archived' => [true, [Document::SYNC_STATUS_SUCCESS, Document::SYNC_STATUS_SUCCESS], true],
         ];
@@ -81,7 +81,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
             $this->entityManager->persist($report);
             $this->entityManager->persist($report->getClient());
 
-            return (new Document($report))
+            return ( new Document($report))
                 ->setFileName('a file.pdf');
         }, $statuses);
 
@@ -146,46 +146,6 @@ class ReportSubmissionRepositoryTest extends WebTestCase
 
         foreach ($todaysReportSubmissions as $rs) {
             self::assertNotContains($rs, $reportSubmissions);
-        }
-    }
-
-    /** @test */
-    public function findAllReportSubmissionsRawSqlWithPeriodProvided()
-    {
-        $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
-        $threeDaysAgo = new \DateTime('-3 days');
-        $lastWeek = new \DateTime('-7 days');
-
-        $yesterdaysReportSubmissionsIds = [];
-        foreach (range(1, 3) as $i) {
-            $reportSubmission = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $yesterday);
-            $yesterdaysReportSubmissionsIds[] = $reportSubmission->getId();
-        }
-
-        $lastWeekReportSubmissionsIds = [];
-        foreach (range(1, 3) as $i) {
-            $reportSubmission = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $lastWeek);
-            $lastWeekReportSubmissionsIds[] = $reportSubmission->getId();
-        }
-
-        $reportSubmissions = $this->entityManager
-            ->getRepository(ReportSubmission::class)
-            ->findAllReportSubmissionsRawSql($threeDaysAgo, $today);
-
-        $actualReportSubmissionIds = [];
-        foreach ($reportSubmissions as $reportSubmission) {
-            $actualReportSubmissionIds[] = $reportSubmission['id'];
-        }
-
-        foreach ($yesterdaysReportSubmissionsIds as $rsid) {
-            self::assertContains($rsid, $actualReportSubmissionIds);
-        }
-
-        foreach ($lastWeekReportSubmissionsIds as $rsid) {
-            self::assertNotContains($rsid, $actualReportSubmissionIds);
         }
     }
 }
