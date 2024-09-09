@@ -3,20 +3,4 @@
     white-space: nowrap;
     @include govuk-font(14, $weight: bold);
   }
-
-  &--not-started {
-    background-color: govuk-colour("dark-grey");
-  }
-
-  &--warning {
-    background-color: $govuk-error-colour;
-  }
-
-  &--notice {
-    background-color: darken(govuk-colour("orange"), 17%);
-  }
-
-  &--success {
-    background-color: govuk-colour("green");
-  }
 }

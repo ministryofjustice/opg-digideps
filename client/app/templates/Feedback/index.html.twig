@@ -25,7 +25,7 @@
             {% endset %}
 
             {{ form_checkbox_group(form.specificPage, 'form.specificPage', {
-                legendClass: 'govuk-label--m',
+                legendClass: 'govuk-fieldset__legend--m',
                 items: [
                     {},
                     { conditional: pageUrlField },
@@ -50,7 +50,7 @@
                 'autocomplete': 'off', 'aria-hidden': 'true'}}) }}
 
             {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
-                legendClass: 'govuk-label--m'
+                legendClass: 'govuk-fieldset__legend--m'
             }) }}
 
             <div class="custom-submit">

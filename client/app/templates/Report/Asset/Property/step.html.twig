@@ -38,7 +38,7 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'labelParameters': transOptions,
-                    'legendClass': 'govuk-label--s',
+                    'legendClass': 'govuk-fieldset__legend--s',
                     'items': [
                         {},
                         {'dataTarget': 'owned-percentage-textarea' }
@@ -61,7 +61,7 @@
                 {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass': 'govuk-label--s',
+                    'legendClass': 'govuk-fieldset__legend--s',
                     'items': [
                         {'dataTarget': 'mortgage-outstanding-amount-textarea' },
                         {},
@@ -87,14 +87,14 @@
     {% if step == 6 %}
         {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
             'fieldSetClass' : 'inline',
-            'legendClass': 'govuk-label--s'
+            'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
     {% if step == 7 %}
         {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
             'fieldSetClass' : 'inline',
-            'legendClass': 'govuk-label--s'
+            'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
@@ -104,7 +104,7 @@
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass': 'govuk-label--s',
+                    'legendClass': 'govuk-fieldset__legend--s',
                     'items': [
                         {'dataTarget': 'rented-out-info' },
                         {}

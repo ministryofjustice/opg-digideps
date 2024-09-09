@@ -76,18 +76,6 @@ func GenerateFakeDataForTable(db *sql.DB, table common.Table, chunkSize int) err
 
 				fakedValue := ""
 				switch col.FakerType {
-				case "FirstName":
-					fakedValue = faker.FirstName()
-				case "LastName":
-					fakedValue = faker.LastName()
-				case "PostCode":
-					var pc common.PostCode
-					faker.FakeData(&pc)
-					fakedValue = fmt.Sprintf("%s%d %s%d", pc.FirstTwoChars, pc.FirstInt, pc.SecondTwoChars, pc.SecondInt)
-				case "PhoneNumber":
-					fakedValue = faker.Phonenumber()
-				case "Email":
-					fakedValue = faker.Email()
 				case "Lorem":
 					colLen, _ := strconv.Atoi(col.ColumnLength)
 					if colLen < 20 {
@@ -102,6 +90,20 @@ func GenerateFakeDataForTable(db *sql.DB, table common.Table, chunkSize int) err
 					} else if len(fakedValue) > 200 {
 						fakedValue = fakedValue[:200]
 					}
+				case "FirstName":
+					fakedValue = faker.FirstName()
+				case "LastName":
+					fakedValue = faker.LastName()
+				case "PostCode":
+					var pc common.PostCode
+					faker.FakeData(&pc)
+					fakedValue = fmt.Sprintf("%s%d %s%d", pc.FirstTwoChars, pc.FirstInt, pc.SecondTwoChars, pc.SecondInt)
+				case "PhoneNumber":
+					fakedValue = faker.Phonenumber()
+				case "Email":
+					fakedValue = faker.Email()
+				case "Organisation":
+					fakedValue = fmt.Sprintf("Organisation-%s-%s", faker.Word(), faker.UUIDDigit())
 				default:
 					fakedValue = ""
 				}

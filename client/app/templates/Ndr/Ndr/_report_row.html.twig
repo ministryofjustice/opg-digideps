@@ -43,7 +43,7 @@
 {% else %}
     {# REPORT NOT ACTIVE #}
     <div class="behat-region-report-card opg-card opg-card--disabled govuk-!-margin-bottom-6">
-        <span class="govuk-tag opg-tag--not-started opg-card__tag">{{ 'notAvailable' | trans({}, 'common') }}</span>
+        <span class="govuk-tag govuk-tag--grey opg-card__tag">{{ 'notAvailable' | trans({}, 'common') }}</span>
         <h3 class="govuk-heading-m flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
         <div class="govuk-!-padding-top-3">
             <p class="text flush--bottom">{{ 'report.notAvailableInfo' | trans }}</p>
