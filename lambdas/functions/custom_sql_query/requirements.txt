@@ -1,0 +1,3 @@
+awslambdaric
+boto3
+psycopg2

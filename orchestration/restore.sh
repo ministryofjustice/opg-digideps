@@ -28,6 +28,9 @@ psql -v ON_ERROR_STOP=1 $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE < dump.sql
 
 echo "Restore complete"
 
+echo "Adding the query audit stored procs and users"
+psql -v ON_ERROR_STOP=1 $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -f audit_setup.sql
+
 if [ "${ANONYMISE}" == "yes" ]; then
 	echo "Anonymising data..."
 	./anonymisation/anonymise
