@@ -93,7 +93,7 @@ class UserDetails
         $this->setOrganisationName($userDetails['organisationName'] ?? null);
         $this->setOrganisationEmailIdentifier($userDetails['organisationEmailIdentifier'] ?? null);
         $this->setCourtDate($userDetails['courtDate'] ?? null);
-        $this->setIsPrimary($userDetails['isPrimary'] ?? null);
+        $this->setIsPrimary($userDetails['isPrimary'] ?? true);
 
         $this->setClientId($userDetails['clientId'] ?? null);
         $this->setClientFirstName($userDetails['clientFirstName'] ?? null);
