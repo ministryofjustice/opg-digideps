@@ -131,18 +131,79 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param \DateTime $fromDate
-     * @param \DateTime $toDate
-     * @param string    $orderBy  default createdOn
-     * @param string    $order    default ASC
+     * @throws \Exception
+     */
+    public function findAllReportSubmissionsRawSql(
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null
+    ): array {
+        $now = new \DateTime();
+        $fromDateStrFormatted = ($fromDate ?? $now)->format('Ymd').' 000000';
+        $toDateStrFormatted = ($toDate ?? $now)->format('Ymd').' 235959';
+
+        $submittedReportsQuery = "
+SELECT
+    r0_.id AS report_submission_id,
+    COALESCE(c3_.case_number, c5_.case_number) AS case_number,
+    r0_.created_on AS created_on,
+    now() AS scan_date,
+    d1_.id AS user_id,
+    d6_.filename AS filename
+FROM report_submission r0_
+LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
+LEFT JOIN report r2_ ON r0_.report_id = r2_.id
+LEFT JOIN client c3_ ON r2_.client_id = c3_.id
+LEFT JOIN odr o4_ ON r0_.ndr_id = o4_.id
+LEFT JOIN client c5_ ON o4_.client_id = c5_.id
+LEFT JOIN document d6_ ON r0_.id = d6_.report_submission_id
+WHERE r0_.created_on >= '$fromDateStrFormatted' AND r0_.created_on <= '$toDateStrFormatted'
+  AND (r0_.created_on >= r2_.submit_date OR r0_.created_on >= o4_.submit_date)
+  AND (r2_.submitted = true OR o4_.submitted = true)
+  AND (r2_.submit_date IS NOT NULL OR o4_.submit_date IS NOT NULL)
+ORDER BY r0_.id DESC;";
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $docStmt = $conn->prepare($submittedReportsQuery);
+        $result = $docStmt->executeQuery();
+
+        return $this->transformReportSubmissionsRawSql($result->fetchAllAssociative());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function transformReportSubmissionsRawSql(array $results): array
+    {
+        $now = new \DateTime();
+        $reportSubmissionsDetails = [];
+        foreach ($results as $row) {
+            $created_on = new \DateTime($row['created_on']);
+            $data = [];
+            $data['id'] = $row['report_submission_id'];
+            $data['case_number'] = $row['case_number'];
+            $data['date_received'] = $created_on->format('Y-m-d');
+            $data['scan_date'] = $now->format('Y-m-d');
+            $data['document_id'] = $row['filename'];
+            $data['document_type'] = 'Reports';
+            $data['form_type'] = 'Reports General';
+            $reportSubmissionsDetails[] = $data;
+        }
+
+        return $reportSubmissionsDetails;
+    }
+
+    /**
+     * @param string $orderBy default createdOn
+     * @param string $order   default ASC
      *
      * @return array
      */
     public function findAllReportSubmissions(
-        \DateTime $fromDate = null,
-        \DateTime $toDate = null,
-        $orderBy = 'createdOn',
-        $order = 'ASC'
+        ?\DateTime $fromDate = null,
+        ?\DateTime $toDate = null,
+        string $orderBy = 'createdOn',
+        string $order = 'ASC'
     ) {
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -179,7 +240,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      *
      * @return \DateTime
      */
-    private function determineCreatedFromDate(\DateTime $date = null)
+    private function determineCreatedFromDate(?\DateTime $date = null)
     {
         $dateFormat = (1 == date('N')) ? 'last Friday midnight' : 'yesterday midnight';
 
@@ -189,7 +250,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     /**
      * @return \DateTime
      */
-    private function determineCreatedToDate(\DateTime $date = null)
+    private function determineCreatedToDate(?\DateTime $date = null)
     {
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
