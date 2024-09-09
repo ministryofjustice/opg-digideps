@@ -17,7 +17,7 @@
             </dt>
             <dd class="push--bottom">
                 {% if report.unSubmitDate != null and report.submitted == false %}
-                    <span class="behat-region-report-detail-status{{ incompleteAppend }} govuk-tag opg-tag--warning">{{ 'changesNeeded' | trans({}, 'common') }}</span>
+                    <span class="behat-region-report-detail-status{{ incompleteAppend }} govuk-tag govuk-tag--red">{{ 'changesNeeded' | trans({}, 'common') }}</span>
                 {% else %}
                     <span class="behat-region-report-detail-status{{ incompleteAppend }} govuk-tag {{ reportStatus.state | status_to_tag_css }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
                 {% endif %}

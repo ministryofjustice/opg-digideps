@@ -3,7 +3,7 @@
     {{ form_label(element, labelText, {'label_attr': {'class': 'govuk-label ' ~ labelClass | default('') }}) }}
 
     {% if (hintText is defined) and (hintText is not empty) %}
-        <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
+        <div class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</div>
     {% endif %}
 
     {{ form_errors(element) }}
