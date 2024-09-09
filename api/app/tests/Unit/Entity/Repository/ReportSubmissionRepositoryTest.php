@@ -150,7 +150,7 @@ class ReportSubmissionRepositoryTest extends WebTestCase
     }
 
     /** @test */
-    public function findAllReportSubmissionsfindAllReportSubmissionsRawSqlWithPeriodProvided()
+    public function findAllReportSubmissionsRawSqlWithPeriodProvided()
     {
         $today = new \DateTime();
         $yesterday = new \DateTime('-1 day');
