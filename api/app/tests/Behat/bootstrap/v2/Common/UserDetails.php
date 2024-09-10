@@ -48,6 +48,7 @@ class UserDetails
     private ?int $userId = null;
     private ?string $userPhone = null;
     private ?string $userRole = null;
+    private ?bool $isPrimary = null;
 
     public function __construct(array $userDetails)
     {
@@ -82,6 +83,7 @@ class UserDetails
         $this->setUserFullName($userDetails['userFullName'] ?? null);
         $this->setUserFullAddressArray($userDetails['userFullAddressArray'] ?? null);
         $this->setUserPhone($userDetails['userPhone'] ?? null);
+        $this->setIsPrimary($userDetails['isPrimary'] ?? null);
 
         $this->setDeputyName($userDetails['deputyName'] ?? null);
         $this->setDeputyFullAddressArray($userDetails['deputyFullAddressArray'] ?? null);
@@ -607,6 +609,18 @@ class UserDetails
     public function setPreviousReportBankAccountId(?int $previousReportBankAccountId): UserDetails
     {
         $this->previousReportBankAccountId = $previousReportBankAccountId;
+
+        return $this;
+    }
+
+    public function getIsPrimary(): ?bool
+    {
+        return $this->isPrimary;
+    }
+
+    public function setIsPrimary(?bool $isPrimary): UserDetails
+    {
+        $this->isPrimary = $isPrimary;
 
         return $this;
     }
