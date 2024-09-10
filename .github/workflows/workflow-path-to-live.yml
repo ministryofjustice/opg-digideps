@@ -33,7 +33,7 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
       - name: Generate build output using Markdown
         run: |
