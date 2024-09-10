@@ -148,7 +148,11 @@ SELECT
     r0_.created_on AS created_on,
     now() AS scan_date,
     d1_.id AS user_id,
-    d6_.filename AS filename
+    CASE
+        WHEN d6_.is_report_pdf = true AND d6_.filename LIKE '%.pdf'
+        THEN d6_.filename
+        ELSE NULL
+    END AS filename
 FROM report_submission r0_
 LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
 LEFT JOIN report r2_ ON r0_.report_id = r2_.id
@@ -160,14 +164,14 @@ WHERE r0_.created_on >= '$fromDateStrFormatted' AND r0_.created_on <= '$toDateSt
   AND (r0_.created_on >= r2_.submit_date OR r0_.created_on >= o4_.submit_date)
   AND (r2_.submitted = true OR o4_.submitted = true)
   AND (r2_.submit_date IS NOT NULL OR o4_.submit_date IS NOT NULL)
-ORDER BY r0_.id DESC;";
+ORDER BY d6_.is_report_pdf ASC, r0_.id DESC;";
 
         $conn = $this->getEntityManager()->getConnection();
 
         $docStmt = $conn->prepare($submittedReportsQuery);
         $result = $docStmt->executeQuery();
 
-        return $this->transformReportSubmissionsRawSql($result->fetchAllAssociative());
+        return array_filter($this->transformReportSubmissionsRawSql($result->fetchAllAssociative()));
     }
 
     /**
