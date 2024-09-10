@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @report-submissions
+@v2 @v2_reporting_1 @report-submissions @iqpal
 Feature: Submitting a report - NDR
 
     @ndr-completed
