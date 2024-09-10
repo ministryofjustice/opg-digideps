@@ -148,7 +148,11 @@ SELECT
     r0_.created_on AS created_on,
     now() AS scan_date,
     d1_.id AS user_id,
-    d6_.filename AS filename
+    CASE
+        WHEN d6_.is_report_pdf = true AND d6_.filename LIKE '%.pdf'
+        THEN d6_.filename
+        ELSE NULL
+    END AS filename
 FROM report_submission r0_
 LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
 LEFT JOIN report r2_ ON r0_.report_id = r2_.id
@@ -167,7 +171,7 @@ ORDER BY r0_.id DESC;";
         $docStmt = $conn->prepare($submittedReportsQuery);
         $result = $docStmt->executeQuery();
 
-        return $this->transformReportSubmissionsRawSql($result->fetchAllAssociative());
+        return array_filter($this->transformReportSubmissionsRawSql($result->fetchAllAssociative()));
     }
 
     /**
