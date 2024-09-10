@@ -11,7 +11,7 @@ jobs:
   client-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
@@ -68,13 +68,13 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: archive pact results
-        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # pin@v3.1.0
+        uses: actions/upload-artifact@b18b1d32f3f31abcdc29dee3f2484801fe7822f4 # pin@v3.1.0
         with:
           name: pact.json
           path: pact.json
 
       - name: archive test results
-        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # pin@v3.1.0
+        uses: actions/upload-artifact@b18b1d32f3f31abcdc29dee3f2484801fe7822f4 # pin@v3.1.0
         with:
           name: client-unit-tests
           path: client-unit-tests.xml
