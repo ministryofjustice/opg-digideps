@@ -1,0 +1,72 @@
+locals {
+  lambda_env_vars = {
+    ENVIRONMENT       = local.environment
+    DATABASE_HOSTNAME = local.db.endpoint
+    DATABASE_NAME     = local.db.name
+    DATABASE_PORT     = tostring(local.db.port)
+  }
+}
+
+module "lamdba_custom_sql_query" {
+  source                = "./modules/lambda"
+  lambda_name           = "custom-sql-query-${local.environment}"
+  description           = "Function to run custom sql queries"
+  working_directory     = "/function"
+  environment_variables = local.lambda_env_vars
+  image_uri             = local.images.custom-sql-query
+  ecr_arn               = data.aws_ecr_repository.images["test"].arn
+  tags                  = var.default_tags
+  account               = var.account
+  environment           = local.environment
+  aws_subnet_ids        = data.aws_subnet.private[*].id
+  memory                = 1024
+  vpc_id                = data.aws_vpc.vpc.id
+  secrets               = []
+  logs_kms_key_arn      = aws_kms_key.cloudwatch_logs.arn
+}
+
+resource "aws_security_group_rule" "lambda_custom_sql_query_to_front" {
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  source_security_group_id = module.api_rds_security_group.id
+  security_group_id        = module.lamdba_custom_sql_query.lambda_sg.id
+  description              = "Outbound lambda custom_sql to database"
+}
+
+resource "aws_security_group_rule" "lambda_custom_sql_query_to_secrets_endpoint" {
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = 443
+  to_port                  = 443
+  source_security_group_id = data.aws_security_group.secrets_endpoint.id
+  security_group_id        = module.lamdba_custom_sql_query.lambda_sg.id
+  description              = "Outbound lambda custom_sql to secrets endpoint"
+}
+
+resource "aws_lambda_permission" "allow_invoke_from_users" {
+  statement_id  = "AllowExecutionFromCLI"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lamdba_custom_sql_query.lambda.function_name
+  principal     = "arn:aws:iam::${var.account.account_id}:role/operator"
+}
+
+resource "aws_iam_role_policy" "custom_sql_query_secretsmanager" {
+  name   = "custom-sql-query-secretsmanager.${local.environment}"
+  policy = data.aws_iam_policy_document.custom_sql_query_secretsmanager.json
+  role   = module.lamdba_custom_sql_query.lambda_role.id
+}
+
+data "aws_iam_policy_document" "custom_sql_query_secretsmanager" {
+  statement {
+    sid    = "AllowQuerySecretsmanagerSecrets"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [
+      aws_secretsmanager_secret.custom_sql_db_creds.arn
+    ]
+  }
+}

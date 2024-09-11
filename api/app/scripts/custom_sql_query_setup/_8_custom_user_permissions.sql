@@ -1,0 +1,10 @@
+REVOKE ALL ON DATABASE api FROM custom_sql_user;
+REVOKE ALL ON SCHEMA public FROM custom_sql_user;
+GRANT EXECUTE ON PROCEDURE execute_custom_query TO custom_sql_user;
+GRANT EXECUTE ON PROCEDURE get_custom_query TO custom_sql_user;
+GRANT EXECUTE ON PROCEDURE revoke_custom_query TO custom_sql_user;
+GRANT EXECUTE ON PROCEDURE sign_off_custom_query TO custom_sql_user;
+GRANT EXECUTE ON PROCEDURE insert_custom_query TO custom_sql_user;
+GRANT CONNECT ON DATABASE api TO custom_sql_user;
+REVOKE ALL ON ALL FUNCTIONS IN SCHEMA public FROM custom_sql_user;
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM custom_sql_user;

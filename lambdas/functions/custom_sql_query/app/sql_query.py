@@ -1,15 +1,26 @@
 import json
+import os
+from datetime import datetime
+
 import boto3
 import psycopg2
 from botocore.exceptions import ClientError
 
 
-secret_name = "SOME SECRET NAME TBC"
+secret_name = f"{os.getenv('ENVIRONMENT')}/custom-sql-db-credentials"
 
 
 def get_db_credentials(secret_name, region_name="eu-west-1"):
-    session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager", region_name=region_name)
+    if os.getenv("ENVIRONMENT") == "local":
+        client = boto3.client(
+            service_name="secretsmanager",
+            region_name=region_name,
+            endpoint_url="http://localstack:4566",
+            aws_access_key_id="fake",
+            aws_secret_access_key="fake",
+        )
+    else:
+        client = boto3.client(service_name="secretsmanager", region_name=region_name)
 
     try:
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
@@ -20,22 +31,15 @@ def get_db_credentials(secret_name, region_name="eu-west-1"):
     return json.loads(secret)
 
 
-def get_calling_user_arn():
-    sts_client = boto3.client("sts")
-
-    # Get the caller's identity
-    caller_identity = sts_client.get_caller_identity()
-
-    return caller_identity["Arn"]
-
-
-def run_insert_custom_query(event, conn, calling_user):
+def run_insert_custom_query(event, conn):
+    calling_user = event["calling_user"]
     custom_query = event["custom_query"]
     validation_query = event["validation_query"]
     expected_before = event["expected_before"]
-    expected_after = event["expected_before"]
+    expected_after = event["expected_after"]
     try:
         cursor = conn.cursor()
+
         procedure_args = [
             custom_query,
             validation_query,
@@ -44,55 +48,61 @@ def run_insert_custom_query(event, conn, calling_user):
             expected_after,
             None,
         ]
-        cursor.callproc("insert_custom_query", procedure_args)
+        sql = "CALL insert_custom_query(%s, %s, %s, %s, %s, %s);"
+        cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
+        result_object = {}
+        for row in result:
+            for idx, value in enumerate(row):
+                result_object["id_inserted"] = value
         conn.commit()
         cursor.close()
         conn.close()
 
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
-        return {"message": "Stored procedure failed to execute", "result": result}
+        return {"message": "Stored procedure failed to execute", "result": e}
 
 
-def run_sign_off_custom_query(event, conn, calling_user):
+def run_sign_off_custom_query(event, conn):
     query_id = event["query_id"]
-    try:
-        cursor = conn.cursor()
-        procedure_args = [query_id, calling_user]
-        cursor.callproc("sign_off_custom_query", procedure_args)
-        result = cursor.fetchall()
-        conn.commit()
-        cursor.close()
-        conn.close()
+    calling_user = event["calling_user"]
 
-        return {"message": "Stored procedure executed successfully", "result": result}
-    except Exception as e:
-        return {"message": "Stored procedure failed to execute", "result": result}
+    cursor = conn.cursor()
+    procedure_args = [query_id, calling_user, None]
+    sql = "CALL sign_off_custom_query(%s, %s, %s);"
+    cursor.execute(sql, procedure_args)
+    result = cursor.fetchall()
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return {"message": "Stored procedure executed successfully", "result": result}
 
 
-def run_execute_and_verify_query(event, conn):
+def run_execute_custom_query(event, conn):
     query_id = event["query_id"]
-    try:
-        cursor = conn.cursor()
-        procedure_args = [query_id]
-        cursor.callproc("execute_and_verify_query", procedure_args)
-        result = cursor.fetchall()
-        conn.commit()
-        cursor.close()
-        conn.close()
 
-        return {"message": "Stored procedure executed successfully", "result": result}
-    except Exception as e:
-        return {"message": "Stored procedure failed to execute", "result": result}
+    cursor = conn.cursor()
+    procedure_args = [query_id, None]
+    sql = "CALL execute_custom_query(%s, %s);"
+    cursor.execute(sql, procedure_args)
+    result = cursor.fetchall()
+    print(result)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return {"message": "Stored procedure executed successfully", "result": result}
 
 
 def run_revoke_custom_query(event, conn):
     query_id = event["query_id"]
     try:
         cursor = conn.cursor()
-        procedure_args = [query_id]
-        cursor.callproc("revoke_custom_query", procedure_args)
+        procedure_args = [query_id, None]
+        sql = "CALL revoke_custom_query(%s, %s);"
+        cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
         conn.commit()
         cursor.close()
@@ -100,7 +110,7 @@ def run_revoke_custom_query(event, conn):
 
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
-        return {"message": "Stored procedure failed to execute", "result": result}
+        return {"message": "Stored procedure failed to execute", "result": e}
 
 
 def run_get_custom_query(event, conn):
@@ -108,25 +118,49 @@ def run_get_custom_query(event, conn):
     try:
         cursor = conn.cursor()
         procedure_args = [query_id]
-        cursor.callproc("get_custom_query", procedure_args)
+        sql = "CALL get_custom_query(%s);"
+        cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
+        fields = [
+            "id",
+            "query",
+            "confirmation_query",
+            "created_by",
+            "created_on",
+            "signed_off_by",
+            "signed_off_on",
+            "run_on",
+            "expected_before",
+            "expected_after",
+            "passed",
+        ]
+        result_object = {}
+        for row in result:
+            for idx, value in enumerate(row):
+                if isinstance(value, datetime):
+                    result_object[fields[idx]] = value.strftime("%Y-%m-%d %H:%M")
+                else:
+                    result_object[fields[idx]] = value
         conn.commit()
         cursor.close()
         conn.close()
 
-        return {"message": "Stored procedure executed successfully", "result": result}
+        return {
+            "message": "Stored procedure executed successfully",
+            "result": result_object,
+        }
     except Exception as e:
-        return {"message": "Stored procedure failed to execute", "result": result}
+        return {"message": "Stored procedure failed to execute", "result": e}
 
 
 def connect_to_db(db_credentials):
     try:
         conn = psycopg2.connect(
-            host=db_credentials["host"],
-            database=db_credentials["dbname"],
+            host=os.getenv("DATABASE_HOSTNAME", "postgres"),
+            database=os.getenv("DATABASE_NAME", "api"),
             user=db_credentials["username"],
             password=db_credentials["password"],
-            port=db_credentials["port"],
+            port=os.getenv("DATABASE_PORT", "5432"),
         )
         return conn
     except Exception as e:
@@ -134,37 +168,23 @@ def connect_to_db(db_credentials):
 
 
 def lambda_handler(event, context):
+    print(event)
     procedure_to_call = event["procedure"]
 
-    try:
-        db_credentials = get_db_credentials(secret_name)
-        conn = connect_to_db(db_credentials)
-        calling_user_arn = get_calling_user_arn()
+    db_credentials = get_db_credentials(secret_name)
+    conn = connect_to_db(db_credentials)
 
-        if procedure_to_call == "insert_custom_query":
-            response = run_insert_custom_query(event, conn, calling_user_arn)
-        elif procedure_to_call == "sign_off_custom_query":
-            response = run_sign_off_custom_query(event, conn, calling_user_arn)
-        elif procedure_to_call == "execute_and_verify_query":
-            response = run_execute_and_verify_query(event, conn)
-        elif procedure_to_call == "revoke_custom_query":
-            response = run_revoke_custom_query(event, conn)
-        elif procedure_to_call == "get_custom_query":
-            response = run_get_custom_query(event, conn)
-        else:
-            response = "Unknown procedure selected"
+    if procedure_to_call == "insert_custom_query":
+        response = run_insert_custom_query(event, conn)
+    elif procedure_to_call == "sign_off_custom_query":
+        response = run_sign_off_custom_query(event, conn)
+    elif procedure_to_call == "execute_custom_query":
+        response = run_execute_custom_query(event, conn)
+    elif procedure_to_call == "revoke_custom_query":
+        response = run_revoke_custom_query(event, conn)
+    elif procedure_to_call == "get_custom_query":
+        response = run_get_custom_query(event, conn)
+    else:
+        response = "Unknown procedure selected"
 
-        return {
-            "statusCode": 200,
-            "body": json.dumps(response),
-        }
-    except Exception as e:
-        if conn:
-            conn.rollback()  # Roll back in case of error
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"message": f"Error executing procedure: {str(e)}"}),
-        }
-    finally:
-        if conn:
-            conn.close()  # Ensure the connection is closed
+    return {"statusCode": 200, "body": response}

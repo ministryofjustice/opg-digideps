@@ -6,3 +6,5 @@ confd -onetime -backend env
 
 php app/console doctrine:fixtures:load --no-interaction
 php app/console doctrine:fixtures:load --no-interaction --env=test
+
+./scripts/setup_custom_sql_query.sh

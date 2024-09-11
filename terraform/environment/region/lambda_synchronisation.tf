@@ -9,7 +9,6 @@ module "lamdba_synchronisation" {
   source                = "./modules/lambda"
   lambda_name           = "synchronise-to-sirius-${local.environment}"
   description           = "Function to kick off document and checklist sync from digideps to sirius"
-  working_directory     = "/var/task"
   environment_variables = local.lambda_env_vars
   image_uri             = local.images.synchronise
   ecr_arn               = data.aws_ecr_repository.images["synchronise-lambda"].arn
