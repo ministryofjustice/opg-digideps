@@ -236,21 +236,6 @@ jobs:
       timeout: "900"
     secrets: inherit
 
-  integration_tests_sequential_iqpal:
-    name: integration tests sequential iqpal
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - reset_database
-      - scale_services_up
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_name: development
-      task_name: "integration_test_v2"
-      timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@multi-feature-flag-enabled,--profile,v2-tests-browserkit"
-    secrets: inherit
-
   integration_tests_1:
     name: integration tests frontend 1
     uses: ./.github/workflows/_run-task.yml
@@ -258,7 +243,6 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
-      - integration_tests_sequential_iqpal
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
@@ -274,7 +258,6 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
-      - integration_tests_sequential_iqpal
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
@@ -290,7 +273,6 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
-      - integration_tests_sequential_iqpal
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
@@ -306,7 +288,6 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
-      - integration_tests_sequential_iqpal
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
@@ -322,7 +303,6 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
-      - integration_tests_sequential_iqpal
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
@@ -338,7 +318,6 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
-      - integration_tests_sequential_iqpal
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
