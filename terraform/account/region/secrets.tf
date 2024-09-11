@@ -8,13 +8,15 @@ module "environment_secrets" {
     "admin-api-client-secret",
     "admin-frontend-secret",
     "database-password",
+    "custom-sql-database-password",
     "front-api-client-secret",
     "front-frontend-secret",
     "front-notify-api-key",
     "synchronisation-jwt-token",
     "public-jwt-key-base64",
     "private-jwt-key-base64",
-    "smoke-test-variables"
+    "smoke-test-variables",
+    "custom-sql-db-password"
   ]
   tags = var.default_tags
 }

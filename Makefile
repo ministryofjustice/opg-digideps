@@ -96,16 +96,16 @@ api-unit-tests: reset-database-unit-tests reset-fixtures-unit-tests ##@unit-test
 	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
 
 reset-database-unit-tests: ##@database Resets the DB schema and runs migrations
-	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
+	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure.sh local
 
 reset-fixtures-unit-tests: ##@database Resets the DB schema and runs migrations
-	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_fixtures_local.sh
+	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_fixtures.sh local
 
 reset-database: ##@database Resets the DB schema and runs migrations
-	docker compose run --rm api-app sh scripts/reset_db_structure_local.sh
+	docker compose run --rm api-app sh scripts/reset_db_structure.sh local
 
 reset-fixtures: ##@database Resets the DB contents and reloads fixtures
-	docker compose run --rm api-app sh scripts/reset_db_fixtures_local.sh
+	docker compose run --rm api-app sh scripts/reset_db_fixtures.sh local
 
 db-terminal: ##@database Login to the database via the terminal
 	docker compose exec -it postgres sh -c "psql -U api"
