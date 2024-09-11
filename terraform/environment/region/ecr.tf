@@ -11,6 +11,7 @@ locals {
     dr-backup        = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.docker_tag}"
     synchronise      = "${data.aws_ecr_repository.images["synchronise-lambda"].repository_url}:${var.docker_tag}"
     file-scanner     = "${data.aws_ecr_repository.images["file-scanner"].repository_url}:${var.docker_tag}"
+    custom-sql-query = "${data.aws_ecr_repository.images["test"].repository_url}:${var.docker_tag}"
   }
 
   repositories = [
@@ -22,7 +23,8 @@ locals {
     "sync",
     "htmltopdf",
     "synchronise-lambda",
-    "file-scanner"
+    "file-scanner",
+    "test"
   ]
 }
 

@@ -263,10 +263,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - 9070:8080
+    depends_on:
+      - localstack
+      - postgres
     volumes:
       - ./lambdas/.aws-lambda-rie:/aws-lambda
       - ./lambdas/functions/custom_sql_query/app:/function/app
     environment:
-      AWS_ACCESS_KEY_ID: FAKE
-      AWS_SECRET_ACCESS_KEY: FAKE
+      ENVIRONMENT: local
+      DATABASE_HOSTNAME: postgres
+      DATABASE_NAME: api
+      DATABASE_PORT: 5432
     entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.sql_query.lambda_handler
