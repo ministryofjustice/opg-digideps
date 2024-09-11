@@ -24,6 +24,7 @@ class SelfRegisterController extends RestController
     private RestFormatter $formatter;
 
     private EntityManagerInterface $em;
+    private $serializer;
 
     public function __construct(
         LoggerInterface $logger,
@@ -153,7 +154,10 @@ class SelfRegisterController extends RestController
             $user->setIsPrimary(true);
         }
 
-        $this->formatter->setJmsSerialiserGroups(['user']);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
 
         return $user;
     }

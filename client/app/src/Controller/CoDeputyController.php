@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
 use App\Model\SelfRegisterData;
 use App\Service\Audit\AuditEvents;
@@ -92,13 +93,16 @@ class CoDeputyController extends AbstractController
                 try {
                     $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
 
-                    $updatedUser = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/'.$user->getId(), $coDeputyVerificationData, 'User', [], false);
-
                     if ($mainDeputy->isNdrEnabled()) {
-                        $updatedUser->setNdrEnabled(true);
+                        $user->setNdrEnabled(true);
                     }
 
-                    $this->restClient->put('user/'.$user->getId(), $updatedUser);
+                    $this->restClient->put('user/'.$user->getId(), $user);
+
+                    /** @var User $user */
+                    $user = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/'.$user->getId(), $coDeputyVerificationData, 'User', [], false);
+
+                    $this->deputyApi->createDeputyFromUser($user);
 
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
@@ -168,7 +172,7 @@ class CoDeputyController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $invitedUser = new EntityDir\User();
+        $invitedUser = new User();
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
         $backLink = $loggedInUser->isNdrEnabled() ?
