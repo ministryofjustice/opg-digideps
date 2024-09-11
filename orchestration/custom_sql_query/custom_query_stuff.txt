@@ -1,0 +1,13 @@
+stuff todo list
+- add a wrapper script to call the lambda:
+- write terraform for the lambda
+- add role that is assumable by team members that only has execute permission on the lambda
+- create the safe_execute_sql db role that only has access to run the 5 stored procs
+- add a role that the lambda uses that has permissions to the secret for the safe_execute_sql db role.
+
+- lock down versions in pip
+- minimise alpine image to packages we need
+- create password setup
+- create ecr image
+- move secret to account tf
+- add secret for read thingy to cycle secrets
