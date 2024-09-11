@@ -65,12 +65,12 @@ locals {
       target_type = "security_group_id"
       target      = module.mock_sirius_integration_security_group.id
     }
-    synchronise_lambda = {
-      port        = 443
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.lamdba_synchronisation.lambda_sg.id
-    }
+    #    synchronise_lambda = {
+    #      port        = 443
+    #      type        = "ingress"
+    #      protocol    = "tcp"
+    #      target_type = "security_group_id"
+    #      target      = module.lamdba_synchronisation.lambda_sg.id
+    #    }
   }
 }
