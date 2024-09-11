@@ -49,3 +49,13 @@ data "aws_secretsmanager_secret" "jwt_token_synchronisation" {
 data "aws_secretsmanager_secret" "smoke_tests_variables" {
   name = join("/", compact([var.secrets_prefix, "smoke-test-variables"]))
 }
+
+resource "aws_secretsmanager_secret" "custom_sql_db_creds" {
+  name        = join("/", compact([var.secrets_prefix, "custom-sql-db-credentials"]))
+  description = "custom-sql-query Database Password"
+  tags        = var.default_tags
+}
+
+#data "aws_secretsmanager_secret" "custom_sql_db_creds" {
+#  name = join("/", compact([var.secrets_prefix, "custom_sql_database_creds"]))
+#}
