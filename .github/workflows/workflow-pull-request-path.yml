@@ -312,7 +312,7 @@ jobs:
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_sequential_1&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_sequential_2:
@@ -328,7 +328,7 @@ jobs:
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_sequential_2&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_sequential_3:
@@ -344,7 +344,7 @@ jobs:
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_sequential_3&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   scale_services_down:
