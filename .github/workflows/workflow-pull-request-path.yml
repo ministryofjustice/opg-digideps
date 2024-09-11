@@ -359,7 +359,6 @@ jobs:
       - integration_tests_admin
       - integration_tests_1
       - integration_tests_2
-      - integration_tests_multi_flag
     with:
       replicas: 1
       acu: 4
