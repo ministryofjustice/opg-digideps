@@ -126,18 +126,12 @@ class ReportController extends AbstractController
         // due to the way
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
         $userEmail = $user->getEmail();
-        file_put_contents('php://stderr', print_r('PRIMARY-FLAG: '.$userEmail, true));
-        file_put_contents('php://stderr', print_r($user->getIsPrimary().$userEmail, true));
-        file_put_contents('php://stderr', print_r('DEPUTY_UID: '.$userEmail, true));
-        file_put_contents('php://stderr', print_r($user->getDeputyUid().$userEmail, true));
+
         $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
-        file_put_contents('php://stderr', print_r('MULTI-FLAG: '.$userEmail, true));
-        file_put_contents('php://stderr', print_r($isMultiClientFeatureEnabled.$userEmail, true));
+
         if ('1' == $isMultiClientFeatureEnabled) {
-            file_put_contents('php://stderr', print_r('----INSIDE MULTI FLAG----- '.$userEmail, true));
             // redirect back to log out page if signing in with non-primary account with primary email
             if (!$user->getIsPrimary()) {
-                file_put_contents('php://stderr', print_r('----INSIDE NOT PRIMARY ACCOUNT----- '.$userEmail, true));
                 $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
                 $this->addFlash('nonPrimaryRedirect',
@@ -151,7 +145,7 @@ class ReportController extends AbstractController
                 return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
             }
         }
-        file_put_contents('php://stderr', print_r('----OUTSIDE----- '.$userEmail, true));
+
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
         if (is_string($route)) {
