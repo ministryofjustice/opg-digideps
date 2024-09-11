@@ -15,17 +15,8 @@ variable "tags" {
 }
 
 variable "rest_api" {
+  type    = any
   default = null
-}
-
-variable "account" {
-  description = "A map that defines account variables."
-}
-
-variable "target_environment" {
-  description = "The sirius environment."
-  type        = string
-  default     = null
 }
 
 variable "memory" {
@@ -52,12 +43,6 @@ variable "description" {
   default     = null
 }
 
-variable "lambda_role_policy_document" {
-  description = "The policy JSON for the lambda IAM role. This policy JSON is merged with Logging and ECR access included in the module."
-  type        = string
-  default     = null
-}
-
 variable "environment_variables" {
   description = "A map that defines environment variables for the Lambda Function."
   type        = map(string)
@@ -79,12 +64,6 @@ variable "timeout" {
   description = "The amount of time your Lambda Function has to run in seconds."
   type        = number
   default     = 30
-}
-
-variable "working_directory" {
-  description = "The working directory for the docker image."
-  type        = string
-  default     = null
 }
 
 variable "api_version" {
