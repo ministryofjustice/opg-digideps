@@ -49,11 +49,15 @@ locals {
           },
           {
             name  = "ANONYMISE",
-            value = "no"
+            value = "yes"
           },
           {
             name  = "ANON_PATH",
             value = "anonymisation/"
+          },
+          {
+            name  = "CHUNK_SIZE",
+            value = "10000"
           }
       ])
     }
