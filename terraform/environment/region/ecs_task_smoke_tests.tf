@@ -51,11 +51,14 @@ module "smoke_tests_security_group" {
   environment = local.environment
 }
 
+# Increased memory as it uses a headless browser
 module "smoke_tests" {
   source = "./modules/task"
   name   = "smoke-tests"
 
   cluster_name          = aws_ecs_cluster.main.name
+  cpu                   = 1024
+  memory                = 2048
   container_definitions = "[${local.smoke_tests}]"
   tags                  = var.default_tags
   environment           = local.environment

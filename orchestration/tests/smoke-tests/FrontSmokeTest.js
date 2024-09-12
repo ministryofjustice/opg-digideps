@@ -10,16 +10,18 @@ import {
   checkReportSectionsVisible,
   updateUserDetails,
   logOutUser,
-  checkServiceHealthFront
+  checkServiceHealthFront,
+  openPageWithRetries
 } from './../utility/Utility.js';
 
 const runSmoke = async () => {
   const browser = await puppeteer.launch(
     {
       executablePath: '/usr/bin/chromium-browser',
-      args: ['--no-sandbox', '--headless']
+      args: ['--no-sandbox', '--headless'],
+      protocolTimeout: 30000
     });
-  const page = await browser.newPage();
+    const page = await openPageWithRetries(browser);
 
   try {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);
