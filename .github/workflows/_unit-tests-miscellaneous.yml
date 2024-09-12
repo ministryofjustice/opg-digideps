@@ -11,9 +11,9 @@ jobs:
   miscellaneous-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
-      - uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3
+      - uses: actions/setup-python@29a37be0a3d3e8bf5bc1eb19cd0502922f5b312a
         with:
           python-version: "3.11"
 
@@ -36,3 +36,8 @@ jobs:
         id: unit-tests-anonymisation
         run: go test ./...
         working-directory: orchestration/anonymisation
+
+      - name: run additional package checks on client
+        id: package-checks-client
+        run: python audit-composer-packages.py client.json
+        working-directory: scripts/package-audit
