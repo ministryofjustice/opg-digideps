@@ -1,0 +1,20 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "report" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'homepage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% block pageContent %}
+
+
+
+    <noscript>
+        {{ hidden_ga_event('Javascript Disabled') }}
+    </noscript>
+
+{% endblock %}

@@ -28,6 +28,7 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -147,6 +148,38 @@ class ReportController extends AbstractController
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
             'client' => $client,
             'coDeputies' => $coDeputies,
+        ];
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/choose-a-client", name="choose_a_client")
+     *
+     * @Security("is_granted('ROLE_LAY_DEPUTY')")     *
+     *
+     * @Template("@App/Index/choose-a-client.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function chooseAClientAction(Redirector $redirector)
+    {
+        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
+
+        // redirect if user has missing details or is on wrong page
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
+        if (is_string($route)) {
+            return $this->redirectToRoute($route);
+        }
+
+        $clients = $user->getClients();
+        if (empty($clients)) {
+            throw $this->createNotFoundException('Client not added');
+        }
+
+        return [
+            'user' => $user,
+            'clients' => $clients,
         ];
     }
 
