@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Model\SelfRegisterData;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
@@ -111,6 +112,9 @@ class SelfRegisterController extends RestController
             $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
             $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid();
 
+            // check if it's the primary account for the co-deputy
+            $existingDeputyAccounts = $this->em->getRepository('App\Entity\User')->findBy(['deputyUid' => $coDeputyUid]);
+
             $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
             if (!empty($existingDeputyCase)) {
                 throw new \RuntimeException(json_encode(sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber())), 463);
@@ -122,7 +126,39 @@ class SelfRegisterController extends RestController
             throw $e;
         }
 
-        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid];
+        $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
+
+        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
+    }
+
+    /**
+     * @Route("/updatecodeputy/{userId}", requirements={"userId":"\d+"}, methods={"PUT"})
+     */
+    public function updateCoDeputyWithVerificationData(Request $request, $userId): User
+    {
+        $user = $this->em->getRepository('App\Entity\User')->findOneBy(['id' => $userId]);
+
+        $coDeputyVerificationData = $this->formatter->deserializeBodyContent($request);
+
+        $user->setCoDeputyClientConfirmed(true);
+
+        $user->setDeputyNo($coDeputyVerificationData['coDeputyUid']);
+        $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
+
+        $user->setActive(true);
+        $user->setRegistrationDate(new \DateTime());
+        $user->setPreRegisterValidatedDate(new \DateTime());
+
+        if (!$coDeputyVerificationData['existingDeputyAccounts']) {
+            $user->setIsPrimary(true);
+        }
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
+
+        return $user;
     }
 
     public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)

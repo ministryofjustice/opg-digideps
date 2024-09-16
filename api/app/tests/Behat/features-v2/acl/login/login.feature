@@ -36,3 +36,20 @@ Feature: Users logging into the service
             | change_password_password_second | DigidepsPass12345 |
         And I press "change_password_save"
         Then the form should be valid
+
+
+    @multi-feature-flag-enabled
+    Scenario: A user tries to login to the service with their non primary account
+        Given a Lay Deputy has multiple client accounts
+        When a Lay Deputy tries to login with their "non-primary" email address
+        Then they get redirected back to the log in page
+        And a flash message should be displayed to the user with their primary email address
+        When the user tries to access their clients report overview page
+        Then they get redirected back to the log in page
+
+    @multi-feature-flag-enabled
+    Scenario: A user tries to login to the service with their primary account
+        Given a Lay Deputy has multiple client accounts
+        And a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Lay homepage
+        And when they log out they shouldn't see a flash message for non primary accounts

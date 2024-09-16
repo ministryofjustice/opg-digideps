@@ -10,6 +10,8 @@ class ParameterStoreService
 {
     public const FLAG_DOCUMENT_SYNC = 'document-sync';
 
+    public const FLAG_MULTI_ACCOUNTS = 'multi-accounts';
+
     /** @var SsmClient */
     private $ssmClient;
 
