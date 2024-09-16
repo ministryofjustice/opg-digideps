@@ -24,7 +24,6 @@ class SelfRegisterController extends RestController
     private RestFormatter $formatter;
 
     private EntityManagerInterface $em;
-    private $serializer;
 
     public function __construct(
         LoggerInterface $logger,
