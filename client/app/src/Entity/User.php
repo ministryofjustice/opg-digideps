@@ -409,7 +409,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
      * @JMS\Groups({"user"})
      *
      * @var \DateTime|null
@@ -420,10 +419,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var string
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user"})
      */
     private $registrationRoute;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     */
+    private $isPrimary;
 
     public function __construct()
     {
@@ -1451,5 +1457,20 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         $this->registrationRoute = $registrationRoute;
 
         return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function setIsPrimary(bool $primary = false): static
+    {
+        $this->isPrimary = $primary;
+
+        return $this;
+    }
+
+    public function getIsPrimary(): bool
+    {
+        return $this->isPrimary;
     }
 }
