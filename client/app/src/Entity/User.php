@@ -466,7 +466,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
      * @JMS\Groups({"user"})
      *
      * @var \DateTime|null
@@ -477,7 +476,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var string
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user"})
      */
     private $registrationRoute;
@@ -486,7 +484,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var bool
      *
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"user"})
      */
     private $isPrimary;
