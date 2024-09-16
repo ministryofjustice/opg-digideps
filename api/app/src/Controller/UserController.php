@@ -624,4 +624,26 @@ class UserController extends RestController
 
         return $requestedUser->getId();
     }
+
+    /**
+     * Endpoint for getting the primary user account for user.
+     *
+     * @Route("/get-primary-email/{deputyUid}", methods={"GET"})
+     *
+     * @throws \Exception
+     */
+    public function getPrimaryEmail(int $deputyUid)
+    {
+        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
+
+        $userEmail = [];
+
+        foreach ($users as $user) {
+            if ($user->getIsPrimary()) {
+                $userEmail = $user->getEmail();
+            }
+        }
+
+        return $userEmail;
+    }
 }

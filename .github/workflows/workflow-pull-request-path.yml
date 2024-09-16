@@ -34,7 +34,7 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@9a9194f87191a7e9055e3e9b95b8cfb13023bb08 # pin@v3
       - name: extract variables for workflow
         id: variables
         env:
@@ -236,8 +236,8 @@ jobs:
       timeout: "900"
     secrets: inherit
 
-  integration_tests_1:
-    name: integration tests frontend 1
+  integration_tests_sequential_multi_flag:
+    name: integration tests sequential multi flag
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -248,7 +248,23 @@ jobs:
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@multi-feature-flag-enabled,--profile,v2-tests-browserkit"
+    secrets: inherit
+
+  integration_tests_1:
+    name: integration tests frontend 1
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+      - integration_tests_sequential_multi_flag
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_2:
@@ -258,12 +274,13 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+      - integration_tests_sequential_multi_flag
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_admin:
@@ -273,12 +290,13 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+      - integration_tests_sequential_multi_flag
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_sequential_1:
@@ -288,12 +306,13 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+      - integration_tests_sequential_multi_flag
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_sequential_2:
@@ -303,12 +322,13 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+      - integration_tests_sequential_multi_flag
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   integration_tests_sequential_3:
@@ -318,12 +338,13 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+      - integration_tests_sequential_multi_flag
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
-      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3&&~multi-feature-flag-enabled,--profile,v2-tests-browserkit"
     secrets: inherit
 
   scale_services_down:

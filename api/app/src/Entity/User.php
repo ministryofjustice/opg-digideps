@@ -1515,8 +1515,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get preRegisterValidatedDate.
-     *
-     * @return ?\DateTime
      */
     public function getPreRegisterValidatedDate(): ?\DateTime
     {
