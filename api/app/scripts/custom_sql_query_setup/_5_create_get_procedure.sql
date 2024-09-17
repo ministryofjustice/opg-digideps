@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE get_custom_query(
+CREATE OR REPLACE PROCEDURE audit.get_custom_query(
     IN query_id INT DEFAULT NULL,
     INOUT out_id INT DEFAULT NULL,
     INOUT out_query text DEFAULT NULL,
@@ -24,7 +24,7 @@ BEGIN
              out_created_on, out_signed_off_by, out_signed_off_on,
              out_run_on, out_expected_before, out_expected_after,
              out_passed
-        FROM custom_queries
+        FROM audit.custom_queries
         WHERE id = query_id;
 
         IF NOT FOUND THEN
@@ -34,7 +34,7 @@ BEGIN
     -- If no id is provided, fetch the latest row based on created_on
     ELSE
         -- Check if there are any rows in the table
-        PERFORM 1 FROM custom_queries;
+        PERFORM 1 FROM audit.custom_queries;
 
         IF NOT FOUND THEN
             RAISE EXCEPTION 'No queries exist in the table';
@@ -48,7 +48,7 @@ BEGIN
              out_created_on, out_signed_off_by, out_signed_off_on,
              out_run_on, out_expected_before, out_expected_after,
              out_passed
-        FROM custom_queries
+        FROM audit.custom_queries
         ORDER BY created_on DESC
         LIMIT 1;
     END IF;

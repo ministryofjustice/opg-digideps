@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE insert_custom_query(
+CREATE OR REPLACE PROCEDURE audit.insert_custom_query(
     IN query TEXT,
     IN confirmation_query TEXT,
     IN created_by VARCHAR(255),
@@ -8,7 +8,7 @@ CREATE OR REPLACE PROCEDURE insert_custom_query(
 )
 LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
-    INSERT INTO custom_queries (
+    INSERT INTO audit.custom_queries (
         query,
         confirmation_query,
         created_by,
