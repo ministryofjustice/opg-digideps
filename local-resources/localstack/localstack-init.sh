@@ -56,4 +56,4 @@ b64jwt=${b64headandpay}.${b64digest}
 awslocal secretsmanager create-secret --name "local/synchronisation-jwt-token" --secret-string ${b64jwt}
 rm private.pem public.pem
 
-awslocal secretsmanager create-secret --name "local/custom-sql-db-password" --secret-string "password123"
+awslocal secretsmanager create-secret --name "local/custom-sql-db-password" --secret-string "api"
