@@ -273,8 +273,8 @@ class UserApi
     {
         return $this->restClient->get(
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
-          'array'
-          )
+            'array'
+        );
     }
 
     public function returnPrimaryEmail(int $deputyUid)
