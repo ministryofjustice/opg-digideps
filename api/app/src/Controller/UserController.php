@@ -625,4 +625,16 @@ class UserController extends RestController
 
         return $requestedUser->getId();
     }
+
+    /**
+     * Endpoint for getting the primary user account for user.
+     *
+     * @Route("/get-all-clients-by-deputy-uid/{deputyUid}", methods={"GET"})
+     *
+     * @throws \Exception
+     */
+    public function getAllClientsByDeputyUid(int $deputyUid): array
+    {
+        return $this->userRepository->getAllClientsAndReportsByDeputyUid($deputyUid);
+    }
 }

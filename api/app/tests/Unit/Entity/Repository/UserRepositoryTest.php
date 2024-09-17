@@ -367,6 +367,60 @@ class UserRepositoryTest extends WebTestCase
         $this->assertCount(2, $usersNotDeleted);
     }
 
+    public function testgetAllClientsAndReportsByDeputyUid()
+    {
+        $userHelper = new UserTestHelper();
+        $reportHelper = new ReportTestHelper();
+        $clientHelper = new ClientTestHelper();
+
+        $clientOne = $clientHelper->generateClient($this->em);
+        $activeUserOne = $userHelper->createAndPersistUser($this->em, $clientOne);
+        $reportOne = $reportHelper->generateReport($this->em, $clientOne)->setSubmitDate(new \DateTime());
+
+        $clientTwo = $clientHelper->generateClient($this->em);
+        $activeUserTwo = $userHelper->createAndPersistUser($this->em, $clientTwo);
+        $reportTwo = $reportHelper->generateReport($this->em, $clientTwo)->setSubmitDate(new \DateTime());
+
+        $clientThree = $clientHelper->generateClient($this->em, $activeUserTwo);
+        $reportThree = $reportHelper->generateReport($this->em, $clientThree)->setSubmitDate(new \DateTime());
+
+        $activeUserOne->setDeputyUid('12345678');
+        $activeUserTwo->setDeputyUid($activeUserOne->getDeputyUid());
+
+        $this->em->persist($reportOne);
+        $this->em->persist($reportTwo);
+        $this->em->persist($clientThree);
+        $this->em->persist($reportThree);
+        $this->em->persist($activeUserOne);
+        $this->em->persist($activeUserTwo);
+        $this->em->flush();
+
+        $clients = $this->sut->getAllClientsAndReportsByDeputyUid($activeUserOne->getDeputyUid());
+
+        $this->assertSame([
+            [
+                'user_id' => $activeUserOne->getId(),
+                'caseNumber' => $clientOne->getCaseNumber(),
+                'client_name' => $clientOne->getFirstname().' '.$clientOne->getLastname(),
+                'report_id' => $reportOne->getId(),
+                'report_type' => $reportOne->getType(),
+            ], [
+                'user_id' => $activeUserTwo->getId(),
+                'caseNumber' => $clientTwo->getCaseNumber(),
+                'client_name' => $clientTwo->getFirstname().' '.$clientTwo->getLastname(),
+                'report_id' => $reportTwo->getId(),
+                'report_type' => $reportTwo->getType(),
+            ],
+            [
+                'user_id' => $activeUserTwo->getId(),
+                'caseNumber' => $clientThree->getCaseNumber(),
+                'client_name' => $clientThree->getFirstname().' '.$clientThree->getLastname(),
+                'report_id' => $reportThree->getId(),
+                'report_type' => $reportThree->getType(),
+            ],
+        ], $clients);
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
