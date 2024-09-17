@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE execute_custom_query(
+CREATE OR REPLACE PROCEDURE audit.execute_custom_query(
     IN query_id INT,
     INOUT result_message TEXT
 )
@@ -19,7 +19,7 @@ BEGIN
            expected_before, expected_after
     INTO v_query, v_confirmation_query, v_created_by, v_signed_off_by, v_run_on,
          v_expected_before, v_expected_after
-    FROM custom_queries
+    FROM audit.custom_queries
     WHERE id = query_id;
 
     -- Check if the id exists
@@ -43,7 +43,7 @@ BEGIN
     END IF;
 
     -- Set run_on to now
-    UPDATE custom_queries
+    UPDATE audit.custom_queries
     SET run_on = NOW()
     WHERE id = query_id;
 
@@ -59,7 +59,7 @@ BEGIN
     END IF;
 
     -- Update the passed field to True
-    UPDATE custom_queries
+    UPDATE audit.custom_queries
     SET passed = TRUE
     WHERE id = query_id;
 
