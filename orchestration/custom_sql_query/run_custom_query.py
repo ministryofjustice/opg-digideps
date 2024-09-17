@@ -1,6 +1,9 @@
 import argparse
 import json
 import sys
+from io import BytesIO
+from botocore.response import StreamingBody
+
 import requests
 import boto3
 
@@ -54,10 +57,15 @@ class LocalLambdaClient:
         self.base_url = base_url
 
     def invoke(self, FunctionName, Payload):
-        print(FunctionName)
-        response = requests.post(self.base_url, data=json.dumps(Payload))
+        response = requests.post(self.base_url, data=Payload)
+        realistic_response = {}
+        encoded_message = json.dumps(response.json()).encode("utf-8")
+        payload_stream = BytesIO(encoded_message)
+        realistic_response["Payload"] = StreamingBody(
+            payload_stream, len(encoded_message)
+        )
 
-        return response
+        return realistic_response
 
 
 def run_insert(
@@ -162,24 +170,10 @@ def run_execute(lambda_client, function_name, query_id, calling_user):
 
 def get_current_user():
     try:
-        current_user = boto3.client("sts").get_caller_identity().get("Arn")
-        user_name = current_user.split("/")[1]
-        return user_name
+        current_user_arn = boto3.client("sts").get_caller_identity().get("Arn")
+        return current_user_arn
     except Exception as e:
         print(e)
-        sys.exit(1)
-
-
-def get_user_password():
-    sql_pw_file = "~/.sql_pw_file"
-    if sql_pw_file:
-        with open(sql_pw_file, "r") as f:
-            sql_pw_plain_text = f.read()
-            return sql_pw_plain_text
-    else:
-        print(
-            "Create file and add a strong password in plain text to it: ~/.sql_pw_file"
-        )
         sys.exit(1)
 
 
@@ -192,7 +186,6 @@ def main(
     expected_before=None,
     expected_after=None,
 ):
-    # calling_user = "mitch"
     calling_user = get_current_user()
     lambda_client = get_lambda_client(environment)
     function_name = (

@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 environment = os.getenv("ENVIRONMENT")
 secret_prefix = (
     environment
-    if environment in ["development", "preproduction", "production"]
+    if environment in ["local", "development", "preproduction", "production"]
     else "default"
 )
 secret_name = f"{secret_prefix}/custom-sql-db-password"
@@ -53,7 +53,7 @@ def run_insert_custom_query(event, conn):
             expected_after,
             None,
         ]
-        sql = "CALL insert_custom_query(%s, %s, %s, %s, %s, %s);"
+        sql = "CALL audit.insert_custom_query(%s, %s, %s, %s, %s, %s);"
         cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
         result_object = {}
@@ -74,8 +74,8 @@ def run_sign_off_custom_query(event, conn):
     calling_user = event["calling_user"]
 
     cursor = conn.cursor()
-    procedure_args = [query_id, calling_user, None]
-    sql = "CALL sign_off_custom_query(%s, %s, %s);"
+    procedure_args = [query_id, calling_user]
+    sql = "CALL audit.sign_off_custom_query(%s, %s);"
     cursor.execute(sql, procedure_args)
     result = cursor.fetchall()
     conn.commit()
@@ -87,13 +87,16 @@ def run_sign_off_custom_query(event, conn):
 
 def run_execute_custom_query(event, conn):
     query_id = event["query_id"]
+    try:
+        cursor = conn.cursor()
+        procedure_args = [query_id]
+        sql = "CALL audit.execute_custom_query(%s);"
+        cursor.execute(sql, procedure_args)
+        result = cursor.fetchall()
+    except psycopg2.DatabaseError as e:
+        result = {"Error": f"Database error: {str(e)}"}
+        print(f"Database error: {e}")
 
-    cursor = conn.cursor()
-    procedure_args = [query_id, None]
-    sql = "CALL execute_custom_query(%s, %s);"
-    cursor.execute(sql, procedure_args)
-    result = cursor.fetchall()
-    print(result)
     conn.commit()
     cursor.close()
     conn.close()
@@ -105,8 +108,8 @@ def run_revoke_custom_query(event, conn):
     query_id = event["query_id"]
     try:
         cursor = conn.cursor()
-        procedure_args = [query_id, None]
-        sql = "CALL revoke_custom_query(%s, %s);"
+        procedure_args = [query_id]
+        sql = "CALL audit.revoke_custom_query(%s);"
         cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
         conn.commit()
@@ -123,7 +126,7 @@ def run_get_custom_query(event, conn):
     try:
         cursor = conn.cursor()
         procedure_args = [query_id]
-        sql = "CALL get_custom_query(%s);"
+        sql = "CALL audit.get_custom_query(%s);"
         cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
         fields = [
@@ -138,6 +141,7 @@ def run_get_custom_query(event, conn):
             "expected_before",
             "expected_after",
             "passed",
+            "result_message",
         ]
         result_object = {}
         for row in result:
@@ -175,7 +179,7 @@ def connect_to_db(db_password):
 def lambda_handler(event, context):
     print(event)
     procedure_to_call = event["procedure"]
-
+    print(procedure_to_call)
     db_password = get_db_password(secret_name)
     conn = connect_to_db(db_password)
 
