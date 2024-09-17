@@ -18,6 +18,19 @@ const checkUrl = (actualUrl, baseUrl, expectedUrl) => {
   }
 }
 
+const openPageWithRetries = async (browser, retries = 3) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const page = await browser.newPage();
+      return page;
+    } catch (error) {
+      console.warn(`Attempt ${i + 1} failed to create page:`, error);
+      if (i === retries - 1) throw error; // Re-throw after retries exhausted
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retrying
+    }
+  }
+};
+
 const logFailureAndContinue = (errorText) => {
   const currentDate = new Date();
   const hours = String(currentDate.getHours()).padStart(2, '0'); // Ensure two digits with leading zero
@@ -275,5 +288,6 @@ export {
     checkReportSectionsVisible,
     updateUserDetails,
     updateUserDetailsConcurrent,
-    logOutUser
+    logOutUser,
+    openPageWithRetries
 };

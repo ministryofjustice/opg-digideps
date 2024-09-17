@@ -9,6 +9,8 @@ use App\Tests\Behat\BehatException;
 
 trait AuthTrait
 {
+    private string $primaryEmailAddress;
+
     /**
      * @Given :email logs in
      */
@@ -98,7 +100,6 @@ trait AuthTrait
      */
     public function aLayDeputyAttemptsToLogIntoTheAdminApp()
     {
-        
         $this->visitAdminPath('/login');
         $this->fillField('login_email', $this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
         $this->fillField('login_password', 'DigidepsPass1234');
@@ -147,12 +148,7 @@ trait AuthTrait
 
         // We didn't filter the list - the user wasn't found
         if (!$filteredUser) {
-            throw new BehatException(
-                 sprintf(
-                     'User details for email %s not found in $this->fixturesUsers',
-                     $email
-                 )
-            );
+            throw new BehatException(sprintf('User details for email %s not found in $this->fixturesUsers', $email));
         }
 
         return $filteredUser;
@@ -174,9 +170,9 @@ trait AuthTrait
     public function theUserClicksOnTheRegistrationLinkSentToTheirEmailWhichHasAnToken($arg1)
     {
         $this->clickActivationOrPasswordResetLinkInEmail(
-            false, 
-            'password reset', 
-            $this->interactingWithUserDetails->getUserEmail(), 
+            false,
+            'password reset',
+            $this->interactingWithUserDetails->getUserEmail(),
             $arg1
         );
     }
@@ -211,17 +207,17 @@ trait AuthTrait
 
     public function assertSuperAdminLoggedIn()
     {
-        $this->assertRoleIs(USER::ROLE_SUPER_ADMIN, $this->loggedInUserDetails->getUserRole());
+        $this->assertRoleIs(User::ROLE_SUPER_ADMIN, $this->loggedInUserDetails->getUserRole());
     }
 
     public function assertAdminLoggedIn()
     {
-        $this->assertRoleIs(USER::ROLE_ADMIN, $this->loggedInUserDetails->getUserRole());
+        $this->assertRoleIs(User::ROLE_ADMIN, $this->loggedInUserDetails->getUserRole());
     }
 
     public function assertAdminManagerLoggedIn()
     {
-        $this->assertRoleIs(USER::ROLE_ADMIN_MANAGER, $this->loggedInUserDetails->getUserRole());
+        $this->assertRoleIs(User::ROLE_ADMIN_MANAGER, $this->loggedInUserDetails->getUserRole());
     }
 
     private function assertRoleIs(string $expectedRole, string $actualRole)
@@ -229,13 +225,7 @@ trait AuthTrait
         $isExpectedRole = $actualRole === $expectedRole;
 
         if (!$isExpectedRole) {
-            throw new BehatException(
-                sprintf(
-                    'Logged in user role is "%s", should be %s', 
-                    $expectedRole, 
-                    $actualRole
-                )
-            );
+            throw new BehatException(sprintf('Logged in user role is "%s", should be %s', $expectedRole, $actualRole));
         }
     }
 
@@ -251,8 +241,8 @@ trait AuthTrait
         $this->em->refresh($user);
 
         $this->assertStringDoesNotEqualString(
-            $this->fixtureHelper->getLegacyPasswordHash(), 
-            $user->getPassword(), 
+            $this->fixtureHelper->getLegacyPasswordHash(),
+            $user->getPassword(),
             'Asserting current password hash does not match legacy password hash'
         );
     }
@@ -266,7 +256,7 @@ trait AuthTrait
         $this->pressButton('Reset your password');
 
         $this->assertElementContainsText(
-            'body', 
+            'body',
             'We have sent a new registration link to your email. Use the link to reset your password.'
         );
     }
@@ -324,5 +314,97 @@ trait AuthTrait
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
+    }
+
+    /**
+     * @Given /^a Lay Deputy has multiple client accounts$/
+     */
+    public function aDeputyHasMultipleClientAccounts()
+    {
+        // create primary user
+        $primaryUser = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
+        $primaryUserId = $primaryUser->getUserId();
+        $primaryDeputyUid = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId])->getDeputyUid();
+
+        // create non-primary user
+        $nonPrimaryUser = $this->createPfaHighNotStartedNonPrimaryUser(null, $this->testRunId.mt_rand(1, 10000));
+        $nonPrimaryUserId = $nonPrimaryUser->getUserId();
+
+        // set the same deputy uid for both accounts
+        $nonPrimaryUser = $this->em->getRepository(User::class)->findOneBy(['id' => $nonPrimaryUserId]);
+        $nonPrimaryUser->setDeputyUid($primaryDeputyUid);
+
+        $this->em->persist($nonPrimaryUser);
+        $this->em->flush();
+
+        $this->primaryEmailAddress = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId])->getEmail();
+    }
+
+    /**
+     * @Given /^a Lay Deputy tries to login with their "([^"]*)" email address$/
+     */
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress($arg1)
+    {
+        $userEmail = 'non-primary' === $arg1 ? $this->layDeputyNotStartedPfaNotPrimaryUser->getUserEmail() : $this->primaryEmailAddress;
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $userEmail);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
+     * @Then /^they get redirected back to the log in page$/
+     */
+    public function theyGetRedirectedBackToTheLogInPage()
+    {
+        $this->iAmOnPage('/login.*$/');
+    }
+
+    /**
+     * @Given /^a flash message should be displayed to the user with their primary email address$/
+     */
+    public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
+    {
+        $alertMessage = sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s', $this->primaryEmailAddress);
+
+        $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "govuk-notification-banner__content"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
+        }
+    }
+
+    /**
+     * @Then /^the user tries to access their clients report overview page$/
+     */
+    public function theUserTriesToAccessTheirClientsReportOverviewPage()
+    {
+        $activeReportId = $this->layDeputyNotStartedPfaNotPrimaryUser->getCurrentReportId();
+
+        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
+        $this->visitPath($reportOverviewUrl);
+    }
+
+    /**
+     * @Given /^when they log out they shouldn't see a flash message for non primary accounts$/
+     *
+     * @throws BehatException
+     */
+    public function whenTheyLogOutTheyShouldnTSeeANonPrimaryFlashMessage()
+    {
+        $this->clickLink('Sign out');
+        $this->iAmOnPage('/login.*$/');
+        $this->assertPageContainsText('You are now signed out');
+
+        $this->assertPageNotContainsText('This account is closed');
+        $this->assertElementNotOnPage('govuk-notification-banner__content');
     }
 }
