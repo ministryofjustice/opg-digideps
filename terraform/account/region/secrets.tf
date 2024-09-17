@@ -14,7 +14,8 @@ module "environment_secrets" {
     "synchronisation-jwt-token",
     "public-jwt-key-base64",
     "private-jwt-key-base64",
-    "smoke-test-variables"
+    "smoke-test-variables",
+    "custom-sql-db-password"
   ]
   tags = var.default_tags
 }
