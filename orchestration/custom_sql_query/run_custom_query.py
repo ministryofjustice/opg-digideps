@@ -1,6 +1,9 @@
 import argparse
 import json
 import sys
+from io import BytesIO
+from botocore.response import StreamingBody
+
 import requests
 import boto3
 
@@ -56,8 +59,15 @@ class LocalLambdaClient:
     def invoke(self, FunctionName, Payload):
         print(FunctionName)
         response = requests.post(self.base_url, data=json.dumps(Payload))
+        print(response.json())
+        realistic_response = {}
+        encoded_message = json.dumps(response.json()).encode("utf-8")
+        payload_stream = BytesIO(encoded_message)
+        realistic_response["Payload"] = StreamingBody(
+            payload_stream, len(encoded_message)
+        )
 
-        return response
+        return realistic_response
 
 
 def run_insert(

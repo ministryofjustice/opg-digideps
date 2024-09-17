@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE sign_off_custom_query(
+CREATE OR REPLACE PROCEDURE audit.sign_off_custom_query(
     IN query_id INT,
     IN signed_off_by_user VARCHAR(255),
     INOUT result_message TEXT
@@ -9,7 +9,7 @@ DECLARE
 BEGIN
     -- Retrieve the created_by user for the given query ID
     SELECT created_by INTO created_by_user
-    FROM custom_queries
+    FROM audit.custom_queries
     WHERE id = query_id;
 
     -- Check if the query exists
@@ -25,7 +25,7 @@ BEGIN
     END IF;
 
     -- Update the signed_off_by and signed_off_on fields
-    UPDATE custom_queries
+    UPDATE audit.custom_queries
     SET signed_off_by = signed_off_by_user,
         signed_off_on = NOW()
     WHERE id = query_id;

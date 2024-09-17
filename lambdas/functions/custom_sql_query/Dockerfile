@@ -1,20 +1,19 @@
 # Define function directory
 ARG FUNCTION_DIR="/function"
 FROM python:3.12-alpine3.18 AS python-alpine
-RUN apk add libstdc++
-RUN apk add zstd-libs
 RUN apk update && apk add --no-cache \
+    libstdc++ \
+    zstd-libs \
     postgresql-dev \
-    gcc \
     python3-dev \
     musl-dev
 RUN apk upgrade
-RUN pip install setuptools --upgrade
 
 # Build image
 FROM python-alpine as build-image
 # Install aws-lambda-cpp build dependencies
 RUN apk add  --no-cache \
+    gcc \
     build-base \
     libtool \
     autoconf \
