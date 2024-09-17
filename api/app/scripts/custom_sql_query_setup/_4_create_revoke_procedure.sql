@@ -1,6 +1,6 @@
-CREATE OR REPLACE PROCEDURE revoke_custom_query(
+CREATE OR REPLACE PROCEDURE audit.revoke_custom_query(
     IN query_id INT,
-    INOUT result_message TEXT
+    INOUT result_message TEXT DEFAULT NULL
 )
 LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE
@@ -8,7 +8,7 @@ DECLARE
 BEGIN
     -- Retrieve the run_on timestamp for the given query ID
     SELECT run_on INTO query_run_on
-    FROM custom_queries
+    FROM audit.custom_queries
     WHERE id = query_id;
 
     -- Check if the query exists
@@ -24,7 +24,7 @@ BEGIN
     END IF;
 
     -- Delete the query
-    DELETE FROM custom_queries
+    DELETE FROM audit.custom_queries
     WHERE id = query_id;
 
     -- Check if the delete affected any rows (just for verification)

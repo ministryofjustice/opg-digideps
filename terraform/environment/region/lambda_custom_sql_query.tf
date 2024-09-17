@@ -8,6 +8,10 @@ locals {
   }
 }
 
+data "aws_iam_role" "custom_sql_user" {
+  name = "custom-sql-role-${var.account.name}"
+}
+
 module "lamdba_custom_sql_query" {
   source                = "./modules/lambda"
   lambda_name           = "custom-sql-query-${local.environment}"
@@ -48,7 +52,7 @@ resource "aws_lambda_permission" "allow_invoke_from_users" {
   statement_id  = "AllowExecutionFromCLI"
   action        = "lambda:InvokeFunction"
   function_name = module.lamdba_custom_sql_query.lambda.function_name
-  principal     = "arn:aws:iam::${var.account.account_id}:role/operator"
+  principal     = data.aws_iam_role.custom_sql_user.arn
 }
 
 resource "aws_iam_role_policy" "custom_sql_query_secretsmanager" {

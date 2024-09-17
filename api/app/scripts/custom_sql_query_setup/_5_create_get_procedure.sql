@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE get_custom_query(
+CREATE OR REPLACE PROCEDURE audit.get_custom_query(
     IN query_id INT DEFAULT NULL,
     INOUT out_id INT DEFAULT NULL,
     INOUT out_query text DEFAULT NULL,
@@ -10,7 +10,8 @@ CREATE OR REPLACE PROCEDURE get_custom_query(
     INOUT out_run_on TIMESTAMP DEFAULT NULL,
     INOUT out_expected_before INT DEFAULT NULL,
     INOUT out_expected_after INT DEFAULT NULL,
-    INOUT out_passed BOOLEAN DEFAULT false
+    INOUT out_passed BOOLEAN DEFAULT false,
+    INOUT result_message TEXT DEFAULT NULL
 )
 LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
@@ -24,20 +25,22 @@ BEGIN
              out_created_on, out_signed_off_by, out_signed_off_on,
              out_run_on, out_expected_before, out_expected_after,
              out_passed
-        FROM custom_queries
+        FROM audit.custom_queries
         WHERE id = query_id;
 
         IF NOT FOUND THEN
-            RAISE EXCEPTION 'Query with id %s does not exist', query_id;
+            result_message := FORMAT('Error: Query with id %s does not exist', query_id);
+            RETURN;
         END IF;
 
     -- If no id is provided, fetch the latest row based on created_on
     ELSE
         -- Check if there are any rows in the table
-        PERFORM 1 FROM custom_queries;
+        PERFORM 1 FROM audit.custom_queries;
 
         IF NOT FOUND THEN
-            RAISE EXCEPTION 'No queries exist in the table';
+            result_message := 'Error: No queries exist in the table';
+            RETURN;
         END IF;
 
         -- Return the latest row based on created_on
@@ -48,9 +51,13 @@ BEGIN
              out_created_on, out_signed_off_by, out_signed_off_on,
              out_run_on, out_expected_before, out_expected_after,
              out_passed
-        FROM custom_queries
+        FROM audit.custom_queries
         ORDER BY created_on DESC
         LIMIT 1;
     END IF;
+    result_message := FORMAT('Success: Performed get on Query with id %s', query_id);
+EXCEPTION
+    WHEN OTHERS THEN
+        result_message := FORMAT('Error: %s', SQLERRM);
 END;
 $$;

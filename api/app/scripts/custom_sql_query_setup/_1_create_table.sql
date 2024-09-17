@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS custom_queries (
+CREATE TABLE IF NOT EXISTS audit.custom_queries (
     id SERIAL PRIMARY KEY,
     query TEXT NOT NULL,
     confirmation_query TEXT,
