@@ -11,6 +11,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}
+
     {% if app.session.get('login-context') == 'password-create' %}
         {{ (page ~ '.pageTitleNewPassword') | trans }}
     {% elseif app.session.get('login-context') == 'password-update' %}

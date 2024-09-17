@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Service;
 
 use App\Repository\PreRegistrationRepository;
+use App\Repository\UserRepository;
 use App\Service\PreRegistrationVerificationService;
 use Mockery as m;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -113,12 +114,13 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('findByCaseNumber')->with('55555555')->andReturn([$singleLayDeputy])
             ->shouldReceive('findByCaseNumber')->with('12345678')->andReturn([])
             ->shouldReceive('findByCaseNumber')->with('WRONG678')->andReturn([])
-
             ->getMock();
+
+        $mockUserRepo = m::mock(UserRepository::class);
 
         $serializer = self::prophesize(SerializerInterface::class);
 
-        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer->reveal(), $mockPreRegRepo);
+        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer->reveal(), $mockPreRegRepo, $mockUserRepo);
     }
 
     public function tearDown(): void
@@ -141,7 +143,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateCaseInsensitive()
     {
-        $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'csurn','DFIRS', 'DSURN', 'dPc123'));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'csurn', 'DFIRS', 'DSURN', 'dPc123'));
     }
 
     /**
@@ -149,12 +151,12 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateNonMLDWithPostcode()
     {
-        $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn','Dfirs', 'DSurn', 'DPC123'));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'Dfirs', 'DSurn', 'DPC123'));
 
         // test each fail individually
         $incorrectCaseNumberMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyFirstname":"%s","deputyLastname":"%s","deputyPostcode":"%s"}}';
         try {
-            $this->preRegistrationVerificationService->validate('WRONG678', 'CSurn', 'DFirs','DSurn', 'DPC123');
+            $this->preRegistrationVerificationService->validate('WRONG678', 'CSurn', 'DFirs', 'DSurn', 'DPC123');
         } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($incorrectCaseNumberMessage, 'WRONG678', 'CSurn', 'DFirs', 'DSurn', 'DPC123'),
@@ -167,7 +169,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $incorrectClientLastnameMessage = '"matching_errors":{"client_lastname":true,"deputy_firstname":false,"deputy_lastname":false,"deputy_postcode":false}';
         try {
-            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'DFirs','DSurn', 'DPC123'));
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'DFirs', 'DSurn', 'DPC123'));
         } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'WRONG', 'DFirs', 'DSurn', 'DPC123'),
@@ -179,7 +181,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $incorrectDeputyFirstnameMessage = '"matching_errors":{"client_lastname":false,"deputy_firstname":true,"deputy_lastname":false,"deputy_postcode":false}';
         try {
-            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn','WRONG', 'DSurn', 'DPC123'));
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DSurn', 'DPC123'));
         } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'WRONG', 'DSurn', 'DPC123'),
@@ -191,7 +193,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $incorrectDeputyLastnameMessage = '"matching_errors":{"client_lastname":false,"deputy_firstname":false,"deputy_lastname":true,"deputy_postcode":false}';
         try {
-            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn','DFirs', 'WRONG', 'DPC123'));
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'WRONG', 'DPC123'));
         } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'DFirs', 'WRONG', 'DPC123'),
@@ -203,7 +205,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $incorrectPostCodeMessage = '"matching_errors":{"client_lastname":false,"deputy_firstname":false,"deputy_lastname":false,"deputy_postcode":true}';
         try {
-            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn','DFirs', 'DSurn', 'WRONG'));
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'DSurn', 'WRONG'));
         } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'DFirs', 'DSurn', 'WRONG'),
@@ -215,7 +217,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $incorrectNamesAndPostcode = '"matching_errors":{"client_lastname":true,"deputy_firstname":true,"deputy_lastname":true,"deputy_postcode":true}';
         try {
-            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'WRONG','WRONG', 'WRONG', 'WRONG'));
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'WRONG', 'WRONG', 'WRONG'));
         } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'WRONG', 'WRONG', 'WRONG', 'WRONG'),
@@ -231,7 +233,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateNonMLDWithNoPostcode()
     {
-        $this->assertTrue($this->preRegistrationVerificationService->validate('22222222', 'CSurn', 'DFirs','DSurn', ''));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('22222222', 'CSurn', 'DFirs', 'DSurn', ''));
     }
 
     /**
@@ -239,7 +241,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateMLDUnique()
     {
-        $this->assertTrue($this->preRegistrationVerificationService->validate('33333333', 'CSurn','DFirs', 'MLDUnique', 'MLD1AA'));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs', 'MLDUnique', 'MLD1AA'));
     }
 
     /**
@@ -247,7 +249,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateSameAddressMLDSiblings()
     {
-        $this->assertTrue($this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs','Sibling', 'MLD1BB'));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs', 'Sibling', 'MLD1BB'));
     }
 
     /**
@@ -257,7 +259,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
     {
         // if all MLD postcodes are in preRegistration, the postcode check is run
         try {
-            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs','DSurn', 'DOEsnT MatteR'));
+            $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'DSurn', 'DOEsnT MatteR'));
         } catch (\RuntimeException $e) {
             $expectedErrorMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyFirstname":"%s","deputyLastname":"%s","deputyPostcode":"%s"},"case_number_matches":null,"matching_errors":{"client_lastname":false,"deputy_firstname":false,"deputy_lastname":false,"deputy_postcode":true}}';
             $this->assertStringContainsString(
@@ -268,7 +270,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
         }
 
         // but if one MLD in preRegistration, the postcode check is skipped
-        $this->assertTrue($this->preRegistrationVerificationService->validate('44444444', 'CSurn', 'DFirs','Sibling', 'DOEsnT MatteR'));
+        $this->assertTrue($this->preRegistrationVerificationService->validate('44444444', 'CSurn', 'DFirs', 'Sibling', 'DOEsnT MatteR'));
     }
 
     /**
@@ -276,9 +278,9 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function getLastMatchedDeputyNumbers()
     {
-        $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs','DSurn', 'DPC123');
+        $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'DSurn', 'DPC123');
         $this->assertEquals(['Dep1'], $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers());
-        $this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs','Sibling', 'MLD1BB');
+        $this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs', 'Sibling', 'MLD1BB');
         $this->assertEquals(['MLDB', 'MLDC'], $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers());
     }
 }
