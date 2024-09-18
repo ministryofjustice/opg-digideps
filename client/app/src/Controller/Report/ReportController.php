@@ -192,7 +192,7 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $clients = $this->userApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
 
         if (empty($clients)) {
             throw $this->createNotFoundException('Client not added');

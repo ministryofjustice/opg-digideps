@@ -32,7 +32,6 @@ class UserApi
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
     protected const CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
-    protected const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'user/get-all-clients-by-deputy-uid/%s';
 
     protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
 
@@ -267,14 +266,6 @@ class UserApi
         );
 
         $this->eventDispatcher->dispatch($adminManagerCreatedEvent, AdminManagerCreatedEvent::NAME);
-    }
-
-    public function getAllClientsByDeputyUid(int $deputyUid)
-    {
-        return $this->restClient->get(
-            sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
-            'array'
-        );
     }
 
     public function returnPrimaryEmail(int $deputyUid)

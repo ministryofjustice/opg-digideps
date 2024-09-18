@@ -408,14 +408,4 @@ SQL;
             'count' => $count,
         ];
     }
-
-    public function getAllClientsAndReportsByDeputyUid(int $deputyUid): array
-    {
-        $query = $this
-            ->getEntityManager()
-            ->createQuery("SELECT u.id user_id ,c.caseNumber,TRIM(CONCAT(c.firstname,' ',c.lastname)) client_name, r.id report_id, r.type report_type FROM App\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r where u.deputyUid = ?1 ORDER BY c.id")
-            ->setParameter(1, $deputyUid);
-
-        return $query->getArrayResult();
-    }
 }

@@ -46,6 +46,7 @@ class UserController extends RestController
 
     /**
      * @Route("", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")
      */
     public function add(Request $request)
@@ -360,6 +361,7 @@ class UserController extends RestController
      * Returns empty if user doesn't exist.
      *
      * @Route("/get-team-names-by-email/{email}", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")
      */
     public function getUserTeamNames(Request $request, $email)
@@ -375,6 +377,7 @@ class UserController extends RestController
      * Delete user with clients.
      *
      * @Route("/{id}", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @param int $id
@@ -412,6 +415,7 @@ class UserController extends RestController
 
     /**
      * @Route("/get-all", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
     public function getAll(Request $request)
@@ -521,6 +525,7 @@ class UserController extends RestController
 
     /**
      * @Route("/{id}/team", requirements={"id":"\d+"}, methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ORG')")
      */
     public function getTeamByUserId(Request $request, $id)
@@ -623,18 +628,6 @@ class UserController extends RestController
         $this->em->flush();
 
         return $requestedUser->getId();
-    }
-
-    /**
-     * Endpoint for getting the clients for a deputy uid.
-     *
-     * @Route("/get-all-clients-by-deputy-uid/{deputyUid}", methods={"GET"})
-     *
-     * @throws \Exception
-     */
-    public function getAllClientsByDeputyUid(int $deputyUid): array
-    {
-        return $this->userRepository->getAllClientsAndReportsByDeputyUid($deputyUid);
     }
 
     /**
