@@ -143,7 +143,7 @@ class Redirector
             return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
-        return $this->router->generate('lay_home');
+        return $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]);
     }
 
     /**
