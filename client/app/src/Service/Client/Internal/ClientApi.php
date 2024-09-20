@@ -29,7 +29,7 @@ class ClientApi
 
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
 
-    protected const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'user/get-all-clients-by-deputy-uid/%s';
+    private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
     /** @var RestClient */
     private $restClient;
@@ -217,13 +217,23 @@ class ClientApi
     }
 
     /**
-     * @return Client
+     * @return Client[]
      */
     public function getAllClientsByDeputyUid(int $deputyUid)
     {
         return $this->restClient->get(
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
-            'Client'
+            'Client[]',
+            [
+                'client',
+                'client-name',
+                'client-case-number',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+            ]
         );
     }
 }
