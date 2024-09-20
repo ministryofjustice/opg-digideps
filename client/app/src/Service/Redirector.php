@@ -94,8 +94,8 @@ class Redirector
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
-        if (in_array($currentRoute, ['lay_home', 'ndr_index', 'choose_a_client'])) {
-            $route = $user->isNdrEnabled() ? 'ndr_index' : $currentRoute;
+        if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
+            $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
         // none of these corrections apply to admin
