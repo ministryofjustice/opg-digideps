@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Client;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -159,76 +160,76 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @return User[]
+     * @return int[]
+     * @throws Exception
      */
-    public function findInactive($select = null)
+    public function findInactive($role = User::ROLE_LAY_DEPUTY): array
     {
-        $thirtyDaysAgo = new \DateTime();
-        $thirtyDaysAgo->sub(new \DateInterval('P30D'));
+        $conn = $this->getEntityManager()->getConnection();
 
-        $reportSubquery = $this->_em->createQueryBuilder()
-            ->select('1')
-            ->from('App\Entity\Report\Report', 'r')
-            ->andWhere('r.client = c');
+        $sql = <<<sql
+        SELECT u.id
+        FROM dd_user u
+        LEFT JOIN deputy_case dc ON dc.user_id = u.id
+        LEFT JOIN client c ON c.id = dc.client_id AND (c.deleted_at IS NULL)
+        WHERE (
+            -- Abandoned Registration process, password set
+            u.registration_token IS NOT NULL 
+            AND u.token_date < date_trunc('month', CURRENT_DATE - INTERVAL '60' day)
+            AND u.last_logged_in < date_trunc('month', CURRENT_DATE - INTERVAL '60' day)
+            AND u.registration_date IS NULL
+            -- Abandoned Registration process, no password set
+            OR u.registration_token IS NOT NULL 
+            AND u.token_date < date_trunc('month', CURRENT_DATE - INTERVAL '30' day)
+            AND u.last_logged_in IS NULL
+            -- Standard no activity within N days
+            OR u.registration_date < date_trunc('month', CURRENT_DATE - INTERVAL '30' day)
+        )
+        AND u.role_name = :role
+        AND NOT EXISTS (
+            SELECT TRUE FROM user_research_response urr WHERE urr.user_id = u.id
+        ) AND NOT EXISTS (
+            SELECT TRUE FROM report r WHERE r.client_id = c.id
+        ) AND NOT EXISTS (
+            SELECT TRUE FROM odr n WHERE n.client_id = c.id
+        ) AND NOT EXISTS (
+            SELECT TRUE FROM dd_user du WHERE du.created_by_id = u.id
+        )
+        sql;
 
-        $ndrSubquery = $this->_em->createQueryBuilder()
-            ->select('1')
-            ->from('App\Entity\Ndr\Ndr', 'n')
-            ->andWhere('n.client = c');
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['role' => $role]);
 
-        $feedbackSubquery = $this->_em->createQueryBuilder()
-            ->select('1')
-            ->from('App\Entity\UserResearch\UserResearchResponse', 'urr')
-            ->andWhere('urr.user = u');
-
-        $createdBySubquery = $this->_em->createQueryBuilder()
-            ->select('1')
-            ->from('App\Entity\User', 'us')
-            ->andWhere('us.createdBy = u');
-
-        $qb = $this->createQueryBuilder('u');
-        $qb
-            ->select($select)
-            ->leftJoin('u.clients', 'c')
-            ->andWhere('u.registrationDate < :reg_cutoff')
-            ->andWhere('u.roleName = :lay_deputy_role')
-            ->andWhere($qb->expr()->not($qb->expr()->exists($feedbackSubquery->getDQL())))
-            ->andWhere($qb->expr()->not($qb->expr()->exists($reportSubquery->getDQL())))
-            ->andWhere($qb->expr()->not($qb->expr()->exists($ndrSubquery->getDQL())))
-            ->andWhere($qb->expr()->not($qb->expr()->exists($createdBySubquery->getDQL())))
-            ->setParameter('reg_cutoff', $thirtyDaysAgo)
-            ->setParameter('lay_deputy_role', User::ROLE_LAY_DEPUTY);
-
-        return $qb->getQuery()->getResult();
+        return $result->fetchFirstColumn();
     }
 
     /**
      * @return array
      */
-    public function findActiveLaysInLastYear()
+    public function findActiveLaysInLastYear(): array
     {
         $oneYearAgo = (new \DateTime())->modify('-1 Year')->format('Y-m-d');
 
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = <<<SQL
-SELECT u.id,
-u.firstname as user_first_name,
-u.lastname as user_last_name,
-u.email as user_email,
-u.phone_main as user_phone_number,
-u.registration_date,
-u.last_logged_in,
-c.firstname as client_first_name,
-c.lastname as client_last_name,
-COUNT(r.id) as submitted_reports
-FROM dd_user as u
-LEFT JOIN deputy_case as dc on u.id = dc.user_id
-LEFT JOIN client as c on dc.client_id = c.id
-LEFT JOIN report as r on c.id = r.client_id
-WHERE r.submit_date is not null AND u.role_name = 'ROLE_LAY_DEPUTY' AND u.last_logged_in >= :oneYearAgo
-GROUP BY u.id, u.firstname, u.lastname, u.email, u.registration_date, u.last_logged_in, c.firstname, c.lastname
-SQL;
+        SELECT u.id,
+        u.firstname as user_first_name,
+        u.lastname as user_last_name,
+        u.email as user_email,
+        u.phone_main as user_phone_number,
+        u.registration_date,
+        u.last_logged_in,
+        c.firstname as client_first_name,
+        c.lastname as client_last_name,
+        COUNT(r.id) as submitted_reports
+        FROM dd_user as u
+        LEFT JOIN deputy_case as dc on u.id = dc.user_id
+        LEFT JOIN client as c on dc.client_id = c.id
+        LEFT JOIN report as r on c.id = r.client_id
+        WHERE r.submit_date is not null AND u.role_name = 'ROLE_LAY_DEPUTY' AND u.last_logged_in >= :oneYearAgo
+        GROUP BY u.id, u.firstname, u.lastname, u.email, u.registration_date, u.last_logged_in, c.firstname, c.lastname
+        SQL;
 
         $stmt = $conn->prepare($sql);
         $result = $stmt->executeQuery(['oneYearAgo' => $oneYearAgo]);

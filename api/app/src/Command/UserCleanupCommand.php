@@ -44,8 +44,7 @@ class UserCleanupCommand extends Command
 
     private function deleteInactivateUsers(): int
     {
-        $inactiveUsers = $this->userRepository->findInactive('u.id');
-        $inactiveUserIds = array_column($inactiveUsers, 'id');
+        $inactiveUserIds = $this->userRepository->findInactive();
 
         $deleteQb = $this->em->createQueryBuilder()
             ->delete()
