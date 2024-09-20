@@ -63,6 +63,7 @@ class RedirectorTest extends TestCase
         $this->tokenStorage->shouldReceive('getToken->getUser')->andReturn($this->user);
 
         $this->authChecker = m::mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface');
+        $this->clientApi = m::mock(ClientApi::class);
         $this->parameterStoreService = m::mock(ParameterStoreService::class);
 
         $this->object = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi, $this->parameterStoreService);
