@@ -111,16 +111,4 @@ class ClientController extends RestController
 
         return $this->buildSuccessResponse($transformedDto);
     }
-
-    /**
-     * Endpoint for getting the clients for a deputy uid.
-     *
-     * @Route("/get-all-clients-by-deputy-uid/{deputyUid}", methods={"GET"})
-     *
-     * @throws \Exception
-     */
-    public function getAllClientsByDeputyUid(int $deputyUid): Client
-    {
-        return $this->repository->getAllClientsAndReportsByDeputyUid($deputyUid);
-    }
 }
