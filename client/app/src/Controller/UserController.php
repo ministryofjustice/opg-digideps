@@ -226,6 +226,8 @@ class UserController extends AbstractController
             $request->getSession()->remove('login-context');
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
+            file_put_contents('php://stderr', print_r('**** Inside detailsAction ****', true));
+
             return $this->redirect($redirector->getHomepageRedirect());
         }
 
