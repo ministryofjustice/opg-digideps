@@ -1,3 +1,3 @@
-Case,ClientSurname,DeputyUid,DeputyFirstname,DeputySurname,DeputyAddress1,DeputyAddress2,DeputyAddress3,DeputyAddress4,DeputyAddress5,DeputyPostcode,ReportType,MadeDate,OrderType,CoDeputy,Hybrid
-1717171T,LOUIE,35672419,BRIAN,MCDUCK,Shieldaig,Northamptonshire,,,,B73,OPG102,2011-04-16,pfa,no,SINGLE
-1717171T,LOUIE,85462817,LIAM,MCQUACK,Fieldag,Southamptonshire,,,,Y73,OPG102,2011-04-16,pfa,no,SINGLE
+Case,ClientFirstname,ClientSurname,ClientAddress1,ClientAddress2,ClientAddress3,ClientAddress4,ClientAddress5,ClientPostcode,DeputyUid,DeputyFirstname,DeputySurname,DeputyAddress1,DeputyAddress2,DeputyAddress3,DeputyAddress4,DeputyAddress5,DeputyPostcode,ReportType,MadeDate,OrderType,CoDeputy,Hybrid
+1717171T,,LOUIE,,,,,,,35672419,BRIAN,MCDUCK,Shieldaig,Northamptonshire,,,,B73,OPG102,2011-04-16,pfa,no,SINGLE
+1717171T,,LOUIE,,,,,,,85462817,LIAM,MCQUACK,Fieldag,Southamptonshire,,,,Y73,OPG102,2011-04-16,pfa,no,SINGLE
