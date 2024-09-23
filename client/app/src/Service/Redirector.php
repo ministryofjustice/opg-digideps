@@ -246,10 +246,10 @@ class Redirector
         }
 
         if ('1' == $isMultiClientFeatureEnabled) {
-            if (1 == count($clients)) {
-                return $this->getLayDeputyHomepage($user, false);
-            } else {
+            if (1 < count($clients)) {
                 return $this->getChooseAClientHomepage($user, false);
+            } else {
+                return $this->getLayDeputyHomepage($user, false);
             }
         } else {
             return $this->getLayDeputyHomepage($user, false);
