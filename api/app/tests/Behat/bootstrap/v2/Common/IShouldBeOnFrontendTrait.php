@@ -840,4 +840,12 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));
     }
+
+    /**
+     * @Then I/they should be on the Choose a Client homepage
+     */
+    public function iAmOnChooseAClientMainPage(): bool
+    {
+        return $this->iAmOnPage('/choose-a-client$/');
+    }
 }
