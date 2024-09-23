@@ -54,13 +54,13 @@ SElECT count(*) FROM (
 
 -- IDENTIFY ANY DUPLICATE DEPUTY ACCOUNTS WHERE ALL ACCOUNTS ARE NOT LINKED TO AN ACTIVE CLIENT
 
-CREATE table ddls330.allDuplicateAccountsHaveInactiveClients (
+CREATE table ddls330.allDuplicateAccountsHaveInactiveClients.mcd (
   deputy_uid bigint,
   hasActiveClients bool
 );
 
 -- Identify all duplicate deputy accounts and group by deputy_uid and 'has active clients' result
-INSERT INTO ddls330.allDuplicateAccountsHaveInactiveClients (deputy_uid, hasActiveClients)
+INSERT INTO ddls330.allDuplicateAccountsHaveInactiveClients.mcd (deputy_uid, hasActiveClients)
 SELECT dd.deputy_uid, c.deleted_at IS NULL
 FROM dd_user dd
      INNER JOIN deputy_case dc on dd.id = dc.user_id
@@ -76,10 +76,10 @@ GROUP by dd.deputy_uid, c.deleted_at IS NULL
 ORDER by dd.deputy_uid;
 
 -- Identify deputy_uids that appear once and do not have any active clients
-SELECT * FROM ddls330.allDuplicateAccountsHaveInactiveClients
+SELECT * FROM ddls330.allDuplicateAccountsHaveInactiveClients.mcd
 WHERE hasActiveClients = FALSE
   AND deputy_uid IN (
-    SELECT deputy_uid FROM ddls330.allDuplicateAccountsHaveInactiveClients
+    SELECT deputy_uid FROM ddls330.allDuplicateAccountsHaveInactiveClients.mcd
     GROUP by deputy_uid
     HAVING COUNT(*) = 1
 );
