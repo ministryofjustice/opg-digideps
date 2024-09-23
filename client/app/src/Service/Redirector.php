@@ -240,8 +240,10 @@ class Redirector
     {
         $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
         $user = $this->getLoggedUser();
-        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
-        file_put_contents('php://stderr', print_r('INSIDE getCorrectLayHomepage : '.count($clients), true));
+        if (!is_null($user->getDeputyUid())) {
+            $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+            file_put_contents('php://stderr', print_r('INSIDE getCorrectLayHomepage : '.count($clients), true));
+        }
 
         if ('1' == $isMultiClientFeatureEnabled) {
             if (1 == count($clients)) {
