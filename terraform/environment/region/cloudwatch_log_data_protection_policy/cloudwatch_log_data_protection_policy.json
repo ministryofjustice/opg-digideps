@@ -5,7 +5,8 @@
     {
       "Sid": "audit-policy",
       "DataIdentifier": [
-        "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
+        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+        "arn:aws:dataprotection::aws:data-identifier/Name"
       ],
       "Operation": {
         "Audit": {
@@ -16,7 +17,8 @@
     {
       "Sid": "redact-policy",
       "DataIdentifier": [
-        "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
+        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+        "arn:aws:dataprotection::aws:data-identifier/Name"
       ],
       "Operation": {
         "Deidentify": {
