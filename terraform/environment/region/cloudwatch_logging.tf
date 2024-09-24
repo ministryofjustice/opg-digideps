@@ -6,6 +6,17 @@ resource "aws_cloudwatch_log_group" "opg_digi_deps" {
   tags              = var.default_tags
 }
 
+resource "aws_cloudwatch_log_data_protection_policy" "opensearch_pipeline" {
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+  policy_document = jsonencode(merge(
+    jsondecode(file("${path.root}/cloudwatch_log_data_protection_policy/cloudwatch_log_data_protection_policy.json")),
+    {
+      Name = "data-protection-${local.environment}-opensearch-ingestion"
+    }
+  ))
+  provider = aws.eu_west_1
+}
+
 ##### Audit Log Group #####
 resource "aws_cloudwatch_log_group" "audit" {
   name       = "audit-${local.environment}"
