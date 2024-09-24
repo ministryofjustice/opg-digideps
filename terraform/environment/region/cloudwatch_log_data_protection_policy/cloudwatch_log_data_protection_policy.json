@@ -1,0 +1,52 @@
+{
+  "Name": "",
+  "Version": "2021-06-01",
+  "Configuration": {
+    "CustomDataIdentifier": [
+      {
+        "Name": "ClientLastname",
+        "Regex": "clientLastname.{20}"
+      },
+      {
+        "Name": "DeputyFirstname",
+        "Regex": "deputyFirstname.{20}"
+      },
+      {
+        "Name": "DeputyPostcode",
+        "Regex": "deputyPostcode.{20}"
+      }
+    ]
+  },
+  "Statement": [
+    {
+      "Sid": "audit-policy",
+      "DataIdentifier": [
+        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+        "arn:aws:dataprotection::aws:data-identifier/Name",
+        "ClientLastname",
+        "DeputyFirstname",
+        "DeputyPostcode"
+      ],
+      "Operation": {
+        "Audit": {
+          "FindingsDestination": {}
+        }
+      }
+    },
+    {
+      "Sid": "redact-policy",
+      "DataIdentifier": [
+        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+        "arn:aws:dataprotection::aws:data-identifier/Name",
+        "ClientLastname",
+        "DeputyFirstname",
+        "DeputyPostcode"
+      ],
+      "Operation": {
+        "Deidentify": {
+          "MaskConfig": {}
+        }
+      }
+    }
+  ]
+}
