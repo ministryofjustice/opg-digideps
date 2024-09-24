@@ -1,0 +1,40 @@
+{
+  "Name": "",
+  "Version": "2021-06-01",
+  "Configuration": {
+    "CustomDataIdentifier": [
+      {
+        "Name": "SearchTerms",
+        "Regex": "search_terms.{500}"
+      }
+    ]
+  },
+  "Statement": [
+    {
+      "Sid": "audit-policy",
+      "DataIdentifier": [
+        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+        "arn:aws:dataprotection::aws:data-identifier/Name",
+        "SearchTerms"
+      ],
+      "Operation": {
+        "Audit": {
+          "FindingsDestination": {}
+        }
+      }
+    },
+    {
+      "Sid": "redact-policy",
+      "DataIdentifier": [
+        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+        "arn:aws:dataprotection::aws:data-identifier/Name",
+        "SearchTerms"
+      ],
+      "Operation": {
+        "Deidentify": {
+          "MaskConfig": {}
+        }
+      }
+    }
+  ]
+}
