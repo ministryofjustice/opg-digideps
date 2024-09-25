@@ -32,30 +32,7 @@ jobs:
           - svc_name: "client-webserver"
             sub_folder: "."
             docker_file: "client/docker/web/Dockerfile"
-          - svc_name: "client"
-            sub_folder: "."
-            docker_file: "client/docker/app/Dockerfile"
-          - svc_name: "api-webserver"
-            sub_folder: "."
-            docker_file: "api/docker/web/Dockerfile"
-          - svc_name: "api"
-            sub_folder: "."
-            docker_file: "api/docker/app/Dockerfile"
-          - svc_name: "sync"
-            sub_folder: "orchestration"
-            docker_file: "Dockerfile"
-          - svc_name: "htmltopdf"
-            sub_folder: "."
-            docker_file: "htmltopdf/Dockerfile"
-          - svc_name: "file-scanner"
-            sub_folder: "."
-            docker_file: "file-scanner/Dockerfile"
-          - svc_name: "dr-backup"
-            sub_folder: "disaster-recovery/backup"
-            docker_file: "Dockerfile"
-          - svc_name: "synchronise-lambda"
-            sub_folder: "lambdas/functions/synchronisation"
-            docker_file: "Dockerfile"
+
     steps:
       - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
@@ -142,10 +119,28 @@ jobs:
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"
-          format: "sarif"
           scanners: "vuln"
-          output: "trivy-results.sarif"
           timeout: 15m
+          trivy-config: .github/trivy_config/trivy_config.yml
+
+      #      - name: cache trivy db
+      #        id: cache-trivy
+      #        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d # pin@v3.0.8
+      #        with:
+      #          path: /tmp/trivy-cache
+      #          key: trivy-db-${{ steps.cache-dates.outputs.cache_date_today }}
+      #          restore-keys: |
+      #            trivy-db-${{ steps.cache-dates.outputs.cache_date_today }}
+
+      - name: Ls contents of trivy cache
+        run: |
+          ls -alt .
+          pwd
+          ls -alt /github/workspace
+          ls -alt /
+          ls -alt /home
+          ls -alt /github/home
+          ls -alt .trivy
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
