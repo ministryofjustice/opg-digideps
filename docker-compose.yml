@@ -255,3 +255,7 @@ services:
   composer:
     image: composer:2.5.8
     command: ["install"]
+
+  trivy:
+    image: ghcr.io/aquasecurity/trivy:0.53.0
+    command: ["sleep 600"]

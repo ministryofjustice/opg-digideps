@@ -1,0 +1,3 @@
+cache-dir: ./trivy-cache
+format: sarif
+output: trivy-results.sarif
