@@ -85,7 +85,7 @@ resource "aws_lb_target_group" "admin" {
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.vpc.id
-  deregistration_delay = 0
+  deregistration_delay = 15
   tags                 = var.default_tags
 
   health_check {

@@ -146,6 +146,21 @@ jobs:
           scanners: "vuln"
           output: "trivy-results.sarif"
           timeout: 15m
+          cache-dir: .trivy
+
+      #      - name: cache trivy db
+      #        id: cache-trivy
+      #        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d # pin@v3.0.8
+      #        with:
+      #          path: /tmp/trivy-cache
+      #          key: trivy-db-${{ steps.cache-dates.outputs.cache_date_today }}
+      #          restore-keys: |
+      #            trivy-db-${{ steps.cache-dates.outputs.cache_date_today }}
+
+      - name: Ls contents of trivy cache
+        run: |
+          ls -alt .
+          ls -alt .trivy
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
