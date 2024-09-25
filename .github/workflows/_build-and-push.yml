@@ -136,6 +136,10 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
+      - name: Create trivy cache directory
+        run: |
+          mkdir /tmp/trivy-cache
+
       - name: trivy image scanning
         id: trivy_scan
         uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # pin@v0.7.1
@@ -146,6 +150,11 @@ jobs:
           scanners: "vuln"
           output: "trivy-results.sarif"
           timeout: 15m
+          cache-dir: /tmp/trivy-cache
+
+      - name: Ls contents of trivy cache
+        run: |
+          ls -alt /tmp/trivy-cache
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
