@@ -1,0 +1,2 @@
+format: sarif
+output: trivy-results.sarif
