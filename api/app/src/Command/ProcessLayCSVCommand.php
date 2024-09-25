@@ -27,7 +27,14 @@ class ProcessLayCSVCommand extends Command
 
     protected const EXPECTED_COLUMNS = [
         'Case',
+        'ClientFirstname',
         'ClientSurname',
+        'ClientAddress1',
+        'ClientAddress2',
+        'ClientAddress3',
+        'ClientAddress4',
+        'ClientAddress5',
+        'ClientPostcode',
         'DeputyUid',
         'DeputyFirstname',
         'DeputySurname',
@@ -45,7 +52,7 @@ class ProcessLayCSVCommand extends Command
     ];
 
     private const OPTIONAL_COLUMNS = [
-        'CourtOrderUid'
+        'CourtOrderUid',
     ];
 
     protected const UNEXPECTED_COLUMNS = [
