@@ -8,6 +8,7 @@ import boto3
 from collections import defaultdict
 import requests
 import json
+from utility.shared import get_service_url
 
 # Create a logger instance
 logger = logging.getLogger(__name__)
@@ -29,8 +30,8 @@ def get_slack_webhook_secret(secret_name, channel_identifier):
         return None
 
 
-def get_service_url(region: str, service: str) -> str:
-    return f"https://console.aws.amazon.com/{service}/home?region={region}"
+# def get_service_url(region: str, service: str) -> str:
+#     return f"https://console.aws.amazon.com/{service}/home?region={region}"
 
 
 def parse_human_time_span(human_time_span):

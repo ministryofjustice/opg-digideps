@@ -32,30 +32,7 @@ jobs:
           - svc_name: "client-webserver"
             sub_folder: "."
             docker_file: "client/docker/web/Dockerfile"
-          - svc_name: "client"
-            sub_folder: "."
-            docker_file: "client/docker/app/Dockerfile"
-          - svc_name: "api-webserver"
-            sub_folder: "."
-            docker_file: "api/docker/web/Dockerfile"
-          - svc_name: "api"
-            sub_folder: "."
-            docker_file: "api/docker/app/Dockerfile"
-          - svc_name: "sync"
-            sub_folder: "orchestration"
-            docker_file: "Dockerfile"
-          - svc_name: "htmltopdf"
-            sub_folder: "."
-            docker_file: "htmltopdf/Dockerfile"
-          - svc_name: "file-scanner"
-            sub_folder: "."
-            docker_file: "file-scanner/Dockerfile"
-          - svc_name: "dr-backup"
-            sub_folder: "disaster-recovery/backup"
-            docker_file: "Dockerfile"
-          - svc_name: "synchronise-lambda"
-            sub_folder: "lambdas/functions/synchronisation"
-            docker_file: "Dockerfile"
+
     steps:
       - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
@@ -136,22 +113,44 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
+      - name: cache trivy db
+        id: cache-trivy
+        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d # pin@v3.0.8
+        with:
+          path: .trivy
+          key: trivy-db-${{ steps.cache-dates.outputs.cache_date_today }}
+          restore-keys: |
+            trivy-db-${{ steps.cache-dates.outputs.cache_date_today }}
+
       - name: trivy image scanning
         id: trivy_scan
         uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # pin@v0.7.1
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"
-          format: "sarif"
           scanners: "vuln"
-          output: "trivy-results.sarif"
           timeout: 15m
+          cache-dir: .trivy
 
-      - name: upload trivy scan results to security tab
-        id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: "trivy-results.sarif"
+      - name: Ls contents of trivy cache
+        run: sudo chown -R $(stat . -c %u:%g) .trivy
+
+      - name: Ls contents of trivy cache
+        run: |
+          ls -alt .
+          pwd
+          echo ${{ runner.workspace }}
+          echo ${{ github.workspace }}
+          ls -alt ${{ runner.workspace }}
+          ls -alt ${{ github.workspace }}
+          sudo chown -R $(stat . -c %u:%g) .trivy
+          ls -alt .trivy
+
+      #      - name: upload trivy scan results to security tab
+      #        id: trivy_upload_sarif
+      #        uses: github/codeql-action/upload-sarif@v2
+      #        with:
+      #          sarif_file: "trivy-results.sarif"
 
       - name: ecr login
         id: login_ecr
