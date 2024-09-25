@@ -12,7 +12,7 @@ COPY api/app/src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.28-fpm-alpine3.19 as base
+FROM php:8.1.28-fpm-alpine3.19 AS base
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -28,7 +28,7 @@ RUN apk --no-cache add \
     php81-pecl-redis
 RUN apk update && apk upgrade
 # Install necessary PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql opcache calendar
+RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
 # Install pcov for faster coverage tooling
 RUN apk add --no-cache autoconf build-base
@@ -62,7 +62,7 @@ RUN mkdir -p var/cache \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
 
-FROM base as application
+FROM base AS application
 COPY --chown=www-data:www-data api/docker/app/confd /etc/confd
 COPY --chown=www-data:www-data --from=composer /app/app app
 COPY --chown=www-data:www-data --from=composer /app/vendor/bin bin
@@ -93,10 +93,7 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
-# output dates to tmp folder to use with Carbon Business Days service for setting due dates
-RUN curl -o /tmp/bank-holidays.json https://www.gov.uk/bank-holidays.json
-
-FROM application as ci-tests
+FROM application AS ci-tests
 # We use this setup for certain commands as part of the CI processing of unit tests
 CMD confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
@@ -104,7 +101,7 @@ CMD confd -onetime -backend env \
     && php app/console doctrine:migrations:up-to-date \
     && php-fpm
 
-FROM application as production
+FROM application AS production
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 

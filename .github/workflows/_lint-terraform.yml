@@ -20,7 +20,7 @@ jobs:
           - folder: "environment"
           - folder: "account"
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # pin@v3
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
       - id: terraform_version
         name: get terraform version
@@ -34,7 +34,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@12e3392609eaaceb7ae6191b3f54bbcb85b5002b
+        uses: aws-actions/configure-aws-credentials@1ceaabc2d4208b18ff52a76e80c3a28df83f0277
         with:
           role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
           role-session-name: github-actions-terraform

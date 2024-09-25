@@ -80,3 +80,23 @@ resource "aws_iam_role_policy" "front_task_logs" {
   policy = data.aws_iam_policy_document.ecs_task_logs.json
   role   = aws_iam_role.front.id
 }
+
+data "aws_iam_policy_document" "front_ssm" {
+  statement {
+    sid    = "AllowGetSSMParameters"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameter",
+      "ssm:GetParameters"
+    ]
+    resources = [
+      aws_ssm_parameter.flag_multi_accounts.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "front_ssm" {
+  name   = "front-ssm.${local.environment}"
+  policy = data.aws_iam_policy_document.front_ssm.json
+  role   = aws_iam_role.front.id
+}

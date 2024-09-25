@@ -10,93 +10,98 @@ class TestFilterLogs(unittest.TestCase):
             {
                 "real_forwarded_for": "192.168.1.1",
                 "status": "404",
-                "request_uri": "/file.zip",
+                "request_uri": "/hackurl1",
             },
             {
                 "real_forwarded_for": "192.168.1.1",
                 "status": "404",
-                "request_uri": "/file.zip",
+                "request_uri": "/hackurl2",
             },
             {
                 "real_forwarded_for": "192.168.1.1",
                 "status": "404",
-                "request_uri": "/file.zip",
+                "request_uri": "/hackurl3",
             },
             {
                 "real_forwarded_for": "192.168.1.1",
                 "status": "404",
-                "request_uri": "/file.zip",
+                "request_uri": "/hackurl4",
             },
             {
                 "real_forwarded_for": "192.168.1.1",
                 "status": "404",
-                "request_uri": "/file.zip",
+                "request_uri": "/hackurl5",
             },
             {
                 "real_forwarded_for": "192.168.1.1",
                 "status": "404",
-                "request_uri": "/file.zip",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "404",
-                "request_uri": "/file.zip",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "404",
-                "request_uri": "/file.zip",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "404",
-                "request_uri": "/file.zip",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "404",
-                "request_uri": "/file.zip",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "404",
-                "request_uri": "/file.zip",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "200",
-                "request_uri": "/admin",
-            },
-            {
-                "real_forwarded_for": "192.168.1.1",
-                "status": "404",
-                "request_uri": "/file.html",
+                "request_uri": "/hackurl6",
             },
             {
                 "real_forwarded_for": "192.168.1.2",
                 "status": "404",
-                "request_uri": "/page.html",
+                "request_uri": "/hack.html",
             },
             {
                 "real_forwarded_for": "192.168.1.2",
                 "status": "404",
-                "request_uri": "/index.php",
+                "request_uri": "/hack.zip",
             },
             {
                 "real_forwarded_for": "192.168.1.3",
                 "status": "200",
-                "request_uri": "/test",
+                "request_uri": "/report",
             },
             {
                 "real_forwarded_for": "192.168.1.3",
                 "status": "404",
-                "request_uri": "/script.js",
+                "request_uri": "/hackscript.js",
+            },
+            {
+                "real_forwarded_for": "192.168.1.3",
+                "status": "200",
+                "request_uri": "/report",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "404",
+                "request_uri": "/hackurl1",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "404",
+                "request_uri": "/hackurl2",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "404",
+                "request_uri": "/hackurl3",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "404",
+                "request_uri": "/hackurl4",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "404",
+                "request_uri": "/hackurl5",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "404",
+                "request_uri": "/hackurl6",
+            },
+            {
+                "real_forwarded_for": "192.168.1.4",
+                "status": "200",
+                "request_uri": "/report",
             },
         ]
 
         expected_ips = [
-            "192.168.1.1",  # Matches "404_with_suffix" > 10 and "2xx_or_3xx_not_root" < 5
-            "192.168.1.2",  # Matches "404_without_suffix" > 5 and "2xx_or_3xx_not_root" < 1
+            "192.168.1.1",  # Matches "404_without_suffix" > 5 and "2xx_or_3xx_not_root" < 1
+            "192.168.1.2",  # Matches "404_with_suffix" > 1 and "2xx_or_3xx_not_root" < 1
         ]
 
         result_ips = filter_logs(logs)

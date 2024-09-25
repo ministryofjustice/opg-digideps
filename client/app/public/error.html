@@ -15,7 +15,12 @@
     </head>
 
     <body class="govuk-template__body">
-        <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+        <a
+            href="#main-content"
+            class="govuk-skip-link"
+            data-module="govuk-skip-link"
+            >Skip to main content</a
+        >
 
         <header class="govuk-header" role="banner" data-module="govuk-header">
             <div class="govuk-header__container govuk-width-container">
@@ -26,7 +31,7 @@
                     >
                         <span class="govuk-header__logotype">
                             <svg
-                                role="presentation"
+                                aria-hidden="true"
                                 focusable="false"
                                 class="govuk-header__logotype-crown"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +61,7 @@
                 <div class="govuk-header__content">
                     <a
                         href="/"
-                        class="govuk-header__link govuk-header__link--service-name"
+                        class="govuk-header__link govuk-header__service-name"
                     >
                         Complete the deputy report
                     </a>
@@ -75,7 +80,11 @@
         </div>
 
         <div class="govuk-width-container opg-main-wrapper">
-            <main id="main-content" class="govuk-main-wrapper" role="main">
+            <main
+                id="main-content"
+                class="govuk-main-wrapper--auto-spacing"
+                role="main"
+            >
                 <h1 class="govuk-heading-l">Application error</h1>
 
                 <p>Please try again in a short while</p>
@@ -91,7 +100,7 @@
                         class="govuk-footer__meta-item govuk-footer__meta-item--grow"
                     >
                         <svg
-                            role="presentation"
+                            aria-hidden="true"
                             focusable="false"
                             class="govuk-footer__licence-logo"
                             xmlns="http://www.w3.org/2000/svg"

@@ -43,7 +43,7 @@ module.exports = {
               sassOptions: {
                 includePaths: [
                   'node_modules/govuk_frontend_toolkit/stylesheets',
-                  'node_modules/govuk-frontend/govuk/assets',
+                  'node_modules/govuk-frontend/dist/govuk/assets',
                   'node_modules/govuk-elements-sass/public/sass'
                 ]
               }
@@ -78,8 +78,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: 'node_modules/jquery/dist/jquery.min.js', to: 'javascripts' },
-        { from: 'node_modules/govuk-frontend/govuk/assets/fonts', to: 'stylesheets/fonts' },
-        { from: 'node_modules/govuk-frontend/govuk/assets/images', to: path.resolve(__dirname, 'public/images') },
+        { from: 'node_modules/govuk-frontend/dist/govuk/assets/fonts', to: 'stylesheets/fonts' },
+        { from: 'node_modules/govuk-frontend/dist/govuk/assets/images', to: path.resolve(__dirname, 'public/images') },
         {
           from: 'node_modules/@ministryofjustice/frontend/moj/assets/images',
           to: path.resolve(__dirname, 'public/images')

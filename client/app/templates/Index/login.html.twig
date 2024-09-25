@@ -11,6 +11,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}
+
     {% if app.session.get('login-context') == 'password-create' %}
         {{ (page ~ '.pageTitleNewPassword') | trans }}
     {% elseif app.session.get('login-context') == 'password-update' %}
@@ -70,5 +71,7 @@
     {{ form_end(form) }}
 
     <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
+
+    <hr class="govuk-section-break govuk-section-break--m">
 
 {% endblock %}

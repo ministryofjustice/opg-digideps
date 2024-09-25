@@ -23,7 +23,6 @@
     "require": {
         "php": "^8.1",
         "aws/aws-sdk-php": "3.299.1",
-        "cmixin/business-day": "^1.18",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.6.3",
@@ -69,7 +68,7 @@
         "symfony/security-core": "^5.4.0",
         "symfony/security-csrf": "^5.4.0",
         "symfony/security-guard": "^5.4.0",
-        "symfony/security-http": "5.4.35",
+        "symfony/security-http": "5.4.41",
         "symfony/serializer": "^5.4.0",
         "symfony/string": "^5.4.0",
         "symfony/twig-bundle": "^5.4.0",

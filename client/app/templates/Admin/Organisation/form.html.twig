@@ -42,7 +42,7 @@
         {% endset %}
 
         {{ form_checkbox_group(form.emailIdentifierType, 'form.emailIdentifierType', {
-            legendClass: 'govuk-label--m',
+            legendClass: 'govuk-fieldset__legend--m',
             items: [
                 { conditional: emailIdentifierDomain },
                 { conditional: emailIdentifierAddress, description: ('form.emailIdentifierType.domainHint' | trans) },
@@ -51,7 +51,7 @@
     {% endif %}
 
     {{ form_checkbox_group(form.isActivated, 'form.isActivated', {
-        'legendClass': 'govuk-label--m'
+        'legendClass': 'govuk-fieldset__legend--m'
     }) }}
 
     {{ form_submit(form.save, 'form.save') }}
