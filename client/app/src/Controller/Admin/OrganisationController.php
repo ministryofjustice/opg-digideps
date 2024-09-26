@@ -239,12 +239,17 @@ class OrganisationController extends AbstractController
         }
 
         if ($form->get('confirm')->isClicked()) {
-            $currentUser = $this->getUser();
-            $this->organisationApi->addUserToOrganisation($organisation, $userToAdd, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
+            try {
+                $currentUser = $this->getUser();
+                $this->organisationApi->addUserToOrganisation($organisation, $userToAdd, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
-            $request->getSession()->getFlashBag()->add('notice', $userToAdd->getFullName().' has been added to '.$organisation->getName());
+                $request->getSession()->getFlashBag()->add('notice', $userToAdd->getFullName().' has been added to '.$organisation->getName());
 
-            return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
+                return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
+            } catch (RestClientException $e) {
+                $this->logger->error($e->getMessage());
+                $request->getSession()->getFlashBag()->add('error', 'Failed to add user to Organisation, please contact OPG support');
+            }
         }
 
         return [

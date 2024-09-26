@@ -175,15 +175,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         WHERE (
             -- Abandoned Registration process, password set
             u.registration_token IS NOT NULL 
-            AND u.token_date < date_trunc('month', CURRENT_DATE - INTERVAL '60' day)
-            AND u.last_logged_in < date_trunc('month', CURRENT_DATE - INTERVAL '60' day)
+            AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
+            AND u.last_logged_in < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
             AND u.registration_date IS NULL
             -- Abandoned Registration process, no password set
             OR u.registration_token IS NOT NULL 
-            AND u.token_date < date_trunc('month', CURRENT_DATE - INTERVAL '30' day)
+            AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
             AND u.last_logged_in IS NULL
             -- Standard no activity within N days
-            OR u.registration_date < date_trunc('month', CURRENT_DATE - INTERVAL '30' day)
+            OR u.registration_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
         )
         AND u.role_name = :role
         AND NOT EXISTS (
@@ -194,6 +194,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             SELECT TRUE FROM odr n WHERE n.client_id = c.id
         ) AND NOT EXISTS (
             SELECT TRUE FROM dd_user du WHERE du.created_by_id = u.id
+        ) AND NOT EXISTS (
+            SELECT TRUE FROM deputy d WHERE d.user_id = u.id
         )
         sql;
 
