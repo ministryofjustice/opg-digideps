@@ -43,6 +43,11 @@
                             {{ 'nav.userAccount' | trans }}
                         </a>
                     </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('client_show') }}" class="govuk-header__link behat-link-user-account">
+                            {{ 'nav.clientAccount' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
                 {% if app.user.isDeputyOrg() %}
                     <li class="govuk-header__navigation-item">
