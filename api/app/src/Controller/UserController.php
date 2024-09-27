@@ -637,11 +637,11 @@ class UserController extends RestController
      *
      * @throws \Exception
      */
-    public function getPrimaryEmail(int $deputyUid)
+    public function getPrimaryEmail(int $deputyUid): string
     {
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
 
-        $userEmail = [];
+        $userEmail = '';
 
         foreach ($users as $user) {
             if ($user->getIsPrimary()) {
