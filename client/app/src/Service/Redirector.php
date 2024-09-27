@@ -76,8 +76,6 @@ class Redirector
                 return $this->router->generate('org_dashboard');
             }
         } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            file_put_contents('php://stderr', print_r('**** Redirected in getFirstPageAfterLogin ****', true));
-
             return $this->getCorrectLayHomepage();
         } else {
             return $this->router->generate('access_denied');
@@ -208,8 +206,6 @@ class Redirector
 
         // deputy: if logged, redirect to overview pages
         if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            file_put_contents('php://stderr', print_r('**** Redirected in getHomepageRedirect ****', true));
-
             return $this->getCorrectLayHomepage();
         }
 
@@ -223,8 +219,6 @@ class Redirector
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
-            file_put_contents('php://stderr', print_r('**** Redirected in getChooseAClientHomepage ****', true));
-
             return $this->router->generate($route);
         }
 
@@ -240,9 +234,9 @@ class Redirector
     {
         $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
         $user = $this->getLoggedUser();
+
         if (!is_null($user->getDeputyUid())) {
             $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
-            file_put_contents('php://stderr', print_r('INSIDE getCorrectLayHomepage : '.count($clients), true));
         }
 
         if ('1' == $isMultiClientFeatureEnabled) {

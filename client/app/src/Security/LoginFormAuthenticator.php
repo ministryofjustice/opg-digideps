@@ -76,7 +76,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        file_put_contents('php://stderr', print_r('**** Inside onAuthenticationSuccess ****', true));
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
 
         if ($request->query->has('lastPage')) {

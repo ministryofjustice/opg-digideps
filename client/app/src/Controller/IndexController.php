@@ -46,7 +46,6 @@ class IndexController extends AbstractController
      */
     public function indexAction(Redirector $redirector)
     {
-        file_put_contents('php://stderr', print_r('**** Inside indexAction ****', true));
         if ($url = $redirector->getHomepageRedirect()) {
             return $this->redirect($url);
         }

@@ -185,7 +185,6 @@ class ReportController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
         $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
-        file_put_contents('php://stderr', print_r('**** Redirected in chooseAClient **** '.$isMultiClientFeatureEnabled, true));
 
         if ('1' == $isMultiClientFeatureEnabled) {
             // redirect back to log out page if signing in with non-primary account with primary email
