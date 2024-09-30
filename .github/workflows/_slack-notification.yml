@@ -54,7 +54,7 @@ jobs:
           SUCCESS: ${{ inputs.success }}
           SCHEDULED_TASK: ${{ inputs.scheduled_task }}
         run: |
-          python ci_slack.py \
+          python ci_monitor_notify.py \
           --success "${SUCCESS}" \
           --commit_message "$(git log -1 --pretty=%B)" \
           --branch "${BRANCH}" \
