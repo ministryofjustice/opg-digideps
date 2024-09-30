@@ -48,10 +48,10 @@ opg-ecs-helper_*.tar.gz
 
 # Lambda specific
 **lambda*.zip
-**slack*.zip
+**monitor_notify*.zip
 **layer*.zip
-lambdas/functions/slack_lambda/layers/**
-!lambdas/functions/slack_lambda/layers/**/.gitkeep
+lambdas/functions/**/layers/**
+!lambdas/functions/**/layers/**/.gitkeep
 
 *__pycache__*
 *venv*
