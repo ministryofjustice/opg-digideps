@@ -63,17 +63,17 @@ class UserRetentionPolicyCommand extends Command
                 $this->userRepository->deleteInactiveAdminUsers($this->inactiveAdminUserIds);
                 $output->writeln(sprintf('delete_inactive_users - success - %d inactive admin user(s) deleted', $countOfAdminUsers));
 
-                return 0;
+                return Command::SUCCESS;
             }
 
             $output->writeln('delete_inactive_users - success - No inactive admin users to delete');
 
-            return 0;
+            return Command::SUCCESS;
         } catch (Exception $e) {
             $output->writeln('delete_inactive_users - failure - Failed to delete inactive users');
             $output->writeln($e);
 
-            return 1;
+            return Command::FAILURE;
         }
     }
 
