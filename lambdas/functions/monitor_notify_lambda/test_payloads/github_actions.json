@@ -1,0 +1,13 @@
+{
+  "GithubActions": {
+    "Branch": "main",
+    "WorkflowName": "Path to live: Test Live Release",
+    "GhActor": "JohnDoe",
+    "Success": "yes",
+    "JobUrl": "https://github.com/your-repo/actions/runs/123456789",
+    "FrontendUrl": "https://your-app-frontend-url.com",
+    "AdminUrl": "https://your-app-admin-url.com",
+    "CommitMessage": "Fix issue with user login",
+    "ScheduledTask": ""
+  }
+}

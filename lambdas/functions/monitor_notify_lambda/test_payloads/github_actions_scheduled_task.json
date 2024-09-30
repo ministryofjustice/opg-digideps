@@ -1,0 +1,13 @@
+{
+  "GithubActions": {
+    "Branch": "main",
+    "WorkflowName": "Scheduled: Daily Backup Task",
+    "GhActor": "System",
+    "Success": "yes",
+    "JobUrl": "https://github.com/your-repo/actions/runs/987654321",
+    "FrontendUrl": "https://your-app-frontend-url.com",
+    "AdminUrl": "https://your-app-admin-url.com",
+    "CommitMessage": "Automated daily backup job",
+    "ScheduledTask": "Daily Backup Task"
+  }
+}

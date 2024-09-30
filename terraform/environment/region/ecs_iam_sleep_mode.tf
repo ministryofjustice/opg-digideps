@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "sleep_mode" {
       "lambda:UpdateFunctionConfiguration"
     ]
     resources = [
-      data.aws_lambda_function.slack_lambda.arn
+      data.aws_lambda_function.monitor_notify_lambda.arn
     ]
   }
 }
