@@ -136,6 +136,12 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@00e8074ea5f4936907c7b26611e2b9b4691c2784 # pin@v1.5.1
+        with:
+          registries: 311462405659
+
       - name: trivy image scanning
         id: trivy_scan
         uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # pin@v0.7.1
@@ -146,18 +152,15 @@ jobs:
           scanners: "vuln"
           output: "trivy-results.sarif"
           timeout: 15m
+        env:
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
+          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: "trivy-results.sarif"
-
-      - name: ecr login
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@00e8074ea5f4936907c7b26611e2b9b4691c2784 # pin@v1.5.1
-        with:
-          registries: 311462405659
 
       - name: show build tag
         env:
