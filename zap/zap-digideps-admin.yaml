@@ -1,0 +1,124 @@
+---
+env:
+  contexts:
+    - name: "Digideps"
+      urls:
+        - "http://admin-webserver/admin/organisations/3"
+      includePaths:
+        - "http://admin-webserver/login"
+        - "http://admin-webserver/admin/organisations.*"
+      excludePaths:
+        - "http://admin-webserver/logout"
+      authentication:
+        method: "script"
+        parameters:
+          script: "/zap/wrk/auth-digi.js"
+          scriptEngine: "ECMAScript : Oracle Nashorn"
+          Login_URL: "http://admin-webserver/login"
+          CSRF_Field: "login[_token]"
+          POST_Data: "login[email]={%username%}&login[password]={%password%}&login[_token]={%login[_token]%}"
+        verification:
+          method: "response"
+          loggedInRegex: "(Log out|Logout|Sign out)"
+          loggedOutRegex: "(You are now signed out)"
+          pollFrequency: 60
+          pollUnits: "requests"
+          pollUrl: ""
+          pollPostData: ""
+      users:
+        - name: "admin"
+          credentials:
+            Username: "super-admin@publicguardian.gov.uk"
+            Password: "DigidepsPass1234"
+      sessionManagement:
+        method: "cookie"
+        parameters: {}
+      technology:
+        exclude:
+          [
+            "Db.CouchDB",
+            "Db.Firebird",
+            "Db.HypersonicSQL",
+            "Db.IBM DB2",
+            "Db.Microsoft Access",
+            "Db.Microsoft SQL Server",
+            "Db.MongoDB",
+            "Db.Oracle",
+            "Db.SAP MaxDB",
+            "Db.SQLite",
+            "Db.Sybase",
+            "Language.ASP",
+            "Language.Java",
+            "Language.Java.Spring",
+            "Language.Ruby",
+            "OS.MacOS",
+            "OS.Windows",
+            "SCM.SVN",
+            "WS.Apache",
+            "WS.IIS",
+            "WS.Tomcat",
+          ]
+  parameters:
+    failOnError: false
+    failOnWarning: false
+    progressToStdout: true
+  vars: {}
+jobs:
+  - name: "spider"
+    type: "spider"
+    parameters:
+      context: "Digideps"
+      user: "admin"
+      url: "http://admin-webserver/admin/organisations"
+      maxDepth: 10
+      maxParseSizeBytes: 26214400
+
+  - name: "passiveScan-wait"
+    type: "passiveScan-wait"
+    parameters:
+      maxDuration: 10
+
+  - name: "activeScan"
+    type: "activeScan"
+    parameters:
+      context: "Digideps"
+      user: "admin"
+      maxScanDurationInMins: 30
+      threadPerHost: 5
+    policyDefinition:
+      defaultStrength: "High"
+      defaultThreshold: "Low"
+      rules: []
+
+  - name: "passiveScan-wait"
+    type: "passiveScan-wait"
+    parameters:
+      maxDuration: 10
+
+  - name: "Modern Report"
+    type: "report"
+    parameters:
+      template: "modern"
+      theme: "console"
+      reportDir: "/zap/wrk/ModernReport"
+      reportFile: "DigidepsModernReport.html"
+      reportTitle: "Modern Report"
+      reportDescription: ""
+      displayReport: false
+    risks:
+      - "low"
+      - "medium"
+      - "high"
+    confidences:
+      - "low"
+      - "medium"
+      - "high"
+      - "confirmed"
+    sections:
+      - "passingrules"
+      - "instancecount"
+      - "alertdetails"
+      - "alertcount"
+      - "params"
+      - "chart"
+      - "statistics"
