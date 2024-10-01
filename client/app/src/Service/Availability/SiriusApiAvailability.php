@@ -20,10 +20,12 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
             $response = $this->client->get('healthcheck');
 
             if (200 !== $response->getStatusCode()) {
-                throw new \RuntimeException('returned HTTP code '.$response->getStatusCode());
+                $this->isHealthy = false;
+                $this->errors = 'Returned HTTP code '.$response->getStatusCode();
             }
         } catch (\Throwable $e) {
-            $this->customMessage = $e->getMessage();
+            $this->isHealthy = false;
+            $this->errors = $e->getMessage();
         }
     }
 
