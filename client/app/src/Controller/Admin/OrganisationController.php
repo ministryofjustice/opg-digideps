@@ -248,7 +248,8 @@ class OrganisationController extends AbstractController
                 return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
             } catch (RestClientException $e) {
                 $this->logger->error($e->getMessage());
-                $request->getSession()->getFlashBag()->add('error', 'Failed to add user to Organisation, please contact OPG support');
+                # The wording 'please try again' has been chosen to allow us to quickly pinpoint in the logs any potential issues
+                $request->getSession()->getFlashBag()->add('error', 'Failed to add user to the Organisation, please try again');
             }
         }
 
