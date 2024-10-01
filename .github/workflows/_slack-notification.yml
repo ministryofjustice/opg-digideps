@@ -46,7 +46,7 @@ jobs:
           cache: "pip"
 
       - name: install requirements
-        run: pip install -r lambdas/functions/monitor_notify/requirements.txt
+        run: pip install -r lambdas/functions/monitor_notify_lambda/requirements.txt
 
       - name: Notify Slack
         env:
@@ -59,4 +59,4 @@ jobs:
           --commit_message "$(git log -1 --pretty=%B)" \
           --branch "${BRANCH}" \
           --scheduled_task "${SCHEDULED_TASK}"
-        working-directory: lambdas/functions/monitor_notify/app
+        working-directory: lambdas/functions/monitor_notify_lambda/app
