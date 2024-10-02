@@ -43,7 +43,7 @@ class UserService
         match (true) {
             $loggedInUser->isLayDeputy() => $userToAdd->setRegistrationRoute(User::CO_DEPUTY_INVITE),
             $loggedInUser->hasAdminRole() => $userToAdd->setRegistrationRoute(User::ADMIN_INVITE),
-            $loggedInUser->isOrgAdministrator() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE)
+            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE)
         };
 
         $this->em->persist($userToAdd);
