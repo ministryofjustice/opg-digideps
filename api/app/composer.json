@@ -58,9 +58,7 @@
         "symfony/security-core": "^5.4.0",
         "symfony/security-http": "5.4.41",
         "symfony/serializer": "^5.4.0",
-        "symfony/twig-bundle": "^5.4.0",
         "symfony/validator": "^5.4.0",
-        "symfony/var-exporter": "^5.4.0",
         "symfony/yaml": "^5.4.0"
     },
     "require-dev": {
