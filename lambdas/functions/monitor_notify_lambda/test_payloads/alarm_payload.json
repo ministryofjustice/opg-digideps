@@ -1,0 +1,10 @@
+{
+  "Records": [
+    {
+      "Sns": {
+        "Message": "{\"AlarmName\": \"5xx test alarm\", \"NewStateValue\": \"bad\", \"OldStateValue\": \"good\"}",
+        "TopicArn": "arn:foo:bar:eu-west-1:123456789"
+      }
+    }
+  ]
+}

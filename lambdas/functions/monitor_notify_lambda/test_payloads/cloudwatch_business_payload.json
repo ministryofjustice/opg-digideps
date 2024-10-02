@@ -1,0 +1,12 @@
+{
+  "scheduled-event-detail": {
+    "job-name": "business_functionality_log_check",
+    "log-group": "/aws/lambda/business-functionality",
+    "log-entries": [
+      "{\"name\": \"Login API check\", \"search1\": \"/login|/user/login\", \"method1\": \"GET\", \"search2\": \"/auth/login|/user/auth\", \"method2\": \"POST\", \"percentage_threshold\": 80, \"count_threshold\": 5}, {\"name\": \"Profile API check\"",
+      "\"search1\": \"/profile|/user/profile\", \"method1\": \"GET\", \"search2\": \"/auth/profile|/user/auth/profile\", \"method2\": \"POST\", \"percentage_threshold\": 90, \"count_threshold\": 3}"
+    ],
+    "search-timespan": "5 minutes",
+    "channel-identifier-failure": "alerts-channel"
+  }
+}
