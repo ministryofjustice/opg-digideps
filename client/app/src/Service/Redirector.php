@@ -240,8 +240,12 @@ class Redirector
         }
 
         if ('1' == $isMultiClientFeatureEnabled) {
-            if (1 < count($clients)) {
-                return $this->getChooseAClientHomepage($user, false);
+            if (!(null === $clients)) {
+                if (1 < count($clients)) {
+                    return $this->getChooseAClientHomepage($user, false);
+                } else {
+                    return $this->getLayDeputyHomepage($user, false);
+                }
             } else {
                 return $this->getLayDeputyHomepage($user, false);
             }
