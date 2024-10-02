@@ -1,0 +1,9 @@
+{
+  "repo-root": "../..",
+  "app-dir": "api/app",
+  "scan-dirs": ["src", "public", "config"],
+  "extensions": ["php", "yml"],
+  "package-file": "composer.json",
+  "lax-search-extensions": ["yml"],
+  "manual-in-use-checked": []
+}
