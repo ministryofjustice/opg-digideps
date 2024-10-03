@@ -17,7 +17,7 @@ resource "aws_sns_topic" "availability-alert" {
 }
 
 resource "aws_sns_topic_subscription" "subscription" {
-  endpoint  = aws_lambda_function.slack_lambda.arn
+  endpoint  = aws_lambda_function.monitor_notify_lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.alerts.arn
 }
@@ -25,7 +25,7 @@ resource "aws_sns_topic_subscription" "subscription" {
 resource "aws_sns_topic_subscription" "subscription_availability" {
   provider = aws.global
 
-  endpoint  = aws_lambda_function.slack_lambda.arn
+  endpoint  = aws_lambda_function.monitor_notify_lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.availability-alert.arn
 }

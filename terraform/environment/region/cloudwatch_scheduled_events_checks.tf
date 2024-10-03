@@ -1,5 +1,5 @@
-data "aws_lambda_function" "slack_lambda" {
-  function_name = "slack-notifier"
+data "aws_lambda_function" "monitor_notify_lambda" {
+  function_name = "monitor-notify"
 }
 
 locals {
@@ -18,7 +18,7 @@ resource "aws_cloudwatch_event_rule" "cross_account_backup_check" {
 
 resource "aws_cloudwatch_event_target" "cross_account_backup_check" {
   target_id = "check-backup-cross-account-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.cross_account_backup_check.name
   input = jsonencode(
     {
@@ -48,7 +48,7 @@ resource "aws_cloudwatch_event_rule" "delete_inactive_users_check" {
 
 resource "aws_cloudwatch_event_target" "delete_inactive_users_check" {
   target_id = "check-delete-inactive-users-check-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.delete_inactive_users_check.name
   input = jsonencode(
     {
@@ -66,34 +66,34 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users_check" {
   )
 }
 
-# Delete zero activity users check
+# Delete zero activity users check - Temp disabled due to change in data structure linking additional tables.
 
-resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
-  name                = "check-delete-zero-activity-users-${terraform.workspace}"
-  description         = "Execute the delete zero activity users check for ${terraform.workspace}"
-  schedule_expression = "cron(12 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
-}
-
-resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
-  target_id = "check-delete-zero-activity-users-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
-  rule      = aws_cloudwatch_event_rule.delete_zero_activity_users_check.name
-  input = jsonencode(
-    {
-      scheduled-event-detail = {
-        job-name                   = "delete_zero_activity_users_check"
-        log-group                  = terraform.workspace,
-        log-entries                = ["delete_zero_activity_users"],
-        search-timespan            = "24 hours",
-        bank-holidays              = "true",
-        channel-identifier-absent  = "team",
-        channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "team"
-      }
-    }
-  )
-}
+#resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
+#  name                = "check-delete-zero-activity-users-${terraform.workspace}"
+#  description         = "Execute the delete zero activity users check for ${terraform.workspace}"
+#  schedule_expression = "cron(12 09 * * ? *)"
+#  is_enabled          = var.account.is_production == 1 ? true : false
+#}
+#
+#resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
+#  target_id = "check-delete-zero-activity-users-${terraform.workspace}"
+#  arn       = data.aws_lambda_function.slack_lambda.arn
+#  rule      = aws_cloudwatch_event_rule.delete_zero_activity_users_check.name
+#  input = jsonencode(
+#    {
+#      scheduled-event-detail = {
+#        job-name                   = "delete_zero_activity_users_check"
+#        log-group                  = terraform.workspace,
+#        log-entries                = ["delete_zero_activity_users"],
+#        search-timespan            = "24 hours",
+#        bank-holidays              = "true",
+#        channel-identifier-absent  = "team",
+#        channel-identifier-success = "scheduled-jobs",
+#        channel-identifier-failure = "team"
+#      }
+#    }
+#  )
+#}
 
 # Resubmit re-submittable error documents check
 
@@ -106,7 +106,7 @@ resource "aws_cloudwatch_event_rule" "resubmit_error_documents_check" {
 
 resource "aws_cloudwatch_event_target" "resubmit_error_documents_check" {
   target_id = "check-resync-resubmittable-error-documents-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.resubmit_error_documents_check.name
   input = jsonencode(
     {
@@ -135,7 +135,7 @@ resource "aws_cloudwatch_event_rule" "db_analyse_command_check" {
 
 resource "aws_cloudwatch_event_target" "db_analyse_command_check" {
   target_id = "check-database-analyse-command-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.db_analyse_command_check.name
   input = jsonencode(
     {
@@ -164,7 +164,7 @@ resource "aws_cloudwatch_event_rule" "sync_documents_check" {
 
 resource "aws_cloudwatch_event_target" "sync_documents_check" {
   target_id = "check-document-sync-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.sync_documents_check.name
   input = jsonencode(
     {
@@ -193,7 +193,7 @@ resource "aws_cloudwatch_event_rule" "sync_checklists_check" {
 
 resource "aws_cloudwatch_event_target" "sync_checklists_check" {
   target_id = "check-checklist-sync-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.sync_checklists_check.name
   input = jsonencode(
     {
@@ -222,7 +222,7 @@ resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats_check" {
 
 resource "aws_cloudwatch_event_target" "satisfaction_performance_stats_check" {
   target_id = "check-satisfaction_performance_stats-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.satisfaction_performance_stats_check.name
   input = jsonencode(
     {
@@ -252,7 +252,7 @@ resource "aws_cloudwatch_event_rule" "lay_csv_processing_check" {
 
 resource "aws_cloudwatch_event_target" "lay_csv_processing_check" {
   target_id = "check-lay-csv-processing-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.lay_csv_processing_check.name
   input = jsonencode(
     {
@@ -282,7 +282,7 @@ resource "aws_cloudwatch_event_rule" "org_csv_processing_check" {
 
 resource "aws_cloudwatch_event_target" "org_csv_processing_check" {
   target_id = "check-org-csv-processing-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.org_csv_processing_check.name
   input = jsonencode(
     {

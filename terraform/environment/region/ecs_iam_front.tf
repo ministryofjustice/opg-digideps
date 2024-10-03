@@ -100,3 +100,22 @@ resource "aws_iam_role_policy" "front_ssm" {
   policy = data.aws_iam_policy_document.front_ssm.json
   role   = aws_iam_role.front.id
 }
+
+# ======= INVOKE API GATEWAY PERMISSIONS =====
+resource "aws_iam_role_policy" "front_invoke_api_gateway" {
+  name   = "front-api-gw.${local.environment}"
+  policy = data.aws_iam_policy_document.front_invoke_api_gateway.json
+  role   = aws_iam_role.front.id
+}
+
+data "aws_iam_policy_document" "front_invoke_api_gateway" {
+  statement {
+    sid    = "AllowInvokeOnDeputyReportingGateway"
+    effect = "Allow"
+    actions = [
+      "execute-api:Invoke",
+      "execute-api:ManageConnections"
+    ]
+    resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius_api_account}:*"]
+  }
+}
