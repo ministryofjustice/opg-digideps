@@ -9,6 +9,14 @@
     {
       "package": "aws/aws-sdk-php",
       "usage-description": "services.yml for s3, secrets, ssm etc.."
+    },
+    {
+      "package": "incenteev/composer-parameter-handler",
+      "usage-description": "part of package post-install from composer.json"
+    },
+    {
+      "package": "symfony/expression-language",
+      "usage-description": "for @Security component in sensio security"
     }
   ]
 }
