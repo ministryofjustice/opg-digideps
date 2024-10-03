@@ -164,6 +164,29 @@ class ClientApi
         );
     }
 
+    /**
+     * @return Client
+     */
+    public function getById(int $clientId, array $includes = [])
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
+            'Client',
+            [
+                'client',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+                'client-deputy',
+                'deputy',
+                'client-organisations',
+                'organisation',
+            ]
+        );
+    }
+
     public function delete(int $id, string $trigger)
     {
         $clientWithUsers = $this->getWithUsersV2($id);
