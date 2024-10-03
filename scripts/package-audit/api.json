@@ -5,5 +5,10 @@
   "extensions": ["php", "yml"],
   "package-file": "composer.json",
   "lax-search-extensions": ["yml"],
-  "manual-in-use-checked": []
+  "manual-in-use-checked": [
+    {
+      "package": "aws/aws-sdk-php",
+      "usage-description": "services.yml for s3, secrets, ssm etc.."
+    }
+  ]
 }
