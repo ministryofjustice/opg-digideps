@@ -21,6 +21,9 @@ RUN apk --no-cache add libcap && \
     setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
     apk del libcap
 
+COPY client/docker/web/health-check.sh /health-check.sh
+RUN chown nginx:nginx /health-check.sh && chmod 550 /health-check.sh
+
 COPY scripts/hardening/harden-nginx.sh /harden-nginx.sh
 RUN /harden-nginx.sh && rm /harden-nginx.sh
 
