@@ -1,6 +1,6 @@
 import argparse
 import os
-import slack
+import monitor_notify
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
         }
     }
 
-    slack.lambda_handler(data, "")
+    monitor_notify.lambda_handler(data, "")
 
 
 if __name__ == "__main__":

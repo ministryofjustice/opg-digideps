@@ -8,7 +8,7 @@ resource "aws_cloudwatch_event_rule" "business_functionality_check" {
 
 resource "aws_cloudwatch_event_target" "business_functionality_check" {
   target_id = "check-business-functionality-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.business_functionality_check.name
   input = jsonencode(
     {

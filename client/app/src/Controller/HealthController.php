@@ -66,7 +66,7 @@ class HealthController extends AbstractController
             'hostedEnv' => $this->hostedEnv,
         ]);
 
-        $response->setStatusCode($healthy ? 200 : 500);
+        $response->setStatusCode($healthy ? 200 : 503);
 
         return $response;
     }
@@ -96,7 +96,7 @@ class HealthController extends AbstractController
             'hostedEnv' => $this->hostedEnv,
         ]);
 
-        $response->setStatusCode($healthy ? 200 : 500);
+        $response->setStatusCode($healthy ? 200 : 503);
 
         return $response;
     }
@@ -145,9 +145,7 @@ class HealthController extends AbstractController
 
             if (!$service->isHealthy()) {
                 $logResponses = true;
-                if ('Sirius' != $service->getName()) {
-                    $healthy = false;
-                }
+                $healthy = false;
                 $errors[] = $service->getErrors();
             }
             $serviceTimeTaken = (microtime(true) - $startServiceTime);
