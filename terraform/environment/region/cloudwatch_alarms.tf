@@ -65,7 +65,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
 
 resource "aws_cloudwatch_log_metric_filter" "frontend_5xx_errors" {
   name           = "Frontend5XXErrors.${local.environment}"
-  pattern        = "{($.service_name = \"frontend\") && ($.status = 5*)}"
+  pattern        = "{($.service_name = \"frontend\") && ($.status = 5*) && ($.request_uri != \"/health-check/dependencies\")}"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -94,7 +94,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
 
 resource "aws_cloudwatch_log_metric_filter" "admin_5xx_errors" {
   name           = "Admin5XXErrors.${local.environment}"
-  pattern        = "{($.service_name = \"admin\") && ($.status = 5*)}"
+  pattern        = "{($.service_name = \"admin\") && ($.status = 5*) && ($.request_uri != \"/health-check/dependencies\")}"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
