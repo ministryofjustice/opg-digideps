@@ -612,7 +612,7 @@ class ReportController extends AbstractController
             'phone' => ['main' => $client->getPhone()],
             'email' => $client->getEmail(),
             'editUrl' => $currentUser->isLayDeputy() ?
-                $this->generateUrl('client_edit', ['from' => 'declaration']) :
+                $this->generateUrl('client_edit', ['clientId' => $client->getId(), 'from' => 'declaration']) :
                 $this->generateUrl('org_client_edit', ['clientId' => $client->getId(), 'from' => 'declaration']),
         ];
     }

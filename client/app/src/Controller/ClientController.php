@@ -47,7 +47,7 @@ class ClientController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector, int $clientId, ParameterStoreService $parameterStoreService)
+    public function indexAction(Redirector $redirector, string $clientId, ParameterStoreService $parameterStoreService)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
@@ -73,6 +73,7 @@ class ClientController extends AbstractController
             }
         }
 
+        file_put_contents('php://stderr', 'TESTing');
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
         if (is_string($route)) {
@@ -180,7 +181,7 @@ class ClientController extends AbstractController
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
             }
 
-            return $this->redirect($this->generateUrl('client_show'));
+            return $this->redirect($this->generateUrl('client_show', ['clientId' => $clientId]));
         }
 
         return [
@@ -198,14 +199,20 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
     {
+        file_put_contents('php://stderr', 'TEST11');
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
 
+        file_put_contents('php://stderr', 'TEST22');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
 
         if (is_string($route)) {
+            file_put_contents('php://stderr', print_r('TEST33', true));
+
             return $this->redirectToRoute($route);
         }
+
+        file_put_contents('php://stderr', print_r('TEST44', true));
 
         $client = $this->clientApi->getFirstClient();
         $existingClientId = 0;

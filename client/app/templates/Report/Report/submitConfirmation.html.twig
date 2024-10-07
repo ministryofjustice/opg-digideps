@@ -32,9 +32,16 @@
         <p class="govuk-body">{{ 'page.yourNextReport' | trans }}</p>
     </div>
 
-    <a href="{{ path( homePathName ) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
-        {{ 'page.yourReportsButton' | trans }}
-    </a>
+    {% if homePathName == 'lay_home' %}
+        <a href="{{ path(homePathName, {'clientId' : report.client.id}) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
+            {{ 'page.yourReportsButton' | trans }}
+        </a>
+    {% else %}
+        <a href="{{ path( homePathName ) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
+            {{ 'page.yourReportsButton' | trans }}
+        </a>
+    {% endif %}
+
 
     {% if report.hasSection('profDeputyCosts') %}
         <ul class="govuk-list govuk-list--bullet push--top">

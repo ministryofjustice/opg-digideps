@@ -145,7 +145,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnLayMainPage(): bool
     {
-        return $this->iAmOnPage('/lay$/');
+        return $this->iAmOnPage('/client\/.*/');
     }
 
     /**
