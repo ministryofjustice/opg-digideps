@@ -48,7 +48,6 @@ func UpdateAllToPassedInValue(
 	tableName string,
 	updateColumn string,
 	updateString string) error {
-	// Base query without the optional WHERE clause
 	query := fmt.Sprintf(`UPDATE anon.%s SET %s = '%s';`, tableName, updateColumn, updateString)
 
 	fmt.Println(query)

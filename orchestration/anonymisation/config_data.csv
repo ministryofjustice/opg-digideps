@@ -85,6 +85,7 @@ public,report,status_cached,text,,NA,
 public,report,type,character varying,,NA,
 public,report,unsubmitted_sections_list,text,,NA,
 public,money_short_category,type_id,character varying,,NA,
+public,client,case_number,character varying,,NA,
 public,client,lastname,character varying,,LastName,client.case_number#pre_registration.client_case_number~client_lastname
 public,deputy,firstname,character varying,,FirstName,deputy.user_id#dd_user.id~firstname
 public,deputy,lastname,character varying,,LastName,deputy.user_id#dd_user.id~lastname
