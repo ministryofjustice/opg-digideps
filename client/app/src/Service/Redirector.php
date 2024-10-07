@@ -68,8 +68,6 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        file_put_contents('php://stderr', 'TEST1');
-
         if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
             if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
                 return $this->router->generate('user_details');
@@ -100,17 +98,13 @@ class Redirector
      */
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
-        file_put_contents('php://stderr', $currentRoute);
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            file_put_contents('php://stderr', 'TEST1');
             $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
-            file_put_contents('php://stderr', 'TEST2');
-
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
@@ -122,14 +116,9 @@ class Redirector
                     $route = 'codep_verification';
                 }
             } else {
-                file_put_contents('php://stderr', 'TEST4');
-
                 if (!$user->isDeputyOrg()) {
-                    file_put_contents('php://stderr', 'TEST5');
-
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
-                        file_put_contents('php://stderr', 'TEST6');
                         $route = 'client_add';
                     }
 
@@ -141,8 +130,6 @@ class Redirector
             }
         }
 
-        file_put_contents('php://stderr', $route);
-
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
@@ -151,7 +138,6 @@ class Redirector
      */
     private function getLayDeputyHomepage(User $user, $enabledLastAccessedUrl = false)
     {
-        file_put_contents('php://stderr', 'TEST3');
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
@@ -175,7 +161,6 @@ class Redirector
      */
     private function getLastAccessedUrl()
     {
-        file_put_contents('php://stderr', 'TEST4');
         $lastUsedUrl = $this->session->get('_security.secured_area.target_path');
         if (!$lastUsedUrl) {
             return false;
@@ -209,7 +194,6 @@ class Redirector
      */
     public function getHomepageRedirect()
     {
-        file_put_contents('php://stderr', 'TEST5');
         if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
             if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {

@@ -215,8 +215,6 @@ class UserController extends AbstractController
 
             // lay deputies are redirected to adding a client (Step.3)
             if ($user->isLayDeputy()) {
-                file_put_contents('php://stderr', 'TEST1');
-
                 return $this->redirectToRoute('client_add');
             }
 

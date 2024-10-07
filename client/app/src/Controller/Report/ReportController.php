@@ -119,14 +119,68 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Report/Report/index.html.twig")
      *
-     * @see ClientController::indexAction()
-     *
      * @return RedirectResponse
      */
     public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
     {
         // Moved to ClientController::indexAction()
         return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/client/{clientId}", name="lay_home")
+     *
+     * @Template("@App/Report/Report/index.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function clientHomepageAction(Redirector $redirector, string $clientId, ParameterStoreService $parameterStoreService)
+    {
+        // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
+        // due to the way
+        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+
+        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+        if ('1' == $isMultiClientFeatureEnabled) {
+            // redirect back to log out page if signing in with non-primary account with primary email
+            if (!$user->getIsPrimary()) {
+                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+
+                $this->addFlash('nonPrimaryRedirect',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                        'primaryEmail' => $primaryEmail,
+                    ]
+                );
+
+                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+            }
+        }
+
+        // redirect if user has missing details or is on wrong page
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
+        if (is_string($route)) {
+            return $this->redirectToRoute($route);
+        }
+
+        $clients = $user->getClients();
+        if (empty($clients)) {
+            throw $this->createNotFoundException('Client not added');
+        }
+
+        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
+        $coDeputies = $clientWithCoDeputies->getCoDeputies();
+
+        return [
+            'user' => $user,
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
+            'client' => $clientWithCoDeputies,
+            'coDeputies' => $coDeputies,
+        ];
     }
 
     /**

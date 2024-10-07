@@ -16,7 +16,6 @@ use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,63 +35,6 @@ class ClientController extends AbstractController
         private PreRegistrationApi $preRegistrationApi,
         private ObservableEventDispatcher $eventDispatcher,
     ) {
-    }
-
-    /**
-     * List of reports.
-     *
-     * @Route("/client/{clientId}", name="lay_home")
-     *
-     * @Template("@App/Report/Report/index.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function indexAction(Redirector $redirector, string $clientId, ParameterStoreService $parameterStoreService)
-    {
-        // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
-        // due to the way
-        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-
-        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
-
-        if ('1' == $isMultiClientFeatureEnabled) {
-            // redirect back to log out page if signing in with non-primary account with primary email
-            if (!$user->getIsPrimary()) {
-                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-                $this->addFlash('nonPrimaryRedirect',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                        'primaryEmail' => $primaryEmail,
-                    ]
-                );
-
-                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
-            }
-        }
-
-        file_put_contents('php://stderr', 'TESTing');
-        // redirect if user has missing details or is on wrong page
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $clients = $user->getClients();
-        if (empty($clients)) {
-            throw $this->createNotFoundException('Client not added');
-        }
-
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
-        $coDeputies = $clientWithCoDeputies->getCoDeputies();
-
-        return [
-            'user' => $user,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
-            'client' => $clientWithCoDeputies,
-            'coDeputies' => $coDeputies,
-        ];
     }
 
     /**
@@ -198,20 +140,14 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
     {
-        file_put_contents('php://stderr', 'TEST11');
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
 
-        file_put_contents('php://stderr', 'TEST22');
         $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
 
         if (is_string($route)) {
-            file_put_contents('php://stderr', print_r('TEST33', true));
-
             return $this->redirectToRoute($route);
         }
-
-        file_put_contents('php://stderr', print_r('TEST44', true));
 
         $client = $this->clientApi->getFirstClient();
         $existingClientId = 0;
