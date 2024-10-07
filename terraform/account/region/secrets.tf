@@ -48,3 +48,9 @@ resource "aws_secretsmanager_secret" "slack_webhook_url" {
   description = "URL of webhook for Slack Integration"
   tags        = var.default_tags
 }
+
+resource "aws_secretsmanager_secret" "preproduction_anonymise_default_pw" {
+  name        = "anonymisation-default-user-pw"
+  description = "Default password for anonymisation users"
+  tags        = var.default_tags
+}

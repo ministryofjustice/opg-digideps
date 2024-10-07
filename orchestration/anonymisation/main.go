@@ -30,6 +30,8 @@ func main() {
 	password := common.GetEnvWithDefault("POSTGRES_PASSWORD", "api")
 	sslmode := common.GetEnvWithDefault("POSTGRES_SSL_MODE", "disable")
 
+	defaultUserPassword := common.GetEnvWithDefault("DEFAULT_USER_PASSWORD", "FakePassword")
+
 	db, err := sql.Open(
 		"postgres",
 		fmt.Sprintf("host=%s user=%s dbname=%s password=%s sslmode=%s sslrootcert=%s", host, user, dbname, password, sslmode, "/certs/eu-west-1-bundle.pem"))
@@ -77,8 +79,12 @@ func main() {
 	tableDetails, err = initialisation.CopySourceTablesToProcessing(db, tableDetails, true)
 	common.CheckError(err)
 
-	// ===== Processing =====
+	// ===== Processing - Create Fake Data in Anon Schema =====
 	err = processing.GenerateAsyncFakeData(db, tableDetails, ChunkSize)
+	common.CheckError(err)
+
+	// ===== Processing - Additional Complex Updates =====
+	err = processing.UpdateAllToPassedInValue(db, "dd_user", "password", defaultUserPassword)
 	common.CheckError(err)
 
 	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "email", "email", EmailSuffixToIgnore)
@@ -87,6 +93,11 @@ func main() {
 	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "password", "email", EmailSuffixToIgnore)
 	common.CheckError(err)
 
+	// ===== Processing - Additional Complex Updates =====
+	err = processing.CustomSQLScriptUpdates(db)
+	common.CheckError(err)
+
+	// ===== Processing - Additional Complex Updates =====
 	err = processing.UpdateAsyncOriginalTables(db, tableDetails, ChunkSize, leftJoins)
 	common.CheckError(err)
 
