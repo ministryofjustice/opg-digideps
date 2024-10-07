@@ -53,8 +53,8 @@ jobs:
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
             docker_file: "Dockerfile"
-          - svc_name: "synchronise-lambda"
-            sub_folder: "lambdas/functions/synchronisation"
+          - svc_name: "custom-sql-lambda"
+            sub_folder: "lambdas/functions/custom_sql_query"
             docker_file: "Dockerfile"
     steps:
       - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
