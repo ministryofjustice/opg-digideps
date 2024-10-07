@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Service\Client\Internal\ClientApi;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -46,7 +47,9 @@ class Redirector
         protected AuthorizationCheckerInterface $authChecker,
         protected RouterInterface $router,
         protected Session $session,
-        protected string $env
+        protected string $env,
+        private ClientApi $clientApi,
+        private ParameterStoreService $parameterStoreService
     ) {
     }
 
@@ -82,7 +85,7 @@ class Redirector
                 return $this->router->generate('org_dashboard');
             }
         } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            return $this->getLayDeputyHomepage($user, false);
+            return $this->getCorrectLayHomepage();
         } else {
             return $this->router->generate('access_denied');
         }
@@ -226,9 +229,51 @@ class Redirector
 
         // deputy: if logged, redirect to overview pages
         if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->getLayDeputyHomepage($this->getLoggedUser(), false);
+            return $this->getCorrectLayHomepage();
         }
 
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    private function getChooseAClientHomepage(User $user, $enabledLastAccessedUrl = false)
+    {
+        // checks if user has missing details or is NDR
+        if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
+            return $this->router->generate($route);
+        }
+
+        // last accessed url
+        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
+            return $lastUsedUri;
+        }
+
+        return $this->router->generate('choose_a_client');
+    }
+
+    private function getCorrectLayHomepage()
+    {
+        $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+        $user = $this->getLoggedUser();
+
+        if (!is_null($user->getDeputyUid())) {
+            $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        }
+
+        if ('1' == $isMultiClientFeatureEnabled) {
+            if (!(null === $clients)) {
+                if (1 < count($clients)) {
+                    return $this->getChooseAClientHomepage($user, false);
+                } else {
+                    return $this->getLayDeputyHomepage($user, false);
+                }
+            } else {
+                return $this->getLayDeputyHomepage($user, false);
+            }
+        } else {
+            return $this->getLayDeputyHomepage($user, false);
+        }
     }
 }

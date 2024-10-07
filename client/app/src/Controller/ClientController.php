@@ -52,7 +52,6 @@ class ClientController extends AbstractController
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-        $userEmail = $user->getEmail();
 
         $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
 

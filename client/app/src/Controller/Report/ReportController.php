@@ -29,6 +29,7 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -126,6 +127,57 @@ class ReportController extends AbstractController
     {
         // Moved to ClientController::indexAction()
         return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/choose-a-client", name="choose_a_client")
+     *
+     * @Security("is_granted('ROLE_LAY_DEPUTY')")     *
+     *
+     * @Template("@App/Index/choose-a-client.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function chooseAClientAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
+    {
+        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
+        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+        if ('1' == $isMultiClientFeatureEnabled) {
+            // redirect back to log out page if signing in with non-primary account with primary email
+            if (!$user->getIsPrimary()) {
+                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+
+                $this->addFlash('nonPrimaryRedirect',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                        'primaryEmail' => $primaryEmail,
+                    ]
+                );
+
+                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+            }
+        }
+
+        // redirect if user has missing details or is on wrong page
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
+        if (is_string($route)) {
+            return $this->redirectToRoute($route);
+        }
+
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+
+        if (empty($clients)) {
+            throw $this->createNotFoundException('Client not added');
+        }
+
+        return [
+            'user' => $user,
+            'clients' => $clients,
+        ];
     }
 
     /**
