@@ -55,7 +55,7 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d localstack postgres redis-api
           while [ $(docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests ls -alt
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure_local.sh
+          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure.sh local
 
       - name: run api unit tests
         env:
