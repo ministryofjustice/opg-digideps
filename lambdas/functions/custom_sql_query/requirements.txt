@@ -1,0 +1,3 @@
+awslambdaric~=2.2.1
+boto3~=1.35.20
+psycopg2~=2.9.9
