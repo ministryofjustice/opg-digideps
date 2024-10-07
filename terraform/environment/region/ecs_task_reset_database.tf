@@ -18,7 +18,7 @@ locals {
     {
       name    = "reset-database",
       image   = local.images.api,
-      command = ["sh", "tests/Behat/reset-db.sh"],
+      command = ["sh", "scripts/reset_db_fixtures.sh"],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -31,6 +31,10 @@ locals {
         {
           name      = "DATABASE_PASSWORD",
           valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "CUSTOM_SQL_DATABASE_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.custom_sql_db_password.arn
         },
         {
           name      = "SECRET",
