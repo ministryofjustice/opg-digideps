@@ -51,5 +51,5 @@ Feature: Users logging into the service
     Scenario: A user tries to login to the service with their primary account
         Given a Lay Deputy has multiple client accounts
         And a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the Lay homepage
+        Then they should be on the Choose a Client homepage
         And when they log out they shouldn't see a flash message for non primary accounts
