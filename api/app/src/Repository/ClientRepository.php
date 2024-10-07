@@ -215,4 +215,14 @@ class ClientRepository extends ServiceEntityRepository
 
         return 0 === count($deputyCaseResults) ? null : $deputyCaseResults[0];
     }
+
+    public function getAllClientsAndReportsByDeputyUid(int $deputyUid)
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery("SELECT c FROM App\Entity\Client c LEFT JOIN c.users u where u.deputyUid = ?1 ORDER BY c.id")
+            ->setParameter(1, $deputyUid);
+
+        return $query->getResult();
+    }
 }

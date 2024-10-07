@@ -29,6 +29,8 @@ class ClientApi
 
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
 
+    private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
+
     /** @var RestClient */
     private $restClient;
 
@@ -212,5 +214,26 @@ class ClientApi
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         return $this->restClient->put(sprintf(self::UPDATE_CLIENT_DEPUTY, $clientId, $deputyId), $currentUser);
+    }
+
+    /**
+     * @return Client[]
+     */
+    public function getAllClientsByDeputyUid(int $deputyUid)
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
+            'Client[]',
+            [
+                'client',
+                'client-name',
+                'client-case-number',
+                'client-reports',
+                'client-ndr',
+                'ndr',
+                'report',
+                'status',
+            ]
+        );
     }
 }
