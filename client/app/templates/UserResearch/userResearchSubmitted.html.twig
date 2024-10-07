@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    {% if homePathName == 'lay_home' %}
+    {% if homePageName == 'lay_home' %}
         <a href="{{ path(homePageName, {'clientId' : report.client.id}) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
             {{ 'page.yourReportsButton' | trans }}
         </a>
