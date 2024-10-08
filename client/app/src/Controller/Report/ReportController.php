@@ -162,11 +162,15 @@ class ReportController extends AbstractController
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        $deputyHasMultiClients = count($clients) > 1;
+
         return [
             'user' => $user,
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
             'client' => $client,
             'coDeputies' => $coDeputies,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -364,12 +368,16 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        $deputyHasMultiClients = count($clients) > 1;
+
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ]);
     }
 
