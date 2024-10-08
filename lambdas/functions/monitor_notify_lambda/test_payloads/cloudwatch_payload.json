@@ -1,19 +1,12 @@
 {
   "scheduled-event-detail": {
     "job-name": "example_job_name",
-    "log-group": "/aws/lambda/example-log-group",
-    "log-entries": [
-      {
-        "log_title": "Example Log Title 1",
-        "status": "success",
-        "count": 2,
-        "description": "The job executed successfully."
-      }
-    ],
+    "log-group": "replace_this_with_actual_log_group",
+    "log-entries": ["test_log_entry"],
     "search-timespan": "15 minutes",
     "bank-holidays": "false",
-    "channel-identifier-absent": "channel_absent_notification",
-    "channel-identifier-success": "channel_success_notification",
-    "channel-identifier-failure": "channel_failure_notification"
+    "channel-identifier-absent": "scheduled-jobs",
+    "channel-identifier-success": "scheduled-jobs",
+    "channel-identifier-failure": "scheduled-jobs"
   }
 }
