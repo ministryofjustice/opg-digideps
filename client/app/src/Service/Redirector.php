@@ -146,7 +146,7 @@ class Redirector
             return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
-        return $this->router->generate('lay_home');
+        return $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]);
     }
 
     /**
@@ -235,22 +235,20 @@ class Redirector
         $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
         $user = $this->getLoggedUser();
 
-        if (!is_null($user->getDeputyUid())) {
-            $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
-        }
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : null;
 
         if ('1' == $isMultiClientFeatureEnabled) {
             if (!(null === $clients)) {
                 if (1 < count($clients)) {
-                    return $this->getChooseAClientHomepage($user, false);
+                    return $this->getChooseAClientHomepage($user);
                 } else {
-                    return $this->getLayDeputyHomepage($user, false);
+                    return $this->getLayDeputyHomepage($user);
                 }
             } else {
-                return $this->getLayDeputyHomepage($user, false);
+                return $this->getLayDeputyHomepage($user);
             }
         } else {
-            return $this->getLayDeputyHomepage($user, false);
+            return $this->getLayDeputyHomepage($user);
         }
     }
 }

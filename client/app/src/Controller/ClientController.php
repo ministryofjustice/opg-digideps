@@ -40,11 +40,21 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/deputyship-details/your-client", name="client_show")
+     * @Route("/deputyship-details/your-client", name="client_show_deprecated")
      *
      * @Template("@App/Client/show.html.twig")
      */
     public function showAction(Redirector $redirector)
+    {
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/deputyship-details/your-client/{clientId}", name="client_show")
+     *
+     * @Template("@App/Client/show.html.twig")
+     */
+    public function showClientDetailsAction(Redirector $redirector, int $clientId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -55,7 +65,7 @@ class ClientController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->clientApi->getFirstClient();
+        $client = $this->clientApi->getById($clientId);
 
         return [
             'client' => $client,
@@ -63,7 +73,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/deputyship-details/your-client/edit", name="client_edit")
+     * @Route("/deputyship-details/your-client/edit", name="client_edit_deprecated")
      *
      * @Template("@App/Client/edit.html.twig")
      *
@@ -71,8 +81,20 @@ class ClientController extends AbstractController
      */
     public function editAction(Request $request)
     {
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/deputyship-details/client/{clientId}/edit", name="client_edit")
+     *
+     * @Template("@App/Client/edit.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function editClientDetailsAction(Request $request, int $clientId)
+    {
         $from = $request->get('from');
-        $preUpdateClient = $this->clientApi->getFirstClient();
+        $preUpdateClient = $this->clientApi->getById($clientId);
 
         if (is_null($preUpdateClient)) {
             /** @var User $user */
@@ -82,7 +104,7 @@ class ClientController extends AbstractController
         }
 
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
-            'action' => $this->generateUrl('client_edit', ['action' => 'edit', 'from' => $from]),
+            'action' => $this->generateUrl('client_edit', ['clientId' => $clientId, 'action' => 'edit', 'from' => $from]),
             'validation_groups' => ['lay-deputy-client-edit'],
         ]);
 
@@ -102,7 +124,7 @@ class ClientController extends AbstractController
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
             }
 
-            return $this->redirect($this->generateUrl('client_show'));
+            return $this->redirect($this->generateUrl('client_show', ['clientId' => $clientId]));
         }
 
         return [
