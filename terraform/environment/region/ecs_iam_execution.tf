@@ -98,7 +98,8 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_secretsmanager_secret.custom_sql_db_password.arn,
       data.aws_secretsmanager_secret.api_secret.arn,
       data.aws_secretsmanager_secret.admin_frontend_secret.arn,
-      data.aws_secretsmanager_secret.admin_api_client_secret.arn
+      data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+      data.aws_secretsmanager_secret.anonymise-default-pw.arn
     ]
     actions = ["secretsmanager:GetSecretValue"]
   }

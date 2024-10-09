@@ -205,7 +205,7 @@ public,deputy,address5,character varying,200,,Lorem
 public,deputy,address_country,character varying,10,,Lorem
 public,deputy,address_postcode,character varying,10,,PostCode
 public,deputy,created_at,timestamp without time zone,,,NA
-public,deputy,deputy_uid,character varying,20,,Lorem
+public,deputy,deputy_uid,character varying,20,,NA
 public,deputy,email1,character varying,60,,Email
 public,deputy,email2,character varying,60,,Email
 public,deputy,email3,character varying,60,,Email
@@ -408,7 +408,7 @@ public,odr_visits_care,plan_move_residence_details,text,,,Lorem
 public,odr_visits_care,when_was_care_plan_last_reviewed,date,,,NA
 public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
 public,organisation,deleted_at,timestamp without time zone,,,NA
-public,organisation,email_identifier,character varying,256,,Email
+public,organisation,email_identifier,character varying,256,,NA
 public,organisation,id,integer,,PRIMARY KEY,NA
 public,organisation,is_activated,boolean,,,NA
 public,organisation,name,character varying,256,,Organisation
@@ -427,7 +427,7 @@ public,pre_registration,deputy_address_5,character varying,255,,Lorem
 public,pre_registration,deputy_firstname,character varying,100,,FirstName
 public,pre_registration,deputy_lastname,character varying,100,,LastName
 public,pre_registration,deputy_postcode,character varying,10,,PostCode
-public,pre_registration,deputy_uid,character varying,100,,Lorem
+public,pre_registration,deputy_uid,character varying,100,,NA
 public,pre_registration,hybrid,character varying,6,,Lorem
 public,pre_registration,id,integer,,PRIMARY KEY,NA
 public,pre_registration,is_co_deputy,boolean,,,NA
