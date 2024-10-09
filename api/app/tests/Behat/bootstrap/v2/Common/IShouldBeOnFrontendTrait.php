@@ -846,6 +846,8 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnChooseAClientMainPage(): bool
     {
+        $this->assertPageContainsText('Select which client you want to manage a report for.');
+
         return $this->iAmOnPage('/choose-a-client$/');
     }
 }

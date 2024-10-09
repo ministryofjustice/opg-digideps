@@ -50,7 +50,6 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedPfaHighAssetsDetails;
-    public UserDetails $layDeputyNotStartedPfaNotPrimaryUser;
     public UserDetails $layDeputyCompletedPfaHighAssetsDetails;
     public UserDetails $layDeputySubmittedPfaHighAssetsDetails;
 
@@ -65,6 +64,9 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyNotStartedCombinedHighDetails;
     public UserDetails $layDeputyCompletedCombinedHighDetails;
     public UserDetails $layDeputySubmittedCombinedHighDetails;
+
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
 
     public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
@@ -625,13 +627,15 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @lay-pfa-high-not-started-not-primary
+     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy
      */
-    public function createPfaHighNotStartedNonPrimaryUser(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null, ?bool $isPrimary = false)
+    public function createLayPfaHighNotStartedMultiClientDeputy()
     {
-        $userDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, $isPrimary, $caseNumber));
-        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaNotPrimaryUser = $userDetails;
+        $deputyUid = 123456789000 + rand(1, 999);
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
 
-        return $userDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
     }
 }
