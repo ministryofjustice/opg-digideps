@@ -7,6 +7,7 @@
 
 {% block htmlTitle %}{{ (app.user.isDeputyOrg() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
 {% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}{% endblock %}
+{% block clientDetails %}{% endblock clientDetails %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('settings') }}
