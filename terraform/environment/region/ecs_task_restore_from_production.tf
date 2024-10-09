@@ -29,10 +29,16 @@ locals {
           awslogs-stream-prefix = "restore"
         }
       },
-      secrets = [{
-        name      = "POSTGRES_PASSWORD",
-        valueFrom = data.aws_secretsmanager_secret.database_password.arn
-      }],
+      secrets = [
+        {
+          name      = "POSTGRES_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "DEFAULT_USER_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.anonymise-default-pw.arn
+        }
+      ],
       environment = concat(local.api_single_db_tasks_base_variables,
         [
           {
