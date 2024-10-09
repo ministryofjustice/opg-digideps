@@ -14,9 +14,17 @@ class ClientControllerTest extends AbstractTestController
     private static $client2;
     private static $report2;
     private static $deputy3;
+    private static $primaryUserAccount;
+    private static $nonPrimaryUserAccount;
+    private static $primaryAccountClient;
+    private static $nonPrimaryAccountClient;
+    private static $primaryAccountClientReport;
+    private static $nonPrimaryAccountClientReport;
 
     private static $tokenAdmin;
     private static $tokenDeputy;
+    private static $tokenMultiClientPrimaryDeputy;
+    private static $tokenMultiClientNonPrimaryDeputy;
     private static $tokenPa;
     private static $tokenProf;
 
@@ -65,6 +73,8 @@ class ClientControllerTest extends AbstractTestController
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenMultiClientPrimaryDeputy = $this->loginAsMultiClientPrimaryDeputy();
+            self::$tokenMultiClientNonPrimaryDeputy = $this->loginAsMultiClientNonPrimaryDeputy();
             self::$tokenPa = $this->loginAsPa();
             self::$tokenProf = $this->loginAsProf();
         }
@@ -79,8 +89,17 @@ class ClientControllerTest extends AbstractTestController
         self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
         self::$report2 = self::fixtures()->createReport(self::$client2);
 
-        // deputy 2
+        // deputy 3
         self::$deputy3 = self::fixtures()->createDeputy();
+
+        // deputy 4 (multi-client deputy)
+        self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
+        self::$primaryAccountClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'Multi-Client1', 'setCaseNumber' => '34566543']);
+        self::$primaryAccountClientReport = self::fixtures()->createReport(self::$primaryAccountClient);
+
+        self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
+        self::$nonPrimaryAccountClient = self::fixtures()->createClient(self::$nonPrimaryUserAccount, ['setFirstname' => 'Multi-Client2', 'setCaseNumber' => '78900987']);
+        self::$nonPrimaryAccountClientReport = self::fixtures()->createReport(self::$nonPrimaryAccountClient);
 
         // pa
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
@@ -214,11 +233,23 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
-    public function testfindByIdAcl()
+    public function testfindByIdAclNotAllowed()
     {
-        $url2 = '/client/'.self::$client2->getId();
+        $url = '/client/'.self::$primaryAccountClient->getId();
 
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+    }
+
+    public function testfindByIdAclAllowed()
+    {
+        $url = '/client/'.self::$primaryAccountClient->getId();
+        $url2 = '/client/'.self::$nonPrimaryAccountClient->getId();
+
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
+        $this->assertEndpointAllowedFor('GET', $url2, self::$tokenMultiClientPrimaryDeputy);
+
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientNonPrimaryDeputy);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientNonPrimaryDeputy);
     }
 
     public function testfindById()
@@ -311,7 +342,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertCount(3, $data);
+        $this->assertCount(5, $data);
     }
 
     public function testUpdateDeputy()
