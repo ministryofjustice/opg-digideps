@@ -61,8 +61,21 @@ func main() {
 }
 
 func turnOff(sess *session.Session, rdsClusterID string, ecsClusterName string) {
+	lambdaSvc := lambda.New(sess)
+	_, err := lambdaSvc.UpdateFunctionConfiguration(&lambda.UpdateFunctionConfigurationInput{
+		FunctionName: aws.String("monitor-notify"),
+		Environment: &lambda.Environment{
+			Variables: map[string]*string{
+				"PAUSE_NOTIFICATIONS": aws.String("1"),
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
 	rdsSvc := rds.New(sess)
-	_, err := rdsSvc.StopDBCluster(&rds.StopDBClusterInput{
+	_, err = rdsSvc.StopDBCluster(&rds.StopDBClusterInput{
 		DBClusterIdentifier: aws.String(rdsClusterID),
 	})
 	if err != nil {
@@ -97,19 +110,6 @@ func turnOff(sess *session.Session, rdsClusterID string, ecsClusterName string) 
 			continue
 		}
 		fmt.Printf("Set desired count to 0 for service: %s\n", *serviceArn)
-	}
-
-	lambdaSvc := lambda.New(sess)
-	_, err = lambdaSvc.UpdateFunctionConfiguration(&lambda.UpdateFunctionConfigurationInput{
-		FunctionName: aws.String("slack-notifier"),
-		Environment: &lambda.Environment{
-			Variables: map[string]*string{
-				"PAUSE_NOTIFICATIONS": aws.String("1"),
-			},
-		},
-	})
-	if err != nil {
-		panic(err)
 	}
 }
 
@@ -170,7 +170,7 @@ func turnOn(sess *session.Session, rdsClusterID string, ecsClusterName string) {
 
 	lambdaSvc := lambda.New(sess)
 	_, err = lambdaSvc.UpdateFunctionConfiguration(&lambda.UpdateFunctionConfigurationInput{
-		FunctionName: aws.String("slack-notifier"),
+		FunctionName: aws.String("monitor-notify"),
 		Environment: &lambda.Environment{
 			Variables: map[string]*string{
 				"PAUSE_NOTIFICATIONS": aws.String("0"),

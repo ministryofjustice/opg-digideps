@@ -56,4 +56,15 @@ data "aws_iam_policy_document" "api_permissions" {
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
     ]
   }
+
+  statement {
+    sid    = "ApiKMSSiriusS3Decrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
