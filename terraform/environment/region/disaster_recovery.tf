@@ -4,7 +4,7 @@ module "disaster_recovery_backup" {
   account_id              = var.account.account_id
   backup_account_id       = local.backup_account_id
   task_runner_arn         = aws_iam_role.events_task_runner.arn
-  execution_role_arn      = aws_iam_role.execution_role.arn
+  execution_role_arn      = aws_iam_role.execution_role_db.arn
   cross_account_role_name = local.cross_account_role_name
   images                  = local.images
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn

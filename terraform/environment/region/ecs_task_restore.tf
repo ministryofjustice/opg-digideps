@@ -9,7 +9,7 @@ module "restore" {
   container_definitions = "[${local.restore_container}]"
   tags                  = var.default_tags
   environment           = local.environment
-  execution_role_arn    = aws_iam_role.execution_role.arn
+  execution_role_arn    = aws_iam_role.execution_role_db.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
   vpc_id                = data.aws_vpc.vpc.id

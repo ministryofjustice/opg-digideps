@@ -92,27 +92,26 @@ class ProcessLayCSVCommand extends Command
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $input->getArgument('csv-filename');
         $fileLocation = sprintf('/tmp/%s', $layReportFile);
-        file_put_contents('php://stderr', print_r(' BUCKET: ', true));
-        file_put_contents('php://stderr', print_r($bucket, true));
-        //         try {
-        $this->s3->getObject([
-            'Bucket' => $bucket,
-            'Key' => $layReportFile,
-            'SaveAs' => $fileLocation,
-        ]);
-        //         } catch (S3Exception $e) {
-        //             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-        //                 $logMessage = 'File %s not found in bucket %s';
-        //             } else {
-        //                 $logMessage = 'Error retrieving file %s from bucket %s';
-        //             }
-        //             $logMessage = sprintf($logMessage, $layReportFile, $bucket);
-        //
-        //             $this->logger->error($logMessage);
-        //             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
-        //
-        //             return Command::FAILURE;
-        //         }
+
+        try {
+            $this->s3->getObject([
+                'Bucket' => $bucket,
+                'Key' => $layReportFile,
+                'SaveAs' => $fileLocation,
+            ]);
+        } catch (S3Exception $e) {
+            if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
+                $logMessage = 'File %s not found in bucket %s';
+            } else {
+                $logMessage = 'Error retrieving file %s from bucket %s';
+            }
+            $logMessage = sprintf($logMessage, $layReportFile, $bucket);
+
+            $this->logger->error($logMessage);
+            $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
+
+            return Command::FAILURE;
+        }
 
         $data = $this->csvToArray($fileLocation);
         if (count($data) >= 1 && $this->process($data)) {

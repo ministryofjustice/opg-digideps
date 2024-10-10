@@ -64,7 +64,7 @@ data "aws_iam_policy_document" "api_permissions" {
       "kms:Decrypt",
     ]
     resources = [
-      "*"
+      "arn:aws:kms:eu-west-1:${var.account.sirius_api_account}:key/*"
     ]
   }
 }
