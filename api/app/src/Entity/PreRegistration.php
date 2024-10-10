@@ -219,6 +219,13 @@ class PreRegistration
         return $this->caseNumber;
     }
 
+    public function setCaseNumber(string $caseNumber): self
+    {
+        $this->caseNumber = strtolower($caseNumber);
+
+        return $this;
+    }
+
     public function getClientLastname()
     {
         return $this->clientLastname;

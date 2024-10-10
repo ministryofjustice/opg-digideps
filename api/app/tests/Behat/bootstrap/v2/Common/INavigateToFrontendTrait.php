@@ -23,4 +23,13 @@ trait INavigateToFrontendTrait
         $this->clickLink('Settings');
         $this->iAmOnOrgSettingsPage();
     }
+
+    /**
+     * @When /^the Lay deputy navigates back to the Choose a Client homepage$/
+     */
+    public function theLayDeputyNavigatesBackToTheChooseAClientHomepage()
+    {
+        $this->clickLink('Complete the deputy report');
+        $this->iAmOnChooseAClientMainPage();
+    }
 }

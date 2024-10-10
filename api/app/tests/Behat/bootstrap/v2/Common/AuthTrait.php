@@ -9,8 +9,6 @@ use App\Tests\Behat\BehatException;
 
 trait AuthTrait
 {
-    private string $primaryEmailAddress;
-
     /**
      * @Given :email logs in
      */
@@ -341,11 +339,14 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^a Lay Deputy tries to login with their "([^"]*)" email address$/
+     * @Given /^a Lay Deputy tries to login with their "(primary|non-primary)" email address$/
      */
-    public function aLayDeputyTriesToLoginWithTheirEmailAddress($arg1)
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary)
     {
-        $userEmail = 'non-primary' === $arg1 ? $this->layDeputyNotStartedPfaNotPrimaryUser->getUserEmail() : $this->primaryEmailAddress;
+        $this->loggedInUserDetails = 'primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
+            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
 
         $this->visitPath('/login');
         $this->fillField('login_email', $userEmail);
@@ -366,7 +367,9 @@ trait AuthTrait
      */
     public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
     {
-        $alertMessage = sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s', $this->primaryEmailAddress);
+        $alertMessage =
+            sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s',
+                $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail());
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
@@ -387,7 +390,7 @@ trait AuthTrait
      */
     public function theUserTriesToAccessTheirClientsReportOverviewPage()
     {
-        $activeReportId = $this->layDeputyNotStartedPfaNotPrimaryUser->getCurrentReportId();
+        $activeReportId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getCurrentReportId();
 
         $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
         $this->visitPath($reportOverviewUrl);
@@ -406,5 +409,38 @@ trait AuthTrait
 
         $this->assertPageNotContainsText('This account is closed');
         $this->assertElementNotOnPage('govuk-notification-banner__content');
+    }
+
+    /**
+     * @When /^they choose their "(primary|non-primary)" Client$/
+     */
+    public function theyChooseTheirFirstClient($isPrimary)
+    {
+        $clientId = 'primary' == $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
+            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+
+        $urlRegex = sprintf('/client\/%d$/', $clientId);
+
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
+     * @Then /^they should be on the "(primary|non-primary)" Client's dashboard$/
+     */
+    public function theyShouldBeOnThatClientSDashboard($isPrimary)
+    {
+        if ('primary' == $isPrimary) {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+            $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientFirstName();
+            $clientLastName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientLastName();
+        } else {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+            $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientFirstName();
+            $clientLastName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientLastName();
+        }
+
+        $this->iAmOnPage(sprintf('/client\/%d$/', $clientId));
+        $this->assertPageContainsText($clientFirstName);
+        $this->assertPageContainsText($clientLastName);
     }
 }

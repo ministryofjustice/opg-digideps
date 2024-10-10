@@ -19,7 +19,7 @@
         {% if app.user.isDeputyOrg() %}
             <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'continue' | trans({}, 'common') }}</a>
         {% else %}
-            <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'continue' | trans({}, 'common') }}</a>
+            <a href="{{ path('lay_home', {clientId: client.id}) }}" class="behat-link-return-to-reports-page">{{ 'continue' | trans({}, 'common') }}</a>
         {% endif %}
 
     </div>

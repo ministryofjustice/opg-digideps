@@ -27,7 +27,7 @@ const runSmoke = async () => {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);
     const user = deputy_user;
     const password = deputy_password;
-    await loginAsUser(page, url, user, password, 'lay');
+    await loginAsUser(page, url, user, password, 'client/');
     await checkReportSectionsVisible(page);
     await updateUserDetails(page, '#profile_firstname', '#profile_save')
     await logOutUser(page, url)

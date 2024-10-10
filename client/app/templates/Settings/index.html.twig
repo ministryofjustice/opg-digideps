@@ -17,7 +17,7 @@
     {% if 'ROLE_LAY_DEPUTY' == app.user.roleName %}
         {% set transOptions = {'%client%': client.firstname} %}
         <h2 class="govuk-heading-m">
-            <a href="{{ path('client_show') }}" class="govuk-link behat-link-client-show">
+            <a href="{{ path('client_show', {'clientId' : client.id}) }}" class="govuk-link behat-link-client-show">
                 {{ 'settings-page.links.client.title' | trans(transOptions) }}
             </a>
         </h2>

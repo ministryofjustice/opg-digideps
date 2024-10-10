@@ -19,8 +19,6 @@ use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\ParameterStoreService;
 use App\Service\Redirector;
-use DateTime;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,6 +66,7 @@ class NdrController extends AbstractController
      * //TODO move view into Ndr directory when branches are integrated.
      *
      * @Route("/ndr", name="ndr_index")
+     *
      * @Template("@App/Ndr/Ndr/index.html.twig")
      *
      * @return array|RedirectResponse
@@ -102,6 +101,7 @@ class NdrController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
+     *
      * @Template("@App/Ndr/Ndr/overview.html.twig")
      *
      * @return array|RedirectResponse
@@ -141,6 +141,7 @@ class NdrController extends AbstractController
      * Used for active and archived NDRs.
      *
      * @Route("/ndr/{ndrId}/review", name="ndr_review")
+     *
      * @Template("@App/Ndr/Ndr/review.html.twig")
      */
     public function reviewAction($ndrId)
@@ -185,7 +186,7 @@ class NdrController extends AbstractController
 
         $attachmentName = sprintf(
             'DigiNdr-%s_%s.pdf',
-            $ndr->getSubmitDate() instanceof DateTime ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $ndr->getSubmitDate() instanceof \DateTime ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
             $ndr->getClient()->getCaseNumber()
         );
 
@@ -209,11 +210,12 @@ class NdrController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
+     *
      * @Template("@App/Ndr/Ndr/declaration.html.twig")
      *
      * @return array|RedirectResponse
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
@@ -238,7 +240,7 @@ class NdrController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $ndr->setSubmitted(true)->setSubmitDate(new DateTime());
+            $ndr->setSubmitted(true)->setSubmitDate(new \DateTime());
 
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
@@ -266,6 +268,7 @@ class NdrController extends AbstractController
      * Page displaying the report has been submitted.
      *
      * @Route("/ndr/{ndrId}/submitted", name="ndr_submit_confirmation")
+     *
      * @Template("@App/Ndr/Ndr/submitConfirmation.html.twig")
      */
     public function submitConfirmationAction(Request $request, $ndrId)
@@ -306,6 +309,7 @@ class NdrController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/submit_feedback", name="ndr_submit_feedback")
+     *
      * @Template("@App/Report/Report/submitFeedback.html.twig")
      */
     public function submitFeedbackAction($ndrId)
@@ -330,6 +334,7 @@ class NdrController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'client' => $client,
         ];
     }
 }

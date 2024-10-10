@@ -34,9 +34,6 @@ abstract class RestController extends AbstractController
         return $entity;
     }
 
-    /**
-     * @param mixed $object
-     */
     protected function hydrateEntityWithArrayData($object, array $data, array $keySetters)
     {
         foreach ($keySetters as $k => $setter) {
@@ -49,14 +46,18 @@ abstract class RestController extends AbstractController
     protected function denyAccessIfReportDoesNotBelongToUser(EntityDir\ReportInterface $report)
     {
         if (!$this->isGranted('edit', $report->getClient())) {
-            throw $this->createAccessDeniedException('Report does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {
+                throw $this->createAccessDeniedException('Report does not belong to user');
+            }
         }
     }
 
     protected function denyAccessIfNdrDoesNotBelongToUser(EntityDir\Ndr\Ndr $ndr)
     {
         if (!$this->isGranted('edit', $ndr->getClient())) {
-            throw $this->createAccessDeniedException('Ndr does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($ndr->getClient()->getId())) {
+                throw $this->createAccessDeniedException('NDR does not belong to user');
+            }
         }
     }
 
@@ -66,7 +67,9 @@ abstract class RestController extends AbstractController
     protected function denyAccessIfClientDoesNotBelongToUser(EntityDir\Client $client)
     {
         if (!$this->isGranted('edit', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
     }
 
@@ -80,5 +83,22 @@ abstract class RestController extends AbstractController
     protected function convertDateStringToDateTime(string $date)
     {
         return empty($date) ? null : new \DateTime($date);
+    }
+
+    protected function checkIfUserHasAccessViaDeputyUid(int $clientId): bool
+    {
+        $hasAccess = false;
+        // Check if the user has access on other accounts based on deputy uid
+        if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
+            $deputyUid = $this->getUser()->getDeputyUid();
+            if ($deputyUid) {
+                $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($clientId);
+                if (in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                    $hasAccess = true;
+                }
+            }
+        }
+
+        return $hasAccess;
     }
 }

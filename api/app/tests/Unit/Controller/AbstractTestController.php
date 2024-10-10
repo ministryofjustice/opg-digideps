@@ -220,6 +220,38 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @return string token
      */
+    protected function loginAsMultiClientPrimaryDeputy()
+    {
+        return $this->login('multi-client-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsMultiClientNonPrimaryDeputy()
+    {
+        return $this->login('multi-client-non-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsMainDeputy()
+    {
+        return $this->login('main-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsCoDeputy()
+    {
+        return $this->login('co-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
     protected function loginAsPa()
     {
         return $this->login('pa@example.org', 'DigidepsPass1234', self::$deputySecret);

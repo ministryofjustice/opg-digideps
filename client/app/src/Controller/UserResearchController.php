@@ -40,9 +40,8 @@ class UserResearchController extends AbstractController
     /**
      * @Route("/report/{reportId}/post_submission_user_research", name="report_post_submission_user_research")
      * @Route("/ndr/{ndrId}/post_submission_user_research", name="ndr_post_submission_user_research")
-     * @Template("@App/UserResearch/postSubmissionUserResearch.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/UserResearch/postSubmissionUserResearch.html.twig")
      *
      * @return array
      */
@@ -78,9 +77,8 @@ class UserResearchController extends AbstractController
     /**
      * @Route("/report/{reportId}/post_submission_user_research/submitted", name="report_user_research_submitted")
      * @Route("/ndr/{ndrId}/post_submission_user_research/submitted", name="ndr_user_research_submitted")
-     * @Template("@App/UserResearch/userResearchSubmitted.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/UserResearch/userResearchSubmitted.html.twig")
      *
      * @return array
      */
@@ -95,6 +93,7 @@ class UserResearchController extends AbstractController
         }
 
         return [
+            'report' => $report,
             'homePageName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
         ];
     }
