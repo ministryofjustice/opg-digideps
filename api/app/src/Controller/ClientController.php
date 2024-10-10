@@ -48,7 +48,12 @@ class ClientController extends RestController
         } else {
             $client = $this->findEntityBy(EntityDir\Client::class, $data['id'], 'Client not found');
             if (!$this->isGranted('edit', $client)) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
+                // Check if the user has access on other accounts based on deputy uid
+                $deputyUid = $this->getUser()->getDeputyUid();
+                $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($id);
+                if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                    throw $this->createAccessDeniedException('Client does not belong to user');
+                }
             }
         }
 
@@ -113,7 +118,12 @@ class ClientController extends RestController
         }
 
         if (!$this->isGranted('view', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            // Check if the user has access on other accounts based on deputy uid
+            $deputyUid = $this->getUser()->getDeputyUid();
+            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($id);
+            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         return $client;
@@ -165,7 +175,12 @@ class ClientController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         if (!$this->isGranted('edit', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            // Check if the user has access on other accounts based on deputy uid
+            $deputyUid = $this->getUser()->getDeputyUid();
+            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($id);
+            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         $client->setArchivedAt(new \DateTime());

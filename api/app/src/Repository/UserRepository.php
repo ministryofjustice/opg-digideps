@@ -161,6 +161,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * @return int[]
+     *
      * @throws Exception
      */
     public function findInactive($role = User::ROLE_LAY_DEPUTY): array
@@ -174,12 +175,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         LEFT JOIN client c ON c.id = dc.client_id AND (c.deleted_at IS NULL)
         WHERE (
             -- Abandoned Registration process, password set
-            u.registration_token IS NOT NULL 
+            u.registration_token IS NOT NULL
             AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
             AND u.last_logged_in < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
             AND u.registration_date IS NULL
             -- Abandoned Registration process, no password set
-            OR u.registration_token IS NOT NULL 
+            OR u.registration_token IS NOT NULL
             AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
             AND u.last_logged_in IS NULL
             -- Standard no activity within N days
@@ -205,9 +206,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result->fetchFirstColumn();
     }
 
-    /**
-     * @return array
-     */
     public function findActiveLaysInLastYear(): array
     {
         $oneYearAgo = (new \DateTime())->modify('-1 Year')->format('Y-m-d');
@@ -410,5 +408,15 @@ SQL;
             'records' => $records,
             'count' => $count,
         ];
+    }
+
+    public function findDeputyUidsForClient(int $clientId)
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery("SELECT u.deputyUid FROM App\Entity\User u LEFT JOIN u.clients c where c.id = ?1 ORDER BY u.id")
+            ->setParameter(1, $clientId);
+
+        return $query->getArrayResult();
     }
 }

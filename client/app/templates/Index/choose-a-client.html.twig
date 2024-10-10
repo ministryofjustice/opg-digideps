@@ -8,6 +8,7 @@
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
+{% block clientDetails %}{% endblock clientDetails %}
 
 {% block pageContent %}
 
@@ -22,7 +23,7 @@
                 </h2>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action">
-                        <a class="govuk-link" href="{{ path( "lay_home", {'id' : client.id}) }}">Manage</a>
+                        <a class="govuk-link" href="{{ path( "lay_home", {'clientId' : client.id}) }}">Manage</a>
                     </li>
                 </ul>
             </div>

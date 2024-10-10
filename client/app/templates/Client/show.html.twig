@@ -53,7 +53,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('client_edit') }}#edit-client" class="govuk-button push--top behat-link-client-edit">
+    <a href="{{ path('client_edit', {'clientId' : client.id}) }}#edit-client" class="govuk-button push--top behat-link-client-edit">
        {{ (page ~ '.editClient') | trans({'%client%': client.firstname}, translationDomain) }}
    </a>
 
