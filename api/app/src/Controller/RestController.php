@@ -47,10 +47,14 @@ abstract class RestController extends AbstractController
     {
         if (!$this->isGranted('edit', $report->getClient())) {
             // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($report->getClient()->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                throw $this->createAccessDeniedException('Report does not belong to user');
+            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
+                $deputyUid = $this->getUser()->getDeputyUid();
+                if ($deputyUid) {
+                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($report->getClient()->getId());
+                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                        throw $this->createAccessDeniedException('Report does not belong to user');
+                    }
+                }
             }
         }
     }
@@ -59,10 +63,14 @@ abstract class RestController extends AbstractController
     {
         if (!$this->isGranted('edit', $ndr->getClient())) {
             // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($ndr->getClient()->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                throw $this->createAccessDeniedException('NDR does not belong to user');
+            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
+                $deputyUid = $this->getUser()->getDeputyUid();
+                if ($deputyUid) {
+                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($ndr->getClient()->getId());
+                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                        throw $this->createAccessDeniedException('NDR does not belong to user');
+                    }
+                }
             }
         }
     }
@@ -74,10 +82,14 @@ abstract class RestController extends AbstractController
     {
         if (!$this->isGranted('edit', $client)) {
             // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($client->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
+            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
+                $deputyUid = $this->getUser()->getDeputyUid();
+                if ($deputyUid) {
+                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($client->getId());
+                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                        throw $this->createAccessDeniedException('Client does not belong to user');
+                    }
+                }
             }
         }
     }

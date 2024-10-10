@@ -414,7 +414,7 @@ SQL;
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery("SELECT u.deputyUid FROM App\Entity\User u LEFT JOIN u.clients c where c.id = ?1 AND u.deputyUid IS NOT NULL ORDER BY u.id")
+            ->createQuery("SELECT u.deputyUid FROM App\Entity\User u INNER JOIN u.clients c where c.id = ?1 AND u.deputyUid IS NOT NULL ORDER BY u.id")
             ->setParameter(1, $clientId);
 
         return $query->getArrayResult();

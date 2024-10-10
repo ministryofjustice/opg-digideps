@@ -24,6 +24,18 @@ class TestUserFixtures extends AbstractDataFixture
             'deputyUid' => 567890098765,
         ],
         [
+            'id' => 'main-deputy',
+            'roleName' => 'ROLE_LAY_DEPUTY',
+            'deputyUid' => 987654321001,
+            'co-deputy' => true,
+        ],
+        [
+            'id' => 'co-deputy',
+            'roleName' => 'ROLE_LAY_DEPUTY',
+            'deputyUid' => 987654321002,
+            'co-deputy' => true,
+        ],
+        [
             'id' => 'admin',
             'roleName' => 'ROLE_ADMIN',
         ],
@@ -74,7 +86,8 @@ class TestUserFixtures extends AbstractDataFixture
             ->setAddressPostcode('SW1')
             ->setAddressCountry('GB')
             ->setRoleName($data['roleName'])
-            ->setDeputyUid($data['deputyUid'] ?? null);
+            ->setDeputyUid($data['deputyUid'] ?? null)
+            ->setCoDeputyClientConfirmed($data['co-deputy'] ?? false);
 
         $manager->persist($user);
     }

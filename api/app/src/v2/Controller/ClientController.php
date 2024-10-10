@@ -79,10 +79,14 @@ class ClientController extends RestController
 
         if (!$this->isGranted('view', $client)) {
             // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
+            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
+                $deputyUid = $this->getUser()->getDeputyUid();
+                if ($deputyUid) {
+                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
+                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                        throw $this->createAccessDeniedException('Client does not belong to user');
+                    }
+                }
             }
         }
 
@@ -113,10 +117,14 @@ class ClientController extends RestController
 
         if (!$this->isGranted('view', $client)) {
             // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
+            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
+                $deputyUid = $this->getUser()->getDeputyUid();
+                if ($deputyUid) {
+                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
+                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+                        throw $this->createAccessDeniedException('Client does not belong to user');
+                    }
+                }
             }
         }
 
