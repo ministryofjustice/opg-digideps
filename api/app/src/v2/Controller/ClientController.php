@@ -4,7 +4,6 @@ namespace App\v2\Controller;
 
 use App\Controller\RestController;
 use App\Entity\Client;
-use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\OrganisationAssembler;
@@ -78,15 +77,8 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 
         if (!$this->isGranted('view', $client)) {
-            // Check if the user has access on other accounts based on deputy uid
-            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
-                $deputyUid = $this->getUser()->getDeputyUid();
-                if ($deputyUid) {
-                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
-                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                        throw $this->createAccessDeniedException('Client does not belong to user');
-                    }
-                }
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
             }
         }
 
@@ -116,15 +108,8 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 
         if (!$this->isGranted('view', $client)) {
-            // Check if the user has access on other accounts based on deputy uid
-            if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
-                $deputyUid = $this->getUser()->getDeputyUid();
-                if ($deputyUid) {
-                    $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
-                    if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
-                        throw $this->createAccessDeniedException('Client does not belong to user');
-                    }
-                }
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
             }
         }
 
