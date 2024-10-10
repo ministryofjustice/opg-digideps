@@ -6,7 +6,7 @@ resource "aws_ecs_task_definition" "api" {
   memory                   = 1024
   container_definitions    = "[${local.api_web}, ${local.api_container}]"
   task_role_arn            = aws_iam_role.api.arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
+  execution_role_arn       = aws_iam_role.execution_role_db.arn
   tags                     = var.default_tags
 }
 
@@ -148,6 +148,6 @@ resource "aws_ecs_task_definition" "api_high_memory" {
   memory                   = 2048
   container_definitions    = "[${local.api_container}]"
   task_role_arn            = aws_iam_role.api.arn
-  execution_role_arn       = aws_iam_role.execution_role.arn
+  execution_role_arn       = aws_iam_role.execution_role_db.arn
   tags                     = var.default_tags
 }
