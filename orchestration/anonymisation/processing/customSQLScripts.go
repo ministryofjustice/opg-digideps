@@ -9,10 +9,7 @@ import (
 )
 
 // CustomSQLScriptUpdates reads SQL files from the 'sql' directory and executes them in order.
-func CustomSQLScriptUpdates(db *sql.DB) error {
-	// Directory containing the SQL files
-	sqlDir := "processing/sql"
-
+func CustomSQLScriptUpdates(db *sql.DB, sqlDir string) error {
 	files, err := os.ReadDir(sqlDir)
 	if err != nil {
 		return fmt.Errorf("failed to read directory: %v", err)
@@ -50,7 +47,7 @@ func UpdateAllToPassedInValue(
 	updateString string) error {
 	query := fmt.Sprintf(`UPDATE anon.%s SET %s = '%s';`, tableName, updateColumn, updateString)
 
-	fmt.Println(query)
+	fmt.Printf(`Ran blanket update on %s for column %s`, tableName, updateColumn)
 	// Execute the update query
 	_, err := db.Exec(query)
 	if err != nil {

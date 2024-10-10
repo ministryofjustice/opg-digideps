@@ -94,7 +94,7 @@ func main() {
 	common.CheckError(err)
 
 	// ===== Processing - Additional Complex Updates =====
-	err = processing.CustomSQLScriptUpdates(db)
+	err = processing.CustomSQLScriptUpdates(db, fmt.Sprintf("%sprocessing/sql", path))
 	common.CheckError(err)
 
 	// ===== Processing - Additional Complex Updates =====
