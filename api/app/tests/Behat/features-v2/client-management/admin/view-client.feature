@@ -1,7 +1,7 @@
 @v2 @v2_admin @admin-client-view
 Feature: Admin - View client details
 
-  @admin @lay-pfa-high-submitted @iqpal
+  @admin @lay-pfa-high-submitted
   Scenario: An admin user views client details associated with a Lay deputy
     Given an admin user accesses the admin app
     Then I should not see "Client details"
