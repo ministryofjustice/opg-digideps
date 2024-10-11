@@ -5,6 +5,7 @@ Feature: Accounts (NDR)
     Scenario: A user adds one of each account type
         Given a Lay Deputy has not started an NDR report
         And I view the NDR overview page
+        Then I should see "Client details"
         Then I should see "bank-accounts" as "1 account"
         And I visit the accounts report section
         And I add one of each account type with valid details
