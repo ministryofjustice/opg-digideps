@@ -5,8 +5,6 @@
 {% block htmlTitle %}{{ 'createReport.htmlTitle' | trans }} {% endblock %}
 {% block pageTitle %}{{ 'createReport.pageTitle' | trans }}{% endblock %}
 
-{% block clientDetails %}{% endblock clientDetails %}
-
 {% block progressBar %}
     {% if app.user.ndrEnabled %}
         <a id="overview-button" href="{{ path('ndr_index') }}" class="link-back behat-link-step-back">Return to Your reports</a>
