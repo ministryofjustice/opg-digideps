@@ -183,7 +183,7 @@ trait DeputyManagementTrait
     }
 
     /**
-     * @Then I should not see the link for clients details
+     * @Then I should not see the link for client details
      */
     public function iShouldNotBeAbleToAccessClientDetailsLink()
     {

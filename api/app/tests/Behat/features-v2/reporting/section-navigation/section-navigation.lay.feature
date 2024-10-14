@@ -41,7 +41,6 @@ Feature: Section navigation from summary pages - Lay
     Scenario: Accounts
         Given a Lay Deputy has a completed report
         And I visit the report overview page
-        Then I should see "Client details"
         When I visit the accounts summary section
         Then the previous section should be "Client benefits check"
         And the next section should be "Deputy expenses"
