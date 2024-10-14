@@ -22,6 +22,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'pfa',
             'coDeputy' => false,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 15,
         ],
         [
@@ -32,6 +34,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'pfa',
             'coDeputy' => false,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
         ],
         [
@@ -42,6 +46,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
         ],
         [
@@ -52,6 +58,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 15,
         ],
         [
@@ -62,6 +70,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
         ],
         [
@@ -72,6 +82,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => true,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
         ],
         [
@@ -82,6 +94,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => false,
             'ndr' => true,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
         ],
         [
@@ -92,6 +106,8 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'pfa',
             'coDeputy' => true,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
         ],
         [
@@ -102,7 +118,33 @@ class LayUserFixtures extends AbstractDataFixture
             'orderType' => 'hw',
             'coDeputy' => true,
             'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => false,
             'count' => 10,
+        ],
+        [
+            'id' => 'Lay-Multi-Client-Deputy',
+            'caseNumber' => '50000000',
+            'deputyUid' => '777700000000',
+            'reportType' => 'OPG102',
+            'orderType' => 'pfa',
+            'coDeputy' => false,
+            'ndr' => false,
+            'multi-client' => true,
+            'duplicate-client' => false,
+            'count' => 2,
+        ],
+        [
+            'id' => 'Lay-Duplicate-Client',
+            'caseNumber' => '40000000',
+            'deputyUid' => '666600000000',
+            'reportType' => 'OPG102',
+            'orderType' => 'pfa',
+            'coDeputy' => false,
+            'ndr' => false,
+            'multi-client' => false,
+            'duplicate-client' => true,
+            'count' => 2,
         ],
     ];
 
@@ -131,12 +173,14 @@ class LayUserFixtures extends AbstractDataFixture
     {
         $offset = strlen((string) abs($iteration));
 
+        $deputyUid = substr_replace($data['deputyUid'], $iteration, -$offset);
+
         // Create user
         $user = (new User())
             ->setFirstname($data['id'])
             ->setLastname('User '.$iteration)
-            ->setDeputyNo($data['deputyUid'])
-            ->setDeputyUid($data['deputyUid'])
+            ->setDeputyNo($deputyUid)
+            ->setDeputyUid($deputyUid)
             ->setEmail(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
@@ -147,16 +191,26 @@ class LayUserFixtures extends AbstractDataFixture
             ->setAddressPostcode('AB1 2CD')
             ->setAddressCountry('GB')
             ->setRoleName('ROLE_LAY_DEPUTY')
-            ->setAgreeTermsUse(true);
+            ->setAgreeTermsUse(true)
+            ->setIsPrimary(true);
 
         $manager->persist($user);
 
-        if (!in_array($data['deputyUid'], $this->deputyUids)) {
-            $this->deputyUids[] = $data['deputyUid'];
+        if ($data['multi-client'] || $data['duplicate-client']) {
+            $duplicateUser = clone $user;
+            $duplicateUser->setLastname('User '.$iteration.' Dupe');
+            $duplicateUser->setEmail(strtolower($data['id']).'-user-'.$iteration.'-dupe@publicguardian.gov.uk');
+            $duplicateUser->setIsPrimary(false);
+
+            $manager->persist($duplicateUser);
+        }
+
+        if (!in_array($deputyUid, $this->deputyUids)) {
+            $this->deputyUids[] = $deputyUid;
             $this->deputy = (new Deputy())
                 ->setFirstname($data['id'])
                 ->setLastname('User '.$iteration)
-                ->setDeputyUid($data['deputyUid'])
+                ->setDeputyUid($deputyUid)
                 ->setEmail1(strtolower($data['id']).'-user-'.$iteration.'@publicguardian.gov.uk')
                 ->setPhoneMain('07911111111111')
                 ->setAddress1('ABC Road')
@@ -172,7 +226,7 @@ class LayUserFixtures extends AbstractDataFixture
         $preRegistrationData = [
             'Case' => substr_replace($data['caseNumber'], $iteration, -$offset),
             'ClientSurname' => 'Client '.$iteration,
-            'DeputyUid' => substr_replace($data['deputyUid'], $iteration, -$offset),
+            'DeputyUid' => $deputyUid,
             'DeputyFirstname' => $data['id'].'-User-'.$iteration,
             'DeputySurname' => 'User',
             'DeputyAddress1' => 'ABC Road',
@@ -191,6 +245,12 @@ class LayUserFixtures extends AbstractDataFixture
         $preRegistration = new PreRegistration($preRegistrationData);
         $manager->persist($preRegistration);
 
+        if ($data['multi-client']) {
+            $preRegistration2 = clone $preRegistration;
+            $preRegistration2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
+            $manager->persist($preRegistration2);
+        }
+
         // Create client
         $client = new Client();
         $client
@@ -207,6 +267,30 @@ class LayUserFixtures extends AbstractDataFixture
 
         $manager->persist($client);
         $user->addClient($client);
+
+        if ($data['multi-client']) {
+            $client2 = clone $client;
+            $client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
+            $client2->setLastname('Client '.$iteration.'-'.$iteration);
+            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
+
+            $manager->persist($client2);
+            $manager->flush();
+            $client2->removeUser($user);
+            $duplicateUser->addClient($client2);
+            $manager->persist($duplicateUser);
+        } elseif ($data['duplicate-client']) {
+            $client2 = clone $client;
+            $client2->setLastname('Client '.$iteration.'-Discharged');
+            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
+            $client2->setDeletedAt(new \DateTime('now'));
+
+            $manager->persist($client2);
+            $manager->flush();
+            $client2->removeUser($user);
+            $duplicateUser->addClient($client2);
+            $manager->persist($duplicateUser);
+        }
 
         if ($data['ndr']) {
             $ndr = new Ndr($client);
@@ -226,11 +310,20 @@ class LayUserFixtures extends AbstractDataFixture
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
+
+            if ($data['multi-client']) {
+                $report = new Report($client2, $type, $startDate, $endDate);
+                $manager->persist($report);
+            }
         }
 
         // If codeputy was enabled, add a secondary account
         if ($data['coDeputy']) {
             $user2 = clone $user;
+            $newDeputyUid = substr_replace($user2->getDeputyNo(), $iteration, $offset, $offset);
+
+            $user2->setDeputyNo($newDeputyUid);
+            $user2->setDeputyUid($newDeputyUid);
             $user2->setLastname($user->getLastname().'-codeputy');
             $user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
             $user2->addClient($client);

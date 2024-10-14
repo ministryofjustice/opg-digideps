@@ -36,7 +36,7 @@ async function task({ page, data }) {
     let csvRow = `${Date.now()},`;
 
     try {
-        csvRow = await measureElapsedTime(page, loginAsUser.bind(null, page, url, user, password, 'lay'), csvRow, timeoutValue);
+        csvRow = await measureElapsedTime(page, loginAsUser.bind(null, page, url, user, password, 'client/'), csvRow, timeoutValue);
         csvRow = await measureElapsedTime(page, checkReportSectionsVisible.bind(null, page), csvRow, timeoutValue);
         csvRow = await measureElapsedTime(page, updateUserDetailsConcurrent.bind(null, page, '#profile_firstname', '#profile_save'), csvRow, timeoutValue);
         csvRow = await measureElapsedTime(page, logOutUser.bind(null, page, url), csvRow, timeoutValue);

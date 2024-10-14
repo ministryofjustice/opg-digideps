@@ -31,7 +31,7 @@
     {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'form.editClientForm.controls.cancel.label',
-        linkHref: path('client_show')
+        linkHref: path('client_show', {'clientId' : client.id})
     } %}
 
     {{ form_end(form) }}

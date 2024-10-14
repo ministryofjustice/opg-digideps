@@ -3,6 +3,7 @@
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
+use App\Controller\ClientController;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
@@ -114,14 +115,28 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/lay", name="lay_home")
-     * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
+     * @Route("/lay", name="lay_home_deprecated")
+     *
+     * @Template("@App/Report/Report/index.html.twig")
+     *
+     * @return RedirectResponse
+     */
+    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
+    {
+        // Moved to ClientController::indexAction()
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/client/{clientId}", name="lay_home")
      *
      * @Template("@App/Report/Report/index.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
+    public function clientHomepageAction(Redirector $redirector, string $clientId, ParameterStoreService $parameterStoreService)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
@@ -156,16 +171,14 @@ class ReportController extends AbstractController
         if (empty($clients)) {
             throw $this->createNotFoundException('Client not added');
         }
-        $client = array_shift($clients);
 
-        // refresh client adding codeputes (another API call to avoid recursion with users)
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
+        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
             'user' => $user,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
-            'client' => $client,
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
+            'client' => $clientWithCoDeputies,
             'coDeputies' => $coDeputies,
         ];
     }
@@ -243,7 +256,7 @@ class ReportController extends AbstractController
         $editReportDatesForm = $this->formFactory->createNamed('report_edit', ReportType::class, $report, ['translation_domain' => 'report']);
         $returnLink = $user->isDeputyOrg()
             ? $this->clientApi->generateClientProfileLink($report->getClient())
-            : $this->generateUrl('lay_home');
+            : $this->generateUrl('lay_home', ['clientId' => $client->getId()]);
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
@@ -504,7 +517,7 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'homePathName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
+            'homePageName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
         ];
     }
 
@@ -532,7 +545,7 @@ class ReportController extends AbstractController
         if ($user->isDeputyOrg()) {
             $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
         } else {
-            $backLink = $this->generateUrl('lay_home');
+            $backLink = $this->generateUrl('lay_home', ['clientId' => $report->getClient()->getId()]);
         }
 
         if (!$report->isSubmitted()) {
@@ -705,7 +718,7 @@ class ReportController extends AbstractController
             'phone' => ['main' => $client->getPhone()],
             'email' => $client->getEmail(),
             'editUrl' => $currentUser->isLayDeputy() ?
-                $this->generateUrl('client_edit', ['from' => 'declaration']) :
+                $this->generateUrl('client_edit', ['clientId' => $client->getId(), 'from' => 'declaration']) :
                 $this->generateUrl('org_client_edit', ['clientId' => $client->getId(), 'from' => 'declaration']),
         ];
     }

@@ -395,7 +395,7 @@ class FixtureHelper
         return $client;
     }
 
-    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null): array
+    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -407,7 +407,10 @@ class FixtureHelper
             false,
             null,
             null,
-            $caseNumber
+            $caseNumber,
+            false,
+            true,
+            $deputyUid
         );
 
         return self::buildUserDetails($user);
@@ -1027,12 +1030,12 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, bool $isPrimary, ?string $caseNumber = null): array
+    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
-            'lay-pfa-high-assets-not-started',
+            'lay-pfa-high-assets-not-started-non-primary',
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
@@ -1041,7 +1044,8 @@ class FixtureHelper
             null,
             $caseNumber,
             true,
-            $isPrimary
+            false,
+            $deputyUid
         );
 
         return self::buildUserDetails($user);
@@ -1192,6 +1196,7 @@ class FixtureHelper
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
+        ?int $deputyUid = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1200,7 +1205,7 @@ class FixtureHelper
         $this->testRunId = $testRunId;
 
         $deputy = $this->userTestHelper
-            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary);
+            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary, $deputyUid);
 
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed, $submitted);

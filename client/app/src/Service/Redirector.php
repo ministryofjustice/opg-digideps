@@ -11,6 +11,13 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * getFirstPageAfterLogin() called after authentication
+ * getHomepageRedirect() called if returning to base domain
+ * Both methods have self-contained logic for prof/pa and admin landing pages
+ * For lays both will direct to getLayDeputyHomepage(), which calls to getCorrectRouteIfDifferent()
+ * This logic is used to determine which page the user should be directed to depending on their status (NDR/Co-Deputy/Multi-client).
+ */
 class Redirector
 {
     /**
@@ -146,7 +153,7 @@ class Redirector
             return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
-        return $this->router->generate('lay_home');
+        return $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]);
     }
 
     /**

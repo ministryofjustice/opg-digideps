@@ -72,6 +72,23 @@ class Fixtures
         return $user;
     }
 
+    public function createCoDeputyClient($users, array $settersMap = []): Client
+    {
+        $client = new Client();
+        $client->setEmail('temp@temp.com');
+        foreach ($settersMap as $k => $v) {
+            $client->$k($v);
+        }
+
+        foreach ($users as $user) {
+            $user->addClient($client);
+        }
+
+        $this->em->persist($client);
+
+        return $client;
+    }
+
     /**
      * @return Deputy
      */
