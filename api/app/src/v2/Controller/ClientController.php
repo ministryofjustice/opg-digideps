@@ -78,10 +78,7 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 
         if (!$this->isGranted('view', $client)) {
-            // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
                 throw $this->createAccessDeniedException('Client does not belong to user');
             }
         }
@@ -112,10 +109,7 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 
         if (!$this->isGranted('view', $client)) {
-            // Check if the user has access on other accounts based on deputy uid
-            $deputyUid = $this->getUser()->getDeputyUid();
-            $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(User::class)->findDeputyUidsForClient($client->getId());
-            if (!in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
                 throw $this->createAccessDeniedException('Client does not belong to user');
             }
         }

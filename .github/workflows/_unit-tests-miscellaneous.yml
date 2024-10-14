@@ -37,7 +37,12 @@ jobs:
         run: go test ./...
         working-directory: orchestration/anonymisation
 
-      - name: run additional package checks on client
+      - name: run additional composer package checks on client
         id: package-checks-client
         run: python audit-composer-packages.py client.json
+        working-directory: scripts/package-audit
+
+      - name: run additional composer package checks on api
+        id: package-checks-api
+        run: python audit-composer-packages.py api.json
         working-directory: scripts/package-audit

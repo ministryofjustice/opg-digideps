@@ -8,7 +8,7 @@ module "restore_from_production" {
   container_definitions = "[${local.restore_from_production_container}]"
   tags                  = var.default_tags
   environment           = local.environment
-  execution_role_arn    = aws_iam_role.execution_role.arn
+  execution_role_arn    = aws_iam_role.execution_role_db.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
   vpc_id                = data.aws_vpc.vpc.id
@@ -29,10 +29,16 @@ locals {
           awslogs-stream-prefix = "restore"
         }
       },
-      secrets = [{
-        name      = "POSTGRES_PASSWORD",
-        valueFrom = data.aws_secretsmanager_secret.database_password.arn
-      }],
+      secrets = [
+        {
+          name      = "POSTGRES_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.database_password.arn
+        },
+        {
+          name      = "DEFAULT_USER_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.anonymise-default-pw.arn
+        }
+      ],
       environment = concat(local.api_single_db_tasks_base_variables,
         [
           {

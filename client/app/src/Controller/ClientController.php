@@ -17,7 +17,6 @@ use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
-use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -35,7 +34,6 @@ class ClientController extends AbstractController
         private RestClient $restClient,
         private PreRegistrationApi $preRegistrationApi,
         private ObservableEventDispatcher $eventDispatcher,
-        private DateTimeProvider $dateTimeProvider
     ) {
     }
 
@@ -50,7 +48,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/deputyship-details/your-client/{clientId}", name="client_show")
+     * @Route("/deputyship-details/client/{clientId}", name="client_show")
      *
      * @Template("@App/Client/show.html.twig")
      */

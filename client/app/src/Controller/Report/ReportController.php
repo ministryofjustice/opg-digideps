@@ -3,6 +3,7 @@
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
+use App\Controller\ClientController;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
@@ -118,7 +119,7 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Report/Report/index.html.twig")
      *
-     * @return array|RedirectResponse
+     * @return RedirectResponse
      */
     public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
     {
@@ -130,7 +131,6 @@ class ReportController extends AbstractController
      * List of reports.
      *
      * @Route("/client/{clientId}", name="lay_home")
-     * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
      *
      * @Template("@App/Report/Report/index.html.twig")
      *
@@ -172,7 +172,6 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException('Client not added');
         }
 
-        // refresh client adding codeputes (another API call to avoid recursion with users)
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 

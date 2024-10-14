@@ -5,18 +5,39 @@ resource "aws_iam_role" "execution_role" {
   tags               = var.default_tags
 }
 
-data "aws_iam_policy_document" "task_role_assume_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      identifiers = ["ecs-tasks.amazonaws.com"]
-      type        = "Service"
-    }
-  }
+resource "aws_iam_role_policy" "execution_role" {
+  policy = data.aws_iam_policy_document.execution_role.json
+  role   = aws_iam_role.execution_role.id
 }
 
+resource "aws_iam_role_policy" "execution_role_secrets" {
+  policy = data.aws_iam_policy_document.execution_role_secrets.json
+  role   = aws_iam_role.execution_role.id
+}
+
+# Shared IAM for ECS task for DB accessible execution role
+resource "aws_iam_role" "execution_role_db" {
+  name               = "execution_role_db.${local.environment}"
+  assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
+  tags               = var.default_tags
+}
+
+resource "aws_iam_role_policy" "execution_role_db" {
+  policy = data.aws_iam_policy_document.execution_role.json
+  role   = aws_iam_role.execution_role_db.id
+}
+
+resource "aws_iam_role_policy" "execution_role_db_secrets" {
+  policy = data.aws_iam_policy_document.execution_role_secrets.json
+  role   = aws_iam_role.execution_role_db.id
+}
+
+resource "aws_iam_role_policy" "execution_role_db_secrets_db" {
+  policy = data.aws_iam_policy_document.execution_role_secrets_db.json
+  role   = aws_iam_role.execution_role_db.id
+}
+
+# Assume role policy
 data "aws_iam_policy_document" "execution_role_assume_policy" {
   statement {
     effect  = "Allow"
@@ -27,11 +48,6 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
       type        = "Service"
     }
   }
-}
-
-resource "aws_iam_role_policy" "execution_role" {
-  policy = data.aws_iam_policy_document.execution_role.json
-  role   = aws_iam_role.execution_role.id
 }
 
 data "aws_iam_policy_document" "execution_role" {
@@ -85,6 +101,16 @@ data "aws_iam_policy_document" "execution_role" {
   }
 
   statement {
+    effect  = "Allow"
+    actions = ["kms:Decrypt"]
+    resources = [
+      data.aws_kms_alias.secretmanager.target_key_arn,
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "execution_role_secrets" {
+  statement {
     sid    = "AllowSecretsAccess"
     effect = "Allow"
     resources = [
@@ -94,48 +120,23 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_secretsmanager_secret.front_notify_api_key.arn,
       data.aws_secretsmanager_secret.front_frontend_secret.arn,
       data.aws_secretsmanager_secret.front_api_client_secret.arn,
-      data.aws_secretsmanager_secret.database_password.arn,
-      data.aws_secretsmanager_secret.custom_sql_db_password.arn,
-      data.aws_secretsmanager_secret.api_secret.arn,
       data.aws_secretsmanager_secret.admin_frontend_secret.arn,
-      data.aws_secretsmanager_secret.admin_api_client_secret.arn
+      data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+      data.aws_secretsmanager_secret.anonymise-default-pw.arn
     ]
     actions = ["secretsmanager:GetSecretValue"]
   }
-
-  statement {
-    effect  = "Allow"
-    actions = ["kms:Decrypt"]
-    resources = [
-      data.aws_kms_alias.secretmanager.target_key_arn,
-    ]
-  }
 }
 
-data "aws_iam_policy_document" "ecs_task_logs" {
+data "aws_iam_policy_document" "execution_role_secrets_db" {
   statement {
-    effect = "Allow"
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Describe only so not overly permissive given role
-    resources = ["arn:aws:logs:*:*:*"]
-    actions = [
-      "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams"
-    ]
-  }
-
-  statement {
+    sid    = "AllowSecretsAccess"
     effect = "Allow"
     resources = [
-      "${aws_cloudwatch_log_group.audit.arn}:log-stream:*",
-      aws_cloudwatch_log_group.audit.arn
+      data.aws_secretsmanager_secret.database_password.arn,
+      data.aws_secretsmanager_secret.api_secret.arn,
+      data.aws_secretsmanager_secret.custom_sql_db_password.arn
     ]
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
+    actions = ["secretsmanager:GetSecretValue"]
   }
-}
-
-data "aws_iam_role" "ecs_autoscaling_service_role" {
-  name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
 }
