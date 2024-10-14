@@ -5,7 +5,7 @@ SET email = LOWER(
 		'.',
 		COALESCE(lastname, 'none'),
         '.',
-        FLOOR(RANDOM()* (99999-0 + 1) + 0)::int,
+		ppk_id,
 		'@',
 		SUBSTRING(email FROM POSITION('@' IN email) + 1)
 	)

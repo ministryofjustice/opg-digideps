@@ -1,5 +1,5 @@
 UPDATE anon.dd_user ad
-SET email = LOWER(CONCAT(SUBSTRING(orguser.email FROM 1 FOR POSITION('@' IN orguser.email)), orguser.email_identifier))
+SET email = LOWER(CONCAT(SUBSTRING(orguser.email FROM 1 FOR POSITION('@' IN orguser.email)), replace(orguser.email_identifier, '@', '')))
 FROM (
 	SELECT dd.id, dd.email, o.email_identifier
 	FROM public.organisation o
