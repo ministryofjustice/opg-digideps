@@ -83,7 +83,11 @@ func main() {
 	err = processing.GenerateAsyncFakeData(db, tableDetails, ChunkSize)
 	common.CheckError(err)
 
-	// ===== Processing - Additional Complex Updates =====
+	// ===== Processing - Additional Complex Script Updates =====
+	err = processing.CustomSQLScriptUpdates(db, fmt.Sprintf("%sprocessing/sql", path))
+	common.CheckError(err)
+
+	// ===== Processing - Additional Programmatic Updates =====
 	err = processing.UpdateAllToPassedInValue(db, "dd_user", "password", defaultUserPassword)
 	common.CheckError(err)
 
@@ -93,11 +97,7 @@ func main() {
 	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "password", "email", EmailSuffixToIgnore)
 	common.CheckError(err)
 
-	// ===== Processing - Additional Complex Updates =====
-	err = processing.CustomSQLScriptUpdates(db, fmt.Sprintf("%sprocessing/sql", path))
-	common.CheckError(err)
-
-	// ===== Processing - Additional Complex Updates =====
+	// ===== Processing - Update Public from Anon =====
 	err = processing.UpdateAsyncOriginalTables(db, tableDetails, ChunkSize, leftJoins)
 	common.CheckError(err)
 
