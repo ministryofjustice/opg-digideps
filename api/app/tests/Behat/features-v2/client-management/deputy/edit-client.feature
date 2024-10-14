@@ -1,4 +1,4 @@
-@v2 @iqpal
+@v2
 Feature: View client details
 
     @admin @lay-pfa-high-submitted
@@ -23,3 +23,9 @@ Feature: View client details
         Given a Lay Deputy exists
         Given I view the lay deputy your details page
         Then I should not see the link for client details
+
+    @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user does not see Client details in nav bar on choose a client homepage
+        And a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        Then I should not see "Client details"
