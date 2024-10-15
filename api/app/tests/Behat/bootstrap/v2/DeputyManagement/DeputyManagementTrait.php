@@ -15,6 +15,16 @@ trait DeputyManagementTrait
     /**
      * Requires a logged in user to call.
      *
+     * @Given I view the lay deputy your details page
+     */
+    public function viewLayMyDetailsPage()
+    {
+        $this->visit('/deputyship-details/');
+    }
+
+    /**
+     * Requires a logged in user to call.
+     *
      * @Given I view the lay deputy edit your details page
      */
     public function viewLayEditMyDetailsPage()
@@ -170,5 +180,13 @@ trait DeputyManagementTrait
                 && in_array($userToBeUpdatedRole, $rolesAdminManagersCanUpdateEmail));
 
         return $isSuperAdmin || $adminManagerIsEditingNonAdminUser;
+    }
+
+    /**
+     * @Then I should not see the link for client details
+     */
+    public function iShouldNotBeAbleToAccessClientDetailsLink()
+    {
+        $this->assertElementNotOnPage('govuk-link behat-link-client-show');
     }
 }

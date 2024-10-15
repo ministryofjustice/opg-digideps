@@ -87,7 +87,7 @@
                         Deputy reports
                     </a>
                 </li>
-                {% if 'settings' in section and section != 'settings' %}
+                {% if 'settings' in section and section != 'settings' and section != 'settings-client'%}
                     <li class="govuk-breadcrumbs__list-item">
                         <a href="{{ path('account_settings') }}" class="govuk-breadcrumbs__link">
                             Deputyship details
