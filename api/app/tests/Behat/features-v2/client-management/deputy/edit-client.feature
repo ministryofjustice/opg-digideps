@@ -26,6 +26,14 @@ Feature: View client details
 
     @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user does not see Client details in nav bar on choose a client homepage
-        And a Lay Deputy tries to login with their "primary" email address
+        Given a Lay Deputy tries to login with their "primary" email address
         Then they should be on the Choose a Client homepage
         Then I should not see "Client details"
+
+    @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user has access to the client details page of the client they have selected
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        And I select the first client from the Choose a Client page
+        Then I should see "Client details"
+        When I select the "Client details" link I should see the details of the chosen client

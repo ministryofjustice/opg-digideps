@@ -4,7 +4,6 @@ namespace App\v2\Controller;
 
 use App\Controller\RestController;
 use App\Entity\Client;
-use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\OrganisationAssembler;
