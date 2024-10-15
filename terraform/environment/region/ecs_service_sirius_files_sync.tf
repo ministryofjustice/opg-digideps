@@ -191,6 +191,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "sirius_files_sync_service_security_group" {
   source      = "./modules/security_group"
   description = "Sirius Files Sync Service"

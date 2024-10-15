@@ -46,7 +46,7 @@ locals {
     ssm     = local.common_sg_rules.ssm
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
-    outbound_rds = {
+    outbound_aws = {
       port        = 443
       type        = "egress"
       protocol    = "tcp"
@@ -56,6 +56,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed for outbound aws api calls (TODO improve this)
 module "sleep_mode_security_group" {
   source      = "./modules/security_group"
   name        = "sleep-mode"

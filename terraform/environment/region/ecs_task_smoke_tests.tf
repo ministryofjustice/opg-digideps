@@ -41,6 +41,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "smoke_tests_security_group" {
   source      = "./modules/security_group"
   name        = "smoke-tests"
