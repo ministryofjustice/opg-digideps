@@ -2,6 +2,7 @@ nav:
   adArea: Assisted Digital
   reports: Your reports
   userAccount: Your details
+  clientAccount: Client details
   # only in case of exception, when it's not clear the user role not the page
   homepage: Homepage
   adminArea: Users
