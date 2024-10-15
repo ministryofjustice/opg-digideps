@@ -33,11 +33,11 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
 
       - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
-      - uses: actions/setup-python@29a37be0a3d3e8bf5bc1eb19cd0502922f5b312a
+      - uses: actions/setup-python@19dfb7b659fa9e60c2f89c33335ab5f6f1792b6e
         if: inputs.terraform_path == 'shared'
         with:
           python-version: "3.11"
@@ -49,7 +49,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.6
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.8
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -59,7 +59,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@1ceaabc2d4208b18ff52a76e80c3a28df83f0277 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@2cefa29f8797029f898b1baeff3e21a144128687 # pin@v1.7.0
         with:
           role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}"
           role-session-name: github-actions-terraform
@@ -99,7 +99,7 @@ jobs:
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v3.0.6
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@v3.0.8
         with:
           aws_account_id: 248804316466
           aws_iam_role: digideps-ci
