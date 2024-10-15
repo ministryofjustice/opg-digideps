@@ -39,6 +39,7 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    #trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
     front_http = {
       port        = 80
       protocol    = "tcp"
@@ -49,6 +50,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "integration_tests_security_group" {
   source      = "./modules/security_group"
   description = "Integration Tests V2 Service"

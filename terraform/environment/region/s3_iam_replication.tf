@@ -1,3 +1,8 @@
+// DATA SOURCE FOR DEFAULT KEY
+data "aws_kms_alias" "source_default_key" {
+  name = "alias/aws/s3"
+}
+
 // CREATE BACKUP ROLE USED FOR LOCAL AND CROSS ACCOUNT REPLICATION
 resource "aws_iam_role" "backup_role" {
   name               = "digideps-backup-role.${local.environment}"
@@ -57,7 +62,7 @@ data "aws_iam_policy_document" "replication_policy" {
       "s3:GetObjectRetention",
       "s3:GetObjectLegalHold"
     ]
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
       "${module.pa_uploads.arn}/*",
       module.pa_uploads.arn
@@ -91,7 +96,7 @@ data "aws_iam_policy_document" "replication_policy" {
         "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3_backup_kms_arn}"
       ]
     }
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
       "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
       "${local.replication_bucket}/*"
@@ -123,7 +128,10 @@ data "aws_iam_policy_document" "replication_policy" {
       ]
     }
 
-    resources = [data.aws_kms_alias.source_default_key.target_key_arn]
+    resources = [
+      data.aws_kms_alias.source_default_key.target_key_arn,
+      aws_kms_key.s3.arn
+    ]
   }
 
   statement {

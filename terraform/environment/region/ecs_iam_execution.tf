@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "execution_role" {
   statement {
     sid    = "AllowLogsAccess"
     effect = "Allow"
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Required for execution role to function
+    #trivy:ignore:avd-aws-0057 - Required for execution role to function
     resources = ["arn:aws:logs:*:*:*"]
     actions = [
       "logs:CreateLogStream",
@@ -93,7 +93,7 @@ data "aws_iam_policy_document" "execution_role" {
   statement {
     sid    = "AllowSSMAccess"
     effect = "Allow"
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Required for execution role to function
+    #trivy:ignore:avd-aws-0057 - Required for execution role to function
     resources = ["arn:aws:ssm:*:*:*"]
     actions = [
       "ssm:GetParameters"

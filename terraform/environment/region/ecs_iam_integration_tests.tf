@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "integration_tests" {
       "s3:GetObjectTagging",
       "s3:PutObjectTagging",
     ]
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
@@ -48,7 +48,7 @@ data "aws_iam_policy_document" "integration_tests" {
       "s3:DeleteObject",
       "s3:ListBucket"
     ]
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
       "${module.pa_uploads.arn}/*",
       module.pa_uploads.arn
