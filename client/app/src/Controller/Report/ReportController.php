@@ -381,12 +381,21 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
+        $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+        $deputyHasMultiClients = false;
+
+        if ('1' == $isMultiClientFeatureEnabled) {
+            $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        }
+
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ]);
     }
 
