@@ -29,24 +29,24 @@ jobs:
       timeout: "700"
     secrets: inherit
 
-  restore_to_preproduction:
-    name: restore to preproduction
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - backup_production
-    with:
-      workspace: preproduction
-      account_name: preproduction
-      task_name: "restore_from_production"
-      timeout: "3600"
-    secrets: inherit
+  #  restore_to_preproduction:
+  #    name: restore to preproduction
+  #    uses: ./.github/workflows/_run-task.yml
+  #    needs:
+  #      - backup_production
+  #    with:
+  #      workspace: preproduction
+  #      account_name: preproduction
+  #      task_name: "restore_from_production"
+  #      timeout: "3600"
+  #    secrets: inherit
 
   slack_notify_failure:
     name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
-      - restore_to_preproduction
+      - backup_production
     with:
       success: no
       branch: main
