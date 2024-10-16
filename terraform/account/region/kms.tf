@@ -1,17 +1,9 @@
-##### Shared KMS key for logs #####
-resource "aws_kms_key" "cloudwatch_logs" {
-  description             = "Digideps shared cloudwatch logs for ${terraform.workspace}"
-  deletion_window_in_days = 10
-  enable_key_rotation     = true
-  policy                  = data.aws_iam_policy_document.cloudwatch_kms.json
-}
-
-resource "aws_kms_alias" "cloudwatch_logs_alias" {
-  name          = "alias/digideps-shared-cloudwatch-${terraform.workspace}"
-  target_key_id = aws_kms_key.cloudwatch_logs.key_id
-}
-
-data "aws_iam_policy_document" "cloudwatch_kms" {
+# KMS SNS
+# See the following link for further information
+# https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html
+# Reusable policies
+data "aws_iam_policy_document" "kms_base_permissions" {
+  provider = aws.global
   statement {
     sid       = "Enable Root account permissions on Key"
     effect    = "Allow"
@@ -27,30 +19,68 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
   }
 
   statement {
-    sid       = "Allow Key to be used for Encryption"
-    effect    = "Allow"
-    resources = ["*"]
+    sid    = "General View Access"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
     actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
       "kms:DescribeKey",
+      "kms:GetKeyPolicy",
+      "kms:GetKeyRotationStatus",
+      "kms:List*",
     ]
 
     principals {
-      type = "Service"
+      type = "AWS"
       identifiers = [
-        "logs.${data.aws_region.current.name}.amazonaws.com",
-        "events.amazonaws.com"
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
       ]
     }
   }
 
   statement {
-    sid       = "Key Administrator"
-    effect    = "Allow"
-    resources = ["*"]
+    sid    = "Key Administrator"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
+    actions = [
+      "kms:Create*",
+      "kms:Describe*",
+      "kms:Enable*",
+      "kms:List*",
+      "kms:Put*",
+      "kms:Update*",
+      "kms:Revoke*",
+      "kms:Disable*",
+      "kms:Get*",
+      "kms:Delete*",
+      "kms:TagResource",
+      "kms:UntagResource",
+      "kms:ScheduleKeyDeletion",
+      "kms:CancelKeyDeletion",
+      "kms:ReplicateKey"
+    ]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/digideps-ci",
+      ]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "kms_development_account_operator_admin" {
+  provider = aws.global
+  statement {
+    sid    = "Dev Account Key Administrator"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
     actions = [
       "kms:Create*",
       "kms:Describe*",
@@ -69,8 +99,10 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
     ]
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator"
+      ]
     }
   }
 }

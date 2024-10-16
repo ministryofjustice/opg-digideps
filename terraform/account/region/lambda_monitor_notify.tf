@@ -31,7 +31,7 @@ resource "aws_lambda_function" "monitor_notify_lambda" {
 resource "aws_cloudwatch_log_group" "monitor_notify_lambda" {
   name              = "/aws/lambda/${local.monitor_notify_lambda_function_name}"
   retention_in_days = 14
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   tags = merge(
     var.default_tags,
     { Name = "${var.account.name}-monitor-notify-log-group" },
@@ -101,6 +101,19 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
       aws_sns_topic.availability-alert.arn
     ]
   }
+
+  #  statement {
+  #    sid    = "KMS_SNS"
+  #    effect = "Allow"
+  #    actions = [
+  #      "kms:Decrypt",
+  #      "kms:GenerateDataKey*",
+  #      "kms:DescribeKey",
+  #    ]
+  #    resources = [
+  #      module.sns_kms.eu_west_1_target_key_arn
+  #    ]
+  #  }
 
   statement {
     sid    = "ReadSecret"

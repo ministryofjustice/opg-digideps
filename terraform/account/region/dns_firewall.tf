@@ -2,7 +2,7 @@ resource "aws_cloudwatch_log_group" "aws_route53_resolver_query_log" {
   count             = var.account.dns_firewall.enabled ? 1 : 0
   name              = "digideps-aws-route53-resolver-query-log-config"
   retention_in_days = 180
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   tags = {
     "Name" = "digideps-aws-route53-resolver-query-log-config"
   }
