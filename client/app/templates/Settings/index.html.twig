@@ -9,7 +9,13 @@
 {% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsSettings('settings') }}
+    {% if deputyHasMultiClients %}
+        {{ macros.breadcrumbsArray([
+            { href: url('choose_a_client'), text: 'Choose a client' }
+        ]) }}
+    {% else %}
+        {{ macros.breadcrumbsSettings('settings') }}
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}

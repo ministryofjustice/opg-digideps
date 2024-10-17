@@ -1,4 +1,5 @@
 {% extends '@App/Layouts/application.html.twig' %}
+{% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
@@ -9,7 +10,13 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block supportTitleTop %}{{ client.fullname }}{% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
+{% block breadcrumbs %}
+    {% if deputyHasMultiClients %}
+        {{ macros.breadcrumbsArray([
+            { href: url('choose_a_client'), text: 'Choose a client' }
+        ]) }}
+    {% endif %}
+{% endblock %}
 
 {% block pageContent %}
 

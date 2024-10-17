@@ -850,4 +850,14 @@ trait IShouldBeOnFrontendTrait
 
         return $this->iAmOnPage('/choose-a-client$/');
     }
+
+    public function iAmOnYourDetailsPage()
+    {
+        return $this->iAmOnPage('/deputyship-details/');
+    }
+
+    public function iAmOnClientDetailsPage()
+    {
+        return $this->iAmOnPage('#deputyship-details/client#');
+    }
 }
