@@ -58,7 +58,7 @@ Feature: Users logging into the service
         And when they log out they shouldn't see a flash message for non primary accounts
 
     @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy-with-ndr
-    Scenario: A user tries to login to the service with their primary account
+    Scenario: A user tries to login to the service with their primary account and has an NDR
         And a Lay Deputy tries to login with their "primary" email address
         Then they should be on the Choose a Client homepage
         When they choose their "primary" Client
