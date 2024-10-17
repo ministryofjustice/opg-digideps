@@ -98,9 +98,17 @@ class Redirector
      */
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
+        // Check if user has multiple clients
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : null;
+        $multiClientDeputy = count($clients) > 1;
+
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+            if ($multiClientDeputy) {
+                $route = 'lay_home';
+            } else {
+                $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+            }
         }
 
         // none of these corrections apply to admin
@@ -108,7 +116,11 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+                    if ($multiClientDeputy) {
+                        $route = 'lay_home';
+                    } else {
+                        $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+                    }
                 }
 
                 // unverified codeputy invitation
