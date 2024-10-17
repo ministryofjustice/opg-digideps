@@ -25,6 +25,7 @@ locals {
   check_csv_uploaded_interval = "cron(0 12 ? * MON-FRI *)"
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "check_csv_uploaded_service_security_group" {
   source      = "./modules/security_group"
   description = "Check CSV Uploaded Service"

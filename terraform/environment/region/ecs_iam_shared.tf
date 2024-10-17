@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 data "aws_iam_policy_document" "ecs_task_logs" {
   statement {
     effect = "Allow"
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Describe only so not overly permissive given role
+    #trivy:ignore:avd-aws-0057 - Describe only so not overly permissive given role
     resources = ["arn:aws:logs:*:*:*"]
     actions = [
       "logs:DescribeLogGroups",
