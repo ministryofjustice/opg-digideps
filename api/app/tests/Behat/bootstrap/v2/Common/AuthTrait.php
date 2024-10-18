@@ -469,4 +469,18 @@ trait AuthTrait
         $this->assertPageContainsText($clientFirstName);
         $this->assertPageContainsText($clientLastName);
     }
+
+    /**
+     * @Then /^they should arrive on the client dashboard of their only active "(primary|non-primary)" client$/
+     */
+    public function theyShouldArriveOnTheClientDashboardOfTheirOnlyActiveClient($isPrimary)
+    {
+        if ('non-primary' == $isPrimary) {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser->getClientId();
+        } else {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+        }
+
+        $this->iAmOnPage(sprintf('/client\/%d$/', $clientId));
+    }
 }
