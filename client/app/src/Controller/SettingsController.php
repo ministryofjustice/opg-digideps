@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Logger;
 use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
+use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,6 +43,10 @@ class SettingsController extends AbstractController
      * @var UserApi
      */
     private $userApi;
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
 
     /**
      * @var RestClient
@@ -57,6 +63,7 @@ class SettingsController extends AbstractController
         Logger $logger,
         DateTimeProvider $dateTimeProvider,
         UserApi $userApi,
+        ClientApi $clientApi,
         RestClient $restClient,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -66,6 +73,7 @@ class SettingsController extends AbstractController
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
         $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -76,7 +84,7 @@ class SettingsController extends AbstractController
      *
      * @Template("@App/Settings/index.html.twig")
      **/
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStore)
     {
         if ($this->getUser()->isDeputyOrg()) {
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
@@ -92,7 +100,17 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        return [];
+        $deputyHasMultiClients = false;
+
+        if ($this->getUser()->isLayDeputy()) {
+            $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+            if ('1' == $isMultiClientFeatureEnabled) {
+                $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+            }
+        }
+
+        return ['deputyHasMultiClients' => $deputyHasMultiClients];
     }
 
     /**
