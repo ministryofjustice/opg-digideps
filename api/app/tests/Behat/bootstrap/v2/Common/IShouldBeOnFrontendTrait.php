@@ -860,4 +860,12 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage('#deputyship-details/client#');
     }
+
+    /**
+     * @Then /^they should be on the add your client page$/
+     */
+    public function theyShouldBeOnTheAddYourClientPage()
+    {
+        return $this->iAmOnPage('#client/add$#');
+    }
 }

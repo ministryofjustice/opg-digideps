@@ -93,3 +93,19 @@ Feature: Users logging into the service
         When the Lay deputy navigates to client details page
         And the Lay Deputy navigates back to the Client dashboard using the breadcrumb
         Then they should be on the "primary" Client's dashboard
+
+    @multi-feature-flag-enabled @lay-pfa-high-started-multi-client-deputy-one-discharged-two-active-clients
+    Scenario: A user logs into the service with their primary account given they're active clients are linked to their non-primary account
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        And have access to all "non-primary" Client dashboards
+
+    @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy-one-active-client
+    Scenario: A user logs into the service with their primary account given they're remaining active client is linked to their non-primary account
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should arrive on the client dashboard of their only active "non-primary" client
+
+    @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy-no-active-clients
+    Scenario: A user logs into the service with their primary account given all of their clients are discharged
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the add your client page
