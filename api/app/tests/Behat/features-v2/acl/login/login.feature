@@ -56,3 +56,9 @@ Feature: Users logging into the service
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
         And when they log out they shouldn't see a flash message for non primary accounts
+
+    @multi-feature-flag-enabled @lay-pfa-high-started-multi-client-deputy-one-discharged-two-active-clients
+    Scenario: A user logs into the service with their primary account given they're active clients are linked to their non-primary account
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        And have access to all "non-primary" Client dashboards

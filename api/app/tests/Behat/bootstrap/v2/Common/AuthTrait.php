@@ -425,6 +425,32 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^have access to all "(primary|non-primary)" Client dashboards$/
+     */
+    public function haveAccessToAllClientDashboards($isPrimary)
+    {
+        $clientIds = [];
+
+        if ('non-primary' == $isPrimary) {
+            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser->getClientId();
+        } else {
+            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+        }
+
+        if (count($clientIds) > 1) {
+            foreach ($clientIds as $clientId) {
+                $urlRegex = sprintf('/client\/%d$/', $clientId);
+                $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+                $this->clickLink('Your reports');
+            }
+        } else {
+            $urlRegex = sprintf('/client\/%d$/', $clientIds);
+            $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+        }
+    }
+
+    /**
      * @Then /^they should be on the "(primary|non-primary)" Client's dashboard$/
      */
     public function theyShouldBeOnThatClientSDashboard($isPrimary)

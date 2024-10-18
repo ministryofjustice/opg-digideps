@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Client;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
@@ -67,6 +68,7 @@ class BaseFeatureContext extends MinkContext
 
     public UserDetails $layPfaHighNotStartedMultiClientDeputyPrimaryUser;
     public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser;
 
     public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
@@ -637,5 +639,31 @@ class BaseFeatureContext extends MinkContext
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+    }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-started-multi-client-deputy-one-discharged-two-active-clients
+     */
+    public function createLayPfaHighNotStartedMultiClientDeputyWithActiveAndDischargedClients()
+    {
+        $deputyUid = 123456789000 + rand(1, 999);
+
+        // generate a second test run id for second non-primary user
+        $testRunId = (string) (time() + rand());
+
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetailsOne = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetailsTwo = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($testRunId, null, $deputyUid));
+
+        // Discharge client linked to primary account
+        $primaryDischargedClientId = $primaryUserDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find($primaryDischargedClientId);
+        $client->setDeletedAt(new \DateTime('now'));
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetailsOne;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser = $nonPrimaryUserDetailsTwo;
     }
 }
