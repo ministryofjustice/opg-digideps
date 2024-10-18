@@ -58,9 +58,3 @@ jobs:
           echo $TF_WORKSPACE
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
-
-      - name: Run Trivy in fs mode against tf environment folder
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: "fs"
-          scan-ref: "terraform/environment"

@@ -249,4 +249,9 @@ class ClientApi
             'Client[]', $groups
         );
     }
+
+    public function checkDeputyHasMultiClients(int $deputyUid): bool
+    {
+        return count($this->getAllClientsByDeputyUid($deputyUid)) > 1;
+    }
 }

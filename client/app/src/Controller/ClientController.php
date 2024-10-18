@@ -16,6 +16,7 @@ use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
+use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -52,7 +53,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Client/show.html.twig")
      */
-    public function showClientDetailsAction(Redirector $redirector, int $clientId)
+    public function showClientDetailsAction(Redirector $redirector, int $clientId, ParameterStoreService $parameterStore)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -65,8 +66,17 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getById($clientId);
 
+        $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+        $deputyHasMultiClients = false;
+
+        if ('1' == $isMultiClientFeatureEnabled) {
+            $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        }
+
         return [
             'client' => $client,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
