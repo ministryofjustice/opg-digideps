@@ -5,9 +5,10 @@ namespace App\v2\Registration\Uploader;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
+use App\v2\Registration\DTO\LayPreRegistrationDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
@@ -18,11 +19,9 @@ use Psr\Log\LoggerInterface;
 
 class LayDeputyshipUploader
 {
-    /** @var array */
-    private $reportsUpdated = [];
+    private array $reportsUpdated = [];
 
-    /** @var array */
-    private $preRegistrationEntriesByCaseNumber = [];
+    private array $preRegistrationEntriesByCaseNumber = [];
 
     /** @var int */
     public const MAX_UPLOAD = 10000;
@@ -31,14 +30,14 @@ class LayDeputyshipUploader
     public const FLUSH_EVERY = 5000;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private ReportRepository $reportRepository,
-        private PreRegistrationFactory $preRegistrationFactory,
-        private LoggerInterface $logger
+        private readonly EntityManagerInterface $em,
+        private readonly ReportRepository $reportRepository,
+        private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly LoggerInterface $logger
     ) {
     }
 
-    public function upload(LayDeputyshipDtoCollection $collection): array
+    public function upload(LayPreRegistrationDtoCollection $collection): array
     {
         $this->throwExceptionIfDataTooLarge($collection);
         $this->preRegistrationEntriesByCaseNumber = [];
@@ -48,10 +47,10 @@ class LayDeputyshipUploader
         try {
             $this->em->beginTransaction();
 
-            foreach ($collection as $index => $layDeputyshipDto) {
+            foreach ($collection as $layPreRegistrationDto) {
                 try {
-                    $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
-                    $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
+                    $caseNumber = strtolower((string) $layPreRegistrationDto->getCaseNumber());
+                    $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layPreRegistrationDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
@@ -81,7 +80,7 @@ class LayDeputyshipUploader
         ];
     }
 
-    private function throwExceptionIfDataTooLarge(LayDeputyshipDtoCollection $collection): void
+    private function throwExceptionIfDataTooLarge(LayPreRegistrationDtoCollection $collection): void
     {
         if ($collection->count() > self::MAX_UPLOAD) {
             throw new \RuntimeException(sprintf('Max %d records allowed in a single bulk insert', self::MAX_UPLOAD));
@@ -91,9 +90,9 @@ class LayDeputyshipUploader
     /**
      * @throws ORMException
      */
-    private function createAndPersistNewPreRegistrationEntity(LayDeputyshipDto $layDeputyshipDto): PreRegistration
+    private function createAndPersistNewPreRegistrationEntity(LayPreRegistrationDto $layPreRegistrationDto): PreRegistration
     {
-        $preRegistrationEntity = $this->preRegistrationFactory->createFromDto($layDeputyshipDto);
+        $preRegistrationEntity = $this->preRegistrationFactory->createFromDto($layPreRegistrationDto);
 
         $this->em->persist($preRegistrationEntity);
 
@@ -108,7 +107,10 @@ class LayDeputyshipUploader
         $reportCaseNumber = '';
         $currentActiveReportId = null;
         $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
-        $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
+        $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole(
+            $caseNumbers, 
+            User::ROLE_LAY_DEPUTY
+        );
 
         try {
             /** @var Report $currentActiveReport */
@@ -117,7 +119,11 @@ class LayDeputyshipUploader
                 $currentActiveReportId = $currentActiveReport->getId();
                 /** @var PreRegistration $preRegistration */
                 $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
-                $determinedReportType = PreRegistration::getReportTypeByOrderType($preRegistration->getTypeOfReport(), $preRegistration->getOrderType(), PreRegistration::REALM_LAY);
+                $determinedReportType = PreRegistration::getReportTypeByOrderType(
+                    $preRegistration->getTypeOfReport(), 
+                    $preRegistration->getCourtOrderType(), 
+                    PreRegistration::REALM_LAY
+                );
 
                 // For Dual Cases, deputy uid needs to match for the report type to be updated
                 if (PreRegistration::DUAL_TYPE == $preRegistration->getHybrid()) {
@@ -141,7 +147,12 @@ class LayDeputyshipUploader
                 }
             }
         } catch (\Throwable $e) {
-            $this->logger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
+            $this->logger->error(
+                sprintf(
+                    'Error whilst updating report type for report with ID: %d, for case number: %s', 
+                    $currentActiveReportId, 
+                    $reportCaseNumber
+                ));
             throw new \Exception($e->getMessage());
         }
 
@@ -158,5 +169,11 @@ class LayDeputyshipUploader
         $this->em->flush();
         $this->em->commit();
         $this->em->clear();
+    }
+    
+    public function multiClientCreation(): void
+    {
+        $preReg = $this->em->getRepository(PreRegistrationRepository::class);
+        $clients = $preReg->findExistingDeputiesMissingAddtionalClients();
     }
 }

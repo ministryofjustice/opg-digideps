@@ -12,23 +12,11 @@ class ClientArchivedEvent extends Event
 {
     public const NAME = 'client.archived';
 
-    /** @var User */
-    private $currentUser;
-
-    /** @var Client */
-    private $client;
-
-    /** @var string */
-    private $trigger;
-
-    /**
-     * ClientDeletedEvent constructor.
-     */
-    public function __construct(Client $client, User $currentUser, string $trigger)
-    {
-        $this->setClient($client);
-        $this->setCurrentUser($currentUser);
-        $this->setTrigger($trigger);
+    public function __construct(
+        private readonly Client $client, 
+        private readonly User $currentUser, 
+        private readonly string $trigger
+    ) {
     }
 
     public function getTrigger(): string
@@ -36,34 +24,13 @@ class ClientArchivedEvent extends Event
         return $this->trigger;
     }
 
-    public function setTrigger(string $trigger): ClientArchivedEvent
-    {
-        $this->trigger = $trigger;
-
-        return $this;
-    }
-
     public function getClient(): Client
     {
         return $this->client;
     }
 
-    public function setClient(Client $client): ClientArchivedEvent
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
     public function getCurrentUser(): User
     {
         return $this->currentUser;
-    }
-
-    public function setCurrentUser(User $currentUser): ClientArchivedEvent
-    {
-        $this->currentUser = $currentUser;
-
-        return $this;
     }
 }

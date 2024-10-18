@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\FixtureFactory;
 
 use App\Entity\PreRegistration;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
 
 class PreRegistrationFactory
@@ -23,7 +23,7 @@ class PreRegistrationFactory
         $deputyNumber = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
         $reportType = 'ndr' == $data['reportType'] ? 'OPG102' : $data['reportType'];
 
-        $dto = (new LayDeputyshipDto())
+        $dto = (new LayPreRegistrationDto())
             ->setCaseNumber($data['caseNumber'] ?? $caseNumber)
             ->setClientSurname($data['clientLastName'] ?? 'Smith')
             ->setDeputyUid($deputyNumber)
@@ -36,9 +36,9 @@ class PreRegistrationFactory
             ->setDeputyFirstname($data['deputyFirstname'] ?? 'Mel')
             ->setDeputySurname($data['deputyLastName'] ?? 'Jones')
             ->setIsNdrEnabled(false)
-            ->setOrderDate(new \DateTime())
+            ->setCourtOrderDate(new \DateTime())
             ->setTypeOfReport($reportType ?? 'OPG102')
-            ->setOrderType($data['orderType'] ?? 'PFA')
+            ->setCourtOrderType($data['orderType'] ?? 'PFA')
             ->setIsCoDeputy($data['createCoDeputy'] ?? false)
             ->setHybrid($data['hybrid'] ?? null);
 
@@ -49,10 +49,10 @@ class PreRegistrationFactory
     {
         $deputyUid = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
 
-        $dto = (new LayDeputyshipDto())
+        $dto = (new LayPreRegistrationDto())
             ->setCaseNumber($caseNumber)
             ->setClientSurname('Smith')
-            ->setOrderType($data['orderType'])
+            ->setCourtOrderType($data['orderType'])
             ->setDeputyUid($deputyUid)
             ->setDeputyAddress1($data['deputyAddress1'] ?? '7 Colonnade Square')
             ->setDeputyAddress2($data['deputyAddress2'] ?? 'Middletown')
@@ -63,9 +63,9 @@ class PreRegistrationFactory
             ->setDeputyFirstname('Jamie')
             ->setDeputySurname('Bloggs')
             ->setIsNdrEnabled(false)
-            ->setOrderDate(new \DateTime())
+            ->setCourtOrderDate(new \DateTime())
             ->setIsCoDeputy(true)
-            ->setOrderType($data['orderType'] ?? 'PFA')
+            ->setCourtOrderType($data['orderType'] ?? 'PFA')
             ->setTypeOfReport($data['reportType'])
             ->setHybrid($data['hybrid'] ?? null);
 

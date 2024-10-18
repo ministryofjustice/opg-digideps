@@ -7,8 +7,8 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
+use App\v2\Registration\DTO\LayPreRegistrationDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
@@ -54,10 +54,10 @@ class LayDeputyshipUploaderTest extends TestCase
     public function throwsExceptionIfDataSetTooLarge()
     {
         $this->expectException(\RuntimeException::class);
-        $collection = new LayDeputyshipDtoCollection();
+        $collection = new LayPreRegistrationDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; ++$i) {
-            $collection->append(new LayDeputyshipDto());
+            $collection->append(new LayPreRegistrationDto());
         }
 
         $this->sut->upload($collection);
@@ -68,10 +68,10 @@ class LayDeputyshipUploaderTest extends TestCase
      */
     public function persistsAnEntryForEachValidDeputyship()
     {
-        $collection = new LayDeputyshipDtoCollection();
+        $collection = new LayPreRegistrationDtoCollection();
 
         for ($i = 0; $i < 3; ++$i) {
-            $collection->append($this->buildLayDeputyshipDto($i));
+            $collection->append($this->buildLayPreRegistrationDto($i));
         }
 
         // Assert 3 PreRegistration entities will be created.
@@ -105,8 +105,8 @@ class LayDeputyshipUploaderTest extends TestCase
         bool $isDualCase,
         ?string $deputyUid)
     {
-        $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1));
+        $collection = new LayPreRegistrationDtoCollection();
+        $collection->append($this->buildLayPreRegistrationDto(1));
 
         $caseType = $isDualCase ? 'DUAL' : 'SINGLE';
 
@@ -176,8 +176,8 @@ class LayDeputyshipUploaderTest extends TestCase
      */
     public function ignoresDeputyshipsWithInvalidDeputyshipData()
     {
-        $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1));
+        $collection = new LayPreRegistrationDtoCollection();
+        $collection->append($this->buildLayPreRegistrationDto(1));
 
         // Ensure factory will throw an exception
         $this
@@ -194,9 +194,9 @@ class LayDeputyshipUploaderTest extends TestCase
         $this->assertEquals('ERROR IN LINE: Unable to create PreRegistration entity', $return['errors'][0]);
     }
 
-    private function buildLayDeputyshipDto($count): LayDeputyshipDto
+    private function buildLayPreRegistrationDto($count): LayPreRegistrationDto
     {
-        return (new LayDeputyshipDto())
+        return (new LayPreRegistrationDto())
             ->setCaseNumber('case-'.$count)
             ->setDeputyUid('depnum-'.$count);
     }

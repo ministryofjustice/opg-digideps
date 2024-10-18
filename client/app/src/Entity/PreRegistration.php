@@ -70,7 +70,7 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      */
-    private $orderType;
+    private $courtOrderType;
 
     /**
      * @JMS\Type("string")
@@ -80,7 +80,7 @@ class PreRegistration
     /**
      * @var DateTime
      */
-    private $orderDate;
+    private $courtOrderDate;
 
     public function __construct()
     {
@@ -116,20 +116,13 @@ class PreRegistration
         return $this->typeOfReport;
     }
 
-    public function getOrderType(): string
+    public function getCourtOrderType(): string
     {
-        return $this->orderType;
+        return $this->courtOrderType;
     }
 
-    public function getOrderDate(): DateTime
+    public function getCourtOrderDate(): DateTime
     {
-        return $this->orderDate;
-    }
-
-    public function setOrderDate(DateTime $orderDate): PreRegistration
-    {
-        $this->orderDate = $orderDate;
-
-        return $this;
+        return $this->courtOrderDate;
     }
 }

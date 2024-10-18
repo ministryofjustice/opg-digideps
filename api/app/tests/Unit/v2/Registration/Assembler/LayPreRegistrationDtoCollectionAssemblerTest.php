@@ -2,31 +2,31 @@
 
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
-use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
-use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use App\v2\Registration\Assembler\LayPreRegistrationDtoAssemblerInterface;
+use App\v2\Registration\Assembler\LayPreRegistrationDtoCollectionAssembler;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
+use App\v2\Registration\DTO\LayPreRegistrationDtoCollection;
 use PHPUnit\Framework\TestCase;
 
-class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
+class LayPreRegistrationDtoCollectionAssemblerTest extends TestCase
 {
-    /** @var LayDeputyshipDtoCollectionAssembler */
+    /** @var LayPreRegistrationDtoCollectionAssembler */
     private $sut;
 
-    /** @var LayDeputyshipDtoAssemblerInterface|\PHPUnit_Framework_MockObject_MockObject */
-    private $layDeputyshipDtoAssembler;
+    /** @var LayPreRegistrationDtoAssemblerInterface|\PHPUnit_Framework_MockObject_MockObject */
+    private $layPreRegistrationDtoAssembler;
 
-    /** @var LayDeputyshipDtoCollection */
+    /** @var LayPreRegistrationDtoCollection */
     private $result;
 
     protected function setUp(): void
     {
-        $this->layDeputyshipDtoAssembler = $this
-            ->getMockBuilder(LayDeputyshipDtoAssemblerInterface::class)
+        $this->layPreRegistrationDtoAssembler = $this
+            ->getMockBuilder(LayPreRegistrationDtoAssemblerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->sut = new LayDeputyshipDtoCollectionAssembler($this->layDeputyshipDtoAssembler);
+        $this->sut = new LayPreRegistrationDtoCollectionAssembler($this->layPreRegistrationDtoAssembler);
     }
 
     /** @test */
@@ -45,16 +45,16 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
     private function assertEachItemWillBeAssembled(array $input): void
     {
         $this
-            ->layDeputyshipDtoAssembler
+            ->layPreRegistrationDtoAssembler
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
             ->withConsecutive([['alpha' => 'alpha-data']], [['beta' => 'beta-data']])
-            ->willReturn(new LayDeputyshipDto());
+            ->willReturn(new LayPreRegistrationDto());
     }
 
     private function assertCollectionIsReturnedAndContainsEachAssembledItem(): void
     {
-        $this->assertInstanceOf(LayDeputyshipDtoCollection::class, $this->result['collection']);
+        $this->assertInstanceOf(LayPreRegistrationDtoCollection::class, $this->result['collection']);
         $this->assertEquals(2, $this->result['collection']->count());
     }
 
@@ -67,11 +67,11 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
         ];
 
         $this
-            ->layDeputyshipDtoAssembler
+            ->layPreRegistrationDtoAssembler
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
             ->withConsecutive([['alpha' => 'not-valid-enough-to-create-a-DTO']], [['beta' => 'beta-data']])
-            ->willReturnOnConsecutiveCalls(null, new LayDeputyshipDto());
+            ->willReturnOnConsecutiveCalls(null, new LayPreRegistrationDto());
 
         $this->result = $this->sut->assembleFromArray($input);
         $this->assertEquals(1, $this->result['collection']->count());

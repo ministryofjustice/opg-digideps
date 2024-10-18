@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Service\Formatter\RestFormatter;
 use App\Service\ReportUtils;
+use App\v2\Registration\Assembler\LayPreRegistrationDtoCollectionAssembler;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
-use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Psr\Log\LoggerInterface;
@@ -17,32 +16,25 @@ class CSVDeputyshipProcessing
     protected const MAX_UPLOAD_BATCH_SIZE = 10000;
 
     public function __construct(
-        private LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
-        private LayDeputyshipUploader $layUploader,
-        private OrgDeputyshipUploader $orgUploader,
-        private SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
-        private RestFormatter $restFormatter,
-        private LoggerInterface $verboseLogger
+        private readonly LayDeputyshipUploader $layUploader,
+        private readonly OrgDeputyshipUploader $orgUploader,
+        private readonly LayPreRegistrationDtoCollectionAssembler $layCollectionAssembler,
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
-    public function layProcessing(array $data, ?int $chunkId)
+    public function layProcessing(array $data, ?int $chunkId): array
     {
-        $assembler = $this->layFactory->create();
-        $uploadCollection = $assembler->assembleFromArray($data);
+        $uploadCollection = $this->layCollectionAssembler->assembleFromArray($data);
 
         $this->verboseLogger->notice(
             sprintf(
-                'Assembled DTO collection from chunkId: %s',
-                $chunkId
-            )
-        );
-        $this->verboseLogger->notice(
-            sprintf(
-                'Size of DTO Collection: %d',
+                'Assembled DTO collection from chunkId: %d Size of DTO Collection: %d',
+                $chunkId,
                 count($uploadCollection['collection'])
             )
         );
+
         $result = $this->layUploader->upload($uploadCollection['collection']);
         $result['skipped'] = $uploadCollection['skipped'];
 
@@ -62,7 +54,7 @@ class CSVDeputyshipProcessing
         return $result;
     }
 
-    public function orgProcessing(array $data)
+    public function orgProcessing(array $data): array
     {
         $rowCount = count($data);
 

@@ -330,7 +330,7 @@ class ReportService
                 if ($client->getUsers()->first()->isLayDeputy()) {
                     return PreRegistration::getReportTypeByOrderType(
                         $preRegistration->getTypeOfReport(),
-                        $preRegistration->getOrderType(),
+                        $preRegistration->getCourtOrderType(),
                         PreRegistration::REALM_LAY
                     );
                 }

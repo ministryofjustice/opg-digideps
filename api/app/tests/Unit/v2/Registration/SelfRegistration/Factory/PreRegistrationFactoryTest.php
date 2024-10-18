@@ -4,7 +4,7 @@ namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
 
 use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +47,7 @@ class PreRegistrationFactoryTest extends TestCase
             ->method('validate')
             ->willReturn($constraintList);
 
-        $this->factory->createFromDto($this->buildLayDeputyshipDto());
+        $this->factory->createFromDto($this->buildLayPreRegistrationDto());
     }
 
     /**
@@ -61,7 +61,7 @@ class PreRegistrationFactoryTest extends TestCase
             ->willReturn(new ConstraintViolationList());
 
         /** @var PreRegistration $result */
-        $result = $this->factory->createFromDto($this->buildLayDeputyshipDto());
+        $result = $this->factory->createFromDto($this->buildLayPreRegistrationDto());
 
         $this->assertInstanceOf(PreRegistration::class, $result);
         $this->assertEquals('case', $result->getCaseNumber());
@@ -75,18 +75,18 @@ class PreRegistrationFactoryTest extends TestCase
         $this->assertEquals('depaddress4', $result->getDeputyAddress4());
         $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals('type', $result->getTypeOfReport());
-        $this->assertEquals('pfa', $result->getOrderType());
+        $this->assertEquals('pfa', $result->getCourtOrderType());
         $this->assertEquals(true, $result->getNdr());
-        $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
+        $this->assertEquals('2011-06-14', $result->getCourtOrderDate()->format('Y-m-d'));
         $this->assertEquals(false, $result->getIsCoDeputy());
     }
 
     /**
      * @throws \Exception
      */
-    private function buildLayDeputyshipDto(): LayDeputyshipDto
+    private function buildLayPreRegistrationDto(): LayPreRegistrationDto
     {
-        return (new LayDeputyshipDto())
+        return (new LayPreRegistrationDto())
             ->setCaseNumber('case')
             ->setDeputyUid('depnum')
             ->setDeputyFirstname('depfirstname')
@@ -100,8 +100,8 @@ class PreRegistrationFactoryTest extends TestCase
             ->setDeputyPostcode('postcode')
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
-            ->setOrderType('pfa')
-            ->setOrderDate(new \DateTime('2011-06-14'))
+            ->setCourtOrderType('pfa')
+            ->setCourtOrderDate(new \DateTime('2011-06-14'))
             ->setIsCoDeputy(false)
             ->setHybrid('hybrid');
     }
