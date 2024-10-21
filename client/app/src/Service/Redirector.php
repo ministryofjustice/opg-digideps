@@ -100,7 +100,7 @@ class Redirector
     {
         // Check if user has multiple clients
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : null;
-        $multiClientDeputy = count($clients) > 1;
+        $multiClientDeputy = !is_null($clients) && count($clients) > 1;
 
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
