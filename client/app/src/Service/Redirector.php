@@ -99,7 +99,7 @@ class Redirector
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
         // Check if user has multiple clients
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : null;
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
         $multiClientDeputy = count($clients) > 1;
 
         // Redirect to appropriate homepage
@@ -262,7 +262,7 @@ class Redirector
         $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
         $user = $this->getLoggedUser();
 
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : null;
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
         if ('1' == $isMultiClientFeatureEnabled) {
