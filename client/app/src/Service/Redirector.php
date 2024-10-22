@@ -163,12 +163,14 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        if (0 == $user->getNumberOfReports()) {
-            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
 
-            if (0 == count($allActiveClients)) {
-                return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+        foreach ($allActiveClients as $activeClient) {
+            if (count($activeClient->getReportIds()) >= 1) {
+                break;
             }
+
+            return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
         // check if last remaining active client is linked to non-primary account if so retrieve id
