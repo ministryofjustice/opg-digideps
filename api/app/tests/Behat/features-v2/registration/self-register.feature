@@ -46,7 +46,7 @@ Feature: Lay Deputy Self Registration
         And I should be on the Lay homepage
 
     @admin
-    Scenario: A Co-deputy can register for the service and is searchable in admin - fix
+    Scenario: A Co-deputy can register for the service and is searchable in admin
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
         When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
         And one of the Lay Deputies registers to deputise for a client with valid details
