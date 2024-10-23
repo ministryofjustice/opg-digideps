@@ -100,13 +100,15 @@ class Redirector
     {
         $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
 
-        // Check if user has multiple clients
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-        $multiClientDeputy = !is_null($clients) && count($clients) > 1;
+        if (is_null($user->getIsMultiClientDeputy())) {
+            // Check if user has multiple clients and set the flag
+            $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+            $user->setIsMultiClientDeputy(!is_null($clients) && count($clients) > 1);
+        }
 
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            if ($multiClientDeputy && '1' == $isMultiClientFeatureEnabled) {
+            if ($user->getIsMultiClientDeputy() && '1' == $isMultiClientFeatureEnabled) {
                 $route = 'lay_home';
             } else {
                 $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
@@ -118,7 +120,7 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    if ($multiClientDeputy && '1' == $isMultiClientFeatureEnabled) {
+                    if ($user->getIsMultiClientDeputy() && '1' == $isMultiClientFeatureEnabled) {
                         $route = 'lay_home';
                     } else {
                         $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
@@ -133,6 +135,7 @@ class Redirector
                 if (!$user->isDeputyOrg()) {
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
+                        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
                         if (0 == count($clients)) {
                             $route = 'client_add';
                         }

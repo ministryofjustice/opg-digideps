@@ -466,6 +466,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
      * @JMS\Groups({"user"})
      *
      * @var \DateTime|null
@@ -476,6 +477,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var string
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"user"})
      */
     private $registrationRoute;
@@ -484,9 +486,19 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var bool
      *
      * @JMS\Type("boolean")
+     *
      * @JMS\Groups({"user"})
      */
     private $isPrimary;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     *
+     * @JMS\Groups({"user"})
+     */
+    private $isMultiClientDeputy;
 
     public function __construct()
     {
@@ -1527,5 +1539,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function getIsPrimary(): bool
     {
         return $this->isPrimary;
+    }
+
+    public function setIsMultiClientDeputy(bool $multiClientDeputy): User
+    {
+        $this->isMultiClientDeputy = $multiClientDeputy;
+
+        return $this;
+    }
+
+    public function getIsMultiClientDeputy(): bool
+    {
+        return $this->isMultiClientDeputy;
     }
 }
