@@ -1548,7 +1548,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getIsMultiClientDeputy(): bool
+    public function getIsMultiClientDeputy(): ?bool
     {
         return $this->isMultiClientDeputy;
     }
