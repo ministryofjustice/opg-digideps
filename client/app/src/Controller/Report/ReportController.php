@@ -381,7 +381,7 @@ class ReportController extends AbstractController
 
         $deputyHasMultiClients = false;
 
-        if ('1' == $isMultiClientFeatureEnabled) {
+        if ('1' == $isMultiClientFeatureEnabled && !$user->isDeputyOrg()) {
             $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
         }
 
