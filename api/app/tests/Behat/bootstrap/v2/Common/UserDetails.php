@@ -49,6 +49,7 @@ class UserDetails
     private ?string $userPhone = null;
     private ?string $userRole = null;
     private ?bool $isPrimary = null;
+    private ?\DateTime $clientDeletedAt = null;
 
     public function __construct(array $userDetails)
     {
@@ -102,6 +103,7 @@ class UserDetails
         $this->setClientEmail($userDetails['clientEmail'] ?? null);
         $this->setClientCaseNumber($userDetails['clientCaseNumber'] ?? null);
         $this->setClientArchivedAt($userDetails['clientArchivedAt'] ?? null);
+        $this->setClientDeletedAt($userDetails['clientDeletedAt'] ?? null);
 
         $currentReportId = $userDetails['currentReportId'] ?? null;
         $previousReportId = $userDetails['previousReportId'] ?? null;
@@ -291,6 +293,18 @@ class UserDetails
     public function setClientArchivedAt(?\DateTime $clientArchivedAt): UserDetails
     {
         $this->clientArchivedAt = $clientArchivedAt;
+
+        return $this;
+    }
+
+    public function getClientDeletedAt(): ?\DateTime
+    {
+        return $this->clientDeletedAt;
+    }
+
+    public function setClientDeletedAt(?\DateTime $clientDeletedAt): UserDetails
+    {
+        $this->clientArchivedAt = $clientDeletedAt;
 
         return $this;
     }

@@ -21,3 +21,10 @@ Feature: Admin - Client Discharge
         When I visit the admin client details page for an existing client linked to a Lay deputy
         And I attempt to discharge the client
         Then the client should not be discharged
+
+    @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy-discharged-client
+    Scenario: A user tries to login to the service with their primary account
+        And a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        When they try to access their "non-primary" discharged Client
+        Then I should be redirected and denied access to continue as client not found

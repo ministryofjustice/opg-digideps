@@ -315,6 +315,18 @@ trait AuthTrait
     }
 
     /**
+     * @Then /^I should be redirected and denied access to continue as client not found$/
+     */
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFound()
+    {
+        $this->assertIntEqualsInt(
+            '404',
+            $this->getSession()->getStatusCode(),
+            'Status code after accessing endpoint'
+        );
+    }
+
+    /**
      * @Given /^a Lay Deputy has multiple client accounts$/
      */
     public function aDeputyHasMultipleClientAccounts()
@@ -442,5 +454,21 @@ trait AuthTrait
         $this->iAmOnPage(sprintf('/client\/%d$/', $clientId));
         $this->assertPageContainsText($clientFirstName);
         $this->assertPageContainsText($clientLastName);
+    }
+
+    /**
+     * @When /^they try to access their "(primary|non-primary)" discharged Client$/
+     */
+    public function theyChooseTheirDischargedClient($isPrimary)
+    {
+        if ('primary' == $isPrimary) {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+        } else {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+        }
+
+        $urlRegex = sprintf('/client\/%d$/', $clientId);
+
+        $this->visitPath($urlRegex);
     }
 }
