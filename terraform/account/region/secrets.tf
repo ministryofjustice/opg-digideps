@@ -16,7 +16,8 @@ module "environment_secrets" {
     "public-jwt-key-base64",
     "private-jwt-key-base64",
     "smoke-test-variables",
-    "custom-sql-db-password"
+    "custom-sql-db-password",
+    "readonly-sql-db-password"
   ]
   tags = var.default_tags
 }
