@@ -50,3 +50,9 @@ resource "aws_iam_role_policy" "admin_task_logs" {
   policy = data.aws_iam_policy_document.ecs_task_logs.json
   role   = aws_iam_role.admin.id
 }
+
+resource "aws_iam_role_policy" "admin_ssm" {
+  name   = "admin-ssm.${local.environment}"
+  policy = data.aws_iam_policy_document.front_ssm.json
+  role   = aws_iam_role.admin.id
+}
