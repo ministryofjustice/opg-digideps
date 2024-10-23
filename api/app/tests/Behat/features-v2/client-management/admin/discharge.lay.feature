@@ -23,7 +23,7 @@ Feature: Admin - Client Discharge
         Then the client should not be discharged
 
     @multi-feature-flag-enabled @lay-pfa-high-not-started-multi-client-deputy-discharged-client
-    Scenario: A user tries to login to the service with their primary account
+    Scenario: A user tries to login to the service with their primary account and access non-primary discharged client
         And a Lay Deputy tries to login with their "primary" email address
         Then they should be on the Choose a Client homepage
         When they try to access their "non-primary" discharged Client
