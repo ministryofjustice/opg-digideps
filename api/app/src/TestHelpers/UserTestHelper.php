@@ -60,7 +60,7 @@ class UserTestHelper extends TestCase
             ->setAgreeTermsUse(true)
             ->setIsPrimary($isPrimary);
 
-        if (str_contains($roleNaqme, 'LAY')) {
+        if (str_contains($roleName, 'LAY')) {
             $user->setDeputyUid($deputyUid ?: intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT)));
         }
 
