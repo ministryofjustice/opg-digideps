@@ -653,6 +653,7 @@ class BaseFeatureContext extends MinkContext
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+    }
 
     /**
      * @BeforeScenario @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
