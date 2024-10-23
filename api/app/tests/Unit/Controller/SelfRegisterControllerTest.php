@@ -737,7 +737,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Sue',
                 'lastname' => 'Jones',
-                'email' => sprintf('firstdeputyaccount%s@example.com', rand(1, 20)),
+                'email' => sprintf('firstdeputyaccount%s@example.com', $casenumber),
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Smith',
