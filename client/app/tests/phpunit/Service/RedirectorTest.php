@@ -168,6 +168,7 @@ class RedirectorTest extends TestCase
         $this->user->shouldReceive('isDeputyOrg')->andReturn($isDeputyOrg);
         $this->user->shouldReceive('getIdOfClientWithDetails')->andReturn($clientKnown);
         $this->user->shouldReceive('hasAddressDetails')->andReturn($hasAddress);
+        $this->parameterStoreService->shouldReceive('getFeatureFlag')->andReturn('0');
 
         $correctRoute = $this->object->getCorrectRouteIfDifferent($this->user, $currentRoute);
         $this->assertEquals($expectedRoute, $correctRoute);
