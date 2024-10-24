@@ -196,3 +196,6 @@ smoke-tests: ##@smoke-tests Run smoke tests (requires app to be up)
 resilience-tests: ##@resilience-tests Run resilience tests (requires app to be up)
 	docker compose build orchestration
 	docker compose run -e LOG_AND_CONTINUE=true --remove-orphans orchestration sh tests/run-resilience-tests.sh
+
+set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-feature-flag name=multi-accounts value=1
+	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite
