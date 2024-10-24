@@ -443,7 +443,8 @@ class FixtureHelper
             $caseNumber,
             false,
             true,
-            $deputyUid
+            $deputyUid,
+            $isMultiClientDeputy
         );
 
         return self::buildUserDetails($user);
@@ -464,7 +465,8 @@ class FixtureHelper
             $caseNumber,
             false,
             true,
-            $deputyUid
+            $deputyUid,
+            $isMultiClientDeputy
         );
 
         $this->addReportsToClient($user->getFirstClient(), $user);
