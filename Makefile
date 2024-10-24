@@ -216,3 +216,6 @@ sql-custom-command-execute: ##@sql-custom-command Run SQL execute custom command
 sql-custom-command-revoke: ##@sql-custom-command Run SQL revoke custom command
 	docker compose -f docker-compose.commands.yml build sql-custom-command
 	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) revoke --query_id=$(id)
+
+set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-feature-flag name=multi-accounts value=1
+	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite

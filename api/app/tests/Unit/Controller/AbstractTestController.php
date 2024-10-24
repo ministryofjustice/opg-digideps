@@ -199,6 +199,16 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
+    protected function assertEndpointNotFoundFor($method, $uri, $token, $data = [])
+    {
+        $this->assertJsonRequest($method, $uri, [
+            'mustFail' => true,
+            'data' => $data,
+            'AuthToken' => $token,
+            'assertResponseCode' => 404,
+        ]);
+    }
+
     protected function assertEndpointAllowedFor($method, $uri, $token, $data = [])
     {
         $this->assertJsonRequest($method, $uri, [

@@ -643,7 +643,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-with-ndr 
+     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-with-ndr
      */
     public function createLayPfaHighNotStartedMultiClientDeputyWithNdr()
     {
