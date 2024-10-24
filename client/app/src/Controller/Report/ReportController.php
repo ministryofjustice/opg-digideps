@@ -170,11 +170,6 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $clients = $user->getClients();
-        if (empty($clients)) {
-            throw $this->createNotFoundException('Client not added');
-        }
-
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
@@ -226,7 +221,8 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), $groups);
 
         if (empty($clients)) {
             throw $this->createNotFoundException('Client not added');
@@ -385,7 +381,7 @@ class ReportController extends AbstractController
 
         $deputyHasMultiClients = false;
 
-        if ('1' == $isMultiClientFeatureEnabled) {
+        if ('1' == $isMultiClientFeatureEnabled && !$user->isDeputyOrg()) {
             $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
         }
 

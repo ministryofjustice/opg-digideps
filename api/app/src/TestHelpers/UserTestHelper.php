@@ -58,8 +58,11 @@ class UserTestHelper extends TestCase
             ->setAddressCountry('GB')
             ->setAddressPostcode($faker->postcode())
             ->setAgreeTermsUse(true)
-            ->setIsPrimary($isPrimary)
-            ->setDeputyUid($deputyUid ?: intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT)));
+            ->setIsPrimary($isPrimary);
+
+        if (str_contains($roleName, 'LAY')) {
+            $user->setDeputyUid($deputyUid ?: intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT)));
+        }
 
         if (!is_null($client)) {
             $user->addClient($client);
