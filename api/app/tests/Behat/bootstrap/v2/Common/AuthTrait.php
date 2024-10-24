@@ -479,7 +479,7 @@ trait AuthTrait
     }
 
     /**
-     * @When /^they try to access their "(primary|non-primary)" discharged Client$/
+     * @When /^they try to access their "(primary|secondary)" discharged Client$/
      */
     public function theyChooseTheirDischargedClient($isPrimary)
     {
