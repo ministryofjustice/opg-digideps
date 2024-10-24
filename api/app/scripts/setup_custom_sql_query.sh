@@ -19,6 +19,12 @@ for sql_file in $(ls $SQL_DIR/*.sql | sort -V); do
     # Create a temporary file for the modified SQL
     temp_file=$(mktemp)
 
+    # Check if password is empty and exit if it is!
+    if [ -z "$CUSTOM_SQL_DATABASE_PASSWORD" ]; then
+        echo "CUSTOM_SQL_DATABASE_PASSWORD is empty. Exiting..."
+        exit 1
+    fi
+
     # Replace the placeholder string with the real password
     sed "s/string_to_replace_with_real_password/$CUSTOM_SQL_DATABASE_PASSWORD/g" "$sql_file" > "$temp_file"
 
