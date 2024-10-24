@@ -135,7 +135,8 @@ data "aws_iam_policy_document" "execution_role_secrets_db" {
     resources = [
       data.aws_secretsmanager_secret.database_password.arn,
       data.aws_secretsmanager_secret.api_secret.arn,
-      data.aws_secretsmanager_secret.custom_sql_db_password.arn
+      data.aws_secretsmanager_secret.custom_sql_db_password.arn,
+      data.aws_secretsmanager_secret.readonly_sql_db_password.arn
     ]
     actions = ["secretsmanager:GetSecretValue"]
   }

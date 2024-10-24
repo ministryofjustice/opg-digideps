@@ -27,3 +27,13 @@ services:
     volumes:
       - "./zap/:/zap/wrk/"
     command: bash -c "zap.sh -cmd -addonupdate -addoninstall pscanrules -addoninstall pscanrulesBeta -addoninstall pscanrulesAlpha -addoninstall ascanrules -addoninstall ascanrulesBeta -addoninstall ascanrulesAlpha; zap.sh -cmd -autorun /zap/wrk/zap-digideps-front.yaml"
+
+  sql-custom-command:
+    build:
+      context: ./scripts/custom_sql_query
+      dockerfile: Dockerfile
+    environment:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
+      WORKSPACE: $WORKSPACE

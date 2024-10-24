@@ -197,5 +197,25 @@ resilience-tests: ##@resilience-tests Run resilience tests (requires app to be u
 	docker compose build orchestration
 	docker compose run -e LOG_AND_CONTINUE=true --remove-orphans orchestration sh tests/run-resilience-tests.sh
 
+sql-custom-command-insert: ##@sql-custom-command Run SQL insert custom command
+	docker compose -f docker-compose.commands.yml build sql-custom-command
+	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) insert --sql_file=_run.sql --verification_sql_file=_verification.sql --expected_before=$(before) --expected_after=$(after)
+
+sql-custom-command-get: ##@sql-custom-command Run SQL get custom command
+	docker compose -f docker-compose.commands.yml build sql-custom-command
+	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) get --query_id=$(id)
+
+sql-custom-command-sign-off: ##@sql-custom-command Run SQL sign off custom command
+	docker compose -f docker-compose.commands.yml build sql-custom-command
+	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) sign_off --query_id=$(id)
+
+sql-custom-command-execute: ##@sql-custom-command Run SQL execute custom command
+	docker compose -f docker-compose.commands.yml build sql-custom-command
+	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) execute --query_id=$(id)
+
+sql-custom-command-revoke: ##@sql-custom-command Run SQL revoke custom command
+	docker compose -f docker-compose.commands.yml build sql-custom-command
+	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) revoke --query_id=$(id)
+
 set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-feature-flag name=multi-accounts value=1
 	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite

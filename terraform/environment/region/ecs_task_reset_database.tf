@@ -37,6 +37,10 @@ locals {
           valueFrom = data.aws_secretsmanager_secret.custom_sql_db_password.arn
         },
         {
+          name      = "READONLY_SQL_DATABASE_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.readonly_sql_db_password.arn
+        },
+        {
           name      = "SECRET",
           valueFrom = data.aws_secretsmanager_secret.api_secret.arn
         }
