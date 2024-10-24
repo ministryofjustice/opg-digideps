@@ -58,7 +58,7 @@ def get_lambda_client(environment):
         return LocalLambdaClient()
     else:
         session = assume_operator(environment)
-        return session.client("lambda")
+        return session.client("lambda", region_name="eu-west-1")
 
 
 class LocalLambdaClient:
