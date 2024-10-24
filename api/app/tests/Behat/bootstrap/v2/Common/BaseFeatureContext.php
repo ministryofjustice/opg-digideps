@@ -635,7 +635,7 @@ class BaseFeatureContext extends MinkContext
     public function createLayPfaHighNotStartedMultiClientDeputy()
     {
         $deputyUid = 123456789000 + rand(1, 999);
-        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid, true));
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
@@ -643,12 +643,12 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-with-ndr 
+     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-with-ndr
      */
     public function createLayPfaHighNotStartedMultiClientDeputyWithNdr()
     {
         $deputyUid = 123456788000 + rand(1, 999);
-        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStartedWithNdr($this->testRunId, null, $deputyUid));
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStartedWithNdr($this->testRunId, null, $deputyUid, true));
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
@@ -665,7 +665,7 @@ class BaseFeatureContext extends MinkContext
         // generate a second test run id for second non-primary user
         $testRunId = (string) (time() + rand());
 
-        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid, true));
         $nonPrimaryUserDetailsOne = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
         $nonPrimaryUserDetailsTwo = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($testRunId, null, $deputyUid));
 
