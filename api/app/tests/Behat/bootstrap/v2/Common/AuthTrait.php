@@ -494,6 +494,7 @@ trait AuthTrait
         $this->visitPath($urlRegex);
     }
 
+    /**
      * @Given /^they discharge the deputy from "([^"]*)" secondary client\(s\)$/
      */
     public function theyDischargeTheDeputyFromNonPrimaryClient($countOfClientAccounts)
