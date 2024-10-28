@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\Report\Document;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 class DocumentRepository extends ServiceEntityRepository
@@ -419,7 +420,7 @@ AND is_report_pdf=false";
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception
      */
     private function setErrorDocumentsToQueued(array $documents, Connection $connection): void
     {
@@ -428,17 +429,17 @@ AND is_report_pdf=false";
             $ids = [];
             foreach ($documents as $data) {
                 $ids[] = $data['document_id'];
+            }
 
-                $idsString = implode(',', $ids);
+            $idsString = implode(',', $ids);
 
-                $updateStatusQuery = "
+            $updateStatusQuery = "
 UPDATE document
 SET synchronisation_status = 'QUEUED', synchronisation_error = ''
 WHERE id IN ($idsString)";
-                $stmt = $connection->prepare($updateStatusQuery);
+            $stmt = $connection->prepare($updateStatusQuery);
 
-                $stmt->execute();
-            }
+            $stmt->executeQuery();
         }
     }
 }
