@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Logger;
 use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
+use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,6 +43,10 @@ class SettingsController extends AbstractController
      * @var UserApi
      */
     private $userApi;
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
 
     /**
      * @var RestClient
@@ -57,6 +63,7 @@ class SettingsController extends AbstractController
         Logger $logger,
         DateTimeProvider $dateTimeProvider,
         UserApi $userApi,
+        ClientApi $clientApi,
         RestClient $restClient,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -66,6 +73,7 @@ class SettingsController extends AbstractController
         $this->logger = $logger;
         $this->dateTimeProvider = $dateTimeProvider;
         $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
         $this->restClient = $restClient;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -73,9 +81,10 @@ class SettingsController extends AbstractController
     /**
      * @Route("/deputyship-details", name="account_settings")
      * @Route("/org/settings", name="org_settings")
+     *
      * @Template("@App/Settings/index.html.twig")
      **/
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStore)
     {
         if ($this->getUser()->isDeputyOrg()) {
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
@@ -86,22 +95,28 @@ class SettingsController extends AbstractController
         }
 
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
+        $user = $this->userApi->getUserWithData();
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'account_settings')) {
             return $this->redirectToRoute($route);
         }
 
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
+        $deputyHasMultiClients = false;
 
-        return [
-            'client' => $client,
-        ];
+        if ($this->getUser()->isLayDeputy()) {
+            $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+            if ('1' == $isMultiClientFeatureEnabled) {
+                $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+            }
+        }
+
+        return ['deputyHasMultiClients' => $deputyHasMultiClients];
     }
 
     /**
      * @Route("/deputyship-details/your-details/change-password", name="user_password_edit")
      * @Route("/org/settings/your-details/change-password", name="org_profile_password_edit")
+     *
      * @Template("@App/Settings/passwordEdit.html.twig")
      */
     public function passwordEditAction(Request $request)
@@ -133,6 +148,7 @@ class SettingsController extends AbstractController
 
     /**
      * @Route("/org/settings/your-details/change-email", name="org_profile_email_edit")
+     *
      * @Template("@App/Settings/emailEdit.html.twig")
      */
     public function emailEditAction(Request $request)
@@ -169,6 +185,7 @@ class SettingsController extends AbstractController
      *
      * @Route("/deputyship-details/your-details", name="user_show")
      * @Route("/org/settings/your-details", name="org_profile_show")
+     *
      * @Template("@App/Settings/profile.html.twig")
      **/
     public function profileAction()
@@ -183,7 +200,9 @@ class SettingsController extends AbstractController
      *
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
      * @Route("/org/settings/your-details/edit", name="org_profile_edit")
+     *
      * @Template("@App/Settings/profileEdit.html.twig")
+     *
      * @throw AccessDeniedException
      **/
     public function profileEditAction(Request $request)
@@ -249,9 +268,9 @@ class SettingsController extends AbstractController
      * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
      * becoming Professional team members.
      *
-     * @throws AccessDeniedException
-     *
      * @return string
+     *
+     * @throws AccessDeniedException
      */
     private function determineNoAdminRole()
     {

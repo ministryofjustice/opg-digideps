@@ -21,7 +21,7 @@ class ClientControllerTest extends AbstractTestController
     private static $nonPrimaryUserAccount;
     private static $primaryAccountClient;
     private static $nonPrimaryAccountClient;
-
+    private static $primaryAccountDischargedClient;
     private static $tokenAdmin;
     private static $tokenDeputy;
     private static $tokenMainDeputy;
@@ -105,6 +105,7 @@ class ClientControllerTest extends AbstractTestController
         // multi-client deputy
         self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
         self::$primaryAccountClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'Multi-Client1', 'setCaseNumber' => '34566543']);
+        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new \DateTime()]);
 
         self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
         self::$nonPrimaryAccountClient = self::fixtures()->createClient(self::$nonPrimaryUserAccount, ['setFirstname' => 'Multi-Client2', 'setCaseNumber' => '78900987']);
@@ -251,6 +252,13 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenProf);
     }
 
+    public function testfindByIdDischargedClientNotFound()
+    {
+        $url = '/client/'.self::$primaryAccountDischargedClient->getId();
+
+        $this->assertEndpointNotFoundFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
+    }
+
     public function testfindByIdAclAllowed()
     {
         $url = '/client/'.self::$primaryAccountClient->getId();
@@ -356,7 +364,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertCount(6, $data);
+        $this->assertCount(7, $data);
     }
 
     public function testUpdateDeputy()

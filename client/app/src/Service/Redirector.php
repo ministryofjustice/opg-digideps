@@ -90,7 +90,7 @@ class Redirector
     }
 
     /**
-     * //TODO refactor remove. seeem overcomplicated.
+     * //TODO refactor remove. seem overcomplicated.
      *
      * @param string $currentRoute
      *
@@ -98,9 +98,19 @@ class Redirector
      */
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
+        $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+        // Check if user has multiple clients
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        $multiClientDeputy = !is_null($clients) && count($clients) > 1;
+
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+            if ($multiClientDeputy && '1' == $isMultiClientFeatureEnabled) {
+                $route = 'lay_home';
+            } else {
+                $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+            }
         }
 
         // none of these corrections apply to admin
@@ -108,7 +118,11 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+                    if ($multiClientDeputy && '1' == $isMultiClientFeatureEnabled) {
+                        $route = 'lay_home';
+                    } else {
+                        $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+                    }
                 }
 
                 // unverified codeputy invitation
@@ -119,7 +133,9 @@ class Redirector
                 if (!$user->isDeputyOrg()) {
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
-                        $route = 'client_add';
+                        if (0 == count($clients)) {
+                            $route = 'client_add';
+                        }
                     }
 
                     // incomplete user info
@@ -136,7 +152,7 @@ class Redirector
     /**
      * @return string
      */
-    private function getLayDeputyHomepage(User $user, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(User $user, $activeClientId = null, $enabledLastAccessedUrl = false)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -149,11 +165,19 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        if (0 == $user->getNumberOfReports()) {
+        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+
+        foreach ($allActiveClients as $activeClient) {
+            if (count($activeClient->getReportIds()) >= 1) {
+                break;
+            }
+
             return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
-        return $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]);
+        // check if last remaining active client is linked to non-primary account if so retrieve id
+        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
+            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
     /**
@@ -242,22 +266,21 @@ class Redirector
         $isMultiClientFeatureEnabled = $this->parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
         $user = $this->getLoggedUser();
 
-        if (!is_null($user->getDeputyUid())) {
-            $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
-        }
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
         if ('1' == $isMultiClientFeatureEnabled) {
             if (!(null === $clients)) {
                 if (1 < count($clients)) {
-                    return $this->getChooseAClientHomepage($user, false);
+                    return $this->getChooseAClientHomepage($user);
                 } else {
-                    return $this->getLayDeputyHomepage($user, false);
+                    return $this->getLayDeputyHomepage($user, $activeClientId);
                 }
             } else {
-                return $this->getLayDeputyHomepage($user, false);
+                return $this->getLayDeputyHomepage($user);
             }
         } else {
-            return $this->getLayDeputyHomepage($user, false);
+            return $this->getLayDeputyHomepage($user);
         }
     }
 }

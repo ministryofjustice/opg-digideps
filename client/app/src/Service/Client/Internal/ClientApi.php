@@ -242,21 +242,16 @@ class ClientApi
     /**
      * @return Client[]
      */
-    public function getAllClientsByDeputyUid(int $deputyUid)
+    public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
     {
         return $this->restClient->get(
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
-            'Client[]',
-            [
-                'client',
-                'client-name',
-                'client-case-number',
-                'client-reports',
-                'client-ndr',
-                'ndr',
-                'report',
-                'status',
-            ]
+            'Client[]', $groups
         );
+    }
+
+    public function checkDeputyHasMultiClients(int $deputyUid): bool
+    {
+        return count($this->getAllClientsByDeputyUid($deputyUid)) > 1;
     }
 }

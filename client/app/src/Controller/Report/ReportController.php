@@ -3,7 +3,6 @@
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Controller\ClientController;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
@@ -144,6 +143,8 @@ class ReportController extends AbstractController
 
         $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
 
+        $deputyHasMultiClients = false;
+
         if ('1' == $isMultiClientFeatureEnabled) {
             // redirect back to log out page if signing in with non-primary account with primary email
             if (!$user->getIsPrimary()) {
@@ -159,17 +160,14 @@ class ReportController extends AbstractController
 
                 return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
             }
+
+            $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
         }
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
         if (is_string($route)) {
             return $this->redirectToRoute($route);
-        }
-
-        $clients = $user->getClients();
-        if (empty($clients)) {
-            throw $this->createNotFoundException('Client not added');
         }
 
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
@@ -180,6 +178,7 @@ class ReportController extends AbstractController
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
             'client' => $clientWithCoDeputies,
             'coDeputies' => $coDeputies,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -222,7 +221,8 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+        $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), $groups);
 
         if (empty($clients)) {
             throw $this->createNotFoundException('Client not added');
@@ -377,12 +377,21 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
+        $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+
+        $deputyHasMultiClients = false;
+
+        if ('1' == $isMultiClientFeatureEnabled && !$user->isDeputyOrg()) {
+            $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        }
+
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ]);
     }
 

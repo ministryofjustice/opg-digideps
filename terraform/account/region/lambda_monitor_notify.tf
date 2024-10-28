@@ -102,19 +102,6 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
     ]
   }
 
-  #  statement {
-  #    sid    = "KMS_SNS"
-  #    effect = "Allow"
-  #    actions = [
-  #      "kms:Decrypt",
-  #      "kms:GenerateDataKey*",
-  #      "kms:DescribeKey",
-  #    ]
-  #    resources = [
-  #      module.sns_kms.eu_west_1_target_key_arn
-  #    ]
-  #  }
-
   statement {
     sid    = "ReadSecret"
     effect = "Allow"

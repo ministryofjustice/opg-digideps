@@ -9,21 +9,16 @@
 {% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsSettings('settings') }}
+    {% if deputyHasMultiClients %}
+        {{ macros.breadcrumbsArray([
+            { href: url('choose_a_client'), text: 'Choose a client' }
+        ]) }}
+    {% else %}
+        {{ macros.breadcrumbsSettings('settings') }}
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}
-    {# Lay deputy can edit their client's details #}
-    {% if 'ROLE_LAY_DEPUTY' == app.user.roleName %}
-        {% set transOptions = {'%client%': client.firstname} %}
-        <h2 class="govuk-heading-m">
-            <a href="{{ path('client_show', {'clientId' : client.id}) }}" class="govuk-link behat-link-client-show">
-                {{ 'settings-page.links.client.title' | trans(transOptions) }}
-            </a>
-        </h2>
-        <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
-    {% endif %}
-
     {# PA/Prof named/admin they can edit their organisation #}
     {% if 'ROLE_PA_NAMED' == app.user.roleName or 'ROLE_PA_ADMIN' == app.user.roleName or
         'ROLE_PROF_NAMED' == app.user.roleName or 'ROLE_PROF_ADMIN' == app.user.roleName %}

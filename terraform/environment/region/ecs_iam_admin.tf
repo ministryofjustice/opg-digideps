@@ -10,7 +10,7 @@ resource "aws_iam_role_policy" "admin_s3" {
   role   = aws_iam_role.admin.id
 }
 
-#tfsec:ignore:aws-iam-no-policy-wildcards - wildcards for objects in individual buckets not overly permissive
+#trivy:ignore:avd-aws-0057 - wildcards for objects in individual buckets not overly permissive
 data "aws_iam_policy_document" "admin_s3" {
   statement {
     sid    = "AdminS3BucketGet"
@@ -48,5 +48,11 @@ resource "aws_iam_role_policy" "admin_query_ssm" {
 resource "aws_iam_role_policy" "admin_task_logs" {
   name   = "admin-task-logs.${local.environment}"
   policy = data.aws_iam_policy_document.ecs_task_logs.json
+  role   = aws_iam_role.admin.id
+}
+
+resource "aws_iam_role_policy" "admin_ssm" {
+  name   = "admin-ssm.${local.environment}"
+  policy = data.aws_iam_policy_document.front_ssm.json
   role   = aws_iam_role.admin.id
 }

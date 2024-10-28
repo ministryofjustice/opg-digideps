@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
@@ -315,6 +316,18 @@ trait AuthTrait
     }
 
     /**
+     * @Then /^I should be redirected and denied access to continue as client not found$/
+     */
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFound()
+    {
+        $this->assertIntEqualsInt(
+            '404',
+            $this->getSession()->getStatusCode(),
+            'Status code after accessing endpoint'
+        );
+    }
+
+    /**
      * @Given /^a Lay Deputy has multiple client accounts$/
      */
     public function aDeputyHasMultipleClientAccounts()
@@ -425,6 +438,27 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^have access to all active client dashboards$/
+     */
+    public function haveAccessToAllActiveClientDashboards()
+    {
+        $this->getActiveClientIds();
+
+        if (count($this->activeClientIds) > 1) {
+            foreach ($this->activeClientIds as $activeClientId) {
+                $urlRegex = sprintf('/client\/%d$/', $activeClientId);
+                $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+                $this->iAmOnPage($urlRegex);
+                $this->clickLink('Your reports');
+            }
+        } else {
+            $urlRegex = sprintf('/client\/%d$/', $this->activeClientIds[0]);
+            $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+            $this->iAmOnPage('/client\/%d$/');
+        }
+    }
+
+    /**
      * @Then /^they should be on the "(primary|non-primary)" Client's dashboard$/
      */
     public function theyShouldBeOnThatClientSDashboard($isPrimary)
@@ -442,5 +476,80 @@ trait AuthTrait
         $this->iAmOnPage(sprintf('/client\/%d$/', $clientId));
         $this->assertPageContainsText($clientFirstName);
         $this->assertPageContainsText($clientLastName);
+    }
+
+    /**
+     * @When /^they try to access their "(primary|secondary)" discharged Client$/
+     */
+    public function theyChooseTheirDischargedClient($isPrimary)
+    {
+        if ('primary' == $isPrimary) {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+        } else {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+        }
+
+        $urlRegex = sprintf('/client\/%d$/', $clientId);
+
+        $this->visitPath($urlRegex);
+    }
+
+    /**
+     * @Given /^they discharge the deputy from "([^"]*)" secondary client\(s\)$/
+     */
+    public function theyDischargeTheDeputyFromNonPrimaryClient($countOfClientAccounts)
+    {
+        if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
+        }
+
+        $this->getActiveClientIds();
+
+        if (1 == $countOfClientAccounts) {
+            $this->iVisitClientDetailsUrl($this->activeClientIds[0]);
+
+            $this->clickLink('Discharge deputy');
+            $this->iAmOnAdminClientDischargePage();
+            $this->clickLink('Discharge deputy');
+        } else {
+            foreach ($this->activeClientIds as $clientId) {
+                $this->iVisitClientDetailsUrl($clientId);
+
+                $this->clickLink('Discharge deputy');
+                $this->iAmOnAdminClientDischargePage();
+                $this->clickLink('Discharge deputy');
+            }
+        }
+    }
+
+    /**
+     * @Then /^should arrive on the client dashboard of their only active client$/
+     */
+    public function shouldArriveOnTheClientDashboardOfTheirOnlyActiveClient()
+    {
+        $singleActiveClient = 0;
+
+        foreach ($this->activeClientIds as $activeClientId) {
+            $isClientStillActive = $this->em->getRepository(Client::class)->find($activeClientId);
+            if (null == $isClientStillActive->getDeletedAt()) {
+                $singleActiveClient = $activeClientId;
+            }
+        }
+
+        $this->iAmOnPage(sprintf('/client\/%d$/', $singleActiveClient));
+    }
+
+    private function getActiveClientIds(): void
+    {
+        foreach ($this->fixtureUsers as $fixtureUser) {
+            if (null != $fixtureUser && 'ROLE_SUPER_ADMIN' != $fixtureUser->getUserRole()) {
+                $clientId = $fixtureUser->getClientId();
+                $activeClient = $this->em->getRepository(Client::class)->find($clientId);
+
+                if (null == $activeClient->getDeletedAt()) {
+                    $this->activeClientIds[] = $clientId;
+                }
+            }
+        }
     }
 }
