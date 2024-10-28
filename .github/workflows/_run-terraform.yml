@@ -33,11 +33,11 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v3
 
       - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
 
-      - uses: actions/setup-python@19dfb7b659fa9e60c2f89c33335ab5f6f1792b6e
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
         if: inputs.terraform_path == 'shared'
         with:
           python-version: "3.11"
@@ -59,7 +59,7 @@ jobs:
           terraform_wrapper: false
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@2cefa29f8797029f898b1baeff3e21a144128687 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@132df1605ae82e618724f3a9ca0129373ac8d869 # pin@v1.7.0
         with:
           role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}"
           role-session-name: github-actions-terraform
