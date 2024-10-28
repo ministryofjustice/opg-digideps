@@ -12,3 +12,9 @@ variable "environment" {
   type        = string
   description = "Environment identifier."
 }
+
+# To delete after we remove reference to this completely
+variable "account_name" {
+  type        = string
+  description = "Account name."
+}
