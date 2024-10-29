@@ -83,6 +83,7 @@ class FixtureController extends AbstractController
                     'deputyLastName' => $deputy->getLastname(),
                     'deputyFirstName' => $deputy->getFirstName(),
                     'reportType' => $fromRequest['reportType'],
+                    'deputyUid' => $fromRequest['deputyUid'],
                 ]
             );
 
@@ -114,6 +115,7 @@ class FixtureController extends AbstractController
                     'deputyLastName' => $coDeputy->getLastname(),
                     'deputyFirstName' => $coDeputy->getFirstName(),
                     'reportType' => $fromRequest['reportType'],
+                    'deputyUid' => $coDeputy->getDeputyUid(),
                 ]
             );
 
@@ -154,6 +156,7 @@ class FixtureController extends AbstractController
             'email' => $fromRequest['deputyEmail'],
             'activated' => $fromRequest['activated'],
             'coDeputyEnabled' => $fromRequest['coDeputyEnabled'],
+            'deputyUid' => $fromRequest['deputyUid'],
         ]);
 
         $this->em->persist($deputy);
