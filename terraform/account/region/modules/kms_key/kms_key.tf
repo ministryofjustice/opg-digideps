@@ -8,6 +8,7 @@ resource "aws_kms_key" "main" {
 }
 
 resource "aws_kms_replica_key" "main" {
+  count                   = var.enable_multi_region ? 1 : 0
   description             = "${data.aws_default_tags.current.tags.application} ${var.encrypted_resource} multi-region replica key"
   deletion_window_in_days = var.deletion_window_in_days
   primary_key_arn         = aws_kms_key.main.arn
@@ -22,7 +23,8 @@ resource "aws_kms_alias" "main_eu_west_1" {
 }
 
 resource "aws_kms_alias" "main_eu_west_2" {
+  count         = var.enable_multi_region ? 1 : 0
   name          = "alias/${var.kms_key_alias_name}"
-  target_key_id = aws_kms_replica_key.main.key_id
+  target_key_id = aws_kms_replica_key.main[0].key_id
   provider      = aws.eu_west_2
 }
