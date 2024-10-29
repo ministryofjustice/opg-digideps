@@ -8,12 +8,13 @@ variable "ecs_cluster" {
   description = "Name of the ECS cluster to run the experiments on."
 }
 
-variable "account_name" {
-  type        = string
-  description = "Account name."
-}
-
 variable "environment" {
   type        = string
   description = "Environment identifier."
+}
+
+# To delete after we remove reference to this completely
+variable "account_name" {
+  type        = string
+  description = "Account name."
 }

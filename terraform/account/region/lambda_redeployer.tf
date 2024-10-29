@@ -24,7 +24,7 @@ resource "aws_lambda_function" "redeployer_lambda" {
 resource "aws_cloudwatch_log_group" "redeployer_lambda" {
   name              = "/aws/lambda/${local.redeployer_lambda_function_name}"
   retention_in_days = 14
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   tags = merge(
     var.default_tags,
     { Name = "redeployer-${var.account.name}-log-group" },
