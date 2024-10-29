@@ -1,7 +1,6 @@
 # Create encrypted logging for fault injection experiments
-
 data "aws_kms_alias" "cloudwatch_application_logs_encryption" {
-  name = "alias/digideps-shared-cloudwatch-${var.account_name}"
+  name = "alias/digideps_logs_encryption_key"
 }
 
 resource "aws_cloudwatch_log_group" "fis_app_ecs_tasks" {
