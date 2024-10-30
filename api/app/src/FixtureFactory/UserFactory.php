@@ -41,7 +41,7 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName($roleName)
             ->setAgreeTermsUse(true)
-            ->setDeputyUid($data['deputyUid']);
+            ->setDeputyUid(User::TYPE_LAY === $data['deputyType'] ? $data['deputyUid'] : null);
 
         if ('true' === $data['activated'] || true === $data['activated']) {
             $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'));

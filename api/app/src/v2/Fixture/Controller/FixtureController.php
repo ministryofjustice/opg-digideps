@@ -256,7 +256,7 @@ class FixtureController extends AbstractController
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyUid($fromRequest['caseNumber'].mt_rand(1, 100))
+            ->setDeputyUid('70'.str_pad($fromRequest['caseNumber'].mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain());
