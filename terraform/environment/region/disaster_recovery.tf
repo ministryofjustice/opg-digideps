@@ -11,7 +11,7 @@ module "disaster_recovery_backup" {
   aws_subnet_ids          = data.aws_subnet.private[*].id
   db                      = local.db
   aws_vpc_id              = data.aws_vpc.vpc.id
-  logs_kms_key_arn        = aws_kms_key.cloudwatch_logs.arn
+  logs_kms_key_arn        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   log_retention           = 30
   common_sg_rules         = local.common_sg_rules
   task_role_assume_policy = data.aws_iam_policy_document.task_role_assume_policy
