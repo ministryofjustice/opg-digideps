@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\Report\Checklist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ChecklistRepository extends ServiceEntityRepository
@@ -34,7 +35,6 @@ LIMIT $limit;";
         $result = $docStmt->executeQuery();
 
         $checklists = [];
-
         // Get all queued checklists
         $results = $result->fetchAllAssociative();
         foreach ($results as $row) {
@@ -42,7 +42,6 @@ LIMIT $limit;";
                 'checklist_id' => $row['checklist_id'],
             ];
         }
-
         if (count($checklists) > 0) {
             $this->setErrorChecklistsToQueued($checklists, $conn);
 
@@ -53,7 +52,7 @@ LIMIT $limit;";
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception
      */
     private function setErrorChecklistsToQueued(array $checklists, Connection $connection): void
     {
@@ -68,7 +67,7 @@ LIMIT $limit;";
 
             $updateStatusQuery = "
 UPDATE checklist
-SET synchronisation_status = 'QUEUED', synchronisation_error = ''
+SET synchronisation_status = 'QUEUED', synchronisation_error = null, synchronisation_time = null
 WHERE id IN ($idsString)";
             $stmt = $connection->prepare($updateStatusQuery);
 

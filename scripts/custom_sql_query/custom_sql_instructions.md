@@ -17,3 +17,7 @@ aws-vault exec identity -- make sql-custom-command-sign-off workspace=ddls123400
 aws-vault exec identity -- make sql-custom-command-execute workspace=ddls1234000 id=1
 aws-vault exec identity -- make sql-custom-command-revoke workspace=ddls1234000 id=1
 ```
+
+To run against your own environment in AWS, use your branch name (which is the environment name) as the workspace variable. You can use 'local' as the workspace to run against local.
+
+The real environments are development, integration, training, preproduction and production.

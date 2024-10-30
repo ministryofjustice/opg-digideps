@@ -9,7 +9,16 @@ from botocore.exceptions import ClientError
 environment = os.getenv("ENVIRONMENT")
 secret_prefix = (
     environment
-    if environment in ["local", "development", "preproduction", "production"]
+    if environment
+    in [
+        "local",
+        "development",
+        "integration",
+        "training",
+        "preproduction",
+        "production",
+        "production02",
+    ]
     else "default"
 )
 secret_name = f"{secret_prefix}/custom-sql-db-password"
