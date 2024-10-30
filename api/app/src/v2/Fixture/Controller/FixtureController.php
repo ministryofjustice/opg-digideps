@@ -98,6 +98,7 @@ class FixtureController extends AbstractController
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $deputy->setIsPrimary(true);
             $deputy->addClient($client);
         } else {
             $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
