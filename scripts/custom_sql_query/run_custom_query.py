@@ -17,7 +17,7 @@ def lambda_invoke(lambda_client, function_name, payload):
     return parsed_payload
 
 
-def assume_operator(environment):
+def assume_custom_sql_role(environment):
     environments = {
         "development": "248804316466",
         "training": "454262938596",
@@ -57,7 +57,7 @@ def get_lambda_client(environment):
         # Return a wrapper client for local Lambda invocation via HTTP POST
         return LocalLambdaClient()
     else:
-        session = assume_operator(environment)
+        session = assume_custom_sql_role(environment)
         return session.client("lambda", region_name="eu-west-1")
 
 
@@ -199,8 +199,14 @@ def main(
 ):
     calling_user = get_current_user()
     lambda_client = get_lambda_client(environment)
+
+    lambda_environment_name = (
+        environment if environment != "production" else "production02"
+    )
     function_name = (
-        "function" if environment == "local" else f"custom-sql-query-{environment}"
+        "function"
+        if environment == "local"
+        else f"custom-sql-query-{lambda_environment_name}"
     )
     if action == "insert":
         response = run_insert(

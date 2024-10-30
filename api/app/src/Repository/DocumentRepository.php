@@ -399,7 +399,7 @@ AND is_report_pdf=false";
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception
      */
     private function setQueuedDocumentsToInProgress(array $documents, Connection $connection): void
     {
@@ -408,14 +408,13 @@ AND is_report_pdf=false";
             $ids = [];
             foreach ($documents as $data) {
                 $ids[] = $data['document_id'];
-
-                $idsString = implode(',', $ids);
-
-                $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
-                $stmt = $connection->prepare($updateStatusQuery);
-
-                $stmt->execute();
             }
+            $idsString = implode(',', $ids);
+
+            $updateStatusQuery = "UPDATE document SET synchronisation_status = 'IN_PROGRESS' WHERE id IN ($idsString)";
+            $stmt = $connection->prepare($updateStatusQuery);
+
+            $stmt->executeQuery();
         }
     }
 
