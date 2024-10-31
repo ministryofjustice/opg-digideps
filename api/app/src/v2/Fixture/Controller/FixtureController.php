@@ -83,6 +83,7 @@ class FixtureController extends AbstractController
                     'deputyLastName' => $deputy->getLastname(),
                     'deputyFirstName' => $deputy->getFirstName(),
                     'reportType' => $fromRequest['reportType'],
+                    'deputyUid' => $fromRequest['deputyUid'],
                 ]
             );
 
@@ -97,6 +98,7 @@ class FixtureController extends AbstractController
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $deputy->setIsPrimary(true);
             $deputy->addClient($client);
         } else {
             $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
@@ -114,6 +116,7 @@ class FixtureController extends AbstractController
                     'deputyLastName' => $coDeputy->getLastname(),
                     'deputyFirstName' => $coDeputy->getFirstName(),
                     'reportType' => $fromRequest['reportType'],
+                    'deputyUid' => $coDeputy->getDeputyUid(),
                 ]
             );
 
@@ -154,6 +157,7 @@ class FixtureController extends AbstractController
             'email' => $fromRequest['deputyEmail'],
             'activated' => $fromRequest['activated'],
             'coDeputyEnabled' => $fromRequest['coDeputyEnabled'],
+            'deputyUid' => $fromRequest['deputyUid'],
         ]);
 
         $this->em->persist($deputy);
@@ -252,7 +256,7 @@ class FixtureController extends AbstractController
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyUid($fromRequest['caseNumber'].mt_rand(1, 100))
+            ->setDeputyUid('70'.str_pad($fromRequest['caseNumber'].mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain());
