@@ -172,7 +172,7 @@ class ClientApi
     public function getById(int $clientId, array $includes = [])
     {
         return $this->restClient->get(
-            sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
+            sprintf(self::GET_CLIENT_BY_ID, $clientId),
             'Client',
             [
                 'client',
