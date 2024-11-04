@@ -258,6 +258,10 @@ class ClientController extends AbstractController
                         $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
                         break;
 
+                    case 464:
+                        $form->addError(new FormError($translator->trans('formErrors.deputyAlreadyRegistered', [], 'register')));
+                        break;
+
                     default:
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }

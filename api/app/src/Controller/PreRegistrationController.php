@@ -29,6 +29,7 @@ class PreRegistrationController extends RestController
 
     /**
      * @Route("/delete", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return array|JsonResponse
@@ -85,9 +86,14 @@ class PreRegistrationController extends RestController
             $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setDeputyUid($verificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setPreRegisterValidatedDate(new \DateTime());
-            $user->setIsPrimary(true);
             $this->em->persist($user);
             $this->em->flush();
+
+            if ($this->preRegistrationVerificationService->deputyHasNotSignedUpAlready()) {
+                $user->setIsPrimary(true);
+            } else {
+                throw new \RuntimeException(json_encode('Deputy has already registered for the service'), 464);
+            }
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
@@ -98,6 +104,7 @@ class PreRegistrationController extends RestController
 
     /**
      * @Route("/count", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function userCount()

@@ -78,7 +78,7 @@ class PreRegistrationVerificationService
         return count($crMatches) > 1;
     }
 
-    public function isSingleDeputyAccount(): bool
+    public function deputyHasNotSignedUpAlready(): bool
     {
         $deputyUid = $this->getLastMatchedDeputyNumbers()[0];
         $existingDeputyAccounts = $this->userRepository->findBy(['deputyUid' => intval($deputyUid)]);
