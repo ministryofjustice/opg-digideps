@@ -5,7 +5,8 @@ namespace App\Controller\Admin;
 use App\Controller\AbstractController;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Form\Admin\Fixture\CourtOrderFixtureType;
+use App\Form\Admin\Fixture\LayCourtOrderFixtureType;
+use App\Form\Admin\Fixture\OrgCourtOrderFixtureType;
 use App\Form\Admin\Fixture\PreRegistrationFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
@@ -65,11 +66,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/court-orders", name="admin_lay_fixtures_court_orders")
+     * @Route("/court-orders/lay", name="admin_lay_fixtures_court_orders")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
-     * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
+     * @Template("@App/Admin/Fixtures/layCourtOrders.html.twig")
      */
     public function layCourtOrdersAction(Request $request)
     {
@@ -77,14 +78,12 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(CourtOrderFixtureType::class, null, [
+        $form = $this->createForm(LayCourtOrderFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
             'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
             'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
             'activated' => $request->get('activated', true),
-            'orgSizeClients' => $request->get('orgSizeClients', 1),
-            'orgSizeUsers' => $request->get('orgSizeUsers', 1),
         ]);
 
         $form->handleRequest($request);
@@ -104,8 +103,6 @@ class FixtureController extends AbstractController
                 'courtDate' => $courtDate->format('Y-m-d'),
                 'coDeputyEnabled' => $submitted['coDeputyEnabled'],
                 'activated' => $submitted['activated'],
-                'orgSizeClients' => $submitted['orgSizeClients'],
-                'orgSizeUsers' => $submitted['orgSizeUsers'],
                 'deputyUid' => $deputyUid,
             ]));
 
@@ -122,11 +119,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/court-orders", name="admin_org_fixtures_court_orders")
+     * @Route("/court-orders/org", name="admin_org_fixtures_court_orders")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
-     * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
+     * @Template("@App/Admin/Fixtures/orgCourtOrders.html.twig")
      */
     public function orgCourtOrdersAction(Request $request)
     {
@@ -134,11 +131,10 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(CourtOrderFixtureType::class, null, [
-            'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
+        $form = $this->createForm(OrgCourtOrderFixtureType::class, null, [
+            'deputyType' => $request->get('deputy-type', User::TYPE_PROF),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
             'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
-            'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
             'activated' => $request->get('activated', true),
             'orgSizeClients' => $request->get('orgSizeClients', 1),
             'orgSizeUsers' => $request->get('orgSizeUsers', 1),
@@ -159,7 +155,6 @@ class FixtureController extends AbstractController
                 'reportType' => $submitted['reportType'],
                 'reportStatus' => $submitted['reportStatus'],
                 'courtDate' => $courtDate->format('Y-m-d'),
-                'coDeputyEnabled' => $submitted['coDeputyEnabled'],
                 'activated' => $submitted['activated'],
                 'orgSizeClients' => $submitted['orgSizeClients'],
                 'orgSizeUsers' => $submitted['orgSizeUsers'],

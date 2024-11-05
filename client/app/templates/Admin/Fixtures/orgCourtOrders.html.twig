@@ -2,8 +2,8 @@
 
 {% trans_default_domain "admin-fixtures" %}
 
-{% block htmlTitle %}Data Fixtures - Court Orders{% endblock %}
-{% block pageTitle %}Court Orders{% endblock %}
+{% block htmlTitle %}Data Fixtures - Organisation Court Orders{% endblock %}
+{% block pageTitle %}Organisation Court Orders{% endblock %}
 {% block supportTitleTop %}Data Fixtures{% endblock %}
 
 {% block pageContent %}
@@ -11,7 +11,6 @@
     {{ form_select(form.deputyType, 'courtOrders.deputyType') }}
     {{ form_select(form.reportType, 'courtOrders.reportType') }}
     {{ form_select(form.reportStatus, 'courtOrders.reportStatus') }}
-    {{ form_select(form.coDeputyEnabled, 'courtOrders.coDeputyEnabled') }}
     {{ form_select(form.activated, 'courtOrders.activated') }}
     {{ form_select(form.orgSizeClients, 'courtOrders.orgSizeClients') }}
     {{ form_select(form.orgSizeUsers, 'courtOrders.orgSizeUsers') }}
