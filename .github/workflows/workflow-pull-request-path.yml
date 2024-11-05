@@ -373,8 +373,15 @@ jobs:
       - scale_services_down
       - codecov
       - workflow_variables
+    if: ${{ always() }}
     steps:
+      - name: Check workflow result
+        if: ${{ failure() }}
+        run: |
+          echo "A job failed. Marking end-workflow as failed."
+          exit 1
       - name: workflow ended successfully
+        if: ${{ success() }}
         run: |
           export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
           export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
