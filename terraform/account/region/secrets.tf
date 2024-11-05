@@ -19,7 +19,8 @@ module "environment_secrets" {
     "custom-sql-db-password",
     "readonly-sql-db-password"
   ]
-  tags = var.default_tags
+  kms_key = module.secret_kms.eu_west_1_target_key_arn
+  tags    = var.default_tags
 }
 
 module "development_environment_secrets" {
@@ -31,13 +32,15 @@ module "development_environment_secrets" {
     "browserstack-username",
     "browserstack-access-key"
   ]
-  tags = var.default_tags
+  kms_key = module.secret_kms.eu_west_1_target_key_arn
+  tags    = var.default_tags
 }
 
 # Account wide secrets
 resource "aws_secretsmanager_secret" "cloud9_users" {
   name        = "cloud9-users"
   description = "Digideps team Cloud9 users"
+  kms_key_id  = module.secret_kms.eu_west_1_target_key_arn
   tags        = var.default_tags
 }
 
@@ -48,11 +51,13 @@ data "aws_secretsmanager_secret_version" "cloud9_users" {
 resource "aws_secretsmanager_secret" "slack_webhook_url" {
   name        = "slack-webhook-url"
   description = "URL of webhook for Slack Integration"
+  kms_key_id  = module.secret_kms.eu_west_1_target_key_arn
   tags        = var.default_tags
 }
 
 resource "aws_secretsmanager_secret" "preproduction_anonymise_default_pw" {
   name        = "anonymisation-default-user-pw"
   description = "Default password for anonymisation users"
+  kms_key_id  = module.secret_kms.eu_west_1_target_key_arn
   tags        = var.default_tags
 }

@@ -6,6 +6,7 @@ resource "aws_sns_topic" "alerts" {
   )
 }
 
+#trivy:ignore:avd-aws-0095 - Can't do cross region SNS encryption
 resource "aws_sns_topic" "availability-alert" {
   provider     = aws.global
   name         = "availability-alert-${local.current_main_region}"
