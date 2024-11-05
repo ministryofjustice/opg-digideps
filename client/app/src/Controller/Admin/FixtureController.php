@@ -65,13 +65,70 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/court-orders", name="admin_fixtures_court_orders")
+     * @Route("/court-orders", name="admin_lay_fixtures_court_orders")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
      */
-    public function courtOrdersAction(Request $request)
+    public function layCourtOrdersAction(Request $request)
+    {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(CourtOrderFixtureType::class, null, [
+            'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
+            'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
+            'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
+            'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
+            'activated' => $request->get('activated', true),
+            'orgSizeClients' => $request->get('orgSizeClients', 1),
+            'orgSizeUsers' => $request->get('orgSizeUsers', 1),
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $submitted = $form->getData();
+            $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
+            $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+            $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
+            $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+
+            $response = $this->restClient->post('v2/fixture/court-order', json_encode([
+                'deputyType' => $submitted['deputyType'],
+                'deputyEmail' => $deputyEmail,
+                'caseNumber' => $caseNumber,
+                'reportType' => $submitted['reportType'],
+                'reportStatus' => $submitted['reportStatus'],
+                'courtDate' => $courtDate->format('Y-m-d'),
+                'coDeputyEnabled' => $submitted['coDeputyEnabled'],
+                'activated' => $submitted['activated'],
+                'orgSizeClients' => $submitted['orgSizeClients'],
+                'orgSizeUsers' => $submitted['orgSizeUsers'],
+                'deputyUid' => $deputyUid,
+            ]));
+
+            $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
+            $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
+            $sanitizedDeputyData = $this->removeNullValues($deputiesData);
+
+            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
+
+            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
+        }
+
+        return ['form' => $form->createView()];
+    }
+
+    /**
+     * @Route("/court-orders", name="admin_org_fixtures_court_orders")
+     *
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
+     */
+    public function orgCourtOrdersAction(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();

@@ -1,7 +1,8 @@
 list:
   links:
     preRegistration: Pre-registration Fixtures
-    courtOrders: Court Orders Fixtures
+    layCourtOrders: Lay Court Order Fixtures
+    orgCourtOrders: Organisation Court Order Fixtures
 courtOrders:
   deputyType:
     label: Deputy Role
