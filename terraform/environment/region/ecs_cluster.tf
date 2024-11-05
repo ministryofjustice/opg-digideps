@@ -17,7 +17,7 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_cloudwatch_log_group" "container_insights" {
   name              = "/aws/ecs/containerinsights/${local.environment}/performance"
   retention_in_days = 1
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   tags              = var.default_tags
 }
 
