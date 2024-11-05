@@ -10,13 +10,8 @@ class ParameterStoreService
 {
     public const PARAMETER_CHECKLIST_SYNC_ROW_LIMIT = 'checklist-sync-row-limit';
     public const PARAMETER_DOCUMENT_SYNC_ROW_LIMIT = 'document-sync-row-limit';
-    public const PARAMETER_DOCUMENT_SYNC_INTERVAL_MINUTES = 'document-sync-interval-minutes';
-
     public const FLAG_CHECKLIST_SYNC = 'checklist-sync';
     public const FLAG_DOCUMENT_SYNC = 'document-sync';
-    public const FLAG_PAPER_REPORTS = 'paper-reports';
-
-    public const FLAG_MULTI_ACCOUNTS = 'multi-accounts';
 
     /** @var SsmClient */
     private $ssmClient;
