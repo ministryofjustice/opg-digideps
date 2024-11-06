@@ -65,7 +65,7 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getById($clientId);
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
 
         return [
             'client' => $client,

@@ -155,7 +155,7 @@ class ReportController extends AbstractController
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
