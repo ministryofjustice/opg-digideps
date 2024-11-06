@@ -82,6 +82,7 @@ class FixtureController extends AbstractController
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
             'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
+            'multiClientEnabled' => $request->get('multi-client-enabled', false),
             'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
             'activated' => $request->get('activated', true),
         ]);
@@ -101,18 +102,39 @@ class FixtureController extends AbstractController
                 'reportType' => $submitted['reportType'],
                 'reportStatus' => $submitted['reportStatus'],
                 'courtDate' => $courtDate->format('Y-m-d'),
+                'multiClientEnabled' => $submitted['multiClientEnabled'],
                 'coDeputyEnabled' => $submitted['coDeputyEnabled'],
                 'activated' => $submitted['activated'],
                 'deputyUid' => $deputyUid,
             ]));
 
             $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
+
             $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
-
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
 
-            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
+            $caseNumber = $response['multiClientCaseNumbers'] ?? [$caseNumber];
+
+            $deputyEmails = [];
+            foreach (array_reverse($deputies) as $deputy) {
+                $deputyEmails[] = $deputy->getEmail();
+            }
+
+            $deputyAndCaseNumber = [];
+
+            if (count($caseNumber) > 1) {
+                for ($i = 0; $i < min(count($deputyEmails), count($caseNumber)); ++$i) {
+                    $deputyAndCaseNumber[] = [
+                        $deputyEmails[$i] => $caseNumber[$i]];
+                }
+            }
+
+            if ($submitted['multiClientEnabled']) {
+                $this->addFlash('courtOrderFixture', ['deputyAndCaseNumber' => $deputyAndCaseNumber, 'caseNumber' => $caseNumber]);
+            } else {
+                $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
+            }
         }
 
         return ['form' => $form->createView()];
@@ -167,7 +189,7 @@ class FixtureController extends AbstractController
 
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
 
-            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
+            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => [$caseNumber]]);
         }
 
         return ['form' => $form->createView()];

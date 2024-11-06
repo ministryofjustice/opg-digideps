@@ -10,6 +10,8 @@ courtOrders:
     label: Report Type
   reportStatus:
     label: Report Status
+  multiClientEnabled:
+    label: Multi Client Deputy Enabled
   coDeputyEnabled:
     label: Co-Deputy Enabled
   createCoDeputy:

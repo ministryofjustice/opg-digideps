@@ -72,67 +72,144 @@ class FixtureController extends AbstractController
         $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
 
         $client = $this->createClient($fromRequest);
+        $deputy = new User();
 
-        if (null === $deputy = $this->userRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
-            $deputy = $this->createDeputy($fromRequest);
-            $deputyPreRegistration = $this->preRegistrationFactory->create(
-                [
-                    'caseNumber' => $client->getCaseNumber(),
-                    'clientLastName' => $client->getLastname(),
-                    'deputyPostCode' => $deputy->getAddressPostcode(),
-                    'deputyLastName' => $deputy->getLastname(),
-                    'deputyFirstName' => $deputy->getFirstName(),
-                    'reportType' => $fromRequest['reportType'],
-                    'deputyUid' => $fromRequest['deputyUid'],
-                ]
-            );
+        if (!$fromRequest['multiClientEnabled']) {
+            if (null === $deputy = $this->userRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+                $deputy = $this->createDeputy($fromRequest);
+                $deputyPreRegistration = $this->preRegistrationFactory->create(
+                    [
+                        'caseNumber' => $client->getCaseNumber(),
+                        'clientLastName' => $client->getLastname(),
+                        'deputyPostCode' => $deputy->getAddressPostcode(),
+                        'deputyLastName' => $deputy->getLastname(),
+                        'deputyFirstName' => $deputy->getFirstName(),
+                        'reportType' => $fromRequest['reportType'],
+                        'deputyUid' => $fromRequest['deputyUid'],
+                    ]
+                );
 
-            $this->em->persist($deputyPreRegistration);
+                $this->em->persist($deputyPreRegistration);
+            }
+
+            if ('ndr' === strtolower($fromRequest['reportType'])) {
+                $this->createNdr($fromRequest, $client);
+                $deputy->setNdrEnabled(true);
+            } else {
+                $this->createReport($fromRequest, $client);
+            }
+
+            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+                $deputy->setIsPrimary(true);
+                $deputy->addClient($client);
+            } else {
+                $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
+            }
+
+            if ($fromRequest['coDeputyEnabled']) {
+                $deputy->setCoDeputyClientConfirmed(true);
+                $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
+
+                $coDeputyPreRegistration = $this->preRegistrationFactory->create(
+                    [
+                        'caseNumber' => $client->getCaseNumber(),
+                        'clientLastName' => $client->getLastname(),
+                        'deputyPostCode' => $coDeputy->getAddressPostcode(),
+                        'deputyLastName' => $coDeputy->getLastname(),
+                        'deputyFirstName' => $coDeputy->getFirstName(),
+                        'reportType' => $fromRequest['reportType'],
+                        'deputyUid' => $coDeputy->getDeputyUid(),
+                    ]
+                );
+
+                $this->em->persist($coDeputyPreRegistration);
+                $this->em->persist($coDeputy);
+            }
         }
 
-        if ('ndr' === strtolower($fromRequest['reportType'])) {
-            $this->createNdr($fromRequest, $client);
-            $deputy->setNdrEnabled(true);
-        } else {
-            $this->createReport($fromRequest, $client);
-        }
-
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
-            $deputy->setIsPrimary(true);
-            $deputy->addClient($client);
-        } else {
-            $this->createOrgAndAttachParticipants($fromRequest, $deputy, $client);
-        }
-
-        if ($fromRequest['coDeputyEnabled']) {
-            $deputy->setCoDeputyClientConfirmed(true);
-            $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
-
-            $coDeputyPreRegistration = $this->preRegistrationFactory->create(
-                [
-                    'caseNumber' => $client->getCaseNumber(),
-                    'clientLastName' => $client->getLastname(),
-                    'deputyPostCode' => $coDeputy->getAddressPostcode(),
-                    'deputyLastName' => $coDeputy->getLastname(),
-                    'deputyFirstName' => $coDeputy->getFirstName(),
-                    'reportType' => $fromRequest['reportType'],
-                    'deputyUid' => $coDeputy->getDeputyUid(),
-                ]
-            );
-
-            $this->em->persist($coDeputyPreRegistration);
-            $this->em->persist($coDeputy);
+        $multiClientDeputy = [];
+        if ($fromRequest['multiClientEnabled']) {
+            $multiClientDeputy[] = $this->createMultiClientDeputy($fromRequest, $client);
         }
 
         $this->em->flush();
 
-        $deputyIds = ['originalDeputy' => $deputy->getId()];
+        if (!$fromRequest['multiClientEnabled']) {
+            $deputyIds = ['originalDeputy' => $deputy->getId()];
+        } else {
+            $deputyIds = $multiClientDeputy[0]['deputyIds'];
+        }
 
         if (isset($coDeputy)) {
             $deputyIds['coDeputy'] = $coDeputy->getId();
         }
 
-        return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds], 'Court order created', Response::HTTP_CREATED);
+        if (!$fromRequest['multiClientEnabled']) {
+            return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'Court order created', Response::HTTP_CREATED]);
+        } else {
+            return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy[0]['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function createMultiClientDeputy($fromRequest, $client): array
+    {
+        // create primary deputy - update email to clearly show it's a multi-client
+        $fromRequest['deputyEmail'] = str_replace(['original-lay-deputy'], 'lay-multi-client-deputy-primary', $fromRequest['deputyEmail']);
+
+        $deputy = $this->createDeputy($fromRequest);
+        $deputy->setIsPrimary(true);
+
+        $deputyPreRegistration = $this->preRegistrationFactory->create(
+            [
+                'caseNumber' => $client->getCaseNumber(),
+                'clientLastName' => $client->getLastname(),
+                'deputyPostCode' => $deputy->getAddressPostcode(),
+                'deputyLastName' => $deputy->getLastname(),
+                'deputyFirstName' => $deputy->getFirstName(),
+                'reportType' => $fromRequest['reportType'],
+                'deputyUid' => $fromRequest['deputyUid'],
+            ]
+        );
+
+        $deputy->addClient($client);
+        $this->createReport($fromRequest, $client);
+
+        $this->em->persist($deputyPreRegistration);
+        $this->em->persist($deputy);
+
+        // create second deputy account and client
+        $fromRequest['deputyEmail'] = str_replace(['lay-multi-client-deputy-primary'], 'lay-multi-client-deputy-secondary', $fromRequest['deputyEmail']);
+        $secondDeputyAccount = $this->createDeputy($fromRequest);
+
+        // update case number for second client
+        $fromRequest['caseNumber'] = substr($fromRequest['caseNumber'], 0, -3).rand(100, 999);
+        $client2 = $this->createClient($fromRequest);
+
+        $secondDeputyPreRegistration = $this->preRegistrationFactory->create(
+            [
+                'caseNumber' => $client2->getCaseNumber(),
+                'clientLastName' => $client2->getLastname(),
+                'deputyPostCode' => $secondDeputyAccount->getAddressPostcode(),
+                'deputyLastName' => $secondDeputyAccount->getLastname(),
+                'deputyFirstName' => $secondDeputyAccount->getFirstName(),
+                'reportType' => $fromRequest['reportType'],
+                'deputyUid' => $deputy->getDeputyUid(),
+            ]);
+
+        $secondDeputyAccount->addClient($client2);
+        $this->createReport($fromRequest, $client2);
+
+        $this->em->persist($secondDeputyPreRegistration);
+        $this->em->persist($secondDeputyAccount);
+        $this->em->flush();
+
+        return [
+            'deputyIds' => ['original deputy' => $deputy->getId(), 'second deputy' => $secondDeputyAccount->getId()],
+            'multiClientCaseNumbers' => [$deputyPreRegistration->getCaseNumber(), $secondDeputyPreRegistration->getCaseNumber()],
+        ];
     }
 
     private function createClient($fromRequest): Client

@@ -35,6 +35,10 @@ class LayCourtOrderFixtureType extends AbstractType
                 'choices' => ['Not started' => Report::STATUS_NOT_STARTED, 'Submittable' => Report::STATUS_READY_TO_SUBMIT],
                 'data' => $options['reportStatus'],
             ])
+            ->add('multiClientEnabled', ChoiceType::class, [
+                'choices' => ['Enabled' => true, 'Disabled' => false],
+                'data' => $options['multiClientEnabled'],
+            ])
             ->add('coDeputyEnabled', ChoiceType::class, [
                 'choices' => ['Enabled' => true, 'Disabled' => false],
                 'data' => $options['coDeputyEnabled'],
@@ -50,6 +54,6 @@ class LayCourtOrderFixtureType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-fixtures',
-        ])->setRequired(['deputyType', 'reportType', 'coDeputyEnabled', 'reportStatus', 'activated']);
+        ])->setRequired(['deputyType', 'reportType', 'coDeputyEnabled', 'reportStatus', 'activated', 'multiClientEnabled']);
     }
 }

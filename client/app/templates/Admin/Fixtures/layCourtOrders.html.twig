@@ -9,6 +9,7 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_select(form.deputyType, 'courtOrders.deputyType') }}
+    {{ form_select(form.multiClientEnabled, 'courtOrders.multiClientEnabled') }}
     {{ form_select(form.reportType, 'courtOrders.reportType') }}
     {{ form_select(form.reportStatus, 'courtOrders.reportStatus') }}
     {{ form_select(form.coDeputyEnabled, 'courtOrders.coDeputyEnabled') }}
