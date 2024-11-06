@@ -1,5 +1,6 @@
 resource "aws_sns_topic" "alerts" {
-  name = "alerts"
+  name              = "alerts"
+  kms_master_key_id = module.sns_kms.eu_west_1_target_key_arn
   tags = merge(
     var.default_tags,
     { Name = "alerts-${var.account.name}" },
