@@ -399,6 +399,42 @@ class UserRegistrationServiceTest extends TestCase
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
+    public function testUserCannotRegisterIfTheyHaveAlreadyRegistered()
+    {
+        $data = new SelfRegisterData();
+        $data->setFirstname('Chris');
+        $data->setLastname('Haden');
+        $data->setEmail('chris@thehadens.com');
+        $data->setClientLastname('Biden');
+        $data->setCaseNumber('8765432T');
+
+        $clientRepo = m::mock(ClientRepository::class)
+            ->shouldReceive('findByCaseNumber')->andReturn(null)
+            ->getMock();
+
+        $userRepo = m::mock(UserRepository::class)
+            ->shouldReceive('findOneByEmail')->andReturn(null)
+            ->getMock();
+
+        $em = m::mock(EntityManager::class)
+            ->shouldReceive('getRepository')->with('App\Entity\Client')->andReturn($clientRepo)
+            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($userRepo)
+            ->getMock();
+
+        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
+            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
+            ->shouldReceive('validate')
+            ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn([0 => '700770077007'])
+            ->shouldReceive('deputyHasNotSignedUpAlready')->andReturn(false)
+            ->getMock();
+
+        self::expectException(\RuntimeException::class);
+        self::expectExceptionMessage('Deputy has already registered for the service');
+
+        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
+        $this->userRegistrationService->selfRegisterUser($data);
+    }
+
     public function tearDown(): void
     {
         m::close();
