@@ -34,12 +34,6 @@ class HtmlToPdfGenerator
     {
         $pdf = $this->getPdfFromHtml('test');
 
-        //        file_put_contents('php://stderr', print_r(strlen($pdf), TRUE));
-        //        file_put_contents('php://stderr', print_r(' JIMMY1 ', TRUE));
-        //        file_put_contents('php://stderr', print_r(preg_match('/PDF-\d/', $pdf), TRUE));
-        //        file_put_contents('php://stderr', print_r(' JIMMY2 ', TRUE));
-        //        file_put_contents('php://stderr', print_r(strlen($pdf) > 700, TRUE));
-        //        file_put_contents('php://stderr', print_r(' JIMMY3 ', TRUE));
         return strlen($pdf) > 700 && preg_match('/PDF-\d/', $pdf);
     }
 
