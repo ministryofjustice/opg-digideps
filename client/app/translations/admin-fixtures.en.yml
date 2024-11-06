@@ -11,9 +11,9 @@ courtOrders:
   reportStatus:
     label: Report Status
   multiClientEnabled:
-    label: Multi Client Deputy Enabled
+    label: Multi-Client Deputy Enabled
   coDeputyEnabled:
-    label: Co-Deputy Enabled
+    label: Co-Deputy Enabled (for single client deputies)
   createCoDeputy:
     label: Create Co-Deputy
   activated:

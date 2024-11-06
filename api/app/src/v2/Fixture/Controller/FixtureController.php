@@ -129,16 +129,12 @@ class FixtureController extends AbstractController
 
         $multiClientDeputy = [];
         if ($fromRequest['multiClientEnabled']) {
-            $multiClientDeputy[] = $this->createMultiClientDeputy($fromRequest, $client);
+            $multiClientDeputy = $this->createMultiClientDeputy($fromRequest, $client);
         }
 
         $this->em->flush();
 
-        if (!$fromRequest['multiClientEnabled']) {
-            $deputyIds = ['originalDeputy' => $deputy->getId()];
-        } else {
-            $deputyIds = $multiClientDeputy[0]['deputyIds'];
-        }
+        $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $deputy->getId()] : $multiClientDeputy['deputyIds'];
 
         if (isset($coDeputy)) {
             $deputyIds['coDeputy'] = $coDeputy->getId();
@@ -147,7 +143,7 @@ class FixtureController extends AbstractController
         if (!$fromRequest['multiClientEnabled']) {
             return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'Court order created', Response::HTTP_CREATED]);
         } else {
-            return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy[0]['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
+            return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
         }
     }
 
