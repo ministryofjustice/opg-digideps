@@ -173,12 +173,12 @@ class PreRegistrationControllerTest extends AbstractTestController
         ]);
     }
 
-    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputyFirstname = 'test', string $deputySurname = 'admin'): PreRegistration
+    private function buildAndPersistPreRegistrationEntity(string $case, string $hybrid = 'SINGLE', string $deputyFirstname = 'test', string $deputySurname = 'admin', string $deputyuid = '700571111000'): PreRegistration
     {
         $preRegistration = new PreRegistration([
             'Case' => $case,
             'ClientSurname' => 'I should get deleted',
-            'DeputyUid' => '700571111000',
+            'DeputyUid' => $deputyuid,
             'DeputyFirstname' => $deputyFirstname,
             'DeputySurname' => $deputySurname,
             'DeputyAddress1' => 'Victoria Road',
@@ -196,8 +196,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testDeputyUidSetWhenSingleMatchFound()
     {
-        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'test', 'deputy');
-        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'test', 'deputy');
+        $this->buildAndPersistPreRegistrationEntity('17171717', 'SINGLE', 'test', 'deputy', '771177117711');
+        $this->buildAndPersistPreRegistrationEntity('28282828', 'SINGLE', 'test', 'deputy', '771177117711');
         $this->fixtures()->flush();
         $this->fixtures()->clear();
 
@@ -207,7 +207,8 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyNo(null);
-        $loggedInUser->setDeputyUid(0);
+        $loggedInUser->setDeputyUid(null);
+        $loggedInUser->setIsPrimary(false);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
         $this->fixtures()->clear();
@@ -223,8 +224,8 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
-        $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
+        $this->assertEquals('771177117711', $loggedInUser->getDeputyNo());
+        $this->assertEquals('771177117711', $loggedInUser->getDeputyUid());
         self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
         self::assertTrue($loggedInUser->getIsPrimary());
     }
@@ -306,6 +307,52 @@ class PreRegistrationControllerTest extends AbstractTestController
             'mustFail' => true,
             'AuthToken' => self::$tokenDeputy,
             'assertResponseCode' => 425,
+        ]);
+    }
+
+    public function testDeputyCannotSignUpTwice()
+    {
+        $this->buildAndPersistPreRegistrationEntity('37373737', 'SINGLE', 'test', 'deputy', '771177117711');
+        $this->buildAndPersistPreRegistrationEntity('48484848', 'SINGLE', 'test', 'deputy', '771177117711');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        self::$tokenDeputy = $this->loginAsDeputy();
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $loggedInUser->setDeputyNo(null);
+        $loggedInUser->setDeputyUid(null);
+        $loggedInUser->setIsPrimary(false);
+        $this->fixtures()->persist($loggedInUser);
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '37373737',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
+        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+
+        $this->assertEquals('771177117711', $loggedInUser->getDeputyNo());
+        $this->assertEquals('771177117711', $loggedInUser->getDeputyUid());
+        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
+        self::assertTrue($loggedInUser->getIsPrimary());
+
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '48484848',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustSucceed' => false,
+            'assertResponseCode' => 464,
+            'AuthToken' => self::$tokenDeputy,
         ]);
     }
 }
