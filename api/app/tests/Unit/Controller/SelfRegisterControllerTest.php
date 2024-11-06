@@ -133,7 +133,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForDuplicate()
     {
-        $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
+        $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019958', 'Zac', 'Tolley');
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
@@ -484,9 +484,9 @@ class SelfRegisterControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function testDeputiesNonPrimaryAccountSetToFalse()
+    public function testSameDeputyCannotRegisterTwice()
     {
-        $this->generateDeputyPrimaryAccount();
+        $this->generateDeputyPrimaryAccount('700000019965');
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         // create second deputy account
@@ -496,7 +496,8 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->flush($preRegistration2);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
-            'mustSucceed' => true,
+            'mustFail' => true,
+            'assertResponseCode' => 464,
             'AuthToken' => $token,
             'data' => [
                 'firstname' => 'Zac',
@@ -509,12 +510,6 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
-
-        $id = $responseArray['data']['id'];
-
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
-        $this->assertEquals('700000019965', $user->getDeputyUid());
-        $this->assertFalse($user->getIsPrimary());
     }
 
     /**
@@ -581,7 +576,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     public function testExistingAccountsAreIdentifiedForCoDeputyWithASecondAccount()
     {
         // first registered deputy account
-        $deputyPrimaryAccountUid = $this->generateDeputyPrimaryAccount();
+        $deputyPrimaryAccountUid = $this->generateDeputyPrimaryAccount('700000019937');
 
         // new deputy and co-deputy pre-registration (which will be the second account for co-deputy)
         $this->generateDeputyAndCoDeputyPreRegistration($deputyPrimaryAccountUid);
@@ -619,7 +614,8 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->flush();
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister/verifycodeputy', [
-            'mustSucceed' => true,
+            'mustFail' => true,
+            'assertResponseCode' => 464,
             'AuthToken' => $token,
             'data' => [
                 'firstname' => 'Sue',
@@ -632,9 +628,6 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
-
-        $existingDeputyAccounts = $responseArray['data']['existingDeputyAccounts'];
-        $this->assertNotEmpty($existingDeputyAccounts);
     }
 
     /**
@@ -721,10 +714,10 @@ class SelfRegisterControllerTest extends AbstractTestController
         return $deputyPreRegistration;
     }
 
-    private function generateDeputyPrimaryAccount()
+    private function generateDeputyPrimaryAccount(string $deputyUid)
     {
         $casenumber = strval(mt_rand(10000000, 99999999));
-        $preRegistration = $this->generatePreRegistration($casenumber, 'Smith', '700000019965', 'Sue', 'Jones');
+        $preRegistration = $this->generatePreRegistration($casenumber, 'Smith', $deputyUid, 'Sue', 'Jones');
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
