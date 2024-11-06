@@ -1,14 +1,14 @@
-##### Shared KMS key for Secrets #####
+##### Shared KMS key for SNS #####
 
-# Secret encryption
-module "secret_kms" {
+# Account logs encryption
+module "sns_kms" {
   source                  = "./modules/kms_key"
-  encrypted_resource      = "Secret"
-  kms_key_alias_name      = "digideps_secret_encryption_key"
+  encrypted_resource      = "SNS"
+  kms_key_alias_name      = "digideps_sns_encryption_key"
   enable_key_rotation     = true
   enable_multi_region     = false
   deletion_window_in_days = 10
-  kms_key_policy          = var.account.name == "development" ? data.aws_iam_policy_document.kms_secret_merged_for_development.json : data.aws_iam_policy_document.kms_secret_merged.json
+  kms_key_policy          = var.account.name == "development" ? data.aws_iam_policy_document.kms_sns_merged_for_development.json : data.aws_iam_policy_document.kms_sns_merged.json
   providers = {
     aws.eu_west_1 = aws.eu_west_1
     aws.eu_west_2 = aws.eu_west_2
@@ -16,26 +16,26 @@ module "secret_kms" {
 }
 
 # Policies
-data "aws_iam_policy_document" "kms_secret_merged_for_development" {
+data "aws_iam_policy_document" "kms_sns_merged_for_development" {
   provider = aws.global
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_secret.json,
+    data.aws_iam_policy_document.kms_sns.json,
     data.aws_iam_policy_document.kms_base_permissions.json,
     data.aws_iam_policy_document.kms_development_account_operator_admin.json
   ]
 }
 
-data "aws_iam_policy_document" "kms_secret_merged" {
+data "aws_iam_policy_document" "kms_sns_merged" {
   provider = aws.global
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_secret.json,
+    data.aws_iam_policy_document.kms_sns.json,
     data.aws_iam_policy_document.kms_base_permissions.json
   ]
 }
 
-data "aws_iam_policy_document" "kms_secret" {
+data "aws_iam_policy_document" "kms_sns" {
   statement {
-    sid       = "Allow Key to be used for Encryption by Secret Manager"
+    sid       = "Allow Key to be used for Encryption by SNS"
     effect    = "Allow"
     resources = ["*"]
     actions = [
@@ -49,24 +49,22 @@ data "aws_iam_policy_document" "kms_secret" {
     principals {
       type = "Service"
       identifiers = [
-        "secretsmanager.amazonaws.com"
+        "events.amazonaws.com",
+        "cloudwatch.amazonaws.com"
       ]
     }
   }
 
   statement {
-    sid       = "Allow Account Roles to Decrypt Key"
+    sid       = "Allow Key to be decrypted by lambda"
     effect    = "Allow"
     resources = ["*"]
-    actions = [
-      "kms:Decrypt",
-      "kms:DescribeKey"
-    ]
+    actions   = ["kms:Decrypt"]
 
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/*"
+        aws_iam_role.lambda_monitor_notify.arn
       ]
     }
   }

@@ -103,6 +103,28 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
   }
 
   statement {
+    sid    = "SnsDecryptKms"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      module.sns_kms.eu_west_1_target_key_arn
+    ]
+  }
+
+  statement {
+    sid    = "SecretDecryptKms"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      module.sns_kms.eu_west_1_target_key_arn
+    ]
+  }
+
+  statement {
     sid    = "ReadSecret"
     effect = "Allow"
     actions = [
