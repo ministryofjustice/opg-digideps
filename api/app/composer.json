@@ -55,7 +55,7 @@
         "symfony/routing": "^5.4.0",
         "symfony/security-bundle": "^5.4.0",
         "symfony/security-core": "^5.4.0",
-        "symfony/security-http": "5.4.41",
+        "symfony/security-http": "5.4.46",
         "symfony/serializer": "^5.4.0",
         "symfony/validator": "^5.4.0",
         "symfony/yaml": "^5.4.0"
@@ -78,7 +78,7 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "5.4.44",
+        "symfony/http-client": "5.4.46",
         "symfony/browser-kit": "^5.4.0",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^5.4.0",
