@@ -92,26 +92,6 @@ resource "aws_iam_role_policy" "front_task_logs" {
   role   = aws_iam_role.front.id
 }
 
-data "aws_iam_policy_document" "front_ssm" {
-  statement {
-    sid    = "AllowGetSSMParameters"
-    effect = "Allow"
-    actions = [
-      "ssm:GetParameter",
-      "ssm:GetParameters"
-    ]
-    resources = [
-      aws_ssm_parameter.flag_multi_accounts.arn
-    ]
-  }
-}
-
-resource "aws_iam_role_policy" "front_ssm" {
-  name   = "front-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.front_ssm.json
-  role   = aws_iam_role.front.id
-}
-
 # ======= INVOKE API GATEWAY PERMISSIONS =====
 resource "aws_iam_role_policy" "front_invoke_api_gateway" {
   name   = "front-api-gw.${local.environment}"

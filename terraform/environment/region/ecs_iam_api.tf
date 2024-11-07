@@ -27,8 +27,7 @@ data "aws_iam_policy_document" "api_permissions" {
       aws_ssm_parameter.flag_document_sync.arn,
       aws_ssm_parameter.document_sync_row_limit.arn,
       aws_ssm_parameter.flag_checklist_sync.arn,
-      aws_ssm_parameter.checklist_sync_row_limit.arn,
-      aws_ssm_parameter.flag_multi_accounts.arn
+      aws_ssm_parameter.checklist_sync_row_limit.arn
     ]
   }
 

@@ -614,22 +614,6 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @multi-feature-flag-enabled
-     */
-    public function theMultiAccountFeatureFlagIsSetToTrue(): void
-    {
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '1');
-    }
-
-    /**
-     * @AfterScenario @multi-feature-flag-enabled
-     */
-    public function theMultiAccountFeatureFlagIsSetToFalse(): void
-    {
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '0');
-    }
-
-    /**
      * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy
      */
     public function createLayPfaHighNotStartedMultiClientDeputy()
