@@ -299,3 +299,32 @@ resource "aws_cloudwatch_event_target" "org_csv_processing_check" {
     }
   )
 }
+
+# Resubmit re-submittable error checklists check
+
+resource "aws_cloudwatch_event_rule" "resubmit_error_checklists_check" {
+  name                = "check-resync-resubmittable-error-checklists-${terraform.workspace}"
+  description         = "Execute the resync resubmittable error checklists check for ${terraform.workspace}"
+  schedule_expression = "cron(17 09 * * ? *)"
+  is_enabled          = var.account.is_production == 1 ? true : false
+}
+
+resource "aws_cloudwatch_event_target" "resubmit_error_checklists_check" {
+  target_id = "check-resync-resubmittable-error-checklists-${terraform.workspace}"
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
+  rule      = aws_cloudwatch_event_rule.resubmit_error_checklists_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "resubmit_error_checklists_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["resync_resubmittable_error_checklists"],
+        search-timespan            = "24 hours",
+        bank-holidays              = "true",
+        channel-identifier-absent  = "team",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "team"
+      }
+    }
+  )
+}

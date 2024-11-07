@@ -36,7 +36,7 @@ data "aws_kms_key" "rds" {
 
 resource "aws_cloudwatch_log_group" "api_cluster" {
   name              = "/aws/rds/cluster/api-${local.environment}/postgresql"
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   retention_in_days = 180
   tags              = var.default_tags
 }
