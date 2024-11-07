@@ -25,7 +25,7 @@ module "lamdba_custom_sql_query" {
   memory                = 1024
   vpc_id                = data.aws_vpc.vpc.id
   secrets               = []
-  logs_kms_key_arn      = aws_kms_key.cloudwatch_logs.arn
+  logs_kms_key_arn      = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
 }
 
 resource "aws_security_group_rule" "lambda_custom_sql_query_to_front" {

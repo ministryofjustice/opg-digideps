@@ -14,8 +14,7 @@ data "aws_iam_policy_document" "integration_tests" {
       "ssm:GetParameters"
     ]
     resources = [
-      aws_ssm_parameter.flag_document_sync.arn,
-      aws_ssm_parameter.flag_multi_accounts.arn
+      aws_ssm_parameter.flag_document_sync.arn
     ]
   }
 

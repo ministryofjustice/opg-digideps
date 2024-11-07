@@ -11,7 +11,6 @@ use App\Service\Client\RestClient;
 use App\Service\Logger;
 use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
-use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -84,7 +83,7 @@ class SettingsController extends AbstractController
      *
      * @Template("@App/Settings/index.html.twig")
      **/
-    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStore)
+    public function indexAction(Redirector $redirector)
     {
         if ($this->getUser()->isDeputyOrg()) {
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
@@ -100,15 +99,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $deputyHasMultiClients = false;
-
-        if ($this->getUser()->isLayDeputy()) {
-            $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
-
-            if ('1' == $isMultiClientFeatureEnabled) {
-                $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
-            }
-        }
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
 
         return ['deputyHasMultiClients' => $deputyHasMultiClients];
     }

@@ -25,7 +25,6 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\Storage\S3Storage;
-use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -120,7 +119,7 @@ class ReportController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
+    public function indexAction()
     {
         // Moved to ClientController::indexAction()
         return $this->redirectToRoute('homepage');
@@ -135,34 +134,28 @@ class ReportController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function clientHomepageAction(Redirector $redirector, string $clientId, ParameterStoreService $parameterStoreService)
+    public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
-        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+        // redirect back to log out page if signing in with non-primary account with primary email
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-        $deputyHasMultiClients = false;
+            $this->addFlash('nonPrimaryRedirect',
+                [
+                    'sentenceOne' => 'This account has been closed.',
+                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                    'primaryEmail' => $primaryEmail,
+                ]
+            );
 
-        if ('1' == $isMultiClientFeatureEnabled) {
-            // redirect back to log out page if signing in with non-primary account with primary email
-            if (!$user->getIsPrimary()) {
-                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-                $this->addFlash('nonPrimaryRedirect',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                        'primaryEmail' => $primaryEmail,
-                    ]
-                );
-
-                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
-            }
-
-            $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
+
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -193,26 +186,23 @@ class ReportController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function chooseAClientAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
+    public function chooseAClientAction(Redirector $redirector)
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
 
-        if ('1' == $isMultiClientFeatureEnabled) {
-            // redirect back to log out page if signing in with non-primary account with primary email
-            if (!$user->getIsPrimary()) {
-                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+        // redirect back to log out page if signing in with non-primary account with primary email
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-                $this->addFlash('nonPrimaryRedirect',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                        'primaryEmail' => $primaryEmail,
-                    ]
-                );
+            $this->addFlash('nonPrimaryRedirect',
+                [
+                    'sentenceOne' => 'This account has been closed.',
+                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                    'primaryEmail' => $primaryEmail,
+                ]
+            );
 
-                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
-            }
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
         // redirect if user has missing details or is on wrong page
@@ -331,7 +321,7 @@ class ReportController extends AbstractController
      *
      * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore, Request $request)
+    public function overviewAction(Redirector $redirector, $reportId)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -377,13 +367,9 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
-        $isMultiClientFeatureEnabled = $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
-
-        $deputyHasMultiClients = false;
-
-        if ('1' == $isMultiClientFeatureEnabled && !$user->isDeputyOrg()) {
-            $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
-        }
+        $deputyHasMultiClients = !$user->isDeputyOrg() && $this->clientApi->checkDeputyHasMultiClients(
+            $user->getDeputyUid()
+        );
 
         return $this->render($template, [
             'user' => $user,
