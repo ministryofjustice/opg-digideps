@@ -56,6 +56,17 @@ data "aws_iam_policy_document" "front_query_secretsmanager" {
       data.aws_secretsmanager_secret.front_notify_api_key.arn,
     ]
   }
+
+  #  statement {
+  #    sid    = "DecryptSecretKMS"
+  #    effect = "Allow"
+  #    actions = [
+  #      "kms:Decrypt"
+  #    ]
+  #    resources = [
+  #      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+  #    ]
+  #  }
 }
 
 resource "aws_iam_role_policy" "front_get_log_events" {
