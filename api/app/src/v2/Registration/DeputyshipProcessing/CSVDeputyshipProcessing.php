@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Service\Formatter\RestFormatter;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\LayPreRegistrationDtoCollectionAssembler;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;

@@ -33,7 +33,14 @@ class PreRegistration
     public function __construct(array $row)
     {
         $this->caseNumber = $row['Case'] ?? '';
+        $this->clientFirstName = $row['ClientFirstname'] ?? '';
         $this->clientLastname = $row['ClientSurname'] ?? '';
+        $this->clientAddress1 = $row['ClientAddress1'] ?? '';
+        $this->clientAddress2 = $row['ClientAddress2'] ?? '';
+        $this->clientAddress3 = $row['ClientAddress3'] ?? '';
+        $this->clientAddress4 = $row['ClientAddress4'] ?? '';
+        $this->clientAddress5 = $row['ClientAddress5'] ?? '';
+        $this->clientPostcode = $row['ClientPostcode'] ?? '';
         $this->deputyUid = $row['DeputyUid'] ?? '';
         $this->deputyFirstname = $row['DeputyFirstname'] ?? '';
         $this->deputySurname = $row['DeputySurname'] ?? '';
@@ -45,8 +52,8 @@ class PreRegistration
         $this->deputyPostCode = $row['DeputyPostcode'] ?? null;
         $this->typeOfReport = $row['ReportType'] ?? null;
         $this->ndr = isset($row['NDR']) ? 'yes' === $row['NDR'] : null;
-        $this->orderDate = isset($row['MadeDate']) ? new \DateTime($row['MadeDate']) : null;
-        $this->orderType = $row['OrderType'] ?? null;
+        $this->courtOrderDate = isset($row['CourtMadeDate']) ? new \DateTime($row['CourtMadeDate']) : null;
+        $this->courtOrderType = $row['CourtOrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
         $this->hybrid = $row['Hybrid'] ?? null;
 
@@ -76,7 +83,12 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
+     * @ORM\Column(name="client_firstname", type="string", length=50, nullable=false)
+     */
+    private string $clientFirstName;
+
+    /**
+     * @JMS\Type("string")
      *
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
@@ -85,6 +97,48 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
+     * @ORM\Column(name="client_address1", type="string", length=50, nullable=false)
+     */
+    private string $clientAddress1;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address2", type="string", length=50, nullable=false)
+     */
+    private string $clientAddress2;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address3", type="string", length=50, nullable=true)
+     */
+    private ?string $clientAddress3;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address4", type="string", nullable=true)
+     */
+    private ?string $clientAddress4;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address5", type="string", nullable=true)
+     */
+    private ?string $clientAddress5;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_postcode", type="string", nullable=false)
+     */
+    private string $clientPostcode;
+
+    /**
+     * @JMS\Type("string")
+     * 
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="deputy_uid", type="string", length=100, nullable=false)
@@ -147,9 +201,9 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
+     * @ORM\Column(name="deputy_postcode", type="string", length=15, nullable=true)
      *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
+     * @Assert\Length(min=2, max=15, minMessage="postcode too short", maxMessage="postcode too long" )
      */
     private ?string $deputyPostCode;
 
@@ -168,14 +222,14 @@ class PreRegistration
     private ?bool $ndr;
 
     /**
-     * @ORM\Column(name="order_date", type="datetime", nullable=true)
+     * @ORM\Column(name="court_order_date", type="datetime", nullable=true)
      */
-    private ?\DateTime $orderDate;
+    private ?\DateTime $courtOrderDate;
 
     /**
-     * @ORM\Column(name="order_type", type="string", nullable=true)
+     * @ORM\Column(name="court_order_type", type="string", nullable=true)
      */
-    private ?string $orderType;
+    private ?string $courtOrderType;
 
     /**
      * @ORM\Column(name="hybrid", type="string", nullable=true)
@@ -256,14 +310,14 @@ class PreRegistration
         return $this->typeOfReport;
     }
 
-    public function getOrderDate(): ?\DateTime
+    public function getCourtOrderDate(): ?\DateTime
     {
-        return $this->orderDate;
+        return $this->courtOrderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate)
+    public function setCourtOrderDate(\DateTime $courtOrderDate)
     {
-        $this->orderDate = $orderDate;
+        $this->courtOrderDate = $courtOrderDate;
 
         return $this;
     }
@@ -352,14 +406,14 @@ class PreRegistration
         return $this;
     }
 
-    public function getOrderType(): mixed
+    public function getCourtOrderType(): mixed
     {
-        return $this->orderType;
+        return $this->courtOrderType;
     }
 
-    public function setOrderType(mixed $orderType): self
+    public function setCourtOrderType(mixed $courtOrderType): self
     {
-        $this->orderType = $orderType;
+        $this->courtOrderType = $courtOrderType;
 
         return $this;
     }
@@ -384,6 +438,78 @@ class PreRegistration
     public function setIsCoDeputy(mixed $isCoDeputy): self
     {
         $this->isCoDeputy = $isCoDeputy;
+
+        return $this;
+    }
+
+    public function getClientFirstName(): string
+    {
+        return $this->clientFirstName;
+    }
+
+    public function setClientFirstName(string $clientFirstName): self
+    {
+        $this->clientFirstName = $clientFirstName;
+
+        return $this;
+    }
+
+    public function getClientPostcode(): string
+    {
+        return $this->clientPostcode;
+    }
+
+    public function setClientPostcode(string $clientPostcode): self
+    {
+        $this->clientPostcode = $clientPostcode;
+
+        return $this;
+    }
+
+    public function getClientAddress2(): string
+    {
+        return $this->clientAddress2;
+    }
+
+    public function setClientAddress2(string $clientAddress2): self
+    {
+        $this->clientAddress2 = $clientAddress2;
+
+        return $this;
+    }
+
+    public function getClientAddress3(): ?string
+    {
+        return $this->clientAddress3;
+    }
+
+    public function setClientAddress3(?string $clientAddress3): self
+    {
+        $this->clientAddress3 = $clientAddress3;
+
+        return $this;
+    }
+
+    public function getClientAddress4(): ?string
+    {
+        return $this->clientAddress4;
+    }
+
+    public function setClientAddress4(?string $clientAddress4): self
+    {
+        $this->clientAddress4 = $clientAddress4;
+
+        return $this;
+    }
+
+    public function getClientAddress5(): ?string
+    {
+        return $this->clientAddress5;
+    }
+
+    public function setClientAddress5(?string $clientAddress5): self
+    {
+        $this->clientAddress5 = $clientAddress5;
 
         return $this;
     }
