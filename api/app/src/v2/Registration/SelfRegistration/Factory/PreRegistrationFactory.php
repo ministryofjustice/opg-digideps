@@ -4,19 +4,19 @@ namespace App\v2\Registration\SelfRegistration\Factory;
 
 use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PreRegistrationFactory
 {
-    public function __construct(private ValidatorInterface $validator, private DateTimeProvider $dateProvider)
+    public function __construct(private readonly ValidatorInterface $validator)
     {
     }
 
     /**
      * @return PreRegistration
      */
-    public function createFromDto(LayDeputyshipDto $dto)
+    public function createFromDto(LayPreRegistrationDto $dto): PreRegistration
     {
         $entity = new PreRegistration($this->convertDtoToArray($dto));
 
@@ -25,7 +25,7 @@ class PreRegistrationFactory
         return $entity;
     }
 
-    private function convertDtoToArray(LayDeputyshipDto $dto): array
+    private function convertDtoToArray(LayPreRegistrationDto $dto): array
     {
         return [
             'Case' => $dto->getCaseNumber(),
@@ -41,8 +41,8 @@ class PreRegistrationFactory
             'DeputyPostcode' => $dto->getDeputyPostcode(),
             'ReportType' => $dto->getTypeOfReport(),
             'NDR' => $dto->isNdrEnabled() ? 'yes' : 'no',
-            'MadeDate' => $dto->getOrderDate()->format('Y-m-d'),
-            'OrderType' => $dto->getOrderType(),
+            'CourtMadeDate' => $dto->getCourtOrderDate()->format('Y-m-d'),
+            'CourtOrderType' => $dto->getCourtOrderType(),
             'CoDeputy' => $dto->getIsCoDeputy() ? 'yes' : 'no',
             'Hybrid' => $dto->getHybrid(),
         ];

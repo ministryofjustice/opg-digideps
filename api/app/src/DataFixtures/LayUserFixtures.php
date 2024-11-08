@@ -19,7 +19,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '61111000',
             'deputyUid' => '700761111000',
             'reportType' => 'OPG102',
-            'orderType' => 'pfa',
+            'courtOrderType' => 'pfa',
             'coDeputy' => false,
             'ndr' => false,
             'count' => 15,
@@ -29,7 +29,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '62222000',
             'deputyUid' => '700762222000',
             'reportType' => 'OPG103',
-            'orderType' => 'pfa',
+            'courtOrderType' => 'pfa',
             'coDeputy' => false,
             'ndr' => false,
             'count' => 10,
@@ -39,7 +39,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '63333000',
             'deputyUid' => '700763333000',
             'reportType' => 'OPG104',
-            'orderType' => 'hw',
+            'courtOrderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
             'count' => 10,
@@ -49,7 +49,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '64444000',
             'deputyUid' => '700764444000',
             'reportType' => 'OPG102',
-            'orderType' => 'hw',
+            'courtOrderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
             'count' => 15,
@@ -59,7 +59,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '65555000',
             'deputyUid' => '700765555000',
             'reportType' => 'OPG103',
-            'orderType' => 'hw',
+            'courtOrderType' => 'hw',
             'coDeputy' => false,
             'ndr' => false,
             'count' => 10,
@@ -69,7 +69,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '66666000',
             'deputyUid' => '700766666000',
             'reportType' => 'OPG102',
-            'orderType' => 'hw',
+            'courtOrderType' => 'hw',
             'coDeputy' => false,
             'ndr' => true,
             'count' => 10,
@@ -79,7 +79,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '67777000',
             'deputyUid' => '700767777000',
             'reportType' => 'OPG103',
-            'orderType' => 'hw',
+            'courtOrderType' => 'hw',
             'coDeputy' => false,
             'ndr' => true,
             'count' => 10,
@@ -89,7 +89,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '68888000',
             'deputyUid' => '700768888000',
             'reportType' => 'OPG103',
-            'orderType' => 'pfa',
+            'courtOrderType' => 'pfa',
             'coDeputy' => true,
             'ndr' => false,
             'count' => 10,
@@ -99,7 +99,7 @@ class LayUserFixtures extends AbstractDataFixture
             'caseNumber' => '69999000',
             'deputyUid' => '700769999000',
             'reportType' => 'OPG103',
-            'orderType' => 'hw',
+            'courtOrderType' => 'hw',
             'coDeputy' => true,
             'ndr' => false,
             'count' => 10,
@@ -183,8 +183,8 @@ class LayUserFixtures extends AbstractDataFixture
             'DeputyPostcode' => 'AB1 2CD',
             'ReportType' => $data['reportType'],
             'NDR' => $data['ndr'],
-            'MadeDate' => '2010-03-30',
-            'OrderType' => $data['orderType'],
+            'CourtMadeDate' => '2010-03-30',
+            'CourtOrderType' => $data['courtOrderType'],
             'CoDeputy' => $data['coDeputy'],
         ];
 
@@ -215,7 +215,7 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($ndr);
         } else {
             $realm = PreRegistration::REALM_LAY;
-            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['orderType'], $realm);
+            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['courtOrderType'], $realm);
 
             $startDate = $client->getExpectedReportStartDate();
             $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));

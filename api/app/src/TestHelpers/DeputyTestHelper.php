@@ -12,7 +12,7 @@ class DeputyTestHelper
     /**
      * @return Deputy
      */
-    public function generateDeputy(?string $email = null, ?string $deputyUid = null)
+    public function generateDeputy(?string $email = null, ?int $deputyUid = null)
     {
         $faker = Factory::create('en_GB');
 

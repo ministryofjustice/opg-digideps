@@ -435,7 +435,7 @@ class ReportServiceTest extends TestCase
      */
     public function testGetReportTypeBasedOnSirius(Client $client, bool $isAString)
     {
-        $preRegistration = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa']);
+        $preRegistration = new PreRegistration(['ReportType' => 'OPG103', 'CourtOrderType' => 'pfa']);
 
         /** @var ObjectProphecy|PreRegistrationRepository $preRegistrationRepo */
         $preRegistrationRepo = self::prophesize(PreRegistrationRepository::class);

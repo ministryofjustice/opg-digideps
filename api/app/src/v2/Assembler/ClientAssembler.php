@@ -5,41 +5,29 @@ namespace App\v2\Assembler;
 use App\Entity\Client;
 use App\v2\Assembler\Report\ReportAssemblerInterface;
 use App\v2\DTO\ClientDto;
+use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
+use App\v2\DTO\NdrDto;
 use App\v2\DTO\OrganisationDto;
 use App\v2\DTO\UserDto;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var ReportAssemblerInterface */
-    private $reportDtoAssembler;
-
-    /** @var NdrAssembler */
-    private $ndrDtoAssembler;
-
-    /** @var DeputyAssembler */
-    private $deputyAssembler;
-
     /**
      * ClientAssembler constructor.
      */
     public function __construct(
-        ReportAssemblerInterface $reportDtoAssembler,
-        NdrAssembler $ndrDtoAssembler,
-        DeputyAssembler $deputyDtoAssembler
+        private readonly ReportAssemblerInterface $reportDtoAssembler,
+        private readonly NdrAssembler $ndrDtoAssembler,
+        private readonly DeputyAssembler $deputyAssembler
     ) {
-        $this->reportDtoAssembler = $reportDtoAssembler;
-        $this->ndrDtoAssembler = $ndrDtoAssembler;
-        $this->deputyAssembler = $deputyDtoAssembler;
     }
 
-    /**
-     * @return ClientDto
-     */
-    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null)
+    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null): ClientDto
     {
         $dto = new ClientDto();
 
@@ -70,10 +58,7 @@ class ClientAssembler
         return $dto;
     }
 
-    /**
-     * @return ClientDto
-     */
-    public function assembleFromEntity(Client $client)
+    public function assembleFromEntity(Client $client): ClientDto
     {
         $dto = new ClientDto();
 
@@ -87,9 +72,9 @@ class ClientAssembler
     }
 
     /**
-     * @return array
+     * @return array<int, ClientDto>
      */
-    private function assembleClientReports(array $reports)
+    private function assembleClientReports(array $reports): array
     {
         $dtos = [];
 
@@ -100,17 +85,27 @@ class ClientAssembler
         return $dtos;
     }
 
-    private function assembleClientNdr(array $ndr)
+    private function assembleClientNdr(array $ndr): NdrDto
     {
         return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
 
-    private function assembleClientDeputy(array $deputy)
+    private function assembleClientDeputy(array $deputy): DeputyDto
     {
         return $this->deputyAssembler->assembleFromArray($deputy);
     }
 
-    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
+    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto): Client
+    {
+        return $this->createClientFromDto($dto);
+    }
+
+    public function assembleFromLayPreRegistrationDto(LayPreRegistrationDto $dto): Client
+    {
+        return $this->createClientFromDto($dto);
+    }
+    
+    private function createClientFromDto($dto): Client
     {
         $client = (new Client())
             ->setCaseNumber($dto->getCaseNumber())
@@ -132,7 +127,10 @@ class ClientAssembler
         return $client;
     }
 
-    private function assembleClientDeputies(array $deputies)
+    /**
+     * @return array<int, UserDto>
+     */
+    private function assembleClientDeputies(array $deputies): array
     {
         $dtos = [];
 

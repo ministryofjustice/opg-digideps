@@ -10,6 +10,7 @@ use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\Console\Input\ArrayInput;
 
@@ -329,7 +330,7 @@ trait IngestTrait
 
         $this->expectedDeputyAddress = $address;
 
-        $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', '66648');
+        $this->createProfAdminNotStarted(null, 'him@jojo5.com', '50000000', 66648);
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
@@ -373,7 +374,7 @@ trait IngestTrait
         $this->deputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', '740000000001');
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000000', 740000000001);
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
@@ -389,7 +390,7 @@ trait IngestTrait
         $this->organisations['added']['expected'] = 1;
         $this->deputies['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
+        $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', 750000000002);
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
@@ -615,7 +616,7 @@ trait IngestTrait
         $this->clients['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', '3636363t');
+        $this->createProfAdminNotStarted(null, 'david@byrne.com', '1919191t', 36363633);
 
         $this->em->clear();
 
@@ -744,7 +745,7 @@ trait IngestTrait
         $this->deputies['updated']['expected'] = 1;
         $this->reports['updated']['expected'] = 1;
 
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', '20082008');
+        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '2828282t', 20082008);
 
         $this->em->clear();
 

@@ -29,7 +29,7 @@ trait ActivateTrait
      */
     public function preRegistrationDetailsExistWithNoUnicodeCharacters()
     {
-        $this->existingPreRegistration = $this->fixtureHelper->createPreRegistration('OPG102', 'PFA', 'O\'Shea');
+        $this->existingPreRegistration = $this->fixtureHelper->createPreRegistration('OPG102', 'PFA', 'O\'Shea', 'D\'Juan');
     }
 
     /**
@@ -123,7 +123,7 @@ trait ActivateTrait
         $this->fillInField('client_courtDate_year', '2020');
 
         if ($this->getSession()->getPage()->findById('client_caseNumber')) {
-            $this->fillInField('client_firstname', $this->faker->firstName());
+            $this->fillInField('client_firstname', $this->existingPreRegistration->getClientFirstName());
             $this->fillInField('client_lastname', $this->existingPreRegistration->getClientLastname());
             $this->fillInField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
         }
@@ -264,7 +264,7 @@ trait ActivateTrait
         $this->fillInField('self_registration_email_first', $this->getUserForTestRun()['email']);
         $this->fillInField('self_registration_email_second', $this->getUserForTestRun()['email']);
         $this->fillInField('self_registration_postcode', $this->existingPreRegistration->getDeputyPostCode());
-        $this->fillInField('self_registration_clientFirstname', 'Billy');
+        $this->fillInField('self_registration_clientFirstname', $this->existingPreRegistration->getClientFirstName());
         $this->fillInField('self_registration_clientLastname', $this->existingPreRegistration->getClientLastname());
         $this->fillInField('self_registration_caseNumber', $this->existingPreRegistration->getCaseNumber());
 

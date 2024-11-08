@@ -320,7 +320,7 @@ class FixtureHelper
         ?int $satisfactionScore = null,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null
+        ?int $deputyUid = null
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $user, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
@@ -910,7 +910,7 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null
+        ?int $deputyUid = null
     ) {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -931,7 +931,7 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?int $deputyNumber = null
     ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -948,12 +948,8 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfAdminSubmitted(
-        string $testRunId,
-        ?string $deputyEmail = null,
-        ?string $caseNumber = null,
-        ?string $deputyNumber = null
-    ): array {
+    public function createProfAdminSubmitted(string $testRunId): array 
+    {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
@@ -1237,7 +1233,7 @@ class FixtureHelper
         $submitted,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null,
+        ?int $deputyUid = null,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null
     ) {
@@ -1286,9 +1282,13 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA', string $clientLastname = 'Smith'): PreRegistration
-    {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientLastName' => $clientLastname];
+    public function createPreRegistration(
+        string $reportType = 'OPG102', 
+        string $orderType = 'PFA', 
+        string $clientLastname = 'Smith', 
+        string $clientFirstName = 'John'
+    ): PreRegistration {
+        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientFirstName' => $clientFirstName, 'clientLastName' => $clientLastname];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);

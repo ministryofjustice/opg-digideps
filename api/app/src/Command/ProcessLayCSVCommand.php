@@ -82,12 +82,15 @@ class ProcessLayCSVCommand extends Command
     {
         $this
             ->setDescription('Process the Lay Deputies CSV from the S3 bucket')
-            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
+            ->addArgument(
+                'csv-filename', 
+                InputArgument::REQUIRED, 
+                'Specify the file name of the CSV to retreive'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        ini_set('memory_limit', '1024M');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $input->getArgument('csv-filename');

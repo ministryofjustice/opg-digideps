@@ -2,9 +2,9 @@
 
 namespace App\v2\Registration\Assembler;
 
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\DTO\LayPreRegistrationDto;
 
-class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
+class SiriusToLayPreRegistrationDtoAssembler implements LayPreRegistrationDtoAssemblerInterface
 {
     private array $requiredData = [
         'Case',
@@ -23,7 +23,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     private array $missingColumns = [];
 
     /**
-     * @return LayDeputyshipDto
+     * @return LayPreRegistrationDto
      */
     public function assembleFromArray(array $data)
     {
@@ -31,7 +31,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
         if (!empty($this->missingColumns)) {
             $message = sprintf(
-                'Cannot assemble LayDeputyshipDto. Missing columns in CSV: %s ',
+                'Cannot assemble LayPreRegistrationDto. Missing columns in CSV: %s ',
                 implode(', ', $this->missingColumns)
             );
 
@@ -41,10 +41,10 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         return $this->buildDto($data);
     }
 
-    private function buildDto(array $data): LayDeputyshipDto
+    private function buildDto(array $data): LayPreRegistrationDto
     {
         return
-            (new LayDeputyshipDto())
+            (new LayPreRegistrationDto())
                 ->setCaseNumber($data['Case'])
                 ->setClientSurname($data['ClientSurname'])
                 ->setDeputyUid($data['DeputyUid'])
@@ -58,8 +58,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputyPostcode($data['DeputyPostcode'])
                 ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
                 ->setIsNdrEnabled(false)
-                ->setOrderDate(new \DateTime($data['MadeDate']))
-                ->setOrderType($data['OrderType'])
+                ->setCourtOrderDate(new \DateTime($data['MadeDate']))
+                ->setCourtOrderType($data['OrderType'])
                 ->setIsCoDeputy('yes' === $data['CoDeputy'])
                 ->setHybrid($data['Hybrid']);
     }
