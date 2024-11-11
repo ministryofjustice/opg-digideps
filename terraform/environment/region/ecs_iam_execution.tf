@@ -116,7 +116,6 @@ data "aws_iam_policy_document" "execution_role_secrets" {
     resources = [
       data.aws_secretsmanager_secret.public_jwt_key_base64.arn,
       data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
-      data.aws_secretsmanager_secret.jwt_token_synchronisation.arn,
       data.aws_secretsmanager_secret.front_notify_api_key.arn,
       data.aws_secretsmanager_secret.front_frontend_secret.arn,
       data.aws_secretsmanager_secret.front_api_client_secret.arn,
