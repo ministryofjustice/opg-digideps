@@ -61,3 +61,8 @@ data "aws_secretsmanager_secret" "readonly_sql_db_password" {
 data "aws_secretsmanager_secret" "anonymise-default-pw" {
   name = "anonymisation-default-user-pw"
 }
+
+##### Shared Application KMS key for logs #####
+#data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
+#  name = "alias/digideps_secret_encryption_key"
+#}

@@ -8,6 +8,11 @@ variable "secrets" {
   type        = set(string)
 }
 
+variable "kms_key" {
+  description = "Arn of the secret manager KMS key to use."
+  type        = string
+}
+
 variable "tags" {
   description = "Tags to apply to secrets."
   type        = map(string)

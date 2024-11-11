@@ -1,7 +1,8 @@
 list:
   links:
     preRegistration: Pre-registration Fixtures
-    courtOrders: Court Orders Fixtures
+    layCourtOrders: Lay Court Order Fixtures
+    orgCourtOrders: Organisation Court Order Fixtures
 courtOrders:
   deputyType:
     label: Deputy Role
@@ -9,16 +10,18 @@ courtOrders:
     label: Report Type
   reportStatus:
     label: Report Status
+  multiClientEnabled:
+    label: Multi-Client Deputy Enabled
   coDeputyEnabled:
-    label: Co-Deputy Enabled
+    label: Co-Deputy Enabled (for single client deputies)
   createCoDeputy:
     label: Create Co-Deputy
   activated:
     label: Account Activated
   orgSizeClients:
-    label: Clients In Org (ignored for lays)
+    label: Clients In Org
   orgSizeUsers:
-    label: Users In Org (ignored for lays)
+    label: Users In Org
   submit:
     label: Create
 preRegistration:

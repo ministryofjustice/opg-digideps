@@ -1,0 +1,19 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-fixtures" %}
+
+{% block htmlTitle %}Data Fixtures - Lay Court Orders{% endblock %}
+{% block pageTitle %}Lay Court Orders{% endblock %}
+{% block supportTitleTop %}Data Fixtures{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_select(form.deputyType, 'courtOrders.deputyType') }}
+    {{ form_select(form.multiClientEnabled, 'courtOrders.multiClientEnabled') }}
+    {{ form_select(form.reportType, 'courtOrders.reportType') }}
+    {{ form_select(form.reportStatus, 'courtOrders.reportStatus') }}
+    {{ form_select(form.coDeputyEnabled, 'courtOrders.coDeputyEnabled') }}
+    {{ form_select(form.activated, 'courtOrders.activated') }}
+    {{ form_submit(form.submit, 'courtOrders.submit') }}
+    {{ form_end(form) }}
+{% endblock %}
