@@ -26,6 +26,7 @@ module "lamdba_custom_sql_query" {
   vpc_id                = data.aws_vpc.vpc.id
   secrets               = []
   logs_kms_key_arn      = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
+  secrets_kms_key_arn   = data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
 }
 
 resource "aws_security_group_rule" "lambda_custom_sql_query_to_front" {
@@ -70,6 +71,17 @@ data "aws_iam_policy_document" "custom_sql_query_secretsmanager" {
     ]
     resources = [
       data.aws_secretsmanager_secret.custom_sql_db_password.arn
+    ]
+  }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
     ]
   }
 }

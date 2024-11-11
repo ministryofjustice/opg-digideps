@@ -94,3 +94,8 @@ variable "logs_kms_key_arn" {
   description = "User managed KMS key for log encryption"
   type        = string
 }
+
+variable "secrets_kms_key_arn" {
+  description = "User managed KMS key for secrets encryption"
+  type        = string
+}
