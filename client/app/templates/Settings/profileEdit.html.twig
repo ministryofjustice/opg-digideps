@@ -9,7 +9,15 @@
 {% block pageTitle %}{{ 'pageTitle.profile-edit' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsSettings("settings-profile-edit") }}
+    {% if deputyHasMultiClients %}
+        {{ macros.breadcrumbsArray([
+            { href: url('choose_a_client'), text: 'Choose a client' },
+            { href: url('account_settings'), text: 'Deputyship details' },
+            { href: url('user_show'), text: 'Your details' }
+        ]) }}
+    {% else %}
+        {{ macros.breadcrumbsSettings("settings-profile-edit") }}
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}
