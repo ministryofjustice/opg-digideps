@@ -5,7 +5,8 @@ namespace App\Controller\Admin;
 use App\Controller\AbstractController;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Form\Admin\Fixture\CourtOrderFixtureType;
+use App\Form\Admin\Fixture\LayCourtOrderFixtureType;
+use App\Form\Admin\Fixture\OrgCourtOrderFixtureType;
 use App\Form\Admin\Fixture\PreRegistrationFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
@@ -65,23 +66,94 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/court-orders", name="admin_fixtures_court_orders")
+     * @Route("/court-orders/lay", name="admin_lay_fixtures_court_orders")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
-     * @Template("@App/Admin/Fixtures/courtOrders.html.twig")
+     * @Template("@App/Admin/Fixtures/layCourtOrders.html.twig")
      */
-    public function courtOrdersAction(Request $request)
+    public function layCourtOrdersAction(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(CourtOrderFixtureType::class, null, [
+        $form = $this->createForm(LayCourtOrderFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
             'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
+            'multiClientEnabled' => $request->get('multi-client-enabled', false),
             'coDeputyEnabled' => $request->get('co-deputy-enabled', false),
+            'activated' => $request->get('activated', true),
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formAndRequestData = $this->retrieveFormData($form, $request);
+            $submittedFormData = $formAndRequestData['submitted'];
+
+            $response = $this->restClient->post('v2/fixture/court-order', json_encode([
+                'deputyType' => $submittedFormData['deputyType'],
+                'deputyEmail' => $formAndRequestData['deputyEmail'],
+                'caseNumber' => $formAndRequestData['caseNumber'],
+                'reportType' => $submittedFormData['reportType'],
+                'reportStatus' => $submittedFormData['reportStatus'],
+                'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
+                'multiClientEnabled' => $submittedFormData['multiClientEnabled'],
+                'coDeputyEnabled' => $submittedFormData['coDeputyEnabled'],
+                'activated' => $submittedFormData['activated'],
+                'deputyUid' => $formAndRequestData['deputyUid'],
+            ]));
+
+            $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
+
+            $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
+            $sanitizedDeputyData = $this->removeNullValues($deputiesData);
+
+            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
+            $caseNumber = $response['multiClientCaseNumbers'] ?? [$formAndRequestData['caseNumber']];
+
+            $deputyEmails = [];
+            foreach (array_reverse($deputies) as $deputy) {
+                $deputyEmails[] = $deputy->getEmail();
+            }
+
+            $deputyAndCaseNumber = [];
+            if (count($caseNumber) > 1) {
+                for ($i = 0; $i < min(count($deputyEmails), count($caseNumber)); ++$i) {
+                    $deputyAndCaseNumber[] = [
+                        $deputyEmails[$i] => $caseNumber[$i],
+                    ];
+                }
+            }
+
+            if ($submittedFormData['multiClientEnabled']) {
+                $this->addFlash('courtOrderFixture', ['deputyAndCaseNumber' => $deputyAndCaseNumber, 'caseNumber' => $caseNumber]);
+            } else {
+                $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
+            }
+        }
+
+        return ['form' => $form->createView()];
+    }
+
+    /**
+     * @Route("/court-orders/org", name="admin_org_fixtures_court_orders")
+     *
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @Template("@App/Admin/Fixtures/orgCourtOrders.html.twig")
+     */
+    public function orgCourtOrdersAction(Request $request)
+    {
+        if ('prod' === $this->symfonyEnvironment) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(OrgCourtOrderFixtureType::class, null, [
+            'deputyType' => $request->get('deputy-type', User::TYPE_PROF),
+            'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
+            'reportStatus' => $request->get('report-status', Report::STATUS_NOT_STARTED),
             'activated' => $request->get('activated', true),
             'orgSizeClients' => $request->get('orgSizeClients', 1),
             'orgSizeUsers' => $request->get('orgSizeUsers', 1),
@@ -89,24 +161,20 @@ class FixtureController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $submitted = $form->getData();
-            $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
-            $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
-            $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
-            $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+            $formAndRequestData = $this->retrieveFormData($form, $request);
+            $submittedFormData = $formAndRequestData['submitted'];
 
             $response = $this->restClient->post('v2/fixture/court-order', json_encode([
-                'deputyType' => $submitted['deputyType'],
-                'deputyEmail' => $deputyEmail,
-                'caseNumber' => $caseNumber,
-                'reportType' => $submitted['reportType'],
-                'reportStatus' => $submitted['reportStatus'],
-                'courtDate' => $courtDate->format('Y-m-d'),
-                'coDeputyEnabled' => $submitted['coDeputyEnabled'],
-                'activated' => $submitted['activated'],
-                'orgSizeClients' => $submitted['orgSizeClients'],
-                'orgSizeUsers' => $submitted['orgSizeUsers'],
-                'deputyUid' => $deputyUid,
+                'deputyType' => $submittedFormData['deputyType'],
+                'deputyEmail' => $formAndRequestData['deputyEmail'],
+                'caseNumber' => $formAndRequestData['caseNumber'],
+                'reportType' => $submittedFormData['reportType'],
+                'reportStatus' => $submittedFormData['reportStatus'],
+                'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
+                'activated' => $submittedFormData['activated'],
+                'orgSizeClients' => $submittedFormData['orgSizeClients'],
+                'orgSizeUsers' => $submittedFormData['orgSizeUsers'],
+                'deputyUid' => $formAndRequestData['deputyUid'],
             ]));
 
             $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
@@ -115,10 +183,27 @@ class FixtureController extends AbstractController
 
             $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
 
-            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => $caseNumber]);
+            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => [$formAndRequestData['caseNumber']]]);
         }
 
         return ['form' => $form->createView()];
+    }
+
+    public function retrieveFormData($form, $request): array
+    {
+        $submitted = $form->getData();
+        $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
+        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+        $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
+        $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+
+        return [
+            'submitted' => $submitted,
+            'courtDate' => $courtDate,
+            'deputyEmail' => $deputyEmail,
+            'caseNumber' => $caseNumber,
+            'deputyUid' => $deputyUid,
+        ];
     }
 
     /**

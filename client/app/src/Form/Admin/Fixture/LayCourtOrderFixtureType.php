@@ -3,30 +3,22 @@
 namespace App\Form\Admin\Fixture;
 
 use App\Entity\Report\Report;
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CourtOrderFixtureType extends AbstractType
+class LayCourtOrderFixtureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('deputyType', ChoiceType::class, [
-                'choices' =>
-                    [
-                        'Lay' => 'LAY',
-                        'Public Authority (Named)' => 'PA',
-                        'Public Authority (Admin)' => 'PA_ADMIN',
-                        'Public Authority (Team Member)' => 'PA_TEAM_MEMBER',
-                        'Professional (Named)' => 'PROF',
-                        'Professional (Admin)' => 'PROF_ADMIN',
-                        'Professional (Team Member)' => 'PROF_TEAM_MEMBER',
-                    ],
-                'data' => $options['deputyType']
+                'choices' => [
+                    'Lay' => 'LAY',
+                ],
+                'data' => $options['deputyType'],
             ])
             ->add('reportType', ChoiceType::class, [
                 'choices' => [
@@ -37,27 +29,23 @@ class CourtOrderFixtureType extends AbstractType
                     'Low assets with health and welfare' => Report::TYPE_COMBINED_LOW_ASSETS,
                     'High assets with health and welfare' => Report::TYPE_COMBINED_HIGH_ASSETS,
                 ],
-                'data' => $options['reportType']
+                'data' => $options['reportType'],
             ])
             ->add('reportStatus', ChoiceType::class, [
                 'choices' => ['Not started' => Report::STATUS_NOT_STARTED, 'Submittable' => Report::STATUS_READY_TO_SUBMIT],
-                'data' => $options['reportStatus']
+                'data' => $options['reportStatus'],
+            ])
+            ->add('multiClientEnabled', ChoiceType::class, [
+                'choices' => ['Enabled' => true, 'Disabled' => false],
+                'data' => $options['multiClientEnabled'],
             ])
             ->add('coDeputyEnabled', ChoiceType::class, [
                 'choices' => ['Enabled' => true, 'Disabled' => false],
-                'data' => $options['coDeputyEnabled']
+                'data' => $options['coDeputyEnabled'],
             ])
             ->add('activated', ChoiceType::class, [
                 'choices' => ['Activated' => true, 'Not Activated' => false],
-                'data' => $options['activated']
-            ])
-            ->add('orgSizeClients', ChoiceType::class, [
-                'choices' => ['1 Client' => 1, '10 Clients' => 10, '100 Clients' => 100, '500 Clients' => 500, '1000 Clients' => 1000],
-                'data' => $options['orgSizeClients']
-            ])
-            ->add('orgSizeUsers', ChoiceType::class, [
-                'choices' => ['1 User' => 1, '10 Users' => 10, '50 Users' => 50, '100 Users' => 100, '150 Users' => 150],
-                'data' => $options['orgSizeUsers']
+                'data' => $options['activated'],
             ])
             ->add('submit', SubmitType::class);
     }
@@ -65,7 +53,7 @@ class CourtOrderFixtureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'admin-fixtures'
-        ])->setRequired(['deputyType', 'reportType', 'reportStatus', 'coDeputyEnabled', 'activated', 'orgSizeClients', 'orgSizeUsers']);
+            'translation_domain' => 'admin-fixtures',
+        ])->setRequired(['deputyType', 'reportType', 'coDeputyEnabled', 'reportStatus', 'activated', 'multiClientEnabled']);
     }
 }
