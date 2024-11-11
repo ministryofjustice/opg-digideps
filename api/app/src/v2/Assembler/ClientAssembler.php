@@ -142,4 +142,34 @@ class ClientAssembler
 
         return $dtos;
     }
+    
+    public function assembleFromPreRegistrationData(array $preRegRow): Client
+    {
+        if (!empty($preRegRow['client_case_number']) &&
+            !empty($preRegRow['client_firstname']) &&
+            !empty($preRegRow['client_lastname']) &&
+            !empty($preRegRow['client_address1']) &&
+            !empty($preRegRow['client_address2']) &&
+            !empty($preRegRow['client_address3'])
+        ) {
+            $client = new Client();
+            $client
+                ->setCaseNumber($preRegRow['client_case_number'])
+                ->setFirstname($preRegRow['client_firstname'])
+                ->setLastname($preRegRow['client_lastname'])
+                ->setAddress($preRegRow['client_address1'])
+                ->setAddress2($preRegRow['client_address2'])
+                ->setAddress3($preRegRow['client_address3'])
+                ->setAddress4($preRegRow['client_address4'] ?: null)
+                ->setAddress5($preRegRow['client_address5'] ?: null)
+                ->setCourtDate((new \DateTime($preRegRow['court_order_date'])));
+    
+            if (!empty($preRegRow['client_postcode'])) {
+                $client->setPostcode($preRegRow['client_postcode']);
+                $client->setCountry('GB');
+            }
+    
+            return $client;
+        }
+    }
 }

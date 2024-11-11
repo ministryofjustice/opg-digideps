@@ -60,4 +60,63 @@ class PreRegistrationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    public function findExistingDeputiesMissingAddtionalClients(): array
+    {
+        $sql = 
+        <<<SQL
+        WITH pre_reg AS (
+            SELECT id, 
+            CAST(deputy_uid AS bigint), 
+            client_case_number,
+            client_firstname,
+            client_lastname,
+            client_address1,
+            client_address2,
+            client_address3,
+            client_address4,
+            client_address5,
+            client_postcode,
+            court_order_date,
+            court_order_type
+            FROM pre_registration
+        ),
+        dep_not_exist AS (
+            SELECT deputy_uid FROM pre_reg
+            EXCEPT
+            (
+                SELECT deputy_uid FROM dd_user
+                UNION
+                SELECT CAST(deputy_uid AS bigint) FROM deputy
+            )
+        ),
+        cdne AS (
+            (
+                SELECT LOWER(client_case_number) AS case_number 
+                FROM pre_reg 
+                WHERE deputy_uid NOT IN (SELECT * FROM dep_not_exist)
+            )
+            EXCEPT
+            SELECT case_number FROM client
+        )
+        SELECT client_case_number,
+        client_firstname,
+        client_lastname,
+        client_address1,
+        client_address2,
+        client_address3,
+        client_address4,
+        client_address5,
+        client_postcode,
+        court_order_date,
+        CAST(deputy_uid AS bigint),
+        id
+        FROM pre_reg WHERE client_case_number IN (SELECT case_number FROM cdne)
+        SQL;
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery();
+        return $result->fetchAllAssociative();
+    }
 }

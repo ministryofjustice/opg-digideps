@@ -2,10 +2,13 @@
 
 namespace App\v2\Registration\Uploader;
 
+use App\Entity\Client;
+use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
+use App\v2\Assembler\ClientAssembler;
 use App\v2\Registration\DTO\LayPreRegistrationDto;
 use App\v2\Registration\DTO\LayPreRegistrationDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
@@ -32,6 +35,7 @@ class LayDeputyshipUploader
         private readonly EntityManagerInterface $em,
         private readonly ReportRepository $reportRepository,
         private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly ClientAssembler $clientAssembler,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -168,5 +172,48 @@ class LayDeputyshipUploader
         $this->em->flush();
         $this->em->commit();
         $this->em->clear();
+    }
+    
+    public function multiClientCreation(): void
+    {
+        $userRepo = $this->em->getRepository(User::class);
+        $deputyRepo = $this->em->getRepository(Deputy::class);
+        $preRegRepo = $this->em->getRepository(PreRegistration::class);
+        $preRegClients = $preRegRepo->findExistingDeputiesMissingAddtionalClients();
+        
+        if (count($preRegClients) >= 1) {
+            foreach ($preRegClients as $preRegRow) {
+                file_put_contents('php://stderr', print_r($preRegRow, TRUE));
+                
+                /** @var $user User */
+                $user = $userRepo->findOneBy(['deputyUid' => $preRegRow['deputy_uid']]);
+                /** @var $deputy Deputy */
+                $deputy = $deputyRepo->findOneBy(['user' => $user]);
+                $client = $this->clientAssembler->assembleFromPreRegistrationData($preRegRow);
+                
+                if ($client instanceof Client) {
+                    $client->setDeputy($deputy);
+
+                    try {
+                        $this->em->beginTransaction();
+                        $this->em->persist($client);
+                    } catch (\Throwable $e) {
+                        $this->logger->error(
+                            sprintf(
+                                'Error whilst try to create new client for deputy ID: %d using PreRegistration row: %d',
+                                $deputy->getId(),
+                                $preRegRow['id']
+                            ));
+                        throw new \Exception($e->getMessage());
+                    }
+                }
+            }
+
+            try {
+                $this->commitTransactionToDatabase();
+            } catch (\Throwable $e) {
+                $this->logger->error($e->getMessage());
+            }
+        }
     }
 }
