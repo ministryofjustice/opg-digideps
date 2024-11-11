@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Event\PreRegistrationCompletedEvent;
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\PreRegistrationRepository;
+use App\Service\Client\LayCsvEvents;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
@@ -72,6 +75,7 @@ class ProcessLayCSVCommand extends Command
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
         private readonly LoggerInterface $logger,
+        private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly PreRegistrationRepository $preReg,
     ) {
@@ -111,8 +115,7 @@ class ProcessLayCSVCommand extends Command
             $logMessage = sprintf($logMessage, $layReportFile, $bucket);
 
             $this->logger->error($logMessage);
-            $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
-
+            $this->triggerCsvEvent('failure', $logMessage);
             return Command::FAILURE;
         }
 
@@ -122,37 +125,15 @@ class ProcessLayCSVCommand extends Command
                 $logMessage = sprintf('Unable to delete file %s.', $fileLocation);
 
                 $this->logger->error($logMessage);
-                $this->cliOutput->writeln(
-                    sprintf(
-                        '%s - failure - (partial) %s Output: %s',
-                        self::JOB_NAME,
-                        $logMessage,
-                        $this->processedStringOutput()
-                    )
-                );
-
+                $this->triggerCsvEvent('failure - (partial)', $logMessage);
                 return Command::SUCCESS;
             }
-
-            $this->cliOutput->writeln(
-                sprintf(
-                    '%s - success - Finished processing LayCSV. Output: %s',
-                    self::JOB_NAME,
-                    $this->processedStringOutput()
-                )
-            );
-
+            // multiclient creation triggered of, success or partial in LayCsvSubscriber
+            $this->triggerCsvEvent('success');
             return Command::SUCCESS;
         }
 
-        $this->cliOutput->writeln(
-            sprintf(
-                '%s - failure - Output: %s',
-                self::JOB_NAME,
-                'Process failed for unknown reason'
-            )
-        );
-
+        $this->triggerCsvEvent('failure', 'Process failed for unknown reason');
         return Command::FAILURE;
     }
 
@@ -212,9 +193,14 @@ class ProcessLayCSVCommand extends Command
         }
     }
 
-    private function processedStringOutput(): string
+    private function processedStringOutput(?string $message = null): string
     {
-        $processed = '';
+        $processed = 'Output: ';
+        if (!empty($message)) {
+            $message = sprintf('Message: %s ', $message);
+            $processed = sprintf('%s %s', $message, $processed);
+        }
+        
         foreach ($this->processingOutput as $reportedHeader => $stats) {
             if (is_array($stats)) {
                 $processed .= $reportedHeader.': ';
@@ -229,5 +215,22 @@ class ProcessLayCSVCommand extends Command
         }
 
         return $processed;
+    }
+    
+    private function triggerCsvEvent(string $state, ?string $message = null): void
+    {
+        $output = (!empty($message)) ? 
+            $this->processedStringOutput($message) : 
+            $this->processedStringOutput();
+
+        $eventTrigger = LayCsvEvents::PREREG_INGESTION_COMPLETED;
+        $preRegistrationEvent = new PreRegistrationCompletedEvent(
+            $eventTrigger,
+            self::JOB_NAME,
+            $state,
+            $output
+        );
+
+        $this->eventDispatcher->dispatch($preRegistrationEvent, PreRegistrationCompletedEvent::NAME);
     }
 }
