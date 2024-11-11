@@ -16,6 +16,7 @@ trait SelfRegistrationTrait
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
     private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
     private string $deputyAlreadyLinkedToCaseNumberError = 'You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0115 934 2700.';
+    private string $deputyAlreadyRegistered = 'You have already registered as a deputy. Please log in to your account to view this case. If you have any questions, call our helpline on 0115 934 2700.';
     private string $reportingPeriodGreaterThanFifteenMonths = 'Check the end date: your reporting period cannot be more than 15 months';
     private string $userEmail;
     private string $coDeputyEmail;
@@ -99,7 +100,7 @@ trait SelfRegistrationTrait
         string $postcode,
         string $clientFirstname,
         string $clientLastname,
-        string $caseNumber
+        string $caseNumber,
     ) {
         $this->fillInField('self_registration_firstname', $firstname);
         $this->fillInField('self_registration_lastname', $lastname);
@@ -445,6 +446,14 @@ trait SelfRegistrationTrait
     public function iShouldSeeADeputyAlreadyLinkedToCaseNumberError(): void
     {
         $this->assertOnErrorMessage($this->deputyAlreadyLinkedToCaseNumberError);
+    }
+
+    /**
+     * @Then I/they should see a 'deputy has already registered' error
+     */
+    public function iShouldSeeADeputyHasAlreadyRegistered(): void
+    {
+        $this->assertOnErrorMessage($this->deputyAlreadyRegistered);
     }
 
     /**

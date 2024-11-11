@@ -90,7 +90,7 @@ Feature: Lay Deputy Self Registration
         And I should be on the Lay homepage
         When I invite a Co-Deputy to the service who is already registered
         Then they shouldn't be able to register to deputise for a client with already registered details
-        And they should see a 'deputy already linked to case number' error
+        And they should see a 'deputy has already registered' error
 
     @super-admin
     Scenario: A Lay user entering an invalid reporting period
