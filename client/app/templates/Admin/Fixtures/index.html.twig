@@ -9,11 +9,17 @@
 {% block supportTitleTop %}Data Fixtures{% endblock %}
 
 {% block pageContent %}
-    <p class="govuk-body">
-        <a href="{{ path('admin_fixtures_court_orders') }}" class="govuk-link"> {{ 'list.links.courtOrders' | trans }} </a>
-    </p>
+    <h3 class="govuk-body bold">Pre Registration</h3>
     <p class="govuk-body">
         <a href="{{ path('pre_registration_fixture') }}" class="govuk-link"> {{ 'list.links.preRegistration' | trans }} </a>
+    </p>
+
+    <h3 class="govuk-body bold">Court Orders</h3>
+    <p class="govuk-body">
+        <a href="{{ path('admin_lay_fixtures_court_orders') }}" class="govuk-link"> {{ 'list.links.layCourtOrders' | trans }} </a>
+    </p>
+    <p class="govuk-body">
+        <a href="{{ path('admin_org_fixtures_court_orders') }}" class="govuk-link"> {{ 'list.links.orgCourtOrders' | trans }} </a>
     </p>
 
 {% endblock %}

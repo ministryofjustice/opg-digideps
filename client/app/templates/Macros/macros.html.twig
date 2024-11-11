@@ -260,14 +260,26 @@
         {% elseif alertType == 'courtOrderFixture' %}
             <div class="opg-alert opg-alert--success">
                 {{ _self.icon('tick', 'opg-alert__icon') }}
-                <p class="govuk-body">Created fixture {{ message.deputies|length > 1 ? 'deputies' : 'deputy' }}:</p>
-                <p class="govuk-body">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{ message.caseNumber}}</strong></p>
-
-                <ul>
-                    {% for deputy in message.deputies %}
-                        <li>{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ deputy.email }}</strong></li>
+                {% if message.caseNumber|length > 1 %}
+                    <p class="govuk-body">Created fixture deputies:</p>
+                    {% for details in message.deputyAndCaseNumber %}
+                        {% for email, caseNumber in details %}
+                            <p class="govuk-body">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{ caseNumber }}</strong></p>
+                            <p class="govuk-body">{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ email }}</strong></p>
+                        {% endfor %}
+                        <br/>
                     {% endfor %}
-                </ul>
+                {% else %}
+                    <p class="govuk-body">Created fixture deputy:</p>
+                    {% for caseNumber in message.caseNumber %}
+                        <p class="govuk-body">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}:<strong>{{ caseNumber}}</strong></p>
+                    {% endfor %}
+                    <ul>
+                        {% for deputy in message.deputies %}
+                            <li>{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ deputy.email }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                {%  endif %}
             </div>
         {% elseif alertType == 'important' %}
             <div class="opg-alert opg-alert--important">
