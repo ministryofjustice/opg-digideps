@@ -125,6 +125,17 @@ data "aws_iam_policy_document" "execution_role_secrets" {
     ]
     actions = ["secretsmanager:GetSecretValue"]
   }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "execution_role_secrets_db" {
@@ -138,5 +149,16 @@ data "aws_iam_policy_document" "execution_role_secrets_db" {
       data.aws_secretsmanager_secret.readonly_sql_db_password.arn
     ]
     actions = ["secretsmanager:GetSecretValue"]
+  }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
   }
 }
