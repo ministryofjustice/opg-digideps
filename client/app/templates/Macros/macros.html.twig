@@ -1,41 +1,70 @@
-{% macro breadcrumbs(report) %}
+{% macro breadcrumbs(report, isMultiClientDeputy) %}
     {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
     <div class="govuk-breadcrumbs">
-        <ol class="govuk-breadcrumbs__list">
-            <li class="govuk-breadcrumbs__list-item">
-                {% if isOrgUser %}
-                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
-                        {{ 'dashboard' | trans({}, 'common' ) }}
+        {% if isMultiClientDeputy %}
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    <a href="{{ path('choose_a_client') }}" class="govuk-breadcrumbs__link">
+                        {{ 'chooseAClient' | trans({}, 'common' ) }}
                     </a>
-                {% else %}
-                    <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    <a href="{{ path('lay_home', {clientId: report.client.id}) }}" class="govuk-breadcrumbs__link">
                         {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
                     </a>
-                {% endif %}
-            </li>
-            <li class="govuk-breadcrumbs__list-item">
-                {% if report.type == 'ndr' %}
-                    <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
-                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview"
-                       data-action="report.overview">
-                        {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
-                    </a>
-
-                {% else %}
-                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
-                       data-action="report.overview">
-                        {% if isOrgUser %}
-                            {{ 'clientProfile' | trans({}, 'common' ) }}
-                        {% else %}
-                            {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
-                        {% endif %}
-                    </a>
-                {% endif %}
-            </li>
-        </ol>
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    {% if report.type == 'ndr' %}
+                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
+                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview"
+                           data-action="report.overview">
+                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
+                           data-action="report.overview">
+                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
+                            {% endif %}
+                        </a>
+                </li>
+            </ol>
+        {% else %}
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    {% if isOrgUser %}
+                        <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                            {{ 'dashboard' | trans({}, 'common' ) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                            {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
+                        </a>
+                    {% endif %}
+                </li>
+                <li class="govuk-breadcrumbs__list-item">
+                    {% if report.type == 'ndr' %}
+                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
+                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview"
+                           data-action="report.overview">
+                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
+                           data-action="report.overview">
+                            {% if isOrgUser %}
+                                {{ 'clientProfile' | trans({}, 'common' ) }}
+                            {% else %}
+                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                </li>
+            </ol>
+        {% endif %}
     </div>
 {% endmacro %}
 
