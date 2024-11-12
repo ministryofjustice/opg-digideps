@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -20,35 +22,27 @@ class LifestyleController extends AbstractController
         'lifestyle-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private StepRedirector $stepRedirector,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/report/{reportId}/lifestyle", name="lifestyle")
-     * @Template("@App/Report/Lifestyle/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Lifestyle/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getLifestyleState()['state']) {
             return $this->redirectToRoute('lifestyle_summary', ['reportId' => $reportId]);
@@ -56,15 +50,14 @@ class LifestyleController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/lifestyle/step/{step}", name="lifestyle_step")
-     * @Template("@App/Report/Lifestyle/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
+     * @Template("@App/Report/Lifestyle/step.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -123,9 +116,8 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle/summary", name="lifestyle_summary")
-     * @Template("@App/Report/Lifestyle/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Lifestyle/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -137,7 +129,7 @@ class LifestyleController extends AbstractController
             return $this->redirectToRoute('lifestyle', ['reportId' => $reportId]);
         }
 
-        if (!$report->getLifestyle()) { //allow validation with answers all skipped
+        if (!$report->getLifestyle()) { // allow validation with answers all skipped
             $report->setLifestyle(new EntityDir\Report\Lifestyle());
         }
 

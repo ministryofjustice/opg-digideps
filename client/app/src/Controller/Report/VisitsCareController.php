@@ -5,6 +5,7 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -21,35 +22,27 @@ class VisitsCareController extends AbstractController
         'visits-care-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private StepRedirector $stepRedirector,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/report/{reportId}/visits-care", name="visits_care")
-     * @Template("@App/Report/VisitsCare/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/VisitsCare/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
@@ -57,15 +50,14 @@ class VisitsCareController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
-     * @Template("@App/Report/VisitsCare/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
+     * @Template("@App/Report/VisitsCare/step.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -132,9 +124,8 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
-     * @Template("@App/Report/VisitsCare/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/VisitsCare/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -146,7 +137,7 @@ class VisitsCareController extends AbstractController
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
-        if (!$report->getVisitsCare()) { //allow validation with answers all skipped
+        if (!$report->getVisitsCare()) { // allow validation with answers all skipped
             $report->setVisitsCare(new EntityDir\Report\VisitsCare());
         }
 

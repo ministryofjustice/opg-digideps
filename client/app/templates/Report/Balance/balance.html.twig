@@ -15,7 +15,7 @@
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report, isMultiClientDeputy) }}{% endblock %}
 
 {% block pageContent %}
     {% if not readyToBalance %}

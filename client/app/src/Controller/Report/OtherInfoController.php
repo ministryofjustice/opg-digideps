@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -20,35 +22,27 @@ class OtherInfoController extends AbstractController
         'more-info-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private StepRedirector $stepRedirector,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/report/{reportId}/any-other-info", name="other_info")
-     * @Template("@App/Report/OtherInfo/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/OtherInfo/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
@@ -56,21 +50,20 @@ class OtherInfoController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
-     * @Template("@App/Report/OtherInfo/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
+     * @Template("@App/Report/OtherInfo/step.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function stepAction(Request $request, $reportId, $step)
     {
-        $totalSteps = 1; //only one step but convenient to reuse the "step" logic and keep things aligned/simple
+        $totalSteps = 1; // only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
@@ -110,9 +103,8 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
-     * @Template("@App/Report/OtherInfo/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/OtherInfo/summary.html.twig")
      *
      * @return array|RedirectResponse
      */

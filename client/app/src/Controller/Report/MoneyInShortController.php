@@ -6,7 +6,9 @@ use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\Status;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,41 +24,41 @@ class MoneyInShortController extends AbstractController
         'money-in-short-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
+     *
      * @Template("@App/Report/MoneyInShort/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInShortState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInShortState()['state']) {
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
         }
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/money-in-short/exist", name="does_money_in_short_exist")
+     *
      * @Template("@App/Report/MoneyInShort/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -120,6 +122,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/no-money-in-short-exists", name="no_money_in_short_exists")
+     *
      * @Template("@App/Report/MoneyInShort/noMoneyInShortToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -152,6 +155,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
+     *
      * @Template("@App/Report/MoneyInShort/category.html.twig")
      *
      * @return array|RedirectResponse
@@ -190,6 +194,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/oneOffPaymentsExist", name="money_in_short_one_off_payments_exist")
+     *
      * @Template("@App/Report/MoneyInShort/oneOffPaymentsExist.html.twig")
      *
      * @return array|RedirectResponse
@@ -250,6 +255,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
+     *
      * @Template("@App/Report/MoneyInShort/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -280,6 +286,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
+     *
      * @Template("@App/Report/MoneyInShort/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -308,6 +315,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
+     *
      * @Template("@App/Report/MoneyInShort/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -338,6 +346,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
@@ -377,6 +386,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
+     *
      * @Template("@App/Report/MoneyInShort/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -386,7 +396,7 @@ class MoneyInShortController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
 

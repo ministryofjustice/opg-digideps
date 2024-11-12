@@ -3,7 +3,9 @@
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -42,7 +44,8 @@ class BalanceController extends AbstractController
 
     public function __construct(
         RestClient $restClient,
-        ReportApi $reportApi
+        ReportApi $reportApi,
+        private ClientApi $clientApi,
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
@@ -51,13 +54,16 @@ class BalanceController extends AbstractController
     /**
      * @Route("/report/{reportId}/balance", name="balance")
      *
-     * @param $reportId
      * @Template("@App/Report/Balance/balance.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function balanceAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ReasonForBalanceType::class, $report);
         $form->handleRequest($request);
@@ -66,11 +72,6 @@ class BalanceController extends AbstractController
             $data = $form->getData();
             $this->restClient->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
 
-//            $request->getSession()->getFlashBag()->add(
-//                'notice',
-//                'Balance explanation added'
-//            );
-
             return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
         }
 
@@ -78,6 +79,7 @@ class BalanceController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

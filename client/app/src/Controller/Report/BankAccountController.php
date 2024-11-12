@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -34,7 +36,8 @@ class BankAccountController extends AbstractController
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        private ClientApi $clientApi,
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
@@ -43,14 +46,17 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/bank-accounts", name="bank_accounts")
-     * @Template("@App/Report/BankAccount/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/BankAccount/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getBankAccountsState()['state']) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
@@ -58,15 +64,15 @@ class BankAccountController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
+     *
      * @Template("@App/Report/BankAccount/step.html.twig")
      *
-     * @param $reportId
-     * @param $step
      * @param null $accountId
      *
      * @return array|RedirectResponse
@@ -178,9 +184,8 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/bank-accounts/add_another", name="bank_accounts_add_another")
-     * @Template("@App/Report/BankAccount/add_another.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/BankAccount/add_another.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -209,7 +214,6 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/report/{reportId}/bank-accounts/summary", name="bank_accounts_summary")
      *
-     * @param $reportId
      * @Template("@App/Report/BankAccount/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -228,10 +232,8 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/bank-account/{accountId}/delete", name="bank_account_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param $reportId
-     * @param $accountId
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */
