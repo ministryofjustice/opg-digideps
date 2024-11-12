@@ -4,6 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -41,7 +42,7 @@ class VisitsCareController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {

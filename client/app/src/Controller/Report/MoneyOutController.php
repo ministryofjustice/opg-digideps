@@ -47,7 +47,7 @@ class MoneyOutController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyOutState()['state']) {
