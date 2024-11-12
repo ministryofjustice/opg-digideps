@@ -194,6 +194,10 @@ class ClientBenefitsCheckController extends AbstractController
      */
     public function summary(int $reportId, string $reportOrNdr)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -201,6 +205,7 @@ class ClientBenefitsCheckController extends AbstractController
             'report' => $report,
             'reportOrNdr' => $reportOrNdr,
             'showActions' => true,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

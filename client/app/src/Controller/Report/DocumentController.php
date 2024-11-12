@@ -354,6 +354,10 @@ class DocumentController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
             return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
@@ -366,6 +370,7 @@ class DocumentController extends AbstractController
             'report' => $report,
             'backLink' => $this->generateUrl('report_documents', ['reportId' => $report->getId()]),
             'status' => $report->getStatus(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

@@ -303,6 +303,10 @@ class DecisionController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -317,6 +321,7 @@ class DecisionController extends AbstractController
             'report' => $report,
             'status' => $report->getStatus(),
             'numOfDecisions' => $numberOfDecisions,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
