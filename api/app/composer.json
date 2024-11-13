@@ -55,7 +55,7 @@
         "symfony/routing": "^5.4.0",
         "symfony/security-bundle": "^5.4.0",
         "symfony/security-core": "^5.4.0",
-        "symfony/security-http": "5.4.45",
+        "symfony/security-http": "5.4.47",
         "symfony/serializer": "^5.4.0",
         "symfony/validator": "^5.4.0",
         "symfony/yaml": "^5.4.0"
