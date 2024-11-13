@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Exception\ReportNotSubmittedException;
 use App\Form\UserResearchResponseType;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserResearchApi;
@@ -17,24 +18,52 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserResearchController extends AbstractController
 {
+    private static $ndrGroupsForValidation = [
+        'client',
+        'client-ndr',
+        'client-benefits-check',
+        'client-case-number',
+        'client-reports',
+        'damages',
+        'ndr',
+        'ndr-action-give-gifts',
+        'ndr-action-more-info',
+        'ndr-action-property',
+        'ndr-account',
+        'ndr-asset',
+        'ndr-debt',
+        'ndr-debt-management',
+        'ndr-expenses',
+        'one-off',
+        'pension',
+        'report',
+        'state-benefits',
+        'user',
+        'user-clients',
+        'visits-care',
+    ];
+
     private UserResearchApi $userResearchApi;
     private ReportApi $reportApi;
     private TranslatorInterface $translator;
     private FormFactoryInterface $formFactory;
     private NdrApi $ndrApi;
+    private ClientApi $clientApi;
 
     public function __construct(
         UserResearchApi $userResearchApi,
         ReportApi $reportApi,
         TranslatorInterface $translator,
         FormFactoryInterface $formFactory,
-        NdrApi $ndrApi
+        NdrApi $ndrApi,
+        ClientApi $clientApi,
     ) {
         $this->userResearchApi = $userResearchApi;
         $this->reportApi = $reportApi;
         $this->translator = $translator;
         $this->formFactory = $formFactory;
         $this->ndrApi = $ndrApi;
+        $this->clientApi = $clientApi;
     }
 
     /**
@@ -84,7 +113,19 @@ class UserResearchController extends AbstractController
      */
     public function userResearchSubmitted(?int $reportId = null, ?int $ndrId = null)
     {
-        $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr']);
+        //        $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr']);
+
+        if (!is_null($reportId)) {
+            $report = $this->reportApi->getReport($reportId, ['report']);
+        } else {
+            $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+            $ndr = $client->getNdr();
+            $ndr->setClient($client);
+
+            $report = $ndr;
+            file_put_contents('php://stderr', print_r('*****INSIDE USER RESEARCH*****', true));
+            file_put_contents('php://stderr', print_r($report, true));
+        }
 
         // check status
         if (!$report->getSubmitted()) {
