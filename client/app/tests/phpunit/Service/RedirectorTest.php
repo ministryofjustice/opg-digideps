@@ -105,17 +105,17 @@ class RedirectorTest extends TestCase
         // ROLE, current_route, isCoDeputy, coDeputyClientConfirmed, isNdrEnabled, isDeputyOrg,  clientKnown, hasAddress
         return [
             // Same URLs never get redirected
-            ['ROLE_LAY_DEPUTY', 'ndr_index',  false, false,  true,  false, true, true, false],
+            ['ROLE_LAY_DEPUTY', 'ndr_index',  false, false,  true,  false, true, true, 'lay_home'],
             ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  false,  false, true, true, false],
 
             // NDR deputy gets redirected to NDR index
-            ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  true,  false, true, true, 'ndr_index'],
+            ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  true,  false, true, true, false],
             // Lay deputy gets redirected to LAY
             ['ROLE_LAY_DEPUTY', 'ndr_index',  false, false,  false,  false, true, true, 'lay_home'],
 
             // Correct URLs dont get redirected
             ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  false,  false, true, true, false],
-            ['ROLE_LAY_DEPUTY', 'ndr_index', false, false,  true,  false, true, true, false],
+            ['ROLE_LAY_DEPUTY', 'ndr_index', false, false,  true,  false, true, true, 'lay_home'],
 
             // User without client gets redirected to client_add
             ['ROLE_LAY_DEPUTY', 'ndr_index', false, false,  true, false, false, true, 'client_add'],
@@ -130,7 +130,7 @@ class RedirectorTest extends TestCase
             ['ROLE_LAY_DEPUTY', 'lay_home', true, false, false, false, true, false, 'codep_verification'],
 
             // Verified co deputies dont get redirected
-            ['ROLE_LAY_DEPUTY', 'ndr_index', true, true, true, true, true, false, false],
+            ['ROLE_LAY_DEPUTY', 'ndr_index', true, true, true, true, true, false, 'lay_home'],
             ['ROLE_LAY_DEPUTY', 'lay_home', true, true, false, false, true, false, false],
 
             // Admins are not redirected

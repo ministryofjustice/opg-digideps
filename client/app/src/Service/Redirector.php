@@ -82,6 +82,8 @@ class Redirector
                 return $this->router->generate('org_dashboard');
             }
         } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
+            file_put_contents('php://stderr', print_r('HELLOOOOO1: ', true));
+
             return $this->getCorrectLayHomepage();
         } else {
             return $this->router->generate('access_denied');
@@ -103,11 +105,7 @@ class Redirector
 
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            if ($multiClientDeputy) {
-                $route = 'lay_home';
-            } else {
-                $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
-            }
+            $route = 'lay_home';
         }
 
         // none of these corrections apply to admin
@@ -115,11 +113,7 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    if ($multiClientDeputy) {
-                        $route = 'lay_home';
-                    } else {
-                        $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
-                    }
+                    $route = 'lay_home';
                 }
 
                 // unverified codeputy invitation
@@ -153,8 +147,12 @@ class Redirector
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
+            file_put_contents('php://stderr', print_r('HELLOOOOO4: ', true));
+
             return $this->router->generate($route);
         }
+
+        file_put_contents('php://stderr', print_r('HELLOOOOO5: ', true));
 
         // last accessed url
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
@@ -169,7 +167,9 @@ class Redirector
                 break;
             }
 
-            return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+            if (!$user->isNdrEnabled()) {
+                return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+            }
         }
 
         // check if last remaining active client is linked to non-primary account if so retrieve id
@@ -269,6 +269,8 @@ class Redirector
             if (1 < count($clients)) {
                 return $this->getChooseAClientHomepage($user);
             } else {
+                file_put_contents('php://stderr', print_r('HELLOOOOO3: ', true));
+
                 return $this->getLayDeputyHomepage($user, $activeClientId);
             }
         } else {
