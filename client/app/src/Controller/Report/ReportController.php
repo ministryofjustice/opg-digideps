@@ -25,6 +25,7 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\Storage\S3Storage;
+use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -96,6 +97,31 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
+    private static $ndrGroupsForValidation = [
+        'client',
+        'client-ndr',
+        'client-benefits-check',
+        'client-case-number',
+        'client-reports',
+        'damages',
+        'ndr',
+        'ndr-action-give-gifts',
+        'ndr-action-more-info',
+        'ndr-action-property',
+        'ndr-account',
+        'ndr-asset',
+        'ndr-debt',
+        'ndr-debt-management',
+        'ndr-expenses',
+        'one-off',
+        'pension',
+        'report',
+        'state-benefits',
+        'user',
+        'user-clients',
+        'visits-care',
+    ];
+
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
@@ -136,9 +162,35 @@ class ReportController extends AbstractController
      */
     public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
-        // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
-        // due to the way
-        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+        $ndrEnabled = false;
+
+        $users = $this->clientApi->getWithUsersV2($clientId)->getUsers();
+        file_put_contents('php://stderr', print_r('USERS: ', true));
+        file_put_contents('php://stderr', print_r($users, true));
+
+        // TEST WITH CO-DEPUTY AS WELL
+        foreach ($users as $user) {
+            if ($user->isNdrEnabled()) {
+                file_put_contents('php://stderr', print_r('NDR ENABLED: ', true));
+                $ndrEnabled = true;
+            }
+        }
+
+        //        $hasReport = $this->clientApi->getById($clientId)->hasReport();
+        //        file_put_contents('php://stderr', print_r('ACTIVE REPORT: '. $hasReport, true));
+        //
+        //        if (!$hasReport) {
+        //        }
+
+        file_put_contents('php://stderr', print_r('NDR ENABLED VARIABLE: '.$ndrEnabled, true));
+
+        if ($ndrEnabled) {
+            $user = $this->userApi->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
+        } else {
+            // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
+            // due to the way
+            $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+        }
 
         // redirect back to log out page if signing in with non-primary account with primary email
         if (!$user->getIsPrimary()) {
@@ -155,7 +207,9 @@ class ReportController extends AbstractController
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients(
+            $user->getDeputyUid()
+        );
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -163,16 +217,39 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
+        if ($ndrEnabled) {
+            $clients = $user->getClients();
+            $client = !empty($clients) ? $clients[0] : null;
+        }
+
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
-        return [
-            'user' => $user,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
-            'client' => $clientWithCoDeputies,
+        $resultsArray = [
             'coDeputies' => $coDeputies,
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
             'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
+
+        if ($ndrEnabled) {
+            return array_merge([
+                'ndrEnabled' => true,
+                'client' => $client,
+                'ndr' => $client->getNdr(),
+                'reportsSubmitted' => $client->getSubmittedReports(),
+                'reportActive' => $client->getActiveReport(),
+                'ndrStatus' => new NdrStatusService($client->getNdr()),
+            ],
+                $resultsArray
+            );
+        } else {
+            return array_merge([
+                'ndrEnabled' => false,
+                'client' => $clientWithCoDeputies,
+            ],
+                $resultsArray
+            );
+        }
     }
 
     /**
