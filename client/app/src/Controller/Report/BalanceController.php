@@ -36,19 +36,11 @@ class BalanceController extends AbstractController
         'balance-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
+        private RestClient $restClient,
+        private ReportApi $reportApi,
         private ClientApi $clientApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**

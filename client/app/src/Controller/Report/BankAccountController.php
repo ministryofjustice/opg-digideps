@@ -24,24 +24,12 @@ class BankAccountController extends AbstractController
         'account-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector,
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private StepRedirector $stepRedirector,
         private ClientApi $clientApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
