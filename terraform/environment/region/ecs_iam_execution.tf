@@ -116,7 +116,6 @@ data "aws_iam_policy_document" "execution_role_secrets" {
     resources = [
       data.aws_secretsmanager_secret.public_jwt_key_base64.arn,
       data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
-      data.aws_secretsmanager_secret.jwt_token_synchronisation.arn,
       data.aws_secretsmanager_secret.front_notify_api_key.arn,
       data.aws_secretsmanager_secret.front_frontend_secret.arn,
       data.aws_secretsmanager_secret.front_api_client_secret.arn,
@@ -125,6 +124,17 @@ data "aws_iam_policy_document" "execution_role_secrets" {
       data.aws_secretsmanager_secret.anonymise-default-pw.arn
     ]
     actions = ["secretsmanager:GetSecretValue"]
+  }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
   }
 }
 
@@ -139,5 +149,16 @@ data "aws_iam_policy_document" "execution_role_secrets_db" {
       data.aws_secretsmanager_secret.readonly_sql_db_password.arn
     ]
     actions = ["secretsmanager:GetSecretValue"]
+  }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
   }
 }

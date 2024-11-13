@@ -11,7 +11,7 @@ jobs:
   miscellaneous-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v3
+      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
       - uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7
         with:
@@ -26,11 +26,6 @@ jobs:
         id: unit-tests-block-ips
         run: python -m unittest tests/*_tests.py
         working-directory: lambdas/functions/block_ips_lambda
-
-      - name: run unit tests for synchronisation
-        id: unit-tests-synchronisation
-        run: go test
-        working-directory: lambdas/functions/synchronisation
 
       - name: run unit tests for anonymisation
         id: unit-tests-anonymisation

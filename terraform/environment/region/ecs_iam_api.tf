@@ -45,6 +45,17 @@ data "aws_iam_policy_document" "api_permissions" {
   }
 
   statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
+  }
+
+  statement {
     sid    = "ApiGetSiriusS3Bucket"
     effect = "Allow"
     actions = [

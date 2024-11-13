@@ -277,25 +277,25 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['status'];
 
         foreach ([
-                     // add here the jms_serialised_version of the ReportStatus getters
-                     'decisions_state',
-                     'contacts_state',
-                     'visits_care_state',
-                     'bank_accounts_state',
-                     'money_transfer_state',
-                     'money_in_state',
-                     'money_out_state',
-                     'money_in_short_state',
-                     'money_out_short_state',
-                     'balance_state',
-                     'assets_state',
-                     'debts_state',
-                     'pa_fees_expenses_state',
-                     'actions_state',
-                     'other_info_state',
-                     'expenses_state',
-                     'gifts_state',
-                 ] as $key) {
+            // add here the jms_serialised_version of the ReportStatus getters
+            'decisions_state',
+            'contacts_state',
+            'visits_care_state',
+            'bank_accounts_state',
+            'money_transfer_state',
+            'money_in_state',
+            'money_out_state',
+            'money_in_short_state',
+            'money_out_short_state',
+            'balance_state',
+            'assets_state',
+            'debts_state',
+            'pa_fees_expenses_state',
+            'actions_state',
+            'other_info_state',
+            'expenses_state',
+            'gifts_state',
+        ] as $key) {
             $this->assertArrayHasKey('state', $data[$key]);
             $this->assertArrayHasKey('nOfRecords', $data[$key]);
         }
@@ -622,7 +622,7 @@ class ReportControllerTest extends AbstractTestController
     public function testMoneyInLowAssetDoesNotExist()
     {
         $reportId = self::$report103->getId();
-        
+
         $url = '/report/'.$reportId;
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -655,10 +655,10 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'reason_for_no_money_in' => 'No money in',
             ]])['data'];
-        
+
         self::fixtures()->clear();
         $report = self::fixtures()->getReportById(self::$report103->getId());
-        
+
         $moneyInSectionStateStatusShort = self::fixtures()->getReportFreshSectionStatus($report, Report::SECTION_MONEY_IN_SHORT)['state'];
 
         $this->assertEquals('No money in', $report->getReasonForNoMoneyIn());
@@ -686,7 +686,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('incomplete', $moneyOutSectionStateStatus);
     }
 
-    
     public function testMoneyCategories()
     {
         $url = '/report/'.self::$report103->getId();
@@ -1051,38 +1050,6 @@ class ReportControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],
         ]);
-
-        self::assertCount(0, $return['data']);
-    }
-
-    /** @test */
-    public function getQueuedDocumentsJwtUsesAuth(): void
-    {
-        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists-jwt', [
-            'mustFail' => true,
-            'ClientSecret' => 'WRONG CLIENT SECRET',
-            'assertCode' => 403,
-            'assertResponseCode' => 403,
-            'data' => ['row_limit' => 100],
-        ], true);
-
-        $this->assertStringContainsString('client secret not accepted', $return['message']);
-
-        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists-jwt', [
-            'mustFail' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-            'assertCode' => 403,
-            'assertResponseCode' => 403,
-            'data' => ['row_limit' => 100],
-        ]);
-
-        $this->assertStringContainsString('JWT is not valid', $return['message']);
-
-        $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists-jwt', [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['row_limit' => 100],
-        ], true);
 
         self::assertCount(0, $return['data']);
     }
