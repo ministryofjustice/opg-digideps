@@ -52,7 +52,6 @@ b64headandpay="${b64headers}.${b64payload}"
 b64digest=$(echo -n ${b64headandpay} | openssl dgst -sha256 -sign private.pem -binary | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
 b64jwt=${b64headandpay}.${b64digest}
 
-awslocal secretsmanager create-secret --name "local/synchronisation-jwt-token" --secret-string ${b64jwt}
 rm private.pem public.pem
 
 awslocal secretsmanager create-secret --name "local/custom-sql-db-password" --secret-string "api"

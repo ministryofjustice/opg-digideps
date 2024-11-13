@@ -42,10 +42,6 @@ data "aws_secretsmanager_secret" "public_jwt_key_base64" {
   name = join("/", compact([var.secrets_prefix, "public-jwt-key-base64"]))
 }
 
-data "aws_secretsmanager_secret" "jwt_token_synchronisation" {
-  name = join("/", compact([var.secrets_prefix, "synchronisation-jwt-token"]))
-}
-
 data "aws_secretsmanager_secret" "smoke_tests_variables" {
   name = join("/", compact([var.secrets_prefix, "smoke-test-variables"]))
 }
@@ -63,6 +59,6 @@ data "aws_secretsmanager_secret" "anonymise-default-pw" {
 }
 
 ##### Shared Application KMS key for logs #####
-#data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
-#  name = "alias/digideps_secret_encryption_key"
-#}
+data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
+  name = "alias/digideps_secret_encryption_key"
+}
