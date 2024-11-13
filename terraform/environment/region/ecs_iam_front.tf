@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "front_s3" {
       "s3:PutObjectTagging",
       "s3:ListBucket"
     ]
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
       module.pa_uploads.arn,
       "${module.pa_uploads.arn}/*",
@@ -56,6 +56,17 @@ data "aws_iam_policy_document" "front_query_secretsmanager" {
       data.aws_secretsmanager_secret.front_notify_api_key.arn,
     ]
   }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "front_get_log_events" {
@@ -78,26 +89,6 @@ data "aws_iam_policy_document" "front_get_log_events" {
 resource "aws_iam_role_policy" "front_task_logs" {
   name   = "front-task-logs.${local.environment}"
   policy = data.aws_iam_policy_document.ecs_task_logs.json
-  role   = aws_iam_role.front.id
-}
-
-data "aws_iam_policy_document" "front_ssm" {
-  statement {
-    sid    = "AllowGetSSMParameters"
-    effect = "Allow"
-    actions = [
-      "ssm:GetParameter",
-      "ssm:GetParameters"
-    ]
-    resources = [
-      aws_ssm_parameter.flag_multi_accounts.arn
-    ]
-  }
-}
-
-resource "aws_iam_role_policy" "front_ssm" {
-  name   = "front-ssm.${local.environment}"
-  policy = data.aws_iam_policy_document.front_ssm.json
   role   = aws_iam_role.front.id
 }
 

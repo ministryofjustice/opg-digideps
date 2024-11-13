@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "performance_data" {
       "s3:GetObjectTagging",
       "s3:PutObjectTagging",
     ]
-    #tfsec:ignore:aws-iam-no-policy-wildcards - Not overly permissive
+    #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
       "arn:aws:s3:::opg-performance-data",
       "arn:aws:s3:::opg-performance-data/*",

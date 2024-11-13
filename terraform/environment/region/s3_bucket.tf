@@ -9,11 +9,7 @@ locals {
 
 data "aws_region" "current" {}
 
-// DATA SOURCE FOR DEFAULT KEY
-data "aws_kms_alias" "source_default_key" {
-  name = "alias/aws/s3"
-}
-
+# trivy:ignore:avd-aws-0132 - This is already customer managed key
 module "pa_uploads" {
   source                               = "./modules/s3_bucket"
   account_name                         = var.account.name

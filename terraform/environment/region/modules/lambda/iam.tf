@@ -50,7 +50,6 @@ data "aws_iam_policy_document" "lambda" {
     effect    = "Allow"
     resources = [var.ecr_arn]
     actions = [
-      "ecr:SetRepositoryPolicy",
       "ecr:GetRepositoryPolicy",
       "ecr:GetDownloadUrlForLayer",
       "ecr:BatchGetImage",
@@ -60,19 +59,30 @@ data "aws_iam_policy_document" "lambda" {
       "ecr:DescribeImages",
       "ecr:DescribeRepositories",
       "ecr:ListImages",
-      "ecr:PutImage",
-      "ecr:InitiateLayerUpload",
-      "ecr:UploadLayerPart",
-      "ecr:CompleteLayerUpload",
+      "ecr:InitiateLayerUpload"
     ]
   }
 
+  dynamic "statement" {
+    for_each = length(var.secrets) > 0 ? [1] : []
+    content {
+      sid       = "allowSecretsManagerAccess"
+      effect    = "Allow"
+      resources = var.secrets
+      actions = [
+        "secretsmanager:GetSecretValue"
+      ]
+    }
+  }
+
   statement {
-    sid       = "allowSecretsManagerAccess"
-    effect    = "Allow"
-    resources = var.secrets
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
     actions = [
-      "secretsmanager:GetSecretValue"
+      "kms:Decrypt"
+    ]
+    resources = [
+      var.secrets_kms_key_arn
     ]
   }
 }

@@ -38,18 +38,91 @@ Feature: Users logging into the service
         Then the form should be valid
 
 
-    @multi-feature-flag-enabled
+    @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user tries to login to the service with their non primary account
-        Given a Lay Deputy has multiple client accounts
-        When a Lay Deputy tries to login with their "non-primary" email address
+        Given a Lay Deputy tries to login with their "non-primary" email address
         Then they get redirected back to the log in page
         And a flash message should be displayed to the user with their primary email address
         When the user tries to access their clients report overview page
         Then they get redirected back to the log in page
 
-    @multi-feature-flag-enabled
+    @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user tries to login to the service with their primary account
-        Given a Lay Deputy has multiple client accounts
         And a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the Lay homepage
+        Then they should be on the Choose a Client homepage
+        When they choose their "primary" Client
+        Then they should be on the "primary" Client's dashboard
+        When the Lay deputy navigates back to the Choose a Client homepage
+        When they choose their "non-primary" Client
+        Then they should be on the "non-primary" Client's dashboard
         And when they log out they shouldn't see a flash message for non primary accounts
+
+    @lay-pfa-high-not-started-multi-client-deputy-with-ndr
+    Scenario: A user tries to login to the service with their primary account and has an NDR
+        And a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        When they choose their "primary" Client
+        Then they should be on the "primary" Client's dashboard
+        When the Lay deputy navigates back to the Choose a Client homepage
+        When they choose their "non-primary" Client
+        Then they should be on the "non-primary" Client's dashboard
+        And when they log out they shouldn't see a flash message for non primary accounts
+
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate client dashboard
+        And a Lay Deputy tries to login with their "primary" email address
+        When they choose their "primary" Client
+        Then they should be on the "primary" Client's dashboard
+        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate report overview page
+        And a Lay Deputy tries to login with their "primary" email address
+        When they choose their "primary" Client
+        Then they should be on the "primary" Client's dashboard
+        When the Lay deputy navigates to the report overview page
+        And the Lay Deputy navigates back to the Client dashboard using the breadcrumb
+        Then they should be on the "primary" Client's dashboard
+        When the Lay deputy navigates to the report overview page
+        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate Your details page
+        And a Lay Deputy tries to login with their "primary" email address
+        When the Lay deputy navigates to your details page
+        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate Client details page
+        And a Lay Deputy tries to login with their "primary" email address
+        When they choose their "primary" Client
+        Then they should be on the "primary" Client's dashboard
+        When the Lay deputy navigates to client details page
+        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+        When they choose their "primary" Client
+        Then they should be on the "primary" Client's dashboard
+        When the Lay deputy navigates to client details page
+        And the Lay Deputy navigates back to the Client dashboard using the breadcrumb
+        Then they should be on the "primary" Client's dashboard
+
+    @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
+    Scenario: A user logs into the service with their primary account given they're active clients are linked to their secondary accounts
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        And have access to all active client dashboards
+        When they try to access their "primary" discharged Client
+        Then I should be redirected and denied access to continue as client not found
+
+    @super-admin @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
+    Scenario: A user logs into the service with their primary account given they're remaining active client is linked to their secondary account
+        Given a super admin user accesses the admin app
+        And they discharge the deputy from "1" secondary client(s)
+        Then a Lay Deputy tries to login with their "primary" email address
+        And should arrive on the client dashboard of their only active client
+
+    @super-admin @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
+    Scenario: A user logs into the service with their primary account given all of their clients are discharged
+        Given a super admin user accesses the admin app
+        And they discharge the deputy from "2" secondary client(s)
+        Then a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the add your client page

@@ -170,37 +170,6 @@ class DocumentControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function getQueuedDocumentsJwtUsesAuth(): void
-    {
-        $return = $this->assertJsonRequest('GET', '/document/queued-jwt', [
-            'mustFail' => true,
-            'ClientSecret' => 'WRONG CLIENT SECRET',
-            'assertCode' => 403,
-            'assertResponseCode' => 403,
-            'data' => ['row_limit' => 100],
-        ], true);
-
-        $this->assertStringContainsString('client secret not accepted', $return['message']);
-
-        $return = $this->assertJsonRequest('GET', '/document/queued-jwt', [
-            'mustFail' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-            'assertCode' => 403,
-            'assertResponseCode' => 403,
-            'data' => ['row_limit' => 100],
-        ]);
-        $this->assertStringContainsString('JWT is not valid', $return['message']);
-
-        $return = $this->assertJsonRequest('GET', '/document/queued-jwt', [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['row_limit' => 100],
-        ], true);
-
-        self::assertCount(0, json_decode($return['data'], true));
-    }
-
-    /** @test */
     public function getQueuedDocuments(): void
     {
         // Queue a document
@@ -319,10 +288,10 @@ class DocumentControllerTest extends AbstractTestController
             'PUT',
             '/document/update-related-statuses',
             [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-            'data' => ['submissionIds' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()], 'errorMessage' => 'An error message'],
-        ]
+                'mustSucceed' => true,
+                'ClientSecret' => API_TOKEN_DEPUTY,
+                'data' => ['submissionIds' => [self::$reportSubmission1->getId(), self::$reportSubmission2->getId()], 'errorMessage' => 'An error message'],
+            ]
         );
 
         self::assertEquals(1, $response['data']);

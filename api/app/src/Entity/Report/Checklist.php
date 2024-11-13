@@ -7,6 +7,7 @@ use App\Entity\SynchronisableInterface;
 use App\Entity\SynchronisableTrait;
 use App\Entity\Traits\ModifyAudit;
 use App\Entity\User;
+use App\Repository\ChecklistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -16,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="checklist")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=ChecklistRepository::class)
  */
 class Checklist implements SynchronisableInterface
 {
@@ -303,7 +304,7 @@ class Checklist implements SynchronisableInterface
     /**
      * Submitted by.
      *
-     * @var \App\Entity\User
+     * @var User
      *
      * @JMS\Type("App\Entity\User")
      *
@@ -922,7 +923,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getSubmittedBy()
     {
@@ -979,9 +980,6 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;

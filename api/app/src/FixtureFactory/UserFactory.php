@@ -40,7 +40,8 @@ class UserFactory
             ->setAddressPostcode(isset($data['postCode']) ? $data['postCode'] : 'SW1')
             ->setAddressCountry('GB')
             ->setRoleName($roleName)
-            ->setAgreeTermsUse(true);
+            ->setAgreeTermsUse(true)
+            ->setDeputyUid(User::TYPE_LAY === $data['deputyType'] ? $data['deputyUid'] : null);
 
         if ('true' === $data['activated'] || true === $data['activated']) {
             $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'));
@@ -135,10 +136,12 @@ class UserFactory
             ->setActive($data['activated'])
             ->setRegistrationDate(new \DateTime())
             ->setCoDeputyClientConfirmed(true)
-            ->setActive(true);
+            ->setActive(true)
+            ->setDeputyUid('7'.str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
         if ('true' === $data['activated'] || true === $data['activated']) {
-            $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'));
+            $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'))
+                  ->setIsPrimary(true);
         } else {
             $user2->setActive(false);
         }

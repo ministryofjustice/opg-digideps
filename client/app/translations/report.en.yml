@@ -15,6 +15,13 @@ homepage:
       We have marked your report as incomplete due to certain parts being unfinished or
       requiring further attention. Please review the highlighted sections in your report.
 
+chooseAClient:
+  htmlTitle: Choose a client - Complete the deputy report | GOV.UK
+  pageTitle: Choose a client
+  title: Select which client you want to manage a report for.
+  courtOrderNumber: Court Order number
+  reportType: Report Type
+
 codeputy:
   inviteAnotherDeputy: Invite another deputy
 

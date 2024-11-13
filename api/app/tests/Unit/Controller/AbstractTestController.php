@@ -199,6 +199,16 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
+    protected function assertEndpointNotFoundFor($method, $uri, $token, $data = [])
+    {
+        $this->assertJsonRequest($method, $uri, [
+            'mustFail' => true,
+            'data' => $data,
+            'AuthToken' => $token,
+            'assertResponseCode' => 404,
+        ]);
+    }
+
     protected function assertEndpointAllowedFor($method, $uri, $token, $data = [])
     {
         $this->assertJsonRequest($method, $uri, [
@@ -215,6 +225,38 @@ abstract class AbstractTestController extends WebTestCase
     protected function loginAsDeputy()
     {
         return $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsMultiClientPrimaryDeputy()
+    {
+        return $this->login('multi-client-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsMultiClientNonPrimaryDeputy()
+    {
+        return $this->login('multi-client-non-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsMainDeputy()
+    {
+        return $this->login('main-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    /**
+     * @return string token
+     */
+    protected function loginAsCoDeputy()
+    {
+        return $this->login('co-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**

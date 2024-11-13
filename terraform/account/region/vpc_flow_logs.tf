@@ -1,3 +1,4 @@
+# To monitor the VPC that we use
 resource "aws_flow_log" "vpc_flow_logs" {
   iam_role_arn    = aws_iam_role.vpc_flow_logs.arn
   log_destination = aws_cloudwatch_log_group.vpc_flow_logs.arn
@@ -7,10 +8,11 @@ resource "aws_flow_log" "vpc_flow_logs" {
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
   name              = "vpc-flow-logs-${var.account.name}"
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   retention_in_days = 180
 }
 
+# To monitor the default VPC. Logs should be empty.
 resource "aws_flow_log" "vpc_flow_logs_default" {
   iam_role_arn    = aws_iam_role.vpc_flow_logs.arn
   log_destination = aws_cloudwatch_log_group.vpc_flow_logs_default.arn
@@ -20,10 +22,11 @@ resource "aws_flow_log" "vpc_flow_logs_default" {
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs_default" {
   name              = "vpc-flow-logs-default-${var.account.name}"
-  kms_key_id        = aws_kms_key.cloudwatch_logs.arn
+  kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   retention_in_days = 180
 }
 
+# VPC Flow Logs Role and Permissions
 resource "aws_iam_role" "vpc_flow_logs" {
   name               = "vpc-flow-logs-${var.account.name}"
   assume_role_policy = data.aws_iam_policy_document.vpc_flow_logs_role_assume_role_policy.json

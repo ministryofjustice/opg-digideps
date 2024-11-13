@@ -11,9 +11,9 @@ jobs:
   miscellaneous-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
-      - uses: actions/setup-python@29a37be0a3d3e8bf5bc1eb19cd0502922f5b312a
+      - uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7
         with:
           python-version: "3.11"
 
@@ -27,17 +27,17 @@ jobs:
         run: python -m unittest tests/*_tests.py
         working-directory: lambdas/functions/block_ips_lambda
 
-      - name: run unit tests for synchronisation
-        id: unit-tests-synchronisation
-        run: go test
-        working-directory: lambdas/functions/synchronisation
-
       - name: run unit tests for anonymisation
         id: unit-tests-anonymisation
         run: go test ./...
         working-directory: orchestration/anonymisation
 
-      - name: run additional package checks on client
+      - name: run additional composer package checks on client
         id: package-checks-client
         run: python audit-composer-packages.py client.json
+        working-directory: scripts/package-audit
+
+      - name: run additional composer package checks on api
+        id: package-checks-api
+        run: python audit-composer-packages.py api.json
         working-directory: scripts/package-audit

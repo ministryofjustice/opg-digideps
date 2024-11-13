@@ -9,8 +9,8 @@ locals {
     orchestration    = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.docker_tag}"
     htmltopdf        = "${data.aws_ecr_repository.images["htmltopdf"].repository_url}:${var.docker_tag}"
     dr-backup        = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.docker_tag}"
-    synchronise      = "${data.aws_ecr_repository.images["synchronise-lambda"].repository_url}:${var.docker_tag}"
     file-scanner     = "${data.aws_ecr_repository.images["file-scanner"].repository_url}:${var.docker_tag}"
+    custom-sql       = "${data.aws_ecr_repository.images["custom-sql-lambda"].repository_url}:${var.docker_tag}"
   }
 
   repositories = [
@@ -21,8 +21,8 @@ locals {
     "dr-backup",
     "sync",
     "htmltopdf",
-    "synchronise-lambda",
-    "file-scanner"
+    "file-scanner",
+    "custom-sql-lambda"
   ]
 }
 

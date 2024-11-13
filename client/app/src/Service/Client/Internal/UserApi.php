@@ -268,11 +268,13 @@ class UserApi
         $this->eventDispatcher->dispatch($adminManagerCreatedEvent, AdminManagerCreatedEvent::NAME);
     }
 
-    public function returnPrimaryEmail(int $deputyUid)
+    public function returnPrimaryEmail(int $deputyUid): string
     {
-        return $this->restClient->get(
+        $jsonString = (string) $this->restClient->get(
             sprintf(self::GET_PRIMARY_EMAIL, $deputyUid),
-            'array'
+            'raw'
         );
+
+        return json_decode($jsonString, true)['data'];
     }
 }

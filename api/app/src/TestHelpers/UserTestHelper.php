@@ -41,7 +41,7 @@ class UserTestHelper extends TestCase
         return $user;
     }
 
-    public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null, bool $isPrimary = true)
+    public function createUser(?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null, bool $isPrimary = true, ?int $deputyUid = null)
     {
         $faker = Factory::create('en_GB');
 
@@ -58,8 +58,11 @@ class UserTestHelper extends TestCase
             ->setAddressCountry('GB')
             ->setAddressPostcode($faker->postcode())
             ->setAgreeTermsUse(true)
-            ->setIsPrimary($isPrimary)
-            ->setDeputyUid(intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT)));
+            ->setIsPrimary($isPrimary);
+
+        if (str_contains($roleName, 'LAY')) {
+            $user->setDeputyUid($deputyUid ?: intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT)));
+        }
 
         if (!is_null($client)) {
             $user->addClient($client);

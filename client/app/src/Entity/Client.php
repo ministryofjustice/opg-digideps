@@ -1036,4 +1036,20 @@ class Client
 
         return null;
     }
+
+    /**
+     * @return array $reportIds
+     */
+    public function getReportIds()
+    {
+        $reportIds = [];
+
+        if (!empty($this->reports)) {
+            foreach ($this->reports as $report) {
+                $reportIds[] = $report->getId();
+            }
+        }
+
+        return $reportIds;
+    }
 }

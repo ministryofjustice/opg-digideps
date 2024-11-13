@@ -25,6 +25,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "scan_security_group" {
   source      = "./modules/security_group"
   description = "Scan Service"

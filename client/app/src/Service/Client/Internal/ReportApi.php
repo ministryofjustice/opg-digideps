@@ -15,8 +15,6 @@ use App\Exception\DisplayableException;
 use App\Exception\ReportSubmittedException;
 use App\Exception\RestClientException;
 use App\Service\Client\RestClient;
-use DateTime;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
@@ -26,8 +24,6 @@ class ReportApi
     private const REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
     private const REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
     private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
-    private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT_JWT = 'report/all-with-queued-checklists-jwt';
-
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
     /** @var RestClient */
@@ -93,10 +89,10 @@ class ReportApi
     }
 
     /**
+     * @return Report
+     *
      * @throws DisplayableException  if report doesn't have specified section
      * @throws NotFoundHttpException if report is submitted
-     *
-     * @return Report
      */
     public function getReportIfNotSubmitted(int $reportId, array $groups = [])
     {
@@ -156,7 +152,7 @@ class ReportApi
 
     public function unsubmit(Report $report, User $user, string $trigger): void
     {
-        $report->setUnSubmitDate(new DateTime());
+        $report->setUnSubmitDate(new \DateTime());
         $uri = sprintf(self::REPORT_UNSUBMIT_ENDPOINT, $report->getId());
 
         $this->restClient->put($uri, $report, [
@@ -198,26 +194,6 @@ class ReportApi
             ['row_limit' => $rowLimit],
             'Report\Report[]',
             [],
-            false
-        );
-    }
-
-    // Duplicating above function until DDPB-4469 is played
-    /**
-     * @return Report[]
-     */
-    public function getReportsWithQueuedChecklistsJwt(Request $request, string $rowLimit): array
-    {
-        return $this->restClient->apiCall(
-            'get',
-            self::REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT_JWT,
-            ['row_limit' => $rowLimit],
-            'Report\Report[]',
-            [
-                'headers' => [
-                    'JWT' => $request->headers->get('JWT'),
-                ],
-            ],
             false
         );
     }

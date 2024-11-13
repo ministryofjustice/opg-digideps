@@ -7,6 +7,8 @@ import (
 	"sync"
 )
 
+// Use this when you want to exclude certain fields for certain rows from anonymisation.
+// For those field/rows, it reapplies the original data.
 func UpdateSelectedColumnsFromPublic(
 	db *sql.DB,
 	tableName string,
@@ -27,7 +29,7 @@ func UpdateSelectedColumnsFromPublic(
 	if whereTerm != "" {
 		query += fmt.Sprintf(" AND pub.%s LIKE '%%%s%%'", whereColumn, whereTerm)
 	}
-	fmt.Print(query)
+	fmt.Println(query)
 	// Execute the update query
 	_, err := db.Exec(query)
 	if err != nil {

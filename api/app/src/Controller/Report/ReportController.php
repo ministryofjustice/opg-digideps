@@ -80,6 +80,7 @@ class ReportController extends RestController
      * Pa report are instead created via OrgService::createReport().
      *
      * @Route("", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -89,7 +90,7 @@ class ReportController extends RestController
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
         }
-        $client = $this->findEntityBy(EntityDir\Client::class, $reportData['client']['id']);
+        $client = $this->findEntityBy(Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
         $this->formatter->validateArray($reportData, [
@@ -112,6 +113,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      *
      * @param int $id
@@ -126,15 +128,15 @@ class ReportController extends RestController
         $this->formatter->setJmsSerialiserGroups($groups);
 
         /* @var $report Report */
-        if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        if ($this->isGranted(User::ROLE_ADMIN)) {
             /** @var SoftDeleteableFilter $filter */
             $filter = $this->em->getFilters()->getFilter('softdeleteable');
-            $filter->disableForEntity(EntityDir\Client::class);
+            $filter->disableForEntity(Client::class);
 
-            $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
+            $report = $this->findEntityBy(Report::class, $id);
             $this->em->getFilters()->enable('softdeleteable');
         } else {
-            $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
+            $report = $this->findEntityBy(Report::class, $id);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 
@@ -143,11 +145,12 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id)
     {
-        $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+        $currentReport = $this->findEntityBy(Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
 
@@ -183,15 +186,16 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
      */
     public function update(Request $request, $id)
     {
         /* @var $report Report */
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+        $report = $this->findEntityBy(Report::class, $id, 'Report not found');
 
         // deputies can only edit their own reports
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 
@@ -429,7 +433,7 @@ class ReportController extends RestController
                 Report::SECTION_MONEY_IN,
             ]);
         }
-      
+
         if (array_key_exists('money_out_exists', $data)) {
             $report->setMoneyOutExists($data['money_out_exists']);
             $report->updateSectionsStatusCache([
@@ -562,12 +566,13 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function unsubmit(Request $request, $id)
     {
         /** @var Report $report */
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+        $report = $this->findEntityBy(Report::class, $id, 'Report not found');
         if (!$report->getSubmitted()) {
             throw new \RuntimeException('Cannot unsubmit an active report');
         }
@@ -596,6 +601,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/get-all-by-user", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ORG')")
      *
      * @throws NonUniqueResultException
@@ -689,8 +695,6 @@ class ReportController extends RestController
     }
 
     /**
-     * @param mixed $orgIdsOrUserId
-     *
      * @throws \Exception
      */
     private function getReportCountsByStatus(Request $request, $orgIdsOrUserId, int $determinant): array
@@ -722,6 +726,7 @@ class ReportController extends RestController
 
     /**
      * @Route("/get-all-by-orgs", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ORG')")
      *
      * @return array
@@ -745,12 +750,13 @@ class ReportController extends RestController
 
     /**
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function submitDocuments($id)
     {
         /* @var Report $currentReport */
-        $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+        $currentReport = $this->findEntityBy(Report::class, $id, 'Report not found');
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
 
         /** @var User $user */
@@ -765,6 +771,7 @@ class ReportController extends RestController
      * Add a checklist for the report.
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function insertChecklist(Request $request, $report_id)
@@ -773,7 +780,7 @@ class ReportController extends RestController
         $user = $this->getUser();
 
         /** @var Report $report */
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+        $report = $this->findEntityBy(Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
@@ -839,6 +846,7 @@ class ReportController extends RestController
      * Update a checklist for the report.
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function updateChecklist(Request $request, $report_id)
@@ -847,7 +855,7 @@ class ReportController extends RestController
         $user = $this->getUser();
 
         /** @var Report $report */
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+        $report = $this->findEntityBy(Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
@@ -879,6 +887,7 @@ class ReportController extends RestController
      * Get a checklist for the report.
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function getChecklist(Request $request, $report_id)
@@ -896,6 +905,7 @@ class ReportController extends RestController
      * Update a checklist for the report.
      *
      * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upsertChecklist(Request $request, $report_id)
@@ -904,7 +914,7 @@ class ReportController extends RestController
         $user = $this->getUser();
 
         /** @var Report $report */
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+        $report = $this->findEntityBy(Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
@@ -941,41 +951,6 @@ class ReportController extends RestController
      */
     public function getReportsWithQueuedChecklists(Request $request): array
     {
-        if (!$this->authService->isSecretValid($request)) {
-            throw new UnauthorisedException('client secret not accepted.');
-        }
-
-        /** @var array $data */
-        $data = $this->formatter->deserializeBodyContent($request);
-
-        /** @var ReportRepository $reportRepo */
-        $reportRepo = $this->em->getRepository(Report::class);
-        $queuedReportIds = $reportRepo->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(intval($data['row_limit']));
-
-        $reports = [];
-        foreach ($queuedReportIds as $reportId) {
-            $filter = $this->em->getFilters()->getFilter('softdeleteable');
-            $filter->disableForEntity(Client::class);
-
-            $reports[] = $this->findEntityBy(Report::class, $reportId);
-        }
-
-        $this->formatter->setJmsSerialiserGroups($this->checklistGroups);
-
-        return $reports;
-    }
-
-    // Duplicating above function until DDPB-4469 is played
-    /**
-     * @Route("/all-with-queued-checklists-jwt", methods={"GET"})
-     *
-     * @throws DBALException
-     */
-    public function getReportsWithQueuedChecklistsJwt(Request $request): array
-    {
-        if (!$this->authService->JWTIsValid($request)) {
-            throw new UnauthorisedException('JWT is not valid');
-        }
         if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
         }

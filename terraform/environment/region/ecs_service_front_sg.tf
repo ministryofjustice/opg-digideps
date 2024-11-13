@@ -1,3 +1,4 @@
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "front_service_security_group" {
   source      = "./modules/security_group"
   description = "Front Service"
@@ -65,12 +66,12 @@ locals {
       target_type = "security_group_id"
       target      = module.mock_sirius_integration_security_group.id
     }
-    synchronise_lambda = {
-      port        = 443
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.lamdba_synchronisation.lambda_sg.id
-    }
+    #    synchronise_lambda = {
+    #      port        = 443
+    #      type        = "ingress"
+    #      protocol    = "tcp"
+    #      target_type = "security_group_id"
+    #      target      = module.lamdba_synchronisation.lambda_sg.id
+    #    }
   }
 }

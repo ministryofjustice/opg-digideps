@@ -31,6 +31,17 @@ data "aws_iam_policy_document" "resilience_tests" {
   }
 
   statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
+  }
+
+  statement {
     sid    = "AllowFISRunExperiments"
     effect = "Allow"
     actions = [
@@ -73,6 +84,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "resilience_tests_security_group" {
   source      = "./modules/security_group"
   name        = "resilience-tests"

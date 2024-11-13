@@ -25,9 +25,9 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\Storage\S3Storage;
-use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -113,38 +113,49 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/lay", name="lay_home")
-     * //TODO we should add Security("is_granted('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
+     * @Route("/lay", name="lay_home_deprecated")
+     *
+     * @Template("@App/Report/Report/index.html.twig")
+     *
+     * @return RedirectResponse
+     */
+    public function indexAction()
+    {
+        // Moved to ClientController::indexAction()
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/client/{clientId}", name="lay_home")
      *
      * @Template("@App/Report/Report/index.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector, ParameterStoreService $parameterStoreService)
+    public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
         $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-        $userEmail = $user->getEmail();
 
-        $isMultiClientFeatureEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS);
+        // redirect back to log out page if signing in with non-primary account with primary email
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-        if ('1' == $isMultiClientFeatureEnabled) {
-            // redirect back to log out page if signing in with non-primary account with primary email
-            if (!$user->getIsPrimary()) {
-                $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+            $this->addFlash('nonPrimaryRedirect',
+                [
+                    'sentenceOne' => 'This account has been closed.',
+                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                    'primaryEmail' => $primaryEmail,
+                ]
+            );
 
-                $this->addFlash('nonPrimaryRedirect',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                        'primaryEmail' => $primaryEmail,
-                    ]
-                );
-
-                return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
-            }
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
+
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -152,21 +163,64 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $clients = $user->getClients();
-        if (empty($clients)) {
-            throw $this->createNotFoundException('Client not added');
-        }
-        $client = array_shift($clients);
-
-        // refresh client adding codeputes (another API call to avoid recursion with users)
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
+        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
             'user' => $user,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
-            'client' => $client,
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
+            'client' => $clientWithCoDeputies,
             'coDeputies' => $coDeputies,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
+        ];
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/choose-a-client", name="choose_a_client")
+     *
+     * @Security("is_granted('ROLE_LAY_DEPUTY')")     *
+     *
+     * @Template("@App/Index/choose-a-client.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function chooseAClientAction(Redirector $redirector)
+    {
+        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
+
+        // redirect back to log out page if signing in with non-primary account with primary email
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+
+            $this->addFlash('nonPrimaryRedirect',
+                [
+                    'sentenceOne' => 'This account has been closed.',
+                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                    'primaryEmail' => $primaryEmail,
+                ]
+            );
+
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        }
+
+        // redirect if user has missing details or is on wrong page
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
+        if (is_string($route)) {
+            return $this->redirectToRoute($route);
+        }
+
+        $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
+        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), $groups);
+
+        if (empty($clients)) {
+            throw $this->createNotFoundException('Client not added');
+        }
+
+        return [
+            'user' => $user,
+            'clients' => $clients,
         ];
     }
 
@@ -192,7 +246,7 @@ class ReportController extends AbstractController
         $editReportDatesForm = $this->formFactory->createNamed('report_edit', ReportType::class, $report, ['translation_domain' => 'report']);
         $returnLink = $user->isDeputyOrg()
             ? $this->clientApi->generateClientProfileLink($report->getClient())
-            : $this->generateUrl('lay_home');
+            : $this->generateUrl('lay_home', ['clientId' => $client->getId()]);
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
@@ -267,7 +321,7 @@ class ReportController extends AbstractController
      *
      * @return RedirectResponse|Response|null
      */
-    public function overviewAction(Redirector $redirector, $reportId, ParameterStoreService $parameterStore, Request $request)
+    public function overviewAction(Redirector $redirector, $reportId)
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -313,12 +367,17 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
+        $deputyHasMultiClients = !$user->isDeputyOrg() && $this->clientApi->checkDeputyHasMultiClients(
+            $user->getDeputyUid()
+        );
+
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ]);
     }
 
@@ -453,7 +512,7 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'homePathName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
+            'homePageName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
         ];
     }
 
@@ -481,7 +540,7 @@ class ReportController extends AbstractController
         if ($user->isDeputyOrg()) {
             $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
         } else {
-            $backLink = $this->generateUrl('lay_home');
+            $backLink = $this->generateUrl('lay_home', ['clientId' => $report->getClient()->getId()]);
         }
 
         if (!$report->isSubmitted()) {
@@ -654,7 +713,7 @@ class ReportController extends AbstractController
             'phone' => ['main' => $client->getPhone()],
             'email' => $client->getEmail(),
             'editUrl' => $currentUser->isLayDeputy() ?
-                $this->generateUrl('client_edit', ['from' => 'declaration']) :
+                $this->generateUrl('client_edit', ['clientId' => $client->getId(), 'from' => 'declaration']) :
                 $this->generateUrl('org_client_edit', ['clientId' => $client->getId(), 'from' => 'declaration']),
         ];
     }

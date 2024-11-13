@@ -431,4 +431,27 @@ MESSAGE;
         $this->em->persist($client);
         $this->em->flush();
     }
+
+    /**
+     * @Given /^I select the first client from the Choose a Client page$/
+     */
+    public function iSelectTheFirstClient()
+    {
+        $firstClientId = $this->loggedInUserDetails->getClientId();
+        $this->visitPath('/client/'.$firstClientId);
+    }
+
+    /**
+     * @When /^I select the "([^"]*)" link I should see the details of the chosen client$/
+     */
+    public function iSelectTheLinkIShouldSeeTheDetailsOfTheChosenClient($link)
+    {
+        $this->clickLink($link);
+
+        $firstClientId = $this->loggedInUserDetails->getClientId();
+        $client = $this->em->find(Client::class, $firstClientId);
+
+        $this->assertPageContainsText(sprintf('%s\'s details', $client->getFirstname()));
+        $this->assertPageContainsText($client->getCaseNumber());
+    }
 }

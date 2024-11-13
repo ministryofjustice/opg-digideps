@@ -30,7 +30,6 @@ awslocal s3api put-bucket-policy \
 awslocal ssm put-parameter --name "/local/flag/checklist-sync" --value "1" --type String --overwrite
 awslocal ssm put-parameter --name "/local/flag/document-sync" --value "1" --type String --overwrite
 awslocal ssm put-parameter --name "/local/flag/paper-reports" --value "0" --type String --overwrite
-awslocal ssm put-parameter --name "/local/flag/multi-accounts" --value "0" --type String --overwrite
 
 awslocal ssm put-parameter --name "/local/parameter/checklist-sync-row-limit" --value "100" --type String --overwrite
 awslocal ssm put-parameter --name "/local/parameter/document-sync-interval-minutes" --value "4" --type String --overwrite
@@ -53,5 +52,6 @@ b64headandpay="${b64headers}.${b64payload}"
 b64digest=$(echo -n ${b64headandpay} | openssl dgst -sha256 -sign private.pem -binary | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
 b64jwt=${b64headandpay}.${b64digest}
 
-awslocal secretsmanager create-secret --name "local/synchronisation-jwt-token" --secret-string ${b64jwt}
 rm private.pem public.pem
+
+awslocal secretsmanager create-secret --name "local/custom-sql-db-password" --secret-string "api"

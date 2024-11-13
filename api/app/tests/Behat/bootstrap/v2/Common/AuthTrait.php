@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
 trait AuthTrait
 {
-    private string $primaryEmailAddress;
-
     /**
      * @Given :email logs in
      */
@@ -317,6 +316,18 @@ trait AuthTrait
     }
 
     /**
+     * @Then /^I should be redirected and denied access to continue as client not found$/
+     */
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFound()
+    {
+        $this->assertIntEqualsInt(
+            '404',
+            $this->getSession()->getStatusCode(),
+            'Status code after accessing endpoint'
+        );
+    }
+
+    /**
      * @Given /^a Lay Deputy has multiple client accounts$/
      */
     public function aDeputyHasMultipleClientAccounts()
@@ -341,11 +352,14 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^a Lay Deputy tries to login with their "([^"]*)" email address$/
+     * @Given /^a Lay Deputy tries to login with their "(primary|non-primary)" email address$/
      */
-    public function aLayDeputyTriesToLoginWithTheirEmailAddress($arg1)
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary)
     {
-        $userEmail = 'non-primary' === $arg1 ? $this->layDeputyNotStartedPfaNotPrimaryUser->getUserEmail() : $this->primaryEmailAddress;
+        $this->loggedInUserDetails = 'primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
+            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
 
         $this->visitPath('/login');
         $this->fillField('login_email', $userEmail);
@@ -366,7 +380,9 @@ trait AuthTrait
      */
     public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
     {
-        $alertMessage = sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s', $this->primaryEmailAddress);
+        $alertMessage =
+            sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s',
+                $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail());
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
@@ -387,7 +403,7 @@ trait AuthTrait
      */
     public function theUserTriesToAccessTheirClientsReportOverviewPage()
     {
-        $activeReportId = $this->layDeputyNotStartedPfaNotPrimaryUser->getCurrentReportId();
+        $activeReportId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getCurrentReportId();
 
         $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
         $this->visitPath($reportOverviewUrl);
@@ -406,5 +422,134 @@ trait AuthTrait
 
         $this->assertPageNotContainsText('This account is closed');
         $this->assertElementNotOnPage('govuk-notification-banner__content');
+    }
+
+    /**
+     * @When /^they choose their "(primary|non-primary)" Client$/
+     */
+    public function theyChooseTheirFirstClient($isPrimary)
+    {
+        $clientId = 'primary' == $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
+            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+
+        $urlRegex = sprintf('/client\/%d$/', $clientId);
+
+        $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
+     * @Given /^have access to all active client dashboards$/
+     */
+    public function haveAccessToAllActiveClientDashboards()
+    {
+        $this->getActiveClientIds();
+
+        if (count($this->activeClientIds) > 1) {
+            foreach ($this->activeClientIds as $activeClientId) {
+                $urlRegex = sprintf('/client\/%d$/', $activeClientId);
+                $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+                $this->iAmOnPage($urlRegex);
+                $this->clickLink('Your reports');
+            }
+        } else {
+            $urlRegex = sprintf('/client\/%d$/', $this->activeClientIds[0]);
+            $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+            $this->iAmOnPage('/client\/%d$/');
+        }
+    }
+
+    /**
+     * @Then /^they should be on the "(primary|non-primary)" Client's dashboard$/
+     */
+    public function theyShouldBeOnThatClientSDashboard($isPrimary)
+    {
+        if ('primary' == $isPrimary) {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+            $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientFirstName();
+            $clientLastName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientLastName();
+        } else {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+            $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientFirstName();
+            $clientLastName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientLastName();
+        }
+
+        $this->iAmOnPage(sprintf('/client\/%d$/', $clientId));
+        $this->assertPageContainsText($clientFirstName);
+        $this->assertPageContainsText($clientLastName);
+    }
+
+    /**
+     * @When /^they try to access their "(primary|secondary)" discharged Client$/
+     */
+    public function theyChooseTheirDischargedClient($isPrimary)
+    {
+        if ('primary' == $isPrimary) {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+        } else {
+            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+        }
+
+        $urlRegex = sprintf('/client\/%d$/', $clientId);
+
+        $this->visitPath($urlRegex);
+    }
+
+    /**
+     * @Given /^they discharge the deputy from "([^"]*)" secondary client\(s\)$/
+     */
+    public function theyDischargeTheDeputyFromNonPrimaryClient($countOfClientAccounts)
+    {
+        if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
+        }
+
+        $this->getActiveClientIds();
+
+        if (1 == $countOfClientAccounts) {
+            $this->iVisitClientDetailsUrl($this->activeClientIds[0]);
+
+            $this->clickLink('Discharge deputy');
+            $this->iAmOnAdminClientDischargePage();
+            $this->clickLink('Discharge deputy');
+        } else {
+            foreach ($this->activeClientIds as $clientId) {
+                $this->iVisitClientDetailsUrl($clientId);
+
+                $this->clickLink('Discharge deputy');
+                $this->iAmOnAdminClientDischargePage();
+                $this->clickLink('Discharge deputy');
+            }
+        }
+    }
+
+    /**
+     * @Then /^should arrive on the client dashboard of their only active client$/
+     */
+    public function shouldArriveOnTheClientDashboardOfTheirOnlyActiveClient()
+    {
+        $singleActiveClient = 0;
+
+        foreach ($this->activeClientIds as $activeClientId) {
+            $isClientStillActive = $this->em->getRepository(Client::class)->find($activeClientId);
+            if (null == $isClientStillActive->getDeletedAt()) {
+                $singleActiveClient = $activeClientId;
+            }
+        }
+
+        $this->iAmOnPage(sprintf('/client\/%d$/', $singleActiveClient));
+    }
+
+    private function getActiveClientIds(): void
+    {
+        foreach ($this->fixtureUsers as $fixtureUser) {
+            if (null != $fixtureUser && 'ROLE_SUPER_ADMIN' != $fixtureUser->getUserRole()) {
+                $clientId = $fixtureUser->getClientId();
+                $activeClient = $this->em->getRepository(Client::class)->find($clientId);
+
+                if (null == $activeClient->getDeletedAt()) {
+                    $this->activeClientIds[] = $clientId;
+                }
+            }
+        }
     }
 }

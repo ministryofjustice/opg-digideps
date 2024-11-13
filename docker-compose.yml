@@ -267,3 +267,24 @@ services:
   composer:
     image: composer:2.5.8
     command: ["install"]
+
+  custom-sql-query:
+    image: custom-sql-query:latest
+    build:
+      context: lambdas/functions/custom_sql_query
+      dockerfile: Dockerfile
+    ports:
+      - 9070:8080
+    depends_on:
+      - localstack
+      - postgres
+    volumes:
+      - ./lambdas/.aws-lambda-rie:/aws-lambda
+      - ./lambdas/functions/custom_sql_query/app:/function/app
+    environment:
+      ENVIRONMENT: local
+      DATABASE_HOSTNAME: postgres
+      DATABASE_NAME: api
+      DATABASE_USERNAME: custom_sql_user
+      DATABASE_PORT: 5432
+    entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.sql_query.lambda_handler

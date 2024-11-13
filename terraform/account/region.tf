@@ -12,6 +12,8 @@ module "eu_west_1" {
     aws            = aws.digideps_eu_west_1
     aws.management = aws.management_eu_west_1
     aws.global     = aws.global
+    aws.eu_west_1  = aws.digideps_eu_west_1
+    aws.eu_west_2  = aws.digideps_eu_west_2
   }
 }
 
@@ -27,5 +29,7 @@ module "eu_west_2" {
     aws            = aws.digideps_eu_west_2
     aws.management = aws.management_eu_west_2
     aws.global     = aws.global
+    aws.eu_west_1  = aws.digideps_eu_west_1
+    aws.eu_west_2  = aws.digideps_eu_west_2
   }
 }

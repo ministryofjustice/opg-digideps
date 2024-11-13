@@ -1,0 +1,5 @@
+{
+  "procedure": "revoke_custom_query",
+  "calling_user": "bob.smith",
+  "query_id": 2
+}

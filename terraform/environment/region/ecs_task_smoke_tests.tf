@@ -15,6 +15,17 @@ data "aws_iam_policy_document" "smoke_tests" {
       data.aws_secretsmanager_secret.smoke_tests_variables.arn
     ]
   }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "smoke_tests" {
@@ -41,6 +52,7 @@ locals {
   }
 }
 
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "smoke_tests_security_group" {
   source      = "./modules/security_group"
   name        = "smoke-tests"

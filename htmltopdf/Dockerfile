@@ -1,10 +1,10 @@
-FROM python:3.10-alpine3.18
+FROM python:3.12-alpine3.19
 
 ENV PYTHONUNBUFFERED 1
 
 RUN addgroup -S htmltopdf && adduser -S htmltopdf -G htmltopdf
 RUN apk --update --upgrade --no-cache add \
-    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl libwebp tiff libcrypto1.1 libssl1.1 ncurses-libs ncurses-terminfo-base libwebp
+    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl libwebp tiff libcrypto3 libssl3 ncurses-libs ncurses-terminfo-base libwebp
 
 
 RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font \

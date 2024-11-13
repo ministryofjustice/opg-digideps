@@ -28,6 +28,13 @@ locals {
       target_type = "security_group_id"
       target      = module.integration_tests.security_group_id
     }
+    custom_sql_lambda = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.lamdba_custom_sql_query.lambda_sg.id
+    }
   }
 }
 

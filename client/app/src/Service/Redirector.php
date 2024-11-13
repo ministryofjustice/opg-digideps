@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Service\Client\Internal\ClientApi;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -10,6 +11,13 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * getFirstPageAfterLogin() called after authentication
+ * getHomepageRedirect() called if returning to base domain
+ * Both methods have self-contained logic for prof/pa and admin landing pages
+ * For lays both will direct to getLayDeputyHomepage(), which calls to getCorrectRouteIfDifferent()
+ * This logic is used to determine which page the user should be directed to depending on their status (NDR/Co-Deputy/Multi-client).
+ */
 class Redirector
 {
     /**
@@ -39,7 +47,8 @@ class Redirector
         protected AuthorizationCheckerInterface $authChecker,
         protected RouterInterface $router,
         protected Session $session,
-        protected string $env
+        protected string $env,
+        private ClientApi $clientApi
     ) {
     }
 
@@ -73,14 +82,14 @@ class Redirector
                 return $this->router->generate('org_dashboard');
             }
         } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            return $this->getLayDeputyHomepage($user, false);
+            return $this->getCorrectLayHomepage();
         } else {
             return $this->router->generate('access_denied');
         }
     }
 
     /**
-     * //TODO refactor remove. seeem overcomplicated.
+     * //TODO refactor remove. seem overcomplicated.
      *
      * @param string $currentRoute
      *
@@ -88,9 +97,17 @@ class Redirector
      */
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
+        // Check if user has multiple clients
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        $multiClientDeputy = !is_null($clients) && count($clients) > 1;
+
         // Redirect to appropriate homepage
         if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+            if ($multiClientDeputy) {
+                $route = 'lay_home';
+            } else {
+                $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+            }
         }
 
         // none of these corrections apply to admin
@@ -98,7 +115,11 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+                    if ($multiClientDeputy) {
+                        $route = 'lay_home';
+                    } else {
+                        $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
+                    }
                 }
 
                 // unverified codeputy invitation
@@ -109,7 +130,9 @@ class Redirector
                 if (!$user->isDeputyOrg()) {
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
-                        $route = 'client_add';
+                        if (0 == count($clients)) {
+                            $route = 'client_add';
+                        }
                     }
 
                     // incomplete user info
@@ -126,7 +149,7 @@ class Redirector
     /**
      * @return string
      */
-    private function getLayDeputyHomepage(User $user, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(User $user, $activeClientId = null, $enabledLastAccessedUrl = false)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -139,11 +162,19 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        if (0 == $user->getNumberOfReports()) {
+        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+
+        foreach ($allActiveClients as $activeClient) {
+            if (count($activeClient->getReportIds()) >= 1) {
+                break;
+            }
+
             return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
-        return $this->router->generate('lay_home');
+        // check if last remaining active client is linked to non-primary account if so retrieve id
+        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
+            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
     /**
@@ -203,9 +234,45 @@ class Redirector
 
         // deputy: if logged, redirect to overview pages
         if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->getLayDeputyHomepage($this->getLoggedUser(), false);
+            return $this->getCorrectLayHomepage();
         }
 
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    private function getChooseAClientHomepage(User $user, $enabledLastAccessedUrl = false)
+    {
+        // checks if user has missing details or is NDR
+        if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
+            return $this->router->generate($route);
+        }
+
+        // last accessed url
+        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
+            return $lastUsedUri;
+        }
+
+        return $this->router->generate('choose_a_client');
+    }
+
+    private function getCorrectLayHomepage()
+    {
+        $user = $this->getLoggedUser();
+
+        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
+
+        if (!(null === $clients)) {
+            if (1 < count($clients)) {
+                return $this->getChooseAClientHomepage($user);
+            } else {
+                return $this->getLayDeputyHomepage($user, $activeClientId);
+            }
+        } else {
+            return $this->getLayDeputyHomepage($user);
+        }
     }
 }

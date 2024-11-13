@@ -27,8 +27,7 @@ data "aws_iam_policy_document" "api_permissions" {
       aws_ssm_parameter.flag_document_sync.arn,
       aws_ssm_parameter.document_sync_row_limit.arn,
       aws_ssm_parameter.flag_checklist_sync.arn,
-      aws_ssm_parameter.checklist_sync_row_limit.arn,
-      aws_ssm_parameter.flag_multi_accounts.arn
+      aws_ssm_parameter.checklist_sync_row_limit.arn
     ]
   }
 
@@ -46,6 +45,17 @@ data "aws_iam_policy_document" "api_permissions" {
   }
 
   statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
+    ]
+  }
+
+  statement {
     sid    = "ApiGetSiriusS3Bucket"
     effect = "Allow"
     actions = [
@@ -54,6 +64,17 @@ data "aws_iam_policy_document" "api_permissions" {
     resources = [
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
       "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
+    ]
+  }
+
+  statement {
+    sid    = "ApiKMSSiriusS3Decrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+    ]
+    resources = [
+      "arn:aws:kms:eu-west-1:${var.account.sirius_api_account}:key/*"
     ]
   }
 }

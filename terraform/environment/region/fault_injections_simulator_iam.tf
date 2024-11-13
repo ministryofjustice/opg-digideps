@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "fault_injection_simulator_create_fis_service_lin
   statement {
     sid       = "AllowServiceLinkedRole"
     effect    = "Allow"
-    resources = ["*"] #tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["*"] #trivy:ignore:avd-aws-0057
     actions = [
       "iam:CreateServiceLinkedRole",
     ]
@@ -92,7 +92,7 @@ data "aws_iam_policy_document" "ssm_register_instance_permissions" {
   statement {
     sid       = "AllowSSMCommands"
     effect    = "Allow"
-    resources = ["*"] #tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["*"] #trivy:ignore:avd-aws-0057
     actions = [
       "ssm:CreateActivation",
       "ssm:AddTagsToResource",
@@ -102,7 +102,7 @@ data "aws_iam_policy_document" "ssm_register_instance_permissions" {
   statement {
     sid       = "ManagedInstancePermissions"
     effect    = "Allow"
-    resources = ["*"] #tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["*"] #trivy:ignore:avd-aws-0057
     actions = [
       "ssm:DeleteActivation",
       "ssm:DeregisterManagedInstance",

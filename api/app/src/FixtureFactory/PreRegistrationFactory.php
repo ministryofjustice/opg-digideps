@@ -20,7 +20,8 @@ class PreRegistrationFactory
     public function create(array $data): PreRegistration
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
-        $deputyNumber = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
+        $generateDeputyUidIfNotSet = '7'.str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT);
+        $deputyUid = array_key_exists('deputyUid', $data) && strval($data['deputyUid']) ? strval($data['deputyUid']) : $generateDeputyUidIfNotSet;
         $reportType = 'ndr' == $data['reportType'] ? 'OPG102' : $data['reportType'];
 
         $dto = (new LayPreRegistrationDto())

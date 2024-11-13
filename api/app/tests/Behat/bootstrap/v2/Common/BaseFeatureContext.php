@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use App\Entity\Client;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
@@ -50,7 +51,6 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $superAdminDetails;
 
     public UserDetails $layDeputyNotStartedPfaHighAssetsDetails;
-    public UserDetails $layDeputyNotStartedPfaNotPrimaryUser;
     public UserDetails $layDeputyCompletedPfaHighAssetsDetails;
     public UserDetails $layDeputySubmittedPfaHighAssetsDetails;
 
@@ -65,6 +65,10 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layDeputyNotStartedCombinedHighDetails;
     public UserDetails $layDeputyCompletedCombinedHighDetails;
     public UserDetails $layDeputySubmittedCombinedHighDetails;
+
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser;
 
     public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
@@ -120,6 +124,7 @@ class BaseFeatureContext extends MinkContext
 
     protected Application $application;
     public BufferedOutput $output;
+    private array $activeClientIds;
 
     public function __construct(
         protected readonly FixtureHelper $fixtureHelper,
@@ -609,29 +614,54 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @multi-feature-flag-enabled
+     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy
      */
-    public function theMultiAccountFeatureFlagIsSetToTrue(): void
+    public function createLayPfaHighNotStartedMultiClientDeputy()
     {
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '1');
+        $deputyUid = 123456789000 + rand(1, 999);
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
     }
 
     /**
-     * @AfterScenario @multi-feature-flag-enabled
+     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-with-ndr
      */
-    public function theMultiAccountFeatureFlagIsSetToFalse(): void
+    public function createLayPfaHighNotStartedMultiClientDeputyWithNdr()
     {
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_MULTI_ACCOUNTS, '0');
+        $deputyUid = 123456788000 + rand(1, 999);
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStartedWithNdr($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
     }
 
     /**
-     * @BeforeScenario @lay-pfa-high-not-started-not-primary
+     * @BeforeScenario @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
      */
-    public function createPfaHighNotStartedNonPrimaryUser(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null, ?bool $isPrimary = false)
+    public function createLayPfaHighNotStartedMultiClientDeputyWithActiveAndDischargedClients()
     {
-        $userDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, $isPrimary, $caseNumber));
-        $this->fixtureUsers[] = $this->layDeputyNotStartedPfaNotPrimaryUser = $userDetails;
+        $deputyUid = 123456789000 + rand(1, 999);
 
-        return $userDetails;
+        // generate a second test run id for second non-primary user
+        $testRunId = (string) (time() + rand());
+
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetailsOne = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetailsTwo = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($testRunId, null, $deputyUid));
+
+        // Discharge client linked to primary account
+        $primaryDischargedClientId = $primaryUserDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find($primaryDischargedClientId);
+        $client->setDeletedAt(new \DateTime('now'));
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetailsOne;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser = $nonPrimaryUserDetailsTwo;
     }
 }

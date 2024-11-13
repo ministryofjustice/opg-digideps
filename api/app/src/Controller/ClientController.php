@@ -48,7 +48,9 @@ class ClientController extends RestController
         } else {
             $client = $this->findEntityBy(EntityDir\Client::class, $data['id'], 'Client not found');
             if (!$this->isGranted('edit', $client)) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
+                if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                    throw $this->createAccessDeniedException('Client does not belong to user');
+                }
             }
         }
 
@@ -113,7 +115,9 @@ class ClientController extends RestController
         }
 
         if (!$this->isGranted('view', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         return $client;
@@ -165,7 +169,9 @@ class ClientController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         if (!$this->isGranted('edit', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         $client->setArchivedAt(new \DateTime());
@@ -251,5 +257,21 @@ class ClientController extends RestController
         $this->em->flush();
 
         return ['clientId' => $id, 'deputyId' => $deputyId];
+    }
+
+    /**
+     * Endpoint for getting the clients for a deputy uid.
+     *
+     * @Route("/get-all-clients-by-deputy-uid/{deputyUid}", methods={"GET"})
+     *
+     * @throws \Exception
+     */
+    public function getAllClientsByDeputyUid(Request $request, int $deputyUid)
+    {
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['client'];
+        $this->formatter->setJmsSerialiserGroups($serialisedGroups);
+
+        return $this->repository->getAllClientsAndReportsByDeputyUid($deputyUid);
     }
 }

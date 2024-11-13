@@ -1,4 +1,5 @@
 # INFO - Table used for holding locks on environments for our environment cleanup job
+#trivy:ignore:avd-aws-0024 ignore:avd-aws-0025 - point in time recovery not needed as transient data
 resource "aws_dynamodb_table" "workspace_cleanup_table" {
   count        = var.account.name == "development" ? 1 : 0
   name         = "WorkspaceCleanup"
@@ -21,6 +22,7 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
 }
 
 # INFO - Table used for working out which IP addresses should be blocked on our WAF
+#trivy:ignore:avd-aws-0024 ignore:avd-aws-0025 - point in time recovery not needed as transient data
 resource "aws_dynamodb_table" "blocked_ips_table" {
   name         = "BlockedIPs"
   billing_mode = "PAY_PER_REQUEST"

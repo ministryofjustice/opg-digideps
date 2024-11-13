@@ -259,6 +259,39 @@ class FixtureHelper
         }
     }
 
+    private function addReportsToClient(
+        Client $client,
+        ?User $user = null,
+        bool $completed = false,
+        bool $submitted = false,
+        ?string $type = null,
+        ?\DateTime $startDate = null,
+        ?int $satisfactionScore = null,
+    ) {
+        $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
+
+        $client->addReport($report);
+        $report->setClient($client);
+
+        if ($completed) {
+            $this->reportTestHelper->completeLayReport($report, $this->em);
+        }
+
+        if ($submitted) {
+            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
+            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
+            $this->reportTestHelper->submitReport($report, $this->em);
+        }
+
+        $this->em->persist($client);
+        $this->em->persist($report);
+
+        if ($submitted and isset($satisfactionScore) and isset($user)) {
+            $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
+            $this->em->persist($satisfaction);
+        }
+    }
+
     private function storeFileInS3(string $bucketName, string $key)
     {
         $filePath = sprintf('%s/fixtures/%s', dirname(__DIR__, 3), 'good.pdf');
@@ -395,7 +428,7 @@ class FixtureHelper
         return $client;
     }
 
-    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null): array
+    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -407,8 +440,34 @@ class FixtureHelper
             false,
             null,
             null,
-            $caseNumber
+            $caseNumber,
+            false,
+            true,
+            $deputyUid
         );
+
+        return self::buildUserDetails($user);
+    }
+
+    public function createLayPfaHighAssetsNotStartedWithNdr(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
+    {
+        $user = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-pfa-high-assets-not-started-with-ndr',
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
+            false,
+            false,
+            true,
+            null,
+            null,
+            $caseNumber,
+            false,
+            true,
+            $deputyUid
+        );
+
+        $this->addReportsToClient($user->getFirstClient(), $user);
 
         return self::buildUserDetails($user);
     }
@@ -861,7 +920,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createLayNdrNotStarted(string $testRunId): array
+    public function createLayNdrNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -870,7 +929,13 @@ class FixtureHelper
             Report::LAY_HW_TYPE,
             false,
             false,
-            true
+            true,
+            null,
+            null,
+            $caseNumber,
+            true,
+            false,
+            $deputyUid
         );
 
         return self::buildUserDetails($user);
@@ -1023,12 +1088,12 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, bool $isPrimary, ?string $caseNumber = null): array
+    public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
-            'lay-pfa-high-assets-not-started',
+            'lay-pfa-high-assets-not-started-non-primary',
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
@@ -1037,7 +1102,8 @@ class FixtureHelper
             null,
             $caseNumber,
             true,
-            $isPrimary
+            false,
+            $deputyUid
         );
 
         return self::buildUserDetails($user);
@@ -1188,6 +1254,7 @@ class FixtureHelper
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
+        ?int $deputyUid = null
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1196,7 +1263,7 @@ class FixtureHelper
         $this->testRunId = $testRunId;
 
         $deputy = $this->userTestHelper
-            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary);
+            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary, $deputyUid);
 
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed, $submitted);

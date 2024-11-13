@@ -5,6 +5,7 @@ locals {
     s3      = var.common_sg_rules.s3
     ssm     = var.common_sg_rules.ssm
     ecr_api = var.common_sg_rules.ecr_api
+    #trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
     dr_backup = {
       port        = 443
       type        = "egress"

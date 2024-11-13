@@ -77,7 +77,9 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 
         if (!$this->isGranted('view', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         return $this->buildSuccessResponse($transformedDto);
@@ -106,7 +108,9 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
 
         if (!$this->isGranted('view', $client)) {
-            throw $this->createAccessDeniedException('Client does not belong to user');
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         return $this->buildSuccessResponse($transformedDto);

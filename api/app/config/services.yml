@@ -249,6 +249,10 @@ services:
         class: App\Repository\DocumentRepository
         tags: ["doctrine.repository_service"]
 
+    App\Repository\ChecklistRepository:
+        class: App\Repository\ChecklistRepository
+        tags: ["doctrine.repository_service"]
+
     App\Repository\DeputyRepository:
         class: App\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]

@@ -99,7 +99,7 @@ data "aws_iam_policy_document" "dr_backup" {
   statement {
     sid    = "allowSnapshotAccess"
     effect = "Allow"
-    #tfsec:ignore:aws-iam-no-policy-wildcards - needs access to snapshots of any name
+    #trivy:ignore:avd-aws-0057 - needs access to snapshots of any name
     resources = ["*"]
     actions = [
       "rds:CreateClusterDBSnapshot",

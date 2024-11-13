@@ -1,0 +1,8 @@
+{
+  "procedure": "insert_custom_query",
+  "calling_user": "bob.smith",
+  "custom_query": "UPDATE dd_user SET lastname = 'Blah' WHERE lastname = 'Manager1';",
+  "validation_query": "SELECT COUNT(*) FROM dd_user WHERE lastname = 'Manager1';",
+  "expected_before": 1,
+  "expected_after": 0
+}

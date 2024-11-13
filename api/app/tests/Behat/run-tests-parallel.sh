@@ -28,7 +28,13 @@ runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
 
-if [ $runtime -gt 420 ]
+if [ "$WORKSPACE" = "integration" ]; then
+    max_time=600
+else
+    max_time=420
+fi
+
+if [ $runtime -gt $max_time ]
 then
     echo "Stage taking too long. Failing the build!"
     echo "Please split out your tests to a new container"

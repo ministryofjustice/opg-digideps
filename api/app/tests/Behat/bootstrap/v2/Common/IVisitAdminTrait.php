@@ -299,4 +299,11 @@ trait IVisitAdminTrait
 
         $this->visitFrontendPath($this->getOrgAddUserUrl($organisation->getId()));
     }
+
+    public function iVisitClientDetailsUrl($clientId)
+    {
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($clientId);
+
+        $this->visitAdminPath($clientDetailsUrl);
+    }
 }

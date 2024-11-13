@@ -32,6 +32,7 @@ locals {
     data.aws_iam_role.sync.arn,
     aws_iam_role.sleep_mode.arn,
     aws_iam_role.execution_role.arn,
+    aws_iam_role.execution_role_db.arn
   ]
   combined_events_task_role_list = tolist(concat(local.events_task_role_list, local.events_task_dr_role_list))
 

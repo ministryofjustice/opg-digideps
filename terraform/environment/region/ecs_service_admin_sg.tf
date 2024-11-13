@@ -1,3 +1,4 @@
+#trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "admin_service_security_group" {
   source      = "./modules/security_group"
   description = "Admin Service"

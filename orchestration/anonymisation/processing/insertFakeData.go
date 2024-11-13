@@ -97,11 +97,11 @@ func GenerateFakeDataForTable(db *sql.DB, table common.Table, chunkSize int) err
 				case "PostCode":
 					var pc common.PostCode
 					faker.FakeData(&pc)
-					fakedValue = fmt.Sprintf("%s%d %s%d", pc.FirstTwoChars, pc.FirstInt, pc.SecondTwoChars, pc.SecondInt)
+					fakedValue = strings.ToUpper(fmt.Sprintf("%s%d %s%d", pc.FirstTwoChars, pc.FirstInt, pc.SecondTwoChars, pc.SecondInt))
 				case "PhoneNumber":
 					fakedValue = faker.Phonenumber()
 				case "Email":
-					fakedValue = faker.Email()
+					fakedValue = strings.ToLower(faker.Email())
 				case "Organisation":
 					fakedValue = fmt.Sprintf("Organisation-%s-%s", faker.Word(), faker.UUIDDigit())
 				default:
