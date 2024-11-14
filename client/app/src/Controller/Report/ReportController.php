@@ -176,12 +176,6 @@ class ReportController extends AbstractController
             }
         }
 
-        //        $hasReport = $this->clientApi->getById($clientId)->hasReport();
-        //        file_put_contents('php://stderr', print_r('ACTIVE REPORT: '. $hasReport, true));
-        //
-        //        if (!$hasReport) {
-        //        }
-
         file_put_contents('php://stderr', print_r('NDR ENABLED VARIABLE: '.$ndrEnabled, true));
 
         if ($ndrEnabled) {
@@ -217,11 +211,6 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        if ($ndrEnabled) {
-            $clients = $user->getClients();
-            $client = !empty($clients) ? $clients[0] : null;
-        }
-
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
@@ -232,6 +221,8 @@ class ReportController extends AbstractController
         ];
 
         if ($ndrEnabled) {
+            $client = $this->clientApi->getById($clientId);
+
             return array_merge([
                 'ndrEnabled' => true,
                 'client' => $client,
