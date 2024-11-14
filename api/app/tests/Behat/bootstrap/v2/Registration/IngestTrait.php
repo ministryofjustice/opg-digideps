@@ -51,6 +51,7 @@ trait IngestTrait
 
     private ?\DateTime $expectedClientCourtDate = null;
 
+    private int $expectedDeputyUid = 0;
     private string $expectedDeputyName = '';
     private string $expectedDeputyAddress = '';
     private string $expectedReportType = '';
@@ -1120,5 +1121,26 @@ trait IngestTrait
         ]);
 
         $this->application->doRun($input, $this->output);
+    }
+
+    /**
+     * @Given /^the new client has been created and associated with deputy$/
+     */
+    public function theNewClientHasBeenCreatedAndAssociatedWithDeputy()
+    {
+        $clients = $this->em
+            ->getRepository(Client::class)
+            ->getAllClientsAndReportsByDeputyUid($deputyUid);
+
+    }
+
+    /**
+     * @Given /^a deputy has already signed up to the service with an active client$/
+     */
+    public function aDeputyHasAlreadySignedUpToTheServiceWithAnActiveClient()
+    {
+        
+        
+        $this->expectedDeputyUid = 0;
     }
 }

@@ -40,11 +40,13 @@ class LayDeputyshipUploaderTest extends TestCase
         $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
         $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
         $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+        $this->clientAssembler = $this->getMockBuilder(ClientAssembler::class)->disableOriginalConstructor()->getMock();
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
             $this->reportRepository,
             $this->factory,
+            $this->clientAssembler,
             $this->logger
         );
     }

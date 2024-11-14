@@ -25,28 +25,56 @@ class ClientTestHelper extends TestCase
         return $client->reveal();
     }
 
-    public function generateClient(EntityManager $em, User $user = null, Organisation $organisation = null, string $caseNumber = null)
+    public function generateClient(EntityManager $em, User $user = null, Organisation $organisation = null, string $caseNumber = null): Client
     {
         $faker = Factory::create('en_GB');
+        $config = [
+            'fistName' => $faker->firstName(),
+            'lastName' => $faker->lastName(),
+            'caseNumber' => $caseNumber ?: self::createValidCaseNumber(),
+            'email' => $faker->safeEmail().mt_rand(1, 100),
+            'streetAddress' => $faker->streetAddress(),
+            'postcode' => $faker->postcode(),
+        ];
 
+        return $this->createClient($em, $config);
+    }
+    
+    public function generateClientFromArray(EntityManager $em, array $config): Client
+    {
+        $faker = Factory::create('en_GB');
+        $config['email'] = $faker->safeEmail().mt_rand(1, 100);
+        
+        $configCorrect = match (true) {
+            !empty($config['fistName']),
+            !empty($config['lastName']),
+            !empty($config['streetAddress']),
+            !empty($config['postcode']) => true
+        };
+        
+        return $this->createClient($em, $config);
+    }
+    
+    protected function createClient(EntityManager $em, array $config): Client
+    {
         $client = (new Client())
-            ->setFirstname($faker->firstName())
-            ->setLastname($faker->lastName())
-            ->setCaseNumber($caseNumber ?: self::createValidCaseNumber())
-            ->setEmail($faker->safeEmail().mt_rand(1, 100))
+            ->setFirstname($config['firstName'])
+            ->setLastname($config['lastName'])
+            ->setCaseNumber($config['caseNumber'] ?: self::createValidCaseNumber())
+            ->setEmail($config['email'])
             ->setCourtDate(new \DateTime('09-Aug-2018'))
-            ->setAddress($faker->streetAddress())
-            ->setAddress2($faker->streetAddress())
-            ->setPostcode($faker->postcode());
+            ->setAddress($config['streetAddress'])
+            ->setAddress2($config['streetAddress'])
+            ->setPostcode($config['postcode']);
 
-        if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
-            return $client->addUser($user ?: (new UserTestHelper())->createAndPersistUser($em));
+        if ($config['user'] instanceof User && User::ROLE_LAY_DEPUTY === $config['user']->getRoleName()) {
+            return $client->addUser($config['user'] ?: (new UserTestHelper())->createAndPersistUser($em));
         }
 
-        if ($organisation) {
-            return $client->setOrganisation($organisation);
+        if ($config['organisation'] instanceof Organisation) {
+            return $client->setOrganisation($config['organisation']);
         }
-
+        
         return $client;
     }
 

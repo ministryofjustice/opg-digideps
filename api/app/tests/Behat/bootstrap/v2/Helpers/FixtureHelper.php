@@ -472,7 +472,7 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayPfaHighAssetsCompleted(string $testRunId): array
+    public function createLayPfaHighAssetsCompleted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -480,7 +480,14 @@ class FixtureHelper
             'lay-pfa-high-assets-completed',
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             true,
-            false
+            false,
+            false,
+            null,
+            null,
+            $caseNumber,
+            false,
+            true,
+            $deputyUid
         );
 
         return self::buildUserDetails($user);
@@ -1241,6 +1248,10 @@ class FixtureHelper
         );
     }
 
+    private function createDeputyClientAndReportFromArray(string $testRunId) {
+        
+    }
+
     private function createDeputyClientAndReport(
         string $testRunId,
         $userRole,
@@ -1355,7 +1366,12 @@ class FixtureHelper
         string $clientLastname = 'Smith', 
         string $clientFirstName = 'John'
     ): PreRegistration {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientFirstName' => $clientFirstName, 'clientLastName' => $clientLastname];
+        $data = [
+            'reportType' => $reportType, 
+            'orderType' => $orderType, 
+            'clientFirstName' => $clientFirstName, 
+            'clientLastName' => $clientLastname
+        ];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);

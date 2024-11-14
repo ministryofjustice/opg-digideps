@@ -664,4 +664,14 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetailsOne;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser = $nonPrimaryUserDetailsTwo;
     }
+    
+    /*
+     * @BeforeScenario @lay-pfa-completed-multi-client-deputy
+     */
+    public function createLayPfaHighCompletedMultiClientDeputy()
+    {
+        $user = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsCompleted($this->testRunId, null, 19371937));
+        
+        $this->fixtureUsers[] = $this->layDeputyCompletedPfaHighAssetsDetails = $user;
+    }
 }

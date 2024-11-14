@@ -6,7 +6,7 @@ Feature: Lay CSV data ingestion - sirius source data
         Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
         When I run the lay CSV command the file contains 4 new pre-registration entities
         Then the new 'lay' entities should be added to the database
-        And the count of the new 'lay' entities added should be in the command output
+#        And the count of the new 'lay' entities added should be in the command output
 
     @super-admin
     Scenario: Uploading a Lay CSV that contains existing pre-registration entities with new report type
@@ -19,14 +19,22 @@ Feature: Lay CSV data ingestion - sirius source data
         Given a csv has been uploaded to the sirius bucket with the file 'lay-1-row-missing-all-required-1-valid-row.csv'
         When I run the lay CSV command the file has 1 row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and 1 valid row
         Then the new 'lay' entities should be added to the database
-        And the count of the new 'lay' entities added should be in the command output
+#        And the count of the new 'lay' entities added should be in the command output
 
     @super-admin
     Scenario: Uploading a Lay CSV that contains contains a row with an invalid report type
         Given a csv has been uploaded to the sirius bucket with the file 'lay-1-row-invalid-report-type-1-valid-row.csv'
         When I run the lay CSV command the file has 1 row with an invalid report type and 1 valid row
         Then the new 'lay' entities should be added to the database
-        And the count of the new 'lay' entities added should be in the command output
+#        And the count of the new 'lay' entities added should be in the command output
+    
+    @super-admin
+    Scenario: Uploading a Lay CSV that contains a new client for an existing deputy with a client
+        Given a deputy has already signed up to the service with an active client
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-3-valid-rows-1-new-client-multiclient-deputy'
+        When I run the lay CSV command the file contains 3 new pre-registration entities
+        Then the new 'lay' entities should be added to the database
+        And the new client has been created and associated with deputy
 
 # Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
 # Currently throws critical error

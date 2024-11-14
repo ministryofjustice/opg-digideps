@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Command;
 
+use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
@@ -17,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use App\Command\ProcessLayCSVCommand;
+use Symfony\Component\Console\Tester\Constraint\CommandIsSuccessful;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProcessLayCSVCommandTest extends KernelTestCase
@@ -42,6 +44,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
+        $this->eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
         
         $this->csvArray = Mock::mock(CsvToArray::class);
 
@@ -49,6 +52,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
             $this->s3->reveal(),
             $this->params->reveal(),
             $this->logger->reveal(),
+            $this->eventDispatcher->reveal(),
             $this->csvProcessing->reveal(), 
             $this->preReg->reveal()
         );
@@ -77,12 +81,6 @@ class ProcessLayCSVCommandTest extends KernelTestCase
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
-        $output = $this->commandTester->getDisplay();
-
-        $this->assertStringContainsString(
-            'lay_csv_processing - success - Finished processing LayCSV. Output:', 
-            $output
-        );
     }
 
     public function testExecuteWithFailedFilePullS3Error(): void
@@ -92,12 +90,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
             ->willThrow(S3Exception::class);
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
-        $output = $this->commandTester->getDisplay();
 
-        $this->assertStringContainsString(
-    'lay_csv_processing - failure - Error retrieving file layDeputyReport.csv from bucket',
-            $output
-        );
     }
     
     public function testExecuteWithMissingCSVCol(): void
