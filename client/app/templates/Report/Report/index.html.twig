@@ -20,47 +20,8 @@
 
 {% block pageContent %}
 
-{#    ***** TRY INCLUDE NDR/INDEX.HTML.TWIG ******#}
     {% if ndrEnabled %}
-        {% if clientHasCoDeputies %}
-            {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
-        {% endif %}
-
-        {% if ndr.submitted %}
-
-            {% if client.unsubmittedReport %}
-                <h2 class="govuk-heading-l">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
-                {% include '@App/Ndr/Ndr/_report_row.html.twig' with {
-                    reportActive: client.unsubmittedReport,
-                    ndr: ndr,
-                } %}
-            {% endif %}
-
-            {# always show the report row. If not created yet, a "Start" button will be shown #}
-            <h2 class="govuk-heading-l">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
-            {% include '@App/Ndr/Ndr/_report_row.html.twig' with {
-                reportActive: reportActive,
-                ndr: ndr,
-            } %}
-
-            {% include '@App/Ndr/Ndr/_report_history.html.twig' with {
-                reports: reportsSubmitted,
-                ndr: ndr,
-            } %}
-
-        {% else %}
-
-            {% include '@App/Ndr/Ndr/_ndr_row.html.twig' with {
-                reports: reportsSubmitted,
-                ndrStatus: ndrStatus,
-            } %}
-
-            <h2 class="govuk-heading-l">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
-            {% include '@App/Ndr/Ndr/_report_row.html.twig' with {
-                reportActive: reportActive,
-                ndr: ndr,
-            } %}
-        {% endif %}
+        {% include '@App/Ndr/Ndr/index.html.twig' %}
     {% else %}
         {% if clientHasCoDeputies %}
             {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
