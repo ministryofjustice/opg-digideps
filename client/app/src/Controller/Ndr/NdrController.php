@@ -146,14 +146,14 @@ class NdrController extends AbstractController
      */
     public function reviewAction($ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
-        $ndr->setClient($client);
 
         // check status
         $ndrStatusService = new NdrStatusService($ndr);
@@ -170,14 +170,14 @@ class NdrController extends AbstractController
      */
     public function pdfViewAction($ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
-        $ndr->setClient($client);
 
         $pdfBinary = $this->getPdfBinaryContent($ndr);
 
@@ -219,14 +219,14 @@ class NdrController extends AbstractController
      */
     public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
-        $ndr->setClient($client);
 
         // check status
         $ndrStatus = new NdrStatusService($ndr);
@@ -273,17 +273,18 @@ class NdrController extends AbstractController
      */
     public function submitConfirmationAction(Request $request, $ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
 
-        $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
             throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
-        $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
             throw new ReportNotSubmittedException();
@@ -314,23 +315,22 @@ class NdrController extends AbstractController
      */
     public function submitFeedbackAction($ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
 
-        $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
             throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
-        $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
             throw new ReportNotSubmittedException();
         }
-
-        $ndrStatus = new NdrStatusService($ndr);
 
         return [
             'ndr' => $ndr,
