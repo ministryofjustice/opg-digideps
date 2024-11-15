@@ -17,7 +17,6 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\File\S3FileUploader;
 use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
-use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -106,7 +105,7 @@ class NdrController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function overviewAction(Redirector $redirector, ParameterStoreService $parameterStore)
+    public function overviewAction(Redirector $redirector, $ndrId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -116,13 +115,14 @@ class NdrController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
 
         if ($ndr->getSubmitted()) {
             throw new ReportSubmittedException();
