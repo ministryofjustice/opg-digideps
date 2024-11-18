@@ -130,7 +130,7 @@ data "aws_iam_policy_document" "replication_policy" {
 
     resources = [
       data.aws_kms_alias.source_default_key.target_key_arn,
-      aws_kms_key.s3.arn
+      data.aws_kms_key.s3.arn
     ]
   }
 
