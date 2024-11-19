@@ -82,8 +82,6 @@ class Redirector
                 return $this->router->generate('org_dashboard');
             }
         } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            file_put_contents('php://stderr', print_r('HELLOOOOO1: ', true));
-
             return $this->getCorrectLayHomepage();
         } else {
             return $this->router->generate('access_denied');
@@ -101,12 +99,6 @@ class Redirector
     {
         // Check if user has multiple clients
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-        $multiClientDeputy = !is_null($clients) && count($clients) > 1;
-
-        // Redirect to appropriate homepage
-        if (in_array($currentRoute, ['lay_home', 'ndr_index'])) {
-            $route = 'lay_home';
-        }
 
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
@@ -147,12 +139,8 @@ class Redirector
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
-            file_put_contents('php://stderr', print_r('HELLOOOOO4: ', true));
-
             return $this->router->generate($route);
         }
-
-        file_put_contents('php://stderr', print_r('HELLOOOOO5: ', true));
 
         // last accessed url
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
@@ -269,8 +257,6 @@ class Redirector
             if (1 < count($clients)) {
                 return $this->getChooseAClientHomepage($user);
             } else {
-                file_put_contents('php://stderr', print_r('HELLOOOOO3: ', true));
-
                 return $this->getLayDeputyHomepage($user, $activeClientId);
             }
         } else {

@@ -11,7 +11,6 @@ use App\Form as FormDir;
 use App\Model as ModelDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
-use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\File\S3FileUploader;
@@ -54,7 +53,6 @@ class NdrController extends AbstractController
     public function __construct(
         private UserApi $userApi,
         private ClientApi $clientApi,
-        private PreRegistrationApi $preRegistrationApi,
         private SatisfactionApi $satisfactionApi,
         private NdrApi $ndrApi,
         private HtmlToPdfGenerator $htmlToPdf
@@ -62,40 +60,16 @@ class NdrController extends AbstractController
     }
 
     /**
-     * //TODO move view into Ndr directory when branches are integrated.
-     *
-     * @Route("/ndr", name="ndr_index")
+     * @Route("/ndr", name="ndr_index_deprecated")
      *
      * @Template("@App/Ndr/Ndr/index.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector)
+    public function indexAction()
     {
-        // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
-
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_index');
-
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
-        $coDeputies = $clientWithCoDeputies->getCoDeputies();
-
-        return [
-            'client' => $client,
-            'coDeputies' => $coDeputies,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
-            'ndr' => $client->getNdr(),
-            'reportsSubmitted' => $client->getSubmittedReports(),
-            'reportActive' => $client->getActiveReport(),
-            'ndrStatus' => new NdrStatusService($client->getNdr()),
-        ];
+        // Moved to ReportController::clientHomepageAction()
+        return $this->redirectToRoute('homepage');
     }
 
     /**

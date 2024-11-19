@@ -189,7 +189,7 @@ class ClientController extends AbstractController
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
                 $url = $currentUser->isNdrEnabled()
-                    ? $this->generateUrl('ndr_index')
+                    ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
 
                 if ($currentUser->isNdrEnabled()) {

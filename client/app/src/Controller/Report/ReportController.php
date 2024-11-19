@@ -163,23 +163,16 @@ class ReportController extends AbstractController
     public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
         $ndrEnabled = false;
-
         $users = $this->clientApi->getWithUsersV2($clientId)->getUsers();
-        file_put_contents('php://stderr', print_r('USERS: ', true));
-        file_put_contents('php://stderr', print_r($users, true));
 
-        // TEST WITH CO-DEPUTY AS WELL
         foreach ($users as $user) {
             if ($user->isNdrEnabled()) {
-                file_put_contents('php://stderr', print_r('NDR ENABLED: ', true));
                 $ndrEnabled = true;
             }
         }
 
-        file_put_contents('php://stderr', print_r('NDR ENABLED VARIABLE: '.$ndrEnabled, true));
-
         if ($ndrEnabled) {
-            $user = $this->userApi->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
+            $user = $this->userApi->getUserWithData();
         } else {
             // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
             // due to the way
@@ -223,13 +216,15 @@ class ReportController extends AbstractController
         if ($ndrEnabled) {
             $client = $this->clientApi->getById($clientId);
 
+            $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
+
             return array_merge([
                 'ndrEnabled' => true,
                 'client' => $client,
                 'ndr' => $client->getNdr(),
                 'reportsSubmitted' => $client->getSubmittedReports(),
                 'reportActive' => $client->getActiveReport(),
-                'ndrStatus' => new NdrStatusService($client->getNdr()),
+                'ndrStatus' => new NdrStatusService($ndr),
             ],
                 $resultsArray
             );
@@ -379,7 +374,10 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('homepage'));
         }
 
-        return ['form' => $form->createView()];
+        return [
+            'form' => $form->createView(),
+            'clientId' => $clientId,
+        ];
     }
 
     /**
