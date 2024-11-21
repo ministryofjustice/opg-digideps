@@ -132,8 +132,9 @@ Feature: Users logging into the service
         Given a super admin user accesses the admin app
         When a Multi-client Lay Deputy exists and I select the non-primary user
         And I enable the NDR for this user
-        And I update the details of the deputy available to me
         Then a Lay Deputy tries to login with their "primary" email address
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
         And I should see the NDR report on the reports page
+        And I disable the NDR for this user
+        And I should not see the NDR report on the reports page

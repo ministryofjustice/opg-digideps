@@ -68,7 +68,7 @@ trait UserExistsTrait
     public function aMultiClientLayDeputyExists()
     {
         if (empty($this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser)) {
-            throw new BehatException('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
+            throw new BehatException('It looks like fixtures are not loaded - missing $layPfaHighNotStartedMultiClientDeputyNonPrimaryUser');
         }
 
         $this->interactingWithUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;

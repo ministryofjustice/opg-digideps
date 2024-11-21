@@ -198,5 +198,21 @@ trait DeputyManagementTrait
         $this->iVisitAdminEditUserPageForInteractingWithUser();
 
         $this->checkOption('admin_ndrEnabled');
+
+        $this->pressButton('Update user');
+        $this->em->clear();
+    }
+
+    /**
+     * @Then /^I disable the NDR for this user$/
+     */
+    public function iShouldBeAbleToDisableNdrEnabled()
+    {
+        $this->iVisitAdminEditUserPageForInteractingWithUser();
+
+        $this->uncheckOption('admin_ndrEnabled');
+
+        $this->pressButton('Update user');
+        $this->em->clear();
     }
 }
