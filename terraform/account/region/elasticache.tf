@@ -27,9 +27,10 @@ resource "aws_elasticache_replication_group" "cache_api" {
 }
 
 resource "aws_security_group" "cache_api_sg" {
-  name   = "${var.account.name}-account-cache-api"
-  vpc_id = aws_vpc.main.id
-  tags   = merge(var.default_tags, { Name = "${var.account.name}-account-cache--api" })
+  name        = "${var.account.name}-account-cache-api"
+  vpc_id      = aws_vpc.main.id
+  tags        = merge(var.default_tags, { Name = "${var.account.name}-account-cache--api" })
+  description = "cache api - ${var.account.name}"
 
   lifecycle {
     create_before_destroy = true
@@ -63,9 +64,10 @@ resource "aws_elasticache_replication_group" "front_api" {
 }
 
 resource "aws_security_group" "cache_front_sg" {
-  name   = "${var.account.name}-account-cache-frontend"
-  vpc_id = aws_vpc.main.id
-  tags   = merge(var.default_tags, { Name = "${var.account.name}-account-cache-frontend" })
+  name        = "${var.account.name}-account-cache-frontend"
+  vpc_id      = aws_vpc.main.id
+  description = "cache front - ${var.account.name}"
+  tags        = merge(var.default_tags, { Name = "${var.account.name}-account-cache-frontend" })
 
   lifecycle {
     create_before_destroy = true
