@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Factory\DeputyFactory;
-use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,11 +24,6 @@ class OrgService
     private $userRepository;
 
     /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
-
-    /**
      * @var DeputyFactory
      */
     private $deputyFactory;
@@ -47,13 +41,11 @@ class OrgService
     public function __construct(
         EntityManagerInterface $em,
         UserRepository $userRepository,
-        ClientRepository $clientRepository,
         DeputyRepository $deputyRepository,
         DeputyFactory $deputyFactory
     ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
-        $this->clientRepository = $clientRepository;
         $this->deputyRepository = $deputyRepository;
         $this->deputyFactory = $deputyFactory;
         $this->added = [];
@@ -65,12 +57,6 @@ class OrgService
     public function getMemberById(string $id)
     {
         return $this->userRepository->find($id);
-    }
-
-    public function addUserToUsersClients(User $userWithClients, User $userBeingAdded, $clientId)
-    {
-        // Move this logic up to the User Service and pass in client id
-        $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
     }
 
     /**
