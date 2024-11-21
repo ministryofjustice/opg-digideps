@@ -560,12 +560,4 @@ trait AuthTrait
     {
         $this->assertPageContainsText('New deputy report');
     }
-
-    /**
-     * @Then I should not see the NDR report on the reports page
-     */
-    public function theyShouldNotBeOnNDRReportPage(): void
-    {
-        $this->assertPageNotContainsText('New deputy report');
-    }
 }
