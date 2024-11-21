@@ -460,10 +460,11 @@ class ReportController extends AbstractController
 
         $form = $this->createForm(ReportDeclarationType::class, $report);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $currentUser */
-            $currentUser = $this->getUser();
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
 
@@ -472,11 +473,14 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
 
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $currentUser->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($currentUser->getDeputyUid()) : null;
+
         return [
             'report' => $report,
             'client' => $report->getClient(),
             'contactDetails' => $this->getAssociatedContactDetails($deputy, $report),
             'form' => $form->createView(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -552,12 +556,15 @@ class ReportController extends AbstractController
             }
         }
 
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         return [
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
