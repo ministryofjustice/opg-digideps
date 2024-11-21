@@ -177,7 +177,7 @@ class CoDeputyController extends AbstractController
 
         $backLink = $loggedInUser->isNdrEnabled() ?
             $this->generateUrl('ndr_index')
-            : $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+            : $this->generateUrl('lay_home', ['clientId' => $clientId]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
