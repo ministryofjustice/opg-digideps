@@ -197,8 +197,6 @@ trait DeputyManagementTrait
     {
         $this->iVisitAdminEditUserPageForInteractingWithUser();
 
-        $this->assertElementOnPage('input[name="admin[ndrEnabled]"]');
-
         'enable' === $isEnabled ? $this->checkOption('admin_ndrEnabled') : $this->uncheckOption('admin_ndrEnabled');
     }
 }
