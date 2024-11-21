@@ -59,4 +59,18 @@ trait UserExistsTrait
 
         $this->interactingWithUserDetails = $this->profTeamDeputyNotStartedHealthWelfareDetails;
     }
+
+    /**
+     * @Given a Multi-client Lay Deputy exists and I select the non-primary user
+     *
+     * @throws BehatException
+     */
+    public function aMultiClientLayDeputyExists()
+    {
+        if (empty($this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
+        }
+
+        $this->interactingWithUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+    }
 }

@@ -189,4 +189,28 @@ trait DeputyManagementTrait
     {
         $this->assertElementNotOnPage('govuk-link behat-link-client-show');
     }
+
+    /**
+     * @Then I enable the NDR for this user
+     */
+    public function iShouldBeAbleToEnableNdr()
+    {
+        $this->iVisitAdminEditUserPageForInteractingWithUser();
+
+        $this->assertElementOnPage('input[name="admin[ndrEnabled]"]');
+
+        $this->checkOption('admin[ndrEnabled]');
+    }
+
+    /**
+     * @Then I disable the NDR for this user
+     */
+    public function iShouldBeAbleToDisableNdr()
+    {
+        $this->iVisitAdminEditUserPageForInteractingWithUser();
+
+        $this->assertElementOnPage('input[name="admin[ndrEnabled]"]');
+
+        $this->uncheckOption('admin[ndrEnabled]');
+    }
 }
