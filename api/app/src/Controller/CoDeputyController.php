@@ -29,6 +29,7 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("{count}", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function countMld(Request $request)
@@ -43,10 +44,11 @@ class CoDeputyController extends RestController
     }
 
     /**
-     * @Route("add", methods={"POST"})
+     * @Route("add/{clientId}", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
-    public function add(Request $request)
+    public function add(Request $request, $clientId)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'email' => 'notEmpty',
@@ -64,7 +66,7 @@ class CoDeputyController extends RestController
         $newUser->recreateRegistrationToken();
         $newUser->setRoleName(User::ROLE_LAY_DEPUTY);
 
-        $this->userService->addUser($loggedInUser, $newUser, $data);
+        $this->userService->addUser($loggedInUser, $newUser, $data, $clientId);
 
         $this->formatter->setJmsSerialiserGroups(['user']);
 
@@ -73,6 +75,7 @@ class CoDeputyController extends RestController
 
     /**
      * @Route("{id}", methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
@@ -105,6 +108,7 @@ class CoDeputyController extends RestController
      * Borrows heavily from CasRecController:addBulk.
      *
      * @Route("{mldupgrade}", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function upgradeToMld(Request $request)

@@ -33,13 +33,14 @@ class UserService
     /**
      * Adds a new user to the database.
      */
-    public function addUser(User $loggedInUser, User $userToAdd, $data)
+    public function addUser(User $loggedInUser, User $userToAdd, $data, $clientId)
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
         $userToAdd->recreateRegistrationToken();
         $userToAdd->setCreatedBy($loggedInUser);
 
+        // check if this match expression is required for other reg routes
         match (true) {
             $loggedInUser->isLayDeputy() => $userToAdd->setRegistrationRoute(User::CO_DEPUTY_INVITE),
             $loggedInUser->hasAdminRole() => $userToAdd->setRegistrationRoute(User::ADMIN_INVITE),
@@ -49,7 +50,7 @@ class UserService
         $this->em->persist($userToAdd);
         $this->em->flush();
 
-        $this->orgService->addUserToUsersClients($loggedInUser, $userToAdd);
+        $this->orgService->addUserToUsersClients($loggedInUser, $userToAdd, $clientId);
     }
 
     /**

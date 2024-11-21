@@ -67,13 +67,10 @@ class OrgService
         return $this->userRepository->find($id);
     }
 
-    public function addUserToUsersClients(User $userWithClients, User $userBeingAdded)
+    public function addUserToUsersClients(User $userWithClients, User $userBeingAdded, $clientId)
     {
-        $clientIds = $this->clientRepository->findAllClientIdsByUser($userWithClients);
-
-        foreach ($clientIds as $clientId) {
-            $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
-        }
+        // Move this logic up to the User Service and pass in client id
+        $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
     }
 
     /**
