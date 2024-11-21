@@ -191,12 +191,12 @@ trait DeputyManagementTrait
     }
 
     /**
-     * @Then /^I "(enable|disable)" the NDR for this user$/
+     * @Then /^I enable the NDR for this user$/
      */
-    public function iShouldBeAbleToToggleNdrEnabled($isEnabled)
+    public function iShouldBeAbleToToggleNdrEnabled()
     {
         $this->iVisitAdminEditUserPageForInteractingWithUser();
 
-        'enable' === $isEnabled ? $this->checkOption('admin_ndrEnabled') : $this->uncheckOption('admin_ndrEnabled');
+        $this->checkOption('admin_ndrEnabled');
     }
 }
