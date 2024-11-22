@@ -1,4 +1,4 @@
-@v2 @v2_admin @login
+@v2 @v2_admin @login @iqpal
 Feature: Users logging into the service
 
     @super-admin
@@ -128,7 +128,7 @@ Feature: Users logging into the service
         Then they should be on the add your client page
 
     @super-admin @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: A user logs into the service with their primary account and toggles with the NDR checkbox attached to non-primary account
+    Scenario: A user logs into the service with their primary account and ticks the NDR checkbox attached to non-primary account
         Given a super admin user accesses the admin app
         When a Multi-client Lay Deputy exists and I select the non-primary user
         And I enable the NDR for this user
@@ -136,3 +136,13 @@ Feature: Users logging into the service
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
         And I should see the NDR report on the reports page
+
+    @super-admin @lay-pfa-high-not-started-multi-client-deputy-with-ndr
+    Scenario: A user logs into the service with their primary account and unticks with the NDR checkbox attached to non-primary account
+        Given a super admin user accesses the admin app
+        When a Multi-client Lay Deputy exists and I select the primary user with NDR
+        And I disable the NDR for this user
+        Then a Lay Deputy tries to login with their "primary" email address
+        When they choose their "non-primary" Client
+        Then they should be on the "non-primary" Client's dashboard
+        And I should not see the NDR report on the reports page

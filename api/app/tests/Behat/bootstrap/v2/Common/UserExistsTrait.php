@@ -73,4 +73,18 @@ trait UserExistsTrait
 
         $this->interactingWithUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
     }
+
+    /**
+     * @Given a Multi-client Lay Deputy exists and I select the primary user with NDR
+     *
+     * @throws BehatException
+     */
+    public function aMultiClientLayDeputyExistsWithNDR()
+    {
+        if (empty($this->layPfaHighNotStartedMultiClientDeputyPrimaryUser)) {
+            throw new BehatException('It looks like fixtures are not loaded - missing $layPfaHighNotStartedMultiClientDeputyPrimaryUser');
+        }
+
+        $this->interactingWithUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser;
+    }
 }
