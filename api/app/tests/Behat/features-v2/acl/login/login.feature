@@ -1,4 +1,4 @@
-@v2 @v2_admin @login @iqpal
+@v2 @v2_admin @login
 Feature: Users logging into the service
 
     @super-admin
