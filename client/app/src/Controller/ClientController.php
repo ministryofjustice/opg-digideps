@@ -94,6 +94,9 @@ class ClientController extends AbstractController
      */
     public function editClientDetailsAction(Request $request, int $clientId)
     {
+        $user = $this->userApi->getUserWithData();
+        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getById($clientId);
 
@@ -131,6 +134,7 @@ class ClientController extends AbstractController
         return [
             'client' => $preUpdateClient,
             'form' => $form->createView(),
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 

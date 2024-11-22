@@ -121,6 +121,7 @@ dashboard: Dashboard
 clientProfile: Client profile
 clients: Clients
 clientDetails: Client details
+chooseAClient: Choose a client
 
 # Back links
 backToReportOverview: Back to report overview

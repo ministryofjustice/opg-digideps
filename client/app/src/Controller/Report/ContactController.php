@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,30 +22,26 @@ class ContactController extends AbstractController
         'contact-status',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
-     * @Template("@App/Report/Contact/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Contact/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getContactsState()['state']) {
@@ -52,14 +50,14 @@ class ContactController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
-     * @Template("@App/Report/Contact/exist.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Contact/exist.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -97,9 +95,8 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add", name="contacts_add")
-     * @Template("@App/Report/Contact/add.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Contact/add.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -141,9 +138,8 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
-     * @Template("@App/Report/Contact/addAnother.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Contact/addAnother.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -171,9 +167,8 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
-     * @Template("@App/Report/Contact/edit.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Contact/edit.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -206,14 +201,17 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
-     * @Template("@App/Report/Contact/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Contact/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getContactsState()['state']) {
@@ -222,14 +220,14 @@ class ContactController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */
