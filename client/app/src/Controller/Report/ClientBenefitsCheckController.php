@@ -59,7 +59,7 @@ class ClientBenefitsCheckController extends AbstractController
         $user = $this->getUser();
         $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
 
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
+        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = ('ndr' === $reportOrNdr) ? $report->getStatusService()->getClientBenefitsCheckState()['state'] :
@@ -108,7 +108,7 @@ class ClientBenefitsCheckController extends AbstractController
             ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]);
 
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'ndr-id', 'ndr'])) :
+        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id', 'ndr-id', 'ndr'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ('ndr' === $reportOrNdr) {
@@ -198,7 +198,7 @@ class ClientBenefitsCheckController extends AbstractController
         $user = $this->getUser();
         $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
 
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
+        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         return [
