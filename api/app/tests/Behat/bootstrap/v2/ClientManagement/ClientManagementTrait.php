@@ -454,4 +454,13 @@ MESSAGE;
         $this->assertPageContainsText(sprintf('%s\'s details', $client->getFirstname()));
         $this->assertPageContainsText($client->getCaseNumber());
     }
+
+    /**
+     * @Given /^I click on the button to edit my client's details$/
+     */
+    public function IClickOnTheButtonToEditMyClientsDetails()
+    {
+        $clientName = $this->loggedInUserDetails->getClientFirstName();
+        $this->clickLink(sprintf('Edit %s\'s details', $clientName));
+    }
 }

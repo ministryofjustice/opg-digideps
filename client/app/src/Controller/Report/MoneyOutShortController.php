@@ -6,7 +6,9 @@ use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\Status;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,41 +24,41 @@ class MoneyOutShortController extends AbstractController
         'money-out-short-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/money-out-short", name="money_out_short")
+     *
      * @Template("@App/Report/MoneyOutShort/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyOutShortState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyOutShortState()['state']) {
             return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
         }
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/money-out-short/exist", name="does_money_out_short_exist")
+     *
      * @Template("@App/Report/MoneyOutShort/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -120,6 +122,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/no-money-out-short-exists", name="no_money_out_short_exists")
+     *
      * @Template("@App/Report/MoneyOutShort/noMoneyOutShortToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -153,6 +156,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/category", name="money_out_short_category")
+     *
      * @Template("@App/Report/MoneyOutShort/category.html.twig")
      *
      * @return array|RedirectResponse
@@ -191,6 +195,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/oneOffPaymentsExist", name="money_out_short_one_off_payments_exist")
+     *
      * @Template("@App/Report/MoneyOutShort/oneOffPaymentsExist.html.twig")
      *
      * @return array|RedirectResponse
@@ -250,6 +255,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/add", name="money_out_short_add")
+     *
      * @Template("@App/Report/MoneyOutShort/add.html.twig")
      *
      * @return array|RedirectResponse
@@ -281,6 +287,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/add_another", name="money_out_short_add_another")
+     *
      * @Template("@App/Report/MoneyOutShort/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -309,6 +316,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/edit/{transactionId}", name="money_out_short_edit")
+     *
      * @Template("@App/Report/MoneyOutShort/edit.html.twig")
      *
      * @return array|RedirectResponse
@@ -339,6 +347,7 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/{transactionId}/delete", name="money_out_short_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
@@ -380,15 +389,20 @@ class MoneyOutShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out-short/summary", name="money_out_short_summary")
+     *
      * @Template("@App/Report/MoneyOutShort/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutShortState()['state'] && 'skip-step' != $fromPage) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutShortState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_out_short', ['reportId' => $reportId]);
         }
 
@@ -396,6 +410,7 @@ class MoneyOutShortController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
