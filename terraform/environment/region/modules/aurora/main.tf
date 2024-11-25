@@ -21,6 +21,7 @@ resource "aws_rds_cluster" "cluster" {
   storage_encrypted                   = var.storage_encrypted
   vpc_security_group_ids              = var.vpc_security_group_ids
   tags                                = var.tags
+  db_cluster_parameter_group_name     = "aurora-14-clust"
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   lifecycle {
     ignore_changes  = [replication_source_identifier]
