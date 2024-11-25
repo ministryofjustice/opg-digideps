@@ -33,7 +33,7 @@
         <a id="overview-button" href="{{ path('homepage') }}"
            class="link-back">{{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}</a>
     {% else %}
-        {{ macros.breadcrumbs(ndr) }}
+        {{ macros.breadcrumbs(ndr, isMultiClientDeputy) }}
     {% endif %}
 {% endblock %}
 
