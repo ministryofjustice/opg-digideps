@@ -16,6 +16,11 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
     enabled        = true
   }
 
+  server_side_encryption {
+    enabled     = true
+    kms_key_arn = module.dynamodb_kms.eu_west_1_target_key_arn
+  }
+
   lifecycle {
     prevent_destroy = false
   }
@@ -70,6 +75,11 @@ resource "aws_dynamodb_table" "blocked_ips_table" {
     attribute_name = "ExpiresTTL"
     enabled        = true
   }
+
+  #  server_side_encryption {
+  #    enabled              = true
+  #    kms_key_arn      = module.dynamodb_kms.eu_west_1_target_key_arn
+  #  }
 
   lifecycle {
     prevent_destroy = false
