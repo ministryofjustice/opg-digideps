@@ -14,3 +14,4 @@ fi
 # Run the custom SQL query setup script
 ./scripts/setup_custom_sql_query.sh
 ./scripts/setup_readonly_sql_query.sh
+./scripts/setup_reindex.sh
