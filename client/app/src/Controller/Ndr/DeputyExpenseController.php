@@ -5,6 +5,7 @@ namespace App\Controller\Ndr;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -29,27 +30,33 @@ class DeputyExpenseController extends AbstractController
 
     /** @var RouterInterface */
     private $router;
+    private $clientApi;
 
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        RouterInterface $router
+        RouterInterface $router,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->router = $router;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses", name="ndr_deputy_expenses")
-     * @Template("@App/Ndr/DeputyExpense/start.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/DeputyExpense/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getExpensesState()['state']) {
@@ -58,11 +65,13 @@ class DeputyExpenseController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/exist", name="ndr_deputy_expenses_exist")
+     *
      * @Template("@App/Ndr/DeputyExpense/exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
@@ -102,9 +111,8 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add", name="ndr_deputy_expenses_add")
-     * @Template("@App/Ndr/DeputyExpense/add.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/DeputyExpense/add.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -145,6 +153,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add_another", name="ndr_deputy_expenses_add_another")
+     *
      * @Template("@App/Ndr/DeputyExpense/addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
@@ -171,6 +180,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/edit/{expenseId}", name="ndr_deputy_expenses_edit")
+     *
      * @Template("@App/Ndr/DeputyExpense/edit.html.twig")
      */
     public function editAction(Request $request, $ndrId, $expenseId)
@@ -199,9 +209,8 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/summary", name="ndr_deputy_expenses_summary")
-     * @Template("@App/Ndr/DeputyExpense/summary.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/DeputyExpense/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -219,9 +228,8 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/{expenseId}/delete", name="ndr_deputy_expenses_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param int $id
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */
