@@ -104,10 +104,15 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
+        $deputyHasMultiClients = !$user->isDeputyOrg() && $this->clientApi->checkDeputyHasMultiClients(
+            $user->getDeputyUid()
+        );
+
         return [
             'client' => $client,
             'ndr' => $ndr,
             'ndrStatus' => $ndrStatus,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
