@@ -4,6 +4,7 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -36,27 +37,36 @@ class ActionController extends AbstractController
         'ndr-action-more-info',
     ];
 
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/actions", name="ndr_actions")
-     * @Template("@App/Ndr/Action/start.html.twig")
      *
-     * @param Request $request
-     * @param $ndrId
+     * @Template("@App/Ndr/Action/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getActionsState()['state']) {
             return $this->redirectToRoute('ndr_actions_summary', ['ndrId' => $ndrId]);
@@ -64,11 +74,13 @@ class ActionController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/actions/step/{step}", name="ndr_actions_step")
+     *
      * @Template("@App/Ndr/Action/step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step)
@@ -115,6 +127,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/actions/summary", name="ndr_actions_summary")
+     *
      * @Template("@App/Ndr/Action/summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
