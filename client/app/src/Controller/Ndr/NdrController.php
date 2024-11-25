@@ -221,6 +221,10 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $currentUser->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($currentUser->getDeputyUid()) : null;
+
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -245,6 +249,7 @@ class NdrController extends AbstractController
             'ndr' => $ndr,
             'client' => $client,
             'form' => $form->createView(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
