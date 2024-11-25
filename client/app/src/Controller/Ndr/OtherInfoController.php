@@ -4,6 +4,7 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -33,22 +34,34 @@ class OtherInfoController extends AbstractController
      */
     private $stepRedirector;
 
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/any-other-info", name="ndr_other_info")
+     *
      * @Template("@App/Ndr/OtherInfo/start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('ndr_other_info_summary', ['ndrId' => $ndrId]);
@@ -56,16 +69,18 @@ class OtherInfoController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/any-other-info/step/{step}", name="ndr_other_info_step")
+     *
      * @Template("@App/Ndr/OtherInfo/step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step)
     {
-        $totalSteps = 1; //only one step but convenient to reuse the "step" logic and keep things aligned/simple
+        $totalSteps = 1; // only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('ndr_other_info_summary', ['ndrId' => $ndrId]);
         }
@@ -105,6 +120,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/any-other-info/summary", name="ndr_other_info_summary")
+     *
      * @Template("@App/Ndr/OtherInfo/summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
