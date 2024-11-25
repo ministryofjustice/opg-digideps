@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,30 +22,27 @@ class DebtController extends AbstractController
         'debt-management',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/debts", name="debts")
-     * @Template("@App/Report/Debt/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Debt/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getDebtsState()['state']) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
@@ -51,14 +50,14 @@ class DebtController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/debts/exist", name="debts_exist")
-     * @Template("@App/Report/Debt/exist.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Debt/exist.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -98,9 +97,8 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/report/{reportId}/debts/edit", name="debts_edit")
-     * @Template("@App/Report/Debt/edit.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Debt/edit.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -144,9 +142,8 @@ class DebtController extends AbstractController
      * How debts are managed question.
      *
      * @Route("/report/{reportId}/debts/management", name="debts_management")
-     * @Template("@App/Report/Debt/management.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Debt/management.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -185,14 +182,17 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/report/{reportId}/debts/summary", name="debts_summary")
-     * @Template("@App/Report/Debt/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Debt/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDebtsState()['state'] && 'skip-step' != $fromPage) {
@@ -203,6 +203,7 @@ class DebtController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

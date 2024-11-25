@@ -150,7 +150,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:13.14
+    image: postgres:13.17
     ports:
       - 5432:5432
     env_file:
@@ -239,7 +239,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.5.2
+    image: stoplight/prism:5.12.1
     ports:
       - 4010:4010
     command:
@@ -265,7 +265,7 @@ services:
     entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
 
   composer:
-    image: composer:2.5.8
+    image: composer:2.5.7
     command: ["install"]
 
   custom-sql-query:

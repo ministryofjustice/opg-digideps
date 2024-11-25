@@ -144,7 +144,7 @@ jobs:
 
       - name: trivy image scanning
         id: trivy_scan
-        uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # pin@v0.7.1
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # pin@v0.7.1
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"

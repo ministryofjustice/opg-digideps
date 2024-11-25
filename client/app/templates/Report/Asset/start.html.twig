@@ -11,7 +11,7 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report, isMultiClientDeputy) }}{% endblock %}
 
 {% block pageContent %}
 
