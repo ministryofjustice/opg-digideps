@@ -4,6 +4,7 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -25,20 +26,33 @@ class DebtController extends AbstractController
      */
     private $restClient;
 
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
     public function __construct(
         ReportApi $reportApi,
-        RestClient $restClient
+        RestClient $restClient,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/debts", name="ndr_debts")
+     *
      * @Template("@App/Ndr/Debt/start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getDebtsState()['state']) {
             return $this->redirectToRoute('ndr_debts_summary', ['ndrId' => $ndr->getId()]);
@@ -46,11 +60,13 @@ class DebtController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/debts/exist", name="ndr_debts_exist")
+     *
      * @Template("@App/Ndr/Debt/exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
@@ -89,6 +105,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/ndr/{ndrId}/debts/edit", name="ndr_debts_edit")
+     *
      * @Template("@App/Ndr/Debt/edit.html.twig")
      */
     public function editAction(Request $request, $ndrId)
@@ -126,6 +143,7 @@ class DebtController extends AbstractController
      * How debts are managed question.
      *
      * @Route("/ndr/{ndrId}/debts/management", name="ndr_debts_management")
+     *
      * @Template("@App/Ndr/Debt/management.html.twig")
      */
     public function managementAction(Request $request, $ndrId)
@@ -164,6 +182,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/ndr/{ndrId}/debts/summary", name="ndr_debts_summary")
+     *
      * @Template("@App/Ndr/Debt/summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
