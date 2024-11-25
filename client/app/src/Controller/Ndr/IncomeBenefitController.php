@@ -5,6 +5,7 @@ namespace App\Controller\Ndr;
 use App\Controller\AbstractController;
 use App\Entity\Ndr\Ndr;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -38,27 +39,33 @@ class IncomeBenefitController extends AbstractController
      * @var StepRedirector
      */
     private $stepRedirector;
+    private $clientApi;
 
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
-     * @Template("@App/Ndr/IncomeBenefit/start.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/IncomeBenefit/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getIncomeBenefitsState()['state']) {
             return $this->redirectToRoute('ndr_income_benefits_summary', ['ndrId' => $ndrId]);
@@ -66,11 +73,13 @@ class IncomeBenefitController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits/step/{step}", name="ndr_income_benefits_step")
+     *
      * @Template("@App/Ndr/IncomeBenefit/step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
@@ -130,6 +139,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits/summary", name="ndr_income_benefits_summary")
+     *
      * @Template("@App/Ndr/IncomeBenefit/summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
