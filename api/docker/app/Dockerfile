@@ -1,4 +1,4 @@
-FROM composer:2.5.7 AS composer
+FROM composer:2.8.3 AS composer
 
 WORKDIR /app
 # Install composer dependencies
