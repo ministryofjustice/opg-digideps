@@ -78,7 +78,7 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "5.4.46",
+        "symfony/http-client": "5.4.47",
         "symfony/browser-kit": "^5.4.0",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^5.4.0",
