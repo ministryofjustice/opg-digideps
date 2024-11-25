@@ -5,6 +5,7 @@ namespace App\Controller\Ndr;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -36,26 +37,36 @@ class VisitsCareController extends AbstractController
      */
     private $stepRedirector;
 
+    /**
+     * @var StepRedirector
+     */
+    private $clientApi;
+
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/visits-care", name="ndr_visits_care")
-     * @Template("@App/Ndr/VisitsCare/start.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/VisitsCare/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getVisitsCareState()['state']) {
             return $this->redirectToRoute('ndr_visits_care_summary', ['ndrId' => $ndrId]);
@@ -63,15 +74,14 @@ class VisitsCareController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/visits-care/step/{step}", name="ndr_visits_care_step")
-     * @Template("@App/Ndr/VisitsCare/step.html.twig")
      *
-     * @param $ndrId
-     * @param $step
+     * @Template("@App/Ndr/VisitsCare/step.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -137,9 +147,8 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/visits-care/summary", name="ndr_visits_care_summary")
-     * @Template("@App/Ndr/VisitsCare/summary.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/VisitsCare/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
