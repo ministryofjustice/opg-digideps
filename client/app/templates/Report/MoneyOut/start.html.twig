@@ -20,7 +20,7 @@
 {% block pageTitle %}{{ 'startPage.moneyOut.pageTitle' | trans(transOptions) }}{% endblock %}
 
 
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report, isMultiClientDeputy) }}{% endblock %}
 
 {% block pageContent %}
 
