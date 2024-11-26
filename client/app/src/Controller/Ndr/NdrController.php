@@ -141,11 +141,14 @@ class NdrController extends AbstractController
         $user = $this->getUser();
         $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
 
+        $backLink = $this->generateUrl('lay_home', ['clientId' => $clientId]);
+
         return [
             'ndr' => $ndr,
             'deputy' => $user,
             'ndrStatus' => $ndrStatusService,
             'isMultiClientDeputy' => $isMultiClientDeputy,
+            'backLink' => $backLink,
         ];
     }
 

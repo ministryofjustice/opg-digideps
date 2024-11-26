@@ -30,8 +30,9 @@
 
 {% block breadcrumbs %}
     {% if ndr.submitted == true %}
-        <a id="overview-button" href="{{ path('homepage') }}"
-           class="link-back">{{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}</a>
+        <a id="back-to-reports" href="{{ backLink }}"
+           class="govuk-link link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}
+        </a>
     {% else %}
         {{ macros.breadcrumbs(ndr, isMultiClientDeputy) }}
     {% endif %}
