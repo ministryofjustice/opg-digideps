@@ -218,7 +218,7 @@ class Deputy
     /**
      * @JMS\Type("App\Entity\User")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy")
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove"})
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
