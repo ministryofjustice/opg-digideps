@@ -77,7 +77,7 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
 
 resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
   target_id = "check-delete-zero-activity-users-${terraform.workspace}"
-  arn       = data.aws_lambda_function.slack_lambda.arn
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
   rule      = aws_cloudwatch_event_rule.delete_zero_activity_users_check.name
   input = jsonencode(
     {
