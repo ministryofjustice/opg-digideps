@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @self-register @iqpal
+@v2 @v2_sequential_1 @registration @self-register
 Feature: Lay Deputy Self Registration
 
     @super-admin
