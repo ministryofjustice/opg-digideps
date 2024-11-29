@@ -61,7 +61,7 @@ data "aws_ip_ranges" "route53_healthchecks_ips" {
 }
 
 locals {
-  default_allow_list = concat(module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+  default_allow_list = concat(module.allow_list.palo_alto_prisma_access, module.allow_list.moj_sites, formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
   admin_allow_list   = length(var.account["admin_allow_list"]) > 0 ? var.account["admin_allow_list"] : local.default_allow_list
   front_allow_list   = length(var.account["front_allow_list"]) > 0 ? var.account["front_allow_list"] : local.default_allow_list
 
