@@ -79,7 +79,7 @@ class NdrController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function overviewAction(Redirector $redirector, $ndrId)
+    public function overviewAction(Redirector $redirector, int $ndrId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -123,7 +123,7 @@ class NdrController extends AbstractController
      *
      * @Template("@App/Ndr/Ndr/review.html.twig")
      */
-    public function reviewAction($ndrId)
+    public function reviewAction(int $ndrId)
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -155,7 +155,7 @@ class NdrController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/deputyndr.pdf", name="ndr_pdf")
      */
-    public function pdfViewAction($ndrId)
+    public function pdfViewAction(int $ndrId)
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -204,7 +204,7 @@ class NdrController extends AbstractController
      *
      * @throws \Exception
      */
-    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
+    public function declarationAction(Request $request, int $ndrId, S3FileUploader $fileUploader)
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -263,7 +263,7 @@ class NdrController extends AbstractController
      *
      * @Template("@App/Ndr/Ndr/submitConfirmation.html.twig")
      */
-    public function submitConfirmationAction(Request $request, $ndrId)
+    public function submitConfirmationAction(Request $request, int $ndrId)
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -305,7 +305,7 @@ class NdrController extends AbstractController
      *
      * @Template("@App/Report/Report/submitFeedback.html.twig")
      */
-    public function submitFeedbackAction($ndrId)
+    public function submitFeedbackAction(int $ndrId)
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
