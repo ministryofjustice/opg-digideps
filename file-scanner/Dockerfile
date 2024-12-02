@@ -1,10 +1,10 @@
-FROM golang:1.22.0-alpine3.18 AS build
+FROM golang:1.22.9-alpine3.20 AS build
 
 # Build go package
 ADD file-scanner/. /go/src/clamav-rest/
 RUN cd /go/src/clamav-rest && go mod vendor && go build -v
 
-FROM alpine:3.19
+FROM alpine:3.20
 
 ENV MAX_SCAN_SIZE=100M
 ENV MAX_FILE_SIZE=25M
