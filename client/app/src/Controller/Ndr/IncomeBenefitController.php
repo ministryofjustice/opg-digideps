@@ -64,7 +64,8 @@ class IncomeBenefitController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName(
+        ) && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
 
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getIncomeBenefitsState()['state']) {
