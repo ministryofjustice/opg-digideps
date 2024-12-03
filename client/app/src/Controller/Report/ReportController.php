@@ -194,9 +194,7 @@ class ReportController extends AbstractController
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients(
-            $user->getDeputyUid()
-        );
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -433,9 +431,7 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
-        $deputyHasMultiClients = !$user->isDeputyOrg() && $this->clientApi->checkDeputyHasMultiClients(
-            $user->getDeputyUid()
-        );
+        $deputyHasMultiClients = !$user->isDeputyOrg() && count($this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
 
         return $this->render($template, [
             'user' => $user,
@@ -539,7 +535,7 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
 
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $currentUser->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($currentUser->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($currentUser);
 
         return [
             'report' => $report,
@@ -622,7 +618,7 @@ class ReportController extends AbstractController
             }
         }
 
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return [
             'user' => $this->getUser(),

@@ -65,7 +65,7 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getById($clientId);
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return [
             'client' => $client,
@@ -95,7 +95,7 @@ class ClientController extends AbstractController
     public function editClientDetailsAction(Request $request, int $clientId)
     {
         $user = $this->userApi->getUserWithData();
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getById($clientId);

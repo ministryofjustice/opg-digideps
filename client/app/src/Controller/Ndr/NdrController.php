@@ -104,9 +104,7 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
-        $deputyHasMultiClients = !$user->isDeputyOrg() && $this->clientApi->checkDeputyHasMultiClients(
-            $user->getDeputyUid()
-        );
+        $deputyHasMultiClients = !$user->isDeputyOrg() && count($this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
 
         return [
             'client' => $client,
@@ -139,7 +137,7 @@ class NdrController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $backLink = $this->generateUrl('lay_home', ['clientId' => $clientId]);
 
@@ -226,7 +224,7 @@ class NdrController extends AbstractController
 
         /** @var User $currentUser */
         $currentUser = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $currentUser->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($currentUser->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($currentUser);
 
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);

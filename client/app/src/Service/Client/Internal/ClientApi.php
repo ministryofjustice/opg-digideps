@@ -6,6 +6,7 @@ namespace App\Service\Client\Internal;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Event\ClientDeletedEvent;
 use App\Event\ClientUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
@@ -250,8 +251,8 @@ class ClientApi
         );
     }
 
-    public function checkDeputyHasMultiClients(int $deputyUid): bool
+    public function checkDeputyHasMultiClients(User $user): bool
     {
-        return count($this->getAllClientsByDeputyUid($deputyUid)) > 1;
+        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
     }
 }
