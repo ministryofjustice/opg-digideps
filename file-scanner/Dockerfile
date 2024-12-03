@@ -1,4 +1,4 @@
-FROM golang:1.22.0-alpine3.18 AS build
+FROM golang:1.22.9-alpine3.20 AS build
 
 # Build go package
 ADD file-scanner/. /go/src/clamav-rest/

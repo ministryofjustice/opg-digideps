@@ -111,6 +111,6 @@
         "phpunit/phpunit": "^9.5.10",
         "symfony/maker-bundle": "^1.29",
         "symfony/phpunit-bridge": "^5.4.0",
-        "symfony/var-dumper": "^5.4.0"
+        "symfony/var-dumper": "5.4.48"
     }
 }
