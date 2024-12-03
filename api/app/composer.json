@@ -83,7 +83,7 @@
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^5.4.0",
         "symfony/phpunit-bridge": "^5.4.0",
-        "symfony/var-dumper": "^5.4.0"
+        "symfony/var-dumper": "5.4.48"
     },
     "scripts": {
         "post-install-cmd": [
