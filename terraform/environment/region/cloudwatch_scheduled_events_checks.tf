@@ -72,7 +72,8 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
   name                = "check-delete-zero-activity-users-${terraform.workspace}"
   description         = "Execute the delete zero activity users check for ${terraform.workspace}"
   schedule_expression = "cron(12 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  #  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled = false
 }
 
 resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
