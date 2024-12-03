@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
+        uses: docker/setup-buildx-action@0f069ddc17b8eb78586b08a7fe335fd54649e2d3
 
       - name: download resources artifact
         uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7

@@ -1,3 +1,4 @@
 * @ministryofjustice/digideps
 /.github/workflows/* @ministryofjustice/opg-webops
 /.github/CODEOWNERS @ministryofjustice/opg-webops
+terraform/* @ministryofjustice/opg-webops

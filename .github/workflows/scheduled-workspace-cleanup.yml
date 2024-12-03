@@ -26,11 +26,11 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.8
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.0
         with:
           terraform_directory: terraform/environment
 
-      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@344fef46b6edc7c46ce8b3b8b0a3ece7e77e05f0 # pin@v2.0.0
         with:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
