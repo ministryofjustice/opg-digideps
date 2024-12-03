@@ -120,6 +120,7 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
   description         = "Delete zero activity users in ${terraform.workspace}"
   schedule_expression = "cron(20 6 * * ? *)"
   tags                = var.default_tags
+  is_enabled          = false
 }
 
 resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
