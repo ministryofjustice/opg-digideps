@@ -13,42 +13,13 @@ class OrgService
 {
     public const DEFAULT_ORG_NAME = 'Your Organisation';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var DeputyFactory
-     */
-    private $deputyFactory;
-
-    /**
-     * @var DeputyRepository
-     */
-    private $deputyRepository;
-
-    /**
-     * @var array
-     */
-    private $added;
-
     public function __construct(
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        DeputyRepository $deputyRepository,
-        DeputyFactory $deputyFactory
+        protected EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private DeputyRepository $deputyRepository,
+        private DeputyFactory $deputyFactory,
+        private array $added = []
     ) {
-        $this->em = $em;
-        $this->userRepository = $userRepository;
-        $this->deputyRepository = $deputyRepository;
-        $this->deputyFactory = $deputyFactory;
-        $this->added = [];
     }
 
     /**

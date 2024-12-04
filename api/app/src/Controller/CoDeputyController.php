@@ -48,7 +48,7 @@ class CoDeputyController extends RestController
      *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
-    public function add(Request $request, $clientId)
+    public function add(Request $request, int $clientId)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'email' => 'notEmpty',
