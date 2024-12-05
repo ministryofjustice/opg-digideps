@@ -159,7 +159,7 @@ class RedirectorTest extends TestCase
         $clientKnown,
         $hasAddress,
         $expectedRoute,
-        $registrationRoute = 'CO_DEPUTY_INVITE'
+        $registrationRoute = User::CO_DEPUTY_INVITE
     ) {
         $this->user->setRoleName($userRole);
 
