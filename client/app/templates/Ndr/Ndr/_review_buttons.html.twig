@@ -21,8 +21,8 @@
     </div>
 {% else %}
     <div class="govuk-button-group">
-        <a class="govuk-button"
-           href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}
+        <a class="button" href="{{ backLink }}">
+            {{ 'backToYourReports' | trans({}, 'common') }}
         </a>
     </div>
 {% endif %}

@@ -1,13 +1,3 @@
-{% extends '@App/Layouts/application.html.twig' %}
-{% set translationDomain = "ndr-homepage" %}
-{% trans_default_domain translationDomain %}
-
-{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
-{% block supportTitleTop %}{{ client.fullname }}{% endblock %}
-
-{% block pageContent %}
-
     {% if clientHasCoDeputies %}
         {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
@@ -48,5 +38,3 @@
         } %}
 
     {% endif %}
-
-{% endblock %}

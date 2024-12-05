@@ -41,7 +41,7 @@ class AssetController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Report\Status::STATE_NOT_STARTED != $report->getStatus()->getAssetsState()['state']) {
@@ -354,7 +354,7 @@ class AssetController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Report\Status::STATE_NOT_STARTED == $report->getStatus()->getAssetsState()['state']) {

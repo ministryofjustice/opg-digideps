@@ -25,7 +25,7 @@
         <p class="govuk-body">{{ 'page.yourNextReport' | trans }}</p>
     </div>
 
-    <a href="{{ path('ndr_index') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
+    <a href="{{ path( "lay_home", {'clientId' : ndr.client.id}) }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-7 behat-link-return-to-reports-page" data-module="govuk-button">
         {{ 'page.yourReportsButton' | trans }}
     </a>
 

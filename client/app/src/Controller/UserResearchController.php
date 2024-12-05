@@ -28,7 +28,7 @@ class UserResearchController extends AbstractController
         ReportApi $reportApi,
         TranslatorInterface $translator,
         FormFactoryInterface $formFactory,
-        NdrApi $ndrApi
+        NdrApi $ndrApi,
     ) {
         $this->userResearchApi = $userResearchApi;
         $this->reportApi = $reportApi;
@@ -84,7 +84,7 @@ class UserResearchController extends AbstractController
      */
     public function userResearchSubmitted(?int $reportId = null, ?int $ndrId = null)
     {
-        $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr']);
+        $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr-client', 'client-id']);
 
         // check status
         if (!$report->getSubmitted()) {

@@ -4,7 +4,9 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -33,26 +35,36 @@ class AssetController extends AbstractController
      */
     private $stepRedirector;
 
+    /**
+     * @var ClientApi
+     */
+    private $clientApi;
+
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/assets", name="ndr_assets")
-     * @Template("@App/Ndr/Asset/start.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/Asset/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getAssetsState()['state']) {
             return $this->redirectToRoute('ndr_assets_summary', ['ndrId' => $ndrId]);
@@ -60,11 +72,13 @@ class AssetController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/assets/exist", name="ndr_assets_exist")
+     *
      * @Template("@App/Ndr/Asset/exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
@@ -85,7 +99,7 @@ class AssetController extends AbstractController
             switch ($ndr->getNoAssetToAdd()) {
                 case 0: // yes
                     return $this->redirectToRoute('ndr_assets_type', ['ndrId' => $ndrId]);
-                case 1: //no
+                case 1: // no
                     $this->restClient->put('ndr/'.$ndrId, $ndr, ['noAssetsToAdd']);
 
                     return $this->redirectToRoute('ndr_assets_summary', ['ndrId' => $ndrId]);
@@ -106,6 +120,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/step-type", name="ndr_assets_type")
+     *
      * @Template("@App/Ndr/Asset/type.html.twig")
      */
     public function typeAction(Request $request, $ndrId)
@@ -135,6 +150,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/other/{title}/add", name="ndr_asset_other_add")
+     *
      * @Template("@App/Ndr/Asset/Other/add.html.twig")
      */
     public function otherAddAction(Request $request, $ndrId, $title)
@@ -166,6 +182,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/other/edit/{assetId}", name="ndr_asset_other_edit")
+     *
      * @Template("@App/Ndr/Asset/Other/edit.html.twig")
      */
     public function otherEditAction(Request $request, $ndrId, $assetId = null)
@@ -199,6 +216,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/add_another", name="ndr_assets_add_another")
+     *
      * @Template("@App/Ndr/Asset/addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
@@ -225,6 +243,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/property/step{step}/{assetId}", name="ndr_assets_property_step", requirements={"step":"\d+"})
+     *
      * @Template("@App/Ndr/Asset/Property/step.html.twig")
      */
     public function propertyStepAction(Request $request, $ndrId, $step, $assetId = null)
@@ -346,9 +365,8 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/summary", name="ndr_assets_summary")
-     * @Template("@App/Ndr/Asset/summary.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/Asset/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -366,6 +384,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/{assetId}/delete", name="ndr_asset_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
