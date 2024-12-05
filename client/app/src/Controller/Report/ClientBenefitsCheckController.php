@@ -10,8 +10,10 @@ use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBeha
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
+use App\Entity\User;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
 use App\Service\Client\Internal\NdrApi;
@@ -37,7 +39,8 @@ class ClientBenefitsCheckController extends AbstractController
         private ClientBenefitsCheckApi $benefitCheckApi,
         private StepRedirector $stepRedirector,
         private MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
-        private NdrApi $ndrApi
+        private NdrApi $ndrApi,
+        private ClientApi $clientApi
     ) {
     }
 
@@ -45,12 +48,17 @@ class ClientBenefitsCheckController extends AbstractController
      * @Route("/{reportOrNdr}/{reportId}/client-benefits-check", name="client_benefits_check", requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * }))
+     *
      * @Template("@App/Report/ClientBenefitsCheck/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function start(int $reportId, string $reportOrNdr)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -67,6 +75,7 @@ class ClientBenefitsCheckController extends AbstractController
         return [
             'report' => $report,
             'reportOrNdr' => $reportOrNdr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -74,6 +83,7 @@ class ClientBenefitsCheckController extends AbstractController
      * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}", name="client_benefits_check_step"), requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * }))
+     *
      * @Template("@App/Report/ClientBenefitsCheck/step.html.twig")
      *
      * @return array|RedirectResponse
@@ -119,8 +129,8 @@ class ClientBenefitsCheckController extends AbstractController
         }
 
         // We only want to support deleting empty income types when there is at least one saved income type - otherwise validate the fields
-        $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection &&
-            count($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()) >= 2;
+        $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection
+            && count($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()) >= 2;
 
         $form = $this->createForm(
             ClientBenefitsCheckType::class,
@@ -169,20 +179,25 @@ class ClientBenefitsCheckController extends AbstractController
     {
         $notYesStatuses = [ClientBenefitsCheck::OTHER_MONEY_NO, ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW];
 
-        return $form->has('doOthersReceiveMoneyOnClientsBehalf') &&
-            in_array($form->get('doOthersReceiveMoneyOnClientsBehalf')->getData(), $notYesStatuses);
+        return $form->has('doOthersReceiveMoneyOnClientsBehalf')
+            && in_array($form->get('doOthersReceiveMoneyOnClientsBehalf')->getData(), $notYesStatuses);
     }
 
     /**
      * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/summary", name="client_benefits_check_summary"), requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * }))
+     *
      * @Template("@App/Report/ClientBenefitsCheck/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summary(int $reportId, string $reportOrNdr)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -190,6 +205,7 @@ class ClientBenefitsCheckController extends AbstractController
             'report' => $report,
             'reportOrNdr' => $reportOrNdr,
             'showActions' => true,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -197,6 +213,7 @@ class ClientBenefitsCheckController extends AbstractController
      * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}", name="client_benefits_check_remove_money_type", requirements={
      *   "reportOrNdr" = "(report|ndr)"
      * })))
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse

@@ -22,6 +22,7 @@ resource "aws_rds_cluster" "cluster" {
   vpc_security_group_ids              = var.vpc_security_group_ids
   tags                                = var.tags
   db_cluster_parameter_group_name     = "aurora-14-clust"
+  db_instance_parameter_group_name    = "aurora-14-inst"
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   lifecycle {
     ignore_changes  = [replication_source_identifier]
@@ -83,6 +84,8 @@ resource "aws_rds_cluster" "cluster_serverless" {
   vpc_security_group_ids              = var.vpc_security_group_ids
   tags                                = var.tags
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
+  db_cluster_parameter_group_name     = "aurora-14-clust"
+  db_instance_parameter_group_name    = "aurora-14-inst"
 
   serverlessv2_scaling_configuration {
     min_capacity = 0.5
@@ -108,6 +111,7 @@ resource "aws_rds_cluster_instance" "serverless_instances" {
   performance_insights_enabled    = true
   performance_insights_kms_key_id = var.kms_key_id
   publicly_accessible             = var.publicly_accessible
+  db_parameter_group_name         = "aurora-14-inst"
   tags                            = var.tags
 
   timeouts {

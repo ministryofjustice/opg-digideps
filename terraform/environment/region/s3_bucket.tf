@@ -15,7 +15,7 @@ module "pa_uploads" {
   account_name                         = var.account.name
   bucket_name                          = "pa-uploads-${local.environment}"
   force_destroy                        = var.account.force_destroy_bucket
-  kms_key_id                           = aws_kms_key.s3.key_id
+  kms_key_id                           = data.aws_kms_key.s3.key_id
   environment_name                     = local.environment
   enable_lifecycle                     = true
   expiration_days                      = local.expiration_days
@@ -31,4 +31,8 @@ module "pa_uploads" {
   providers = {
     aws = aws
   }
+}
+
+data "aws_kms_key" "s3" {
+  key_id = "alias/digideps_s3_encryption_key"
 }
