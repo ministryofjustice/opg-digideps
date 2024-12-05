@@ -123,7 +123,7 @@ class Redirector
                 }
 
                 // unverified codeputy invitation
-                if (!$user->getCoDeputyClientConfirmed()) {
+                if (!$user->getCoDeputyClientConfirmed() && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
                     $route = 'codep_verification';
                 }
             } else {
