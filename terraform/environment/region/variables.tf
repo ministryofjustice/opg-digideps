@@ -84,9 +84,11 @@ data "terraform_remote_state" "shared" {
   backend   = "s3"
   workspace = var.account.state_source
   config = {
-    bucket   = "opg.terraform.state"
-    key      = "digideps-infrastructure-shared/terraform.tfstate"
-    region   = "eu-west-1"
-    role_arn = "arn:aws:iam::311462405659:role/${var.default_role}"
+    bucket = "opg.terraform.state"
+    key    = "digideps-infrastructure-shared/terraform.tfstate"
+    region = "eu-west-1"
+    assume_role = {
+      role_arn = "arn:aws:iam::311462405659:role/${var.default_role}"
+    }
   }
 }
