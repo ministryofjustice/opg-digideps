@@ -163,7 +163,7 @@ class CoDeputyController extends AbstractController
      *
      * @throws \Throwable
      */
-    public function addAction(Request $request, Redirector $redirector)
+    public function addAction(Request $request, Redirector $redirector, $clientId)
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -177,12 +177,12 @@ class CoDeputyController extends AbstractController
 
         $backLink = $loggedInUser->isNdrEnabled() ?
             $this->generateUrl('ndr_index')
-            : $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+            : $this->generateUrl('lay_home', ['clientId' => $clientId]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->userApi->createCoDeputy($invitedUser, $loggedInUser);
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, $clientId);
 
                 $this->userApi->update(
                     $loggedInUser,

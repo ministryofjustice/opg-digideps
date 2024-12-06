@@ -5,35 +5,23 @@ namespace App\Service;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\User;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
 {
-    /** @var UserRepository */
-    private $userRepository;
-
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /**
-     * @var OrgService
-     */
-    private $orgService;
-
     public function __construct(
-        EntityManagerInterface $em,
-        OrgService $orgService
+        private EntityManagerInterface $em,
+        private ClientRepository $clientRepository,
+        private UserRepository $userRepository
     ) {
-        $this->userRepository = $em->getRepository(User::class);
-        $this->em = $em;
-        $this->orgService = $orgService;
     }
 
     /**
      * Adds a new user to the database.
      */
-    public function addUser(User $loggedInUser, User $userToAdd, $data)
+    public function addUser(User $loggedInUser, User $userToAdd, ?int $clientId)
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
@@ -49,7 +37,14 @@ class UserService
         $this->em->persist($userToAdd);
         $this->em->flush();
 
-        $this->orgService->addUserToUsersClients($loggedInUser, $userToAdd);
+        if ($loggedInUser->isLayDeputy()) {
+            $this->addUserToUsersClients($userToAdd, $clientId);
+        }
+    }
+
+    private function addUserToUsersClients($userToAdd, ?int $clientId)
+    {
+        $this->clientRepository->saveUserToClient($userToAdd, $clientId);
     }
 
     /**
