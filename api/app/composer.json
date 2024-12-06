@@ -22,7 +22,7 @@
     },
     "require": {
         "php": "^8.1",
-        "aws/aws-sdk-php": "3.299.1",
+        "aws/aws-sdk-php": "3.329.0",
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.6.3",
@@ -78,12 +78,12 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "5.4.46",
+        "symfony/http-client": "5.4.47",
         "symfony/browser-kit": "^5.4.0",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^5.4.0",
         "symfony/phpunit-bridge": "^5.4.0",
-        "symfony/var-dumper": "^5.4.0"
+        "symfony/var-dumper": "5.4.48"
     },
     "scripts": {
         "post-install-cmd": [

@@ -6,7 +6,9 @@ use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\Status;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -26,33 +28,27 @@ class MoneyInController extends AbstractController
         'account',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private StepRedirector $stepRedirector,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/report/{reportId}/money-in", name="money_in")
+     *
      * @Template("@App/Report/MoneyIn/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInState()['state']) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
@@ -60,11 +56,13 @@ class MoneyInController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/money-in/exist", name="does_money_in_exist")
+     *
      * @Template("@App/Report/MoneyIn/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -151,6 +149,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/no-money-in-exists", name="no_money_in_exists")
+     *
      * @Template("@App/Report/MoneyIn/noMoneyInToReport.html.twig")
      *
      * @return array|RedirectResponse
@@ -183,6 +182,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
+     *
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *
      * @param null $transactionId
@@ -292,6 +292,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
+     *
      * @Template("@App/Report/MoneyIn/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -320,12 +321,17 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
+     *
      * @Template("@App/Report/MoneyIn/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInState()['state'] && 'skip-step' != $fromPage) {
@@ -336,11 +342,13 @@ class MoneyInController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse

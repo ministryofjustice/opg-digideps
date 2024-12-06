@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -23,38 +25,33 @@ class MoneyTransferController extends AbstractController
         'money-transfer-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private StepRedirector $stepRedirector,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
+     *
      * @Template("@App/Report/MoneyTransfer/start.html.twig")
      *
      * @return array|Response|RedirectResponse
      */
     public function startAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
             return $this->render('@App/Report/MoneyTransfer/error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
                 'report' => $report,
+                'isMultiClientDeputy' => $isMultiClientDeputy,
             ]);
         }
 
@@ -64,11 +61,13 @@ class MoneyTransferController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/money-transfers/exist", name="money_transfers_exist")
+     *
      * @Template("@App/Report/MoneyTransfer/exist.html.twig")
      *
      * @return array|RedirectResponse
@@ -108,6 +107,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step")
+     *
      * @Template("@App/Report/MoneyTransfer/step.html.twig")
      *
      * @param null $transferId
@@ -198,6 +198,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
+     *
      * @Template("@App/Report/MoneyTransfer/addAnother.html.twig")
      *
      * @return array|RedirectResponse
@@ -226,12 +227,17 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/summary", name="money_transfers_summary")
+     *
      * @Template("@App/Report/MoneyTransfer/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyTransferState()['state']) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
@@ -239,11 +245,13 @@ class MoneyTransferController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
