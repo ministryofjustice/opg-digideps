@@ -22,7 +22,7 @@ class ClientTransformer
     public function __construct(
         ReportTransformer $reportTransformer,
         NdrTransformer $ndrTransformer,
-        DeputyTransformer $deputyTransformer
+        DeputyTransformer $deputyTransformer,
     ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
@@ -146,6 +146,8 @@ class ClientTransformer
                     'job_title' => $userDto->getJobTitle(),
                     'phone_main' => $userDto->getPhoneMain(),
                     'last_logged_in' => $userDto->getLastLoggedIn() instanceof \DateTime ? $userDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
+                    'deputy_uid' => $userDto->getDeputyUid(),
+                    'is_primary' => $userDto->getIsPrimary(),
                 ];
             }
         }

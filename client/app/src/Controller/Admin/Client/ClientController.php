@@ -3,8 +3,10 @@
 namespace App\Controller\Admin\Client;
 
 use App\Controller\AbstractController;
+use App\Entity\User;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,18 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ClientController extends AbstractController
 {
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ClientApi */
-    private $clientApi;
-
     public function __construct(
-        RestClient $restClient,
-        ClientApi $clientApi
+        private RestClient $restClient,
+        private ClientApi $clientApi,
+        private UserApi $userApi,
     ) {
-        $this->restClient = $restClient;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -47,9 +42,17 @@ class ClientController extends AbstractController
             return $this->redirectToRoute('admin_client_archived', ['id' => $client->getId()]);
         }
 
+        $deputy = $client->getDeputy();
+
+        if ($deputy instanceof User) {
+            if (false == $deputy->getIsPrimary()) {
+                $deputy = $this->userApi->getPrimaryUserAccount($deputy->getDeputyUid());
+            }
+        }
+
         return [
             'client' => $client,
-            'deputy' => $client->getDeputy(),
+            'deputy' => $deputy,
         ];
     }
 

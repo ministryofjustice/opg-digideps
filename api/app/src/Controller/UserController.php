@@ -40,7 +40,7 @@ class UserController extends RestController
         private EntityManagerInterface $em,
         private AuthService $authService,
         private RestFormatter $formatter,
-        private PasswordHasherFactoryInterface $hasherFactory
+        private PasswordHasherFactoryInterface $hasherFactory,
     ) {
     }
 
@@ -650,5 +650,26 @@ class UserController extends RestController
         }
 
         return $userEmail;
+    }
+
+    /**
+     * Endpoint for getting the primary user account associated with a deputy uid.
+     *
+     * @Route("/get-primary-user-account/{deputyUid}", methods={"GET"})
+     *
+     * @throws \Exception
+     */
+    public function getPrimaryUserAccount(int $deputyUid): ?User
+    {
+        $this->formatter->setJmsSerialiserGroups(['user', 'user-list']);
+        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
+
+        foreach ($users as $user) {
+            if ($user->getIsPrimary()) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 }
