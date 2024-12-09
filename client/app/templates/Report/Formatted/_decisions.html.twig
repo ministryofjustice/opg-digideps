@@ -13,7 +13,9 @@
                     <td class="label">No</td>
                 </tr>
             </table>
+        </div>
 
+        <div class="box">
             {% if decisions | length == 0 %}
                 <div class="labelvalue push-half--top">
                     <div class="label">No decisions made:</div>
@@ -44,6 +46,6 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            </div>
         </div>
+    </div>
 {% endif %}
