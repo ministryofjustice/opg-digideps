@@ -119,6 +119,20 @@ data "aws_iam_policy_document" "lambda_block_ips" {
     resources = ["*"]
   }
 
+  statement {
+    sid    = "UseDynamodbKMSKey"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey"
+    ]
+    resources = [
+      module.dynamodb_kms.eu_west_1_target_key_arn
+    ]
+  }
 }
 
 data "archive_file" "block_ips_zip" {
