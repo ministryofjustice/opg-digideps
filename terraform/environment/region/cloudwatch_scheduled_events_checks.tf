@@ -68,32 +68,33 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users_check" {
 
 # Delete zero activity users check - Temp disabled due to change in data structure linking additional tables.
 
-#resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
-#  name                = "check-delete-zero-activity-users-${terraform.workspace}"
-#  description         = "Execute the delete zero activity users check for ${terraform.workspace}"
-#  schedule_expression = "cron(12 09 * * ? *)"
-#  is_enabled          = var.account.is_production == 1 ? true : false
-#}
-#
-#resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
-#  target_id = "check-delete-zero-activity-users-${terraform.workspace}"
-#  arn       = data.aws_lambda_function.slack_lambda.arn
-#  rule      = aws_cloudwatch_event_rule.delete_zero_activity_users_check.name
-#  input = jsonencode(
-#    {
-#      scheduled-event-detail = {
-#        job-name                   = "delete_zero_activity_users_check"
-#        log-group                  = terraform.workspace,
-#        log-entries                = ["delete_zero_activity_users"],
-#        search-timespan            = "24 hours",
-#        bank-holidays              = "true",
-#        channel-identifier-absent  = "team",
-#        channel-identifier-success = "scheduled-jobs",
-#        channel-identifier-failure = "team"
-#      }
-#    }
-#  )
-#}
+resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
+  name                = "check-delete-zero-activity-users-${terraform.workspace}"
+  description         = "Execute the delete zero activity users check for ${terraform.workspace}"
+  schedule_expression = "cron(12 09 * * ? *)"
+  #  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled = false
+}
+
+resource "aws_cloudwatch_event_target" "delete_zero_activity_users_check" {
+  target_id = "check-delete-zero-activity-users-${terraform.workspace}"
+  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
+  rule      = aws_cloudwatch_event_rule.delete_zero_activity_users_check.name
+  input = jsonencode(
+    {
+      scheduled-event-detail = {
+        job-name                   = "delete_zero_activity_users_check"
+        log-group                  = terraform.workspace,
+        log-entries                = ["delete_zero_activity_users"],
+        search-timespan            = "24 hours",
+        bank-holidays              = "true",
+        channel-identifier-absent  = "team",
+        channel-identifier-success = "scheduled-jobs",
+        channel-identifier-failure = "team"
+      }
+    }
+  )
+}
 
 # Resubmit re-submittable error documents check
 

@@ -63,7 +63,7 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -356,7 +356,7 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = 'ROLE_LAY_DEPUTY' == $user->getRoleName() ? $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid()) : null;
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
