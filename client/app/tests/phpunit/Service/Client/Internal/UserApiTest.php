@@ -40,7 +40,7 @@ class UserApiTest extends TestCase
     /** @var UserApi */
     private $sut;
 
-    /** @var \Faker\Generator */
+    /** @var Faker\Generator */
     private $faker;
 
     public function setUp(): void
@@ -228,15 +228,17 @@ class UserApiTest extends TestCase
         $createdCoDeputy = $invitedCoDeputy->setRegistrationDate(new DateTime());
         $invitedByDeputy = UserHelpers::createInvitedCoDeputy();
 
+        $clientId = 100;
+
         $this->restClient
-            ->post('codeputy/add', $invitedCoDeputy, ['codeputy'], 'User')
+            ->post(sprintf('codeputy/add/%s', $clientId), $invitedCoDeputy, ['codeputy'], 'User')
             ->shouldBeCalled()
             ->willReturn($createdCoDeputy);
 
         $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputy);
         $this->eventDispatcher->dispatch($coDeputyCreatedEvent, 'codeputy.created')->shouldBeCalled();
 
-        $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputy);
+        $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputy, $clientId);
     }
 
     /** @test */
