@@ -88,8 +88,7 @@ form:
     label: Please tell us more about the gifts you intend to make.
     hint: |
       Tell us who you plan to give gifts to, on what occasion and roughly how much you will spend.
-      For example, "Birthday gifts for %client%'s immediate family. I'll spend around £10 on
-      each gift."
+      For example, "Birthday gifts for client's immediate family. I spend around £10 on each gift"
   actionPropertyMaintenance:
     label: Are there plans for maintenance or alterations to any property owned by %client%?
   actionPropertySellingRent:

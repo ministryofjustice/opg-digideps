@@ -934,7 +934,7 @@ class FixtureHelper
             null,
             $caseNumber,
             true,
-            false,
+            true,
             $deputyUid
         );
 

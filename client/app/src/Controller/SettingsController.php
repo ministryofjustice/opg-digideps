@@ -99,7 +99,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return ['deputyHasMultiClients' => $deputyHasMultiClients];
     }
@@ -132,7 +132,7 @@ class SettingsController extends AbstractController
             return $this->redirect($this->generateUrl($successRoute));
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return [
             'form' => $form->createView(),
@@ -185,7 +185,7 @@ class SettingsController extends AbstractController
     public function profileAction()
     {
         $user = $this->userApi->getUserWithData();
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return [
             'user' => $this->getUser(),
@@ -255,7 +255,7 @@ class SettingsController extends AbstractController
             }
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($preUpdateDeputy->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($preUpdateDeputy);
 
         return [
             'user' => $preUpdateDeputy,
