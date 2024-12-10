@@ -1,4 +1,4 @@
-#tfsec:ignore:aws-s3-enable-bucket-logging - only contains dev data. no need for access logging
+#trivy:ignore:avd-aws-0089 - only contains dev data. no need for access logging
 resource "aws_s3_bucket" "pa_uploads_branch_replication" {
   count         = var.account.name == "development" ? 1 : 0
   bucket        = "pa-uploads-branch-replication"
@@ -107,6 +107,7 @@ resource "aws_iam_role_policy_attachment" "replication" {
   policy_arn = aws_iam_policy.replication[0].arn
 }
 
+#trivy:ignore:avd-aws-0132 - only used in development
 resource "aws_s3_bucket_server_side_encryption_configuration" "pa_uploads_branch_replication" {
   count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].bucket
