@@ -574,4 +574,20 @@ trait AuthTrait
         $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
     }
+
+    /**
+     * @Then I should see the NDR report on the reports page
+     */
+    public function theyShouldBeOnNDRReportPage(): void
+    {
+        $this->assertPageContainsText('New deputy report');
+    }
+
+    /**
+     * @Then I should not see the NDR report on the reports page
+     */
+    public function theyShouldNotBeOnNDRReportPage(): void
+    {
+        $this->assertPageNotContainsText('New deputy report');
+    }
 }

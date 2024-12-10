@@ -11,13 +11,11 @@ use App\Form as FormDir;
 use App\Model as ModelDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
-use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\File\S3FileUploader;
 use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
-use App\Service\ParameterStoreService;
 use App\Service\Redirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,7 +53,6 @@ class NdrController extends AbstractController
     public function __construct(
         private UserApi $userApi,
         private ClientApi $clientApi,
-        private PreRegistrationApi $preRegistrationApi,
         private SatisfactionApi $satisfactionApi,
         private NdrApi $ndrApi,
         private HtmlToPdfGenerator $htmlToPdf
@@ -63,40 +60,16 @@ class NdrController extends AbstractController
     }
 
     /**
-     * //TODO move view into Ndr directory when branches are integrated.
-     *
-     * @Route("/ndr", name="ndr_index")
+     * @Route("/ndr", name="ndr_index_deprecated")
      *
      * @Template("@App/Ndr/Ndr/index.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function indexAction(Redirector $redirector)
+    public function indexAction()
     {
-        // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData(array_merge(self::$ndrGroupsForValidation, ['status']));
-
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'ndr_index');
-
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($client->getId());
-        $coDeputies = $clientWithCoDeputies->getCoDeputies();
-
-        return [
-            'client' => $client,
-            'coDeputies' => $coDeputies,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($client->getCaseNumber()),
-            'ndr' => $client->getNdr(),
-            'reportsSubmitted' => $client->getSubmittedReports(),
-            'reportActive' => $client->getActiveReport(),
-            'ndrStatus' => new NdrStatusService($client->getNdr()),
-        ];
+        // Moved to ReportController::clientHomepageAction()
+        return $this->redirectToRoute('homepage');
     }
 
     /**
@@ -106,7 +79,7 @@ class NdrController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function overviewAction(Redirector $redirector, ParameterStoreService $parameterStore)
+    public function overviewAction(Redirector $redirector, int $ndrId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -116,13 +89,14 @@ class NdrController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
 
         if ($ndr->getSubmitted()) {
             throw new ReportSubmittedException();
@@ -130,10 +104,13 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
+        $deputyHasMultiClients = !$user->isDeputyOrg() && count($this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
+
         return [
             'client' => $client,
             'ndr' => $ndr,
             'ndrStatus' => $ndrStatus,
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -144,40 +121,48 @@ class NdrController extends AbstractController
      *
      * @Template("@App/Ndr/Ndr/review.html.twig")
      */
-    public function reviewAction($ndrId)
+    public function reviewAction(int $ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
 
-        $ndr = $client->getNdr();
-        $ndr->setClient($client);
-
         // check status
         $ndrStatusService = new NdrStatusService($ndr);
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
+        $backLink = $this->generateUrl('lay_home', ['clientId' => $clientId]);
+
         return [
             'ndr' => $ndr,
-            'deputy' => $this->getUser(),
+            'deputy' => $user,
             'ndrStatus' => $ndrStatusService,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
+            'backLink' => $backLink,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/deputyndr.pdf", name="ndr_pdf")
      */
-    public function pdfViewAction($ndrId)
+    public function pdfViewAction(int $ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
-        $ndr->setClient($client);
 
         $pdfBinary = $this->getPdfBinaryContent($ndr);
 
@@ -217,16 +202,16 @@ class NdrController extends AbstractController
      *
      * @throws \Exception
      */
-    public function declarationAction(Request $request, $ndrId, S3FileUploader $fileUploader)
+    public function declarationAction(Request $request, int $ndrId, S3FileUploader $fileUploader)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
-
-        $ndr = $client->getNdr();
-        $ndr->setClient($client);
 
         // check status
         $ndrStatus = new NdrStatusService($ndr);
@@ -236,6 +221,10 @@ class NdrController extends AbstractController
         if ($ndr->getSubmitted()) {
             throw new ReportSubmittedException();
         }
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($currentUser);
 
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
@@ -261,6 +250,7 @@ class NdrController extends AbstractController
             'ndr' => $ndr,
             'client' => $client,
             'form' => $form->createView(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -271,19 +261,20 @@ class NdrController extends AbstractController
      *
      * @Template("@App/Ndr/Ndr/submitConfirmation.html.twig")
      */
-    public function submitConfirmationAction(Request $request, $ndrId)
+    public function submitConfirmationAction(Request $request, int $ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
 
-        $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
             throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
-        $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
             throw new ReportNotSubmittedException();
@@ -312,25 +303,24 @@ class NdrController extends AbstractController
      *
      * @Template("@App/Report/Report/submitFeedback.html.twig")
      */
-    public function submitFeedbackAction($ndrId)
+    public function submitFeedbackAction(int $ndrId)
     {
-        $client = $this->clientApi->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+
+        $clientId = $ndr->getClient()->getId();
+        $client = $this->clientApi->getById($clientId);
 
         if (is_null($client)) {
             throw $this->createNotFoundException();
         }
 
-        $ndr = $client->getNdr();
         if ($ndr->getId() != $ndrId) {
             throw $this->createAccessDeniedException('Not authorised to access this Report');
         }
-        $ndr->setClient($client);
 
         if (!$ndr->getSubmitted()) {
             throw new ReportNotSubmittedException();
         }
-
-        $ndrStatus = new NdrStatusService($ndr);
 
         return [
             'ndr' => $ndr,

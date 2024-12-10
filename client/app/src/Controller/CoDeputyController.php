@@ -175,9 +175,7 @@ class CoDeputyController extends AbstractController
         $invitedUser = new User();
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
-        $backLink = $loggedInUser->isNdrEnabled() ?
-            $this->generateUrl('ndr_index')
-            : $this->generateUrl('lay_home', ['clientId' => $clientId]);
+        $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -229,9 +227,7 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $existingCoDeputy);
 
-        $backLink = $loggedInUser->isNdrEnabled() ?
-            $this->generateUrl('ndr_index')
-            : $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+        $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
 
         $form->handleRequest($request);
 
