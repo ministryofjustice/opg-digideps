@@ -24,14 +24,6 @@ locals {
       target_type = "security_group_id"
       target      = module.admin_elb_security_group.id
     }
-    # TO_DEL
-    cache_front = {
-      port        = 6379
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = data.aws_security_group.front_cache_sg.id
-    }
     front_cache = {
       port        = 6379
       type        = "egress"
