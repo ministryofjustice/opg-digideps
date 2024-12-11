@@ -5,10 +5,6 @@ data "aws_elasticache_replication_group" "front_cache_cluster" {
   replication_group_id = "frontend-redis-${var.account.name}"
 }
 
-data "aws_security_group" "front_cache_sg" {
-  name = "${var.account.name}-account-cache-frontend"
-}
-
 data "aws_security_group" "cache_front_sg" {
   name = "${var.account.name}-shared-cache-front"
 }
@@ -37,10 +33,6 @@ resource "aws_security_group_rule" "front_to_cache" {
 
 data "aws_elasticache_replication_group" "api_cache_cluster" {
   replication_group_id = "api-redis-${var.account.name}"
-}
-
-data "aws_security_group" "api_cache_sg" {
-  name = "${var.account.name}-account-cache-api"
 }
 
 data "aws_security_group" "cache_api_sg" {

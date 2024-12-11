@@ -58,3 +58,37 @@ jobs:
           echo $TF_WORKSPACE
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
+
+      - name: configure OIDC AWS credentials for ECR push
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-push
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@bfbd05a2dcf76451041cbd4b9d11cff82489a1ee # pin@v1.5.1
+        with:
+          registries: 311462405659
+
+      - name: Trivy Terraform Config Scan
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        with:
+          scan-type: "config"
+          target: terraform/${{ matrix.folder }}
+          severity: "MEDIUM,HIGH,CRITICAL"
+          format: "sarif"
+          output: "trivy-results.sarif"
+        env:
+          TRIVY_TIMEOUT: 15m
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
+
+      - name: Upload Trivy scan results to Security tab
+        id: trivy_upload_sarif
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: "trivy-results.sarif"

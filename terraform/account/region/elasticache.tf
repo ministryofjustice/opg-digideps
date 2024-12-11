@@ -26,17 +26,6 @@ resource "aws_elasticache_replication_group" "cache_api" {
   }, var.default_tags)
 }
 
-# TO_DEL
-resource "aws_security_group" "cache_api_sg" {
-  name   = "${var.account.name}-account-cache-api"
-  vpc_id = aws_vpc.main.id
-  tags   = merge(var.default_tags, { Name = "${var.account.name}-account-cache--api" })
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_security_group" "api_cache_sg" {
   name        = "${var.account.name}-shared-cache-api"
   description = "API Cache"
@@ -73,17 +62,6 @@ resource "aws_elasticache_replication_group" "front_api" {
     InstanceName = "front-${var.account.name}"
     Stack        = var.account.name
   }, var.default_tags)
-}
-
-# TO_DEL
-resource "aws_security_group" "cache_front_sg" {
-  name   = "${var.account.name}-account-cache-frontend"
-  vpc_id = aws_vpc.main.id
-  tags   = merge(var.default_tags, { Name = "${var.account.name}-account-cache-frontend" })
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_security_group" "front_cache_sg" {
