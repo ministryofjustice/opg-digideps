@@ -225,7 +225,14 @@ class LayUserFixtures extends AbstractDataFixture
 
         $preRegistrationData = [
             'Case' => substr_replace($data['caseNumber'], $iteration, -$offset),
-            'ClientSurname' => 'Client '.$iteration,
+            'ClientFirstname' => 'Client 1',
+            'ClientSurname' => 'Clientsurname',
+            'ClientAddress1' => 'Client Road',
+            'ClientAddress2' => null,
+            'ClientAddress3' => null,
+            'ClientAddress4' => null,
+            'ClientAddress5' => null,
+            'ClientPostcode' => 'CL1 3NT',
             'DeputyUid' => $deputyUid,
             'DeputyFirstname' => $data['id'].'-User-'.$iteration,
             'DeputySurname' => 'User',
@@ -248,6 +255,7 @@ class LayUserFixtures extends AbstractDataFixture
         if ($data['multi-client']) {
             $preRegistration2 = clone $preRegistration;
             $preRegistration2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
+            $preRegistration2->setClientFirstname('Client 2');
             $manager->persist($preRegistration2);
         }
 
@@ -272,6 +280,7 @@ class LayUserFixtures extends AbstractDataFixture
             $client2 = clone $client;
             $client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
             $client2->setLastname('Client '.$iteration.'-'.$iteration);
+            $client2->setFirstname('Client '.$iteration.'-'.$iteration);
             $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
 
             $manager->persist($client2);
