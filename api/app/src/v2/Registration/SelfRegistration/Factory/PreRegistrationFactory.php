@@ -29,7 +29,14 @@ class PreRegistrationFactory
     {
         return [
             'Case' => $dto->getCaseNumber(),
+            'ClientFirstname' => $dto->getClientFirstname(),
             'ClientSurname' => $dto->getClientSurname(),
+            'ClientAddress1' => $dto->getClientAddress1(),
+            'ClientAddress2' => $dto->getClientAddress2(),
+            'ClientAddress3' => $dto->getClientAddress3(),
+            'ClientAddress4' => $dto->getClientAddress4(),
+            'ClientAddress5' => $dto->getClientAddress5(),
+            'ClientPostcode' => $dto->getClientPostcode(),
             'DeputyUid' => $dto->getDeputyUid(),
             'DeputyFirstname' => $dto->getDeputyFirstname(),
             'DeputySurname' => $dto->getDeputySurname(),
