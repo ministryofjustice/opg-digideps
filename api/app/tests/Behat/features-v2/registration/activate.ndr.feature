@@ -12,7 +12,7 @@ Feature: Activate user account - Lay users (NDR)
         Then the partially registered users 'active flag' should 'not be' set
         And the partially registered users 'registration date' should 'not be' set
         When the user completes the final registration step
-        Then I should be on the Ndr Lay homepage
+        Then I should be on the Lay homepage
         And an admin user accesses the admin app
         Then the partially registered users 'active flag' should 'be' set
         And the partially registered users 'registration date' should 'be' set

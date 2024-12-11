@@ -65,7 +65,7 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getById($clientId);
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return [
             'client' => $client,
@@ -95,7 +95,7 @@ class ClientController extends AbstractController
     public function editClientDetailsAction(Request $request, int $clientId)
     {
         $user = $this->userApi->getUserWithData();
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getById($clientId);
@@ -193,7 +193,7 @@ class ClientController extends AbstractController
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
                 $url = $currentUser->isNdrEnabled()
-                    ? $this->generateUrl('ndr_index')
+                    ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
 
                 if ($currentUser->isNdrEnabled()) {

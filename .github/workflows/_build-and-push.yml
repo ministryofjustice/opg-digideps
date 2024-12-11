@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
+        uses: docker/setup-buildx-action@0f069ddc17b8eb78586b08a7fe335fd54649e2d3
 
       - name: export dates
         id: cache-dates
@@ -81,7 +81,7 @@ jobs:
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
 
       - name: install aws cli
-        uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
+        uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
       - name: configure OIDC AWS credentials for ECR push
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
