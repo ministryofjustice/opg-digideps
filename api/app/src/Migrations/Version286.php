@@ -11,7 +11,7 @@ final class Version286 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Adjusts fk constraint so cleanup job can correctly execute';
+        return 'Alters column & adds missing deputies to deputy table';
     }
 
     public function up(Schema $schema): void

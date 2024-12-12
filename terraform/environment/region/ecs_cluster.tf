@@ -120,6 +120,10 @@ locals {
       name  = "LAY_REPORT_CSV_FILENAME",
       value = local.lay_report_csv_file
     },
+    {
+      name  = "RUN_ONE_OFF_MIGRATIONS",
+      value = true
+    },
   ]
 
   api_integration_test_variables = [
