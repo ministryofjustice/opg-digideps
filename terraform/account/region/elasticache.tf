@@ -12,7 +12,7 @@ resource "aws_elasticache_replication_group" "cache_api" {
   num_cache_clusters         = 2
   port                       = 6379
   subnet_group_name          = var.account.ec_subnet_group
-  security_group_ids         = [aws_security_group.cache_api_sg.id, aws_security_group.api_cache_sg.id]
+  security_group_ids         = [aws_security_group.api_cache_sg.id]
   snapshot_retention_limit   = 1
   apply_immediately          = var.account.apply_immediately
   snapshot_window            = "02:00-03:50"
@@ -26,6 +26,7 @@ resource "aws_elasticache_replication_group" "cache_api" {
   }, var.default_tags)
 }
 
+# TO_DEL
 resource "aws_security_group" "cache_api_sg" {
   name   = "${var.account.name}-account-cache-api"
   vpc_id = aws_vpc.main.id
@@ -37,9 +38,11 @@ resource "aws_security_group" "cache_api_sg" {
 }
 
 resource "aws_security_group" "api_cache_sg" {
-  name   = "${var.account.name}-shared-cache-api"
-  vpc_id = aws_vpc.main.id
-  tags   = merge(var.default_tags, { Name = "cache-api" })
+  name        = "${var.account.name}-shared-cache-api"
+  description = "API Cache"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(var.default_tags, { Name = "cache-api" })
 
   lifecycle {
     create_before_destroy = true
@@ -58,7 +61,7 @@ resource "aws_elasticache_replication_group" "front_api" {
   num_cache_clusters         = 2
   port                       = 6379
   subnet_group_name          = var.account.ec_subnet_group
-  security_group_ids         = [aws_security_group.cache_front_sg.id, aws_security_group.front_cache_sg.id]
+  security_group_ids         = [aws_security_group.front_cache_sg.id]
   snapshot_retention_limit   = 1
   apply_immediately          = var.account.apply_immediately
   snapshot_window            = "02:00-03:50"
@@ -72,6 +75,7 @@ resource "aws_elasticache_replication_group" "front_api" {
   }, var.default_tags)
 }
 
+# TO_DEL
 resource "aws_security_group" "cache_front_sg" {
   name   = "${var.account.name}-account-cache-frontend"
   vpc_id = aws_vpc.main.id
@@ -83,9 +87,10 @@ resource "aws_security_group" "cache_front_sg" {
 }
 
 resource "aws_security_group" "front_cache_sg" {
-  name   = "${var.account.name}-shared-cache-front"
-  vpc_id = aws_vpc.main.id
-  tags   = merge(var.default_tags, { Name = "cache-front" })
+  name        = "${var.account.name}-shared-cache-front"
+  vpc_id      = aws_vpc.main.id
+  description = "Frontend Cache"
+  tags        = merge(var.default_tags, { Name = "cache-front" })
 
   lifecycle {
     create_before_destroy = true
