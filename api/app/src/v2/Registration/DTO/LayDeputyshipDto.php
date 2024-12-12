@@ -7,7 +7,14 @@ namespace App\v2\Registration\DTO;
 class LayDeputyshipDto
 {
     private ?string $caseNumber;
+    private ?string $clientFirstname;
     private ?string $clientSurname;
+    private ?string $clientAddress1;
+    private ?string $clientAddress2;
+    private ?string $clientAddress3;
+    private ?string $clientAddress4;
+    private ?string $clientAddress5;
+    private ?string $clientPostcode;
     private ?string $deputyFirstname;
     private ?string $deputySurname;
     private ?string $deputyUid;
@@ -224,6 +231,90 @@ class LayDeputyshipDto
     public function setHybrid(?string $hybrid): LayDeputyshipDto
     {
         $this->hybrid = $hybrid;
+
+        return $this;
+    }
+
+    public function getClientFirstname(): ?string
+    {
+        return $this->clientFirstname;
+    }
+
+    public function setClientFirstname(?string $clientFirstname): LayDeputyshipDto
+    {
+        $this->clientFirstname = $clientFirstname;
+
+        return $this;
+    }
+
+    public function getClientAddress1(): ?string
+    {
+        return $this->clientAddress1;
+    }
+
+    public function setClientAddress1(?string $clientAddress1): LayDeputyshipDto
+    {
+        $this->clientAddress1 = $clientAddress1;
+
+        return $this;
+    }
+
+    public function getClientAddress2(): ?string
+    {
+        return $this->clientAddress2;
+    }
+
+    public function setClientAddress2(?string $clientAddress2): LayDeputyshipDto
+    {
+        $this->clientAddress2 = $clientAddress2;
+
+        return $this;
+    }
+
+    public function getClientAddress3(): ?string
+    {
+        return $this->clientAddress3;
+    }
+
+    public function setClientAddress3(?string $clientAddress3): LayDeputyshipDto
+    {
+        $this->clientAddress3 = $clientAddress3;
+
+        return $this;
+    }
+
+    public function getClientAddress4(): ?string
+    {
+        return $this->clientAddress4;
+    }
+
+    public function setClientAddress4(?string $clientAddress4): LayDeputyshipDto
+    {
+        $this->clientAddress4 = $clientAddress4;
+
+        return $this;
+    }
+
+    public function getClientAddress5(): ?string
+    {
+        return $this->clientAddress5;
+    }
+
+    public function setClientAddress5(?string $clientAddress5): LayDeputyshipDto
+    {
+        $this->clientAddress5 = $clientAddress5;
+
+        return $this;
+    }
+
+    public function getClientPostcode(): ?string
+    {
+        return $this->clientPostcode;
+    }
+
+    public function setClientPostcode(?string $clientPostcode): LayDeputyshipDto
+    {
+        $this->clientPostcode = $clientPostcode;
 
         return $this;
     }
