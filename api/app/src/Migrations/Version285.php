@@ -20,7 +20,7 @@ final class Version285 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE pre_registration ADD client_firstname VARCHAR(50) NOT NULL');
+        $this->addSql('ALTER TABLE pre_registration ADD client_firstname VARCHAR(50) DEFAULT NULL');
         $this->addSql('ALTER TABLE pre_registration ADD client_address_1 VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE pre_registration ADD client_address_2 VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE pre_registration ADD client_address_3 VARCHAR(255) DEFAULT NULL');

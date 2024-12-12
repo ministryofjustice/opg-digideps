@@ -33,7 +33,7 @@ class PreRegistration
     public function __construct(array $row)
     {
         $this->caseNumber = $row['Case'] ?? '';
-        $this->clientFirstname = $row['ClientFirstname'] ?? '';
+        $this->clientFirstname = $row['ClientFirstname'] ?? null;
         $this->clientLastname = $row['ClientSurname'] ?? '';
         $this->clientAddress1 = $row['ClientAddress1'] ?? null;
         $this->clientAddress2 = $row['ClientAddress2'] ?? null;
@@ -83,9 +83,7 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(name="client_firstname", type="string", length=50, nullable=false)
+     * @ORM\Column(name="client_firstname", type="string", length=50, nullable=true)
      */
     private string $clientFirstname;
 
