@@ -151,7 +151,8 @@ class RedirectorTest extends TestCase
         $isDeputyOrg,
         $clientKnown,
         $hasAddress,
-        $expectedRoute
+        $expectedRoute,
+        $registrationRoute = User::CO_DEPUTY_INVITE
     ) {
         $this->user->setRoleName($userRole);
 
@@ -161,6 +162,7 @@ class RedirectorTest extends TestCase
         $this->user->shouldReceive('isDeputyOrg')->andReturn($isDeputyOrg);
         $this->user->shouldReceive('getIdOfClientWithDetails')->andReturn($clientKnown);
         $this->user->shouldReceive('hasAddressDetails')->andReturn($hasAddress);
+        $this->user->shouldReceive('getRegistrationRoute')->andReturn($registrationRoute);
         $this->parameterStoreService->shouldReceive('getFeatureFlag')->andReturn('0');
 
         $correctRoute = $this->object->getCorrectRouteIfDifferent($this->user, $currentRoute);

@@ -71,11 +71,9 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $clientId
-     *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function saveUserToClient(User $user, $clientId)
+    public function saveUserToClient(User $user, int $clientId)
     {
         $conn = $this->getEntityManager()->getConnection();
 
