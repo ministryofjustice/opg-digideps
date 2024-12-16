@@ -2,7 +2,7 @@ resource "aws_iam_role" "ci_test" {
   assume_role_policy = data.aws_iam_policy_document.ci_test_assume_policy.json
   name               = "digideps-test-ci"
   tags               = var.default_tags
-  provider           = aws.management
+  provider           = aws.management_admin
 }
 
 data "aws_iam_policy_document" "ci_test_assume_policy" {
@@ -11,8 +11,10 @@ data "aws_iam_policy_document" "ci_test_assume_policy" {
     effect = "Allow"
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::631181914621:role/oidc-digideps-development"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::631181914621:role/oidc-digideps-development"
+      ]
     }
 
     actions = ["sts:AssumeRole"]
@@ -23,7 +25,7 @@ resource "aws_iam_role_policy" "ci_test" {
   name     = "digideps-test-ci"
   policy   = data.aws_iam_policy_document.ci_test.json
   role     = aws_iam_role.ci_test.id
-  provider = aws.management
+  provider = aws.management_admin
 }
 
 data "aws_iam_policy_document" "ci_test" {
@@ -43,6 +45,18 @@ data "aws_iam_policy_document" "ci_test" {
       "arn:aws:route53:::hostedzone/Z0818402Q9ADP2GK9BOL"
     ]
   }
+
+  statement {
+    sid    = "GetParameters"
+    effect = "Allow"
+    actions = [
+      "ssm:GetParameter"
+    ]
+    resources = [
+      "arn:aws:ssm:eu-west-1:311462405659:parameter/digideps/*"
+    ]
+  }
+
 
   statement {
     sid    = "ReadDNS"
@@ -67,6 +81,28 @@ data "aws_iam_policy_document" "ci_test" {
   }
 
   statement {
+    sid    = "S3AllowReadWrite"
+    effect = "Allow"
+    actions = [
+      "s3:*"
+    ]
+    resources = [
+      "arn:aws:s3:::backup.complete-deputy-report.service.gov.uk",
+      "arn:aws:s3:::backup.complete-deputy-report.service.gov.uk/*"
+    ]
+  }
+
+  statement {
+    sid    = "KMSListDescribe"
+    effect = "Allow"
+    actions = [
+      "kms:ListAliases",
+      "kms:DescribeKey"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
     sid    = "ECRAllowRead"
     effect = "Allow"
     actions = [
@@ -84,7 +120,7 @@ data "aws_iam_policy_document" "ci_test" {
       "ecr:DescribeImageScanFindings"
     ]
     resources = [
-      "arn:aws:ecr:region:311462405659:digideps/*"
+      "arn:aws:ecr:eu-west-1:311462405659:digideps/*"
     ]
   }
 

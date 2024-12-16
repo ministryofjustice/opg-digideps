@@ -5,7 +5,7 @@ terraform {
     encrypt = true
     region  = "eu-west-1"
     assume_role = {
-      role_arn = "arn:aws:iam::311462405659:role/digideps-ci"
+      role_arn = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
     }
     dynamodb_table = "remote_lock"
   }
@@ -29,7 +29,19 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE_TEST}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "management_admin"
+  default_tags {
+    tags = local.default_tags
+  }
+  assume_role {
+    role_arn     = "arn:aws:iam::311462405659:role/breakglass"
     session_name = "terraform-session"
   }
 }
@@ -54,7 +66,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE_TEST}"
     session_name = "terraform-session"
   }
 }

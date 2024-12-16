@@ -554,6 +554,28 @@ trait AuthTrait
     }
 
     /**
+     * @When /^the Lay Deputy logs in with the email address attached to their primary account$/
+     */
+    public function aLayDeputyLogsInWithTheEmailAddressAttachedToTheirAccount()
+    {
+        $userAccount = $this->em->getRepository(User::class)->findOneBy(['email' => $this->loggedInUserDetails->getUserEmail()]);
+        $allUserAccounts = $this->em->getRepository(User::class)->findBy(['deputyUid' => $userAccount->getDeputyUid()]);
+
+        $primaryEmailAddress = '';
+
+        foreach ($allUserAccounts as $userAccount) {
+            if ($userAccount->getIsPrimary()) {
+                $primaryEmailAddress = $userAccount->getEmail();
+            }
+        }
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $primaryEmailAddress);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
      * @Then I should see the NDR report on the reports page
      */
     public function theyShouldBeOnNDRReportPage(): void

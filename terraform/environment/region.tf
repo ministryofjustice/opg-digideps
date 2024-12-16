@@ -19,8 +19,9 @@ module "eu_west_1" {
   admin_fully_qualified_domain_name = aws_route53_record.admin.fqdn
 
   providers = {
-    aws            = aws.digideps_eu_west_1
-    aws.management = aws.management_eu_west_1
+    aws                  = aws.digideps_eu_west_1
+    aws.management       = aws.management_eu_west_1
+    aws.management_admin = aws.management_admin
   }
 }
 
@@ -43,7 +44,8 @@ module "eu_west_2" {
   admin_fully_qualified_domain_name = aws_route53_record.admin.fqdn
 
   providers = {
-    aws            = aws.digideps_eu_west_2
-    aws.management = aws.management_eu_west_2
+    aws                  = aws.digideps_eu_west_2
+    aws.management       = aws.management_eu_west_2
+    aws.management_admin = aws.management_eu_west_2
   }
 }
