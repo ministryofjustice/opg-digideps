@@ -30,7 +30,7 @@ class UserApi
     protected const USER_BY_ID_ENDPOINT = 'user/%s';
     protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
-    protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add';
+    protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add/%s';
     protected const CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
 
     protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
@@ -226,10 +226,10 @@ class UserApi
     /**
      * @return User
      */
-    public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName)
+    public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName, int $clientId)
     {
         $createdCoDeputy = $this->restClient->post(
-            self::CREATE_CODEPUTY_ENDPOINT,
+            sprintf(self::CREATE_CODEPUTY_ENDPOINT, $clientId),
             $invitedCoDeputy,
             ['codeputy'],
             'User'

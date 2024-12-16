@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\v2\Common\UserDetails;
 
@@ -243,6 +244,7 @@ trait SelfRegistrationTrait
 
     /**
      * @Given one of the Lay Deputies registers to deputise for a client with valid details
+     * @Given /^the same Lay deputy registers to deputise for a client with valid details$/
      */
     public function oneOfTheLayDeputiesRegistersToDeputiseForAClientWithValidDetails()
     {
@@ -708,5 +710,34 @@ trait SelfRegistrationTrait
     public function iShouldSeeReportingPeriodGreaterThanFifteenMonthsError()
     {
         $this->assertOnErrorMessage($this->reportingPeriodGreaterThanFifteenMonths);
+    }
+
+    /**
+     * @Given /^one of the Lay deputies listed in the lay csv already has an existing account$/
+     */
+    public function theDeputyListedInTheLayCsvAlreadyHasAnExistingAccount()
+    {
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
+
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails;
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails->setIsPrimary(true);
+
+        $existingDeputyAccount = $this->em->getRepository(User::class)->findOneBy(['email' => $this->interactingWithUserDetails->getUserEmail()]);
+        $existingDeputyAccount->setDeputyUid(35672419);
+
+        $this->em->persist($existingDeputyAccount);
+        $this->em->flush();
+    }
+
+    /**
+     * @Then /^I select the new client from the csv on the Choose a Client page$/
+     */
+    public function iSelectTheNewClientFromTheCsvOnTheChooseAClientPage()
+    {
+        $caseNumber = '1717171T';
+
+        $client = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
+
+        $this->visitPath('/client/'.$client->getId());
     }
 }
