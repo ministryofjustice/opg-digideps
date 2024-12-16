@@ -8,7 +8,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 {
     private array $requiredData = [
         'Case',
-        'ClientFirstname',
         'ClientSurname',
         'DeputyUid',
         'DeputyFirstname',
@@ -47,7 +46,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         return
             (new LayDeputyshipDto())
                 ->setCaseNumber($data['Case'])
-                ->setClientFirstname($data['ClientFirstname'])
+                ->setClientFirstname($data['ClientFirstname'] ?: null)
                 ->setClientSurname($data['ClientSurname'])
                 ->setClientAddress1($data['ClientAddress1'] ?: null)
                 ->setClientAddress2($data['ClientAddress2'] ?: null)

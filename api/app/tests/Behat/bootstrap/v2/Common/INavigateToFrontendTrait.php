@@ -76,4 +76,13 @@ trait INavigateToFrontendTrait
         $this->clickLink('Client details');
         $this->iAmOnClientDetailsPage();
     }
+
+    /**
+     * @When /^I navigate to the Choose a client homepage$/
+     */
+    public function iNavigateToTheChooseAClientHomepage()
+    {
+        $this->clickLink('Choose a client');
+        $this->iAmOnChooseAClientMainPage();
+    }
 }

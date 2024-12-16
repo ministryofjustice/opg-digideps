@@ -3,6 +3,11 @@ variable "DEFAULT_ROLE" {
   type    = string
 }
 
+variable "DEFAULT_ROLE_TEST" {
+  default = "digideps-test-ci"
+  type    = string
+}
+
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
   type        = string
