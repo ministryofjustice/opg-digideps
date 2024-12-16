@@ -7,7 +7,7 @@ resource "aws_iam_role" "ci_test" {
 
 data "aws_iam_policy_document" "ci_test_assume_policy" {
   statement {
-    sid    = "Trust relations"
+    sid    = "TrustRelations"
     effect = "Allow"
 
     principals {
@@ -28,7 +28,7 @@ resource "aws_iam_role_policy" "ci_test" {
 
 data "aws_iam_policy_document" "ci_test" {
   statement {
-    sid    = "Write DNS access"
+    sid    = "WriteDNSAccess"
     effect = "Allow"
     actions = [
       "route53:Change*",
@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "ci_test" {
   }
 
   statement {
-    sid    = "Read DNS"
+    sid    = "ReadDNS"
     effect = "Allow"
     actions = [
       "route53:Get*",
@@ -57,7 +57,7 @@ data "aws_iam_policy_document" "ci_test" {
   }
 
   statement {
-    sid    = "ECR Allow List"
+    sid    = "ECRAllowList"
     effect = "Allow"
     actions = [
       "ecr:List*",
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "ci_test" {
   }
 
   statement {
-    sid    = "ECR Allow Read"
+    sid    = "ECRAllowRead"
     effect = "Allow"
     actions = [
       "ecr:GetAuthorizationToken",
@@ -84,7 +84,7 @@ data "aws_iam_policy_document" "ci_test" {
       "ecr:DescribeImageScanFindings"
     ]
     resources = [
-      "311462405659.dkr.ecr.eu-west-1.amazonaws.com/digideps/*"
+      "arn:aws:ecr:region:311462405659:digideps/*"
     ]
   }
 
