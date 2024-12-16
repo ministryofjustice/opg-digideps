@@ -59,15 +59,15 @@ jobs:
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
 
-      - name: configure OIDC AWS credentials for ECR push
+      - name: configure OIDC AWS credentials for Trivy DB Ecr
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
-          role-session-name: github-actions-ecr-push
+          role-session-name: github-actions-ecr-trivy-db
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - name: ecr login
+      - name: ecr login for trivy db
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@bfbd05a2dcf76451041cbd4b9d11cff82489a1ee # pin@v1.5.1
         with:
