@@ -34,7 +34,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
                 'email' => 'behat-dontsaveme@example.org',
-                'client_firstname' => '',
+                'client_firstname' => null,
                 'client_lastname' => '',
                 'case_number' => '12345678',
             ],
@@ -217,7 +217,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 [
                     'id' => 1,
                     'case_number' => '97643164',
-                    'client_firstname' => '',
+                    'client_firstname' => null,
                     'client_lastname' => 'Douglas',
                     'client_address1' => null,
                     'client_address2' => null,
@@ -296,7 +296,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 [
                     'id' => 1,
                     'case_number' => '97643164',
-                    'client_firstname' => '',
+                    'client_firstname' => null,
                     'client_lastname' => 'Douglas',
                     'client_address1' => null,
                     'client_address2' => null,
@@ -375,7 +375,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 [
                     'id' => 1,
                     'case_number' => '97643164',
-                    'client_firstname' => '',
+                    'client_firstname' => null,
                     'client_lastname' => 'Douglas',
                     'client_address1' => null,
                     'client_address2' => null,
@@ -454,7 +454,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 [
                     'id' => 1,
                     'case_number' => '97643164',
-                    'client_firstname' => '',
+                    'client_firstname' => null,
                     'client_lastname' => 'Douglas',
                     'client_address1' => null,
                     'client_address2' => null,
