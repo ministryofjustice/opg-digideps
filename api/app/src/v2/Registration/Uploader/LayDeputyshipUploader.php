@@ -2,16 +2,21 @@
 
 namespace App\v2\Registration\Uploader;
 
+use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
+use App\v2\Assembler\ClientAssembler;
+use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
@@ -34,7 +39,9 @@ class LayDeputyshipUploader
         private EntityManagerInterface $em,
         private ReportRepository $reportRepository,
         private PreRegistrationFactory $preRegistrationFactory,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private SiriusToLayDeputyshipDtoAssembler $assembler,
+        private ClientAssembler $clientAssembler
     ) {
     }
 
@@ -79,6 +86,80 @@ class LayDeputyshipUploader
             'cases-with-updated-reports' => $this->reportsUpdated,
             'source' => 'sirius',
         ];
+    }
+    
+    public function handleNewMultiClients(): array
+    {
+        $multiClientResults = [
+            'clientsAdded' => [
+                'count' => 0,
+            ],
+            'clientsSkipped' => 0,
+            'errors' => [
+                'count' => 0,
+                'messages' => [],
+            ],
+        ];
+        $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
+
+        foreach ($preRegistrationNewClients AS $preReg){
+            $layDeputyshipDto = $this->assembler->assembleFromArray($preReg);
+            try {
+                $this->em->beginTransaction();
+                $user = $this->handleNewUser($layDeputyshipDto);
+                $client = $this->handleNewClient($layDeputyshipDto, $user);
+                // create report and associate with client
+                $this->commitTransactionToDatabase();
+                ++$multiClientResults['clientsAdded']['count'];
+            } catch (\Throwable $e) {
+                $message = sprintf('Error when creating additional client for deputyUID %s for case %s: %s',
+                    $layDeputyshipDto->getDeputyUid(),
+                    $layDeputyshipDto->getCaseNumber(),
+                    str_replace(PHP_EOL, '', $e->getMessage())
+                );
+                $this->logger->warning($message);
+                $multiClientResults['errors']['messages'][] = $message;
+                ++$multiClientResults['errors']['count'];
+                ++$multiClientResults['clientsSkipped'];
+                continue;
+            }
+        }
+
+        return [
+            'new-clients-found' => count($preRegistrationNewClients),
+            'multi-clients-results' => $multiClientResults
+        ];
+    }
+
+    private function handleNewUser(LayDeputyshipDto $dto): ?User
+    {
+        try {
+            $primaryDeputyUser = $this->em->getRepository(User::class)->findPrimaryUserByDeputyUid($dto->getDeputyUid());
+        } catch (NoResultException|NonUniqueResultException $e) {
+            throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $dto->getDeputyUid()));
+        }
+
+        $users = $this->em->getRepository(User::class)->findBy(['deputyUid' => $dto->getDeputyUid()]);
+        $newSecondaryUser = clone $primaryDeputyUser;
+        $newSecondaryUser->setEmail('secondary-'.count($users).'-'.$primaryDeputyUser->getEmail());
+        $newSecondaryUser->setIsPrimary(false);
+        $this->em->persist($newSecondaryUser);
+        return $newSecondaryUser;
+    }
+
+    private function handleNewClient(LayDeputyshipDto $dto, User $newUser): ?Client
+    {
+        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($dto->getCaseNumber());
+
+        if ($existingClient instanceof Client){
+            throw new \RuntimeException('client already exists');
+        } else {
+            $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
+            $newClient->addUser($newUser);
+            $this->em->persist($newClient);
+            $this->added['clients'][] = $dto->getCaseNumber();
+        }
+        return $existingClient;
     }
 
     private function throwExceptionIfDataTooLarge(LayDeputyshipDtoCollection $collection): void

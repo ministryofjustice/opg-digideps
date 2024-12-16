@@ -184,6 +184,8 @@ class ProcessLayCSVCommand extends Command
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
                 $this->storeOutput($result);
             }
+            $this->logger->notice('Directly creating any new Lay clients for active deputies');
+            $this->csvProcessing->layProcessingHandleNewMultiClients();
 
             return true;
         }
