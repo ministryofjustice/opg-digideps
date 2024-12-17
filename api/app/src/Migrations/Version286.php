@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version287 extends AbstractMigration
+final class Version286 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -24,7 +24,7 @@ final class Version287 extends AbstractMigration
             INSERT INTO deputy 
             (user_id, deputy_uid, firstname, lastname, email1, address1, address2, 
             address3, address4, address5, address_postcode, address_country, phone_main, phone_alternative)
-            SELECT id, deputy_uid, firstname, lastname, email, address1, address2, address3, 
+            SELECT id, CAST(deputy_uid AS VARCHAR), firstname, lastname, email, address1, address2, address3, 
             address4, address5, address_postcode, address_country, phone_main, phone_alternative
             FROM dd_user
             WHERE id IN (
@@ -36,7 +36,7 @@ final class Version287 extends AbstractMigration
                     SELECT id
                     FROM dd_user 
                     WHERE is_primary = TRUE
-                    AND deputy_uid NOT IN (
+                    AND CAST(deputy_uid AS VARCHAR) NOT IN (
                         SELECT deputy_uid 
                         FROM deputy
                         )
