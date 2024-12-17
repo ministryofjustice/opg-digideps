@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use MockeryStub as m;
@@ -24,7 +26,8 @@ class UserServiceTest extends TestCase
         $email = 'test@tester.co.uk';
 
         $this->em = m::mock(EntityManager::class);
-        $this->orgService = m::mock(OrgService::class);
+        $this->clientRepository = m::mock(ClientRepository::class);
+        $this->userRepository = m::mock(UserRepository::class);
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($email) {
             switch ($arg) {
@@ -36,7 +39,7 @@ class UserServiceTest extends TestCase
             }
         });
 
-        $this->sut = new UserService($this->em, $this->orgService);
+        $this->sut = new UserService($this->em, $this->clientRepository, $this->userRepository);
     }
 
     /**
@@ -47,16 +50,16 @@ class UserServiceTest extends TestCase
     public static function setRoleForLoggedInUser()
     {
         return [
-            [User::ROLE_LAY_DEPUTY, User::CO_DEPUTY_INVITE],
-            [User::ROLE_ADMIN, User::ADMIN_INVITE],
-            [User::ROLE_PROF_ADMIN, User::ORG_ADMIN_INVITE],
+            [User::ROLE_LAY_DEPUTY, User::CO_DEPUTY_INVITE, 100],
+            [User::ROLE_ADMIN, User::ADMIN_INVITE, null],
+            [User::ROLE_PROF_ADMIN, User::ORG_ADMIN_INVITE, null],
         ];
     }
 
     /**
      * @dataProvider setRoleForLoggedInUser
      */
-    public function testRegistrationRoute($role, $expectedRoute)
+    public function testRegistrationRoute($role, $expectedRoute, $clientId)
     {
         $loggedInUser = $this->user;
         $loggedInUser->setRoleName($role);
@@ -66,10 +69,11 @@ class UserServiceTest extends TestCase
         $userToAdd->setEmail('test@tester.co.uk');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
-        $this->orgService->shouldReceive('addUserToUsersClients')
-            ->with($loggedInUser, $userToAdd);
+        $this->userRepository->shouldReceive('findOneBy')
+            ->with(['email' => 'test@tester.co.uk']);
+        $this->clientRepository->shouldReceive('saveUserToClient')->with($userToAdd, $clientId);
 
-        $this->sut->addUser($loggedInUser, $userToAdd, '');
+        $this->sut->addUser($loggedInUser, $userToAdd, $clientId);
 
         $this->assertEquals($expectedRoute, $userToAdd->getRegistrationRoute());
     }
