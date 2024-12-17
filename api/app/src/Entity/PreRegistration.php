@@ -33,8 +33,15 @@ class PreRegistration
     public function __construct(array $row)
     {
         $this->caseNumber = $row['Case'] ?? '';
+        $this->clientFirstname = $row['ClientFirstname'] ?? null;
         $this->clientLastname = $row['ClientSurname'] ?? '';
-        $this->deputyUid = $row['DeputyUid'] ?? '';
+        $this->clientAddress1 = $row['ClientAddress1'] ?? null;
+        $this->clientAddress2 = $row['ClientAddress2'] ?? null;
+        $this->clientAddress3 = $row['ClientAddress3'] ?? null;
+        $this->clientAddress4 = $row['ClientAddress4'] ?? null;
+        $this->clientAddress5 = $row['ClientAddress5'] ?? null;
+        $this->clientPostcode = $row['ClientPostcode'] ?? null;
+        $this->deputyUid      = $row['DeputyUid'] ?? '';
         $this->deputyFirstname = $row['DeputyFirstname'] ?? '';
         $this->deputySurname = $row['DeputySurname'] ?? '';
         $this->deputyAddress1 = $row['DeputyAddress1'] ?? null;
@@ -76,11 +83,63 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
+     * @ORM\Column(name="client_firstname", type="string", nullable=true)
+     */
+    private ?string $clientFirstname;
+
+    /**
+     * @JMS\Type("string")
+     *
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
     private string $clientLastname;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address_1", type="string", nullable=true)
+     */
+    private ?string $clientAddress1;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address_2", type="string", nullable=true)
+     */
+    private ?string $clientAddress2;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address_3", type="string", nullable=true)
+     */
+    private ?string $clientAddress3;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address_4", type="string", nullable=true)
+     */
+    private ?string $clientAddress4;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_address_5", type="string", nullable=true)
+     */
+    private ?string $clientAddress5;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="client_postcode", type="string", length=10, nullable=true)
+     *
+     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
+     *
+     */
+    private ?string $clientPostcode;
 
     /**
      * @JMS\Type("string")
@@ -231,6 +290,90 @@ class PreRegistration
         return $this->clientLastname;
     }
 
+    public function getClientFirstname(): ?string
+    {
+        return $this->clientFirstname;
+    }
+
+    public function setClientFirstname(?string $clientFirstname): self
+    {
+        $this->clientFirstname = $clientFirstname;
+
+        return $this;
+    }
+
+    public function getClientPostcode(): ?string
+    {
+        return $this->clientPostcode;
+    }
+
+    public function setClientPostcode(?string $clientPostcode): self
+    {
+        $this->clientPostcode = $clientPostcode;
+
+        return $this;
+    }
+
+    public function getClientAddress1(): ?string
+    {
+        return $this->clientAddress2;
+    }
+
+    public function setClientAddress1(?string $clientAddress1): self
+    {
+        $this->clientAddress2 = $clientAddress1;
+
+        return $this;
+    }
+
+    public function getClientAddress2(): ?string
+    {
+        return $this->clientAddress2;
+    }
+
+    public function setClientAddress2(?string $clientAddress2): self
+    {
+        $this->clientAddress2 = $clientAddress2;
+
+        return $this;
+    }
+
+    public function getClientAddress3(): ?string
+    {
+        return $this->clientAddress3;
+    }
+
+    public function setClientAddress3(?string $clientAddress3): self
+    {
+        $this->clientAddress3 = $clientAddress3;
+
+        return $this;
+    }
+
+    public function getClientAddress4(): ?string
+    {
+        return $this->clientAddress4;
+    }
+
+    public function setClientAddress4(?string $clientAddress4): self
+    {
+        $this->clientAddress4 = $clientAddress4;
+
+        return $this;
+    }
+
+    public function getClientAddress5(): ?string
+    {
+        return $this->clientAddress5;
+    }
+
+    public function setClientAddress5(?string $clientAddress5): self
+    {
+        $this->clientAddress5 = $clientAddress5;
+
+        return $this;
+    }
+
     public function getDeputyUid()
     {
         return $this->deputyUid;
@@ -268,7 +411,7 @@ class PreRegistration
         return $this->orderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate)
+    public function setOrderDate(\DateTime $orderDate): self
     {
         $this->orderDate = $orderDate;
 
