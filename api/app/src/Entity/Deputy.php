@@ -57,7 +57,7 @@ class Deputy
      *
      * @JMS\Groups({"report-submitted-by", "deputy"})
      *
-     * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="deputy_uid", type="bigint", length=20, nullable=false, unique=true)
      */
     private $deputyUid;
 
@@ -253,7 +253,7 @@ class Deputy
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getDeputyUid()
     {
@@ -261,7 +261,7 @@ class Deputy
     }
 
     /**
-     * @param string $deputyUid
+     * @param int $deputyUid
      *
      * @return $this
      */
