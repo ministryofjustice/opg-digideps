@@ -157,7 +157,7 @@ class LayDeputyshipUploader
 
     private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
     {
-        $existingReport = $newClient->getReports();
+        $existingReport = $newClient->getCurrentReport();
 
         if ($existingReport instanceof Report) {
             throw new \RuntimeException('report already exists');
