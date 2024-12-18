@@ -41,7 +41,7 @@ class LayDeputyshipUploader
         private PreRegistrationFactory $preRegistrationFactory,
         private LoggerInterface $logger,
         private SiriusToLayDeputyshipDtoAssembler $assembler,
-        private ClientAssembler $clientAssembler
+        private ClientAssembler $clientAssembler,
     ) {
     }
 
@@ -87,20 +87,20 @@ class LayDeputyshipUploader
             'source' => 'sirius',
         ];
     }
-    
+
     public function handleNewMultiClients(): array
     {
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
         $clientsAdded = 0;
         $errors = [];
 
-        foreach ($preRegistrationNewClients AS $preReg){
+        foreach ($preRegistrationNewClients as $preReg) {
             $layDeputyshipDto = $this->assembler->assembleFromArray($preReg);
             try {
                 $this->em->beginTransaction();
                 $user = $this->handleNewUser($layDeputyshipDto);
                 $client = $this->handleNewClient($layDeputyshipDto, $user);
-                // create report and associate with client
+                $this->handleNewReport($layDeputyshipDto, $client);
                 $this->commitTransactionToDatabase();
                 ++$clientsAdded;
             } catch (\Throwable $e) {
@@ -118,7 +118,7 @@ class LayDeputyshipUploader
         return [
             'new-clients-found' => count($preRegistrationNewClients),
             'clients-added' => $clientsAdded,
-            'errors' => $errors
+            'errors' => $errors,
         ];
     }
 
@@ -135,6 +135,7 @@ class LayDeputyshipUploader
         $newSecondaryUser->setEmail('secondary-'.count($users).'-'.$primaryDeputyUser->getEmail());
         $newSecondaryUser->setIsPrimary(false);
         $this->em->persist($newSecondaryUser);
+
         return $newSecondaryUser;
     }
 
@@ -142,7 +143,7 @@ class LayDeputyshipUploader
     {
         $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($dto->getCaseNumber());
 
-        if ($existingClient instanceof Client){
+        if ($existingClient instanceof Client) {
             throw new \RuntimeException('client already exists');
         } else {
             $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
@@ -150,7 +151,36 @@ class LayDeputyshipUploader
             $this->em->persist($newClient);
             $this->added['clients'][] = $dto->getCaseNumber();
         }
+
         return $existingClient;
+    }
+
+    private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
+    {
+        $existingReport = $newClient->getReports();
+
+        if ($existingReport instanceof Report) {
+            throw new \RuntimeException('report already exists');
+        } else {
+            $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
+
+            $reportStartDate = $dto->getOrderDate()->add(new \DateInterval('P28D'));
+            $reportEndDate = clone $reportStartDate;
+            $reportEndDate->add(new \DateInterval('P364D'));
+
+            $newReport = $newReport = new Report(
+                $newClient,
+                $determinedReportType,
+                $reportStartDate,
+                $reportEndDate,
+                false
+            );
+
+            $newReport->setClient($newClient);
+            $this->em->persist($newReport);
+        }
+
+        return $newReport;
     }
 
     private function throwExceptionIfDataTooLarge(LayDeputyshipDtoCollection $collection): void
