@@ -152,7 +152,7 @@ class LayDeputyshipUploader
             $this->added['clients'][] = $dto->getCaseNumber();
         }
 
-        return $existingClient;
+        return $newClient;
     }
 
     private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
@@ -164,11 +164,11 @@ class LayDeputyshipUploader
         } else {
             $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
 
-            $reportStartDate = $dto->getOrderDate()->add(new \DateInterval('P28D'));
+            $reportStartDate = clone $dto->getOrderDate();
             $reportEndDate = clone $reportStartDate;
             $reportEndDate->add(new \DateInterval('P364D'));
 
-            $newReport = $newReport = new Report(
+            $newReport = new Report(
                 $newClient,
                 $determinedReportType,
                 $reportStartDate,

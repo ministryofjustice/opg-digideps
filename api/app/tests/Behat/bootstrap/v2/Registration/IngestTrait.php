@@ -1152,6 +1152,29 @@ trait IngestTrait
         );
     }
 
+    /**
+     * @Then the client with case number :caseNumber should have an active report with type :expectedReportType
+     */
+    public function clientWithCaseNumberShouldHaveReportType(string $caseNumber, string $expectedReportType): void
+    {
+        /* @var Client $client */
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $caseNumber]);
+
+        if (is_null($client)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $caseNumber));
+        }
+
+        $report = $client->getCurrentReport();
+
+        $this->assertStringEqualsString(
+            $report->getType(),
+            $expectedReportType,
+            'Comparing expected report type with actual report type'
+        );
+    }
+
     protected function runCSVCommand(string $type, string $fileName)
     {
         $command = ('lay' === $type) ?

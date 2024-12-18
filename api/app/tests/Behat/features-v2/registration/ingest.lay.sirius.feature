@@ -35,8 +35,10 @@ Feature: Lay CSV data ingestion - sirius source data
         When I run the lay CSV command the file contains 2 new pre-registration entities
         And the Lay deputy with deputy UID 700761111001 has 2 associated active clients
         And the client with case number '12345673' should have the address '64 zoo lane, vrombaut, beebies, london, , cl1 3nt'
+        And the client with case number '12345673' should have an active report with type '102'
         When I run the lay CSV command the file contains 2 new pre-registration entities
         And the Lay deputy with deputy UID 700761111001 has 2 associated active clients
+        And the client with case number '12345673' should have an active report with type '102'
 
 # Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
 # Currently throws critical error
