@@ -90,17 +90,9 @@ class LayDeputyshipUploader
     
     public function handleNewMultiClients(): array
     {
-        $multiClientResults = [
-            'clientsAdded' => [
-                'count' => 0,
-            ],
-            'clientsSkipped' => 0,
-            'errors' => [
-                'count' => 0,
-                'messages' => [],
-            ],
-        ];
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
+        $clientsAdded = 0;
+        $errors = [];
 
         foreach ($preRegistrationNewClients AS $preReg){
             $layDeputyshipDto = $this->assembler->assembleFromArray($preReg);
@@ -110,7 +102,7 @@ class LayDeputyshipUploader
                 $client = $this->handleNewClient($layDeputyshipDto, $user);
                 // create report and associate with client
                 $this->commitTransactionToDatabase();
-                ++$multiClientResults['clientsAdded']['count'];
+                ++$clientsAdded;
             } catch (\Throwable $e) {
                 $message = sprintf('Error when creating additional client for deputyUID %s for case %s: %s',
                     $layDeputyshipDto->getDeputyUid(),
@@ -118,16 +110,15 @@ class LayDeputyshipUploader
                     str_replace(PHP_EOL, '', $e->getMessage())
                 );
                 $this->logger->warning($message);
-                $multiClientResults['errors']['messages'][] = $message;
-                ++$multiClientResults['errors']['count'];
-                ++$multiClientResults['clientsSkipped'];
+                $errors[] = $message;
                 continue;
             }
         }
 
         return [
             'new-clients-found' => count($preRegistrationNewClients),
-            'multi-clients-results' => $multiClientResults
+            'clients-added' => $clientsAdded,
+            'errors' => $errors
         ];
     }
 
