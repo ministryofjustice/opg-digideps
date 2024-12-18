@@ -65,6 +65,8 @@ class PreRegistrationRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
+        $this->_em->getFilters()->disable('softdeleteable');
+
         $newMultiClentsQuery = <<<SQL
         SELECT
             pr.client_case_number AS "Case",
