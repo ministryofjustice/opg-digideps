@@ -19,7 +19,7 @@ final class Version286 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        if (getenv('RUN_ONE_OFF_MIGRATIONS')) {
+        if (!!getenv('RUN_ONE_OFF_MIGRATIONS')) {
             $sql = <<<SQL
             INSERT INTO deputy 
             (user_id, deputy_uid, firstname, lastname, email1, address1, address2, 

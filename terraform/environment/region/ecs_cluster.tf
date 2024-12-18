@@ -122,7 +122,7 @@ locals {
     },
     {
       name  = "RUN_ONE_OFF_MIGRATIONS",
-      value = "true"
+      value = var.account.run_one_off_migrations
     },
   ]
 
