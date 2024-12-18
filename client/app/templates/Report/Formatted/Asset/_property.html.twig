@@ -1,118 +1,119 @@
 {% for asset in assetsInGroup.items %}
-     <h3>Property {{ loop.index }}</h3>
-
-     {# address #}
-     <div class="box">
-         <dl class="labelvalue">
-            <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
-            <dd class="value">
-                {{ asset.address}}<br/>
-                {{ asset.address2}}<br/>
-                {{ asset.county}}
-            </dd>
-            <dt class="label">Postcode</dt>
-            <dd class="value">{{ asset.postcode}} </dd>
-        </dl>
-     </div>
-
-    {# property details #}
     <div class="box">
-        <div class="half-width first">
-            <dl class="labelvalue">
-                <dt class="label">Who lives at the property?</dt>
-                <dd class="value">{{ asset.occupants | nl2br }}</dd>
+         <h3>Property {{ loop.index }}</h3>
+
+         {# address #}
+         <div class="box">
+             <dl class="labelvalue">
+                <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
+                <dd class="value">
+                    {{ asset.address}}<br/>
+                    {{ asset.address2}}<br/>
+                    {{ asset.county}}
+                </dd>
+                <dt class="label">Postcode</dt>
+                <dd class="value">{{ asset.postcode}} </dd>
             </dl>
-            <div class="label question">Is the property fully or part-owned by the client?</div>
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox"{% if asset.owned =='fully' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">Fully-owned</td>
-                    <td class="value checkbox"{% if asset.owned =='partly' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">Part-owned</td>
-                </tr>
-            </table>
+         </div>
 
-            {% if asset.ownedPercentage %}
+        {# property details #}
+        <div class="box">
+            <div class="half-width first">
                 <dl class="labelvalue">
-                    <dt class="label question flush--bottom">If part-owned, what is the client's share of the property?</dt>
-                    <dd class="value"> {{ asset.ownedPercentage }}%</dd>
+                    <dt class="label">Who lives at the property?</dt>
+                    <dd class="value">{{ asset.occupants | nl2br }}</dd>
                 </dl>
-            {% endif %}
+                <div class="label question">Is the property fully or part-owned by the client?</div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox"{% if asset.owned =='fully' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">Fully-owned</td>
+                        <td class="value checkbox"{% if asset.owned =='partly' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">Part-owned</td>
+                    </tr>
+                </table>
 
-            <div class="label question">Is the property subject to an equity release scheme?</div>
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox"{% if asset.isSubjectToEquityRelease =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if asset.isSubjectToEquityRelease =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                </tr>
-            </table>
-        </div>
+                {% if asset.ownedPercentage %}
+                    <dl class="labelvalue">
+                        <dt class="label question flush--bottom">If part-owned, what is the client's share of the property?</dt>
+                        <dd class="value"> {{ asset.ownedPercentage }}%</dd>
+                    </dl>
+                {% endif %}
 
-        <div class="half-width">
-            <dl class="labelvalue">
-                <dt class="label">Estimated value of the property?</dt>
-                <dd class="value">&pound;{{ asset.value | money_format }}</dd>
-            </dl>
+                <div class="label question">Is the property subject to an equity release scheme?</div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox"{% if asset.isSubjectToEquityRelease =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="value checkbox"{% if asset.isSubjectToEquityRelease =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </table>
+            </div>
 
-            <div class="label question">Is there an outstanding mortgage?</div>
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox"{% if asset.hasMortgage =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if asset.hasMortgage =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                </tr>
-            </table>
-
-            {% if asset.mortgageOutstandingAmount %}
+            <div class="half-width">
                 <dl class="labelvalue">
-                    <dt class="label question flush--bottom">If yes, how much is there left to pay?</dt>
-                    <dd class="value">&pound;{{ asset.mortgageOutstandingAmount | money_format }} </dd>
+                    <dt class="label">Estimated value of the property?</dt>
+                    <dd class="value">&pound;{{ asset.value | money_format }}</dd>
                 </dl>
-            {% endif %}
 
-            <div class="label question">Is there a charge on the property?</br>
-                For example, Local Authority to recover care fees</div>
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox"{% if asset.hasCharges =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if asset.hasCharges =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                </tr>
-            </table>
+                <div class="label question">Is there an outstanding mortgage?</div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox"{% if asset.hasMortgage =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="value checkbox"{% if asset.hasMortgage =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </table>
 
-            <div class="label question">Is the property rented out?</div>
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox"{% if asset.isRentedOut =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    <td class="value checkbox"{% if asset.isRentedOut =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-                </tr>
-           </table>
+                {% if asset.mortgageOutstandingAmount %}
+                    <dl class="labelvalue">
+                        <dt class="label question flush--bottom">If yes, how much is there left to pay?</dt>
+                        <dd class="value">&pound;{{ asset.mortgageOutstandingAmount | money_format }} </dd>
+                    </dl>
+                {% endif %}
 
-            {% if asset.rentAgreementEndDate %}
-                <dl class="labelvalue">
-                    <dt class="label question flush--bottom">If yes, when does the rental agreement end?</dt>
-                    <dd class="value">
-                        {{ asset.rentAgreementEndDate | date("m/Y") }}
-                    </dd>
-                </dl>
-            {% endif %}
+                <div class="label question">Is there a charge on the property?</br>
+                    For example, Local Authority to recover care fees</div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox"{% if asset.hasCharges =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="value checkbox"{% if asset.hasCharges =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </table>
 
-            {% if asset.rentIncomeMonth %}
-                <dl class="labelvalue">
-                    <dt class="label question flush--bottom">Rental income (per month)</dt>
-                    <dd class="value">
-                        &pound;{{ asset.rentIncomeMonth | money_format }}
-                    </dd>
-                </dl>
-            {% endif %}
+                <div class="label question">Is the property rented out?</div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox"{% if asset.isRentedOut =='yes' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="value checkbox"{% if asset.isRentedOut =='no' %} aria-label=”Selected”>X{% else %}>&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+               </table>
 
+                {% if asset.rentAgreementEndDate %}
+                    <dl class="labelvalue">
+                        <dt class="label question flush--bottom">If yes, when does the rental agreement end?</dt>
+                        <dd class="value">
+                            {{ asset.rentAgreementEndDate | date("m/Y") }}
+                        </dd>
+                    </dl>
+                {% endif %}
+
+                {% if asset.rentIncomeMonth %}
+                    <dl class="labelvalue">
+                        <dt class="label question flush--bottom">Rental income (per month)</dt>
+                        <dd class="value">
+                            &pound;{{ asset.rentIncomeMonth | money_format }}
+                        </dd>
+                    </dl>
+                {% endif %}
+
+            </div>
         </div>
     </div>
-
 {% endfor %}
