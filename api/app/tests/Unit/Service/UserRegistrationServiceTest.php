@@ -425,7 +425,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->shouldReceive('validate')
             ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn([0 => '700770077007'])
-            ->shouldReceive('deputyHasNotSignedUpAlready')->andReturn(false)
+            ->shouldReceive('isFirstTimeDeputySigningUp')->andReturn(false)
             ->getMock();
 
         self::expectException(\RuntimeException::class);
