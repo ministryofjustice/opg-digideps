@@ -14,7 +14,7 @@ class UserRegistrationService
 
     public function __construct(
         private EntityManagerInterface $em,
-        private PreRegistrationVerificationService $preRegistrationVerificationService
+        private PreRegistrationVerificationService $preRegistrationVerificationService,
     ) {
         $this->selfRegisterCaseNumber = '';
     }
@@ -82,8 +82,10 @@ class UserRegistrationService
             $user->setPreRegisterValidatedDate(new \DateTime('now'));
             $user->setRegistrationRoute(User::SELF_REGISTER);
 
-            if ($this->preRegistrationVerificationService->isSingleDeputyAccount()) {
+            if ($this->preRegistrationVerificationService->isFirstTimeDeputySigningUp()) {
                 $user->setIsPrimary(true);
+            } else {
+                throw new \RuntimeException(json_encode('Deputy has already registered for the service'), 464);
             }
         } else {
             // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
@@ -120,6 +122,10 @@ class UserRegistrationService
             $selfRegisterData->getLastname(),
             $selfRegisterData->getPostcode()
         );
+
+        if (!$this->preRegistrationVerificationService->isFirstTimeDeputySigningUp()) {
+            throw new \RuntimeException('Deputy has already registered for the service', 464);
+        }
 
         // store case number in class property to access in retrieveCoDeputyUid exception
         $this->selfRegisterCaseNumber = $selfRegisterData->getCaseNumber();

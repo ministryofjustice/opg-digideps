@@ -72,6 +72,8 @@ formErrors:
     Please call 0115 934 2700 to make sure we have the correct record of your deputyship.
   deputyAlreadyLinkedToCaseNumber: |
     You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0115 934 2700.
+  deputyAlreadyRegistered: |
+    You have already registered as a deputy. Please log in to your account to view this case. If you have any questions, call our helpline on 0115 934 2700.
 
 matchingErrors:
   caseNumber: |
