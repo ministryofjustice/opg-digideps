@@ -141,10 +141,14 @@ class LayDeputyshipUploader
 
     private function handleNewClient(LayDeputyshipDto $dto, User $newUser): ?Client
     {
-        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($dto->getCaseNumber());
+        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($dto->getCaseNumber());
 
         if ($existingClient instanceof Client) {
-            throw new \RuntimeException('client already exists');
+            foreach ($existingClient->getUsers() as $user) {
+                if ($user->getDeputyUid() == $newUser->getDeputyUid()) {
+                    throw new \RuntimeException(sprintf('a client with case number %s already exists that is associated with a user with deputy UID %s', $existingClient->getCaseNumber(), $newUser->getDeputyUid()));
+                }
+            }
         } else {
             $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
             $newClient->addUser($newUser);

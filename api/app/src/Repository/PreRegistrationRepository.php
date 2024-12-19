@@ -65,8 +65,6 @@ class PreRegistrationRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $this->_em->getFilters()->disable('softdeleteable');
-
         $newMultiClentsQuery = <<<SQL
         SELECT
             pr.client_case_number AS "Case",
@@ -94,7 +92,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
             pr.client_address_5   AS "ClientAddress5",
             pr.client_postcode    AS "ClientPostcode"
         FROM pre_registration pr
-        LEFT JOIN dd_user u ON pr.deputy_uid::bigint = u.deputy_uid
+        LEFT JOIN dd_user u ON pr.deputy_uid = u.deputy_uid::varchar(30)
         LEFT JOIN deputy_case dc ON u.id = dc.user_id
         LEFT JOIN client c ON dc.client_id = c.id
         WHERE c.case_number != pr.client_case_number
@@ -102,7 +100,6 @@ class PreRegistrationRepository extends ServiceEntityRepository
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
         $result = $stmt->fetchAllAssociative();
-        $this->_em->getFilters()->enable('softdeleteable');
 
         return $result;
     }
