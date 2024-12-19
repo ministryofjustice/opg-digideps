@@ -15,6 +15,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use App\Command\ProcessLayCSVCommand;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -73,6 +74,13 @@ class ProcessLayCSVCommandTest extends KernelTestCase
                 'report-update-count' => 0,
                 'cases-with-updated-reports' => 0,
                 'source' => 'sirius',
+            ]);
+
+        $this->csvProcessing->layProcessingHandleNewMultiClients()
+            ->shouldBeCalled()
+            ->willReturn([
+                'added' => 0,
+                'errors' => []
             ]);
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
