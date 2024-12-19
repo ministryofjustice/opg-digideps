@@ -83,7 +83,7 @@ class PreRegistrationController extends RestController
         );
 
         if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
-            if ($this->preRegistrationVerificationService->deputyHasNotSignedUpAlready()) {
+            if ($this->preRegistrationVerificationService->isFirstTimeDeputySigningUp()) {
                 $user->setIsPrimary(true);
             } else {
                 throw new \RuntimeException(json_encode('Deputy has already registered for the service'), 464);
