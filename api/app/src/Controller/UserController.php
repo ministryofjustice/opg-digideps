@@ -662,14 +662,7 @@ class UserController extends RestController
     public function getPrimaryUserAccount(int $deputyUid): ?User
     {
         $this->formatter->setJmsSerialiserGroups(['user', 'user-list']);
-        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
 
-        foreach ($users as $user) {
-            if ($user->getIsPrimary()) {
-                return $user;
-            }
-        }
-
-        return null;
+        return $this->userRepository->findPrimaryUserByDeputyUid($deputyUid);
     }
 }
