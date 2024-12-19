@@ -419,4 +419,23 @@ SQL;
 
         return $query->getArrayResult();
     }
+
+    public function findActiveClientsCountForDeputyUid(string $deputyUid): int
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery("SELECT COUNT(u) FROM App\Entity\User u INNER JOIN u.clients c where c.archivedAt IS NULL and c.deletedAt IS NULL AND u.deputyUid = :deputyUid")
+            ->setParameter('deputyUid', $deputyUid);
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function findPrimaryUserByDeputyUid(string $deputyUid): ?User
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery("SELECT u FROM App\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = True")
+            ->setParameter('deputyUid', $deputyUid);
+        return $query->getSingleResult();
+    }
 }
