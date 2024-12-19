@@ -70,6 +70,18 @@ class Client implements ClientInterface
     private $users;
 
     /**
+     * @JMS\Groups({"client-deputy"})
+     * @JMS\Type("ArrayCollection<App\Entity\Deputy>")
+     * 
+     * @ORM\OneToMany(targetEntity="App\Entity\Deputy", inversedBy="deputy", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable (name="client_deputy",
+     *     joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="CASCADE")}
+     *     )
+     */
+    private $deputies;
+
+    /**
      * @JMS\Groups({"client-reports"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
@@ -303,6 +315,7 @@ class Client implements ClientInterface
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->deputies = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
@@ -1042,5 +1055,65 @@ class Client implements ClientInterface
         }
 
         return false;
+    }
+
+    /**
+     * Add deputies.
+     *
+     * @return Client
+     */
+    public function addDeputy(Deputy $deputy)
+    {
+        if (!$this->deputies->contains($deputy)) {
+            $this->deputies->add($deputy);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove deputies.
+     */
+    public function removeDeputy(Deputy $deputy)
+    {
+        $this->deputies->removeElement($deputy);
+    }
+
+    /**
+     * Get deputies.
+     *
+     * @return Collection
+     */
+    public function getDeputies()
+    {
+        return $this->deputies;
+    }
+
+    /**
+     * @param array $deputies
+     *
+     * @return $this
+     */
+    public function setDeputies(array $deputies)
+    {
+        $this->deputies = $deputies;
+
+        return $this;
+    }
+
+    /**
+     * @return array $deputyIds
+     */
+    public function getDeputiesIds()
+    {
+        $deputyIds = [];
+
+        if (!empty($this->deputies)) {
+            foreach ($this->deputies as $deputy) {
+                $deputyIds[] = $deputy->getId();
+            }
+        }
+
+        return $deputyIds;
     }
 }
