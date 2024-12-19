@@ -1,4 +1,4 @@
-#tfsec:ignore:aws-s3-enable-bucket-logging - only contains dev data. no need for access logging
+#trivy:ignore:avd-aws-0089 - only contains dev data. no need for access logging
 resource "aws_s3_bucket" "pa_uploads_branch_replication" {
   count         = var.account.name == "development" ? 1 : 0
   bucket        = "pa-uploads-branch-replication"
@@ -47,61 +47,58 @@ data "aws_iam_policy_document" "pa_uploads_branch_replication" {
 }
 
 resource "aws_iam_role" "replication" {
-  count = var.account.name == "development" ? 1 : 0
-  name  = "replication-role.replication"
-
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "s3.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-POLICY
+  count              = var.account.name == "development" ? 1 : 0
+  name               = "replication-role.replication"
+  assume_role_policy = data.aws_iam_policy_document.assume_policy.json
   tags = merge(
     var.default_tags,
     { Name = "replication-role-${var.account.name}" },
   )
 }
 
-resource "aws_iam_policy" "replication" {
-  count = var.account.name == "development" ? 1 : 0
-  name  = "replication-policy.replication"
+data "aws_iam_policy_document" "assume_policy" {
+  statement {
+    effect = "Allow"
 
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:GetReplicationConfiguration",
-        "s3:ListBucket"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.pa_uploads_branch_replication[0].arn}"
-      ]
-    },
-    {
-      "Action": [
-        "s3:GetObjectVersion",
-        "s3:GetObjectVersionAcl"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.pa_uploads_branch_replication[0].arn}/*"
-      ]
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
     }
-  ]
+    actions = ["sts:AssumeRole"]
+  }
 }
-POLICY
+
+data "aws_iam_policy_document" "replication_policy" {
+  count = var.account.name == "development" ? 1 : 0
+  statement {
+    sid    = "AllowReplication"
+    effect = "Allow"
+    actions = [
+      "s3:GetReplicationConfiguration",
+      "s3:ListBucket"
+    ]
+    resources = [
+      aws_s3_bucket.pa_uploads_branch_replication[0].arn
+    ]
+  }
+
+  statement {
+    sid    = "GetObjectVersions"
+    effect = "Allow"
+    actions = [
+      "s3:GetObjectVersion",
+      "s3:GetObjectVersionAcl"
+    ]
+    resources = [
+      "${aws_s3_bucket.pa_uploads_branch_replication[0].arn}/*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "replication" {
+  count  = var.account.name == "development" ? 1 : 0
+  name   = "replication-policy.replication"
+  policy = data.aws_iam_policy_document.replication_policy[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "replication" {
@@ -110,6 +107,7 @@ resource "aws_iam_role_policy_attachment" "replication" {
   policy_arn = aws_iam_policy.replication[0].arn
 }
 
+#trivy:ignore:avd-aws-0132 - only used in development
 resource "aws_s3_bucket_server_side_encryption_configuration" "pa_uploads_branch_replication" {
   count  = var.account.name == "development" ? 1 : 0
   bucket = aws_s3_bucket.pa_uploads_branch_replication[0].bucket

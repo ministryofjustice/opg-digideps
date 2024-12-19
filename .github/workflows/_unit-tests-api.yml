@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5
 
       - name: cache docker layers
         id: cache-docker
@@ -53,8 +53,6 @@ jobs:
         id: unit-test-setup
         run: |
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d localstack postgres redis-api
-          while [ $(docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T localstack awslocal secretsmanager list-secrets | grep synchronisation-jwt-token | wc -l) -lt 1 ]; do sleep 1; done
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests ls -alt
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure.sh local
 
       - name: run api unit tests

@@ -24,11 +24,11 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.8
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.0
         with:
           terraform_directory: terraform/${{ matrix.folder }}
 
-      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@344fef46b6edc7c46ce8b3b8b0a3ece7e77e05f0 # pin@v2.0.0
         with:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
@@ -41,7 +41,7 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
@@ -58,3 +58,31 @@ jobs:
           echo $TF_WORKSPACE
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
+
+      - name: configure OIDC AWS credentials for Trivy DB Ecr
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-trivy-db
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: ecr login for trivy db
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@bfbd05a2dcf76451041cbd4b9d11cff82489a1ee # pin@v1.5.1
+        with:
+          registries: 311462405659
+
+      - name: Trivy Terraform Config Scan
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        with:
+          scan-type: "config"
+          target: terraform/${{ matrix.folder }}
+          severity: "MEDIUM,HIGH,CRITICAL"
+          format: "sarif"
+          output: "trivy-results.sarif"
+        env:
+          TRIVY_TIMEOUT: 15m
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db

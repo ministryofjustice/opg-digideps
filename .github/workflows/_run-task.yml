@@ -32,15 +32,15 @@ jobs:
     steps:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
-      - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
+      - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.0.8
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.0
         with:
           terraform_directory: terraform/environment
 
-      - uses: hashicorp/setup-terraform@1b93182764c8332e7679b2393cb307cbe7baf9dc # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@344fef46b6edc7c46ce8b3b8b0a3ece7e77e05f0 # pin@v2.0.0
         with:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
@@ -53,7 +53,7 @@ jobs:
           role-duration-seconds: 3600
           aws-region: eu-west-1
 
-      - uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb # pin@v0.5.4
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 

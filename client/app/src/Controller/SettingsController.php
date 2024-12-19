@@ -99,7 +99,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         return ['deputyHasMultiClients' => $deputyHasMultiClients];
     }
@@ -132,8 +132,11 @@ class SettingsController extends AbstractController
             return $this->redirect($this->generateUrl($successRoute));
         }
 
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
+
         return [
             'form' => $form->createView(),
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -181,8 +184,12 @@ class SettingsController extends AbstractController
      **/
     public function profileAction()
     {
+        $user = $this->userApi->getUserWithData();
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
+
         return [
             'user' => $this->getUser(),
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -248,10 +255,13 @@ class SettingsController extends AbstractController
             }
         }
 
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($preUpdateDeputy);
+
         return [
             'user' => $preUpdateDeputy,
             'form' => $form->createView(),
             'client_validated' => false, // to allow change of name/postcode/email
+            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 

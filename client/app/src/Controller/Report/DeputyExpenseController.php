@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,30 +23,26 @@ class DeputyExpenseController extends AbstractController
         'account',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/deputy-expenses", name="deputy_expenses")
-     * @Template("@App/Report/DeputyExpense/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/DeputyExpense/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getExpensesState()['state']) {
@@ -53,14 +51,14 @@ class DeputyExpenseController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/exist", name="deputy_expenses_exist")
-     * @Template("@App/Report/DeputyExpense/exist.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/DeputyExpense/exist.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -101,9 +99,8 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/add", name="deputy_expenses_add")
-     * @Template("@App/Report/DeputyExpense/add.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/DeputyExpense/add.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -151,9 +148,8 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/add_another", name="deputy_expenses_add_another")
-     * @Template("@App/Report/DeputyExpense/addAnother.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/DeputyExpense/addAnother.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -181,10 +177,8 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/edit/{expenseId}", name="deputy_expenses_edit")
-     * @Template("@App/Report/DeputyExpense/edit.html.twig")
      *
-     * @param $reportId
-     * @param $expenseId
+     * @Template("@App/Report/DeputyExpense/edit.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -240,14 +234,17 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/summary", name="deputy_expenses_summary")
-     * @Template("@App/Report/DeputyExpense/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/DeputyExpense/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getExpensesState()['state']) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
@@ -255,15 +252,14 @@ class DeputyExpenseController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/{expenseId}/delete", name="deputy_expenses_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param $reportId
-     * @param $expenseId
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */

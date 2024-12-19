@@ -4,7 +4,9 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -32,27 +34,33 @@ class BankAccountController extends AbstractController
      * @var StepRedirector
      */
     private $stepRedirector;
+    private $clientApi;
 
     public function __construct(
         ReportApi $reportApi,
         RestClient $restClient,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        ClientApi $clientApi
     ) {
         $this->reportApi = $reportApi;
         $this->restClient = $restClient;
         $this->stepRedirector = $stepRedirector;
+        $this->clientApi = $clientApi;
     }
 
     /**
      * @Route("/ndr/{ndrId}/bank-accounts", name="ndr_bank_accounts")
-     * @Template("@App/Ndr/BankAccount/start.html.twig")
      *
-     * @param $ndrId
+     * @Template("@App/Ndr/BankAccount/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($ndrId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getBankAccountsState()['state']) {
             return $this->redirectToRoute('ndr_bank_accounts_summary', ['ndrId' => $ndrId]);
@@ -60,15 +68,15 @@ class BankAccountController extends AbstractController
 
         return [
             'ndr' => $ndr,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/ndr/{ndrId}/bank-account/step{step}/{accountId}", name="ndr_bank_accounts_step", requirements={"step":"\d+"})
+     *
      * @Template("@App/Ndr/BankAccount/step.html.twig")
      *
-     * @param $ndrId
-     * @param $step
      * @param null $accountId
      *
      * @return array|RedirectResponse
@@ -164,6 +172,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-accounts/add_another", name="ndr_bank_accounts_add_another")
+     *
      * @Template("@App/Ndr/BankAccount/add_another.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
@@ -191,7 +200,6 @@ class BankAccountController extends AbstractController
     /**
      * @Route("/ndr/{ndrId}/bank-accounts/summary", name="ndr_bank_accounts_summary")
      *
-     * @param $ndrId
      * @Template("@App/Ndr/BankAccount/summary.html.twig")
      *
      * @return array|RedirectResponse
@@ -210,10 +218,8 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-account/{accountId}/delete", name="ndr_bank_account_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param $ndrId
-     * @param $accountId
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */

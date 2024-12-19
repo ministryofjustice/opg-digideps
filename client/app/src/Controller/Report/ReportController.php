@@ -25,6 +25,7 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\Storage\S3Storage;
+use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -96,6 +97,31 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
+    private static $ndrGroupsForValidation = [
+        'client',
+        'client-ndr',
+        'client-benefits-check',
+        'client-case-number',
+        'client-reports',
+        'damages',
+        'ndr',
+        'ndr-action-give-gifts',
+        'ndr-action-more-info',
+        'ndr-action-property',
+        'ndr-account',
+        'ndr-asset',
+        'ndr-debt',
+        'ndr-debt-management',
+        'ndr-expenses',
+        'one-off',
+        'pension',
+        'report',
+        'state-benefits',
+        'user',
+        'user-clients',
+        'visits-care',
+    ];
+
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
@@ -136,9 +162,22 @@ class ReportController extends AbstractController
      */
     public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
-        // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
-        // due to the way
-        $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+        $ndrEnabled = false;
+        $users = $this->clientApi->getWithUsersV2($clientId)->getUsers();
+
+        foreach ($users as $user) {
+            if ($user->isNdrEnabled()) {
+                $ndrEnabled = true;
+            }
+        }
+
+        if ($ndrEnabled) {
+            $user = $this->userApi->getUserWithData();
+        } else {
+            // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
+            // due to the way
+            $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
+        }
 
         // redirect back to log out page if signing in with non-primary account with primary email
         if (!$user->getIsPrimary()) {
@@ -155,7 +194,7 @@ class ReportController extends AbstractController
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
-        $deputyHasMultiClients = $this->getUser()->isLayDeputy() && $this->clientApi->checkDeputyHasMultiClients($user->getDeputyUid());
+        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
@@ -166,13 +205,35 @@ class ReportController extends AbstractController
         $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
-        return [
-            'user' => $user,
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
-            'client' => $clientWithCoDeputies,
+        $resultsArray = [
             'coDeputies' => $coDeputies,
+            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
             'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
+
+        if ($ndrEnabled) {
+            $client = $this->clientApi->getById($clientId);
+
+            $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
+
+            return array_merge([
+                'ndrEnabled' => true,
+                'client' => $client,
+                'ndr' => $client->getNdr(),
+                'reportsSubmitted' => $client->getSubmittedReports(),
+                'reportActive' => $client->getActiveReport(),
+                'ndrStatus' => new NdrStatusService($ndr),
+            ],
+                $resultsArray
+            );
+        } else {
+            return array_merge([
+                'ndrEnabled' => false,
+                'client' => $clientWithCoDeputies,
+            ],
+                $resultsArray
+            );
+        }
     }
 
     /**
@@ -311,7 +372,10 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('homepage'));
         }
 
-        return ['form' => $form->createView()];
+        return [
+            'form' => $form->createView(),
+            'clientId' => $clientId,
+        ];
     }
 
     /**
@@ -367,9 +431,7 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
-        $deputyHasMultiClients = !$user->isDeputyOrg() && $this->clientApi->checkDeputyHasMultiClients(
-            $user->getDeputyUid()
-        );
+        $deputyHasMultiClients = !$user->isDeputyOrg() && count($this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
 
         return $this->render($template, [
             'user' => $user,
@@ -460,10 +522,11 @@ class ReportController extends AbstractController
 
         $form = $this->createForm(ReportDeclarationType::class, $report);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $currentUser */
-            $currentUser = $this->getUser();
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
 
@@ -472,11 +535,14 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
 
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($currentUser);
+
         return [
             'report' => $report,
             'client' => $report->getClient(),
             'contactDetails' => $this->getAssociatedContactDetails($deputy, $report),
             'form' => $form->createView(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -552,12 +618,15 @@ class ReportController extends AbstractController
             }
         }
 
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         return [
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

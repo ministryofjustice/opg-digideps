@@ -74,6 +74,17 @@ data "aws_iam_policy_document" "lambda" {
       ]
     }
   }
+
+  statement {
+    sid    = "DecryptSecretKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      var.secrets_kms_key_arn
+    ]
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "vpc_access_execution_role" {

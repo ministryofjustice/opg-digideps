@@ -71,7 +71,7 @@ class ProcessLayCSVCommand extends Command
     public function __construct(
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $verboseLogger,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly PreRegistrationRepository $preReg,
     ) {
@@ -107,7 +107,7 @@ class ProcessLayCSVCommand extends Command
             }
             $logMessage = sprintf($logMessage, $layReportFile, $bucket);
 
-            $this->logger->error($logMessage);
+            $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
 
             return Command::FAILURE;
@@ -118,7 +118,7 @@ class ProcessLayCSVCommand extends Command
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s.', $fileLocation);
 
-                $this->logger->error($logMessage);
+                $this->verboseLogger->error($logMessage);
                 $this->cliOutput->writeln(
                     sprintf(
                         '%s - failure - (partial) %s Output: %s',
@@ -164,7 +164,7 @@ class ProcessLayCSVCommand extends Command
         } catch (\RuntimeException $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
-            $this->logger->error($logMessage);
+            $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(self::JOB_NAME.' - failure - '.$logMessage);
         }
 
@@ -179,11 +179,13 @@ class ProcessLayCSVCommand extends Command
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
-                $this->logger->notice(sprintf('Uploading chunk with Id: %s', $index));
+                $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
                 $this->storeOutput($result);
             }
+            $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
+            $this->csvProcessing->layProcessingHandleNewMultiClients();
 
             return true;
         }

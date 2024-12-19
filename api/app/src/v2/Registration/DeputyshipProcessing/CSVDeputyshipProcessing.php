@@ -62,6 +62,12 @@ class CSVDeputyshipProcessing
         return $result;
     }
 
+    public function layProcessingHandleNewMultiClients(): array
+    {
+        $result = $this->layUploader->handleNewMultiClients();
+        return $result;
+    }
+
     public function orgProcessing(array $data)
     {
         $rowCount = count($data);

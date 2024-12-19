@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -32,7 +34,8 @@ class ActionController extends AbstractController
     public function __construct(
         RestClient $restClient,
         ReportApi $reportApi,
-        StepRedirector $stepRedirector
+        StepRedirector $stepRedirector,
+        private ClientApi $clientApi,
     ) {
         $this->restClient = $restClient;
         $this->reportApi = $reportApi;
@@ -41,10 +44,15 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions", name="actions")
+     *
      * @Template("@App/Report/Action/start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getActionsState()['state']) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
@@ -52,11 +60,13 @@ class ActionController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/actions/step/{step}", name="actions_step")
+     *
      * @Template("@App/Report/Action/step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
@@ -116,10 +126,15 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions/summary", name="actions_summary")
+     *
      * @Template("@App/Report/Action/summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getActionsState()['state'] && 'skip-step' != $fromPage) {
@@ -130,6 +145,7 @@ class ActionController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

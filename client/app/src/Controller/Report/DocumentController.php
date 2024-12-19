@@ -39,46 +39,32 @@ class DocumentController extends AbstractController
         'documents-state',
     ];
 
-    private S3FileUploader $fileUploader;
-    private RestClient $restClient;
-    private ReportApi $reportApi;
-    private ClientApi $clientApi;
-    private StepRedirector $stepRedirector;
-    private TranslatorInterface $translator;
-    private DocumentService $documentService;
-    private LoggerInterface $logger;
-    private S3Storage $s3Storage;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        S3FileUploader $fileUploader,
-        ClientApi $clientApi,
-        StepRedirector $stepRedirector,
-        TranslatorInterface $translator,
-        DocumentService $documentService,
-        LoggerInterface $logger,
-        S3Storage $s3Storage
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private S3FileUploader $fileUploader,
+        private ClientApi $clientApi,
+        private StepRedirector $stepRedirector,
+        private TranslatorInterface $translator,
+        private DocumentService $documentService,
+        private LoggerInterface $logger,
+        private S3Storage $s3Storage,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->fileUploader = $fileUploader;
-        $this->clientApi = $clientApi;
-        $this->stepRedirector = $stepRedirector;
-        $this->translator = $translator;
-        $this->documentService = $documentService;
-        $this->logger = $logger;
-        $this->s3Storage = $s3Storage;
     }
 
     /**
      * @Route("/report/{reportId}/documents", name="documents")
+     *
      * @Template("@App/Report/Document/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED !== $report->getStatus()->getDocumentsState()['state']) {
@@ -93,12 +79,14 @@ class DocumentController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
      * @Route("/report/{reportId}/documents/step/1", name="documents_step")
+     *
      * @Template("@App/Report/Document/step1.html.twig")
      *
      * @return array|RedirectResponse
@@ -156,6 +144,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
+     *
      * @Template("@App/Report/Document/step2.html.twig")
      *
      * @return array|RedirectResponse
@@ -223,6 +212,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/reupload", name="report_documents_reupload")
+     *
      * @Template("@App/Report/Document/reupload.html.twig")
      *
      * @return array|RedirectResponse
@@ -357,12 +347,17 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
+     *
      * @Template("@App/Report/Document/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction(Request $request, $reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
             return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
@@ -375,6 +370,7 @@ class DocumentController extends AbstractController
             'report' => $report,
             'backLink' => $this->generateUrl('report_documents', ['reportId' => $report->getId()]),
             'status' => $report->getStatus(),
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -382,6 +378,7 @@ class DocumentController extends AbstractController
      * Confirm delete document form.
      *
      * @Route("/documents/{documentId}/delete", name="delete_document")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse|Response
@@ -504,6 +501,7 @@ class DocumentController extends AbstractController
      * Confirm additional documents form.
      *
      * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
+     *
      * @Template("@App/Report/Document/submitMoreDocumentsConfirm.html.twig")
      *
      * @return array
@@ -529,6 +527,7 @@ class DocumentController extends AbstractController
      * Confirmed send additional documents.
      *
      * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
+     *
      * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
      *
      * @return RedirectResponse

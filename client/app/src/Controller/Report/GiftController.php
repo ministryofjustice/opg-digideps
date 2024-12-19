@@ -4,7 +4,9 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
+use App\Entity\User;
 use App\Form as FormDir;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,30 +23,26 @@ class GiftController extends AbstractController
         'account',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private RestClient $restClient,
+        private ReportApi $reportApi,
+        private ClientApi $clientApi
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("/report/{reportId}/gifts", name="gifts")
-     * @Template("@App/Report/Gift/start.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Gift/start.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function startAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getGiftsState()['state']) {
@@ -53,14 +51,14 @@ class GiftController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/gifts/exist", name="gifts_exist")
-     * @Template("@App/Report/Gift/exist.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Gift/exist.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -101,9 +99,8 @@ class GiftController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/gifts/add", name="gifts_add")
-     * @Template("@App/Report/Gift/add.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Gift/add.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -155,10 +152,8 @@ class GiftController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/gifts/edit/{giftId}", name="gifts_edit")
-     * @Template("@App/Report/Gift/edit.html.twig")
      *
-     * @param $reportId
-     * @param $giftId
+     * @Template("@App/Report/Gift/edit.html.twig")
      *
      * @return array|RedirectResponse
      */
@@ -210,14 +205,17 @@ class GiftController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/gifts/summary", name="gifts_summary")
-     * @Template("@App/Report/Gift/summary.html.twig")
      *
-     * @param $reportId
+     * @Template("@App/Report/Gift/summary.html.twig")
      *
      * @return array|RedirectResponse
      */
     public function summaryAction($reportId)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getGiftsState()['state']) {
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
@@ -225,15 +223,14 @@ class GiftController extends AbstractController
 
         return [
             'report' => $report,
+            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
     /**
      * @Route("/report/{reportId}/gifts/{giftId}/delete", name="gifts_delete")
-     * @Template("@App/Common/confirmDelete.html.twig")
      *
-     * @param $reportId
-     * @param $giftId
+     * @Template("@App/Common/confirmDelete.html.twig")
      *
      * @return array|RedirectResponse
      */

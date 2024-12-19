@@ -35,7 +35,14 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
     {
         return [
             ['Case'],
+            ['ClientFirstname'],
             ['ClientSurname'],
+            ['ClientAddress1'],
+            ['ClientAddress2'],
+            ['ClientAddress3'],
+            ['ClientAddress4'],
+            ['ClientAddress5'],
+            ['ClientPostcode'],
             ['DeputyUid'],
             ['DeputyFirstname'],
             ['DeputySurname'],
@@ -79,7 +86,14 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 
         $this->assertInstanceOf(LayDeputyshipDto::class, $result);
         $this->assertEquals('caseT', $result->getCaseNumber());
+        $this->assertEquals('firstname', $result->getClientFirstname());
         $this->assertEquals('surname', $result->getClientSurname());
+        $this->assertEquals('client_postcode', $result->getClientPostcode());
+        $this->assertEquals('client_address1', $result->getClientAddress1());
+        $this->assertEquals('client_address2', $result->getClientAddress2());
+        $this->assertEquals('client_address3', $result->getClientAddress3());
+        $this->assertEquals('client_address4', $result->getClientAddress4());
+        $this->assertEquals('client_address5', $result->getClientAddress5());
         $this->assertEquals('deputy_no', $result->getDeputyUid());
         $this->assertEquals('deputyfirstname', $result->getDeputyFirstname());
         $this->assertEquals('deputysurname', $result->getDeputySurname());
@@ -108,7 +122,14 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
     {
         return [
             'Case' => 'caseT',
+            'ClientFirstname' => 'firstname',
             'ClientSurname' => 'surname',
+            'ClientAddress1' => 'client_address1',
+            'ClientAddress2' => 'client_address2',
+            'ClientAddress3' => 'client_address3',
+            'ClientAddress4' => 'client_address4',
+            'ClientAddress5' => 'client_address5',
+            'ClientPostcode' => 'client_postcode',
             'DeputyUid' => 'deputy_no',
             'DeputyFirstname' => 'deputyfirstname',
             'DeputySurname' => 'deputysurname',

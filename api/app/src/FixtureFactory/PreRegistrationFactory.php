@@ -14,9 +14,6 @@ class PreRegistrationFactory
     {
     }
 
-    /**
-     * @return Client
-     */
     public function create(array $data): PreRegistration
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
@@ -26,8 +23,15 @@ class PreRegistrationFactory
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($data['caseNumber'] ?? $caseNumber)
+            ->setClientFirstname($data['clientFirstName'] ?? 'John')
             ->setClientSurname($data['clientLastName'] ?? 'Smith')
             ->setDeputyUid($deputyUid)
+            ->setClientAddress1($data['clientAddress1'] ?? 'Client Street')
+            ->setClientAddress2($data['clientAddress2'] ?? 'Clientville')
+            ->setClientAddress3($data['clientAddress3'] ?? 'ClientTon')
+            ->setClientAddress4($data['clientAddress4'] ?? null)
+            ->setClientAddress5($data['clientAddress5'] ?? null)
+            ->setClientPostcode($data['clientPostCode'] ?? 'DY8')
             ->setDeputyAddress1($data['deputyAddress1'] ?? 'Victoria Park')
             ->setDeputyAddress2($data['deputyAddress2'] ?? 'Fakeville')
             ->setDeputyAddress3($data['deputyAddress3'] ?? 'Pretendham')

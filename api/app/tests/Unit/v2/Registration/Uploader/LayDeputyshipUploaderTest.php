@@ -15,8 +15,9 @@ use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class LayDeputyshipUploaderTest extends TestCase
+class LayDeputyshipUploaderTest extends KernelTestCase
 {
     /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject */
     protected $em;
@@ -35,16 +36,21 @@ class LayDeputyshipUploaderTest extends TestCase
 
     protected function setUp(): void
     {
+        $container = static::getContainer();
         $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
         $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
         $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+        $layDeputyshipDtoAssembler = $container->get('App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler');
+        $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
             $this->reportRepository,
             $this->factory,
-            $this->logger
+            $this->logger,
+            $layDeputyshipDtoAssembler,
+            $clientAssembler
         );
     }
 

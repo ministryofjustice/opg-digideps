@@ -27,11 +27,6 @@ jobs:
         run: python -m unittest tests/*_tests.py
         working-directory: lambdas/functions/block_ips_lambda
 
-      - name: run unit tests for synchronisation
-        id: unit-tests-synchronisation
-        run: go test
-        working-directory: lambdas/functions/synchronisation
-
       - name: run unit tests for anonymisation
         id: unit-tests-anonymisation
         run: go test ./...
