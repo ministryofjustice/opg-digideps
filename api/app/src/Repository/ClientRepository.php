@@ -135,20 +135,20 @@ class ClientRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findByCaseNumberIncludingDischarged(string $caseNumber): ?Client
+    public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed
     {
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
-        $client = $this
+        $clients = $this
             ->getEntityManager()
             ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)')
             ->setParameter('caseNumber', $caseNumber)
-            ->getOneOrNullResult();
+            ->getResult();
 
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return $client;
+        return $clients;
     }
 
     public function findByIdIncludingDischarged(int $id): ?Client
