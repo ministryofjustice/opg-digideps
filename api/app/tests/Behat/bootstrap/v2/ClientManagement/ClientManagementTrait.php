@@ -223,39 +223,6 @@ MESSAGE;
     }
 
     /**
-     * @Then I should see the Primary Lay deputies name, address and contact details
-     */
-    public function iShouldSeePrimaryLayDeputyDetails()
-    {
-        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
-
-        $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserFullname();
-        $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserPhone();
-        $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail();
-        $detailsToAssertOn = array_merge(
-            $detailsToAssertOn,
-            $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserFullAddressArray()
-        );
-
-        $missingDetails = [];
-
-        foreach ($detailsToAssertOn as $detail) {
-            $detailPresent = str_contains($pageContent, $detail);
-
-            if (!$detailPresent) {
-                $missingDetails[] = $detail;
-            }
-        }
-
-        if (!empty($missingDetails)) {
-            $missingDetailsString = implode(', ', $missingDetails);
-            $detailsToAssertOnString = implode(', ', $detailsToAssertOn);
-
-            throw new BehatException(sprintf('Some client details were missing: %s. Wanted: %s, got (full HTML): %s', $missingDetailsString, $detailsToAssertOnString, $pageContent));
-        }
-    }
-
-    /**
      * @Then I should see the reports associated with the client
      */
     public function iShouldSeeDeputyReports()
