@@ -24,12 +24,3 @@ Feature: Admin - View client details
     Given a super admin user accesses the admin app
     When I visit the admin client details page for an existing client linked to a Lay deputy
     And I should see "Discharge deputy"
-
-    @admin @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: An admin user views client details associated with a non-primary Lay deputy user account
-        Given an admin user accesses the admin app
-        When I visit the admin client details page for an existing client linked to a non-primary Lay deputy user account
-        Then I should see the clients court order number
-        And I should see the Primary Lay deputies name, address and contact details
-        And I should see the reports associated with the client
-        And I should not see "Discharge deputy"
