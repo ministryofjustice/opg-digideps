@@ -60,6 +60,7 @@ variable "accounts" {
       fault_injection_experiments_enabled    = bool
       sleep_mode_enabled                     = bool
       waf_ip_blocking_enabled                = bool
+      run_one_off_migrations                 = string
     })
   )
 }
