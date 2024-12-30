@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      ssh_private_key:
+        required: true
     inputs:
       terraform_path:
         description: "The name of the terraform path"
