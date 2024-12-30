@@ -77,16 +77,16 @@ jobs:
   build_web_resources:
     name: build web resources
     uses: ./.github/workflows/_web-resources.yml
-    secrets: inherit
 
   terraform_lint:
     name: lint terraform code
     uses: ./.github/workflows/_lint-terraform.yml
     needs:
       - workflow_variables
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-    secrets: inherit
 
   test_js:
     name: test javascript code
@@ -104,7 +104,6 @@ jobs:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
-    secrets: inherit
 
   api_unit_tests_1:
     name: api unit tests 1
@@ -149,7 +148,6 @@ jobs:
       - api_unit_tests_1
       - api_unit_tests_2
       - api_unit_tests_3
-    secrets: inherit
 
   miscellaneous_unit_tests:
     name: miscellaneous unit tests
@@ -163,12 +161,13 @@ jobs:
     needs:
       - workflow_variables
       - terraform_lint
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: development
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
-    secrets: inherit
 
   terraform_apply_environment:
     name: environment apply terraform
@@ -177,6 +176,8 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
       - workflow_variables
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       terraform_path: environment
@@ -184,7 +185,6 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
       pull_request_path: true
-    secrets: inherit
 
   ecr_scan_results:
     name: ecr scan results
@@ -194,7 +194,6 @@ jobs:
     needs:
       - terraform_apply_environment
       - workflow_variables
-    secrets: inherit
 
   scale_services_up:
     name: scale up services
@@ -207,7 +206,6 @@ jobs:
       acu: 16
       account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-    secrets: inherit
 
   reset_database:
     name: reset database
@@ -215,12 +213,13 @@ jobs:
     needs:
       - workflow_variables
       - terraform_apply_environment
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "reset_database"
       timeout: "500"
-    secrets: inherit
 
   smoke_tests:
     name: smoke tests
@@ -229,12 +228,13 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "smoke_tests"
       timeout: "900"
-    secrets: inherit
 
   integration_tests_1:
     name: integration tests frontend 1
@@ -243,13 +243,14 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_2:
     name: integration tests frontend 2
@@ -258,13 +259,14 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_admin:
     name: integration tests admin
@@ -273,13 +275,14 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_sequential_1:
     name: integration tests sequential 1
@@ -288,13 +291,14 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_sequential_2:
     name: integration tests sequential 2
@@ -303,13 +307,14 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_sequential_3:
     name: integration tests sequential 3
@@ -318,13 +323,14 @@ jobs:
       - workflow_variables
       - reset_database
       - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   scale_services_down:
     if: always()
@@ -343,7 +349,6 @@ jobs:
       acu: 4
       account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-    secrets: inherit
 
   end_of_workflow:
     name: end of workflow
@@ -389,7 +394,6 @@ jobs:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
-    secrets: inherit
 
   slack_notify_failure:
     name: notify of failure
@@ -402,4 +406,3 @@ jobs:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
-    secrets: inherit

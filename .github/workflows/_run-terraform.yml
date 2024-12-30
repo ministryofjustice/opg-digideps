@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      ssh_private_key:
+        required: true
     inputs:
       terraform_path:
         description: "The name of the terraform path"
@@ -68,7 +71,7 @@ jobs:
 
       - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+          ssh-private-key: ${{ secrets.ssh_private_key }}
 
       - name: build redeployer
         if: inputs.terraform_path == 'account'

@@ -6,6 +6,9 @@ defaults:
 
 on:
   workflow_call:
+    secrets:
+      ssh_private_key:
+        required: true
     inputs:
       workspace:
         description: "Terraform workspace"
@@ -43,7 +46,7 @@ jobs:
 
       - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+          ssh-private-key: ${{ secrets.ssh_private_key }}
 
       - name: terraform fmt ${{ matrix.folder }} check
         run: terraform fmt -check -recursive
