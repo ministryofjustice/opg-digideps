@@ -15,6 +15,12 @@ variable "OPG_DOCKER_TAG" {
   type        = string
 }
 
+variable "project" {
+  description = "project name"
+  type        = string
+  default     = "digideps"
+}
+
 variable "accounts" {
   type = map(
     object({
