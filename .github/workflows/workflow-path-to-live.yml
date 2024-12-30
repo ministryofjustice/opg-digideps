@@ -60,7 +60,6 @@ jobs:
   build_web_resources:
     name: build web resources
     uses: ./.github/workflows/_web-resources.yml
-    secrets: inherit
 
   docker_build_scan_push:
     name: build, scan and push
@@ -72,7 +71,6 @@ jobs:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
-    secrets: inherit
 
   api_unit_tests_1:
     name: api unit tests 1
@@ -116,7 +114,6 @@ jobs:
       - api_unit_tests_1
       - api_unit_tests_2
       - api_unit_tests_3
-    secrets: inherit
 
   miscellaneous_unit_tests:
     name: miscellaneous unit tests
@@ -135,7 +132,6 @@ jobs:
       apply: true
       account_name: development
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-    secrets: inherit
 
   terraform_apply_account_preproduction:
     name: preproduction account apply terraform
@@ -155,7 +151,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-    secrets: inherit
 
   terraform_apply_integration:
     name: integration environment apply terraform
@@ -169,7 +164,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-    secrets: inherit
 
   scale_services_up:
     name: scale up integration services
@@ -182,7 +176,6 @@ jobs:
       acu: 16
       account_id: 454262938596
       workspace: integration
-    secrets: inherit
 
   reset_database:
     name: reset integration database
@@ -195,7 +188,6 @@ jobs:
       account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
-    secrets: inherit
 
   integration_tests_1:
     name: integration tests frontend 1
@@ -209,7 +201,6 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_2:
     name: integration tests frontend 2
@@ -223,7 +214,6 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_admin:
     name: integration tests admin
@@ -237,7 +227,6 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_sequential_1:
     name: integration tests sequential 1
@@ -251,7 +240,6 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_sequential_2:
     name: integration tests sequential 2
@@ -265,7 +253,6 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   integration_tests_sequential_3:
     name: integration tests sequential 3
@@ -279,7 +266,6 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
-    secrets: inherit
 
   scale_services_down:
     if: always()
@@ -298,7 +284,6 @@ jobs:
       acu: 4
       account_id: 454262938596
       workspace: integration
-    secrets: inherit
 
   terraform_apply_preproduction:
     name: preproduction environment apply terraform
@@ -318,7 +303,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-    secrets: inherit
 
   terraform_apply_training:
     name: training environment apply terraform
@@ -332,7 +316,6 @@ jobs:
       apply: true
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-    secrets: inherit
 
   terraform_apply_account_production:
     name: production account apply terraform
@@ -346,7 +329,6 @@ jobs:
       apply: true
       account_name: production
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
-    secrets: inherit
 
   terraform_apply_production:
     name: production environment apply terraform
@@ -360,7 +342,6 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: production
-    secrets: inherit
 
   smoke_tests_production:
     name: smoke tests on production
@@ -373,7 +354,6 @@ jobs:
       account_name: production
       task_name: "smoke_tests"
       timeout: "900"
-    secrets: inherit
 
   end_of_workflow:
     name: end of workflow
@@ -399,7 +379,6 @@ jobs:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
-    secrets: inherit
 
   slack_notify_failure:
     name: notify of failure
@@ -412,4 +391,3 @@ jobs:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 515688267891
-    secrets: inherit
