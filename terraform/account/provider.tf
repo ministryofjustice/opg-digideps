@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket  = "opg.terraform.state"
-    key     = "digideps-infrastructure-shared/terraform.tfstate"
+    key     = "opg-digideps-environment/terraform.tfstate"
     encrypt = true
     region  = "eu-west-1"
     assume_role = {
