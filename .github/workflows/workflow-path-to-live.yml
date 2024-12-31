@@ -109,6 +109,8 @@ jobs:
   codecov:
     name: upload to codecov
     uses: ./.github/workflows/_codecov.yml
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
     needs:
       - client_unit_tests
       - api_unit_tests_1

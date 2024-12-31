@@ -30,23 +30,20 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - name: parse terraform version
-        id: tf_version_setup
-        run: |
-          if [ -f ./versions.tf ]; then
-            terraform_version=$(cat ./versions.tf | ../../scripts/pipeline/terraform/terraform-version.sh)
-            echo "- Terraform version: [${terraform_version}]" >> $GITHUB_STEP_SUMMARY
-            echo "TERRAFORM_VERSION=${terraform_version}" >> $GITHUB_OUTPUT
-          fi
-        working-directory: terraform/${{ inputs.terraform_path }}
-
-      - name: "Terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
-        run: echo "terraform version [${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}]"
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.0
+        with:
+          terraform_directory: terraform/${{ inputs.terraform_path }}
 
       - uses: hashicorp/setup-terraform@344fef46b6edc7c46ce8b3b8b0a3ece7e77e05f0 # pin@v2.0.0
         with:
-          terraform_version: ${{ steps.tf_version_setup.outputs.TERRAFORM_VERSION }}
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for latest deployment
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
@@ -55,10 +52,6 @@ jobs:
           role-session-name: github-actions-slack-notifier
           role-duration-seconds: 900
           aws-region: eu-west-1
-
-      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.ssh_private_key }}
 
       - name: terraform init
         run: terraform init -input=false
@@ -72,3 +65,9 @@ jobs:
           export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
           echo "image_tag=$(echo ${IMAGE_TAG})" >> $GITHUB_OUTPUT
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: Unset AWS variables
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV

@@ -83,14 +83,6 @@ jobs:
       - name: install aws cli
         uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
-      - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
-        with:
-          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
-          role-session-name: github-actions-ecr-push
-          role-duration-seconds: 900
-          aws-region: eu-west-1
-
       - name: download resources artifact
         uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
@@ -135,6 +127,14 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: configure OIDC AWS credentials for ECR push
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-push
+          role-duration-seconds: 900
+          aws-region: eu-west-1
 
       - name: ecr login
         id: login_ecr
@@ -192,3 +192,9 @@ jobs:
             docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
           fi
           docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME
+
+      - name: Unset AWS variables
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV

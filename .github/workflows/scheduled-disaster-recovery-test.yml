@@ -31,6 +31,11 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
+      - name: install requirements
+        id: requirements
+        run: pip install -r requirements.txt
+        working-directory: disaster-recovery/restore
+
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
         with:
@@ -38,11 +43,6 @@ jobs:
           role-session-name: github-actions-terraform-run-task
           role-duration-seconds: 7200
           aws-region: eu-west-1
-
-      - name: install requirements
-        id: requirements
-        run: pip install -r requirements.txt
-        working-directory: disaster-recovery/restore
 
       - name: restore to a point in time
         id: restore
@@ -53,6 +53,12 @@ jobs:
           --cluster_from api-integration \
           --pitr "${TEN_MINS_AGO}"
         working-directory: disaster-recovery/restore
+
+      - name: Unset AWS variables
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
 
   restore_from_remote_backup:
     runs-on: ubuntu-latest
@@ -68,6 +74,11 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
+      - name: install requirements
+        id: requirements
+        run: pip install -r requirements.txt
+        working-directory: disaster-recovery/restore
+
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
         with:
@@ -75,11 +86,6 @@ jobs:
           role-session-name: github-actions-terraform-run-task
           role-duration-seconds: 7200
           aws-region: eu-west-1
-
-      - name: install requirements
-        id: requirements
-        run: pip install -r requirements.txt
-        working-directory: disaster-recovery/restore
 
       - name: get latest integration snapshot id
         id: snapshot
@@ -100,6 +106,12 @@ jobs:
           --snapshot_id ${SNAPSHOT_ID}
         working-directory: disaster-recovery/restore
 
+      - name: Unset AWS variables
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+
   slack_notify_success:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
@@ -109,7 +121,6 @@ jobs:
       success: yes
       branch: integration
       account: 248804316466
-    secrets: inherit
 
   slack_notify_failure:
     name: notify of failure
@@ -121,4 +132,3 @@ jobs:
       success: no
       branch: integration
       account: 248804316466
-    secrets: inherit
