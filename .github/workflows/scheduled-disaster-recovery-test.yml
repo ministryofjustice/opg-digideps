@@ -55,6 +55,7 @@ jobs:
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
@@ -107,6 +108,7 @@ jobs:
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV

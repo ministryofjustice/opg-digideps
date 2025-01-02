@@ -194,6 +194,7 @@ jobs:
           docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV

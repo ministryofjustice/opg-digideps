@@ -48,6 +48,7 @@ jobs:
           aws rds modify-db-cluster --db-cluster-identifier api-${TF_WORKSPACE} --serverless-v2-scaling-configuration MinCapacity=0.5,MaxCapacity=${ACU}
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV

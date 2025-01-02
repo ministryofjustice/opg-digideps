@@ -40,6 +40,7 @@ jobs:
         run: python ./scripts/pipeline/ecrscan/ecr_scan_results.py --search digideps --tag ${TAG} --print_to_terminal --fail_pipe
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV

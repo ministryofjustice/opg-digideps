@@ -82,6 +82,7 @@ jobs:
           ./scripts/destroy_workspace.sh ${WORKSPACE}
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV

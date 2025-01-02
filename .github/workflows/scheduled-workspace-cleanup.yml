@@ -78,6 +78,7 @@ jobs:
         working-directory: scripts/pipeline/cleanup_task_definitions
 
       - name: Unset AWS variables
+        if: always()
         run: |
           echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
