@@ -27,7 +27,6 @@ jobs:
       acu: 8
       account_id: 454262938596
       workspace: integration
-    secrets: inherit
 
   resilience_tests_integration:
     name: resilience tests on integration
@@ -39,7 +38,8 @@ jobs:
       account_name: preproduction
       task_name: "resilience_tests"
       timeout: "3600"
-    secrets: inherit
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
   scale_services_down:
     if: always()
@@ -52,4 +52,3 @@ jobs:
       acu: 4
       account_id: 454262938596
       workspace: integration
-    secrets: inherit
