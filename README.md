@@ -14,10 +14,13 @@ If developing the app then ensure you have [pre-commit](https://pre-commit.com/)
 
 #### M1 macOS Monterey ≥ 12.2 | Intel macOS Monterey ≥ 12.3 Docker settings
 
-* `Docker preferences -> Experimental Features -> tick 'Use the new Virtualization framework'`
-* `Docker preferences -> Experimental Features -> tick 'Enable VirtioFS accelerated directory sharing'`
+* `Docker settings -> General -> make sure 'Use the new Virtualization framework' is ticked`
+* `Docker settings -> General -> tick 'VirtioFS' for file sharing`
+* `Docker settings -> General -> untick 'Use Rosetta'`
 
-Once both boxes are checked click `Apply & Restart` then run the `Make` command `make up-app-build`
+Also in `Docker settings -> Resources`, make sure that you have at least 10gb of memory allocated or you may get performance issues.
+
+Once both boxes are checked click `Apply & Restart` then continue to follow the instructions below.
 
 ## Installation
 
