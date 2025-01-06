@@ -725,7 +725,7 @@ class Client implements ClientInterface
         return $this;
     }
 
-    public function getAddress5(): string
+    public function getAddress5(): ?string
     {
         return $this->address5;
     }

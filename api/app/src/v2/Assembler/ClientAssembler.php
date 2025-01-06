@@ -8,6 +8,7 @@ use App\v2\DTO\ClientDto;
 use App\v2\DTO\DtoPropertySetterTrait;
 use App\v2\DTO\OrganisationDto;
 use App\v2\DTO\UserDto;
+use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
@@ -123,6 +124,28 @@ class ClientAssembler
             ->setAddress5($dto->getClientAddress5() ?: null)
             ->setDateOfBirth($dto->getClientDateOfBirth() ?: null)
             ->setCourtDate($dto->getCourtDate() ?: null);
+
+        if (!empty($dto->getClientPostCode())) {
+            $client->setPostcode($dto->getClientPostCode());
+            $client->setCountry('GB'); // postcode given means a UK address is given
+        }
+
+        return $client;
+    }
+    
+    public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto)
+    {
+        $client = (new Client())
+            ->setCaseNumber($dto->getCaseNumber())
+            ->setFirstname($dto->getClientFirstname() ?: null)
+            ->setLastname($dto->getClientSurname())
+            ->setAddress($dto->getClientAddress1() ?: null)
+            ->setAddress2($dto->getClientAddress2() ?: null)
+            ->setAddress3($dto->getClientAddress3() ?: null)
+            ->setAddress4($dto->getClientAddress4() ?: null)
+            ->setAddress5($dto->getClientAddress5() ?: null)
+            ->setPostcode($dto->getClientPostcode() ?: null)
+            ->setCourtDate($dto->getOrderDate() ?: null);
 
         if (!empty($dto->getClientPostCode())) {
             $client->setPostcode($dto->getClientPostCode());

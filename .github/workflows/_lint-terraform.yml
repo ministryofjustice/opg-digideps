@@ -6,6 +6,9 @@ defaults:
 
 on:
   workflow_call:
+    secrets:
+      ssh_private_key:
+        required: true
     inputs:
       workspace:
         description: "Terraform workspace"
@@ -33,6 +36,14 @@ jobs:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
+      - name: terraform fmt ${{ matrix.folder }} check
+        run: terraform fmt -check -recursive
+        working-directory: terraform/${{ matrix.folder }}
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.ssh_private_key }}
+
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
         with:
@@ -40,14 +51,6 @@ jobs:
           role-session-name: github-actions-terraform
           role-duration-seconds: 900
           aws-region: eu-west-1
-
-      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
-
-      - name: terraform fmt ${{ matrix.folder }} check
-        run: terraform fmt -check -recursive
-        working-directory: terraform/${{ matrix.folder }}
 
       - name: terraform validate ${{ inputs.workspace }}
         env:
@@ -58,3 +61,45 @@ jobs:
           echo $TF_WORKSPACE
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+
+      - name: configure OIDC AWS credentials for Trivy DB Ecr
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-trivy-db
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: ecr login for trivy db
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@bfbd05a2dcf76451041cbd4b9d11cff82489a1ee # pin@v1.5.1
+        with:
+          registries: 311462405659
+
+      - name: Trivy Terraform Config Scan
+        id: trivy_scan
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0
+        with:
+          scan-type: "config"
+          target: terraform/${{ matrix.folder }}
+          severity: "MEDIUM,HIGH,CRITICAL"
+          format: "sarif"
+          output: "trivy-results.sarif"
+        env:
+          TRIVY_TIMEOUT: 15m
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV

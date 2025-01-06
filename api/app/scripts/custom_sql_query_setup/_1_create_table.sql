@@ -11,3 +11,4 @@ CREATE TABLE IF NOT EXISTS audit.custom_queries (
     expected_after INT,
     passed BOOLEAN
 );
+ALTER SEQUENCE audit.custom_queries_id_seq CACHE 1;

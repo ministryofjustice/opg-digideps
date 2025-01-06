@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      ssh_private_key:
+        required: true
     inputs:
       terraform_path:
         description: "The name of the terraform path"
@@ -58,6 +61,15 @@ jobs:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
+      - name: build redeployer
+        if: inputs.terraform_path == 'account'
+        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
+        working-directory: terraform/account/region/go_redeployer
+
+      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.ssh_private_key }}
+
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
         with:
@@ -65,15 +77,6 @@ jobs:
           role-session-name: github-actions-terraform
           role-duration-seconds: 7400
           aws-region: eu-west-1
-
-      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
-
-      - name: build redeployer
-        if: inputs.terraform_path == 'account'
-        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
-        working-directory: terraform/account/region/go_redeployer
 
       - name: terraform init for account
         if: inputs.terraform_path == 'account'
@@ -116,3 +119,10 @@ jobs:
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV

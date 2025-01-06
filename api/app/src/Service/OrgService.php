@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Factory\DeputyFactory;
-use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,49 +13,13 @@ class OrgService
 {
     public const DEFAULT_ORG_NAME = 'Your Organisation';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
-
-    /**
-     * @var DeputyFactory
-     */
-    private $deputyFactory;
-
-    /**
-     * @var DeputyRepository
-     */
-    private $deputyRepository;
-
-    /**
-     * @var array
-     */
-    private $added;
-
     public function __construct(
-        EntityManagerInterface $em,
-        UserRepository $userRepository,
-        ClientRepository $clientRepository,
-        DeputyRepository $deputyRepository,
-        DeputyFactory $deputyFactory
+        protected EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private DeputyRepository $deputyRepository,
+        private DeputyFactory $deputyFactory,
+        private array $added = []
     ) {
-        $this->em = $em;
-        $this->userRepository = $userRepository;
-        $this->clientRepository = $clientRepository;
-        $this->deputyRepository = $deputyRepository;
-        $this->deputyFactory = $deputyFactory;
-        $this->added = [];
     }
 
     /**
@@ -65,15 +28,6 @@ class OrgService
     public function getMemberById(string $id)
     {
         return $this->userRepository->find($id);
-    }
-
-    public function addUserToUsersClients(User $userWithClients, User $userBeingAdded)
-    {
-        $clientIds = $this->clientRepository->findAllClientIdsByUser($userWithClients);
-
-        foreach ($clientIds as $clientId) {
-            $this->clientRepository->saveUserToClient($userBeingAdded, $clientId);
-        }
     }
 
     /**
