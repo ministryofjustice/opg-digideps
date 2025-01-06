@@ -19,36 +19,36 @@ permissions:
   statuses: none
 
 jobs:
-  #  backup_production:
-  #    name: backup production
-  #    uses: ./.github/workflows/_run-task.yml
-  #    with:
-  #      workspace: production02
-  #      account_name: production
-  #      task_name: "backup"
-  #      timeout: "700"
-  #    secrets:
-  #      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+  backup_production:
+    name: backup production
+    uses: ./.github/workflows/_run-task.yml
+    with:
+      workspace: production02
+      account_name: production
+      task_name: "backup"
+      timeout: "700"
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
-  #  restore_to_preproduction:
-  #    name: restore to preproduction
-  #    uses: ./.github/workflows/_run-task.yml
-  #    needs:
-  #      - backup_production
-  #    with:
-  #      workspace: preproduction
-  #      account_name: preproduction
-  #      task_name: "restore_from_production"
-  #      timeout: "3600"
-  #    secrets:
-  #      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+  restore_to_preproduction:
+    name: restore to preproduction
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - backup_production
+    with:
+      workspace: preproduction
+      account_name: preproduction
+      task_name: "restore_from_production"
+      timeout: "3600"
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
   slack_notify_failure:
     name: notify of failure
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
-    #    needs:
-    #      - backup_production
+    needs:
+      - backup_production
     with:
       success: no
       branch: main
