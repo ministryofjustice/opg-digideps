@@ -144,19 +144,29 @@ class LayDeputyshipUploader
         $existingClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($dto->getCaseNumber());
 
         if ($existingClients) {
+            /* @var Client $existingClient */
+            // If there is an existing active client, we shouldn't create a new instance of the client
+            foreach ($existingClients as $existingClient) {
+                if (!$existingClient->isDeleted()) {
+                    throw new \RuntimeException(sprintf('an active client with case number %s already exists', $existingClient->getCaseNumber()));
+                }
+            }
+            // Loop through the discharged clients to ensure we are not creating an account for a deputy associated with a discharged client
             foreach ($existingClients as $existingClient) {
                 foreach ($existingClient->getUsers() as $user) {
                     if ($user->getDeputyUid() == $newUser->getDeputyUid()) {
-                        throw new \RuntimeException(sprintf('a client with case number %s already exists that is associated with a user with deputy UID %s', $existingClient->getCaseNumber(), $newUser->getDeputyUid()));
+                        throw new \RuntimeException(sprintf('a discharged client with case number %s already exists that is associated with a user with deputy UID %s', $existingClient->getCaseNumber(), $newUser->getDeputyUid()));
                     }
                 }
             }
-        } else {
-            $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
-            $newClient->addUser($newUser);
-            $this->em->persist($newClient);
-            $this->added['clients'][] = $dto->getCaseNumber();
         }
+
+        // Only create a new instance of the client if one doesn't already exist,
+        // Or if all the clients are discharged, and we are creating an account for a deputy that is not associated with this case number already
+        $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
+        $newClient->addUser($newUser);
+        $this->em->persist($newClient);
+        $this->added['clients'][] = $dto->getCaseNumber();
 
         return $newClient;
     }
