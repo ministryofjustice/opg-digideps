@@ -27,7 +27,8 @@ jobs:
       account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
-    secrets: inherit
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
   slack_notify_failure:
     name: notify of failure
@@ -40,4 +41,3 @@ jobs:
       branch: main
       account: 515688267891
       scheduled_task: "Reset Training Environment"
-    secrets: inherit
