@@ -92,10 +92,16 @@ class PreRegistrationRepository extends ServiceEntityRepository
             pr.client_address_5   AS "ClientAddress5",
             pr.client_postcode    AS "ClientPostcode"
         FROM pre_registration pr
-        LEFT JOIN dd_user u ON pr.deputy_uid = u.deputy_uid::varchar(30)
-        LEFT JOIN deputy_case dc ON u.id = dc.user_id
-        LEFT JOIN client c ON dc.client_id = c.id
-        WHERE c.case_number != pr.client_case_number
+        INNER JOIN dd_user u ON pr.deputy_uid = u.deputy_uid::varchar(30)
+        WHERE (pr.deputy_uid, pr.client_case_number) IN (SELECT deputy_uid, lower(client_case_number)
+                                                         FROM pre_registration
+                                                         GROUP BY deputy_uid, lower(client_case_number)
+                                                         EXCEPT
+                                                         SELECT u.deputy_uid::varchar(30), lower(c.case_number)
+                                                         FROM dd_user u
+                                                                  INNER JOIN deputy_case dc ON u.id = dc.user_id
+                                                                  INNER JOIN client c on dc.client_id = c.id
+                                                         GROUP BY u.deputy_uid, lower(c.case_number));
         SQL;
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
