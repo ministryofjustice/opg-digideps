@@ -201,9 +201,6 @@ services:
       - DEFAULT_REGION=eu-west-1
       - USE_SINGLE_REGION=1
       - DEBUG=1
-      - LAMBDA_EXECUTOR=docker
-      - LAMBDA_REMOVE_CONTAINERS="true"
-      - LAMBDA_FORWARD_URL=http://synchronisation:8080
 
   wait-for-it:
     build: ./wait-for-it
@@ -248,21 +245,6 @@ services:
       - -h
       - 0.0.0.0
       - --dynamic
-
-  synchronisation:
-    container_name: opg-synchronisation-lambda
-    build:
-      context: ./lambdas/functions/synchronisation
-    ports:
-      - 2080:8080
-    environment:
-      AWS_REGION: eu-west-1
-      AWS_ACCESS_KEY_ID: localstack
-      AWS_SECRET_ACCESS_KEY: localstack
-      DIGIDEPS_SYNC_ENDPOINT: https://frontend
-      SECRETS_PREFIX: local
-      LOCALSTACK_ENDPOINT: http://localstack:4566
-    entrypoint: /aws-lambda/aws-lambda-rie /var/task/main
 
   composer:
     image: composer:2.5.7

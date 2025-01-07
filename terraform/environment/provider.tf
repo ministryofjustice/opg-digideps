@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket  = "opg.terraform.state"
-    key     = "opg-digi-deps-infrastructure/terraform.tfstate"
+    key     = "opg-digideps-environment/terraform.tfstate"
     encrypt = true
     region  = "eu-west-1"
     assume_role = {
@@ -29,7 +29,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE_MGMT}"
     session_name = "terraform-session"
   }
 }
@@ -54,7 +54,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE_MGMT}"
     session_name = "terraform-session"
   }
 }
@@ -78,7 +78,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE_MGMT}"
     session_name = "terraform-session"
   }
 }

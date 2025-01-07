@@ -9,6 +9,7 @@ use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -1105,6 +1106,73 @@ trait IngestTrait
         $this->preRegistration['expected'] = $newEntitiesCount;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
+    }
+
+    /**
+     * @Given the Lay deputy with deputy UID :deputyUid has :deputyClientCount associated active clients
+     */
+    public function theLayDeputyWithDeputyUidHasAssociatedClient($deputyUid, $deputyClientCount): void
+    {
+        $clientCount = $this->em
+            ->getRepository(User::class)
+            ->findActiveClientsCountForDeputyUid($deputyUid);
+
+        if ($clientCount != $deputyClientCount) {
+            throw new BehatException(sprintf("Unexpected number of active clients associated with this Deputy UID. Expected: '%s', got '%s'", $deputyClientCount, $clientCount));
+        }
+    }
+
+    /**
+     * @Then the client with case number :caseNumber should have the address :fullAddress
+     */
+    public function clientWithCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress): void
+    {
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $caseNumber]);
+
+        if (is_null($client)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $caseNumber));
+        }
+
+        $actualClientAddress = sprintf(
+            '%s, %s, %s, %s, %s, %s',
+            $client->getAddress() ?? '',
+            $client->getAddress2() ?? '',
+            $client->getAddress3() ?? '',
+            $client->getAddress4() ?? '',
+            $client->getAddress5() ?? '',
+            $client->getPostcode() ?? ''
+        );
+
+        $this->assertStringEqualsString(
+            $fullAddress,
+            $actualClientAddress,
+            'Comparing address defined in step against actual client address'
+        );
+    }
+
+    /**
+     * @Then the client with case number :caseNumber should have an active report with type :expectedReportType
+     */
+    public function clientWithCaseNumberShouldHaveReportType(string $caseNumber, string $expectedReportType): void
+    {
+        /* @var Client $client */
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->findOneBy(['caseNumber' => $caseNumber]);
+
+        if (is_null($client)) {
+            throw new BehatException(sprintf('Client not found with case number "%s"', $caseNumber));
+        }
+
+        $report = $client->getCurrentReport();
+
+        $this->assertStringEqualsString(
+            $report->getType(),
+            $expectedReportType,
+            'Comparing expected report type with actual report type'
+        );
     }
 
     protected function runCSVCommand(string $type, string $fileName)

@@ -17,14 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
-      - name: configure OIDC AWS credentials for ECR scanning
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
-        with:
-          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-scan
-          role-session-name: github-actions-ecr-scan
-          role-duration-seconds: 1800
-          aws-region: eu-west-1
-
       - name: install python
         uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
         with:
@@ -34,7 +26,22 @@ jobs:
       - name: install requirements
         run: pip install -r ./scripts/pipeline/ecrscan/requirements.txt
 
+      - name: configure OIDC AWS credentials for ECR scanning
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
+        with:
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-scan
+          role-session-name: github-actions-ecr-scan
+          role-duration-seconds: 1800
+          aws-region: eu-west-1
+
       - name: Check ECR scan results
         env:
           TAG: ${{ inputs.tag }}
         run: python ./scripts/pipeline/ecrscan/ecr_scan_results.py --search digideps --tag ${TAG} --print_to_terminal --fail_pipe
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV

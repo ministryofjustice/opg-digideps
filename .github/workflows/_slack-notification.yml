@@ -31,14 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
 
-      - name: configure OIDC AWS credentials for slack notification
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
-        with:
-          role-to-assume: arn:aws:iam::${{ inputs.account }}:role/digideps-gh-actions-slack-notifier
-          role-session-name: github-actions-slack-notifier
-          role-duration-seconds: 900
-          aws-region: eu-west-1
-
       - name: install python
         uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
         with:
@@ -47,6 +39,14 @@ jobs:
 
       - name: install requirements
         run: pip install -r lambdas/functions/monitor_notify_lambda/requirements.txt
+
+      - name: configure OIDC AWS credentials for slack notification
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::${{ inputs.account }}:role/digideps-gh-actions-slack-notifier
+          role-session-name: github-actions-slack-notifier
+          role-duration-seconds: 900
+          aws-region: eu-west-1
 
       - name: Notify Slack
         env:
@@ -60,3 +60,10 @@ jobs:
           --branch "${BRANCH}" \
           --scheduled_task "${SCHEDULED_TASK}"
         working-directory: lambdas/functions/monitor_notify_lambda/app
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
