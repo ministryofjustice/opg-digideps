@@ -52,7 +52,7 @@ class UserDto
     /** @var array */
     private $clients;
 
-    private int $deputyUid;
+    private ?int $deputyUid;
 
     private bool $isPrimary;
 
@@ -282,7 +282,7 @@ class UserDto
 
     public function getDeputyUid(): ?int
     {
-        return $this->deputyUid;
+        return $this->deputyUid ?? null;
     }
 
     public function setDeputyUid(?int $deputyUid): UserDto
