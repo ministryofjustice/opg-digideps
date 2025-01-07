@@ -28,10 +28,6 @@ services:
     env_file:
       - .env
 
-  synchronisation:
-    restart: "no"
-    entrypoint: ["echo", "Service sync disabled"]
-
   node-js:
     image: opg-digideps-resources
     build:
