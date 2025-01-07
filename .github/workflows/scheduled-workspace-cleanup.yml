@@ -35,6 +35,18 @@ jobs:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
+      - name: install workspace manager
+        run: |
+          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.2/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+          sudo chmod +x /usr/local/bin/terraform-workspace-manager
+
+      - name: install python
+        uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
       - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
@@ -47,12 +59,6 @@ jobs:
           role-duration-seconds: 7400
           aws-region: eu-west-1
 
-      - name: install workspace manager
-        run: |
-          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.2/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
-          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
-          sudo chmod +x /usr/local/bin/terraform-workspace-manager
-
       - name: terraform init
         run: terraform init -input=false
         working-directory: terraform/environment
@@ -63,12 +69,6 @@ jobs:
           ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
         working-directory: terraform/environment
 
-      - name: install python
-        uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
-        with:
-          python-version: "3.10"
-          cache: "pip"
-
       - name: clean up old task definitions
         env:
           REGION: eu-west-1
@@ -76,6 +76,13 @@ jobs:
           pip install -r requirements.txt
           python cleanup_task_definitions.py
         working-directory: scripts/pipeline/cleanup_task_definitions
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
+          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
 
   slack_notify_failure:
     name: notify of failure
@@ -88,4 +95,3 @@ jobs:
       branch: main
       account: 454262938596
       scheduled_task: "Environment Cleanup"
-    secrets: inherit

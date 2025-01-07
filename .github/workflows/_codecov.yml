@@ -6,6 +6,9 @@ defaults:
 
 on:
   workflow_call:
+    secrets:
+      codecov_token:
+        required: true
 
 jobs:
   code_coverage:
@@ -44,7 +47,7 @@ jobs:
           fail_ci_if_error: true
           flags: client
           verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.codecov_token }}
 
       - name: service api codecov upload
         uses: codecov/codecov-action@v3
@@ -54,4 +57,4 @@ jobs:
           fail_ci_if_error: true
           flags: api
           verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.codecov_token }}
