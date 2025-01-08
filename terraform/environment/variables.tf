@@ -4,12 +4,6 @@ variable "DEFAULT_ROLE" {
   default     = "digideps-ci"
 }
 
-variable "DEFAULT_ROLE_MGMT" {
-  type        = string
-  description = "Default role to use for management providers"
-  default     = "digideps-custom-ci"
-}
-
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
   type        = string

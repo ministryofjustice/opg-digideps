@@ -8,11 +8,6 @@ variable "account" {
   description = "The account map"
 }
 
-variable "default_role" {
-  type        = string
-  description = "The default role to use"
-}
-
 variable "docker_tag" {
   type        = string
   description = "The docker_tag"
@@ -85,10 +80,10 @@ data "terraform_remote_state" "shared" {
   workspace = var.account.state_source
   config = {
     bucket = "opg.terraform.state"
-    key    = "digideps-infrastructure-shared/terraform.tfstate"
+    key    = "opg-digideps-account/terraform.tfstate"
     region = "eu-west-1"
     assume_role = {
-      role_arn = "arn:aws:iam::311462405659:role/${var.default_role}"
+      role_arn = "arn:aws:iam::311462405659:role/digideps-state-write"
     }
   }
 }
