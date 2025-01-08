@@ -664,4 +664,24 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetailsOne;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser = $nonPrimaryUserDetailsTwo;
     }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client
+     */
+    public function createLayPfaHighNotStartedMultiClientDeputyWithOneActiveClientAndSecondaryDischargedClient()
+    {
+        $deputyUid = 123456789000 + rand(1, 999);
+        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+        $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+
+        // Discharge client linked to secondary account
+        $nonPrimaryDischargedClientId = $nonPrimaryUserDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find($nonPrimaryDischargedClientId);
+        $client->setDeletedAt(new \DateTime('now'));
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+    }
 }
