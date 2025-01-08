@@ -5,11 +5,14 @@ namespace App\Entity;
 use App\Entity\Report\Report;
 use App\Entity\Traits\ActiveAudit;
 use App\Entity\Traits\IsSoftDeleteableEntity;
-use DateTime;
+use App\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @AppAssert\YearMustBeFourDigitsLong(groups={"client-court-date"})
+ */
 class Client
 {
     use IsSoftDeleteableEntity;

@@ -5,7 +5,6 @@ namespace App\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,17 +38,11 @@ class ClientType extends AbstractType
                 ->add('save', FormTypes\SubmitType::class);
 
         // strip tags to prevent XSS as the name is often displayed around mixed with translation with the twig "raw" filter
-        // only allow user to enter a four digit year
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
             $data['firstname'] = strip_tags($data['firstname']);
             $data['lastname'] = strip_tags($data['lastname']);
             $event->setData($data);
-
-            if (!preg_match('/^\d{4}$/', $data['courtDate']['year'])) {
-                $form = $event->getForm();
-                $form->addError(new FormError('Please enter a valid four-digit year.'));
-            }
         });
     }
 
@@ -57,7 +50,7 @@ class ClientType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'registration',
-            'validation_groups' => 'lay-deputy-client',
+            'validation_groups' => ['lay-deputy-client', 'client-court-date'],
         ]);
     }
 

@@ -7,13 +7,13 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class YearMustBeFourDigits extends Constraint
+class YearMustBeFourDigitsLong extends Constraint
 {
     public string $message = 'Please enter a valid four-digit year.';
 
     public function validatedBy()
     {
-        return 'start_end_dates';
+        return static::class.'Validator';
     }
 
     /**

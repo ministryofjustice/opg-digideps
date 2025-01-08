@@ -255,10 +255,6 @@ services:
     tags:
       - { name: validator.constraint_validator, alias: email_same_domain }
 
-  App\Validator\Constraints\YearMustBeFourDigitsLongValidator:
-    tags:
-      - { name: validator.constraint_validator, alias: start_end_dates }
-
   GuzzleHttp\Client:
     arguments:
       $config:

@@ -9,28 +9,46 @@ class YearMustBeFourDigitsLongValidator extends ConstraintValidator
 {
     public function validate($data, Constraint $constraint)
     {
-        if (!$data instanceof StartEndDateComparableInterface) {
-            throw new \InvalidArgumentException(sprintf('Validation data must implement %s interface', StartEndDateComparableInterface::class));
-        }
+        $startAndEndDate = [];
+        $courtDate = new \DateTime();
 
-        $startAndEndDate = [$data->getStartDate(), $data->getEndDate()];
+        if ($data instanceof StartEndDateComparableInterface) {
+            $startAndEndDate = [$data->getStartDate(), $data->getEndDate()];
 
-        foreach ($startAndEndDate as $date) {
-            if (!$date instanceof \DateTime) {
+            foreach ($startAndEndDate as $date) {
+                if (!$date instanceof \DateTime) {
+                    return;
+                }
+            }
+        } else {
+            $courtDate = $data->getCourtDate();
+
+            if (!$courtDate instanceof \DateTime) {
                 return;
             }
         }
 
-        foreach ($startAndEndDate as $date) {
-            $year = $date->format('Y'); // extract the year from the date string
+        if ($startAndEndDate) {
+            $count = count(array_filter($startAndEndDate, function ($date) {
+                $year = $date->format('Y');
 
-            $count = 0;
-            !preg_match('/^2\d{3}$/', $year) ? $count++ : $count; // if the year does not start with a 2 and is not 4 digits long
-        }
-        if ($count > 0) {
-            $this->context
-                ->buildViolation($constraint->message)
-                ->addViolation();
+                // if the year does not start with a 2 and is not 4 digits long add to count
+                return !preg_match('/^2\d{3}$/', $year);
+            }));
+
+            if ($count > 0) {
+                $this->context
+                    ->buildViolation($constraint->message)
+                    ->addViolation();
+            }
+        } else {
+            $year = $courtDate->format('Y');
+
+            if (!preg_match('/^2\d{3}$/', $year)) {
+                $this->context
+                    ->buildViolation($constraint->message)
+                    ->addViolation();
+            }
         }
     }
 }
