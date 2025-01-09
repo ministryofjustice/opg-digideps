@@ -66,10 +66,6 @@ services:
     volumes:
       - ./htmltopdf/app.py:/app.py
 
-  synchronisation:
-    volumes:
-      - ./lambdas/functions/synchronisation/.aws-lambda-rie:/aws-lambda
-
   mock-notify-api:
     volumes:
       - ./client/app/govuk-notifications.yaml:/tmp/govuk-notifications.yaml

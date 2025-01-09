@@ -23,7 +23,8 @@ jobs:
       workspace: training
       terraform_path: environment
       account_name: preproduction
-    secrets: inherit
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
   terraform_apply_development:
     name: development environment apply terraform
@@ -37,7 +38,8 @@ jobs:
       account_name: development
       container_version: ${{ needs.latest_deployed_image.outputs.image_tag }}
       pull_request_path: true
-    secrets: inherit
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
   reset_database:
     name: reset development database
@@ -49,7 +51,8 @@ jobs:
       account_name: development
       task_name: "reset_database"
       timeout: "500"
-    secrets: inherit
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
   slack_notify_success:
     name: notify of success
@@ -61,7 +64,6 @@ jobs:
       branch: main
       account: 515688267891
       scheduled_task: "Development Environment Spun Up"
-    secrets: inherit
 
   slack_notify_failure:
     name: notify of failure
@@ -74,4 +76,3 @@ jobs:
       branch: main
       account: 515688267891
       scheduled_task: "Development Environment Spun Up"
-    secrets: inherit

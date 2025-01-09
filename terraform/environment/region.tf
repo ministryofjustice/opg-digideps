@@ -7,7 +7,6 @@ module "eu_west_1" {
 
   account                           = local.account
   default_tags                      = local.default_tags
-  default_role                      = var.DEFAULT_ROLE
   secrets_prefix                    = local.secrets_prefix
   shared_environment_variables      = local.shared_environment_variables
   docker_tag                        = var.OPG_DOCKER_TAG
@@ -31,7 +30,6 @@ module "eu_west_2" {
 
   account                           = local.account
   default_tags                      = local.default_tags
-  default_role                      = var.DEFAULT_ROLE
   secrets_prefix                    = local.secrets_prefix
   shared_environment_variables      = local.shared_environment_variables
   docker_tag                        = var.OPG_DOCKER_TAG
