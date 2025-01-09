@@ -3,20 +3,36 @@
 namespace App\Form;
 
 use App\Form\Report\ReportType;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\Validator\Validation;
 
 class ReportTypeTest extends TypeTestCase
 {
-    public function testSubmitValidData()
+    // ensures validation constraints are applied
+    protected function getExtensions(): array
     {
+        $validator = Validation::createValidator();
+
+        return [
+            new ValidatorExtension($validator),
+        ];
+    }
+
+    public function testSubmitValidYear()
+    {
+        $currentDate = new \DateTime();
+        $currentYear = $currentDate->format('Y');
+        $followingYear = $currentDate->modify('+1 year')->format('Y');
+
         $startDate = [
-            'year' => '2022',
+            'year' => $currentYear,
             'month' => '01',
             'day' => '02',
         ];
 
         $endDate = [
-            'year' => '2023',
+            'year' => $followingYear,
             'month' => '01',
             'day' => '02',
         ];
@@ -35,16 +51,16 @@ class ReportTypeTest extends TypeTestCase
         $this->assertTrue($form->isValid());
     }
 
-    public function testSubmitInvalidData()
+    public function testSubmitInvalidYear()
     {
         $startDate = [
-            'year' => '22',
+            'year' => '2000',
             'month' => '01',
             'day' => '02',
         ];
 
         $endDate = [
-            'year' => '23',
+            'year' => '2001',
             'month' => '01',
             'day' => '02',
         ];
@@ -58,12 +74,12 @@ class ReportTypeTest extends TypeTestCase
         $form = $this->factory->create(ReportType::class);
 
         $form->submit($formData);
-        $errors = $form->getErrors();
+        $errors = $form['startDate']->getErrors();
 
         $this->assertTrue($form->isSubmitted());
         $this->assertFalse($form->isValid());
 
         $this->assertCount(1, $errors);
-        $this->assertSame('Please enter a valid four-digit year.', $errors[0]->getMessage());
+        $this->assertSame('Please enter a valid year.', $errors[0]->getMessage());
     }
 }
