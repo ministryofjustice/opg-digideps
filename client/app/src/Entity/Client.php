@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @AppAssert\YearMustBeFourDigitsLong(groups={"client-court-date"})
+ * @AppAssert\YearMustBeFourDigitsAndValid(groups={"client-court-date"})
  */
 class Client
 {

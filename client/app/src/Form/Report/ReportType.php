@@ -22,7 +22,7 @@ class ReportType extends AbstractType
                     new Range([
                         'min' => (new \DateTime('now'))->modify('-7 years'),
                         'max' => (new \DateTime('now'))->modify('+3 years'),
-                        'notInRangeMessage' => 'Please enter a valid year.',
+                        'notInRangeMessage' => 'Please enter a valid start date.',
                         'groups' => 'start-end-dates',
                     ]),
                 ],

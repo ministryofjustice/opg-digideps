@@ -5,7 +5,7 @@ namespace App\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class YearMustBeFourDigitsLongValidator extends ConstraintValidator
+class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
 {
     public function validate($data, Constraint $constraint)
     {
