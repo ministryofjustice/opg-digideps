@@ -396,20 +396,20 @@ trait SelfRegistrationTrait
         $this->fillInField('client_postcode', 'NG1 2HT');
         $this->fillInField('client_country', 'GB');
         $this->fillInField('client_phone', '01789432876');
-        $this->fillInField('client_courtDate_day', '01');
-        $this->fillInField('client_courtDate_month', '01');
-        $this->fillInField('client_courtDate_year', '2016');
+        $this->fillInField('client_courtDate_day', '16');
+        $this->fillInField('client_courtDate_month', '04');
+        $this->fillInField('client_courtDate_year', '2023');
         $this->pressButton('client_save');
     }
 
     private function fillInReportDetailsAndSubmit(): void
     {
-        $this->fillInField('report_startDate_day', '01');
+        $this->fillInField('report_startDate_day', '02');
         $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2016');
-        $this->fillInField('report_endDate_day', '31');
-        $this->fillInField('report_endDate_month', '03');
-        $this->fillInField('report_endDate_year', '2017');
+        $this->fillInField('report_startDate_year', '2023');
+        $this->fillInField('report_endDate_day', '01');
+        $this->fillInField('report_endDate_month', '01');
+        $this->fillInField('report_endDate_year', '2024');
         $this->pressButton('report_save');
     }
 

@@ -80,6 +80,6 @@ class ReportTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
 
         $this->assertCount(1, $errors);
-        $this->assertSame('Please enter a valid year.', $errors[0]->getMessage());
+        $this->assertSame('Please enter a valid start date.', $errors[0]->getMessage());
     }
 }
