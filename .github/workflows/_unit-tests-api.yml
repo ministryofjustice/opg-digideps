@@ -65,6 +65,8 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests sh scripts/api_unit_test.sh ${SELECTION}
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 tests/coverage
           docker cp "api-unit-tests:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests-${SELECTION}.xml"
+          docker cp "api-unit-tests:/var/www/tests/coverage-html" "./api-unit-tests-${SELECTION}-coverage-html"
+          zip -r "./api-unit-tests-${SELECTION}-html.zip" "./api-unit-tests-${SELECTION}-coverage-html"
           docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml down
 
       - name: archive test results
@@ -72,3 +74,9 @@ jobs:
         with:
           name: api-unit-tests-${{ inputs.selection }}
           path: api-unit-tests-${{ inputs.selection }}.xml
+
+      - name: archive test results (HTML)
+        uses: actions/upload-artifact@184d73b71b93c222403b2e7f1ffebe4508014249 # pin@v3.1.0
+        with:
+          name: api-unit-tests-${{ inputs.selection }}-html
+          path: ./api-unit-tests-${{ inputs.selection }}-html.zip
