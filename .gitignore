@@ -58,6 +58,7 @@ lambdas/functions/**/layers/**
 
 # Code coverage
 api/tests/coverage/
+build
 
 #cache grinds
 client/app/cachegrind/*/cachegrind*

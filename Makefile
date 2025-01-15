@@ -89,7 +89,7 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml build client-unit-tests
 	docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d pact-mock
 	sleep 5
-	docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit
+	docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit --coverage-html=/var/www/build/coverage-client
 
 api-unit-tests: reset-database-unit-tests reset-fixtures-unit-tests ##@unit-tests Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml build api-unit-tests
