@@ -32,6 +32,8 @@ Api:
 $ make api-unit-tests
 ```
 
+This will run the api tests and generate test coverage reports in the build/coverage-api directory.
+
 ### Client unit tests using CLI
 
 To run the client tests without a docker container (useful for running tests quickly during dev as it avoids having to
@@ -65,7 +67,7 @@ $ PACT_MOCK_SERVER_HOST=localhost PACT_MOCK_SERVER_PORT=1234 APP_ENV=dev APP_DEB
 To re-run the tests, you just need to run the second command again, unless you are changing mocks. If mocks change,
 you'll need to restart the pact-mock server.
 
-To generate coverage reports, you will need to install and configure XDebug (see online guides for how to do this); the
+**To generate coverage reports**, you will need to install and configure XDebug (see online guides for how to do this); the
 short version is:
 
 ```shell
