@@ -67,33 +67,8 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
     ;;
   selection-all)
-    # Run all three blocks
-    printf '\n Running DBAL Suite \n\n'
-    php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
-    printf '\n Running Command Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
-    printf '\n Running Controller Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
-    printf '\n Running ControllerReport Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
-    printf '\n Running Controller-Ndr Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
-    printf '\n Running Entity Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
-    printf '\n Running Factory Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Factory/ --coverage-php tests/coverage/Factory.cov
-    printf '\n Running Security Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Security/ --coverage-php tests/coverage/Security.cov
-    printf '\n Running Service Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Service/ --coverage-php tests/coverage/Service.cov
-    printf '\n Running Stats Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Stats/ --coverage-php tests/coverage/Stats.cov
-    printf '\n Running Transformer Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Transformer/ --coverage-php tests/coverage/Transformer.cov
-    printf '\n Running v2 Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/v2/ --coverage-php tests/coverage/v2.cov
-    printf '\n Running Logger Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
+    php vendor/bin/phpunit -c tests/Unit/phpunit.xml tests/Unit/Entity --coverage-php tests/coverage/all.cov
+    php vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
     echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all"

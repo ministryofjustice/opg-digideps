@@ -6,9 +6,7 @@ namespace App\Service;
 
 use App\Service\AWS\RequestSigner;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
-use DateTime;
 use DigidepsTests\Helpers\SiriusHelpers;
-use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use PhpPact\Consumer\InteractionBuilder;
@@ -21,7 +19,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Throwable;
 
 class SiriusApiGatewayClientTest extends KernelTestCase
 {
@@ -54,7 +51,12 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     {
         $client = new GuzzleClient();
         $baseUrl = getenv('PACT_MOCK_SERVER_HOST');
-        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
+        $pactHostPort = getenv('PACT_MOCK_SERVER_PORT');
+        if (!$pactHostPort) {
+            $pactHostPort = 80;
+        }
+
+        $serializer = self::bootKernel(['debug' => false])->getContainer()->get('serializer');
 
         // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
         $config = new MockServerEnvConfig();
@@ -75,7 +77,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $this->sut = new SiriusApiGatewayClient(
             $client,
             $this->signer->reveal(),
-            'http://'.$baseUrl,
+            'http://'.$baseUrl.':'.$pactHostPort,
             $serializer,
             $this->logger->reveal()
         );
@@ -84,7 +86,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     /**
      * @test
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function sendReportPdfDocument()
     {
@@ -92,9 +94,9 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
-        $reportStartDate = new DateTime('2018-05-14');
-        $reportEndDate = new DateTime('2019-05-13');
-        $reportSubmittedDate = new DateTime('2019-06-20');
+        $reportStartDate = new \DateTime('2018-05-14');
+        $reportEndDate = new \DateTime('2019-05-13');
+        $reportSubmittedDate = new \DateTime('2019-06-20');
         $reportSubmissionId = 9876;
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -110,7 +112,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         try {
             $result = $this->sut->sendReportPdfDocument($siriusDocumentUpload, $this->caseRef);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -165,16 +167,16 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
-    private function throwReadableFailureMessage(Throwable $e)
+    private function throwReadableFailureMessage(\Throwable $e)
     {
         $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
-        throw new Exception(sprintf('Pact test failed: %s', $json));
+        throw new \Exception(sprintf('Pact test failed: %s', $json));
     }
 
     /**
      * @test
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function sendSupportingDocument()
     {
@@ -191,7 +193,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         try {
             $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -257,15 +259,15 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $this->fileContents,
             11112,
             $this->submitterEmail,
-            new DateTime('2019-06-01'),
-            new DateTime('2020-05-31'),
+            new \DateTime('2019-06-01'),
+            new \DateTime('2020-05-31'),
             2020,
             'PF'
         );
 
         try {
             $result = $this->sut->postChecklistPdf($upload, $this->reportPdfUuid, $this->caseRef);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
 
@@ -336,8 +338,8 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $this->fileContents,
             11112,
             $this->submitterEmail,
-            new DateTime('2019-06-01'),
-            new DateTime('2020-05-31'),
+            new \DateTime('2019-06-01'),
+            new \DateTime('2020-05-31'),
             2020,
             'PF'
         );

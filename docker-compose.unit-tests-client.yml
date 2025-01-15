@@ -16,6 +16,8 @@ services:
       AWS_SESSION_TOKEN: fakeValue
     env_file:
       - ./client/app/frontend.env
+    volumes:
+      - ./build/coverage-client:/var/www/build/coverage-client
 
   pact-mock:
     container_name: client-unit-tests-pact

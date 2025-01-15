@@ -7,22 +7,15 @@ This application uses two main testing technologies:
 
 ## How to run the tests
 
-In order to run tests locally, create a .env file in the root of the repo and add the test key found in AWS secrets manager under the Digideps developer account:
+### Unit tests using a docker test container
 
-e.g.
-```shell script
-# .env
-
-NOTIFY_API_KEY=fakeKeyGetRealValueFromAWS-123abcabc-abc1-12bn-65pp-12344567abc12-8j11j8d-4532-856s-7d55
-```
-
-### Unit tests
-
-Frontend and Admin:
+Client (frontend and admin):
 
 ```shell script
 $ make client-unit-tests
 ```
+
+This will run the client tests and generate test coverage reports in the build/coverage-client directory.
 
 Api:
 
@@ -30,12 +23,73 @@ Api:
 $ make api-unit-tests
 ```
 
-### Integration tests
+This will run the api tests and generate test coverage reports in the build/coverage-api directory.
 
-Run all behat tests:
+### Client unit tests using CLI
+
+To run the client tests without a docker container (useful for running tests quickly during dev as it avoids having to
+keep rebuilding and restarting containers), ensure you have PHP 8.1 installed:
 
 ```shell script
-$ make behat-tests
+$ php -version
+PHP 8.1.31 (cli) (built: Nov 19 2024 15:24:51) (NTS)
+```
+
+You also need ImageMagick, which can be installed on a Mac using homebrew:
+
+```shell script
+$ brew install ImageMagick
+```
+
+Then do:
+
+```shell script
+$ docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d pact-mock
+
+# ... wait for it to start ...
+
+$ cd client/app
+
+$ PACT_MOCK_SERVER_HOST=localhost PACT_MOCK_SERVER_PORT=1234 APP_ENV=dev APP_DEBUG=0 \
+  AWS_ACCESS_KEY_ID=aFakeSecretAccessKeyId AWS_SECRET_ACCESS_KEY=aFakeSecretAccessKey \
+  AWS_SESSION_TOKEN=fakeValue vendor/bin/phpunit -c tests/phpunit/phpunit.xml
+```
+
+To re-run the tests, you just need to run the second command again, unless you are changing mocks. If mocks change,
+you'll need to restart the pact-mock server.
+
+**To generate coverage reports**, you will need to install and configure XDebug (see online guides for how to do this); the
+short version is:
+
+```shell
+pecl install xdebug # you may need some dependencies installed for this to work
+```
+
+Then run this modified phpunit command:
+
+```shell
+$ XDEBUG_MODE=coverage PACT_MOCK_SERVER_HOST=localhost PACT_MOCK_SERVER_PORT=1234 APP_ENV=dev APP_DEBUG=0 \
+  AWS_ACCESS_KEY_ID=aFakeSecretAccessKeyId AWS_SECRET_ACCESS_KEY=aFakeSecretAccessKey \
+  AWS_SESSION_TOKEN=fakeValue vendor/bin/phpunit -c tests/phpunit/phpunit.xml --coverage-html=build/coverage-client
+```
+
+The coverage report is output to build/coverage-client.
+
+### Integration tests
+
+In order to run the integration tests locally, create an .env file in the root of the repo and add the test
+key found in AWS secrets manager under the Digideps developer account, e.g.
+
+```shell script
+# .env
+
+NOTIFY_API_KEY=fakeKeyGetRealValueFromAWS-123abcabc-abc1-12bn-65pp-12344567abc12-8j11j8d-4532-856s-7d55
+```
+
+Run all integration (Behat) tests:
+
+```shell script
+$ make integration-tests
 ```
 
 Run a specific suite:
