@@ -12,6 +12,8 @@ class UserControllerTest extends AbstractTestController
     private static $deputy1;
     private static $admin1;
     private static $deputy2;
+    private static $primaryUserAccount;
+    private static $nonPrimaryUserAccount;
     private static $tokenAdmin;
     private static $tokenSuperAdmin;
     private static $tokenDeputy;
@@ -29,6 +31,8 @@ class UserControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
         self::$deputy2 = self::fixtures()->createUser();
+        self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
+        self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
 
         self::fixtures()->flush()->clear();
     }
@@ -544,5 +548,20 @@ class UserControllerTest extends AbstractTestController
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->assertTrue($deputy->getAgreeTermsUse());
         $this->assertEquals(date('Y-m-d'), $deputy->getAgreeTermsUseDate()->format('Y-m-d'));
+    }
+
+    public function testGetPrimaryAccount()
+    {
+        $url = '/user/get-primary-user-account/567890098765';
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'assertResponseCode' => 200,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        $this->assertEquals('multi-client-primary-deputy', $data['lastname']);
+        $this->assertEquals('multi-client-primary-deputy@example.org', $data['email']);
+        $this->assertTrue($data['is_primary']);
     }
 }

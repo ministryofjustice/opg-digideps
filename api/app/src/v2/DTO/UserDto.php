@@ -52,6 +52,10 @@ class UserDto
     /** @var array */
     private $clients;
 
+    private ?int $deputyUid;
+
+    private bool $isPrimary;
+
     public function getId(): int
     {
         return $this->id;
@@ -272,6 +276,30 @@ class UserDto
     public function setAddressCountry(?string $addressCountry): UserDto
     {
         $this->addressCountry = $addressCountry;
+
+        return $this;
+    }
+
+    public function getDeputyUid(): ?int
+    {
+        return $this->deputyUid ?? null;
+    }
+
+    public function setDeputyUid(?int $deputyUid): UserDto
+    {
+        $this->deputyUid = $deputyUid;
+
+        return $this;
+    }
+
+    public function getIsPrimary(): ?bool
+    {
+        return $this->isPrimary;
+    }
+
+    public function setIsPrimary(?bool $isPrimary): UserDto
+    {
+        $this->isPrimary = $isPrimary;
 
         return $this;
     }
