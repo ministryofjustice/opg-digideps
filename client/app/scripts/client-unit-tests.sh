@@ -8,4 +8,4 @@ php vendor/phpunit/phpcov/phpcov merge --clover "./tests/phpunit/coverage/client
 
 php vendor/phpunit/phpcov/phpcov merge --html "./tests/phpunit/coverage/client-unit-tests" "./tests/phpunit/coverage"
 
-zip -r client-unit-tests.html.zip ./tests/phpunit/coverage/client-unit-tests
+python "import shutil; shutil.make_archive('client-unit-tests.html.zip', 'zip', './tests/phpunit/coverage/client-unit-tests')"
