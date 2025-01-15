@@ -7,15 +7,6 @@ This application uses two main testing technologies:
 
 ## How to run the tests
 
-In order to run integration???also for api tests locally, create a .env file in the root of the repo and add the test
-key found in AWS secrets manager under the Digideps developer account, e.g.
-
-```shell script
-# .env
-
-NOTIFY_API_KEY=fakeKeyGetRealValueFromAWS-123abcabc-abc1-12bn-65pp-12344567abc12-8j11j8d-4532-856s-7d55
-```
-
 ### Unit tests using a docker test container
 
 Client (frontend and admin):
@@ -86,7 +77,16 @@ The coverage report is output to build/coverage-client.
 
 ### Integration tests
 
-Run all behat tests:
+In order to run the integration tests locally, create an .env file in the root of the repo and add the test
+key found in AWS secrets manager under the Digideps developer account, e.g.
+
+```shell script
+# .env
+
+NOTIFY_API_KEY=fakeKeyGetRealValueFromAWS-123abcabc-abc1-12bn-65pp-12344567abc12-8j11j8d-4532-856s-7d55
+```
+
+Run all integration (Behat) tests:
 
 ```shell script
 $ make integration-tests
