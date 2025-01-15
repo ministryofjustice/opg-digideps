@@ -2,29 +2,28 @@
 
 namespace App\Validator\Constraints;
 
-use RuntimeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class CommonPasswordValidator extends ConstraintValidator
 {
-    const TMP_ROOT_PATH = '/tmp/';
-    const PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
+    public const TMP_ROOT_PATH = '/tmp/';
+    public const PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
 
     private string $filePathCommonPasswords;
 
     private string $pwnedPasswordsUrl;
 
-    public function __construct()
-    {
-        $this->filePathCommonPasswords = self::TMP_ROOT_PATH.'commonpasswords.txt';
-        $this->pwnedPasswordsUrl = self::PWNED_PW_URL;
+    public function __construct(
+        string $filePathCommonPasswords = self::TMP_ROOT_PATH.'commonpasswords.txt',
+        string $pwnedPasswordsUrl = self::PWNED_PW_URL,
+    ) {
+        $this->filePathCommonPasswords = $filePathCommonPasswords;
+        $this->pwnedPasswordsUrl = $pwnedPasswordsUrl;
     }
 
     /**
      * Validates a password is not in list of pwned passwords.
-     *
-     * @param mixed $password
      */
     public function validate($password, Constraint $constraint)
     {
@@ -50,7 +49,7 @@ class CommonPasswordValidator extends ConstraintValidator
             }
             fclose($handle);
         }
-        //show results:
+        // show results:
         if (count($matches) > 0) {
             return true;
         } else {
@@ -70,7 +69,7 @@ class CommonPasswordValidator extends ConstraintValidator
                     $fp
                 );
                 if (false === $written) {
-                    throw new RuntimeException(sprintf('Unable to download or write common password file to disk'));
+                    throw new \RuntimeException(sprintf('Unable to download or write common password file to disk'));
                 }
             }
         }
