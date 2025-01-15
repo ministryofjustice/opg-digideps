@@ -39,7 +39,7 @@ class CommonPasswordValidatorTest extends TestCase
         }
 
         // initialize the validator with the mocked context
-        $validator = new CommonPasswordValidator(__DIR__.'/../../fixtures/commonpasswords.txt');
+        $validator = new CommonPasswordValidator(__DIR__.'/../../TestData/commonpasswords.txt');
         $validator->initialize($context);
 
         // return the SomeConstraintValidator
