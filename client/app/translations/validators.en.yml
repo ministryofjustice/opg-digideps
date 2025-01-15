@@ -105,6 +105,7 @@ report:
     invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
     beforeStart: "Check the end date: it cannot be before the start date"
     greaterThan15Months: "Check the end date: your reporting period cannot be more than 15 months"
+    invalidYear: Please enter a valid year
   dueDate:
     notBlank: Enter the new due date
     invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"

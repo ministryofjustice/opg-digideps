@@ -17,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
  *
+ * @AppAssert\YearMustBeFourDigitsAndValid(groups={"start-end-dates"})
+ *
  * @AppAssert\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal(groups={"prof-deputy-estimate-costs"})
  *
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
