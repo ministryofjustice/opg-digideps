@@ -95,10 +95,13 @@ case "$1" in
     printf '\n Running Logger Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
     ;;
+  selection-all-local-with-coverage)
+    php vendor/bin/phpunit -c tests/Unit/phpunit.xml tests/Unit/ --coverage-html tests/coverage-api
+    ;;
   *)
     echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all"
     exit 1
     ;;
 esac
 
-php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"
+#php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"

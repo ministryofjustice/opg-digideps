@@ -93,7 +93,7 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 
 api-unit-tests: reset-database-unit-tests reset-fixtures-unit-tests ##@unit-tests Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml build api-unit-tests
-	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
+	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all-local-with-coverage
 
 reset-database-unit-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure.sh local

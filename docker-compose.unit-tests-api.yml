@@ -22,6 +22,8 @@ services:
     env_file:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
+    volumes:
+      - ./build/coverage-api:/var/www/tests/coverage-api
 
   redis-api:
     restart: always

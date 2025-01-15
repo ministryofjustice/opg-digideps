@@ -32,6 +32,8 @@ Api:
 $ make api-unit-tests
 ```
 
+This will run the api tests and generate test coverage reports in the build/coverage-api directory.
+
 ### Client unit tests using CLI
 
 To run the client tests without a docker container (useful for running tests quickly during dev as it avoids having to
