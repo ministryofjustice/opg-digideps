@@ -101,7 +101,6 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
 
     # generate HTML coverage report
-    cp -a ./tests/coverage ./build/api-coverage-raw
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
