@@ -67,7 +67,7 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
     ;;
   selection-all)
-    php vendor/bin/phpunit -c tests/Unit/phpunit.xml tests/Unit/Entity --coverage-php tests/coverage/all.cov
+    php vendor/bin/phpunit -c tests/Unit/phpunit.xml tests/Unit/ --coverage-php tests/coverage/all.cov
     php vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
