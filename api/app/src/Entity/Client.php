@@ -276,6 +276,17 @@ class Client implements ClientInterface
     private $deputy;
 
     /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
+     *
+     * @ORM\OrderBy({"created_at"="DESC"})
+     */
+    private $courtOrders;
+
+    /**
      * @var \DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")

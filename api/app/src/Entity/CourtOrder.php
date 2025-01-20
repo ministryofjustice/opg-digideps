@@ -61,6 +61,17 @@ class CourtOrder
      */
     private $active;
 
+    /**
+     * @var Client
+     *
+     * @JMS\Type("App\Entity\Client")
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders", fetch="EAGER")
+     *
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     */
+    private $client;
+
     public function getId(): int
     {
         return $this->id;
