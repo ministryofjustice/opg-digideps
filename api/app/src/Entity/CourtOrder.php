@@ -119,4 +119,19 @@ class CourtOrder
 
         return $this;
     }
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    /**
+     * @return CourtOrder
+     */
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
+
+        return $this;
+    }
 }

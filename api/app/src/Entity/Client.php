@@ -1054,4 +1054,19 @@ class Client implements ClientInterface
 
         return false;
     }
+
+    public function getCourtOrders(): ArrayCollection
+    {
+        return $this->courtOrders;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setCourtOrders(ArrayCollection $courtOrders)
+    {
+        $this->courtOrders = $courtOrders;
+
+        return $this;
+    }
 }
