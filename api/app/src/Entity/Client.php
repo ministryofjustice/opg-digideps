@@ -282,7 +282,7 @@ class Client implements ClientInterface
      *
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
      *
-     * @ORM\OrderBy({"created"="DESC"})
+     * @ORM\OrderBy({"createdAt"="DESC"})
      */
     private $courtOrders;
 
