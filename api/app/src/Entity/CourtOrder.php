@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -60,6 +61,24 @@ class CourtOrder
      * @ORM\Column(name="active", type="boolean", options = { "default": true })
      */
     private $active;
+
+    /**
+     * @ORM\Column(name="created_at", type="datetime",nullable=true)
+     *
+     * @Gedmo\Timestampable(on="create")
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     */
+    private \DateTime $created;
+
+    /**
+     * @ORM\Column(name="updated_at", type="datetime",nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     */
+    private \DateTime $updated;
 
     /**
      * @var Client
@@ -125,12 +144,21 @@ class CourtOrder
         return $this->client;
     }
 
-    /**
-     * @return CourtOrder
-     */
-    public function setClient(Client $client)
+    public function setClient(Client $client): CourtOrder
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+    public function setCreated(\DateTime $created): CourtOrder
+    {
+        $this->created = $created;
 
         return $this;
     }
