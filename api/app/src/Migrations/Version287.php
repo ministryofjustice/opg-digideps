@@ -14,7 +14,7 @@ final class Version287 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add migration script for relationship between Client and Court Order';
     }
 
     public function up(Schema $schema): void
