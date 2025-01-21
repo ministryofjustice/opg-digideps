@@ -9,17 +9,23 @@ class CommonPasswordValidator extends ConstraintValidator
 {
     public const TMP_ROOT_PATH = '/tmp/';
     public const PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
+    private const CACHE_PASSWORDS_SECS = 24 * 3600;
 
     private string $filePathCommonPasswords;
+    private string $pwnedPasswordsUrl = '';
+    private bool $refreshCache;
 
-    private string $pwnedPasswordsUrl;
-
+    /**
+     * @param bool $refreshCache Set to true if password cache should be regularly refreshed
+     */
     public function __construct(
         string $filePathCommonPasswords = self::TMP_ROOT_PATH.'commonpasswords.txt',
         string $pwnedPasswordsUrl = self::PWNED_PW_URL,
+        bool $refreshCache = true,
     ) {
         $this->filePathCommonPasswords = $filePathCommonPasswords;
         $this->pwnedPasswordsUrl = $pwnedPasswordsUrl;
+        $this->refreshCache = $refreshCache;
     }
 
     /**
@@ -59,18 +65,21 @@ class CommonPasswordValidator extends ConstraintValidator
 
     protected function checkCommonPasswordsFileExists(string $filePath)
     {
-        if (file_exists($filePath) & (time() - filemtime($filePath) < 24 * 3600)) {
+        if (
+            file_exists($filePath) &
+            ((!$this->refreshCache) | (time() - filemtime($filePath) < self::CACHE_PASSWORDS_SECS))
+        ) {
             return;
-        } else {
-            $fp = fopen($this->pwnedPasswordsUrl, 'r');
-            if (false !== $fp) {
-                $written = file_put_contents(
-                    "$filePath",
-                    $fp
-                );
-                if (false === $written) {
-                    throw new \RuntimeException(sprintf('Unable to download or write common password file to disk'));
-                }
+        }
+
+        $fp = fopen($this->pwnedPasswordsUrl, 'r');
+        if (false !== $fp) {
+            $written = file_put_contents(
+                "$filePath",
+                $fp
+            );
+            if (false === $written) {
+                throw new \RuntimeException(sprintf('Unable to download or write common password file to disk'));
             }
         }
     }
