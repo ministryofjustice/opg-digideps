@@ -65,6 +65,18 @@ class PreRegistrationRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
+        /** Query to retrieve the new clients to be made from the PreReg table for existing deputies.
+         *
+         * Inner query is comparing the combination of deputy uid and case number (which is akin to a court order, just without the report type)
+         * Compares the combinations that exist in PreReg (essentially Sirius) with the combinations from User & Client table (Digideps)
+         * This gives us which combinations do not exist in Digideps
+         *
+         * Outer query bring backs fields and links PreReg table to User table via deputy_uid
+         * This is so we are only focused on deputies that have signed up and have a deputy_uid.
+         *
+         * We then compare the combinations of deputy uid and case number from the outer query with
+         * the combination of deputy uid and case number from the inner query.
+         */
         $newMultiClentsQuery = <<<SQL
         SELECT
             pr.client_case_number AS "Case",
