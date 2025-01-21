@@ -222,7 +222,12 @@ class Deputy
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private User|null $user;
+    private ?User $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CourtOrderDeputy", mappedBy="courtOrder")
+     */
+    private $courtOrderDeputyRelationship;
 
     /**
      * @return int
@@ -595,5 +600,19 @@ class Deputy
     {
         return $this->email1 !== $dto->getDeputyEmail()
             && null !== $dto->getDeputyEmail();
+    }
+
+    public function getCourtOrdersWithStatus(): array
+    {
+        $result = [];
+
+        foreach ($this->courtOrderDeputyRelationship as $element) {
+            $result[] = [
+                'courtOrder' => $element->getCourtOrder(),
+                'discharged' => $element->isDischarged(),
+            ];
+        }
+
+        return $result;
     }
 }
