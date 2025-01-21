@@ -62,9 +62,15 @@ class CourtOrder
     private $active;
 
     /**
-     * @ORM\OneToMany(targetEntity="CourtOrderDeputy", mappedBy="deputy")
+     * @var Client
+     *
+     * @JMS\Type("App\Entity\Client")
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders", fetch="EAGER")
+     *
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
-    private $deputyCourtOrderRelationship;
+    private $client;
 
     public function getId(): int
     {
@@ -114,17 +120,15 @@ class CourtOrder
         return $this;
     }
 
-    public function getDeputiesWithStatus(): array
+    public function getClient(): Client
     {
-        $result = [];
+        return $this->client;
+    }
 
-        foreach ($this->deputyCourtOrderRelationship as $element) {
-            $result[] = [
-                'deputy' => $element->getDeputy(),
-                'discharged' => $element->isDischarged(),
-            ];
-        }
+    public function setClient(Client $client): CourtOrder
+    {
+        $this->client = $client;
 
-        return $result;
+        return $this;
     }
 }
