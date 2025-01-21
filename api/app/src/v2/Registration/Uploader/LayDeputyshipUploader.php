@@ -143,7 +143,7 @@ class LayDeputyshipUploader
     {
         $existingClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($dto->getCaseNumber());
 
-        if ($existingClients) {
+        if (count($existingClients) > 0) {
             /* @var Client $existingClient */
             // If there is an existing active client, we shouldn't create a new instance of the client
             foreach ($existingClients as $existingClient) {
