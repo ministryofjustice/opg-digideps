@@ -44,7 +44,7 @@ class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
         } else {
             $year = $courtDate->format('Y');
 
-            if (!preg_match('/^2\d{3}$/', $year)) {
+            if (!preg_match('/^2\d{3}$/', $year) && !preg_match('/^19\d{2}$/', $year)) {
                 $this->context
                     ->buildViolation($constraint->message)
                     ->addViolation();
