@@ -132,7 +132,7 @@ class LayDeputyshipUploader
 
         $users = $this->em->getRepository(User::class)->findBy(['deputyUid' => $dto->getDeputyUid()]);
         $newSecondaryUser = clone $primaryDeputyUser;
-        $newSecondaryUser->setEmail('secondary-'.count($users).'-'.$primaryDeputyUser->getEmail());
+        $newSecondaryUser->setEmail('2nd-'.count($users).'-'.$primaryDeputyUser->getEmail());
         $newSecondaryUser->setIsPrimary(false);
         $this->em->persist($newSecondaryUser);
 
