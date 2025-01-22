@@ -1,0 +1,6 @@
+failure-threshold: error # name of threshold level (error | warning | info | style | ignore | none)
+format: tty # Output format (tty | json | checkstyle | codeclimate | gitlab_codeclimate | gnu | codacy)
+ignored:
+  - DL3018
+  - DL3013
+  - DL4006

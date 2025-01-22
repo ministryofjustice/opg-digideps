@@ -24,5 +24,5 @@ RUN /harden-nginx.sh && rm /harden-nginx.sh
 
 USER nginx
 
-CMD confd -onetime -backend env \
-  && nginx -g "daemon off;"
+CMD ["sh", "-c", "confd -onetime -backend env \
+  && nginx -g \"daemon off;\""]

@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:stable-alpine
+FROM nginx-unprivileged:stable-alpine
 USER root
 
 RUN apk upgrade && \
@@ -15,7 +15,7 @@ RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxclaus/waitforit/re
   && chmod +x /usr/local/bin/waitforit
 
 COPY --chown=nginx client/docker/web/confd /etc/confd
-COPY --chown=nginx client/resources/public/ public/
+COPY --chown=nginx client/resources/public/ /public/
 
 RUN apk --no-cache add libcap && \
     setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
@@ -29,5 +29,5 @@ RUN /harden-nginx.sh && rm /harden-nginx.sh
 
 USER nginx
 
-CMD confd -onetime -backend env \
-  && nginx -g "daemon off;"
+CMD ["sh", "-c", "confd -onetime -backend env \
+  && nginx -g \"daemon off;\""]

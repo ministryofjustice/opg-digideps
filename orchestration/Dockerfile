@@ -1,12 +1,15 @@
 FROM golang:1.23-alpine3.20 AS builder
 WORKDIR /app
 COPY anonymisation anonymisation
-RUN cd anonymisation && go build -o anonymise main.go
-
+WORKDIR /app/anonymisation
+RUN go build -o anonymise main.go
+WORKDIR /app
 COPY sleep_mode sleep_mode
-RUN cd sleep_mode && go build -o environment_status main.go
+WORKDIR /app/sleep_mode
+RUN go build -o environment_status main.go
 
 FROM alpine:3.20
+WORKDIR /
 RUN apk update && apk upgrade
 
 ENV POSTGRES_DATABASE **None**
@@ -30,26 +33,36 @@ RUN apk add --no-cache \
     chromium
 RUN apk update && apk upgrade
 
-ADD tests/package.json tests/package.json
-ADD tests/package-lock.json tests/package-lock.json
-RUN cd tests && npm ci
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
+
+COPY backup.sh backup.sh
+COPY restore.sh restore.sh
+COPY common.sh common.sh
+COPY analyse-database.sh analyse-database.sh
 
 COPY --from=builder /app/sleep_mode/environment_status .
 RUN chmod +x environment_status
-COPY --from=builder /app/anonymisation /anonymisation
-RUN chmod +x /anonymisation/anonymise
 
-ADD tests/smoke-tests/AdminSmokeTest.js tests/smoke-tests/AdminSmokeTest.js
-ADD tests/smoke-tests/FrontSmokeTest.js tests/smoke-tests/FrontSmokeTest.js
-ADD tests/resilience-tests/FrontLoadTest.js tests/resilience-tests/FrontLoadTest.js
-ADD tests/resilience-tests/Analyse.js tests/resilience-tests/Analyse.js
-ADD tests/resilience-tests/RunExperiments.js tests/resilience-tests/RunExperiments.js
-ADD tests/utility/Utility.js tests/utility/Utility.js
-ADD tests/utility/DataAnalysis.js tests/utility/DataAnalysis.js
-ADD tests/run-smoke-tests.sh tests/run-smoke-tests.sh
-ADD tests/run-resilience-tests.sh tests/run-resilience-tests.sh
-ADD backup.sh backup.sh
-ADD restore.sh restore.sh
-ADD common.sh common.sh
-ADD analyse-database.sh analyse-database.sh
+WORKDIR /anonymisation
+COPY --from=builder /app/anonymisation .
+RUN chmod +x anonymise
+
+WORKDIR /tests
+COPY tests/package.json package.json
+COPY tests/package-lock.json package-lock.json
+COPY tests/run-smoke-tests.sh run-smoke-tests.sh
+COPY tests/run-resilience-tests.sh run-resilience-tests.sh
+RUN npm ci
+
+WORKDIR /tests/smoke-tests
+COPY tests/smoke-tests/AdminSmokeTest.js AdminSmokeTest.js
+COPY tests/smoke-tests/FrontSmokeTest.js FrontSmokeTest.js
+
+WORKDIR /tests/resilience-tests
+COPY tests/resilience-tests/FrontLoadTest.js FrontLoadTest.js
+COPY tests/resilience-tests/Analyse.js Analyse.js
+COPY tests/resilience-tests/RunExperiments.js RunExperiments.js
+
+WORKDIR /tests/utility
+COPY tests/utility/Utility.js Utility.js
+COPY tests/utility/DataAnalysis.js DataAnalysis.js
