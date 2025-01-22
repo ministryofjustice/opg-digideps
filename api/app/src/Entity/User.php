@@ -6,7 +6,6 @@ use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -331,13 +330,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $coDeputyClientConfirmed;
 
     /**
-     * @var UserResearchResponse|null
+     * @var UserResearchResponse[]
      *
      * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
      * @JMS\Groups({"user", "satisfaction", "user-research"})
-     * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $userResearchResponse;
+    private $userResearchResponses;
 
     /**
      * @var User|null

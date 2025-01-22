@@ -37,7 +37,8 @@ class UserResearchResponse
     private ResearchType $researchType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponses", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      *
      * @JMS\Type("App\Entity\User")
      *
