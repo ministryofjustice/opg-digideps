@@ -47,7 +47,8 @@ jobs:
         run: |
           find . -type f -name "*Dockerfile*" -exec sh -c 'for file; \
           do echo "Processing $file"; \
-          docker run --rm -i hadolint/hadolint < "$file"; \
+          docker run --rm -i -v ./hadolint.yaml:/.config/hadolint.yaml \
+          hadolint/hadolint < "$file"; \
           done' sh {} +
 
           if [ $? -ne 0 ]; then
