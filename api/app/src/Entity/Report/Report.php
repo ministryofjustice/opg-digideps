@@ -588,6 +588,15 @@ class Report implements ReportInterface
      **/
     private $reasonForNoMoneyOut;
 
+    /**
+     * @JMS\Groups({"report"})
+     *
+     * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\CourtOrder", mappedBy="reports", cascade={"persist"}, fetch="EXTRA_LAZY")
+     */
+    private $courtOrders;
+
     private array $excludeSections = [];
     private ?\DateTime $benefitsSectionReleaseDate = null;
 
@@ -807,7 +816,7 @@ class Report implements ReportInterface
      *
      * @return Report
      */
-    public function setSubmitDate(\DateTime $submitDate = null)
+    public function setSubmitDate(?\DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
 
@@ -888,7 +897,7 @@ class Report implements ReportInterface
      *
      * @return Report
      */
-    public function setClient(Client $client = null)
+    public function setClient(?Client $client = null)
     {
         $this->client = $client;
 
@@ -921,7 +930,7 @@ class Report implements ReportInterface
     /**
      * @return Report
      */
-    public function setVisitsCare(VisitsCare $visitsCare = null)
+    public function setVisitsCare(?VisitsCare $visitsCare = null)
     {
         $this->visitsCare = $visitsCare;
 
@@ -1341,9 +1350,9 @@ class Report implements ReportInterface
         }
 
         return [
-                'report-summary' => $previousReport->getReportSummary(),
-                'financial-summary' => $previousReport->getFinancialSummary(),
-            ];
+            'report-summary' => $previousReport->getReportSummary(),
+            'financial-summary' => $previousReport->getFinancialSummary(),
+        ];
     }
 
     /**
