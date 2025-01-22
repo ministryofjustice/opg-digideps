@@ -8,7 +8,7 @@ RUN apk update && apk add --no-cache \
     python3-dev \
     musl-dev
 RUN apk upgrade
-RUN pip install --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Build image
 FROM python-alpine as build-image
@@ -28,12 +28,14 @@ RUN apk add  --no-cache \
 ARG FUNCTION_DIR
 # Create function directory
 RUN mkdir -p ${FUNCTION_DIR}
+
+WORKDIR /${FUNCTION_DIR}
 # Copy function code
-COPY app ${FUNCTION_DIR}/app
+COPY app app
 COPY requirements.txt requirements.txt
 # Install the runtime interface client
-RUN python -m pip install --upgrade pip
-RUN python -m pip install \
+RUN python -m pip install --no-cache-dir --upgrade pip
+RUN python -m pip install --no-cache-dir \
         --target ${FUNCTION_DIR} \
         --requirement requirements.txt
 

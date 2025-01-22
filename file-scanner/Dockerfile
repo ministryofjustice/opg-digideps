@@ -1,8 +1,9 @@
 FROM golang:1.22.9-alpine3.20 AS build
 
 # Build go package
-ADD file-scanner/. /go/src/clamav-rest/
-RUN cd /go/src/clamav-rest && go mod vendor && go build -v
+COPY file-scanner/. /go/src/clamav-rest/
+WORKDIR /go/src/clamav-rest
+RUN go mod vendor && go build -v
 
 FROM alpine:3.20
 
