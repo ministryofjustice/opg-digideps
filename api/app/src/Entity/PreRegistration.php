@@ -83,7 +83,7 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @ORM\Column(name="client_firstname", type="string", nullable=true)
+     * @ORM\Column(name="client_firstname", type="string", length=100, nullable=true)
      */
     private ?string $clientFirstname;
 
@@ -237,7 +237,7 @@ class PreRegistration
     private ?string $orderType;
 
     /**
-     * @ORM\Column(name="hybrid", type="string", nullable=true)
+     * @ORM\Column(name="hybrid", type="string", length=6, nullable=true)
      */
     private ?string $hybrid;
 
