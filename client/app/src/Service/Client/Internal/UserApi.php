@@ -32,7 +32,7 @@ class UserApi
     protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
     protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add/%s';
     protected const CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
-
+    protected const GET_PRIMARY_USER_ACCOUNT_ENDPOINT = 'user/get-primary-user-account/%s';
     protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
 
     /** @var RestClientInterface */
@@ -47,7 +47,7 @@ class UserApi
     public function __construct(
         RestClientInterface $restClient,
         TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher
+        ObservableEventDispatcher $eventDispatcher,
     ) {
         $this->restClient = $restClient;
         $this->tokenStorage = $tokenStorage;
@@ -276,5 +276,14 @@ class UserApi
         );
 
         return json_decode($jsonString, true)['data'];
+    }
+
+    public function getPrimaryUserAccount(int $deputyUid): User
+    {
+        return $this->restClient->get(
+            sprintf(self::GET_PRIMARY_USER_ACCOUNT_ENDPOINT, $deputyUid),
+            'User',
+            []
+        );
     }
 }

@@ -61,6 +61,29 @@ class CourtOrder
      */
     private $active;
 
+    /**
+     * @var Client
+     *
+     * @JMS\Type("App\Entity\Client")
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders", fetch="EAGER")
+     *
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     */
+    private $client;
+
+    /**
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY")
+     *
+     * @ORM\JoinTable(name="court_order_report",
+     *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
+     *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
+     *     )
+     */
+    private $reports;
+
     public function getId(): int
     {
         return $this->id;
@@ -105,6 +128,18 @@ class CourtOrder
     public function setActive(bool $active): CourtOrder
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(Client $client): CourtOrder
+    {
+        $this->client = $client;
 
         return $this;
     }
