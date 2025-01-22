@@ -124,8 +124,8 @@ class Document implements SynchronisableInterface
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"synchronisation"})
-     *
-     * @ORM\Column(name="sync_attempts", type="integer", nullable=false)
+     *s
+     * @ORM\Column(name="sync_attempts", type="integer", nullable=false, options={"default": 0})
      */
     protected $syncAttempts = 0;
 
