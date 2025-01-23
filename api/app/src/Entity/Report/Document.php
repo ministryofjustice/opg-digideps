@@ -124,7 +124,6 @@ class Document implements SynchronisableInterface
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"synchronisation"})
-     *s
      *
      * @ORM\Column(name="sync_attempts", type="integer", nullable=false, options={"default": 0})
      */
