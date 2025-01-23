@@ -330,14 +330,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $coDeputyClientConfirmed;
 
     /**
-     * @var UserResearchResponse[]
+     * @var UserResearchResponse|null
      *
      * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
      * @JMS\Groups({"user", "satisfaction", "user-research"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
-    private $userResearchResponses;
+    private $userResearchResponse
+    ;
 
     /**
      * @var User|null
