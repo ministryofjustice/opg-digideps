@@ -40,6 +40,8 @@ class UserResearchResponse
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
      *
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     *
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
