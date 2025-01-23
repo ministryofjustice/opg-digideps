@@ -39,8 +39,7 @@ class ResearchType
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", orphanRemoval=true, cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist"})
      */
     private UserResearchResponse $userResearchResponse;
 

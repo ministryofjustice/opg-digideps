@@ -28,7 +28,8 @@ class UserResearchResponse
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist", "remove"})
+     * 
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @JMS\Type("App\Entity\UserResearch\ResearchType")
