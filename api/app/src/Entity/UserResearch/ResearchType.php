@@ -17,7 +17,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class ResearchType
 {
-    public function __construct(array $formResponses, UuidInterface $id = null)
+    public function __construct(array $formResponses, ?UuidInterface $id = null)
     {
         if (empty($formResponses)) {
             throw new \RuntimeException('Must select at least one research type', 403);

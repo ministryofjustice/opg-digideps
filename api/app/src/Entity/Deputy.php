@@ -222,7 +222,7 @@ class Deputy
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
-    private User|null $user;
+    private ?User $user;
 
     /**
      * @return int
