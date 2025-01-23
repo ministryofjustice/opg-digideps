@@ -336,8 +336,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @JMS\Groups({"user", "satisfaction", "user-research"})
      * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
-    private $userResearchResponse
-    ;
+    private $userResearchResponse;
 
     /**
      * @var User|null
