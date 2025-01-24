@@ -65,17 +65,15 @@ class PreRegistrationRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        /** Query to retrieve the new clients to be made from the PreReg table for existing deputies.
+        /**
+         * Query to retrieve the new clients to be made from the PreReg table for existing deputies.
          *
-         * Inner query is comparing the combination of deputy uid and case number (which is akin to a court order, just without the report type)
-         * Compares the combinations that exist in PreReg (essentially Sirius) with the combinations from User & Client table (Digideps)
-         * This gives us which combinations do not exist in Digideps
+         * Query is comparing the combination of deputy uid and case number (which is akin to a court order, just without the report type);
+         * comparison is between combinations in PreReg (essentially Sirius) with combinations from User & Client table (Digideps).
+         * This gives us which combinations do not exist in Digideps.
          *
-         * Outer query bring backs fields and links PreReg table to User table via deputy_uid
-         * This is so we are only focused on deputies that have signed up and have a deputy_uid.
-         *
-         * We then compare the combinations of deputy uid and case number from the outer query with
-         * the combination of deputy uid and case number from the inner query.
+         * Note that because we are deliberately excluding combinations which already exist in digideps, any
+         * combos which do exist will cause no change to the database and not throw an error.
          */
         $newMultiClentsQuery = <<<SQL
         SELECT
@@ -104,16 +102,19 @@ class PreRegistrationRepository extends ServiceEntityRepository
             pr.client_address_5   AS "ClientAddress5",
             pr.client_postcode    AS "ClientPostcode"
         FROM pre_registration pr
-        INNER JOIN dd_user u ON pr.deputy_uid = u.deputy_uid::varchar(30)
-        WHERE (pr.deputy_uid, pr.client_case_number) IN (SELECT deputy_uid, lower(client_case_number)
-                                                         FROM pre_registration
-                                                         GROUP BY deputy_uid, lower(client_case_number)
-                                                         EXCEPT
-                                                         SELECT u.deputy_uid::varchar(30), lower(c.case_number)
-                                                         FROM dd_user u
-                                                                  INNER JOIN deputy_case dc ON u.id = dc.user_id
-                                                                  INNER JOIN client c on dc.client_id = c.id
-                                                         GROUP BY u.deputy_uid, lower(c.case_number));
+        WHERE
+            -- only entries in pre_registration table with an entry in the dd_user table
+            (SELECT COUNT(1) FROM dd_user u WHERE pr.deputy_uid = u.deputy_uid::varchar(30) LIMIT 1) > 0
+        AND
+            -- only combinations of deputy UID and case number which aren't already present
+            (pr.deputy_uid, pr.client_case_number)
+            NOT IN (
+                SELECT u.deputy_uid::varchar(30), lower(c.case_number)
+                FROM dd_user u
+                INNER JOIN deputy_case dc ON u.id = dc.user_id
+                INNER JOIN client c on dc.client_id = c.id
+                WHERE lower(c.case_number) = lower(pr.client_case_number)
+            );
         SQL;
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
