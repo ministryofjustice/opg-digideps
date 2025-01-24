@@ -90,9 +90,21 @@ class LayDeputyshipUploader
 
     public function handleNewMultiClients(): array
     {
-        $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
         $clientsAdded = 0;
         $errors = [];
+
+        $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
+        $numMultiClients = count($preRegistrationNewClients);
+
+        if (0 == $numMultiClients) {
+            $this->logger->info('No new multi clients to add');
+
+            return [
+                'new-clients-found' => $numMultiClients,
+                'clients-added' => $clientsAdded,
+                'errors' => $errors,
+            ];
+        }
 
         foreach ($preRegistrationNewClients as $preReg) {
             $layDeputyshipDto = $this->assembler->assembleFromArray($preReg);
