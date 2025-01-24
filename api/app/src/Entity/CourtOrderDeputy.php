@@ -18,18 +18,18 @@ class CourtOrderDeputy
     /**
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
      *
-     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id")
      */
     private CourtOrder $courtOrder;
 
     /**
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
      *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id")
      */
     private Deputy $deputy;
 

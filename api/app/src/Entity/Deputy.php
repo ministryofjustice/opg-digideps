@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -225,9 +226,16 @@ class Deputy
     private ?User $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist"})
+     *
+     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
      */
-    private $courtOrderDeputyRelationship = [];
+    private Collection $courtOrderDeputyRelationships;
+
+    public function __construct()
+    {
+        $this->courtOrderDeputyRelationships = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -602,11 +610,23 @@ class Deputy
             && null !== $dto->getDeputyEmail();
     }
 
+    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $discharged = false): Deputy
+    {
+        $courtOrderDeputy = new CourtOrderDeputy();
+        $courtOrderDeputy->setCourtOrder($courtOrder);
+        $courtOrderDeputy->setDeputy($this);
+        $courtOrderDeputy->setDischarged($discharged);
+
+        $this->courtOrderDeputyRelationships[] = $courtOrderDeputy;
+
+        return $this;
+    }
+
     public function getCourtOrdersWithStatus(): array
     {
         $result = [];
 
-        foreach ($this->courtOrderDeputyRelationship as $element) {
+        foreach ($this->courtOrderDeputyRelationships as $element) {
             $result[] = [
                 'courtOrder' => $element->getCourtOrder(),
                 'discharged' => $element->isDischarged(),
