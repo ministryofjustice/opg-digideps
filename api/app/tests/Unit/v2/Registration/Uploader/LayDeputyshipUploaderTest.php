@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
@@ -13,7 +14,6 @@ use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationExceptio
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -214,5 +214,34 @@ class LayDeputyshipUploaderTest extends KernelTestCase
             ->method('findAllActiveReportsByCaseNumbersAndRole')
             ->with([], User::ROLE_LAY_DEPUTY)
             ->willReturn([]);
+    }
+
+    /**
+     * @test
+     */
+    public function testHandleNewMultiClientsNoNewClientsToAdd()
+    {
+        $mockPreRegistrationRepo = $this->getMockBuilder(PreRegistrationRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockPreRegistrationRepo->expects($this->once())
+            ->method('getNewClientsForExistingDeputiesArray')
+            ->willReturn([]);
+
+        $this->logger->expects($this->once())
+            ->method('info')
+            ->with('No new multi clients to add');
+
+        $this->em->expects($this->once())
+            ->method('getRepository')
+            ->with(PreRegistration::class)
+            ->willReturn($mockPreRegistrationRepo);
+
+        $actual = $this->sut->handleNewMultiClients();
+
+        $this->assertEquals(0, $actual['new-clients-found']);
+        $this->assertEquals(0, $actual['clients-added']);
+        $this->assertEquals([], $actual['errors']);
     }
 }
