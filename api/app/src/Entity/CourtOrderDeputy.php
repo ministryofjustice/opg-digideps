@@ -18,20 +18,20 @@ class CourtOrderDeputy
     /**
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", cascade={"persist"}, fetch="EAGER")
      *
      * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false)
      */
-    private $courtOrder;
+    private CourtOrder $courtOrder;
 
     /**
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", cascade={"persist"}, fetch="EAGER")
      *
      * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false)
      */
-    private $deputy;
+    private Deputy $deputy;
 
     /**
      * @ORM\Column(name="discharged", type="boolean", nullable=false)
@@ -43,9 +43,23 @@ class CourtOrderDeputy
         return $this->deputy;
     }
 
+    public function setDeputy(Deputy $deputy): CourtOrderDeputy
+    {
+        $this->deputy = $deputy;
+
+        return $this;
+    }
+
     public function getCourtOrder(): CourtOrder
     {
         return $this->courtOrder;
+    }
+
+    public function setCourtOrder(CourtOrder $courtOrder): CourtOrderDeputy
+    {
+        $this->courtOrder = $courtOrder;
+
+        return $this;
     }
 
     public function isDischarged(): bool
@@ -53,7 +67,7 @@ class CourtOrderDeputy
         return $this->discharged;
     }
 
-    public function setDischarged(bool $discharged)
+    public function setDischarged(bool $discharged): CourtOrderDeputy
     {
         $this->discharged = $discharged;
 

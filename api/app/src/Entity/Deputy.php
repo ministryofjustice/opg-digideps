@@ -225,9 +225,9 @@ class Deputy
     private ?User $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="CourtOrderDeputy", mappedBy="courtOrder")
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
      */
-    private $courtOrderDeputyRelationship;
+    private $courtOrderDeputyRelationship = [];
 
     /**
      * @return int

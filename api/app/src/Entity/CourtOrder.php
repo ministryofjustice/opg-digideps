@@ -73,7 +73,7 @@ class CourtOrder
     private $client;
 
     /**
-     * @ORM\OneToMany(targetEntity="CourtOrderDeputy", mappedBy="deputy")
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy")
      */
     private $deputyCourtOrderRelationship;
 
@@ -135,19 +135,5 @@ class CourtOrder
         $this->client = $client;
 
         return $this;
-    }
-
-    public function getDeputiesWithStatus(): array
-    {
-        $result = [];
-
-        foreach ($this->deputyCourtOrderRelationship as $element) {
-            $result[] = [
-                'deputy' => $element->getDeputy(),
-                'discharged' => $element->isDischarged(),
-            ];
-        }
-
-        return $result;
     }
 }
