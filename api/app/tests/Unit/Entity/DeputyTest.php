@@ -3,57 +3,36 @@
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
 use App\TestHelpers\DeputyTestHelper;
-use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
 
-class DeputyTest extends KernelTestCase
+class DeputyTest extends TestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-    }
-
     public function testGetCourtOrdersWithStatus()
     {
         $faker = Factory::create();
+        $fakeUid = $faker->unique()->randomNumber(8);
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy();
+        $deputy->setLastname('MONK');
 
         $courtOrder = new CourtOrder();
         $courtOrder
-            ->setCourtOrderUid($faker->unique()->randomNumber(8))
+            ->setCourtOrderUid($fakeUid)
             ->setType('hybrid')
             ->setActive(true);
 
-        $courtOrderDeputy = new CourtOrderDeputy();
+        $deputy->associateWithCourtOrder($courtOrder);
 
-        $courtOrderDeputy
-            ->setDeputy($deputy)
-            ->setCourtOrder($courtOrder)
-            ->setDischarged(false);
-
-        $this->em->persist($deputy);
-
-        $this->em->persist($courtOrder);
-
-        $this->em->persist($courtOrderDeputy);
-        $this->em->flush();
-
-        // one deputy can have many court orders
         $actual = $deputy->getCourtOrdersWithStatus();
+        $actualDischarged = $actual[0]['discharged'];
+        $actualCourtOrder = $actual[0]['courtOrder'];
 
-        $expected = ['courtOrder' => $courtOrder, 'discharged' => false];
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals(1, count($actual));
+        $this->assertEquals(false, $actualDischarged);
+        $this->assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
+        $this->assertEquals('hybrid', $actualCourtOrder->getType());
     }
 }
