@@ -55,7 +55,7 @@ class LayDeputyshipUploader
         try {
             $this->em->beginTransaction();
 
-            foreach ($collection as $index => $layDeputyshipDto) {
+            foreach ($collection as $layDeputyshipDto) {
                 try {
                     $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
                     $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
@@ -90,7 +90,6 @@ class LayDeputyshipUploader
 
     public function handleNewMultiClients(): array
     {
-        $clientsAdded = 0;
         $errors = [];
 
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
@@ -101,20 +100,26 @@ class LayDeputyshipUploader
 
             return [
                 'new-clients-found' => $numMultiClients,
-                'clients-added' => $clientsAdded,
+                'clients-added' => 0,
                 'errors' => $errors,
             ];
         }
 
         foreach ($preRegistrationNewClients as $preReg) {
             $layDeputyshipDto = $this->assembler->assembleFromArray($preReg);
+            $deputyUid = $layDeputyshipDto->getDeputyUid();
+            $caseNumber = $layDeputyshipDto->getCaseNumber();
+
             try {
                 $this->em->beginTransaction();
-                $user = $this->handleNewUser($layDeputyshipDto);
+
+                $user = $this->handleNewUser($deputyUid);
+
                 $client = $this->handleNewClient($layDeputyshipDto, $user);
+                $clientsAdded[] = $caseNumber;
+
                 $this->handleNewReport($layDeputyshipDto, $client);
                 $this->commitTransactionToDatabase();
-                ++$clientsAdded;
             } catch (\Throwable $e) {
                 $message = sprintf('Error when creating additional client for deputyUID %s for case %s: %s',
                     $layDeputyshipDto->getDeputyUid(),
@@ -128,24 +133,36 @@ class LayDeputyshipUploader
         }
 
         return [
+            // potential new clients, not necessarily added
             'new-clients-found' => count($preRegistrationNewClients),
-            'clients-added' => $clientsAdded,
+
+            // clients actually added from potential new clients
+            'clients-added' => count($clientsAdded),
+
             'errors' => $errors,
         ];
     }
 
-    private function handleNewUser(LayDeputyshipDto $dto): ?User
+    private function handleNewUser(string $deputyUid): ?User
     {
+        $userRepo = $this->em->getRepository(User::class);
+
         try {
-            $primaryDeputyUser = $this->em->getRepository(User::class)->findPrimaryUserByDeputyUid($dto->getDeputyUid());
+            $primaryDeputyUser = $userRepo->findPrimaryUserByDeputyUid($deputyUid);
         } catch (NoResultException|NonUniqueResultException $e) {
-            throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $dto->getDeputyUid()));
+            throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
         }
 
-        $users = $this->em->getRepository(User::class)->findBy(['deputyUid' => $dto->getDeputyUid()]);
+        $users = $userRepo->findBy(['deputyUid' => $deputyUid]);
+
+        if (!is_countable($users)) {
+            throw new \ValueError(sprintf('could not retrieve users for deputy UID %s', $deputyUid));
+        }
+
         $newSecondaryUser = clone $primaryDeputyUser;
         $newSecondaryUser->setEmail('d'.count($users).$primaryDeputyUser->getEmail());
         $newSecondaryUser->setIsPrimary(false);
+
         $this->em->persist($newSecondaryUser);
 
         return $newSecondaryUser;
@@ -153,14 +170,19 @@ class LayDeputyshipUploader
 
     private function handleNewClient(LayDeputyshipDto $dto, User $newUser): ?Client
     {
-        $existingClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($dto->getCaseNumber());
+        $caseNumber = $dto->getCaseNumber();
+        $existingClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($caseNumber);
+
+        if (!is_countable($existingClients)) {
+            throw new \ValueError(sprintf('unable to find clients for case number %s', $caseNumber));
+        }
 
         if (count($existingClients) > 0) {
             /* @var Client $existingClient */
             // If there is an existing active client, we shouldn't create a new instance of the client
             foreach ($existingClients as $existingClient) {
                 if (!$existingClient->isDeleted()) {
-                    throw new \RuntimeException(sprintf('an active client with case number %s already exists', $existingClient->getCaseNumber()));
+                    throw new \RuntimeException(sprintf('an active client with case number %s already exists', $caseNumber));
                 }
             }
             // Loop through the discharged clients to ensure we are not creating an account for a deputy associated with a discharged client
@@ -173,12 +195,12 @@ class LayDeputyshipUploader
             }
         }
 
-        // Only create a new instance of the client if one doesn't already exist,
-        // Or if all the clients are discharged, and we are creating an account for a deputy that is not associated with this case number already
+        // Only create a new instance of the client if one doesn't already exist;
+        // or if all the clients are discharged, and we are creating an account for a deputy that is not associated
+        // with this case number already.
         $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
         $newClient->addUser($newUser);
         $this->em->persist($newClient);
-        $this->added['clients'][] = $dto->getCaseNumber();
 
         return $newClient;
     }
