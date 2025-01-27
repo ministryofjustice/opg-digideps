@@ -119,6 +119,7 @@ class LayDeputyshipUploader
                 $clientsAdded[] = $caseNumber;
 
                 $this->handleNewReport($layDeputyshipDto, $client);
+
                 $this->commitTransactionToDatabase();
             } catch (\Throwable $e) {
                 $message = sprintf('Error when creating additional client for deputyUID %s for case %s: %s',
@@ -160,7 +161,7 @@ class LayDeputyshipUploader
         }
 
         $newSecondaryUser = clone $primaryDeputyUser;
-        $newSecondaryUser->setEmail('d'.count($users).$primaryDeputyUser->getEmail());
+        $newSecondaryUser->setEmail($deputyUid.'-'.(count($users) + 1).'@secondary.email');
         $newSecondaryUser->setIsPrimary(false);
 
         $this->em->persist($newSecondaryUser);
