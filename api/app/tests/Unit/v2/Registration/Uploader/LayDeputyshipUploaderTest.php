@@ -44,13 +44,13 @@ class LayDeputyshipUploaderTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+        $this->em = $this->createMock(EntityManager::class);
+        $this->reportRepository = $this->createMock(ReportRepository::class);
+        $this->factory = $this->createMock(PreRegistrationFactory::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
-        $this->layDeputyshipDtoAssembler = $this->getMockBuilder(SiriusToLayDeputyshipDtoAssembler::class)->disableOriginalConstructor()->getMock();
-        $this->clientAssembler = $this->getMockBuilder(ClientAssembler::class)->disableOriginalConstructor()->getMock();
+        $this->layDeputyshipDtoAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
+        $this->clientAssembler = $this->createMock(ClientAssembler::class);
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
@@ -138,14 +138,14 @@ class LayDeputyshipUploaderTest extends KernelTestCase
 
         // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
 
-        $existingClient = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
+        $existingClient = $this->createMock(Client::class);
         $existingClient
             ->expects($this->once())
             ->method('getCaseNumber')
             ->willReturn('case-1');
 
         if ($isDualCase) {
-            $deputy = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
+            $deputy = $this->createMock(User::class);
             $deputy
                 ->expects($this->once())
                 ->method('getDeputyNo')
@@ -229,9 +229,7 @@ class LayDeputyshipUploaderTest extends KernelTestCase
      */
     public function testHandleNewMultiClientsNoNewClientsToAdd()
     {
-        $mockPreRegistrationRepo = $this->getMockBuilder(PreRegistrationRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockPreRegistrationRepo = $this->createMock(PreRegistrationRepository::class);
 
         $mockPreRegistrationRepo->expects($this->once())
             ->method('getNewClientsForExistingDeputiesArray')
@@ -258,24 +256,22 @@ class LayDeputyshipUploaderTest extends KernelTestCase
      */
     public function testHandleNewMultiClients()
     {
-        $mockDto1 = $this->getMockBuilder(LayDeputyshipDto::class)->getMock();
+        $mockDto1 = $this->createMock(LayDeputyshipDto::class);
         $mockDto1->method('getDeputyUid')->willReturn('case-1');
         $mockDto1->method('getTypeOfReport')->willReturn('OPG102');
         $mockDto1->method('getOrderType')->willReturn('pfa');
 
-        $mockDto2 = $this->getMockBuilder(LayDeputyshipDto::class)->getMock();
+        $mockDto2 = $this->createMock(LayDeputyshipDto::class);
         $mockDto2->method('getDeputyUid')->willReturn('case-2');
         $mockDto2->method('getTypeOfReport')->willReturn('OPG102');
         $mockDto2->method('getOrderType')->willReturn('hw');
 
-        $mockPreRegistrationRepo = $this->getMockBuilder(PreRegistrationRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockPreRegistrationRepo = $this->createMock(PreRegistrationRepository::class);
         $mockPreRegistrationRepo->expects($this->once())
             ->method('getNewClientsForExistingDeputiesArray')
             ->willReturn([[], []]);
 
-        $mockClientRepo = $this->getMockBuilder(ClientRepository::class)->disableOriginalConstructor()->getMock();
+        $mockClientRepo = $this->createMock(ClientRepository::class);
 
         // test case where there are no existing case + deputy UID combinations
         $mockClientRepo->expects($this->any())
@@ -286,10 +282,10 @@ class LayDeputyshipUploaderTest extends KernelTestCase
             ->method('assembleFromArray')
             ->willReturnOnConsecutiveCalls($mockDto1, $mockDto2);
 
-        $mockUser1 = $this->getMockBuilder(User::class)->getMock();
-        $mockUser2 = $this->getMockBuilder(User::class)->getMock();
+        $mockUser1 = $this->createMock(User::class);
+        $mockUser2 = $this->createMock(User::class);
 
-        $mockUserRepo = $this->getMockBuilder(UserRepository::class)->disableOriginalConstructor()->getMock();
+        $mockUserRepo = $this->createMock(UserRepository::class);
         $mockUserRepo->expects($this->exactly(2))
             ->method('findPrimaryUserByDeputyUid')
             ->willReturnCallback(function (string $deputyUid) use ($mockUser1, $mockUser2) {
