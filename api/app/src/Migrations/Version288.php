@@ -14,24 +14,24 @@ final class Version288 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Creates link table between court orders and deputies';
+        return '';
     }
 
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE court_order_deputy (court_order_id INT NOT NULL, deputy_id INT NOT NULL, discharged BOOLEAN NOT NULL, PRIMARY KEY(court_order_id, deputy_id))');
-        $this->addSql('CREATE INDEX IDX_994DD8A9A8D7D89C ON court_order_deputy (court_order_id)');
-        $this->addSql('CREATE INDEX IDX_994DD8A94B6F93BB ON court_order_deputy (deputy_id)');
-        $this->addSql('ALTER TABLE court_order_deputy ADD CONSTRAINT FK_994DD8A9A8D7D89C FOREIGN KEY (court_order_id) REFERENCES court_order (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE court_order_deputy ADD CONSTRAINT FK_994DD8A94B6F93BB FOREIGN KEY (deputy_id) REFERENCES deputy (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE TABLE court_order_report (court_order_id INT NOT NULL, report_id INT NOT NULL, PRIMARY KEY(court_order_id, report_id))');
+        $this->addSql('CREATE INDEX IDX_7598C4B2A8D7D89C ON court_order_report (court_order_id)');
+        $this->addSql('CREATE INDEX IDX_7598C4B24BD2A4C0 ON court_order_report (report_id)');
+        $this->addSql('ALTER TABLE court_order_report ADD CONSTRAINT FK_7598C4B2A8D7D89C FOREIGN KEY (court_order_id) REFERENCES court_order (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE court_order_report ADD CONSTRAINT FK_7598C4B24BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE court_order_deputy DROP CONSTRAINT FK_994DD8A9A8D7D89C');
-        $this->addSql('ALTER TABLE court_order_deputy DROP CONSTRAINT FK_994DD8A94B6F93BB');
-        $this->addSql('DROP TABLE court_order_deputy');
+        $this->addSql('ALTER TABLE court_order_report DROP CONSTRAINT FK_7598C4B2A8D7D89C');
+        $this->addSql('ALTER TABLE court_order_report DROP CONSTRAINT FK_7598C4B24BD2A4C0');
+        $this->addSql('DROP TABLE court_order_report');
     }
 }

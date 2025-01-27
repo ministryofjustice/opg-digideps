@@ -74,7 +74,18 @@ class CourtOrder
      */
     private $client;
 
-    /**
+     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY")
+     *
+     * @ORM\JoinTable(name="court_order_report",
+     *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
+     *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
+     *     )
+     */
+    private $reports;
+    
+      /**
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="id", referencedColumnName="court_order_id")
