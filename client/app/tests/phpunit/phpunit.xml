@@ -21,9 +21,21 @@
     </coverage>
     <testsuites>
         <testsuite name="Client unit tests">
-            <directory suffix=".php">./</directory>
-            <exclude>./Pact</exclude>
-            <exclude>./Helpers</exclude>
+            <directory>./Command</directory>
+            <directory>./Entity</directory>
+            <directory>./Event</directory>
+            <directory>./EventListener</directory>
+            <directory>./EventSubscriber</directory>
+            <directory>./Form</directory>
+            <directory>./Logger</directory>
+            <directory>./Mapper</directory>
+            <directory>./Model</directory>
+            <directory>./Resolver</directory>
+            <directory>./Security</directory>
+            <directory>./Service</directory>
+            <directory>./Transformer</directory>
+            <directory>./Twig</directory>
+            <directory>./Validator</directory>
         </testsuite>
         <testsuite name="Pact contract tests">
             <directory>./Pact</directory>
