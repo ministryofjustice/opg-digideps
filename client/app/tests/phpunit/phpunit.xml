@@ -23,6 +23,7 @@
         <testsuite name="Client unit tests">
             <directory suffix=".php">./</directory>
             <exclude>./Pact</exclude>
+            <exclude>./Helpers</exclude>
         </testsuite>
         <testsuite name="Pact contract tests">
             <directory>./Pact</directory>
