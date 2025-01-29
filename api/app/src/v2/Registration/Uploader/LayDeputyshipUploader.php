@@ -20,6 +20,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 class LayDeputyshipUploader
 {
@@ -137,7 +138,7 @@ class LayDeputyshipUploader
             // potential new clients, not necessarily added
             'new-clients-found' => count($preRegistrationNewClients),
 
-            // clients actually added from potential new clients
+            // clients actually added from list of potential new clients
             'clients-added' => count($clientsAdded),
 
             'errors' => $errors,
@@ -154,14 +155,13 @@ class LayDeputyshipUploader
             throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
         }
 
-        $users = $userRepo->findBy(['deputyUid' => $deputyUid]);
-
-        if (!is_countable($users)) {
-            throw new \ValueError(sprintf('could not retrieve users for deputy UID %s', $deputyUid));
-        }
-
         $newSecondaryUser = clone $primaryDeputyUser;
-        $newSecondaryUser->setEmail($deputyUid.'-'.(count($users) + 1).'@secondary.email');
+
+        // give duplicate user a unique, non-functional email address, with their deputy UID in it
+        // for future de-duplication
+        $uuid = str_replace('-', '', Uuid::uuid4()->toString());
+        $newSecondaryUser->setEmail($deputyUid.'-'.$uuid.'@dupe');
+
         $newSecondaryUser->setIsPrimary(false);
 
         $this->em->persist($newSecondaryUser);
