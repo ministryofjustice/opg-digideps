@@ -106,20 +106,20 @@ class PreRegistrationRepository extends ServiceEntityRepository
             -- only entries in pre_registration table with an entry in the dd_user table
             (SELECT COUNT(1) FROM dd_user u WHERE pr.deputy_uid = u.deputy_uid::varchar(30) LIMIT 1) > 0
         AND
-            -- only combinations of deputy UID + case number + report type (pfa|hw) which aren't already present
-            (pr.deputy_uid, pr.client_case_number, pr.type_of_report)
+            -- only combinations of deputy UID + case number which aren't already present
+            (pr.deputy_uid, pr.client_case_number)
             NOT IN (
-                SELECT u.deputy_uid::varchar(30), lower(c.case_number), r.type
+                SELECT u.deputy_uid::varchar(30), lower(c.case_number)
                 FROM dd_user u
                 INNER JOIN deputy_case dc ON u.id = dc.user_id
                 INNER JOIN client c ON dc.client_id = c.id
-                INNER JOIN report r ON c.id = r.client_id
                 WHERE lower(c.case_number) = lower(pr.client_case_number)
             );
         SQL;
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
         $result = $stmt->fetchAllAssociative();
+        print_r($result);
 
         return $result;
     }

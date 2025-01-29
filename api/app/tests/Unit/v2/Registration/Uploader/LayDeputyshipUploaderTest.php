@@ -297,18 +297,6 @@ class LayDeputyshipUploaderTest extends KernelTestCase
 
                 return null;
             });
-        $mockUserRepo->expects($this->exactly(2))
-            ->method('findBy')
-            ->willReturnCallback(function (array $criteria) use ($mockUser1, $mockUser2) {
-                $deputyUid = $criteria['deputyUid'];
-                if ('case-1' == $deputyUid) {
-                    return [$mockUser1];
-                } elseif ('case-2' == $deputyUid) {
-                    return [$mockUser2];
-                }
-
-                return null;
-            });
 
         $this->em->expects($this->any())
             ->method('getRepository')
