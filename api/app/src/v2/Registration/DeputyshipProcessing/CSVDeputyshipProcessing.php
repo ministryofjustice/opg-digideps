@@ -22,7 +22,7 @@ class CSVDeputyshipProcessing
         private OrgDeputyshipUploader $orgUploader,
         private SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
         private RestFormatter $restFormatter,
-        private LoggerInterface $verboseLogger
+        private LoggerInterface $verboseLogger,
     ) {
     }
 
@@ -64,8 +64,7 @@ class CSVDeputyshipProcessing
 
     public function layProcessingHandleNewMultiClients(): array
     {
-        $result = $this->layUploader->handleNewMultiClients();
-        return $result;
+        return $this->layUploader->handleNewMultiClients();
     }
 
     public function orgProcessing(array $data)
