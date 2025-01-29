@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\Entity\Client;
+use App\Entity\User;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
@@ -134,7 +135,7 @@ class BaseFeatureContext extends MinkContext
         protected readonly ParameterStoreService $parameterStoreService,
         protected readonly KernelInterface $kernel,
         protected readonly S3Storage $s3,
-        protected readonly S3Client $s3Client
+        protected readonly S3Client $s3Client,
     ) {
         // Required so we can run tests against commands
         $this->application = new Application($kernel);
@@ -683,5 +684,18 @@ class BaseFeatureContext extends MinkContext
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+    }
+
+    /**
+     * @AfterScenario @multiclient-multiple-clients-visible.
+     */
+    public function cleanupDeputyForMultiClientFeature()
+    {
+        $repo = $this->em->getRepository(User::class);
+        $users = $repo->findBy(['email' => 'marbo.vantz@nowhere.1111.com']);
+        foreach ($users as $user) {
+            $this->em->remove($user);
+        }
+        $this->em->flush();
     }
 }
