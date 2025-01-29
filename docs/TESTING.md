@@ -25,6 +25,14 @@ $ make api-unit-tests
 
 This will run the api tests and generate test coverage reports in the build/coverage-api directory.
 
+### Populating local databases
+ - Tests that interact with the database will populate the local api database when ran directly from your IDE
+ - Tests that interact with the database will populate the api-unit-test database when ran as part of the make api-unit-tests command
+ - Both databases are ran from the api-app container
+ - The following command allows you to run an individual test from the command line that specifically populates the api-unit-database if preferred
+ `make reset-database-unit-tests reset-fixtures-unit-tests; docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml build api-unit-tests; docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 api-unit-tests php vendor/bin/phpunit -d memory_limit=512M -c tests/Unit {enter path to file for e.g. tests/Unit/Entity/DeputyTest.php}`
+
+
 ### Client unit tests using CLI
 
 To run the client tests without a docker container (useful for running tests quickly during dev as it avoids having to

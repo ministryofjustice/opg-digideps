@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Traits\CreateUpdateTimestamps;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -66,7 +68,7 @@ class CourtOrder
      *
      * @JMS\Type("App\Entity\Client")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
@@ -83,6 +85,18 @@ class CourtOrder
      *     )
      */
     private $reports;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
+     *
+     * @ORM\JoinColumn(name="id", referencedColumnName="court_order_id")
+     */
+    private Collection $courtOrderDeputyRelationships;
+
+    public function __construct()
+    {
+        $this->courtOrderDeputyRelationships = new ArrayCollection();
+    }
 
     public function getId(): int
     {
