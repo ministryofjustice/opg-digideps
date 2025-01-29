@@ -20,7 +20,7 @@ class CourtOrderDeputy
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
      *
-     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false)
      */
     private CourtOrder $courtOrder;
 
@@ -29,7 +29,7 @@ class CourtOrderDeputy
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
      *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false)
      */
     private Deputy $deputy;
 
@@ -37,6 +37,11 @@ class CourtOrderDeputy
      * @ORM\Column(name="discharged", type="boolean", nullable=false)
      */
     private bool $discharged;
+
+    public function __construct()
+    {
+        $this->discharged = false;
+    }
 
     public function getDeputy(): Deputy
     {
