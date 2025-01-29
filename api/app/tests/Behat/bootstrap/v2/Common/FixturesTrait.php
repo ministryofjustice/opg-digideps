@@ -165,6 +165,14 @@ trait FixturesTrait
         $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
     }
 
+    /**
+     * @Given the Lay deputy user with deputy UID :deputyUid and email :email exists
+     */
+    public function theLayDeputyUserWithEmailExists($deputyUid, $email)
+    {
+        return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid));
+    }
+
     private function createAdditionalAdminUser(string $roleName)
     {
         $email = sprintf('%s@t.uk', rand(0, 999999999));
