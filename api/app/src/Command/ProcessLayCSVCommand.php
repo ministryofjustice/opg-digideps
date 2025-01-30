@@ -49,15 +49,7 @@ class ProcessLayCSVCommand extends Command
         'OrderType',
         'CoDeputy',
         'Hybrid',
-    ];
-
-    private const OPTIONAL_COLUMNS = [
-        'CourtOrderUid',
-    ];
-
-    protected const UNEXPECTED_COLUMNS = [
-        'LastReportDay',
-        'DeputyOrganisation',
+        'CourtOrderUid'
     ];
 
     private array $processingOutput = [
@@ -156,12 +148,8 @@ class ProcessLayCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray($fileName, false, false))
-                ->setExpectedColumns(self::EXPECTED_COLUMNS)
-                ->setOptionalColumns(self::OPTIONAL_COLUMNS)
-                ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
-                ->getData();
-        } catch (\RuntimeException $e) {
+            return (new CsvToArray(self::EXPECTED_COLUMNS))->create($fileName);
+        } catch (\Exception $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->verboseLogger->error($logMessage);

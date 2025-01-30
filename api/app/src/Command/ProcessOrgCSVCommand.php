@@ -28,6 +28,11 @@ class ProcessOrgCSVCommand extends Command
         'ClientForename',
         'ClientSurname',
         'ClientDateOfBirth',
+        'ClientAddress1',
+        'ClientAddress2',
+        'ClientAddress3',
+        'ClientAddress4',
+        'ClientAddress5',
         'ClientPostcode',
         'DeputyUid',
         'DeputyType',
@@ -35,30 +40,18 @@ class ProcessOrgCSVCommand extends Command
         'DeputyOrganisation',
         'DeputyForename',
         'DeputySurname',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
         'DeputyPostcode',
         'MadeDate',
         'LastReportDay',
         'ReportType',
         'OrderType',
         'Hybrid',
-    ];
-
-    private const OPTIONAL_COLUMNS = [
-        'ClientAddress1',
-        'ClientAddress2',
-        'ClientAddress3',
-        'ClientAddress4',
-        'ClientAddress5',
-        'DeputyAddress1',
-        'DeputyAddress2',
-        'DeputyAddress3',
-        'DeputyAddress4',
-        'DeputyAddress5',
         'CourtOrderUid',
-    ];
-
-    private const UNEXPECTED_COLUMNS = [
-        'NDR',
     ];
 
     private array $processingOutput = [
@@ -170,11 +163,7 @@ class ProcessOrgCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray($fileName, false))
-            ->setExpectedColumns(self::EXPECTED_COLUMNS)
-            ->setOptionalColumns(self::OPTIONAL_COLUMNS)
-            ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
-            ->getData();
+            return (new CsvToArray(self::EXPECTED_COLUMNS))->create($fileName);
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
