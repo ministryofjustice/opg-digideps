@@ -92,6 +92,7 @@ class LayDeputyshipUploader
     public function handleNewMultiClients(): array
     {
         $errors = [];
+        $clientsAdded = [];
 
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
         $numMultiClients = count($preRegistrationNewClients);

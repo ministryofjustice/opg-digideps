@@ -692,10 +692,16 @@ class BaseFeatureContext extends MinkContext
     public function cleanupDeputyForMultiClientFeature()
     {
         $repo = $this->em->getRepository(User::class);
-        $users = $repo->findBy(['email' => 'marbo.vantz@nowhere.1111.com']);
+
+        $qb = $repo->createQueryBuilder('u');
+        $users = $qb->where(
+            $qb->expr()->in('u.email', ['marbo.vantz@nowhere.1111.com', 'ulu.frine@nowhere.1111.com'])
+        )->getQuery()->getResult();
+
         foreach ($users as $user) {
             $this->em->remove($user);
         }
+
         $this->em->flush();
     }
 }
