@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Event;
 
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class UserUpdatedEventTest extends TestCase
 {
     /** @test */
-    public function event_is_initialised_correctly()
+    public function eventIsInitialisedCorrectly()
     {
         $preUpdateUser = UserHelpers::createUser();
         $postUpdateUser = UserHelpers::createUser();
@@ -17,12 +19,12 @@ class UserUpdatedEventTest extends TestCase
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
 
-        self::assertEquals($currentUser->getEmail(), $event->getCurrentUserEmail());
-        self::assertEquals($postUpdateUser->getEmail(), $event->getPostUpdateEmail());
-        self::assertEquals($postUpdateUser->getFullName(), $event->getPostUpdateFullName());
-        self::assertEquals($postUpdateUser->getRoleName(), $event->getPostUpdateRoleName());
-        self::assertEquals($preUpdateUser->getEmail(), $event->getPreUpdateEmail());
-        self::assertEquals($preUpdateUser->getRoleName(), $event->getPreUpdateRoleName());
+        self::assertEquals($currentUser->getEmail(), $event->getCurrentUser()->getEmail());
+        self::assertEquals($postUpdateUser->getEmail(), $event->getPostUpdateUser()->getEmail());
+        self::assertEquals($postUpdateUser->getFullName(), $event->getPostUpdateUser()->getFullName());
+        self::assertEquals($postUpdateUser->getRoleName(), $event->getPostUpdateUser()->getRoleName());
+        self::assertEquals($preUpdateUser->getEmail(), $event->getPreUpdateUser()->getEmail());
+        self::assertEquals($preUpdateUser->getRoleName(), $event->getPreUpdateUser()->getRoleName());
         self::assertEquals($trigger, $event->getTrigger());
     }
 }

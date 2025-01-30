@@ -23,6 +23,7 @@
         <testsuite name="Client unit tests">
             <directory>./Command</directory>
             <directory>./Entity</directory>
+            <directory>./Event</directory>
             <directory>./EventListener</directory>
             <directory>./EventSubscriber</directory>
             <directory>./Form</directory>
