@@ -41,7 +41,7 @@ class CsvToArray
         
         if (!$header) {
             $this->closeFile($handle);
-            throw new RuntimeException('Empty or corrupted file, cannot parse CSV header');
+            throw new \RuntimeException('Empty or corrupted file, cannot parse CSV header');
         }
 
         $ret = [];
@@ -54,6 +54,11 @@ class CsvToArray
                 }
 
                 $rowArray[$index] = $data;
+            }
+            
+            if (count($this->expectedColumns) !== count($rowArray)) {
+                $this->closeFile($handle);
+                throw new \RuntimeException("Malformed row within file, invalid CSV");
             }
 
             $ret[] = $rowArray;
