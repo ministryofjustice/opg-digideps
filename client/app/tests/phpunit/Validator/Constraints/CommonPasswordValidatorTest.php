@@ -2,15 +2,13 @@
 
 namespace App\Validator\Constraints;
 
-use App\Validator\Constraints\CommonPassword;
-use App\Validator\Constraints\CommonPasswordValidator;
 use PHPUnit\Framework\TestCase;
 
 class CommonPasswordValidatorTest extends TestCase
 {
-
     /**
-     * @param string $expectedMessage The expected message on a validation violation, if any.
+     * @param string $expectedMessage the expected message on a validation violation, if any
+     *
      * @return CommonPasswordValidator
      */
     public function configureValidator($expectedMessage = null)
@@ -18,13 +16,13 @@ class CommonPasswordValidatorTest extends TestCase
         // mock the violation builder
         $builder = $this->getMockBuilder('Symfony\Component\Validator\Violation\ConstraintViolationBuilder')
             ->disableOriginalConstructor()
-            ->setMethods(array('addViolation'))
+            ->setMethods(['addViolation'])
             ->getMock();
 
         // mock the validator context
         $context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContext')
             ->disableOriginalConstructor()
-            ->setMethods(array('buildViolation'))
+            ->setMethods(['buildViolation'])
             ->getMock();
 
         if ($expectedMessage) {
@@ -41,7 +39,11 @@ class CommonPasswordValidatorTest extends TestCase
         }
 
         // initialize the validator with the mocked context
-        $validator = new CommonPasswordValidator();
+        $validator = new CommonPasswordValidator(
+            __DIR__.'/../../TestData/commonpasswords.txt',
+            '',
+            false
+        );
         $validator->initialize($context);
 
         // return the SomeConstraintValidator

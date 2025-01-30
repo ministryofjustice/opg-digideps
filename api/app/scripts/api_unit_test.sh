@@ -43,6 +43,7 @@ case "$1" in
     ;;
   selection-3)
     # API Run 3
+    # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
     printf '\n Running DBAL Suite \n\n'
     php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
     printf '\n Running Controller-Ndr Suite \n\n'
@@ -67,19 +68,23 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
     ;;
   selection-all)
-    # Run all three blocks
-    printf '\n Running DBAL Suite \n\n'
-    php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
-    printf '\n Running Command Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
+    # selection-1
     printf '\n Running Controller Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
+
+    # selection-2
     printf '\n Running ControllerReport Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
+
+    # selection-3
+    printf '\n Running DBAL Suite \n\n'
+    php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
     printf '\n Running Controller-Ndr Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
+    printf '\n Running Command Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
     printf '\n Running Factory Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Factory/ --coverage-php tests/coverage/Factory.cov
     printf '\n Running Security Suite \n\n'
@@ -94,6 +99,9 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/v2/ --coverage-php tests/coverage/v2.cov
     printf '\n Running Logger Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
+
+    # generate HTML coverage report
+    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
     echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all"
