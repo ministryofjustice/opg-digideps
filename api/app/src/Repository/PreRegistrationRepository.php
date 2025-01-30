@@ -118,9 +118,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
         SQL;
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
-        $result = $stmt->fetchAllAssociative();
-        print_r($result);
 
-        return $result;
+        return $stmt->fetchAllAssociative();
     }
 }
