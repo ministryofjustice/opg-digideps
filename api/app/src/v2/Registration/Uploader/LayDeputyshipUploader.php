@@ -116,8 +116,11 @@ class LayDeputyshipUploader
 
                 $user = $this->handleUser($deputyUid);
 
-                $client = $this->handleNewClient($layDeputyshipDto, $user);
-                $clientsAdded[] = $caseNumber;
+                $clientHandleResult = $this->handleNewClient($layDeputyshipDto, $user);
+                $client = $clientHandleResult['client'];
+                if ($clientHandleResult['is_new_client']) {
+                    $clientsAdded[] = $caseNumber;
+                }
 
                 $this->handleNewReport($layDeputyshipDto, $client);
 
@@ -158,7 +161,10 @@ class LayDeputyshipUploader
         return $primaryDeputyUser;
     }
 
-    private function handleNewClient(LayDeputyshipDto $dto, User $newUser): ?Client
+    /*
+     * @returns ['client' => Client, 'is_new_client' => bool]
+     */
+    private function handleNewClient(LayDeputyshipDto $dto, User $newUser): array
     {
         $caseNumber = $dto->getCaseNumber();
         $existingClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($caseNumber);
@@ -182,6 +188,7 @@ class LayDeputyshipUploader
             }
         }
 
+        $isNewClient = false;
         if (1 === count($existingClients)) {
             // if there is one Client, and the above checks were OK, we can just use that Client, rather than making a new one
             $client = $existingClients[0];
@@ -190,12 +197,16 @@ class LayDeputyshipUploader
             // or if all the clients are discharged, and we are creating a client for a deputy that is not associated
             // with this case number already.
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
+            $isNewClient = true;
         }
 
         $client->addUser($newUser);
         $this->em->persist($client);
 
-        return $client;
+        return [
+            'client' => $client,
+            'is_new_client' => $isNewClient,
+        ];
     }
 
     private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
