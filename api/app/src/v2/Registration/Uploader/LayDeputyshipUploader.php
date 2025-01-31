@@ -115,7 +115,7 @@ class LayDeputyshipUploader
             try {
                 $this->em->beginTransaction();
 
-                $user = $this->handleNewUser($deputyUid);
+                $user = $this->handleUser($deputyUid);
 
                 $client = $this->handleNewClient($layDeputyshipDto, $user);
                 $clientsAdded[] = $caseNumber;
@@ -146,7 +146,7 @@ class LayDeputyshipUploader
         ];
     }
 
-    private function handleNewUser(string $deputyUid): ?User
+    private function handleUser(string $deputyUid): ?User
     {
         $userRepo = $this->em->getRepository(User::class);
 
@@ -154,6 +154,12 @@ class LayDeputyshipUploader
             $primaryDeputyUser = $userRepo->findPrimaryUserByDeputyUid($deputyUid);
         } catch (NoResultException|NonUniqueResultException $e) {
             throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
+        }
+
+        // if this primary user is not associated with a client yet, we don't need to add a secondary user
+        // and can just use the primary user
+        if (0 === count($primaryDeputyUser->getClients())) {
+            return $primaryDeputyUser;
         }
 
         $newSecondaryUser = clone $primaryDeputyUser;
@@ -179,32 +185,35 @@ class LayDeputyshipUploader
             throw new \ValueError(sprintf('unable to find clients for case number %s', $caseNumber));
         }
 
-        if (count($existingClients) > 0) {
-            /* @var Client $existingClient */
-            // If there is an existing active client, we shouldn't create a new instance of the client
-            foreach ($existingClients as $existingClient) {
-                if (!$existingClient->isDeleted()) {
-                    throw new \RuntimeException(sprintf('an active client with case number %s already exists', $caseNumber));
-                }
-            }
-            // Loop through the discharged clients to ensure we are not creating an account for a deputy associated with a discharged client
-            foreach ($existingClients as $existingClient) {
-                foreach ($existingClient->getUsers() as $user) {
-                    if ($user->getDeputyUid() == $newUser->getDeputyUid()) {
+        /* @var Client $existingClient */
+        foreach ($existingClients as $existingClient) {
+            // Loop through the existing clients to ensure we are not creating a client for a deputy already associated
+            // with this case; NB this should already have been excluded by the
+            // PreRegistrationRepository->getNewClientsForExistingDeputiesArray() query but this is a double check, I think
+            foreach ($existingClient->getUsers() as $user) {
+                if ($user->getDeputyUid() == $newUser->getDeputyUid()) {
+                    if ($existingClient->isDeleted()) {
                         throw new \RuntimeException(sprintf('a discharged client with case number %s already exists that is associated with a user with deputy UID %s', $existingClient->getCaseNumber(), $newUser->getDeputyUid()));
                     }
+                    throw new \RuntimeException(sprintf('an active client with case number %s already exists', $caseNumber));
                 }
             }
         }
 
-        // Only create a new instance of the client if one doesn't already exist;
-        // or if all the clients are discharged, and we are creating an account for a deputy that is not associated
-        // with this case number already.
-        $newClient = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
-        $newClient->addUser($newUser);
-        $this->em->persist($newClient);
+        if (1 === count($existingClients)) {
+            // if there is one Client, and the above checks were OK, we can just use that Client, rather than making a new one
+            $client = $existingClients[0];
+        } else {
+            // Only create a new instance of the client if one doesn't already exist;
+            // or if all the clients are discharged, and we are creating a client for a deputy that is not associated
+            // with this case number already.
+            $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
+        }
 
-        return $newClient;
+        $client->addUser($newUser);
+        $this->em->persist($client);
+
+        return $client;
     }
 
     private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
@@ -212,25 +221,26 @@ class LayDeputyshipUploader
         $existingReport = $newClient->getCurrentReport();
 
         if ($existingReport instanceof Report) {
-            throw new \RuntimeException('report already exists');
-        } else {
-            $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
-
-            $reportStartDate = clone $dto->getOrderDate();
-            $reportEndDate = clone $reportStartDate;
-            $reportEndDate->add(new \DateInterval('P364D'));
-
-            $newReport = new Report(
-                $newClient,
-                $determinedReportType,
-                $reportStartDate,
-                $reportEndDate,
-                false
-            );
-
-            $newReport->setClient($newClient);
-            $this->em->persist($newReport);
+            // throw new \RuntimeException('report already exists');
+            return null;
         }
+
+        $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
+
+        $reportStartDate = clone $dto->getOrderDate();
+        $reportEndDate = clone $reportStartDate;
+        $reportEndDate->add(new \DateInterval('P364D'));
+
+        $newReport = new Report(
+            $newClient,
+            $determinedReportType,
+            $reportStartDate,
+            $reportEndDate,
+            false
+        );
+
+        $newReport->setClient($newClient);
+        $this->em->persist($newReport);
 
         return $newReport;
     }
