@@ -214,7 +214,6 @@ class LayDeputyshipUploader
         $existingReport = $newClient->getCurrentReport();
 
         if ($existingReport instanceof Report) {
-            // throw new \RuntimeException('report already exists');
             return null;
         }
 
