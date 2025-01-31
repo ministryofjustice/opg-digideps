@@ -6,6 +6,7 @@ namespace App\Tests\Behat\v2\Common;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Result\ExecutedStepResult;
+use Mockery\Exception;
 
 trait DebugTrait
 {
@@ -48,14 +49,14 @@ trait DebugTrait
             && $result->hasException()
         ) {
             $feature = basename($scope->getFeature()->getFile());
-            $this->debug($feature);
+            $this->debug($feature, $result->getException());
         }
     }
 
     /**
      * @Then I save the page as :name
      */
-    public function debug($name)
+    public function debug(string $name, \Exception $ex)
     {
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad((string) $i, 2, '0', STR_PAD_LEFT);
@@ -78,6 +79,10 @@ trait DebugTrait
         $currentUrl = $session->getCurrentUrl();
 
         $message = <<<CONTEXT
+EXCEPTION: {$ex->getMessage()}
+@ FILE: {$ex->getFile()}; LINE: {$ex->getLine()}
+TRACE: {$ex->getTraceAsString()}
+
 Logged in user: $loggedInEmail
 Interacting with user: $interactingWithEmail
 Test run ID: $this->testRunId
