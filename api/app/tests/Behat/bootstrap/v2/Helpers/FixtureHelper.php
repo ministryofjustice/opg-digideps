@@ -87,11 +87,11 @@ class FixtureHelper
             'currentReportDueDate' => $currentReport?->getDueDate(),
             'currentReportStartDate' => $currentReport?->getStartDate(),
             'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport?->getEndDate(),
-            'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]->getId(),
+            'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]?->getId(),
             'courtDate' => $client ? $client->getCourtDate()?->format('j F Y') : null,
         ];
 
-        if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
+        if ($previousReport && $currentReport && $previousReport->getId() !== $currentReport->getId()) {
             $userDetails = array_merge(
                 $userDetails,
                 [
