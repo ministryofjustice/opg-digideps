@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @ingest @multiclientcodeputies
+@v2 @v2_sequential_1 @registration @ingest @multiclient
 Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
 
     @super-admin @multiclient-codeputies-multiple-clients-visible
@@ -15,7 +15,6 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         And I am on "/logout"
 
         When "ulu.frine@nowhere.1111.com" logs in
-        And print last response
         Then I should see "Bert Vonk"
         And I am on "/logout"
 
