@@ -20,7 +20,6 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 
 class LayDeputyshipUploader
 {
@@ -156,24 +155,7 @@ class LayDeputyshipUploader
             throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
         }
 
-        // if this primary user is not associated with a client yet, we don't need to add a secondary user
-        // and can just use the primary user
-        if (0 === count($primaryDeputyUser->getClients())) {
-            return $primaryDeputyUser;
-        }
-
-        $newSecondaryUser = clone $primaryDeputyUser;
-
-        // give duplicate user a unique, non-functional email address, with their deputy UID in it
-        // for future de-duplication
-        $uuid = str_replace('-', '', Uuid::uuid4()->toString());
-        $newSecondaryUser->setEmail($deputyUid.'-'.$uuid.'@dupe');
-
-        $newSecondaryUser->setIsPrimary(false);
-
-        $this->em->persist($newSecondaryUser);
-
-        return $newSecondaryUser;
+        return $primaryDeputyUser;
     }
 
     private function handleNewClient(LayDeputyshipDto $dto, User $newUser): ?Client
