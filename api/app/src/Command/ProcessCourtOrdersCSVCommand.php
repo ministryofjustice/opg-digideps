@@ -26,12 +26,6 @@ class ProcessCourtOrdersCSVCommand extends Command
     private const EXPECTED_COLUMNS = [
     ];
 
-    private const OPTIONAL_COLUMNS = [
-    ];
-
-    private const UNEXPECTED_COLUMNS = [
-    ];
-
     private array $processingOutput = [
         'errors' => [
             'count' => 0,
@@ -130,11 +124,7 @@ class ProcessCourtOrdersCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray($fileName, false, false))
-                ->setExpectedColumns(self::EXPECTED_COLUMNS)
-                ->setOptionalColumns(self::OPTIONAL_COLUMNS)
-                ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
-                ->getData();
+            return (new CsvToArray(self::EXPECTED_COLUMNS))->create($fileName);
         } catch (\RuntimeException $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
@@ -152,9 +142,9 @@ class ProcessCourtOrdersCSVCommand extends Command
 
             foreach ($chunks as $index => $chunk) {
                 $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
-                $result = $this->csvProcessing->courtOrderProcessing($chunk, $index);
-                $this->storeOutput($result);
+                // Handle processing & output of CSV below
+                //$result = $this->csvProcessing->courtOrderProcessing($chunk, $index);
+                //$this->storeOutput($result);
             }
 
             return true;
