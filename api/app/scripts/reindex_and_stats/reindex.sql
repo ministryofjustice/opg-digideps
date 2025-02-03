@@ -1,1 +1,10 @@
+UPDATE pg_settings SET autovacuum_analyze_scale_factor = '0.05';
+UPDATE pg_settings SET autovacuum_vacuum_insert_scale_factor = '0.2';
+UPDATE pg_settings SET autovacuum_vacuum_scale_factor = '0.1';
+UPDATE pg_settings SET checkpoint_completion_target = '0.5';
+UPDATE pg_settings SET password_encryption = 'md5';
+UPDATE pg_settings SET rds.extensions = 'address_standardizer, address_standardizer_data_us, apg_plan_mgmt, aurora_stat_utils, amcheck, autoinc, aws_commons, aws_ml, aws_s3, aws_lambda, bool_plperl, bloom, btree_gin, btree_gist, citext, cube, dblink, dict_int, dict_xsyn, earthdistance, fuzzystrmatch, h3, h3_postgis, hll, hstore, hstore_plperl, hypopg, insert_username, intagg, intarray, ip4r, isn, jsonb_plperl, lo, log_fdw, ltree, moddatetime, mysql_fdw, oracle_fdw, orafce, pgaudit, pgcrypto, pglogical, pgrouting, pgrowlocks, pgstattuple, pgtap, pg_bigm, pg_buffercache, pg_cron, pg_freespacemap, pg_hint_plan, pg_partman, pg_prewarm, pg_proctab, pg_repack, pg_similarity, pg_stat_statements, pg_trgm, pg_visibility, plcoffee, plls, plperl, plpgsql, plprofiler, pltcl, plv8, postgis, postgis_tiger_geocoder, postgis_raster, postgis_topology, postgres_fdw, prefix, rdkit, rds_tools, refint, seg, sslinfo, tablefunc, tcn, tds_fdw, tsm_system_rows, tsm_system_time, unaccent, uuid-ossp, vector';
+UPDATE pg_settings SET rds.temp_tablespaces = 'rds_temp_tablespace';
+UPDATE pg_settings SET shared_preload_libraries = 'rdsutils,pg_stat_statements';
+UPDATE pg_settings SET vacuum_cost_page_miss = '0';
 REINDEX DATABASE api;

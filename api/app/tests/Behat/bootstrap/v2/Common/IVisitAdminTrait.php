@@ -35,6 +35,21 @@ trait IVisitAdminTrait
     }
 
     /**
+     * @When I visit the admin client details page for an existing client linked to a non-primary Lay deputy user account
+     */
+    public function iVisitAdminLayClientDetailsPageForNonPrimaryDeputy()
+    {
+        if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
+            throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
+        }
+
+        $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId());
+        $this->visitAdminPath($clientDetailsUrl);
+
+        $this->interactingWithUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+    }
+
+    /**
      * @When I visit the admin client archived page for the user I'm interacting with
      */
     public function iVisitTheAdminClientArchivedPage()
