@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\App\Event;
 
@@ -10,19 +12,17 @@ use PHPUnit\Framework\TestCase;
 class ClientDeletedEventTest extends TestCase
 {
     /** @test */
-    public function event_is_initialised_correctly()
+    public function eventIsInitialisedCorrectly()
     {
         $client = ClientHelpers::createClient();
         $currentUser = UserHelpers::createUser();
-        $deletedDeputy = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
-        $event = new ClientDeletedEvent($client, $currentUser, $deletedDeputy, $trigger);
+        $event = new ClientDeletedEvent($client, $currentUser, $trigger);
 
-        self::assertEquals($client->getCaseNumber(), $event->getCaseNumber());
-        self::assertEquals($client->getCourtDate(), $event->getDeputyshipStartDate());
-        self::assertEquals($currentUser->getEmail(), $event->getDischargedByEmail());
-        self::assertEquals($deletedDeputy->getFullName(), $event->getDischargedDeputyName());
+        self::assertEquals($client->getCaseNumber(), $event->getClientWithUsers()->getCaseNumber());
+        self::assertEquals($client->getCourtDate(), $event->getClientWithUsers()->getCourtDate());
+        self::assertEquals($currentUser->getEmail(), $event->getCurrentUser()->getEmail());
         self::assertEquals($trigger, $event->getTrigger());
     }
 }

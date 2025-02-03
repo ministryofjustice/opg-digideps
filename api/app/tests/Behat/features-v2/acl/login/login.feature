@@ -146,3 +146,11 @@ Feature: Users logging into the service
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
         And I should not see the NDR report on the reports page
+
+    @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client
+    Scenario: A user tries to login to the service with their secondary account that has no active clients attached to it
+        Given a Lay Deputy tries to login with their "non-primary" email address
+        Then they get redirected back to the log in page
+        And a flash message should be displayed to the user with their primary email address
+        When the user tries to access their clients report overview page
+        Then they get redirected back to the log in page
