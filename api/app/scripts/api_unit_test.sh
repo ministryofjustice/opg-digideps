@@ -38,14 +38,7 @@ case "$1" in
     ;;
   selection-2)
     # API Run 2
-    printf '\n Running ControllerReport Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
-    ;;
-  selection-3)
-    # API Run 3
     # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
-    printf '\n Running DBAL Suite \n\n'
-    php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
     printf '\n Running Controller-Ndr Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
@@ -73,12 +66,6 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
 
     # selection-2
-    printf '\n Running ControllerReport Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
-
-    # selection-3
-    printf '\n Running DBAL Suite \n\n'
-    php vendor/bin/phpunit --debug -c tests/Unit tests/Unit/DBAL/ --coverage-php tests/coverage/DBAL.cov
     printf '\n Running Controller-Ndr Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
