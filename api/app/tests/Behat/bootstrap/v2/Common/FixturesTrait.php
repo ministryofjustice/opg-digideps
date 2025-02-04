@@ -250,4 +250,14 @@ trait FixturesTrait
             return $this->profTeamDeputyNotStartedHealthWelfareDetails;
         }
     }
+
+    public function getClientIdByCaseNumber(string $caseNumber): ?int
+    {
+        $result = $this->em->getRepository(Client::class)->getArrayByCaseNumber($caseNumber);
+        if (is_null($result)) {
+            return null;
+        }
+
+        return $result['id'];
+    }
 }
