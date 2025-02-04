@@ -41,3 +41,20 @@ jobs:
         id: package-checks-api
         run: python audit-composer-packages.py api.json
         working-directory: scripts/package-audit
+
+      - name: run linting on all our Dockerfiles
+        id: hadolint
+        run: |
+          find . -type f -name "*Dockerfile*" -exec sh -c 'for file; \
+          do echo "Processing $file"; \
+          docker run --rm -i -v ./hadolint.yaml:/.config/hadolint.yaml \
+          hadolint/hadolint < "$file"; \
+          done' sh {} +
+
+          if [ $? -ne 0 ]; then
+              echo "==== Dockerfile Linting Failure. Errors found ===="
+              exit 1
+          else
+              echo "==== Dockerfile Linting Success. No errors ===="
+              exit 0
+          fi

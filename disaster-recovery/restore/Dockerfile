@@ -1,7 +1,7 @@
 FROM python:3.12-alpine3.20
 
 COPY requirements.txt /requirements.txt
-RUN apk update && apk upgrade && pip install --upgrade pip \
+RUN apk update && apk upgrade && pip install --no-cache-dir --upgrade pip \
     \ pip install -r /requirements.txt
 COPY ./database_restore.py /database_restore.py
 RUN pip uninstall -y wheel setuptools
