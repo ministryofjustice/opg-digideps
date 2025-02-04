@@ -280,7 +280,7 @@ class DocumentRepositoryTest extends KernelTestCase
         Document $document,
         Client $client,
         ReportSubmission $submission,
-        $report
+        $report,
     ) {
         $docId = $document->getId();
 

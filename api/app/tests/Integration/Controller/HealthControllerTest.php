@@ -17,8 +17,8 @@ class HealthControllerTest extends AbstractTestController
     public function testContainerHealth()
     {
         $ret = $this->assertJsonRequest('GET', '/health-check', [
-                'assertResponseCode' => 200,
-            ])['data'];
+            'assertResponseCode' => 200,
+        ])['data'];
 
         $this->assertEquals('ok', $ret);
     }

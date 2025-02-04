@@ -80,9 +80,9 @@ class VisitsCareControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         $this->assertEquals(self::$visitsCare1->getId(), $data['id']);
         $this->assertEquals(self::$visitsCare1->getDoYouLiveWithClient(), $data['do_you_live_with_client']);

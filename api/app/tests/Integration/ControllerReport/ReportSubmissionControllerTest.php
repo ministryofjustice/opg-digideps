@@ -272,9 +272,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::fixtures()->persist($entity);
     }
 
-    /**
-     * @return mixed
-     */
     private function makeRequestAndReturnResults(string $endpoint, array $params)
     {
         $url = sprintf('%s?%s', $endpoint, http_build_query($params));
