@@ -16,45 +16,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ProcessOrgCSVCommand extends Command
+class ProcessCourtOrdersCSVCommand extends Command
 {
-    public static $defaultName = 'digideps:api:process-org-csv';
-    private const JOB_NAME = 'org_csv_processing';
+    public static $defaultName = 'digideps:api:process-court-orders-csv';
+    private const JOB_NAME = 'courtorder_csv_processing';
 
     private const CHUNK_SIZE = 50;
 
     private const EXPECTED_COLUMNS = [
-        'Case',
-        'ClientForename',
-        'ClientSurname',
-        'ClientDateOfBirth',
-        'ClientAddress1',
-        'ClientAddress2',
-        'ClientAddress3',
-        'ClientAddress4',
-        'ClientAddress5',
-        'ClientPostcode',
-        'DeputyUid',
-        'DeputyType',
-        'DeputyEmail',
-        'DeputyOrganisation',
-        'DeputyForename',
-        'DeputySurname',
-        'DeputyAddress1',
-        'DeputyAddress2',
-        'DeputyAddress3',
-        'DeputyAddress4',
-        'DeputyAddress5',
-        'DeputyPostcode',
-        'MadeDate',
-        'LastReportDay',
-        'ReportType',
-        'OrderType',
-        'Hybrid',
-    ];
-
-    protected const OPTIONAL_COLUMNS = [
-        'CourtOrderUid'
     ];
 
     private array $processingOutput = [
@@ -62,28 +31,18 @@ class ProcessOrgCSVCommand extends Command
             'count' => 0,
             'messages' => [],
         ],
-        'added' => [
-            'clients' => 0,
-            'deputies' => 0,
-            'reports' => 0,
-            'organisations' => 0,
-        ],
-        'updated' => [
-            'clients' => 0,
-            'deputies' => 0,
-            'reports' => 0,
-            'organisations' => 0,
-        ],
+        'added' => 0,
+        'updated' => 0,
         'skipped' => 0,
     ];
 
     private OutputInterface $cliOutput;
 
     public function __construct(
-        private S3Client $s3,
-        private ParameterBagInterface $params,
-        private LoggerInterface $verboseLogger,
-        private CSVDeputyshipProcessing $csvProcessing,
+        private readonly S3Client $s3,
+        private readonly ParameterBagInterface $params,
+        private readonly LoggerInterface $verboseLogger,
+        private readonly CSVDeputyshipProcessing $csvProcessing,
     ) {
         parent::__construct();
     }
@@ -91,7 +50,7 @@ class ProcessOrgCSVCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Processes the PA/Prof CSV Report from the S3 bucket.')
+            ->setDescription('Processes the CourtOrder CSV Report from the S3 bucket.')
             ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
     }
 
@@ -142,7 +101,7 @@ class ProcessOrgCSVCommand extends Command
 
             $this->cliOutput->writeln(
                 sprintf(
-                    '%s - success - Finished processing OrgCSV, Output: %s',
+                    '%s - success - Finished processing CourtOrderCSV, Output: %s',
                     self::JOB_NAME,
                     $this->processedStringOutput()
                 )
@@ -165,8 +124,8 @@ class ProcessOrgCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray(self::EXPECTED_COLUMNS, self::OPTIONAL_COLUMNS))->create($fileName);
-        } catch (\Throwable $e) {
+            return (new CsvToArray(self::EXPECTED_COLUMNS))->create($fileName);
+        } catch (\RuntimeException $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->verboseLogger->error($logMessage);
@@ -182,13 +141,11 @@ class ProcessOrgCSVCommand extends Command
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
-                $upload = $this->csvProcessing->orgProcessing($chunk);
-
-                $this->storeOutput($upload);
-                $this->verboseLogger->notice(sprintf('Successfully processed chunk: %d', $index));
+                $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
+                // Handle processing & output of CSV below
+                //$result = $this->csvProcessing->courtOrderProcessing($chunk, $index);
+                //$this->storeOutput($result);
             }
-
-            $this->verboseLogger->notice('Successfully processed all chunks');
 
             return true;
         }
@@ -198,23 +155,19 @@ class ProcessOrgCSVCommand extends Command
 
     private function storeOutput(array $processingOutput): void
     {
-        $this->processingOutput['errors']['count'] += $processingOutput['errors']['count'];
-        $this->processingOutput['errors']['messages'] = implode(', ', $processingOutput['errors']['messages']);
-
-        if (!empty($processingOutput['added'])) {
-            foreach ($processingOutput['added'] as $group => $items) {
-                $this->processingOutput['added'][$group] += count($items);
-            }
+        if (!empty($processingOutput['errors'])) {
+            $this->processingOutput['errors'] = array_merge(
+                $this->processingOutput['errors'],
+                $processingOutput['errors']
+            );
         }
 
-        if (!empty($processingOutput['updated'])) {
-            foreach ($processingOutput['updated'] as $group => $items) {
-                $this->processingOutput['updated'][$group] += count($items);
-            }
+        if (!empty($processingOutput['added'])) {
+            $this->processingOutput['added'] += $processingOutput['added'];
         }
 
         if (!empty($processingOutput['skipped'])) {
-            $this->processingOutput['skipped'] += $processingOutput['skipped'];
+            $this->processingOutput['skipped'] += count($processingOutput['skipped']);
         }
     }
 
@@ -222,25 +175,12 @@ class ProcessOrgCSVCommand extends Command
     {
         $processed = '';
         foreach ($this->processingOutput as $reportedHeader => $stats) {
-            if (is_array($stats) && count($stats) >= 1) {
-                foreach ($stats as $statHeader => $statValue) {
-                    if (!is_array($statValue)) {
-                        if ('count' === $statHeader) {
-                            $processed .= sprintf('%s: %s. ', $reportedHeader, $statValue);
-                        } else {
-                            $processed .= sprintf('%s %s: %s. ', ucfirst($statHeader), $reportedHeader, $statValue);
-                        }
-                    } else {
-                        if (count($statValue) >= 1) {
-                            foreach ($statValue as $i => $message) {
-                                if (0 === $i) {
-                                    $processed .= sprintf('%s %s: ', ucfirst($statHeader), $reportedHeader);
-                                }
+            if (is_array($stats)) {
+                $processed .= $reportedHeader.': ';
 
-                                $processed .= sprintf('%s; ', $message);
-                            }
-                        }
-                    }
+                foreach ($stats as $statHeader => $statValue) {
+                    $statValue = str_replace(PHP_EOL, '', $statValue);
+                    $processed .= sprintf('%s: %s. ', $statHeader, $statValue);
                 }
             } else {
                 $processed .= sprintf('%s %s. ', $stats, $reportedHeader);
