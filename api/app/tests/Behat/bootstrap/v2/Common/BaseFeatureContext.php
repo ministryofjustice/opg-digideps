@@ -687,7 +687,7 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @AfterScenario @multiclient
+     * AfterScenario @multiclient.
      */
     public function cleanupDeputyForMultiClientFeature()
     {
