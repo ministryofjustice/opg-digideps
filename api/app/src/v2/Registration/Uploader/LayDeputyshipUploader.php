@@ -114,7 +114,7 @@ class LayDeputyshipUploader
             try {
                 $this->em->beginTransaction();
 
-                $user = $this->handleUser($deputyUid);
+                $user = $this->findUser($deputyUid);
 
                 $clientHandleResult = $this->handleNewClient($layDeputyshipDto, $user);
                 $client = $clientHandleResult['client'];
@@ -148,7 +148,12 @@ class LayDeputyshipUploader
         ];
     }
 
-    private function handleUser(string $deputyUid): ?User
+    /*
+     * Assumption is that we can just associate all clients to the existing user in the dd_user table.
+     * If there is no user in this table, we won't get any potential new clients as we don't have anything to attach
+     * them to.
+     */
+    private function findUser(string $deputyUid): ?User
     {
         $userRepo = $this->em->getRepository(User::class);
 
