@@ -117,6 +117,7 @@ class ReportsSubmittedQueryTest extends WebTestCase
         $id = mt_rand();
         $user = (new User())
             ->setFirstname('Lay')
+            ->setLastname('User')
             ->setEmail("metric-test-$id@publicguardian.gov.uk")
             ->setRoleName('ROLE_'.$type.'_DEPUTY');
 

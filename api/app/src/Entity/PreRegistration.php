@@ -41,7 +41,7 @@ class PreRegistration
         $this->clientAddress4 = $row['ClientAddress4'] ?? null;
         $this->clientAddress5 = $row['ClientAddress5'] ?? null;
         $this->clientPostcode = $row['ClientPostcode'] ?? null;
-        $this->deputyUid      = $row['DeputyUid'] ?? '';
+        $this->deputyUid = $row['DeputyUid'] ?? '';
         $this->deputyFirstname = $row['DeputyFirstname'] ?? '';
         $this->deputySurname = $row['DeputySurname'] ?? '';
         $this->deputyAddress1 = $row['DeputyAddress1'] ?? null;
@@ -83,7 +83,7 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @ORM\Column(name="client_firstname", type="string", nullable=true)
+     * @ORM\Column(name="client_firstname", type="string", length=100, nullable=true)
      */
     private ?string $clientFirstname;
 
@@ -137,7 +137,6 @@ class PreRegistration
      * @ORM\Column(name="client_postcode", type="string", length=10, nullable=true)
      *
      * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
-     *
      */
     private ?string $clientPostcode;
 
@@ -237,7 +236,7 @@ class PreRegistration
     private ?string $orderType;
 
     /**
-     * @ORM\Column(name="hybrid", type="string", nullable=true)
+     * @ORM\Column(name="hybrid", type="string", length=6, nullable=true)
      */
     private ?string $hybrid;
 
