@@ -16,7 +16,7 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         Then I should see "Bert Vonk"
         And I am on "/logout"
 
-        # Upload same case plus two more clients for the same deputy
+        # Upload the original case plus two new ones, each associated with both deputies
         Given a csv has been uploaded to the sirius bucket with the file "lay-multiclient-codeputies-2.csv"
         And I run the lay CSV command for "lay-multiclient-codeputies-2.csv"
 
