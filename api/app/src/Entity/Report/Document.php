@@ -125,7 +125,7 @@ class Document implements SynchronisableInterface
      *
      * @JMS\Groups({"synchronisation"})
      *
-     * @ORM\Column(name="sync_attempts", type="integer", nullable=false)
+     * @ORM\Column(name="sync_attempts", type="integer", nullable=false, options={"default": 0})
      */
     protected $syncAttempts = 0;
 
@@ -134,8 +134,6 @@ class Document implements SynchronisableInterface
      *
      * Report is initially required, but will be set to null at submission time,
      * and associated to a specific ReportSubmission instead
-     *
-     * @param mixed $report
      */
     public function __construct($report)
     {

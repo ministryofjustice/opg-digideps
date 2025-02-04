@@ -96,6 +96,7 @@ class Fixtures
     {
         // add clent, cot, report, needed for assets
         $deputy = new Deputy();
+        $deputy->setDeputyUid('UID'.rand(1, 999999));
         $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
         $deputy->setFirstname('name'.time());
         $deputy->setLastname('surname'.time());
@@ -217,7 +218,7 @@ class Fixtures
 
     public function createReport(
         Client $client,
-        array $settersMap = []
+        array $settersMap = [],
     ) {
         // should be created via ReportService, but this is a fixture, so better to keep it simple
         $report = new Report(
