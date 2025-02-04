@@ -7,6 +7,7 @@ namespace App\Tests\Behat\v2\Registration;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\v2\Common\UserDetails;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 
 trait SelfRegistrationTrait
 {
@@ -24,18 +25,37 @@ trait SelfRegistrationTrait
     private string $deputyUid;
     private string $coDeputyUid;
 
+    private array $cachedFixtures = [];
+
+    private function getFixtureJson(string $jsonFile)
+    {
+        if (array_key_exists($jsonFile, $this->cachedFixtures)) {
+            return $this->cachedFixtures[$jsonFile];
+        }
+
+        $file = file_get_contents(__DIR__.'/../../../fixtures/'.$jsonFile);
+
+        $out = json_decode($file, true);
+        if (is_null($out)) {
+            throw new JsonException("Unable to parse JSON from file {$jsonFile}");
+        }
+
+        $this->cachedFixtures[$jsonFile] = $out;
+
+        return $out;
+    }
+
     /**
-     * @Given the Lay Deputy with reference :name @ :jsonFile registers to deputise
+     * @Given the lay deputy :name @ :jsonFile registers as a deputy
      *
-     * e.g. 'Given the Lay Deputy with reference "Marbo Vantz" @ "ingest.lay.multiclient.codeputies.sirius.json" registers to deputise'
+     * e.g. 'Given the lay deputy "Marbo Vantz" @ "ingest.lay.multiclient.codeputies.sirius.json" registers as a deputy'
      *
-     * This looks up a deputy in a specific json fixture file, using :name as a key into the JSON,
-     * and registers them through the frontend. See the file referenced above for an example of the format.
+     * This looks up a deputy in a specific json fixture file :jsonFile, using :name as a key into the JSON,
+     * and registers them through the frontend. See the file referenced above for an example of the JSON format.
      */
     public function aLayDeputyWithRefRegistersToDeputise(string $jsonFile, string $name)
     {
-        $file = file_get_contents(__DIR__.'/../../../fixtures/'.$jsonFile);
-        $fixture = json_decode($file, true);
+        $fixture = $this->getFixtureJson($jsonFile);
         $regDetails = $fixture[$name];
 
         $this->visitFrontendPath('/register');
@@ -53,10 +73,7 @@ trait SelfRegistrationTrait
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 
-        $this->assertPageContainsText('Sign in to your new account');
-        $this->fillInField('login_email', $regDetails['deputy']['email']);
-        $this->fillInField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
+        $this->loginToFrontendAs($regDetails['deputy']['email']);
 
         $this->fillInField('user_details_address1', $regDetails['deputy']['address1']);
         $this->fillInField('user_details_addressCountry', $regDetails['deputy']['country']);
@@ -81,6 +98,62 @@ trait SelfRegistrationTrait
         $this->pressButton('report_save');
 
         $this->visitFrontendPath('/logout');
+    }
+
+    /**
+     * @Given a lay deputy :name @ :jsonFile is invited to be a co-deputy for case :caseNumber
+     *
+     * See aLayDeputyWithRefRegistersToDeputise for an explanation of the reference and JSON format.
+     *
+     * NB a user on the case referenced must be logged in for this sequence to work.
+     */
+    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $caseNumber)
+    {
+        $fixture = $this->getFixtureJson($jsonFile);
+        $codeputy = $fixture[$name]['codeputy'];
+
+        $clientId = $this->getClientIdByCaseNumber($caseNumber);
+        $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
+
+        $this->fillInField('co_deputy_invite_firstname', $codeputy['firstName']);
+        $this->fillInField('co_deputy_invite_lastname', $codeputy['lastName']);
+        $this->fillInField('co_deputy_invite_email', $codeputy['email']);
+        $this->pressButton('co_deputy_invite_submit');
+    }
+
+    /**
+     * @When a lay deputy :name @ :jsonFile completes their registration as a co-deputy for case :caseNumber
+     */
+    public function foo(string $name, string $jsonFile, string $caseNumberIn)
+    {
+        $fixture = $this->getFixtureJson($jsonFile);
+        $regDetails = $fixture[$name];
+        $caseNumber = $regDetails['caseNumber'];
+
+        $this->assertStringEqualsString($caseNumberIn, $regDetails['caseNumber'], 'caseNumber');
+
+        $codeputy = $regDetails['codeputy'];
+        $client = $regDetails['client'];
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $codeputy['email'], 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $codeputy['email']);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillInField('co_deputy_firstname', $codeputy['firstName']);
+        $this->fillInField('co_deputy_lastname', $codeputy['lastName']);
+        $this->fillInField('co_deputy_address1', $codeputy['address1']);
+        $this->fillInField('co_deputy_addressPostcode', $codeputy['postcode']);
+        $this->fillInField('co_deputy_addressCountry', $codeputy['country']);
+        $this->fillInField('co_deputy_phoneMain', $codeputy['phone']);
+        $this->fillInField('co_deputy_clientLastname', $client['lastName']);
+        $this->fillInField('co_deputy_clientCaseNumber', $caseNumber);
+
+        $this->pressButton('co_deputy_save');
     }
 
     /**
