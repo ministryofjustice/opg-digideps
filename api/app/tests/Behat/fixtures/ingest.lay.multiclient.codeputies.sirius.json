@@ -1,0 +1,35 @@
+{
+    "Marbo Vantz": {
+        "__comment__": "Corresponds with a CSV row in sirius-csvs/lay-multiclient-codeputies*.csv",
+        "caseNumber": "91513119",
+        "deputy": {
+            "deputyUid": "97571940",
+            "firstName": "Marbo",
+            "lastName": "Vantz",
+            "email": "marbo.vantz@nowhere.1111.com",
+            "address1": "21 Test Road",
+            "postcode": "AB1 2CD",
+            "country": "GB",
+            "phone": "01000 321234"
+        },
+        "client": {
+            "firstName": "Bert",
+            "lastName": "Vonk",
+            "address1": "1 South Parade",
+            "postcode": "NG1 2HT",
+            "country": "GB",
+            "phone": "01789432876",
+            "courtDateDay": "14",
+            "courtDateMonth": "04",
+            "courtDateYear": "2024"
+        },
+        "report": {
+            "startDay": "14",
+            "startMonth": "04",
+            "startYear": "2025",
+            "endDay": "13",
+            "endMonth": "04",
+            "endYear": "2026"
+        }
+    }
+}
