@@ -1,6 +1,6 @@
 {
     "Marbo Vantz": {
-        "__comment__": "Corresponds with a CSV row in sirius-csvs/lay-multiclient-codeputies*.csv",
+        "__comment__": "Deputy; corresponds with a CSV row in sirius-csvs/lay-multiclient-codeputies*.csv",
         "caseNumber": "91513119",
         "deputy": {
             "deputyUid": "97571940",
@@ -30,6 +30,22 @@
             "endDay": "13",
             "endMonth": "04",
             "endYear": "2026"
+        }
+    },
+    "Ulu Frine": {
+        "__comment__": "Co-deputy; corresponds with a CSV row in sirius-csvs/lay-multiclient-codeputies*.csv",
+        "caseNumber": "91513119",
+        "codeputy": {
+            "firstName": "Ulu",
+            "lastName": "Frine",
+            "email": "ulu.frine@nowhere.1111.com",
+            "address1": "21 Test Road",
+            "postcode": "AB1 2CD",
+            "country": "GB",
+            "phone": "01789432876"
+        },
+        "client": {
+            "lastName": "Vonk"
         }
     }
 }
