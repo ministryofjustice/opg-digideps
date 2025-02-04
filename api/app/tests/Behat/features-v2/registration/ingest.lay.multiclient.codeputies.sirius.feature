@@ -34,7 +34,7 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         And I should see "Caspar Ghostfriendly"
         And I am on "/logout"
 
-        # Able Verm is discharged and not present in this CSV file
+        # Able Werm is discharged and not present in this CSV file
         Given a csv has been uploaded to the sirius bucket with the file "lay-multiclient-codeputies-3.csv"
         And I run the lay CSV command for "lay-multiclient-codeputies-3.csv"
 
