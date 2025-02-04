@@ -95,11 +95,11 @@ RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https:/
 
 FROM application AS ci-tests
 # We use this setup for certain commands as part of the CI processing of unit tests
-CMD confd -onetime -backend env \
+CMD ["sh", "-c", "confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && php-fpm
+    && php-fpm"]
 
 FROM application AS production
 COPY scripts/hardening/harden.sh /harden.sh
@@ -107,8 +107,8 @@ RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
 
-CMD confd -onetime -backend env \
+CMD ["sh", "-c", "confd -onetime -backend env \
     && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && php-fpm
+    && php-fpm"]
