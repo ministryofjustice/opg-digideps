@@ -1,6 +1,11 @@
 # Doctrine Configuration
 doctrine:
     dbal:
+        options:
+            random_page_cost: 1.1
+            enable_hashjoin: false
+            enable_nestloop: true
+            work_mem: "64MB"
         connections:
             default:
                 driver: pdo_pgsql

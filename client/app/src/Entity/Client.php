@@ -1032,7 +1032,7 @@ class Client
         }
 
         foreach ($this->getUsers() as $user) {
-            if ($user->isLayDeputy()) {
+            if ($user->isLayDeputy() && !is_null($user->getDeputyUid())) {
                 return $user;
             }
         }

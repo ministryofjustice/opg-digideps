@@ -7,8 +7,8 @@ services:
 
   frontend-webserver:
     volumes:
-      - ./client/resources/public/assets:/public/assets
-      - ./client/resources/public/images:/public/images
+      - ./client/resources/public/assets:/www/data/public/assets
+      - ./client/resources/public/images:/www/data/public/images
 
   frontend-app:
     volumes:
@@ -27,8 +27,8 @@ services:
 
   admin-webserver:
     volumes:
-      - ./client/resources/public/assets:/public/assets
-      - ./client/resources/public/images:/public/images
+      - ./client/resources/public/assets:/www/data/public/assets
+      - ./client/resources/public/images:/www/data/public/images
 
   admin-app:
     volumes:
