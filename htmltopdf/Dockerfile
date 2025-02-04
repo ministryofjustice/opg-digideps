@@ -1,5 +1,5 @@
 FROM python:3.12-alpine3.20
-
+WORKDIR /
 ENV PYTHONUNBUFFERED 1
 
 RUN addgroup -S htmltopdf && adduser -S htmltopdf -G htmltopdf
@@ -12,19 +12,20 @@ RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto term
     && fc-list | sort
 
 COPY htmltopdf/requirements.txt .
-COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
-COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
-RUN pip3 install --upgrade pip && pip install --upgrade pip
+RUN pip3 install --upgrade --no-cache-dir pip && pip install --upgrade --no-cache-dir pip
 
 RUN set -ex \
 && apk add --no-cache --virtual .build-deps musl-dev gcc g++ zlib-dev libffi-dev \
-&& pip3 install -r requirements.txt \
+&& pip3 install --no-cache-dir -r requirements.txt \
 && apk del .build-deps
 
-ADD --chown=htmltopdf:htmltopdf htmltopdf/docker-entrypoint.sh /docker-entrypoint.sh
-ADD --chown=htmltopdf:htmltopdf htmltopdf/app.py /app.py
-ADD --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-tmp
+COPY --chown=htmltopdf:htmltopdf htmltopdf/docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=htmltopdf:htmltopdf htmltopdf/app.py /app.py
+COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-tmp
+
+COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
+COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
 EXPOSE 80
 
