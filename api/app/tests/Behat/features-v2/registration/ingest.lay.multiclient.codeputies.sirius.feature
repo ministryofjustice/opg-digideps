@@ -33,16 +33,3 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         And I should see "Able Werm"
         And I should see "Caspar Ghostfriendly"
         And I am on "/logout"
-
-        # Able Werm is discharged and not present in this CSV file
-        Given a csv has been uploaded to the sirius bucket with the file "lay-multiclient-codeputies-3.csv"
-        And I run the lay CSV command for "lay-multiclient-codeputies-3.csv"
-
-        # Doesn't work yet
-        #When "marbo.vantz@nowhere.1111.com" logs in
-        #And I am on "/choose-a-client"
-        #Then I should see "Bert Vonk"
-        #And I should not see "Able Werm"
-        #And I should see "Caspar Ghostfriendly"
-        #And print last response
-        #And I am on "/logout"
