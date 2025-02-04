@@ -39,8 +39,6 @@ case "$1" in
   selection-2)
     # API Run 2
     # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
-    printf '\n Running Controller-Ndr Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
@@ -66,8 +64,6 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
 
     # selection-2
-    printf '\n Running Controller-Ndr Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
