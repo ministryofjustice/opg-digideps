@@ -13,6 +13,7 @@ RUN npm audit --production
 RUN NODE_ENV=production npm run build
 
 FROM node-base as testing
+# hadolint ignore=DL3016
 RUN npm install -g jest jest-environment-jsdom
 RUN npm run build
 
