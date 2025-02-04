@@ -25,6 +25,65 @@ trait SelfRegistrationTrait
     private string $coDeputyUid;
 
     /**
+     * @Given the Lay Deputy with reference :name @ :jsonFile registers to deputise
+     *
+     * e.g. 'Given the Lay Deputy with reference "Marbo Vantz" @ "ingest.lay.multiclient.codeputies.sirius.json" registers to deputise'
+     *
+     * This looks up a deputy in a specific json fixture file, using :name as a key into the JSON,
+     * and registers them through the frontend. See the file referenced above for an example of the format.
+     */
+    public function aLayDeputyWithRefRegistersToDeputise(string $jsonFile, string $name)
+    {
+        $file = file_get_contents(__DIR__.'/../../../fixtures/'.$jsonFile);
+        $fixture = json_decode($file, true);
+        $regDetails = $fixture[$name];
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            $regDetails['deputy']['firstName'],
+            $regDetails['deputy']['lastName'],
+            $regDetails['deputy']['email'],
+            $regDetails['deputy']['postcode'],
+            $regDetails['client']['firstName'],
+            $regDetails['client']['lastName'],
+            $regDetails['caseNumber'],
+        );
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $regDetails['deputy']['email'], 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $regDetails['deputy']['email']);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillInField('user_details_address1', $regDetails['deputy']['address1']);
+        $this->fillInField('user_details_addressCountry', $regDetails['deputy']['country']);
+        $this->fillInField('user_details_phoneMain', $regDetails['deputy']['phone']);
+        $this->pressButton('user_details_save');
+
+        $this->fillInField('client_address', $regDetails['client']['address1']);
+        $this->fillInField('client_postcode', $regDetails['client']['postcode']);
+        $this->fillInField('client_country', $regDetails['client']['country']);
+        $this->fillInField('client_phone', $regDetails['client']['phone']);
+        $this->fillInField('client_courtDate_day', $regDetails['client']['courtDateDay']);
+        $this->fillInField('client_courtDate_month', $regDetails['client']['courtDateMonth']);
+        $this->fillInField('client_courtDate_year', $regDetails['client']['courtDateYear']);
+        $this->pressButton('client_save');
+
+        $this->fillInField('report_startDate_day', $regDetails['report']['startDay']);
+        $this->fillInField('report_startDate_month', $regDetails['report']['startMonth']);
+        $this->fillInField('report_startDate_year', $regDetails['report']['startYear']);
+        $this->fillInField('report_endDate_day', $regDetails['report']['endDay']);
+        $this->fillInField('report_endDate_month', $regDetails['report']['endMonth']);
+        $this->fillInField('report_endDate_year', $regDetails['report']['endYear']);
+        $this->pressButton('report_save');
+
+        $this->visitFrontendPath('/logout');
+    }
+
+    /**
      * @Given a Lay Deputy registers to deputise for a client with valid details
      */
     public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails()
@@ -101,7 +160,7 @@ trait SelfRegistrationTrait
         string $postcode,
         string $clientFirstname,
         string $clientLastname,
-        string $caseNumber
+        string $caseNumber,
     ) {
         $this->fillInField('self_registration_firstname', $firstname);
         $this->fillInField('self_registration_lastname', $lastname);
