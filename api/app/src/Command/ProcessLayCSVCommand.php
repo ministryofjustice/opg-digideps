@@ -185,7 +185,11 @@ class ProcessLayCSVCommand extends Command
                 $this->storeOutput($result);
             }
             $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
-            $this->csvProcessing->layProcessingHandleNewMultiClients();
+            $result = $this->csvProcessing->layProcessingHandleNewMultiClients();
+
+            if (0 == $result['new-clients-found']) {
+                $this->verboseLogger->notice('No new multiclients were found, so none were added');
+            }
 
             return true;
         }
