@@ -11,7 +11,7 @@ class CsvToArray
     const ESCAPE = '\\';
     const CHAR_LIMIT_PER_ROW = 2000; // current average is around the 300-400 chars
 
-    public function __construct(private readonly array $expectedColumns = []) 
+    public function __construct(private readonly array $expectedColumns = [], private readonly array $optionalColumns = []) 
     {
     }
 
@@ -47,16 +47,28 @@ class CsvToArray
         $ret = [];
         while (($row = $this->getRow($handle)) !== false) {
             $rowArray = [];
+            $optionalPresent = false;
+            $numberOfOptional = 0;
+
             foreach ($row as $i => $data) {
                 $index = $header[$i];
-                if (!array_key_exists($index, $this->expectedColumns)) {
+                if (!in_array($index, $this->optionalColumns) && !in_array($index, $this->expectedColumns)) {
                     continue;
+                }
+
+                if (in_array($index, $this->optionalColumns)) {
+                    $numberOfOptional++;
+                    $optionalPresent = true;
                 }
 
                 $rowArray[$index] = $data;
             }
-            
-            if (count($this->expectedColumns) !== count($rowArray)) {
+
+            $expectedCount = $optionalPresent ? 
+                count($this->expectedColumns) + $numberOfOptional: 
+                count($this->expectedColumns); 
+
+            if ($expectedCount !== count($rowArray)) {
                 $this->closeFile($handle);
                 throw new \RuntimeException("Malformed row within file, invalid CSV");
             }

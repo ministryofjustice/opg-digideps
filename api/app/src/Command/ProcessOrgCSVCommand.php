@@ -51,7 +51,10 @@ class ProcessOrgCSVCommand extends Command
         'ReportType',
         'OrderType',
         'Hybrid',
-        'CourtOrderUid',
+    ];
+
+    protected const OPTIONAL_COLUMNS = [
+        'CourtOrderUid'
     ];
 
     private array $processingOutput = [
@@ -94,7 +97,6 @@ class ProcessOrgCSVCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        ini_set('memory_limit', '1024M');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = $input->getArgument('csv-filename');
@@ -163,7 +165,7 @@ class ProcessOrgCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray(self::EXPECTED_COLUMNS))->create($fileName);
+            return (new CsvToArray(self::EXPECTED_COLUMNS, self::OPTIONAL_COLUMNS))->create($fileName);
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 

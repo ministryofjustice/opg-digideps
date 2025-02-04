@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProcessCourtOrdersCSVCommand extends Command
 {
-    public static $defaultName = 'digideps:api:process-courtorder-csv';
+    public static $defaultName = 'digideps:api:process-court-orders-csv';
     private const JOB_NAME = 'courtorder_csv_processing';
 
     private const CHUNK_SIZE = 50;
@@ -101,7 +101,7 @@ class ProcessCourtOrdersCSVCommand extends Command
 
             $this->cliOutput->writeln(
                 sprintf(
-                    '%s - success - Finished processing OrgCSV, Output: %s',
+                    '%s - success - Finished processing CourtOrderCSV, Output: %s',
                     self::JOB_NAME,
                     $this->processedStringOutput()
                 )
