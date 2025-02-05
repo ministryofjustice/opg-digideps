@@ -92,8 +92,8 @@ class StatsControllerTest extends AbstractTestController
                 'GET',
                 '/stats/admins/inactive_admin_users',
                 [
-                   'mustFail' => true,
-                   'AuthToken' => $token,
+                    'mustFail' => true,
+                    'AuthToken' => $token,
                 ]
             );
         }

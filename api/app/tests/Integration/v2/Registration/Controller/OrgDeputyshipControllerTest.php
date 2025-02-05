@@ -63,7 +63,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         int $expectedDeputies,
         int $expectedReports,
         int $expectedOrganisations,
-        int $expectedErrors
+        int $expectedErrors,
     ) {
         $this->client->request('POST', '/v2/org-deputyships', [], [], $this->headers, $deputyshipsJson);
 

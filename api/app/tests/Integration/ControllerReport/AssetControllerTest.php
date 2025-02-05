@@ -59,9 +59,9 @@ class AssetControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data']['assets'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data']['assets'];
 
         $this->assertCount(2, $data);
 
@@ -94,9 +94,9 @@ class AssetControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         $this->assertEquals(self::$asset1->getId(), $data['id']);
         $this->assertEquals(self::$asset1->getTitle(), $data['title']);

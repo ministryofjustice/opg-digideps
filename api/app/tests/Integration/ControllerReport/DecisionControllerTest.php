@@ -78,9 +78,9 @@ class DecisionControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         $this->assertEquals(self::$decision1->getId(), $data['id']);
         $this->assertEquals(self::$decision1->getDescription(), $data['description']);
@@ -92,9 +92,9 @@ class DecisionControllerTest extends AbstractTestController
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data']['decisions'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data']['decisions'];
 
         $this->assertCount(1, $data);
         $this->assertEquals(self::$decision1->getId(), $data[0]['id']);
@@ -131,13 +131,13 @@ class DecisionControllerTest extends AbstractTestController
 
         // empty params
         $errorMessage = $this->assertJsonRequest('POST', $url, [
-                'data' => [
-                    'report_id' => self::$report1->getId(),
-                ],
-                'mustFail' => true,
-                'AuthToken' => self::$tokenDeputy,
-                'assertResponseCode' => 400,
-            ])['message'];
+            'data' => [
+                'report_id' => self::$report1->getId(),
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 400,
+        ])['message'];
         $this->assertStringContainsString('description', $errorMessage);
         $this->assertStringContainsString('client_involved_boolean', $errorMessage);
         $this->assertStringContainsString('client_involved_details', $errorMessage);
