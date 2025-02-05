@@ -4,8 +4,8 @@
 resource "aws_elasticache_replication_group" "cache_api" {
   automatic_failover_enabled = true
   engine                     = "redis"
-  engine_version             = "6.x"
-  parameter_group_name       = "api-cache-params"
+  engine_version             = var.account.name == "development" ? "7.1" : "6.x"
+  parameter_group_name       = var.account.name == "development" ? "api-cache-params7x" : "api-cache-params"
   replication_group_id       = "api-redis-${var.account.name}"
   description                = "Replication Group for API"
   node_type                  = "cache.t4g.small"
@@ -42,8 +42,8 @@ resource "aws_security_group" "api_cache_sg" {
 resource "aws_elasticache_replication_group" "front_api" {
   automatic_failover_enabled = true
   engine                     = "redis"
-  engine_version             = "6.x"
-  parameter_group_name       = "default.redis6.x"
+  engine_version             = var.account.name == "development" ? "7.1" : "6.x"
+  parameter_group_name       = var.account.name == "development" ? "default.redis7.1" : "default.redis6.x"
   replication_group_id       = "frontend-redis-${var.account.name}"
   description                = "Replication Group for Front and Admin"
   node_type                  = "cache.t4g.small"
@@ -78,6 +78,16 @@ resource "aws_security_group" "front_cache_sg" {
 resource "aws_elasticache_parameter_group" "digideps" {
   name   = "api-cache-params"
   family = "redis6.x"
+
+  parameter {
+    name  = "maxmemory-policy"
+    value = "allkeys-lru"
+  }
+}
+
+resource "aws_elasticache_parameter_group" "digideps_redis" {
+  name   = "api-cache-params7x"
+  family = "redis7"
 
   parameter {
     name  = "maxmemory-policy"
