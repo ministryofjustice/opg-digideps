@@ -695,6 +695,7 @@ class BaseFeatureContext extends MinkContext
             'marbo.vantz@nowhere.1111.com',
             'ulu.frine@nowhere.1111.com',
             'lekko.plip@nowhere.1111.com',
+            'frankie.velocity@nowhere.1111.com',
         ];
 
         $repo = $this->em->getRepository(User::class);
