@@ -123,15 +123,6 @@ jobs:
     needs:
       - workflow_variables
 
-  api_unit_tests_3:
-    name: api unit tests 3
-    uses: ./.github/workflows/_unit-tests-api.yml
-    with:
-      selection: selection-3
-      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
-    needs:
-      - workflow_variables
-
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml

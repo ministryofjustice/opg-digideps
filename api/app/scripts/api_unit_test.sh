@@ -87,7 +87,7 @@ case "$1" in
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
-    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all"
+    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-all"
     exit 1
     ;;
 esac
