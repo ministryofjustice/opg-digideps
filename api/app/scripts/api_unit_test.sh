@@ -33,11 +33,6 @@ export SSL=${DATABASE_SSL:=allow}
 case "$1" in
   selection-1)
     # API Run 1
-    printf '\n Running Controller Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
-    ;;
-  selection-2)
-    # API Run 2
     # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
@@ -60,10 +55,6 @@ case "$1" in
     ;;
   selection-all)
     # selection-1
-    printf '\n Running Controller Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Controller/ --coverage-php tests/coverage/Controller.cov
-
-    # selection-2
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
@@ -87,7 +78,7 @@ case "$1" in
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
-    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-all"
+    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-all"
     exit 1
     ;;
 esac

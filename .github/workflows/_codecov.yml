@@ -27,12 +27,6 @@ jobs:
           name: api-unit-tests-selection-1
           path: ./
 
-      - name: download artifact for api tests 2
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
-        with:
-          name: api-unit-tests-selection-2
-          path: ./
-
       - name: service client codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -47,7 +41,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: digideps-api-unit-tests
-          files: ./api-unit-tests-selection-1.xml,./api-unit-tests-selection-2.xml
+          files: ./api-unit-tests-selection-1.xml
           fail_ci_if_error: true
           flags: api
           verbose: true

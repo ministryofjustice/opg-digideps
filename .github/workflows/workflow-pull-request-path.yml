@@ -114,15 +114,6 @@ jobs:
     needs:
       - workflow_variables
 
-  api_unit_tests_2:
-    name: api unit tests 2
-    uses: ./.github/workflows/_unit-tests-api.yml
-    with:
-      selection: selection-2
-      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
-    needs:
-      - workflow_variables
-
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml
@@ -145,7 +136,6 @@ jobs:
       - client_unit_tests
       - miscellaneous_tests
       - api_unit_tests_1
-      - api_unit_tests_2
 
   terraform_plan_account_development:
     name: account plan terraform development
