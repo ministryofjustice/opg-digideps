@@ -17,7 +17,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class ResearchType
 {
-    public function __construct(array $formResponses, UuidInterface $id = null)
+    public function __construct(array $formResponses, ?UuidInterface $id = null)
     {
         if (empty($formResponses)) {
             throw new \RuntimeException('Must select at least one research type', 403);
@@ -39,7 +39,7 @@ class ResearchType
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist"})
      */
     private UserResearchResponse $userResearchResponse;
 

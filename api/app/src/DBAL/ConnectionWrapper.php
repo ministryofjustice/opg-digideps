@@ -64,6 +64,7 @@ class ConnectionWrapper extends Connection
             $this->beginTransaction();
         }
 
+        //      Add the show for the var in here.
         $this->executeQuery('SET random_page_cost = 1.1;');
 
         if ($this->_eventManager->hasListeners(Events::postConnect)) {

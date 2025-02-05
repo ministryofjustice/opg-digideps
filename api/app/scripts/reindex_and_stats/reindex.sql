@@ -7,3 +7,4 @@ UPDATE pg_settings SET rds.extensions = 'address_standardizer, address_standardi
 UPDATE pg_settings SET rds.temp_tablespaces = 'rds_temp_tablespace';
 UPDATE pg_settings SET shared_preload_libraries = 'rdsutils,pg_stat_statements';
 UPDATE pg_settings SET vacuum_cost_page_miss = '0';
+SET random_page_cost = 1.1;
