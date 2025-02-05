@@ -146,7 +146,6 @@ jobs:
       - miscellaneous_tests
       - api_unit_tests_1
       - api_unit_tests_2
-      - api_unit_tests_3
 
   terraform_plan_account_development:
     name: account plan terraform development
