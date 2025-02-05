@@ -1,0 +1,35 @@
+{
+    "Frankie Velocity": {
+        "__comment__": "Deputy; corresponds with a CSV row in sirius-csvs/lay-multiclient-discharged.csv",
+        "caseNumber": "98788669",
+        "deputy": {
+            "deputyUid": "97571940",
+            "firstName": "Frankie",
+            "lastName": "Velocity",
+            "email": "frankie.velocity@nowhere.1111.com",
+            "address1": "21 Test Road",
+            "postcode": "AB1 2CD",
+            "country": "GB",
+            "phone": "01000 321234"
+        },
+        "client": {
+            "firstName": "Mibbleblip",
+            "lastName": "Taralavalantula",
+            "address1": "1 South Parade",
+            "postcode": "NG1 2HT",
+            "country": "GB",
+            "phone": "01789432876",
+            "courtDateDay": "14",
+            "courtDateMonth": "04",
+            "courtDateYear": "2024"
+        },
+        "report": {
+            "startDay": "14",
+            "startMonth": "04",
+            "startYear": "2025",
+            "endDay": "13",
+            "endMonth": "04",
+            "endYear": "2026"
+        }
+    }
+}
