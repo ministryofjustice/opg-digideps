@@ -218,8 +218,8 @@ jobs:
       task_name: "smoke_tests"
       timeout: "900"
 
-  integration_tests_1:
-    name: integration tests frontend 1
+  end_to_end_tests_1:
+    name: end to end tests frontend 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -230,12 +230,12 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "end_to_end_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
 
-  integration_tests_2:
-    name: integration tests frontend 2
+  end_to_end_tests_2:
+    name: end to end tests frontend 2
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -246,12 +246,12 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "end_to_end_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
 
-  integration_tests_admin:
-    name: integration tests admin
+  end_to_end_tests_admin:
+    name: end to end tests admin
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -262,12 +262,12 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "end_to_end_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
 
-  integration_tests_sequential_1:
-    name: integration tests sequential 1
+  end_to_end_tests_sequential_1:
+    name: end_to_end tests sequential 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -278,12 +278,12 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "end_to_end_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
 
-  integration_tests_sequential_2:
-    name: integration tests sequential 2
+  end_to_end_tests_sequential_2:
+    name: end to end tests sequential 2
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -294,12 +294,12 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "end_to_end_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
 
-  integration_tests_sequential_3:
-    name: integration tests sequential 3
+  end_to_end_tests_sequential_3:
+    name: end to end tests sequential 3
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -310,7 +310,7 @@ jobs:
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_name: development
-      task_name: "integration_test_v2"
+      task_name: "end_to_end_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
 
@@ -320,12 +320,12 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - integration_tests_sequential_1
-      - integration_tests_sequential_2
-      - integration_tests_sequential_3
-      - integration_tests_admin
-      - integration_tests_1
-      - integration_tests_2
+      - end_to_end_tests_sequential_1
+      - end_to_end_tests_sequential_2
+      - end_to_end_tests_sequential_3
+      - end_to_end_tests_admin
+      - end_to_end_tests_1
+      - end_to_end_tests_2
     with:
       replicas: 1
       acu: 4
