@@ -2,11 +2,11 @@
 
 # Front Elasticache
 data "aws_elasticache_replication_group" "front_cache_cluster" {
-  replication_group_id = "frontend-redis-${var.account.name}"
+  replication_group_id = "frontend-cache-${var.account.name}"
 }
 
 data "aws_security_group" "cache_front_sg" {
-  name = "${var.account.name}-shared-cache-front"
+  name = "${var.account.name}-account-cache-front"
 }
 
 resource "aws_security_group_rule" "admin_to_cache" {
@@ -32,11 +32,11 @@ resource "aws_security_group_rule" "front_to_cache" {
 # API Elasticache
 
 data "aws_elasticache_replication_group" "api_cache_cluster" {
-  replication_group_id = "api-redis-${var.account.name}"
+  replication_group_id = "api-cache-${var.account.name}"
 }
 
 data "aws_security_group" "cache_api_sg" {
-  name = "${var.account.name}-shared-cache-api"
+  name = "${var.account.name}-account-cache-api"
 }
 
 resource "aws_security_group_rule" "api_to_cache" {
