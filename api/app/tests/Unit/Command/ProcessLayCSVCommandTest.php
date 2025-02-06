@@ -126,7 +126,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'lay_csv_processing - failure - Error processing CSV: Invalid file. Cannot find expected header',
+            'lay_csv_processing - failure - Error processing CSV: Malformed row within file, invalid CSV',
             $output
         );
     }

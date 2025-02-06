@@ -25,15 +25,15 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
         $kernel = static::createKernel();
         $app = new Application($kernel);
 
-        copy(dirname(dirname(__DIR__)) .'/csv/courtOrders.csv', '/tmp/courtOrders.csv');
+
+        $this->csvFilename = 'courtOrders.csv';
+        copy(dirname(dirname(__DIR__)) .'/csv/'. $this->csvFilename, '/tmp/'. $this->csvFilename);
 
         $this->s3 = self::prophesize(S3Client::class);
         $this->params = self::prophesize(ParameterBagInterface::class);
         $this->params->get('s3_sirius_bucket')
             ->shouldBeCalled()
             ->willReturn('bucket');
-
-        $this->csvFilename = 'courtOrders.csv';
 
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
