@@ -25,7 +25,7 @@ output "Tasks" {
     reset_database          = module.reset_database.render
     restore                 = module.restore.render
     restore_from_production = module.restore_from_production.render
-    end_to_end_test_v2      = module.end_to_end_tests.render_with_override
+    end_to_end_test_v2      = module.integration_tests.render_with_override
     smoke_tests             = module.smoke_tests.render
     resilience_tests        = module.resilience_tests.render
   }
