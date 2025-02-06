@@ -97,6 +97,7 @@ class ProcessOrgCSVCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '1024M');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
         $paProReportFile = $input->getArgument('csv-filename');
