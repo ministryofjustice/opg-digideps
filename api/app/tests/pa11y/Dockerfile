@@ -23,6 +23,6 @@ RUN npm -g config set user root
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = false
 
-RUN npm install -g pa11y-ci
+RUN npm install -g pa11y-ci@3.1.0
 
 COPY .pa11yci .

@@ -221,7 +221,7 @@ class Deputy
      *
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove"})
      *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
     private ?User $user;
 

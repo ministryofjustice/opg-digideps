@@ -21,7 +21,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class UserResearchResponse
 {
-    public function __construct(UuidInterface $id = null)
+    public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
         $this->created = new \DateTime();
@@ -29,6 +29,8 @@ class UserResearchResponse
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist", "remove"})
+     *
+     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @JMS\Type("App\Entity\UserResearch\ResearchType")
      *
@@ -38,6 +40,8 @@ class UserResearchResponse
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
+     *
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @JMS\Type("App\Entity\User")
      *

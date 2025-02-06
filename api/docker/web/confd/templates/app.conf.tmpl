@@ -2,7 +2,7 @@ server {
     listen     80 default_server;
     server_name   _;
     server_tokens off;
-    root /public;
+    root /www/data/public;
 
     ## Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
@@ -18,7 +18,7 @@ server {
     client_body_timeout 240s;
 
     location / {
-        root    /public;
+        root    /www/data/public;
 
         # cache static assets for 90 days
         location ~* \.(css|jpg|js|png|ico|jpeg|woff2|woff)$ {
