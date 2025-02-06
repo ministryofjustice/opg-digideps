@@ -686,23 +686,13 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
     }
 
-    /**
-     * @AfterScenario @multiclient.
-     */
-    public function cleanupDeputyForMultiClientFeature()
+    public function cleanupUsers(array $emails)
     {
-        $testEmails = [
-            'marbo.vantz@nowhere.1111.com',
-            'ulu.frine@nowhere.1111.com',
-            'lekko.plip@nowhere.1111.com',
-            'frankie.velocity@nowhere.1111.com',
-        ];
-
         $repo = $this->em->getRepository(User::class);
 
         $qb = $repo->createQueryBuilder('u');
         $users = $qb->where(
-            $qb->expr()->in('u.email', $testEmails)
+            $qb->expr()->in('u.email', $emails)
         )->getQuery()->getResult();
 
         foreach ($users as $user) {
