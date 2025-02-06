@@ -1,7 +1,7 @@
 @v2 @v2_sequential_1 @registration @ingest @multiclient
 Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
 
-    @super-admin @multiclient-codeputies-multiple-clients-visible
+    @multiclient-codeputies-multiple-clients-visible
     Scenario: Upload two CSV files where the second adds more clients to two co-deputies
         Given a csv has been uploaded to the sirius bucket with the file "lay-multiclient-codeputies-1.csv"
         And I run the lay CSV command for "lay-multiclient-codeputies-1.csv"

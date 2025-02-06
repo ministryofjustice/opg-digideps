@@ -123,7 +123,7 @@ trait SelfRegistrationTrait
     /**
      * @When a lay deputy :name @ :jsonFile completes their registration as a co-deputy for case :caseNumber
      */
-    public function foo(string $name, string $jsonFile, string $caseNumberIn)
+    public function aLayDeputyCompletesTheirRegistration(string $name, string $jsonFile, string $caseNumberIn)
     {
         $fixture = $this->getFixtureJson($jsonFile);
         $regDetails = $fixture[$name];
@@ -243,6 +243,8 @@ trait SelfRegistrationTrait
         $this->fillInField('self_registration_clientLastname', $clientLastname);
         $this->fillInField('self_registration_caseNumber', $caseNumber);
         $this->pressButton('self_registration_save');
+
+        $this->assertPageNotContainsText('There are some problems on this page');
     }
 
     /**
