@@ -1,24 +1,24 @@
-module "integration_tests" {
+module "end_to_end_tests" {
   source = "./modules/task"
-  name   = "integration-tests"
+  name   = "end_to_end_tests"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.integration_tests_container}]"
+  container_definitions = "[${local.end_to_end_tests_container}]"
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role_db.arn
   subnet_ids            = data.aws_subnet.private[*].id
-  task_role_arn         = aws_iam_role.integration_tests.arn
+  task_role_arn         = aws_iam_role.end_to_end_tests.arn
   vpc_id                = data.aws_vpc.vpc.id
-  security_group_id     = module.integration_tests_security_group.id
+  security_group_id     = module.end_to_end_tests_security_group.id
   cpu                   = 4096
   memory                = 8192
   override              = ["sh", "./tests/Behat/run-tests-parallel.sh"]
-  service_name          = "integration-tests"
+  service_name          = "end_to_end_tests"
 }
 
 locals {
-  integration_tests_sg_rules = {
+  end_to_end_tests_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
     s3      = local.common_sg_rules.s3
@@ -51,27 +51,27 @@ locals {
 }
 
 #trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
-module "integration_tests_security_group" {
+module "end_to_end_tests_security_group" {
   source      = "./modules/security_group"
-  description = "Integration Tests V2 Service"
-  rules       = local.integration_tests_sg_rules
-  name        = "integration-tests"
+  description = "End to End Tests V2 Service"
+  rules       = local.end_to_end_tests_sg_rules
+  name        = "end-to-end-tests"
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
 }
 
 locals {
-  integration_tests_container = jsonencode(
+  end_to_end_tests_container = jsonencode(
     {
-      name  = "integration-tests",
+      name  = "end-to-end-tests",
       image = local.images.api,
       logConfiguration = {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = "integration-tests"
+          awslogs-stream-prefix = "end-to-end-tests"
         }
       },
       secrets = [

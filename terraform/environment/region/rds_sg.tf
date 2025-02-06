@@ -21,12 +21,12 @@ locals {
       target_type = "security_group_id"
       target      = module.db_access_task_security_group.id
     }
-    integration_test = {
+    end_to_end_test = {
       port        = 5432
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.integration_tests.security_group_id
+      target      = module.end_to_end_tests.security_group_id
     }
     custom_sql_lambda = {
       port        = 5432

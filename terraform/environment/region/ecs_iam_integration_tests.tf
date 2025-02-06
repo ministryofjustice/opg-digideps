@@ -1,10 +1,10 @@
-resource "aws_iam_role" "integration_tests" {
+resource "aws_iam_role" "end_to_end_tests" {
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_policy.json
-  name               = "integration-tests.${local.environment}"
+  name               = "end_to_end_tests.${local.environment}"
   tags               = var.default_tags
 }
 
-data "aws_iam_policy_document" "integration_tests" {
+data "aws_iam_policy_document" "end_to_end_tests" {
   statement {
     sid    = "AllowPutSSMParameters"
     effect = "Allow"
@@ -55,8 +55,8 @@ data "aws_iam_policy_document" "integration_tests" {
   }
 }
 
-resource "aws_iam_role_policy" "admin_put_parameter_ssm_integration_tests" {
-  name   = "admin-put-parameter-ssm-integration-tests.${local.environment}"
-  policy = data.aws_iam_policy_document.integration_tests.json
-  role   = aws_iam_role.integration_tests.id
+resource "aws_iam_role_policy" "admin_put_parameter_ssm_end_to_end_tests" {
+  name   = "admin-put-parameter-ssm-end_to_end_tests.${local.environment}"
+  policy = data.aws_iam_policy_document.end_to_end_tests.json
+  role   = aws_iam_role.end_to_end_tests.id
 }
