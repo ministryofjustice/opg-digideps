@@ -27,13 +27,10 @@ class ProcessCourtOrdersCSVCommand extends Command
     ];
 
     private array $processingOutput = [
-        'errors' => [
-            'count' => 0,
-            'messages' => [],
-        ],
         'added' => 0,
-        'updated' => 0,
         'skipped' => 0,
+        'updated' => 0,
+        'errors' => [],
     ];
 
     private OutputInterface $cliOutput;

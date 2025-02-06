@@ -28,11 +28,6 @@ class ProcessOrgCSVCommand extends Command
         'ClientForename',
         'ClientSurname',
         'ClientDateOfBirth',
-        'ClientAddress1',
-        'ClientAddress2',
-        'ClientAddress3',
-        'ClientAddress4',
-        'ClientAddress5',
         'ClientPostcode',
         'DeputyUid',
         'DeputyType',
@@ -40,11 +35,6 @@ class ProcessOrgCSVCommand extends Command
         'DeputyOrganisation',
         'DeputyForename',
         'DeputySurname',
-        'DeputyAddress1',
-        'DeputyAddress2',
-        'DeputyAddress3',
-        'DeputyAddress4',
-        'DeputyAddress5',
         'DeputyPostcode',
         'MadeDate',
         'LastReportDay',
@@ -54,7 +44,17 @@ class ProcessOrgCSVCommand extends Command
     ];
 
     protected const OPTIONAL_COLUMNS = [
-        'CourtOrderUid'
+        'CourtOrderUid',
+        'ClientAddress1',
+        'ClientAddress2',
+        'ClientAddress3',
+        'ClientAddress4',
+        'ClientAddress5',
+        'DeputyAddress1',
+        'DeputyAddress2',
+        'DeputyAddress3',
+        'DeputyAddress4',
+        'DeputyAddress5',
     ];
 
     private array $processingOutput = [
