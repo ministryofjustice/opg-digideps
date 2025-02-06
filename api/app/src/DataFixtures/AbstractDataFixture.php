@@ -30,7 +30,7 @@ abstract class AbstractDataFixture implements ContainerAwareInterface, FixtureIn
      */
     protected $container;
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /** @var KernelInterface $kernel */
         $kernel = $this->container->get('kernel');
@@ -40,7 +40,7 @@ abstract class AbstractDataFixture implements ContainerAwareInterface, FixtureIn
         }
     }
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }
