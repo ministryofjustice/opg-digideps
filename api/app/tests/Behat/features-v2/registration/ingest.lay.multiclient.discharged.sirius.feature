@@ -1,7 +1,7 @@
 @v2 @v2_sequential_1 @registration @ingest @multiclient
 Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
 
-    @super-admin @multiclient-multiple-clients-one-discharged
+    @multiclient-multiple-clients-one-discharged
     Scenario: Upload a CSV file with two clients, then discharge one
         # see https://opgtransform.atlassian.net/browse/DDLS-457, scenario 4
         # NB even though this CSV has two rows, only the row 1 (whose details the deputy uses to register with) will be
@@ -24,7 +24,7 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         And I am on "/logout"
 
         # The client the deputy has been discharged from should no longer be shown
-        Given a super admin discharges the deputy from "98788669"
+        Given a super admin discharges the deputy from "98388669"
         And I am on admin page "/logout"
         When "frankie.velocity@nowhere.1111.com" logs in
         Then I should not see "Mibbleblip Taralavalantula"
