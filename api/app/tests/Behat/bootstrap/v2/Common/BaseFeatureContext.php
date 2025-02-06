@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Common;
 
 use App\Entity\Client;
-use App\Entity\User;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Aws\S3\S3Client;
-use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
@@ -684,21 +682,5 @@ class BaseFeatureContext extends MinkContext
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
-    }
-
-    public function cleanupUsers(array $emails)
-    {
-        $repo = $this->em->getRepository(User::class);
-
-        $qb = $repo->createQueryBuilder('u');
-        $users = $qb->where(
-            $qb->expr()->in('u.email', $emails)
-        )->getQuery()->getResult();
-
-        foreach ($users as $user) {
-            $this->em->remove($user);
-        }
-
-        $this->em->flush();
     }
 }
