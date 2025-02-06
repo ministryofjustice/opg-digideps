@@ -1,9 +1,9 @@
 {
     "Frankie Velocity": {
         "__comment__": "Deputy; corresponds with a CSV row in sirius-csvs/lay-multiclient-discharged.csv",
-        "caseNumber": "98788669",
+        "caseNumber": "98388669",
         "deputy": {
-            "deputyUid": "97571940",
+            "deputyUid": "97571945",
             "firstName": "Frankie",
             "lastName": "Velocity",
             "email": "frankie.velocity@nowhere.1111.com",
