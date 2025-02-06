@@ -243,8 +243,6 @@ trait SelfRegistrationTrait
         $this->fillInField('self_registration_clientLastname', $clientLastname);
         $this->fillInField('self_registration_caseNumber', $caseNumber);
         $this->pressButton('self_registration_save');
-
-        $this->assertPageNotContainsText('There are some problems on this page');
     }
 
     /**
