@@ -267,7 +267,7 @@ jobs:
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
 
   end_to_end_tests_sequential_1:
-    name: end to end tests sequential 1
+    name: end_to_end tests sequential 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
