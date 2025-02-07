@@ -114,6 +114,15 @@ jobs:
     needs:
       - workflow_variables
 
+  api_integration_tests:
+    name: api integration tests
+    uses: ./.github/workflows/_integration-tests-api.yml
+    with:
+      selection: selection-all
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml
