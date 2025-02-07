@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @activate
+@v2 @v2_sequential_1 @registration @activate @iqpal
 Feature: Activate user account - Lay Users
 
     @super-admin @admin
