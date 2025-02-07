@@ -14,7 +14,7 @@ class CsvToArray
     ) {
     }
 
-    private function keepExpectedAndOptionalColumns(\Closure $record)
+    private function keepExpectedAndOptionalColumns(array $record)
     {
         $trimmedRecord = [];
 
@@ -53,6 +53,6 @@ class CsvToArray
         }
 
         // only keep expected and optional columns
-        return array_map([$this, 'keepExpectedAndOptionalColumns'], (array) $records);
+        return array_map([$this, 'keepExpectedAndOptionalColumns'], iterator_to_array($records));
     }
 }
