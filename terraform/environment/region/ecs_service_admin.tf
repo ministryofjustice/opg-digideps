@@ -85,7 +85,7 @@ locals {
       healthCheck = {
         command : [
           "CMD-SHELL",
-          "/health-check.sh"
+          "/opt/scripts/health-check.sh"
         ],
         interval = 30,
         timeout  = 5,

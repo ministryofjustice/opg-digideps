@@ -76,7 +76,7 @@ class MoneyTransfer
      *
      * @JMS\Groups({"money-transfer"})
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="description", type="string", length=75, nullable=true)
      */
     private $description;
 

@@ -117,9 +117,9 @@ jobs:
       - api_unit_tests_2
       - api_unit_tests_3
 
-  miscellaneous_unit_tests:
-    name: miscellaneous unit tests
-    uses: ./.github/workflows/_unit-tests-miscellaneous.yml
+  miscellaneous_tests:
+    name: miscellaneous tests
+    uses: ./.github/workflows/_tests-miscellaneous.yml
     needs:
       - workflow_variables
 
@@ -144,7 +144,7 @@ jobs:
       - workflow_variables
       - terraform_apply_account_development
       - docker_build_scan_push
-      - miscellaneous_unit_tests
+      - miscellaneous_tests
       - client_unit_tests
       - api_unit_tests_1
       - api_unit_tests_2
