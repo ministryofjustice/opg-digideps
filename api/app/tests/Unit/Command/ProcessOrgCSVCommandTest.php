@@ -135,7 +135,7 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'org_csv_processing - failure - Error processing CSV: Malformed row within file, invalid CSV',
+            "CSV file /tmp/{$this->csvFilename} does not contain all expected columns in header",
             $output
         );
     }
