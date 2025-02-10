@@ -105,6 +105,7 @@ jobs:
     needs:
       - client_unit_tests
       - api_unit_tests
+      - api_integration_tests
 
   miscellaneous_tests:
     name: miscellaneous tests
