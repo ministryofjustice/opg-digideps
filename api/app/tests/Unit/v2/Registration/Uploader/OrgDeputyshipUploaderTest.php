@@ -355,8 +355,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             )
         );
 
-        self::assertCount(0, $actualUploadResults['added']['clients']);
-        self::assertCount(0, $actualUploadResults['updated']['clients']);
+        self::assertCount(0, $actualUploadResults['added']['clients'], 'Unexpected clients have been added to the Database');
+        self::assertCount(0, $actualUploadResults['updated']['clients'], 'Unexpected clients have been updated within the Database');
 
         /** @var Client $updatedClient */
         $updatedClient = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
