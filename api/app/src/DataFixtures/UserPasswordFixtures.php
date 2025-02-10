@@ -34,7 +34,7 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
         $manager->flush();
     }
 
-    public function getOrder()
+    public function getOrder(): int
     {
         return 11;
     }
