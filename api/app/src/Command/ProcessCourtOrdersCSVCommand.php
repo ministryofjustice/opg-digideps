@@ -55,13 +55,13 @@ class ProcessCourtOrdersCSVCommand extends Command
     {
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
-        $paProReportFile = $input->getArgument('csv-filename');
-        $fileLocation = sprintf('/tmp/%s', $paProReportFile);
+        $courtOrdersFile = $input->getArgument('csv-filename');
+        $fileLocation = sprintf('/tmp/%s', $courtOrdersFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
-                'Key' => $paProReportFile,
+                'Key' => $courtOrdersFile,
                 'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
@@ -70,7 +70,7 @@ class ProcessCourtOrdersCSVCommand extends Command
             } else {
                 $logMessage = 'Error retrieving file %s from bucket %s';
             }
-            $logMessage = sprintf($logMessage, $paProReportFile, $bucket);
+            $logMessage = sprintf($logMessage, $courtOrdersFile, $bucket);
 
             $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));

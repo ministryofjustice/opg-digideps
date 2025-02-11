@@ -100,13 +100,13 @@ class ProcessOrgCSVCommand extends Command
         ini_set('memory_limit', '1024M');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
-        $courtOrdersFile = $input->getArgument('csv-filename');
-        $fileLocation = sprintf('/tmp/%s', $courtOrdersFile);
+        $paProReportFile = $input->getArgument('csv-filename');
+        $fileLocation = sprintf('/tmp/%s', $paProReportFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
-                'Key' => $courtOrdersFile,
+                'Key' => $paProReportFile,
                 'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
@@ -115,7 +115,7 @@ class ProcessOrgCSVCommand extends Command
             } else {
                 $logMessage = 'Error retrieving file %s from bucket %s';
             }
-            $logMessage = sprintf($logMessage, $courtOrdersFile, $bucket);
+            $logMessage = sprintf($logMessage, $paProReportFile, $bucket);
 
             $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
