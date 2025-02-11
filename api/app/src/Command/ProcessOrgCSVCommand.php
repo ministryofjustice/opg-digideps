@@ -43,7 +43,8 @@ class ProcessOrgCSVCommand extends Command
         'Hybrid',
     ];
 
-    private const OPTIONAL_COLUMNS = [
+    protected const OPTIONAL_COLUMNS = [
+        'CourtOrderUid',
         'ClientAddress1',
         'ClientAddress2',
         'ClientAddress3',
@@ -54,11 +55,6 @@ class ProcessOrgCSVCommand extends Command
         'DeputyAddress3',
         'DeputyAddress4',
         'DeputyAddress5',
-        'CourtOrderUid',
-    ];
-
-    private const UNEXPECTED_COLUMNS = [
-        'NDR',
     ];
 
     private array $processingOutput = [
@@ -170,11 +166,7 @@ class ProcessOrgCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray($fileName, false))
-            ->setExpectedColumns(self::EXPECTED_COLUMNS)
-            ->setOptionalColumns(self::OPTIONAL_COLUMNS)
-            ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
-            ->getData();
+            return (new CsvToArray(self::EXPECTED_COLUMNS, self::OPTIONAL_COLUMNS))->create($fileName);
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
