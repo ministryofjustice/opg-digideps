@@ -11,9 +11,9 @@ jobs:
   miscellaneous-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
-      - uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7
+      - uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c
         with:
           python-version: "3.11"
 
