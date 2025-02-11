@@ -37,6 +37,9 @@ def alarm_message(message, region):
             "filter*20*40message*20*3d*7e*20*2f*5c*5berror*5c*5d.*2a*7c*5c*5bcrit*5c*5d.*2a*7c*5c*5balert*5c*5d"
             ".*2a*7c*5c*5bemerg*5c*5d.*2a*2f*0a*7c*20"
         )
+    elif "response-time" in alarm_name:
+        fields = "fields*20*40timestamp*2c*20service_name*2c*20upstream_response_time*2c*20request_uri*2c*20status*2c*20real_forwarded_for*0a*7c*20"
+        filter = "filter*20upstream_response_time*20*3e*202.0*0a*7c*20"
     else:
         fields = "fields*20*40timestamp*2c*20*40message*2c*20*40logStream*2c*20*40log*0a*7c*20"
         filter = ""
