@@ -2,33 +2,6 @@
 # exit on error
 set -e
 
-# Generate config files so test bootstrap can address the DB
-confd -onetime -backend env
-
-ATTEMPTS=0
-
-while curl -s http://localstack:4566/health | grep -v "\"initScripts\": \"initialized\""; do
-  printf 'localstack initialisation scripts are still running\n'
-
-  ATTEMPTS=$((ATTEMPTS+1))
-
-  if [[ "$ATTEMPTS" -eq 20 ]]; then
-      printf 'localstack failed to initialize\n'
-      exit 1
-  fi
-
-  sleep 1s
-done
-
-printf '\n---localstack initialized---\n\n'
-
-# Export unit test DB config so it can be used in tests
-export PGHOST=${DATABASE_HOSTNAME:=postgres}
-export PGPASSWORD=${DATABASE_PASSWORD:=api}
-export PGDATABASE=digideps_unit_test
-export PGUSER=${DATABASE_USERNAME:=api}
-export SSL=${DATABASE_SSL:=allow}
-
 # Check the argument provided and run the corresponding test suites
 case "$1" in
   selection-all)
