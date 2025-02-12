@@ -49,12 +49,6 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - name: setup local docker resources for unit tests
-        id: unit-test-setup
-        run: |
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d localstack postgres redis-api
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run --rm api-unit-tests sh scripts/reset_db_structure.sh local
-
       - name: run api unit tests
         env:
           SELECTION: ${{ inputs.selection }}
