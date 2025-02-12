@@ -120,9 +120,8 @@ class LayDeputyshipUploader
                 $client = $clientHandleResult['client'];
                 if ($clientHandleResult['is_new_client']) {
                     $clientsAdded[] = $caseNumber;
+                    $this->handleNewReport($layDeputyshipDto, $client);
                 }
-
-                $this->handleNewReport($layDeputyshipDto, $client);
 
                 $this->commitTransactionToDatabase();
             } catch (\Throwable $e) {
@@ -193,16 +192,32 @@ class LayDeputyshipUploader
             }
         }
 
-        $isNewClient = false;
+        $client = null;
+        $isNewClient = true;
         if (1 === count($existingClients)) {
-            // if there is one Client, and the above checks were OK, we can just use that Client, rather than making a new one
-            $client = $existingClients[0];
-        } else {
-            // Only create a new instance of the client if one doesn't already exist;
+            // If there is one Client, and the above checks were OK, we might be able to just use that Client,
+            // rather than making a new one, providing this deputy can see that client's report as a co-deputy;
+            // to work that out, we work out which report type we would be creating, then see whether the
+            // existing client already has a report of that type.
+            /** @var Client $potentialClient */
+            $potentialClient = $existingClients[0];
+            $determinedReportType = PreRegistration::getReportTypeByOrderType(
+                $dto->getTypeOfReport(),
+                $dto->getOrderType(),
+                PreRegistration::REALM_LAY,
+            );
+
+            if ($potentialClient->getCurrentReport()->getType() === $determinedReportType) {
+                $client = $potentialClient;
+                $isNewClient = false;
+            }
+        }
+
+        if (is_null($client)) {
+            // only create a new instance of the client if one doesn't already exist;
             // or if all the clients are discharged, and we are creating a client for a deputy that is not associated
-            // with this case number already.
+            // with this case number already
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
-            $isNewClient = true;
         }
 
         $client->addUser($newUser);
@@ -214,14 +229,9 @@ class LayDeputyshipUploader
         ];
     }
 
+    // we only call this if we created a new client; otherwise we are reusing an existing client and report
     private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
     {
-        $existingReport = $newClient->getCurrentReport();
-
-        if ($existingReport instanceof Report) {
-            return null;
-        }
-
         $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
 
         $reportStartDate = clone $dto->getOrderDate();
