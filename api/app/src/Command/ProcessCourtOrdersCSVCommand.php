@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
@@ -17,47 +16,20 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ProcessLayCSVCommand extends Command
+class ProcessCourtOrdersCSVCommand extends Command
 {
-    public static $defaultName = 'digideps:api:process-lay-csv';
-
-    private const JOB_NAME = 'lay_csv_processing';
+    public static $defaultName = 'digideps:api:process-court-orders-csv';
+    private const JOB_NAME = 'courtorder_csv_processing';
 
     private const CHUNK_SIZE = 50;
 
-    protected const EXPECTED_COLUMNS = [
-        'Case',
-        'ClientFirstname',
-        'ClientSurname',
-        'ClientAddress1',
-        'ClientAddress2',
-        'ClientAddress3',
-        'ClientAddress4',
-        'ClientAddress5',
-        'ClientPostcode',
-        'DeputyUid',
-        'DeputyFirstname',
-        'DeputySurname',
-        'DeputyAddress1',
-        'DeputyAddress2',
-        'DeputyAddress3',
-        'DeputyAddress4',
-        'DeputyAddress5',
-        'DeputyPostcode',
-        'ReportType',
-        'MadeDate',
-        'OrderType',
-        'CoDeputy',
-        'Hybrid'
-    ];
-    
-    protected const OPTIONAL_COLUMNS = [
-        'CourtOrderUid'
+    private const EXPECTED_COLUMNS = [
     ];
 
     private array $processingOutput = [
         'added' => 0,
         'skipped' => 0,
+        'updated' => 0,
         'errors' => [],
     ];
 
@@ -68,7 +40,6 @@ class ProcessLayCSVCommand extends Command
         private readonly ParameterBagInterface $params,
         private readonly LoggerInterface $verboseLogger,
         private readonly CSVDeputyshipProcessing $csvProcessing,
-        private readonly PreRegistrationRepository $preReg,
     ) {
         parent::__construct();
     }
@@ -76,22 +47,21 @@ class ProcessLayCSVCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Process the Lay Deputies CSV from the S3 bucket')
+            ->setDescription('Processes the CourtOrder CSV Report from the S3 bucket.')
             ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        ini_set('memory_limit', '1024M');
         $this->cliOutput = $output;
         $bucket = $this->params->get('s3_sirius_bucket');
-        $layReportFile = $input->getArgument('csv-filename');
-        $fileLocation = sprintf('/tmp/%s', $layReportFile);
+        $courtOrdersFile = $input->getArgument('csv-filename');
+        $fileLocation = sprintf('/tmp/%s', $courtOrdersFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
-                'Key' => $layReportFile,
+                'Key' => $courtOrdersFile,
                 'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
@@ -100,7 +70,7 @@ class ProcessLayCSVCommand extends Command
             } else {
                 $logMessage = 'Error retrieving file %s from bucket %s';
             }
-            $logMessage = sprintf($logMessage, $layReportFile, $bucket);
+            $logMessage = sprintf($logMessage, $courtOrdersFile, $bucket);
 
             $this->verboseLogger->error($logMessage);
             $this->cliOutput->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
@@ -111,12 +81,12 @@ class ProcessLayCSVCommand extends Command
         $data = $this->csvToArray($fileLocation);
         if (count($data) >= 1 && $this->process($data)) {
             if (!unlink($fileLocation)) {
-                $logMessage = sprintf('Unable to delete file %s.', $fileLocation);
+                $logMessage = sprintf('Unable to delete file %s', $fileLocation);
 
                 $this->verboseLogger->error($logMessage);
                 $this->cliOutput->writeln(
                     sprintf(
-                        '%s - failure - (partial) %s Output: %s',
+                        '%s failure - (partial) - %s processing Output: %s',
                         self::JOB_NAME,
                         $logMessage,
                         $this->processedStringOutput()
@@ -128,7 +98,7 @@ class ProcessLayCSVCommand extends Command
 
             $this->cliOutput->writeln(
                 sprintf(
-                    '%s - success - Finished processing LayCSV. Output: %s',
+                    '%s - success - Finished processing CourtOrderCSV, Output: %s',
                     self::JOB_NAME,
                     $this->processedStringOutput()
                 )
@@ -151,8 +121,8 @@ class ProcessLayCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray(self::EXPECTED_COLUMNS, self::OPTIONAL_COLUMNS))->create($fileName);
-        } catch (\Exception $e) {
+            return (new CsvToArray(self::EXPECTED_COLUMNS))->create($fileName);
+        } catch (\RuntimeException $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->verboseLogger->error($logMessage);
@@ -164,19 +134,15 @@ class ProcessLayCSVCommand extends Command
 
     private function process(mixed $data): bool
     {
-        $this->preReg->deleteAll();
-
         if (is_array($data)) {
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
             foreach ($chunks as $index => $chunk) {
                 $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
-                $result = $this->csvProcessing->layProcessing($chunk, $index);
-                $this->storeOutput($result);
+                // Handle processing & output of CSV below
+                //$result = $this->csvProcessing->courtOrderProcessing($chunk, $index);
+                //$this->storeOutput($result);
             }
-            $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
-            $this->csvProcessing->layProcessingHandleNewMultiClients();
 
             return true;
         }
