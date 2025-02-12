@@ -76,6 +76,20 @@ fields @timestamp, status, service_name, request_uri, upstream_response_time
 QUERY
 }
 
+resource "aws_cloudwatch_query_definition" "critical" {
+  name            = "Analysis/Critical-Level-Application-Errors"
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
+
+  query_string = <<QUERY
+# Purpose: Search for critical level error messages
+# Usage: Find the error and look at the request.path and msg for details
+fields @timestamp, request.path, msg, @message
+| filter level = 'CRITICAL'
+| sort @timestamp desc
+| limit 1000
+QUERY
+}
+
 resource "aws_cloudwatch_query_definition" "response_distribution" {
   name            = "Analysis/Response-Distribution-By-Status"
   log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
