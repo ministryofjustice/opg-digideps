@@ -57,7 +57,7 @@ jobs:
             sub_folder: "lambdas/functions/custom_sql_query"
             docker_file: "Dockerfile"
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@f7ce87c1d6bead3e36075b2ce75da1f6cc28aaca
@@ -70,7 +70,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v3.0.8
+        uses: actions/cache@36f1e144e1c8edb0a652766b484448563d8baf46 # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -84,7 +84,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
       - name: download resources artifact
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
         with:
           name: web-distribution
           path: client/resources/public
@@ -129,7 +129,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
@@ -138,7 +138,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@bfbd05a2dcf76451041cbd4b9d11cff82489a1ee # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@5987c53246a4cdb9fb822a0b17a98df3cdc62942 # pin@v1.5.1
         with:
           registries: 311462405659
 

@@ -33,7 +33,7 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: Generate build output using Markdown
         run: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
         with:
           prerelease: false
           default_bump: "minor"
