@@ -6,7 +6,6 @@ namespace App\Tests\Behat\v2\Common;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Result\ExecutedStepResult;
-use Mockery\Exception;
 
 trait DebugTrait
 {
