@@ -1,11 +1,11 @@
 <?php
 
-namespace app\tests\Integration\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
-use app\tests\Integration\Fixtures;
+use App\Tests\Integration\Fixtures;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

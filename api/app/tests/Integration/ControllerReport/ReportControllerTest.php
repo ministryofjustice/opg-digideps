@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests\Unit\ControllerReport;
+namespace App\Tests\Integration\ControllerReport;
 
 use App\Entity\Report\Checklist;
 use App\Entity\Report\ChecklistInformation;
 use App\Entity\Report\Document;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
-use app\tests\Integration\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
 {

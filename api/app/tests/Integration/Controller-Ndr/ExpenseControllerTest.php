@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Unit\Controller\Ndr;
+namespace App\Tests\Integration\Controller\Ndr;
 
 use App\Entity\Ndr\Expense;
 use App\Entity\Ndr\Ndr;
-use app\tests\Integration\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {

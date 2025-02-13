@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\tests\Integration;
+namespace App\Tests\Integration;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

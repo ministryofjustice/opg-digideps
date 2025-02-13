@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\Controller;
+namespace App\Tests\Integration\v2\Registration\Controller;
 
-use app\tests\Integration\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;

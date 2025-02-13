@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\User;
-use app\tests\Integration\Controller\AbstractTestController;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Repository;
+namespace App\Tests\Integration\Entity\Repository;
 
 use App\Entity\Client;
 use App\Entity\ClientInterface;
@@ -12,7 +12,7 @@ use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use App\Repository\ReportRepository;
 use App\Service\Search\ClientSearchFilter;
-use app\tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiBaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;

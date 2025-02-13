@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Controller;
-
-use app\tests\Integration\Controller\AbstractTestController;
+namespace App\Tests\Integration\Controller;
 
 class DeputyControllerTest extends AbstractTestController
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Unit\Controller\Ndr;
+namespace App\Tests\Integration\Controller\Ndr;
 
 use App\Entity\Ndr\VisitsCare;
-use app\tests\Integration\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {

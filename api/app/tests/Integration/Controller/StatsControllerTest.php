@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
-
-use app\tests\Integration\Controller\AbstractTestController;
+namespace App\Tests\Integration\Controller;
 
 class StatsControllerTest extends AbstractTestController
 {

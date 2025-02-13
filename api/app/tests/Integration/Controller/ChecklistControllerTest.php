@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Report\Checklist;
-use app\tests\Integration\Controller\AbstractTestController;
 
 class ChecklistControllerTest extends AbstractTestController
 {

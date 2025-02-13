@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Setting;
-use app\tests\Integration\Controller\AbstractTestController;
-use app\tests\Integration\Fixtures;
+use App\Tests\Integration\Fixtures;
 
 class SettingControllerTest extends AbstractTestController
 {

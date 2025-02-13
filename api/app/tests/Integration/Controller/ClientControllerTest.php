@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use app\tests\Integration\Controller\AbstractTestController;
 
 class ClientControllerTest extends AbstractTestController
 {

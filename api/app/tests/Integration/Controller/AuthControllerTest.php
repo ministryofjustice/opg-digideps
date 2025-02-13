@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\User;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
-use app\tests\Integration\Controller\AbstractTestController;
 
 class AuthControllerTest extends AbstractTestController
 {
