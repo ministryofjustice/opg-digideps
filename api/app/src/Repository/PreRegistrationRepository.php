@@ -106,7 +106,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
             (SELECT COUNT(1) FROM dd_user u WHERE pr.deputy_uid = u.deputy_uid::varchar(30) LIMIT 1) > 0
         AND
             -- only combinations of deputy UID + case number which aren't already present
-            (pr.deputy_uid, pr.client_case_number)
+            (pr.deputy_uid, lower(pr.client_case_number))
             NOT IN (
                 SELECT u.deputy_uid::varchar(30), lower(c.case_number)
                 FROM dd_user u
