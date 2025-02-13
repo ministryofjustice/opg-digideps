@@ -89,10 +89,9 @@ class LayDeputyshipUploader
     }
 
     /**
-     * @param bool $detailedInfo Set to true to get detailed info about changes made
-     *                           to the database
+     * @param bool $detailedInfo Set to true to get detailed info about changes made to the database
      */
-    public function handleNewMultiClients(bool $detailedInfo = true): array
+    public function handleNewMultiClients(bool $detailedInfo = false): array
     {
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
         $numMultiClients = count($preRegistrationNewClients);
@@ -156,20 +155,14 @@ class LayDeputyshipUploader
                         // was a new client created for this row?
                         'isNewClient' => $clientHandleResult['isNewClient'],
 
-                        // was a new report created for this row?
-                        'isNewReport' => is_null($clientHandleResult['existingReport']),
-
-                        // data from the CSV parsed into the DTO
-                        'csv-client_case_number' => $caseNumber,
-                        'csv-deputy_uid' => $layDeputyshipDto->getDeputyUid(),
-                        'csv-order_type' => $layDeputyshipDto->getOrderType(),
-                        'csv-type_of_report' => $layDeputyshipDto->getTypeOfReport(),
-
                         // ID of the client used for this row
                         'clientId' => $client->getId(),
 
                         // UIDs of deputies associated with the client (including the deputy from the row)
                         'clientDeputyUids' => $deputyUids,
+
+                        // was a new report created for this row?
+                        'isNewReport' => is_null($clientHandleResult['existingReport']),
 
                         // ID of the report used for this row
                         'reportId' => $report->getId(),
@@ -179,8 +172,15 @@ class LayDeputyshipUploader
 
                         // type of the existing report which was updated for this row, e.g.
                         // if we received a '102-4' marked HYBRID and the existing report was a '102', this would
-                        // contain '102'
+                        // contain '102' (the report type before we updated it to '102-4')
                         'oldReportType' => $clientHandleResult['oldReportType'],
+
+                        // data from the CSV parsed into the DTO
+                        'dto.caseNumber' => $layDeputyshipDto->getCaseNumber(),
+                        'dto.deputyUid' => $layDeputyshipDto->getDeputyUid(),
+                        'dto.orderType' => $layDeputyshipDto->getOrderType(),
+                        'dto.typeOfReport' => $layDeputyshipDto->getTypeOfReport(),
+                        'dto.orderDate' => $layDeputyshipDto->getOrderDate(),
                     ];
                 }
             } catch (\Throwable $e) {
