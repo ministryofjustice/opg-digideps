@@ -91,7 +91,6 @@ class PreRegistrationRepository extends ServiceEntityRepository
             pr.order_date         AS "MadeDate",
             pr.order_type         AS "OrderType",
             CASE WHEN pr.is_co_deputy THEN 'yes' ELSE 'no' END AS "CoDeputy",
-            pr.created_at         AS "MadeDate",
             pr.hybrid             AS "Hybrid",
             pr.deputy_firstname   AS "DeputyFirstname",
             pr.client_firstname   AS "ClientFirstname",
