@@ -166,6 +166,14 @@ trait FixturesTrait
     }
 
     /**
+     * @Given the Lay deputy user with deputy UID :deputyUid, email :email, first name :firstName, and last name :lastName exists
+     */
+    public function theLayDeputyUserWithEmailNamedExists($deputyUid, $email, $firstName, $lastName)
+    {
+        return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid), $firstName, $lastName);
+    }
+
+    /**
      * @Given the Lay deputy user with deputy UID :deputyUid and email :email exists
      */
     public function theLayDeputyUserWithEmailExists($deputyUid, $email)
