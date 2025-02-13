@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Tests\Unit\Controller\AbstractTestController;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class DeputyControllerTest extends AbstractTestController
 {

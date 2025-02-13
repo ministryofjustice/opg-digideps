@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Entity;
 
 use App\TestHelpers\ReportSubmissionHelper;
-use App\Tests\Unit\ApiBaseTestCase;
+use app\tests\Integration\ApiBaseTestCase;
 
 /**
  * User Entity test.

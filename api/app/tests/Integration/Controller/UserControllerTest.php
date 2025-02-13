@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Controller;
 
 use App\Entity\Role;
 use App\Entity\User;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class UserControllerTest extends AbstractTestController
 {

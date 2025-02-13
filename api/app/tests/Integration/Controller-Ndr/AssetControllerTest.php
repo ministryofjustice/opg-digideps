@@ -4,7 +4,7 @@ namespace App\Tests\Unit\Controller\Ndr;
 
 use App\Entity\Ndr\AssetOther;
 use App\Entity\Ndr\AssetProperty;
-use App\Tests\Unit\Controller\AbstractTestController;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {

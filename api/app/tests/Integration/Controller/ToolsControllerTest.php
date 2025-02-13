@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Controller;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use app\tests\Integration\Controller\AbstractTestController;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 

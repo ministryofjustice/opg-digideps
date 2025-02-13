@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace app\tests\Integration;
 
 use App\Entity as EntityDir;
 use App\Entity\Client;

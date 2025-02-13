@@ -6,7 +6,7 @@ use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\MoneyTransactionShortIn;
 use App\Entity\Report\MoneyTransactionShortOut;
 use App\Entity\Report\Report;
-use App\Tests\Unit\Controller\AbstractTestController;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class MoneyTransactionShortControllerTest extends AbstractTestController
 {

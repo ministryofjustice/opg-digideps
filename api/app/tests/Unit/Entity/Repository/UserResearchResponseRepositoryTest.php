@@ -6,7 +6,7 @@ namespace App\Tests\Unit\Entity\Repository;
 
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Repository\UserResearchResponseRepository;
-use App\Tests\Unit\Fixtures;
+use app\tests\Integration\Fixtures;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

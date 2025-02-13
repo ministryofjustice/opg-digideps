@@ -12,7 +12,7 @@ use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use App\Repository\ReportRepository;
 use App\Service\Search\ClientSearchFilter;
-use App\Tests\Unit\ApiBaseTestCase;
+use app\tests\Integration\ApiBaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;

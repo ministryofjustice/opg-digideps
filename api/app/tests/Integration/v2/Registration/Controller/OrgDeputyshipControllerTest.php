@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\Controller;
 
-use App\Tests\Unit\Controller\AbstractTestController;
+use app\tests\Integration\Controller\AbstractTestController;
 use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;

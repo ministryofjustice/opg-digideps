@@ -4,7 +4,7 @@ namespace App\Tests\Unit\Controller\Ndr;
 
 use App\Entity\Ndr\Expense;
 use App\Entity\Ndr\Ndr;
-use App\Tests\Unit\Controller\AbstractTestController;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {

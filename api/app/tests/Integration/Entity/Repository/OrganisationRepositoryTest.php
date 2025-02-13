@@ -5,7 +5,7 @@ namespace App\Tests\Unit\Entity\Repository;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Repository\OrganisationRepository;
-use App\Tests\Unit\Fixtures;
+use app\tests\Integration\Fixtures;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;

@@ -8,6 +8,7 @@ use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class ClientBenefitsCheckControllerTest extends AbstractTestController
 {

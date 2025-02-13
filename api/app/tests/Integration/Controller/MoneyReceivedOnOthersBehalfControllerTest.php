@@ -11,6 +11,7 @@ use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
 {

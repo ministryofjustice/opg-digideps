@@ -4,7 +4,7 @@ namespace App\Tests\Unit\ControllerReport;
 
 use App\Entity\Report\Expense;
 use App\Entity\Report\Report;
-use App\Tests\Unit\Controller\AbstractTestController;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {

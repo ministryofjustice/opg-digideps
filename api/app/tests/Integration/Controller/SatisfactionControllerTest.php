@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Controller;
 
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
+use app\tests\Integration\Controller\AbstractTestController;
 
 class SatisfactionControllerTest extends AbstractTestController
 {

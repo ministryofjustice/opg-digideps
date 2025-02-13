@@ -96,8 +96,8 @@ class JWTServiceTest extends TestCase
 
         $config = Configuration::forAsymmetricSigner(
             new Signer\Rsa\Sha256(),
-            Signer\Key\InMemory::plainText($this->privateKeyPem),
-            Signer\Key\InMemory::plainText($this->publicKeyPem),
+            InMemory::plainText($this->privateKeyPem),
+            InMemory::plainText($this->publicKeyPem),
         );
 
         $token = $config->parser()->parse($actuaklJwt);

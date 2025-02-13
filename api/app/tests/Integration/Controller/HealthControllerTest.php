@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Controller;
 
+use app\tests\Integration\Controller\AbstractTestController;
+
 class HealthControllerTest extends AbstractTestController
 {
     public function testServiceHealth()

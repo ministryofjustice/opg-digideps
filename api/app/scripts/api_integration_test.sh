@@ -32,6 +32,8 @@ export SSL=${DATABASE_SSL:=allow}
 # Check the argument provided and run the corresponding test suites
 case "$1" in
   selection-all)
+    printf '\n Running Stats Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running Command Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Command/ --coverage-php tests/coverage/Command.cov
     printf '\n Running Controller Suite \n\n'
@@ -46,8 +48,6 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Security Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Security/ --coverage-php tests/coverage/Security.cov
-    printf '\n Running Stats Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
 
