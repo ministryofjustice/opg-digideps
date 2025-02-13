@@ -26,7 +26,7 @@ Feature: Lay CSV data ingestion - sirius source data for dual deputies
         And I should see "money-out" as "not started"
         And I should see "balance" as "more information needed"
         And I should see "assets" as "not started"
-        And I should see "debt" as "not started"
+        And I should see "debts" as "not started"
         And I should not see "lifestyle"
         And I am on "/logout"
 
@@ -44,5 +44,5 @@ Feature: Lay CSV data ingestion - sirius source data for dual deputies
         And I should not see "money-out" report section
         And I should not see "balance" report section
         And I should not see "assets" report section
-        And I should not see "debt" report section
+        And I should not see "debts" report section
         And I am on "/logout"
