@@ -200,22 +200,24 @@ class FixtureHelper
         );
     }
 
-    public function createUser(string $roleName, ?string $email = null, ?int $deputyUid = null)
-    {
+    public function createUser(
+        string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
+    ) {
         if (is_null($email)) {
             $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
         }
 
-        return $this->userTestHelper->createUser(null, $roleName, $email, true, $deputyUid);
+        return $this->userTestHelper->createUser(null, $roleName, $email, true, $deputyUid, $firstName, $lastName);
     }
 
-    public function createAndPersistUser(string $roleName, ?string $email = null, ?int $deputyUid = null)
-    {
+    public function createAndPersistUser(
+        string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
+    ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
-        $user = $this->createUser($roleName, $email, $deputyUid);
+        $user = $this->createUser($roleName, $email, $deputyUid, $firstName, $lastName);
         $this->setPassword($user);
 
         $this->em->persist($user);
