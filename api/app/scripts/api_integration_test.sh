@@ -31,23 +31,23 @@ export SSL=${DATABASE_SSL:=allow}
 
 # Check the argument provided and run the corresponding test suites
 case "$1" in
-  selection-all)
-    printf '\n Running Stats Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
-    printf '\n Running Command Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Integration/Command/ --coverage-php tests/coverage/Command.cov
+  selection-all) # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
     printf '\n Running Controller Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Controller/ --coverage-php tests/coverage/Controller.cov
-    printf '\n Running Controller-Ndr Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Integration/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running ControllerReport Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
     printf '\n Running DBAL Suite \n\n'
     php vendor/bin/phpunit --debug -c tests/Unit tests/Integration/DBAL/ --coverage-php tests/coverage/DBAL.cov
+    printf '\n Running Controller-Ndr Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Integration/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Entity/ --coverage-php tests/coverage/Entity.cov
+    printf '\n Running Command Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Integration/Command/ --coverage-php tests/coverage/Command.cov
     printf '\n Running Security Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Security/ --coverage-php tests/coverage/Security.cov
+    printf '\n Running Stats Suite \n\n'
+    php vendor/bin/phpunit -c tests/Unit tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
 
