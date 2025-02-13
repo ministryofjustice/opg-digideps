@@ -106,6 +106,7 @@ class LayDeputyshipUploader
 
             'errors' => [],
 
+            // entities added/changed; remains empty unless $detailedInfo is true
             'details' => [],
         ];
 
@@ -150,14 +151,15 @@ class LayDeputyshipUploader
                         $deputyUids[] = $user->getDeputyUid();
                     }
 
+                    // this data reported from the database
                     $entityDetails[] = [
-                        // was a new client added for this row?
+                        // was a new client created for this row?
                         'isNewClient' => $clientHandleResult['isNewClient'],
 
-                        // was an existing report used for this row?
+                        // was a new report created for this row?
                         'isNewReport' => is_null($clientHandleResult['existingReport']),
 
-                        // data from the CSV parsed into DTO
+                        // data from the CSV parsed into the DTO
                         'csv-client_case_number' => $caseNumber,
                         'csv-deputy_uid' => $layDeputyshipDto->getDeputyUid(),
                         'csv-order_type' => $layDeputyshipDto->getOrderType(),
@@ -166,17 +168,18 @@ class LayDeputyshipUploader
                         // ID of the client used for this row
                         'clientId' => $client->getId(),
 
-                        // UIDs of deputies associated with the used client (including the deputy from the row)
+                        // UIDs of deputies associated with the client (including the deputy from the row)
                         'clientDeputyUids' => $deputyUids,
 
                         // ID of the report used for this row
                         'reportId' => $report->getId(),
 
-                        // type of the report used for this row, e.g. '102', '103', '104', '102-4', '103-4'
+                        // type of the report used for this row; '102', '103', '104', '102-4', '103-4'
                         'reportType' => $report->getType(),
 
                         // type of the existing report which was updated for this row, e.g.
-                        // if we received a '102-4' and the existing report was a '102', this would contain '102'
+                        // if we received a '102-4' marked HYBRID and the existing report was a '102', this would
+                        // contain '102'
                         'oldReportType' => $clientHandleResult['oldReportType'],
                     ];
                 }
@@ -196,8 +199,6 @@ class LayDeputyshipUploader
         $info['clients-added'] = count($clientsAdded);
         $info['errors'] = $errors;
         $info['details'] = $entityDetails;
-
-        print_r($info);
 
         return $info;
     }
@@ -221,7 +222,11 @@ class LayDeputyshipUploader
     }
 
     /*
-     * @returns ['client' => Client, 'is_new_client' => bool]
+     * @returns ['client' => Client, 'isNewClient' => bool, 'existingReport' => ?Report, 'oldReportType' => ?string]
+     * client is either an existing client or a new one
+     * isNewClient is true if client is a new one
+     * existingReport is only set if an existing report is going to be used for this row/DTO
+     * oldReportType is only set if the report type on the existing report was changed (i.e. it became a hybrid)
      */
     private function handleNewClient(LayDeputyshipDto $dto, User $newUser): array
     {
@@ -254,8 +259,15 @@ class LayDeputyshipUploader
         if (1 === count($existingClients)) {
             // If there is one Client, and the above checks were OK, we might be able to just use that Client,
             // rather than making a new one, providing this deputy can see that client's report as a co-deputy;
-            // to work that out, we work out which report type we would be creating, then see whether the
-            // existing client already has a report of that type.
+            // to work that out, we work out which report type we should be creating, then check whether the
+            // existing client already has a report of a compatible type and that the row is marked as HYBRID.
+            //
+            // COMPATIBLE REPORT TYPES (incoming = in CSV row, existing = type of existing report on client)
+            // incoming = 102, existing = 102
+            // incoming = 103, existing = 103
+            // incoming = 104, existing = 104
+            // incoming = 102-4, existing = 102 or 102-4, incoming row marked as HYBRID (report will become a hybrid)
+            // incoming = 103-4, existing = 103 or 103-4, incoming row marked as HYBRID (report will become a hybrid)
             /** @var Client $potentialClient */
             $potentialClient = $existingClients[0];
             $determinedReportType = PreRegistration::getReportTypeByOrderType(
@@ -264,17 +276,27 @@ class LayDeputyshipUploader
                 PreRegistration::REALM_LAY,
             );
 
-            if ($potentialClient->getCurrentReport()->getType() === $determinedReportType) {
+            $compatibleReport = str_starts_with($determinedReportType, $potentialClient->getCurrentReport()->getType());
+            if (str_ends_with($determinedReportType, '-4')) {
+                $compatibleReport &= 'HYBRID' === $dto->getHybrid();
+            }
+
+            if ($compatibleReport) {
                 $client = $potentialClient;
                 $isNewClient = false;
                 $existingReport = $potentialClient->getCurrentReport();
 
-                // TODO set the report type if it needs to be converted to a hybrid report and set $oldReportType
+                // set the report type if it needs to be converted to a hybrid report and store $oldReportType
+                $existingReportType = $existingReport->getType();
+                if ($existingReportType !== $determinedReportType) {
+                    $oldReportType = $existingReportType;
+                    $existingReport->setType($determinedReportType);
+                }
             }
         }
 
         if (is_null($client)) {
-            // only create a new instance of the client if one doesn't already exist;
+            // only create a new client if one doesn't already exist;
             // or if all the clients are discharged, and we are creating a client for a deputy that is not associated
             // with this case number already
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
