@@ -88,24 +88,36 @@ class LayDeputyshipUploader
         ];
     }
 
-    public function handleNewMultiClients(): array
+    /**
+     * @param bool $detailedInfo Set to true to get detailed info about changes made
+     *                           to the database
+     */
+    public function handleNewMultiClients(bool $detailedInfo = true): array
     {
-        $errors = [];
-        $clientsAdded = [];
-
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
         $numMultiClients = count($preRegistrationNewClients);
+
+        $info = [
+            // potential new clients, not necessarily added
+            'new-clients-found' => $numMultiClients,
+
+            // clients actually added from list of potential new clients
+            'clients-added' => 0,
+
+            'errors' => [],
+
+            'details' => [],
+        ];
 
         if (0 == $numMultiClients) {
             $this->logger->info('No new multi clients to add');
 
-            return [
-                'new-clients-found' => $numMultiClients,
-                'clients-added' => 0,
-                'errors' => $errors,
-            ];
+            return $info;
         }
 
+        $clientsAdded = [];
+        $errors = [];
+        $entityDetails = [];
         foreach ($preRegistrationNewClients as $preReg) {
             $layDeputyshipDto = $this->assembler->assembleFromArray($preReg);
             $deputyUid = $layDeputyshipDto->getDeputyUid();
@@ -117,13 +129,57 @@ class LayDeputyshipUploader
                 $user = $this->findUser($deputyUid);
 
                 $clientHandleResult = $this->handleNewClient($layDeputyshipDto, $user);
+
+                /** @var Client $client */
                 $client = $clientHandleResult['client'];
-                if ($clientHandleResult['is_new_client']) {
+                if ($clientHandleResult['isNewClient']) {
                     $clientsAdded[] = $caseNumber;
-                    $this->handleNewReport($layDeputyshipDto, $client);
+                }
+
+                $report = $clientHandleResult['existingReport'];
+                if (is_null($report)) {
+                    $report = $this->handleNewReport($layDeputyshipDto, $client);
                 }
 
                 $this->commitTransactionToDatabase();
+
+                if ($detailedInfo) {
+                    $users = $client->getUsers();
+                    $deputyUids = [];
+                    foreach ($users as $user) {
+                        $deputyUids[] = $user->getDeputyUid();
+                    }
+
+                    $entityDetails[] = [
+                        // was a new client added for this row?
+                        'isNewClient' => $clientHandleResult['isNewClient'],
+
+                        // was an existing report used for this row?
+                        'isNewReport' => is_null($clientHandleResult['existingReport']),
+
+                        // data from the CSV parsed into DTO
+                        'csv-client_case_number' => $caseNumber,
+                        'csv-deputy_uid' => $layDeputyshipDto->getDeputyUid(),
+                        'csv-order_type' => $layDeputyshipDto->getOrderType(),
+                        'csv-type_of_report' => $layDeputyshipDto->getTypeOfReport(),
+
+                        // ID of the client used for this row
+                        'clientId' => $client->getId(),
+
+                        // UIDs of deputies associated with the used client (including the deputy from the row)
+                        'clientDeputyUids' => $deputyUids,
+
+                        // ID of the report used for this row
+                        'reportId' => $report->getId(),
+
+                        // type of the report used for this row, e.g. '102', '103', '104', '102-4', '103-4'
+                        'reportType' => $report->getType(),
+
+                        // type of the existing report which was updated for this row, e.g.
+                        // if we received a '102-4' and the existing report was a '102', this would contain '102'
+                        'oldReportType' => $clientHandleResult['oldReportType'],
+                    ];
+                }
             } catch (\Throwable $e) {
                 $message = sprintf('Error when creating additional client for deputyUID %s for case %s: %s',
                     $layDeputyshipDto->getDeputyUid(),
@@ -131,20 +187,19 @@ class LayDeputyshipUploader
                     str_replace(PHP_EOL, '', $e->getMessage())
                 );
                 $this->logger->warning($message);
+                $this->logger->error($e->getFile().' '.$e->getLine());
                 $errors[] = $message;
                 continue;
             }
         }
 
-        return [
-            // potential new clients, not necessarily added
-            'new-clients-found' => count($preRegistrationNewClients),
+        $info['clients-added'] = count($clientsAdded);
+        $info['errors'] = $errors;
+        $info['details'] = $entityDetails;
 
-            // clients actually added from list of potential new clients
-            'clients-added' => count($clientsAdded),
+        print_r($info);
 
-            'errors' => $errors,
-        ];
+        return $info;
     }
 
     /*
@@ -193,6 +248,8 @@ class LayDeputyshipUploader
         }
 
         $client = null;
+        $existingReport = null;
+        $oldReportType = null;
         $isNewClient = true;
         if (1 === count($existingClients)) {
             // If there is one Client, and the above checks were OK, we might be able to just use that Client,
@@ -210,6 +267,9 @@ class LayDeputyshipUploader
             if ($potentialClient->getCurrentReport()->getType() === $determinedReportType) {
                 $client = $potentialClient;
                 $isNewClient = false;
+                $existingReport = $potentialClient->getCurrentReport();
+
+                // TODO set the report type if it needs to be converted to a hybrid report and set $oldReportType
             }
         }
 
@@ -225,12 +285,14 @@ class LayDeputyshipUploader
 
         return [
             'client' => $client,
-            'is_new_client' => $isNewClient,
+            'existingReport' => $existingReport,
+            'oldReportType' => $oldReportType,
+            'isNewClient' => $isNewClient,
         ];
     }
 
     // we only call this if we created a new client; otherwise we are reusing an existing client and report
-    private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): ?Report
+    private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): Report
     {
         $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
 
