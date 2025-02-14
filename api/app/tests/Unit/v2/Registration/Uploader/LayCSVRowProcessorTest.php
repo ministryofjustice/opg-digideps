@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
+use App\Entity\Client;
+use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\Uploader\ClientMatcher;
+use App\v2\Registration\Uploader\ClientMatch;
+use App\v2\Registration\Uploader\LayCSVClientMatcher;
 use App\v2\Registration\Uploader\LayCSVRowProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
@@ -21,6 +25,7 @@ class LayCSVRowProcessorTest extends TestCase
     private SiriusToLayDeputyshipDtoAssembler $mockLayDeputyAssembler;
     private ClientAssembler $mockClientAssembler;
     private LoggerInterface $mockLogger;
+    private LayCSVClientMatcher $mockClientMatcher;
     private UserRepository $mockUserRepository;
     private LayCSVRowProcessor $sut;
 
@@ -29,7 +34,7 @@ class LayCSVRowProcessorTest extends TestCase
         $this->mockEm = $this->createMock(EntityManagerInterface::class);
         $this->mockLayDeputyAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
         $this->mockClientAssembler = $this->createMock(ClientAssembler::class);
-        $this->mockClientMatcher = $this->createMock(ClientMatcher::class);
+        $this->mockClientMatcher = $this->createMock(LayCSVClientMatcher::class);
         $this->mockLogger = $this->createMock(LoggerInterface::class);
 
         $this->mockUserRepository = $this->createMock(UserRepository::class);
@@ -79,23 +84,95 @@ class LayCSVRowProcessorTest extends TestCase
         );
     }
 
-    public function testProcessRowExistingClientCompatibleReport()
+    public function testProcessRowMatchingClientAndReport()
+    {
+        // Expectations
+        $row = ['DeputyUid' => '222222222'];
+
+        $orderDate = new \DateTime('2025-02-14');
+
+        $layDeputyshipDto = new LayDeputyshipDto();
+        $layDeputyshipDto->setDeputyUid('222222222')
+            ->setCaseNumber('88888888')
+            ->setOrderType('OPG102')
+            ->setTypeOfReport('102')
+            ->setOrderDate($orderDate);
+
+        $user = new User();
+        $user->setDeputyUid(222222222);
+
+        $existingClient = $this->createMock(Client::class);
+
+        $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
+        $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
+        $existingReport->expects($this->once())->method('getId')->willReturn(1);
+
+        $clientMatch = new ClientMatch(
+            client: $existingClient,
+            report: $existingReport,
+            reportTypeWasChangedFrom: null,
+        );
+
+        $this->mockLayDeputyAssembler->expects($this->once())
+            ->method('assembleFromArray')
+            ->with($row)
+            ->willReturn($layDeputyshipDto);
+
+        $this->mockEm->expects($this->once())->method('beginTransaction');
+        $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
+
+        $this->mockUserRepository->expects($this->once())
+            ->method('findPrimaryUserByDeputyUid')
+            ->with('222222222')
+            ->willReturn($user);
+
+        $this->mockClientMatcher->expects($this->once())
+            ->method('matchDto')
+            ->with($layDeputyshipDto)
+            ->willReturn($clientMatch);
+
+        $existingClient->expects($this->once())
+            ->method('addUser')
+            ->with($user);
+
+        $this->mockEm->expects($this->once())->method('persist')->with($existingClient);
+        $this->mockEm->expects($this->once())->method('flush');
+        $this->mockEm->expects($this->once())->method('commit');
+        $this->mockEm->expects($this->once())->method('clear');
+
+        $existingClient->expects($this->once())->method('getUsers')->willReturn([$user]);
+        $existingClient->expects($this->once())->method('getId')->willReturn(33333333);
+        $existingClient->expects($this->once())->method('getCaseNumber')->willReturn('88888888');
+
+        // Test
+        $output = $this->sut->processRow($row);
+
+        // Assert
+        $expected = [
+            'isNewClient' => false,
+            'clientId' => 33333333,
+            'clientCaseNumber' => '88888888',
+            'clientDeputyUids' => [222222222],
+            'isNewReport' => false,
+            'reportId' => 1,
+            'reportType' => '102',
+            'reportTypeWasChangedFrom' => null,
+            'dto.caseNumber' => '88888888',
+            'dto.deputyUid' => '222222222',
+            'dto.orderType' => 'OPG102',
+            'dto.typeOfReport' => '102',
+            'dto.orderDate' => $orderDate,
+        ];
+
+        $this->assertEquals($expected, $output['entityDetails']);
+        $this->assertEquals(null, $output['error']);
+    }
+
+    public function testProcessRowMatchingClientReportChangedToHybrid()
     {
     }
 
-    public function testProcessRowExistingClientCompatibleHybridReport()
-    {
-    }
-
-    public function testProcessRowExistingClientCompatibleReportChangesToHybrid()
-    {
-    }
-
-    public function testProcessRowExistingClientNewReport()
-    {
-    }
-
-    public function testProcessRowNewClientNewReport()
+    public function testProcessRowNoMatchingClient()
     {
     }
 }
