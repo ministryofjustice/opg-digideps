@@ -110,13 +110,17 @@ class LayDeputyshipUploader
         foreach ($preRegistrationNewClients as $preReg) {
             $rowResult = $this->rowProcessor->processRow($preReg);
 
-            $entities = $rowResult['entityDetails'];
-            if ($entities['isNewClient']) {
-                $clientsAdded[] = $entities['clientCaseNumber'];
-            }
+            $error = $rowResult['error'];
+            if (!is_null($error)) {
+                $errors[] = $error;
+            } else {
+                $entities = $rowResult['entityDetails'];
+                if ($entities['isNewClient']) {
+                    $clientsAdded[] = $entities['clientCaseNumber'];
+                }
 
-            $entityDetails[] = $entities;
-            $errors[] = $rowResult['error'];
+                $entityDetails[] = $entities;
+            }
         }
 
         $info['clients-added'] = count($clientsAdded);
