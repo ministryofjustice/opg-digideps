@@ -11,11 +11,11 @@ use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use App\v2\Assembler\ClientAssembler;
-use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
+use App\v2\Registration\Uploader\LayCSVRowProcessor;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,29 +36,27 @@ class LayDeputyshipUploaderTest extends KernelTestCase
     /** @var LoggerInterface */
     private $logger;
 
-    private SiriusToLayDeputyshipDtoAssembler $layDeputyshipDtoAssembler;
-    private ClientAssembler $clientAssembler;
-
     /** @var LayDeputyshipUploader */
     private $sut;
+
+    private LayCSVRowProcessor $rowProcessor;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->reportRepository = $this->createMock(ReportRepository::class);
         $this->factory = $this->createMock(PreRegistrationFactory::class);
+        $this->rowProcessor = $this->createMock(LayCSVRowProcessor::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
-        $this->layDeputyshipDtoAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
         $this->clientAssembler = $this->createMock(ClientAssembler::class);
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
             $this->reportRepository,
             $this->factory,
+            $this->rowProcessor,
             $this->logger,
-            $this->layDeputyshipDtoAssembler,
-            $this->clientAssembler
         );
     }
 
