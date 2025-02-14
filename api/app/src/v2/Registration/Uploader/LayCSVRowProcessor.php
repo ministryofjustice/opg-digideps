@@ -58,6 +58,7 @@ class LayCSVRowProcessor
                 $report = $this->handleNewReport($layDeputyshipDto, $client);
             }
 
+            $this->em->persist($report);
             $this->em->persist($client);
             $this->em->flush();
             $this->em->commit();
@@ -161,7 +162,6 @@ class LayCSVRowProcessor
         );
 
         $newReport->setClient($newClient);
-        $this->em->persist($newReport);
 
         return $newReport;
     }
