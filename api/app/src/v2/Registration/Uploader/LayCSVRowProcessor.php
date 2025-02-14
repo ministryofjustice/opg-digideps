@@ -60,47 +60,19 @@ class LayCSVRowProcessor
                 $deputyUids[] = $user->getDeputyUid();
             }
 
-            $entityDetails = [
-                // was a new client created for this row?
-                'isNewClient' => $clientHandleResult['isNewClient'],
-
-                // ID of the client used for this row
-                'clientId' => $client->getId(),
-
-                // case number of the client
-                'clientCaseNumber' => $client->getCaseNumber(),
-
-                // UIDs of deputies associated with the client (including the deputy from the row)
-                'clientDeputyUids' => $deputyUids,
-
-                // was a new report created for this row?
-                'isNewReport' => is_null($clientHandleResult['existingReport']),
-
-                // ID of the report used for this row
-                'reportId' => $report->getId(),
-
-                // type of the report used for this row; '102', '103', '104', '102-4', '103-4'
-                'reportType' => $report->getType(),
-
-                // type of the existing report which was updated for this row, e.g.
-                // if we received a '102-4' marked HYBRID and the existing report was a '102', this would
-                // contain '102' (the report type before we updated it to '102-4')
-                'oldReportType' => $clientHandleResult['oldReportType'],
-
-                // data from the CSV parsed into the DTO
-                'dto.caseNumber' => $layDeputyshipDto->getCaseNumber(),
-                'dto.deputyUid' => $layDeputyshipDto->getDeputyUid(),
-                'dto.orderType' => $layDeputyshipDto->getOrderType(),
-                'dto.typeOfReport' => $layDeputyshipDto->getTypeOfReport(),
-                'dto.orderDate' => $layDeputyshipDto->getOrderDate(),
-            ];
+            $entityDetails = $this->getEntityDetails(
+                $clientHandleResult,
+                $deputyUids,
+                $report,
+                $layDeputyshipDto
+            );
         } catch (\Throwable $e) {
-            $message = sprintf('Error when creating additional client for deputyUID %s for case %s: %s',
+            $errorMessage = sprintf('Error when creating entities for deputyUID %s for case %s: %s',
                 $layDeputyshipDto->getDeputyUid(),
                 $layDeputyshipDto->getCaseNumber(),
                 str_replace(PHP_EOL, '', $e->getMessage())
             );
-            $this->logger->warning($message);
+            $this->logger->warning($errorMessage);
             $this->logger->error($e->getFile().' '.$e->getLine());
         }
 
@@ -142,21 +114,6 @@ class LayCSVRowProcessor
 
         if (!is_countable($existingClients)) {
             throw new \ValueError(sprintf('unable to find clients for case number %s', $caseNumber));
-        }
-
-        /* @var Client $existingClient */
-        foreach ($existingClients as $existingClient) {
-            // Loop through the existing clients to ensure we are not creating a client for a deputy already associated
-            // with this case; NB this should already have been excluded by the
-            // PreRegistrationRepository->getNewClientsForExistingDeputiesArray() query but this is a double check, I think
-            foreach ($existingClient->getUsers() as $user) {
-                if ($user->getDeputyUid() == $newUser->getDeputyUid()) {
-                    if ($existingClient->isDeleted()) {
-                        throw new \RuntimeException(sprintf('a discharged client with case number %s already exists that is associated with a user with deputy UID %s', $existingClient->getCaseNumber(), $newUser->getDeputyUid()));
-                    }
-                    throw new \RuntimeException(sprintf('an active client with case number %s already exists', $caseNumber));
-                }
-            }
         }
 
         $client = null;
@@ -241,5 +198,49 @@ class LayCSVRowProcessor
         $this->em->persist($newReport);
 
         return $newReport;
+    }
+
+    private function getEntityDetails(
+        array $clientHandleResult,
+        array $deputyUids,
+        mixed $report,
+        LayDeputyshipDto $layDeputyshipDto,
+    ): array {
+        $client = $clientHandleResult['client'];
+
+        return [
+            // was a new client created for this row?
+            'isNewClient' => $clientHandleResult['isNewClient'],
+
+            // ID of the client used for this row
+            'clientId' => $client->getId(),
+
+            // case number of the client
+            'clientCaseNumber' => $client->getCaseNumber(),
+
+            // UIDs of deputies associated with the client (including the deputy from the row)
+            'clientDeputyUids' => $deputyUids,
+
+            // was a new report created for this row?
+            'isNewReport' => is_null($clientHandleResult['existingReport']),
+
+            // ID of the report used for this row
+            'reportId' => $report->getId(),
+
+            // type of the report used for this row; '102', '103', '104', '102-4', '103-4'
+            'reportType' => $report->getType(),
+
+            // type of the existing report which was updated for this row, e.g.
+            // if we received a '102-4' marked HYBRID and the existing report was a '102', this would
+            // contain '102' (the report type before we updated it to '102-4')
+            'oldReportType' => $clientHandleResult['oldReportType'],
+
+            // data from the CSV parsed into the DTO
+            'dto.caseNumber' => $layDeputyshipDto->getCaseNumber(),
+            'dto.deputyUid' => $layDeputyshipDto->getDeputyUid(),
+            'dto.orderType' => $layDeputyshipDto->getOrderType(),
+            'dto.typeOfReport' => $layDeputyshipDto->getTypeOfReport(),
+            'dto.orderDate' => $layDeputyshipDto->getOrderDate(),
+        ];
     }
 }
