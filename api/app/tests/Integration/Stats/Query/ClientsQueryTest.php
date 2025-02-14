@@ -7,6 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Service\Stats\Query\ClientsQuery;
 use App\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ClientsQueryTest extends WebTestCase
@@ -18,9 +19,14 @@ class ClientsQueryTest extends WebTestCase
     {
         $kernel = self::bootKernel(['environment' => 'test', 'debug' => false]);
 
+        /* @var EntityManager em */
         self::$em = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+
+        self::$em->createQueryBuilder()->delete()->from(Client::class, 'c')->getQuery()->execute();
+        self::$em->createQueryBuilder()->delete()->from(Report::class, 'r')->getQuery()->execute();
+        self::$em->createQueryBuilder()->delete()->from(Ndr::class, 'n')->getQuery()->execute();
 
         static::givenClientWithReportsOfType(['NDR', '102']);
         static::givenClientWithReportsOfType(['NDR', '102']);
