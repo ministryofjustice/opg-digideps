@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Service\Formatter\RestFormatter;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
@@ -20,8 +19,6 @@ class CSVDeputyshipProcessing
         private LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
         private LayDeputyshipUploader $layUploader,
         private OrgDeputyshipUploader $orgUploader,
-        private SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
-        private RestFormatter $restFormatter,
         private LoggerInterface $verboseLogger,
     ) {
     }
