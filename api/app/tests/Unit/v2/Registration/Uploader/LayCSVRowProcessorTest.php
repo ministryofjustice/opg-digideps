@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
+use App\v2\Registration\Uploader\ClientMatcher;
 use App\v2\Registration\Uploader\LayCSVRowProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
@@ -28,13 +29,16 @@ class LayCSVRowProcessorTest extends TestCase
         $this->mockEm = $this->createMock(EntityManagerInterface::class);
         $this->mockLayDeputyAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
         $this->mockClientAssembler = $this->createMock(ClientAssembler::class);
+        $this->mockClientMatcher = $this->createMock(ClientMatcher::class);
         $this->mockLogger = $this->createMock(LoggerInterface::class);
+
         $this->mockUserRepository = $this->createMock(UserRepository::class);
 
         $this->sut = new LayCSVRowProcessor(
             $this->mockEm,
             $this->mockLayDeputyAssembler,
             $this->mockClientAssembler,
+            $this->mockClientMatcher,
             $this->mockLogger
         );
     }
@@ -75,28 +79,23 @@ class LayCSVRowProcessorTest extends TestCase
         );
     }
 
-    public function testProcessRowNoClientException()
-    {
-        // line 116
-    }
-
-    public function testProcessRowExistingClientNewReport()
-    {
-        // line 123
-    }
-
     public function testProcessRowExistingClientCompatibleReport()
     {
-        // line 123
     }
 
     public function testProcessRowExistingClientCompatibleHybridReport()
     {
-        // line 144
+    }
+
+    public function testProcessRowExistingClientCompatibleReportChangesToHybrid()
+    {
+    }
+
+    public function testProcessRowExistingClientNewReport()
+    {
     }
 
     public function testProcessRowNewClientNewReport()
     {
-        // line 162
     }
 }
