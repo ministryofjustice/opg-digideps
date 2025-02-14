@@ -6,11 +6,8 @@ use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Repository\ClientRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
-use App\v2\Assembler\ClientAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
@@ -48,8 +45,6 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $this->factory = $this->createMock(PreRegistrationFactory::class);
         $this->rowProcessor = $this->createMock(LayCSVRowProcessor::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-
-        $this->clientAssembler = $this->createMock(ClientAssembler::class);
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
@@ -254,82 +249,47 @@ class LayDeputyshipUploaderTest extends KernelTestCase
      */
     public function testHandleNewMultiClients()
     {
-        $mockDto1 = $this->createMock(LayDeputyshipDto::class);
-        $mockDto1->method('getDeputyUid')->willReturn('case-1');
-        $mockDto1->method('getTypeOfReport')->willReturn('OPG102');
-        $mockDto1->method('getOrderType')->willReturn('pfa');
-
-        $mockDto2 = $this->createMock(LayDeputyshipDto::class);
-        $mockDto2->method('getDeputyUid')->willReturn('case-2');
-        $mockDto2->method('getTypeOfReport')->willReturn('OPG102');
-        $mockDto2->method('getOrderType')->willReturn('hw');
+        $case1 = ['Case' => '11111111'];
+        $case2 = ['Case' => '22222222'];
+        $case3 = ['Case' => '33333333'];
 
         $mockPreRegistrationRepo = $this->createMock(PreRegistrationRepository::class);
         $mockPreRegistrationRepo->expects($this->once())
             ->method('getNewClientsForExistingDeputiesArray')
-            ->willReturn([[], []]);
+            ->willReturn([$case1, $case2, $case3]);
 
-        $mockClientRepo = $this->createMock(ClientRepository::class);
-
-        // test case where there are no existing case + deputy UID combinations
-        $mockClientRepo->expects($this->any())
-            ->method('findByCaseNumberIncludingDischarged')
-            ->willReturn([]);
-
-        $this->layDeputyshipDtoAssembler->expects($this->any())
-            ->method('assembleFromArray')
-            ->willReturnOnConsecutiveCalls($mockDto1, $mockDto2);
-
-        $mockUser1 = $this->createMock(User::class);
-        $mockUser2 = $this->createMock(User::class);
-
-        $mockUserRepo = $this->createMock(UserRepository::class);
-        $mockUserRepo->expects($this->exactly(2))
-            ->method('findPrimaryUserByDeputyUid')
-            ->willReturnCallback(function (string $deputyUid) use ($mockUser1, $mockUser2) {
-                if ('case-1' == $deputyUid) {
-                    return $mockUser1;
-                } elseif ('case-2' == $deputyUid) {
-                    return $mockUser2;
-                }
-
-                return null;
-            });
-
-        $this->em->expects($this->any())
+        $this->em->expects($this->once())
             ->method('getRepository')
-            ->willReturnCallback(function (string $repoClass) use ($mockUserRepo, $mockPreRegistrationRepo, $mockClientRepo) {
-                if (User::class == $repoClass) {
-                    return $mockUserRepo;
-                } elseif (PreRegistration::class == $repoClass) {
-                    return $mockPreRegistrationRepo;
-                } elseif (Client::class == $repoClass) {
-                    return $mockClientRepo;
+            ->with(PreRegistration::class)
+            ->willReturn($mockPreRegistrationRepo);
+
+        $this->rowProcessor->expects($this->exactly(3))
+            ->method('processRow')
+            ->willReturnCallback(function (array $case) use ($case1, $case2, $case3) {
+                if ($case === $case1) {
+                    return [
+                        'entityDetails' => ['clientCaseNumber' => '11111111', 'isNewClient' => false],
+                        'error' => null,
+                    ];
                 }
-
-                return null;
-            });
-
-        $stubClient1 = new Client();
-        $stubClient2 = new Client();
-
-        $this->clientAssembler->expects($this->any())
-            ->method('assembleFromLayDeputyshipDto')
-            ->willReturnCallback(function ($dto) use ($stubClient1, $stubClient2) {
-                $deputyUid = $dto->getDeputyUid();
-                if ('case-1' == $deputyUid) {
-                    return $stubClient1;
-                } elseif ('case-2' == $deputyUid) {
-                    return $stubClient2;
+                if ($case === $case2) {
+                    return [
+                        'entityDetails' => ['clientCaseNumber' => '22222222', 'isNewClient' => true],
+                        'error' => null,
+                    ];
                 }
-
-                return null;
+                if ($case === $case3) {
+                    return [
+                        'entityDetails' => [],
+                        'error' => 'an error occurred',
+                    ];
+                }
             });
 
         $actual = $this->sut->handleNewMultiClients();
 
-        $this->assertEquals(2, $actual['new-clients-found']);
-        $this->assertEquals(2, $actual['clients-added']);
-        $this->assertEquals(0, count($actual['errors']));
+        $this->assertEquals(3, $actual['new-clients-found']);
+        $this->assertEquals(1, $actual['clients-added']);
+        $this->assertEquals(['an error occurred'], $actual['errors']);
     }
 }
