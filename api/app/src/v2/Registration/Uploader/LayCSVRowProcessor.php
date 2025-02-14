@@ -16,16 +16,23 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Processor for an individual row in the lay CSV file.
+ */
 class LayCSVRowProcessor
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly SiriusToLayDeputyshipDtoAssembler $layDeputyAssembler,
         private readonly ClientAssembler $clientAssembler,
+        private readonly ClientMatcher $clientMatcher,
         private readonly LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @param array $preReg An array as produced by PreRegistrationRepository->getNewClientsForExistingDeputiesArray()
+     */
     public function processRow(array $preReg): array
     {
         $layDeputyshipDto = $this->layDeputyAssembler->assembleFromArray($preReg);
@@ -44,7 +51,9 @@ class LayCSVRowProcessor
             /** @var Client $client */
             $client = $clientHandleResult['client'];
 
+            /** @var ?Report $report */
             $report = $clientHandleResult['existingReport'];
+
             if (is_null($report)) {
                 $report = $this->handleNewReport($layDeputyshipDto, $client);
             }
@@ -102,68 +111,23 @@ class LayCSVRowProcessor
 
     /*
      * @returns ['client' => Client, 'isNewClient' => bool, 'existingReport' => ?Report, 'oldReportType' => ?string]
-     * client is either an existing client or a new one
+     * client is either an existing active client or a new one
      * isNewClient is true if client is a new one
      * existingReport is only set if an existing report is going to be used for this row/DTO
      * oldReportType is only set if the report type on the existing report was changed (i.e. it became a hybrid)
      */
     private function handleNewClient(LayDeputyshipDto $dto, User $newUser): array
     {
-        $caseNumber = $dto->getCaseNumber();
-        $existingClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($caseNumber);
+        $clientMatch = $this->clientMatcher->matchDto($dto);
+        $client = $clientMatch->client;
 
-        if (!is_countable($existingClients)) {
-            throw new \ValueError(sprintf('unable to find clients for case number %s', $caseNumber));
-        }
-
-        $client = null;
-        $existingReport = null;
-        $oldReportType = null;
-        $isNewClient = true;
-        if (1 === count($existingClients)) {
-            // If there is one Client, and the above checks were OK, we might be able to just use that Client,
-            // rather than making a new one, providing this deputy can see that client's report as a co-deputy;
-            // to work that out, we work out which report type we should be creating, then check whether the
-            // existing client already has a report of a compatible type and that the row is marked as HYBRID.
-            //
-            // COMPATIBLE REPORT TYPES (incoming = in CSV row, existing = type of existing report on client)
-            // incoming = 102, existing = 102
-            // incoming = 103, existing = 103
-            // incoming = 104, existing = 104
-            // incoming = 102-4, existing = 102 or 102-4, incoming row marked as HYBRID (report will become a hybrid)
-            // incoming = 103-4, existing = 103 or 103-4, incoming row marked as HYBRID (report will become a hybrid)
-            /** @var Client $potentialClient */
-            $potentialClient = $existingClients[0];
-            $determinedReportType = PreRegistration::getReportTypeByOrderType(
-                $dto->getTypeOfReport(),
-                $dto->getOrderType(),
-                PreRegistration::REALM_LAY,
-            );
-
-            $compatibleReport = str_starts_with($determinedReportType, $potentialClient->getCurrentReport()->getType());
-            if (str_ends_with($determinedReportType, '-4')) {
-                $compatibleReport &= 'HYBRID' === $dto->getHybrid();
-            }
-
-            if ($compatibleReport) {
-                $client = $potentialClient;
-                $isNewClient = false;
-                $existingReport = $potentialClient->getCurrentReport();
-
-                // set the report type if it needs to be converted to a hybrid report and store $oldReportType
-                $existingReportType = $existingReport->getType();
-                if ($existingReportType !== $determinedReportType) {
-                    $oldReportType = $existingReportType;
-                    $existingReport->setType($determinedReportType);
-                }
-            }
-        }
-
+        $isNewClient = false;
         if (is_null($client)) {
             // only create a new client if one doesn't already exist;
             // or if all the clients are discharged, and we are creating a client for a deputy that is not associated
             // with this case number already
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
+            $isNewClient = true;
         }
 
         $client->addUser($newUser);
@@ -171,8 +135,8 @@ class LayCSVRowProcessor
 
         return [
             'client' => $client,
-            'existingReport' => $existingReport,
-            'oldReportType' => $oldReportType,
+            'existingReport' => $clientMatch->report,
+            'reportTypeWasChangedFrom' => $clientMatch->reportTypeWasChangedFrom,
             'isNewClient' => $isNewClient,
         ];
     }
@@ -203,7 +167,7 @@ class LayCSVRowProcessor
     private function getEntityDetails(
         array $clientHandleResult,
         array $deputyUids,
-        mixed $report,
+        Report $report,
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
         $client = $clientHandleResult['client'];
@@ -233,7 +197,7 @@ class LayCSVRowProcessor
             // type of the existing report which was updated for this row, e.g.
             // if we received a '102-4' marked HYBRID and the existing report was a '102', this would
             // contain '102' (the report type before we updated it to '102-4')
-            'oldReportType' => $clientHandleResult['oldReportType'],
+            'reportTypeWasChangedFrom' => $clientHandleResult['reportTypeWasChangedFrom'],
 
             // data from the CSV parsed into the DTO
             'dto.caseNumber' => $layDeputyshipDto->getCaseNumber(),
