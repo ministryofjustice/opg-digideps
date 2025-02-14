@@ -25,7 +25,7 @@ class LayCSVRowProcessor
         private readonly EntityManagerInterface $em,
         private readonly SiriusToLayDeputyshipDtoAssembler $layDeputyAssembler,
         private readonly ClientAssembler $clientAssembler,
-        private readonly ClientMatcher $clientMatcher,
+        private readonly LayCSVClientMatcher $clientMatcher,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -46,18 +46,19 @@ class LayCSVRowProcessor
 
             $user = $this->findUser($deputyUid);
 
-            $clientHandleResult = $this->handleNewClient($layDeputyshipDto, $user);
+            $clientHandleResult = $this->handleNewClient($layDeputyshipDto);
 
             /** @var Client $client */
             $client = $clientHandleResult['client'];
+            $client->addUser($user);
 
             /** @var ?Report $report */
             $report = $clientHandleResult['existingReport'];
-
             if (is_null($report)) {
                 $report = $this->handleNewReport($layDeputyshipDto, $client);
             }
 
+            $this->em->persist($client);
             $this->em->flush();
             $this->em->commit();
             $this->em->clear();
@@ -106,6 +107,10 @@ class LayCSVRowProcessor
             throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
         }
 
+        if (is_null($primaryDeputyUser)) {
+            throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
+        }
+
         return $primaryDeputyUser;
     }
 
@@ -116,7 +121,7 @@ class LayCSVRowProcessor
      * existingReport is only set if an existing report is going to be used for this row/DTO
      * oldReportType is only set if the report type on the existing report was changed (i.e. it became a hybrid)
      */
-    private function handleNewClient(LayDeputyshipDto $dto, User $newUser): array
+    private function handleNewClient(LayDeputyshipDto $dto): array
     {
         $clientMatch = $this->clientMatcher->matchDto($dto);
         $client = $clientMatch->client;
@@ -129,9 +134,6 @@ class LayCSVRowProcessor
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
             $isNewClient = true;
         }
-
-        $client->addUser($newUser);
-        $this->em->persist($client);
 
         return [
             'client' => $client,
@@ -170,6 +172,7 @@ class LayCSVRowProcessor
         Report $report,
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
+        /** @var Client $client */
         $client = $clientHandleResult['client'];
 
         return [
