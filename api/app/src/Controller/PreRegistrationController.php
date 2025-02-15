@@ -23,12 +23,13 @@ class PreRegistrationController extends RestController
     public function __construct(
         private PreRegistrationVerificationService $preRegistrationVerificationService,
         private RestFormatter $formatter,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
     ) {
     }
 
     /**
      * @Route("/delete", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return array|JsonResponse
@@ -82,10 +83,15 @@ class PreRegistrationController extends RestController
         );
 
         if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
+            if ($this->preRegistrationVerificationService->isFirstTimeDeputySigningUp()) {
+                $user->setIsPrimary(true);
+            } else {
+                throw new \RuntimeException(json_encode('Deputy has already registered for the service'), 464);
+            }
+
             $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setDeputyUid($verificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setPreRegisterValidatedDate(new \DateTime());
-            $user->setIsPrimary(true);
             $this->em->persist($user);
             $this->em->flush();
         } else {
@@ -98,6 +104,7 @@ class PreRegistrationController extends RestController
 
     /**
      * @Route("/count", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function userCount()

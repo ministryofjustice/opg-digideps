@@ -361,6 +361,10 @@ class UserController extends AbstractController
                         $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
                         break;
 
+                    case 464:
+                        $form->addError(new FormError($this->translator->trans('formErrors.deputyAlreadyRegistered', [], 'register')));
+                        break;
+
                     default:
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
