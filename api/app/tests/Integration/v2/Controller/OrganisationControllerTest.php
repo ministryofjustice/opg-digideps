@@ -43,6 +43,7 @@ class OrganisationControllerTest extends AbstractTestController
         self::$fixtures::deleteReportsData(['organisation']);
 
         self::$orgs = self::fixtures()->createOrganisations(4);
+        self::$profUser = self::fixtures()->createUser(['setRoleName' => User::ROLE_PROF_ADMIN]);
 
         self::fixtures()->flush()->clear();
 

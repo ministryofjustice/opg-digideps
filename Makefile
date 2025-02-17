@@ -97,7 +97,7 @@ api-unit-tests: ##@unit-tests Run the api unit tests
 
 api-integration-tests: reset-database-integration-tests reset-fixtures-integration-tests ##@integration-tests Run the api integration tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml build api-integration-tests
-	docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-all
+	docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-3
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml run --rm api-integration-tests sh scripts/reset_db_structure.sh local

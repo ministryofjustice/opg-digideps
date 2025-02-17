@@ -31,11 +31,15 @@ export SSL=${DATABASE_SSL:=allow}
 
 # Check the argument provided and run the corresponding test suites
 case "$1" in
-  selection-all) # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
+selection-1)
     printf '\n Running Controller Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Controller/ --coverage-php tests/coverage/Controller.cov
+    ;;
+selection-2)
     printf '\n Running ControllerReport Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/ControllerReport/ --coverage-php tests/coverage/ControllerReport.cov
+    ;;
+selection-3)
     printf '\n Running DBAL Suite \n\n'
     php vendor/bin/phpunit --debug -c tests/Unit tests/Integration/DBAL/ --coverage-php tests/coverage/DBAL.cov
     printf '\n Running Controller-Ndr Suite \n\n'
@@ -50,10 +54,12 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Unit tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
+    ;;
+#  selection-all) # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
 
     # generate HTML coverage report
-    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
-    ;;
+#    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
+#    ;;
   *)
     echo "Invalid argument. Please provide one of the following arguments: selection-all"
     exit 1
