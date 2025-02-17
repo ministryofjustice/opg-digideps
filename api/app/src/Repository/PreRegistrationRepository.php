@@ -73,7 +73,25 @@ class PreRegistrationRepository extends ServiceEntityRepository
          * This gives us which combinations do not exist in Digideps.
          *
          * Note that because we are deliberately excluding combinations which already exist in digideps, any
-         * combos which do exist will cause no change to the database and not throw an error.
+         * combos which do exist will cause no change to the database and not throw an error. Also note that we need
+         * to handle potential error cases where we don't have the current case+deputy, but then receive it twice in the
+         * same CSV file, e.g.
+         *
+         * case1,newDeputy1,hw
+         * case1,newDeputy1,hw
+         *
+         * Also note that we are not just checking for cases where a deputy already exists: a new deputy might
+         * have two or more rows for different cases in the same CSV file, so we can't assume which deputies may
+         * be multi-client deputies on the basis of what's currently in the database. For example, we've never seen
+         * newDeputy1 or newDeputy2 before and we get these rows in the CSV:
+         *
+         * case1,newDeputy1,hw
+         * case2,newDeputy1,pfa
+         * case1,newDeputy2,hw
+         *
+         * In this situation, case1 should have co-deputies newDeputy1 and newDeputy2, and case2 should have deputy
+         * newDeputy1; in addition, newDeputy1 is a multi-client deputy, despite the fact we've never encountered them
+         * before in previous CSV uploads.
          */
         $newMultiClentsQuery = <<<SQL
         SELECT
@@ -113,7 +131,8 @@ class PreRegistrationRepository extends ServiceEntityRepository
                 INNER JOIN deputy_case dc ON u.id = dc.user_id
                 INNER JOIN client c ON dc.client_id = c.id
                 WHERE lower(c.case_number) = lower(pr.client_case_number)
-            );
+            )
+        ;
         SQL;
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
