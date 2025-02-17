@@ -6,6 +6,7 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\ReportRepository;
+use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
@@ -28,11 +29,12 @@ class LayDeputyshipUploader
     public const MAX_UPLOAD = 10000;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private ReportRepository $reportRepository,
-        private PreRegistrationFactory $preRegistrationFactory,
-        private LayCSVRowProcessor $rowProcessor,
-        private LoggerInterface $logger,
+        private readonly EntityManagerInterface $em,
+        private readonly ReportRepository $reportRepository,
+        private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly SiriusToLayDeputyshipDtoAssembler $layDeputyAssembler,
+        private readonly LayDeputyshipProcessor $layDeputyProcessor,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -108,7 +110,8 @@ class LayDeputyshipUploader
         $entityDetails = [];
 
         foreach ($preRegistrationNewClients as $preReg) {
-            $rowResult = $this->rowProcessor->processRow($preReg);
+            $dto = $this->layDeputyAssembler->assembleFromArray($preReg);
+            $rowResult = $this->layDeputyProcessor->processLayDeputyship($dto);
 
             $error = $rowResult['error'];
             if (!is_null($error)) {
