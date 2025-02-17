@@ -9,7 +9,6 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\v2\Assembler\ClientAssembler;
-use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -17,25 +16,20 @@ use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
 
 /**
- * Processor for an individual row in the lay CSV file.
+ * Processor for an individual row in the lay CSV file, represented as a lay deputyship DTO object.
  */
-class LayCSVRowProcessor
+class LayDeputyshipProcessor
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly SiriusToLayDeputyshipDtoAssembler $layDeputyAssembler,
         private readonly ClientAssembler $clientAssembler,
-        private readonly LayCSVClientMatcher $clientMatcher,
+        private readonly LayClientMatcher $clientMatcher,
         private readonly LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * @param array $preReg An array as produced by PreRegistrationRepository->getNewClientsForExistingDeputiesArray()
-     */
-    public function processRow(array $preReg): array
+    public function processLayDeputyship(LayDeputyshipDto $layDeputyshipDto): array
     {
-        $layDeputyshipDto = $this->layDeputyAssembler->assembleFromArray($preReg);
         $deputyUid = $layDeputyshipDto->getDeputyUid();
 
         $entityDetails = [];

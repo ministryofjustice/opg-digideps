@@ -12,36 +12,34 @@ use App\v2\Assembler\ClientAssembler;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\Uploader\ClientMatch;
-use App\v2\Registration\Uploader\LayCSVClientMatcher;
-use App\v2\Registration\Uploader\LayCSVRowProcessor;
+use App\v2\Registration\Uploader\LayClientMatcher;
+use App\v2\Registration\Uploader\LayDeputyshipProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class LayCSVRowProcessorTest extends TestCase
+class LayDeputyshipProcessorTest extends TestCase
 {
     private EntityManagerInterface $mockEm;
     private SiriusToLayDeputyshipDtoAssembler $mockLayDeputyAssembler;
     private ClientAssembler $mockClientAssembler;
     private LoggerInterface $mockLogger;
-    private LayCSVClientMatcher $mockClientMatcher;
+    private LayClientMatcher $mockClientMatcher;
     private UserRepository $mockUserRepository;
-    private LayCSVRowProcessor $sut;
+    private LayDeputyshipProcessor $sut;
 
     public function setUp(): void
     {
         $this->mockEm = $this->createMock(EntityManagerInterface::class);
-        $this->mockLayDeputyAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
         $this->mockClientAssembler = $this->createMock(ClientAssembler::class);
-        $this->mockClientMatcher = $this->createMock(LayCSVClientMatcher::class);
+        $this->mockClientMatcher = $this->createMock(LayClientMatcher::class);
         $this->mockLogger = $this->createMock(LoggerInterface::class);
 
         $this->mockUserRepository = $this->createMock(UserRepository::class);
 
-        $this->sut = new LayCSVRowProcessor(
+        $this->sut = new LayDeputyshipProcessor(
             $this->mockEm,
-            $this->mockLayDeputyAssembler,
             $this->mockClientAssembler,
             $this->mockClientMatcher,
             $this->mockLogger
@@ -54,16 +52,9 @@ class LayCSVRowProcessorTest extends TestCase
     public function testProcessRowNoUserException()
     {
         // Expectations
-        $row = ['DeputyUid' => '111111111'];
-
         $layDeputyshipDto = new LayDeputyshipDto();
         $layDeputyshipDto->setDeputyUid('111111111')
             ->setCaseNumber('99999999');
-
-        $this->mockLayDeputyAssembler->expects($this->once())
-            ->method('assembleFromArray')
-            ->with($row)
-            ->willReturn($layDeputyshipDto);
 
         $this->mockEm->expects($this->once())->method('beginTransaction');
         $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
@@ -74,7 +65,7 @@ class LayCSVRowProcessorTest extends TestCase
             ->willThrowException(new NoResultException());
 
         // Test
-        $output = $this->sut->processRow($row);
+        $output = $this->sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $this->assertEquals([], $output['entityDetails']);
@@ -87,8 +78,6 @@ class LayCSVRowProcessorTest extends TestCase
     public function testProcessRowMatchingClientAndReport()
     {
         // Expectations
-        $row = ['DeputyUid' => '222222222'];
-
         $orderDate = new \DateTime('2025-02-14');
 
         $layDeputyshipDto = new LayDeputyshipDto();
@@ -106,11 +95,6 @@ class LayCSVRowProcessorTest extends TestCase
         $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
         $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
         $existingReport->expects($this->once())->method('getId')->willReturn(1);
-
-        $this->mockLayDeputyAssembler->expects($this->once())
-            ->method('assembleFromArray')
-            ->with($row)
-            ->willReturn($layDeputyshipDto);
 
         $this->mockEm->expects($this->once())->method('beginTransaction');
         $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
@@ -145,7 +129,7 @@ class LayCSVRowProcessorTest extends TestCase
         $existingClient->expects($this->once())->method('getCaseNumber')->willReturn('88888888');
 
         // Test
-        $output = $this->sut->processRow($row);
+        $output = $this->sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $expected = [
@@ -171,8 +155,6 @@ class LayCSVRowProcessorTest extends TestCase
     public function testProcessRowNoMatchingClient()
     {
         // Expectations
-        $row = ['DeputyUid' => '222222222'];
-
         $orderDate = new \DateTime('2025-02-14');
 
         $layDeputyshipDto = new LayDeputyshipDto();
@@ -184,11 +166,6 @@ class LayCSVRowProcessorTest extends TestCase
 
         $user = new User();
         $user->setDeputyUid(222222222);
-
-        $this->mockLayDeputyAssembler->expects($this->once())
-            ->method('assembleFromArray')
-            ->with($row)
-            ->willReturn($layDeputyshipDto);
 
         $this->mockEm->expects($this->once())->method('beginTransaction');
         $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
@@ -228,7 +205,7 @@ class LayCSVRowProcessorTest extends TestCase
         $mockClient->expects($this->once())->method('getCaseNumber')->willReturn('88888888');
 
         // Test
-        $output = $this->sut->processRow($row);
+        $output = $this->sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $expected = [
