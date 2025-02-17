@@ -77,8 +77,10 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $this->csvProcessing->layProcessingHandleNewMultiClients()
             ->shouldBeCalled()
             ->willReturn([
-                'added' => 0,
+                'new-clients-found' => 0,
+                'clients-added' => 0,
                 'errors' => [],
+                'details' => [],
             ]);
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
