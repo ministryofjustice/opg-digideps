@@ -25,7 +25,7 @@ class ClientMatch
  * with it. To be compatible, the DTO has to reference the same case, and the current report associated with
  * that client has to marry up with the report and order type details in the DTO.
  */
-class LayCSVClientMatcher
+class LayClientMatcher
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
