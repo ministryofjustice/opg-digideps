@@ -72,29 +72,20 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
 
-  api_unit_tests_1:
-    name: api unit tests 1
+  api_unit_tests:
+    name: api unit tests
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
-      selection: selection-1
+      selection: selection-all
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
 
-  api_unit_tests_2:
-    name: api unit tests 2
-    uses: ./.github/workflows/_unit-tests-api.yml
+  api_integration_tests:
+    name: api integration tests
+    uses: ./.github/workflows/_integration-tests-api.yml
     with:
-      selection: selection-2
-      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
-    needs:
-      - workflow_variables
-
-  api_unit_tests_3:
-    name: api unit tests 3
-    uses: ./.github/workflows/_unit-tests-api.yml
-    with:
-      selection: selection-3
+      selection: selection-all
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
@@ -113,9 +104,8 @@ jobs:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     needs:
       - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
+      - api_unit_tests
+      - api_integration_tests
 
   miscellaneous_tests:
     name: miscellaneous tests
@@ -146,9 +136,8 @@ jobs:
       - docker_build_scan_push
       - miscellaneous_tests
       - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
+      - api_unit_tests
+      - api_integration_tests
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
