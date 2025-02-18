@@ -1,3 +1,41 @@
+# Sirius CourtOrder CSV Ingestion
+
+resource "aws_cloudwatch_event_rule" "csv_automation_court_order_processing" {
+  name                = "csv-automation-court-order-processing-${local.environment}"
+  description         = "Process Sirus Court Orders CSV for all Users ${terraform.workspace}"
+  schedule_expression = "cron(59 1 * * ? *)"
+  tags                = var.default_tags
+}
+
+resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
+  rule     = aws_cloudwatch_event_rule.csv_automation_court_order_processing.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.private[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "api_app",
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-court-orders-csv", "--env=prod", "--no-debug", local.court_order_report_csv_file]
+        }
+      ]
+    }
+  )
+}
+
 # Sirius Lay CSV Ingestion
 
 resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
