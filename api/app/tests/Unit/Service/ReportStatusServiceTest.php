@@ -45,87 +45,87 @@ class ReportStatusServiceTest extends TestCase
     private function getReportMocked(array $reportMethods = [], $hasBalance = true)
     {
         $report = m::mock(Report::class, $reportMethods + [
-                'getSectionStatusesCached' => [],
-                'getBankAccounts' => [],
-                'getBankAccountsIncomplete' => [],
-                'getExpenses' => [],
-                'getPaidForAnything' => null,
-                'expensesSectionCompleted' => null,
-                'getGifts' => [],
-                'giftsSectionCompleted' => null,
-                'getMoneyTransfers' => [],
-                'getNoTransfersToAdd' => null,
-                'getAssets' => [],
-                'getDecisions' => [],
-                'getHasCapacityChanged' => null,
-                'getNoAssetToAdd' => null,
-                'getContacts' => [],
-                'getReasonForNoContacts' => null,
-                'getSignificantDecisionsMade' => null,
-                'getReasonForNoDecisions' => null,
-                'getVisitsCare' => m::mock(VisitsCare::class, [
-                    'getDoYouLiveWithClient' => null,
-                    'getDoesClientReceivePaidCare' => null,
-                    'getWhoIsDoingTheCaring' => null,
-                    'getDoesClientHaveACarePlan' => null,
-                ]),
-                'getLifestyle' => m::mock(VisitsCare::class, [
-                    'getCareAppointments' => null,
-                    'getDoesClientUndertakeSocialActivities' => null,
-                ]),
-                'getAction' => m::mock(Action::class, [
-                    'getDoYouExpectFinancialDecisions' => null,
-                    'getDoYouHaveConcerns' => null,
-                ]),
-                'getActionMoreInfo' => null,
-                'getMentalCapacity' => null,
-                'getMoneyInExists' => null,
-                'hasMoneyIn' => false,
-                'getMoneyTransactionsIn' => [],
-                'getMoneyOutExists' => null,
-                'hasMoneyOut' => false,
-                'getMoneyTransactionsOut' => [],
-                'getHasDebts' => null,
-                'getDebts' => [],
-                'getDebtsWithValidAmount' => [],
-                'getDebtManagement' => null,
-                'getTotalsMatch' => null,
-                'getBalanceMismatchExplanation' => null,
-                'getDocuments' => [],
-                'getDeputyDocuments' => [],
-                'getWishToProvideDocumentation' => null,
-                // 103
-                'getMoneyShortCategoriesIn' => [],
-                'getMoneyShortCategoriesInPresent' => [],
-                'getMoneyTransactionsShortInExist' => null,
-                'getMoneyTransactionsShortIn' => [],
-                'getMoneyShortCategoriesOut' => [],
-                'getMoneyShortCategoriesOutPresent' => [],
-                'getMoneyTransactionsShortOutExist' => null,
-                'getMoneyTransactionsShortOut' => [],
-                'getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
-                // 106
-                'has106Flag' => false,
-//                'getFeesWithValidAmount'                           => [],
-//                'getReasonForNoFees'                => null,
-                'paFeesExpensesNotStarted' => null,
-                'paFeesExpensesCompleted' => null,
-                'getProfDeputyCostsHowCharged' => null,
-                'hasProfDeputyCostsHowChargedFixedOnly' => null,
-                'getProfDeputyCostsHasPrevious' => null,
-                'getProfDeputyFixedCost' => null,
-                'getProfDeputyCostsHasInterim' => null,
-                'getProfDeputyCostsAmountToScco' => null,
-                'hasProfDeputyOtherCosts' => null,
-                'isMissingMoneyOrAccountsOrClosingBalance' => true,
-//                'hasSection' => false,
-                // 'getExpenses'                       => [],
-                // 'getPaidForAnything'                => null,
-                'getAvailableSections' => [ // 102 sections
-                    'decisions', 'contacts', 'visitsCare', 'balance', 'bankAccounts',
-                    'moneyTransfers', 'moneyIn', 'moneyOut',
-                    'assets', 'debts', 'gifts', 'actions', 'otherInfo', 'deputyExpenses', ],
-            ]);
+            'getSectionStatusesCached' => [],
+            'getBankAccounts' => [],
+            'getBankAccountsIncomplete' => [],
+            'getExpenses' => [],
+            'getPaidForAnything' => null,
+            'expensesSectionCompleted' => null,
+            'getGifts' => [],
+            'giftsSectionCompleted' => null,
+            'getMoneyTransfers' => [],
+            'getNoTransfersToAdd' => null,
+            'getAssets' => [],
+            'getDecisions' => [],
+            'getHasCapacityChanged' => null,
+            'getNoAssetToAdd' => null,
+            'getContacts' => [],
+            'getReasonForNoContacts' => null,
+            'getSignificantDecisionsMade' => null,
+            'getReasonForNoDecisions' => null,
+            'getVisitsCare' => m::mock(VisitsCare::class, [
+                'getDoYouLiveWithClient' => null,
+                'getDoesClientReceivePaidCare' => null,
+                'getWhoIsDoingTheCaring' => null,
+                'getDoesClientHaveACarePlan' => null,
+            ]),
+            'getLifestyle' => m::mock(VisitsCare::class, [
+                'getCareAppointments' => null,
+                'getDoesClientUndertakeSocialActivities' => null,
+            ]),
+            'getAction' => m::mock(Action::class, [
+                'getDoYouExpectFinancialDecisions' => null,
+                'getDoYouHaveConcerns' => null,
+            ]),
+            'getActionMoreInfo' => null,
+            'getMentalCapacity' => null,
+            'getMoneyInExists' => null,
+            'hasMoneyIn' => false,
+            'getMoneyTransactionsIn' => [],
+            'getMoneyOutExists' => null,
+            'hasMoneyOut' => false,
+            'getMoneyTransactionsOut' => [],
+            'getHasDebts' => null,
+            'getDebts' => [],
+            'getDebtsWithValidAmount' => [],
+            'getDebtManagement' => null,
+            'getTotalsMatch' => null,
+            'getBalanceMismatchExplanation' => null,
+            'getDocuments' => [],
+            'getDeputyDocuments' => [],
+            'getWishToProvideDocumentation' => null,
+            // 103
+            'getMoneyShortCategoriesIn' => [],
+            'getMoneyShortCategoriesInPresent' => [],
+            'getMoneyTransactionsShortInExist' => null,
+            'getMoneyTransactionsShortIn' => [],
+            'getMoneyShortCategoriesOut' => [],
+            'getMoneyShortCategoriesOutPresent' => [],
+            'getMoneyTransactionsShortOutExist' => null,
+            'getMoneyTransactionsShortOut' => [],
+            'getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+            // 106
+            'has106Flag' => false,
+            //                'getFeesWithValidAmount'                           => [],
+            //                'getReasonForNoFees'                => null,
+            'paFeesExpensesNotStarted' => null,
+            'paFeesExpensesCompleted' => null,
+            'getProfDeputyCostsHowCharged' => null,
+            'hasProfDeputyCostsHowChargedFixedOnly' => null,
+            'getProfDeputyCostsHasPrevious' => null,
+            'getProfDeputyFixedCost' => null,
+            'getProfDeputyCostsHasInterim' => null,
+            'getProfDeputyCostsAmountToScco' => null,
+            'hasProfDeputyOtherCosts' => null,
+            'isMissingMoneyOrAccountsOrClosingBalance' => true,
+            //                'hasSection' => false,
+            // 'getExpenses'                       => [],
+            // 'getPaidForAnything'                => null,
+            'getAvailableSections' => [ // 102 sections
+                'decisions', 'contacts', 'visitsCare', 'balance', 'bankAccounts',
+                'moneyTransfers', 'moneyIn', 'moneyOut',
+                'assets', 'debts', 'gifts', 'actions', 'otherInfo', 'deputyExpenses', ],
+        ]);
 
         $report->shouldReceive('hasSection')->with('balance')->andReturn($hasBalance);
 
@@ -237,12 +237,12 @@ class ReportStatusServiceTest extends TestCase
         $t = m::mock(MoneyTransactionShort::class);
 
         return [
-            [['getMoneyInExists'=> null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyInExists'=> 'No','getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyInExists'=> 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
+            [['getMoneyInExists' => null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyInExists' => 'No', 'getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes', 'getMoneyShortCategoriesInPresent' => [], 'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes', 'getMoneyShortCategoriesInPresent' => [], 'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes', 'getMoneyShortCategoriesInPresent' => [[$cat]], 'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyInExists' => 'Yes', 'getMoneyShortCategoriesInPresent' => [[$cat]], 'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
         ];
     }
 
@@ -263,12 +263,12 @@ class ReportStatusServiceTest extends TestCase
         $t = m::mock(MoneyTransactionShort::class);
 
         return [
-            [['getMoneyOutExists'=> null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyOutExists'=> 'No','getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyOutExists'=> 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
+            [['getMoneyOutExists' => null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyOutExists' => 'No', 'getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes', 'getMoneyShortCategoriesOutPresent' => [], 'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes', 'getMoneyShortCategoriesOutPresent' => [], 'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes', 'getMoneyShortCategoriesOutPresent' => [$cat], 'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyOutExists' => 'Yes', 'getMoneyShortCategoriesOutPresent' => [[$cat]], 'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
         ];
     }
 
@@ -457,32 +457,32 @@ class ReportStatusServiceTest extends TestCase
             [
                 'howCharged' => null,
                 'hasMoreInfo' => null,
-                'expectedStatus' => ReportStatusService::STATE_NOT_STARTED,
+                'expectedStatus' => StatusService::STATE_NOT_STARTED,
             ],
             [
                 'howCharged' => 'fixed',
                 'hasMoreInfo' => null,
-                'expectedStatus' => ReportStatusService::STATE_DONE,
+                'expectedStatus' => StatusService::STATE_DONE,
             ],
             [
                 'howCharged' => 'assessed',
                 'hasMoreInfo' => null,
-                'expectedStatus' => ReportStatusService::STATE_INCOMPLETE,
+                'expectedStatus' => StatusService::STATE_INCOMPLETE,
             ],
             [
                 'howCharged' => 'both',
                 'hasMoreInfo' => null,
-                'expectedStatus' => ReportStatusService::STATE_INCOMPLETE,
+                'expectedStatus' => StatusService::STATE_INCOMPLETE,
             ],
             [
                 'howCharged' => 'assessed',
                 'hasMoreInfo' => 'yes',
-                'expectedStatus' => ReportStatusService::STATE_DONE,
+                'expectedStatus' => StatusService::STATE_DONE,
             ],
             [
                 'howCharged' => 'both',
                 'hasMoreInfo' => 'yes',
-                'expectedStatus' => ReportStatusService::STATE_DONE,
+                'expectedStatus' => StatusService::STATE_DONE,
             ],
         ];
     }
@@ -592,62 +592,62 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
-    public function testGetRemainingSectionsAndStatus()
-    {
-        $this->markTestSkipped('not easily testable after use of cache');
-        $mocksCompletingReport = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
-            + array_pop($this->decisionsProvider())[0]
-            + array_pop($this->contactsProvider())[0]
-            + array_pop($this->visitsCareProvider())[0]
-            + array_pop($this->actionsProvider())[0]
-            + array_pop($this->otherInfoProvider())[0]
-            + array_pop($this->giftsProvider())[0]
-            + array_pop($this->documentsProvider())[0]
-            + array_pop($this->balanceProvider())[0]
-            + array_pop($this->bankAccountProvider())[0]
-            + array_pop($this->expensesProvider())[0]
-            + array_pop($this->assetsProvider())[0]
-            + array_pop($this->debtsProvider())[0]
-            + array_pop($this->moneyTransferProvider())[0]
-            + array_pop($this->MoneyInProvider())[0]
-            + array_pop($this->MoneyOutProvider())[0];
-
-        // all empty
-        $report = $this->getReportMocked();
-        $report->shouldReceive('isDue')->andReturn(true);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
-        $object = new StatusService($report);
-        $this->assertNotEquals([], $object->getRemainingSections());
-        $this->assertEquals('notStarted', $object->getStatus());
-
-        // due, half complete
-        $dp = $this->decisionsProvider();
-        $retPartial = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
-            + array_pop($dp)[0];
-        $report = $this->getReportMocked($retPartial);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
-        $object = new StatusService($report);
-        $report->shouldReceive('isDue')->andReturn(true);
-        $this->assertEquals('notFinished', $object->getStatus());
-
-        // not due, complete
-        $report = $this->getReportMocked($mocksCompletingReport);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
-        $object = new StatusService($report);
-        $this->assertEquals([], $object->getRemainingSections());
-        $report->shouldReceive('isDue')->andReturn(false);
-        $this->assertEquals('notFinished', $object->getStatus());
-
-        // due, complete
-        $report = $this->getReportMocked($mocksCompletingReport);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
-        $object = new StatusService($report);
-        $report->shouldReceive('isDue')->andReturn(true);
-        $this->assertEquals('readyToSubmit', $object->getStatus());
-    }
+    //    public function testGetRemainingSectionsAndStatus()
+    //    {
+    //        $this->markTestSkipped('not easily testable after use of cache');
+    //        $mocksCompletingReport = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
+    //            + array_pop($this->decisionsProvider())[0]
+    //            + array_pop($this->contactsProvider())[0]
+    //            + array_pop($this->visitsCareProvider())[0]
+    //            + array_pop($this->actionsProvider())[0]
+    //            + array_pop($this->otherInfoProvider())[0]
+    //            + array_pop($this->giftsProvider())[0]
+    //            + array_pop($this->documentsProvider())[0]
+    //            + array_pop($this->balanceProvider())[0]
+    //            + array_pop($this->bankAccountProvider())[0]
+    //            + array_pop($this->expensesProvider())[0]
+    //            + array_pop($this->assetsProvider())[0]
+    //            + array_pop($this->debtsProvider())[0]
+    //            + array_pop($this->moneyTransferProvider())[0]
+    //            + array_pop($this->MoneyInProvider())[0]
+    //            + array_pop($this->MoneyOutProvider())[0];
+    //
+    //        // all empty
+    //        $report = $this->getReportMocked();
+    //        $report->shouldReceive('isDue')->andReturn(true);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
+    //        $object = new StatusService($report);
+    //        $this->assertNotEquals([], $object->getRemainingSections());
+    //        $this->assertEquals('notStarted', $object->getStatus());
+    //
+    //        // due, half complete
+    //        $dp = $this->decisionsProvider();
+    //        $retPartial = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
+    //            + array_pop($dp)[0];
+    //        $report = $this->getReportMocked($retPartial);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
+    //        $object = new StatusService($report);
+    //        $report->shouldReceive('isDue')->andReturn(true);
+    //        $this->assertEquals('notFinished', $object->getStatus());
+    //
+    //        // not due, complete
+    //        $report = $this->getReportMocked($mocksCompletingReport);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
+    //        $object = new StatusService($report);
+    //        $this->assertEquals([], $object->getRemainingSections());
+    //        $report->shouldReceive('isDue')->andReturn(false);
+    //        $this->assertEquals('notFinished', $object->getStatus());
+    //
+    //        // due, complete
+    //        $report = $this->getReportMocked($mocksCompletingReport);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
+    //        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
+    //        $object = new StatusService($report);
+    //        $report->shouldReceive('isDue')->andReturn(true);
+    //        $this->assertEquals('readyToSubmit', $object->getStatus());
+    //    }
 
     public function decisionsProvider()
     {
@@ -888,7 +888,7 @@ class ReportStatusServiceTest extends TestCase
 
         $report->isDue()->shouldBeCalled()->willReturn(true);
 
-        $sut = new ReportStatusService($report->reveal());
+        $sut = new StatusService($report->reveal());
         $status = $sut->getStatus();
         self::assertEquals(Report::STATUS_READY_TO_SUBMIT, $status);
     }
@@ -904,7 +904,7 @@ class ReportStatusServiceTest extends TestCase
 
         $report->isDue()->shouldBeCalled()->willReturn(false);
 
-        $sut = new ReportStatusService($report->reveal());
+        $sut = new StatusService($report->reveal());
         $status = $sut->getStatus();
         self::assertEquals(Report::STATUS_NOT_FINISHED, $status);
     }
@@ -917,7 +917,7 @@ class ReportStatusServiceTest extends TestCase
         $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(false);
 
-        $sut = new ReportStatusService($report->reveal());
+        $sut = new StatusService($report->reveal());
         $status = $sut->getStatus();
         self::assertEquals(Report::STATUS_NOT_STARTED, $status);
     }
@@ -931,7 +931,7 @@ class ReportStatusServiceTest extends TestCase
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
         $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
 
-        $sut = new ReportStatusService($report->reveal());
+        $sut = new StatusService($report->reveal());
         $status = $sut->getStatusIgnoringDueDate();
         self::assertEquals(Report::STATUS_READY_TO_SUBMIT, $status);
     }
