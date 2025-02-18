@@ -10,12 +10,19 @@ use App\Entity\Report\Report;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * If $reportTypeShouldChangeTo is set, this is the proposed new type for the found report.
+ * If $activeClientExistsForCase is true, we found at least one active case with the same case number as the DTO,
+ * but it had an incompatible report. This is always true if a compatible client and report were found, but not vice
+ * versa.
+ */
 class ClientMatch
 {
     public function __construct(
         public readonly ?Client $client,
         public readonly ?Report $report,
-        public readonly ?string $reportTypeWasChangedFrom,
+        public readonly ?string $reportTypeShouldChangeTo,
+        public readonly bool $activeClientExistsForCase,
     ) {
     }
 }
@@ -36,12 +43,16 @@ class LayClientMatcher
     {
         $caseNumber = $dto->getCaseNumber();
         $potentialClients = $this->em->getRepository(Client::class)->findByCaseNumberIncludingDischarged($caseNumber);
+        $activeClientExistsForCase = false;
+        $reportTypeShouldChangeTo = null;
 
         /** @var Client $potentialClient */
         foreach ($potentialClients as $potentialClient) {
             if ($potentialClient->isDeleted()) {
                 continue;
             }
+
+            $activeClientExistsForCase = true;
 
             // If there is an undeleted Client, we might be able to just use that Client,
             // rather than making a new one, providing this deputy can see that client's report as a co-deputy;
@@ -71,23 +82,21 @@ class LayClientMatcher
             }
 
             if ($isCompatibleReport) {
-                $reportTypeWasChangedFrom = null;
-
-                // set the report type if it needs to be converted to a hybrid report and store previous report type
+                // report is compatible but type should change
                 $existingReportType = $existingReport->getType();
                 if ($existingReportType !== $determinedReportType) {
-                    $reportTypeWasChangedFrom = $existingReportType;
-                    $existingReport->setType($determinedReportType);
+                    $reportTypeShouldChangeTo = $determinedReportType;
                 }
 
                 return new ClientMatch(
                     $potentialClient,
                     $existingReport,
-                    $reportTypeWasChangedFrom,
+                    $reportTypeShouldChangeTo,
+                    $activeClientExistsForCase,
                 );
             }
         }
 
-        return new ClientMatch(null, null, null);
+        return new ClientMatch(null, null, null, $activeClientExistsForCase);
     }
 }
