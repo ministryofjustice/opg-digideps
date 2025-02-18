@@ -528,6 +528,14 @@ trait IngestTrait
     }
 
     /**
+     * @When I run the lay CSV command for :csvFilename
+     */
+    public function iRunTheLayCsvCommandFor(string $csvFilename)
+    {
+        $this->uploadCsvAndCountCreatedEntities($csvFilename);
+    }
+
+    /**
      * @When I run the lay CSV command the file contains :newEntitiesCount new pre-registration entities
      */
     public function iRunTheLayCsvCommandTheFileContainsNPreRegistrationEntities(int $newEntitiesCount)

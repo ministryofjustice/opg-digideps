@@ -65,6 +65,34 @@ class PreRegistrationRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
+        /**
+         * Query to retrieve the new clients to be made from the PreReg table for existing deputies.
+         *
+         * Query is comparing the combination of deputy uid and case number (which is akin to a court order, just without the report type);
+         * comparison is between combinations in PreReg (essentially Sirius) with combinations from User & Client table (Digideps).
+         * This gives us which combinations do not exist in Digideps.
+         *
+         * Note that because we are deliberately excluding combinations which already exist in digideps, any
+         * combos which do exist will cause no change to the database and not throw an error. Also note that we need
+         * to handle potential error cases where we don't have the current case+deputy, but then receive it twice in the
+         * same CSV file, e.g.
+         *
+         * case1,newDeputy1,hw
+         * case1,newDeputy1,hw
+         *
+         * Also note that we are not just checking for cases where a deputy already exists: a new deputy might
+         * have two or more rows for different cases in the same CSV file, so we can't assume which deputies may
+         * be multi-client deputies on the basis of what's currently in the database. For example, we've never seen
+         * newDeputy1 or newDeputy2 before and we get these rows in the CSV:
+         *
+         * case1,newDeputy1,hw
+         * case2,newDeputy1,pfa
+         * case1,newDeputy2,hw
+         *
+         * In this situation, case1 should have co-deputies newDeputy1 and newDeputy2, and case2 should have deputy
+         * newDeputy1; in addition, newDeputy1 is a multi-client deputy, despite the fact we've never encountered them
+         * before in previous CSV uploads.
+         */
         $newMultiClentsQuery = <<<SQL
         SELECT
             pr.client_case_number AS "Case",
@@ -81,7 +109,6 @@ class PreRegistrationRepository extends ServiceEntityRepository
             pr.order_date         AS "MadeDate",
             pr.order_type         AS "OrderType",
             CASE WHEN pr.is_co_deputy THEN 'yes' ELSE 'no' END AS "CoDeputy",
-            pr.created_at         AS "MadeDate",
             pr.hybrid             AS "Hybrid",
             pr.deputy_firstname   AS "DeputyFirstname",
             pr.client_firstname   AS "ClientFirstname",
@@ -92,15 +119,24 @@ class PreRegistrationRepository extends ServiceEntityRepository
             pr.client_address_5   AS "ClientAddress5",
             pr.client_postcode    AS "ClientPostcode"
         FROM pre_registration pr
-        LEFT JOIN dd_user u ON pr.deputy_uid = u.deputy_uid::varchar(30)
-        LEFT JOIN deputy_case dc ON u.id = dc.user_id
-        LEFT JOIN client c ON dc.client_id = c.id
-        WHERE c.case_number != pr.client_case_number
+        WHERE
+            -- only entries in pre_registration table with an entry in the dd_user table
+            (SELECT COUNT(1) FROM dd_user u WHERE pr.deputy_uid = u.deputy_uid::varchar(30) LIMIT 1) > 0
+        AND
+            -- only combinations of deputy UID + case number which aren't already present
+            (pr.deputy_uid, lower(pr.client_case_number))
+            NOT IN (
+                SELECT u.deputy_uid::varchar(30), lower(c.case_number)
+                FROM dd_user u
+                INNER JOIN deputy_case dc ON u.id = dc.user_id
+                INNER JOIN client c ON dc.client_id = c.id
+                WHERE lower(c.case_number) = lower(pr.client_case_number)
+            )
+        ;
         SQL;
 
         $stmt = $conn->executeQuery($newMultiClentsQuery);
-        $result = $stmt->fetchAllAssociative();
 
-        return $result;
+        return $stmt->fetchAllAssociative();
     }
 }

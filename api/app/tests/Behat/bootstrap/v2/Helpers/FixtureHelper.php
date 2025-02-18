@@ -87,11 +87,11 @@ class FixtureHelper
             'currentReportDueDate' => $currentReport?->getDueDate(),
             'currentReportStartDate' => $currentReport?->getStartDate(),
             'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport?->getEndDate(),
-            'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]->getId(),
+            'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]?->getId(),
             'courtDate' => $client ? $client->getCourtDate()?->format('j F Y') : null,
         ];
 
-        if ($previousReport && $previousReport->getId() !== $currentReport->getId()) {
+        if ($previousReport && $currentReport && $previousReport->getId() !== $currentReport->getId()) {
             $userDetails = array_merge(
                 $userDetails,
                 [
@@ -200,22 +200,25 @@ class FixtureHelper
         );
     }
 
-    public function createUser(string $roleName, ?string $email = null)
-    {
+    public function createUser(
+        string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
+    ) {
         if (is_null($email)) {
             $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
         }
 
-        return $this->userTestHelper->createUser(null, $roleName, $email);
+        return $this->userTestHelper->createUser(null, $roleName, $email, true, $deputyUid, $firstName, $lastName);
     }
 
-    public function createAndPersistUser(string $roleName, ?string $email = null)
-    {
+    public function createAndPersistUser(
+        string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
+    ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
-        $user = $this->createUser($roleName, $email);
+        $user = $this->createUser($roleName, $email, $deputyUid, $firstName, $lastName);
+        $this->setPassword($user);
 
         $this->em->persist($user);
         $this->em->flush();
@@ -230,7 +233,7 @@ class FixtureHelper
         ?string $type = null,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
-        ?string $caseNumber = null
+        ?string $caseNumber = null,
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
@@ -353,7 +356,7 @@ class FixtureHelper
         ?int $satisfactionScore = null,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null
+        ?string $deputyUid = null,
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $user, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
@@ -975,7 +978,7 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyUid = null
+        ?string $deputyUid = null,
     ) {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -996,7 +999,7 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyNumber = null,
     ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -1017,7 +1020,7 @@ class FixtureHelper
         string $testRunId,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
-        ?string $deputyNumber = null
+        ?string $deputyNumber = null,
     ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -1258,7 +1261,7 @@ class FixtureHelper
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
-        ?int $deputyUid = null
+        ?int $deputyUid = null,
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1306,7 +1309,7 @@ class FixtureHelper
         ?string $caseNumber = null,
         ?string $deputyUid = null,
         ?\DateTime $startDate = null,
-        ?int $satisfactionScore = null
+        ?int $satisfactionScore = null,
     ) {
         if ('prod' === $this->symfonyEnvironment) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
