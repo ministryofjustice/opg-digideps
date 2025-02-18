@@ -87,7 +87,7 @@ class SelfRegisterData
      *
      * @Assert\Regex(
      *      pattern="/^.{8}$|^.{10}$/",
-     *      message="client.caseNumber.exactMessage1"
+     *      message="client.caseNumber.exactMessage"
      *  )
      */
     private $caseNumber;
