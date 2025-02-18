@@ -23,7 +23,7 @@ services:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
     volumes:
-      - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/coverage-api-integration:/var/www/build/coverage-api
 
   redis-api:
     restart: always

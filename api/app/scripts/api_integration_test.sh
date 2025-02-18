@@ -109,4 +109,4 @@ case "$1" in
     ;;
 esac
 
-php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"
+php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-integration-tests.xml" "./tests/coverage"

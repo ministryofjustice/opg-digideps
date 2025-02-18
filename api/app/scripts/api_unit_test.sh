@@ -7,7 +7,7 @@ case "$1" in
   selection-all)
     # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
     printf '\n Running Unit Test Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit --coverage-php tests/coverage/Unittests.cov
+    php -d memory_limit=128M vendor/bin/phpunit -c tests/Unit tests/Unit --coverage-php tests/coverage/Unittests.cov
 #    printf '\n Running Command Suite \n\n'
 #    php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
 #    printf '\n Running Factory Suite \n\n'
