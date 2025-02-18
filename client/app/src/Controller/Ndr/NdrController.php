@@ -17,6 +17,7 @@ use App\Service\File\S3FileUploader;
 use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\Redirector;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,7 +56,8 @@ class NdrController extends AbstractController
         private ClientApi $clientApi,
         private SatisfactionApi $satisfactionApi,
         private NdrApi $ndrApi,
-        private HtmlToPdfGenerator $htmlToPdf
+        private HtmlToPdfGenerator $htmlToPdf,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -229,6 +231,17 @@ class NdrController extends AbstractController
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $validForSubmission = $ndr->validForSubmission();
+            if (count($validForSubmission['msg']) > 0) {
+                foreach ($validForSubmission['msg'] as $message) {
+                    $this->logger->warning(sprintf('Client id %s has submission issue: %s', $clientId, $message));
+                }
+
+                if (!$validForSubmission['valid']) {
+                    throw new \RuntimeException(sprintf('Submission validation failed for client id '.$clientId));
+                }
+            }
+
             $ndr->setSubmitted(true)->setSubmitDate(new \DateTime());
 
             // store PDF as a document
