@@ -28,29 +28,36 @@ class LayDeputyshipProcessor
     ) {
     }
 
+    /**
+     * @return array
+     *               [
+     *               'entityDetails' => [] || [<details about entities added>],
+     *               'message' => '<explanation of what happened with the row>,
+     *               'error' => null || '<error which occurred while processing the row>'
+     *               ]
+     */
     public function processLayDeputyship(LayDeputyshipDto $layDeputyshipDto): array
     {
-        $deputyUid = $layDeputyshipDto->getDeputyUid();
-
         $entityDetails = [];
+        $message = null;
         $errorMessage = null;
 
         try {
-            $this->em->beginTransaction();
+            $client = $this->handleNewClient($layDeputyshipDto);
 
-            $user = $this->findUser($deputyUid);
+            if (is_null($client)) {
+                return [
+                    'entityDetails' => $entityDetails,
+                    'message' => 'Found a potential co-deputy or dual; will not create new multi-client entities',
+                    'errorMessage' => $errorMessage,
+                ];
+            }
 
-            $clientHandleResult = $this->handleNewClient($layDeputyshipDto);
-
-            /** @var Client $client */
-            $client = $clientHandleResult['client'];
+            $user = $this->findUser($layDeputyshipDto->getDeputyUid());
             $client->addUser($user);
 
-            /** @var ?Report $report */
-            $report = $clientHandleResult['existingReport'];
-            if (is_null($report)) {
-                $report = $this->handleNewReport($layDeputyshipDto, $client);
-            }
+            $report = $this->handleNewReport($layDeputyshipDto, $client);
+            $report->setClient($client);
 
             $this->em->persist($report);
             $this->em->persist($client);
@@ -59,18 +66,13 @@ class LayDeputyshipProcessor
             $this->em->clear();
 
             // record what has been added to the db
-            $users = $client->getUsers();
-            $deputyUids = [];
-            foreach ($users as $user) {
-                $deputyUids[] = $user->getDeputyUid();
-            }
-
             $entityDetails = $this->getEntityDetails(
-                $clientHandleResult,
-                $deputyUids,
+                $client,
                 $report,
                 $layDeputyshipDto
             );
+
+            $message = 'Added new client and report to multi-client deputy';
         } catch (\Throwable $e) {
             $errorMessage = sprintf('Error when creating entities for deputyUID %s for case %s: %s',
                 $layDeputyshipDto->getDeputyUid(),
@@ -83,6 +85,7 @@ class LayDeputyshipProcessor
 
         return [
             'entityDetails' => $entityDetails,
+            'message' => $message,
             'error' => $errorMessage,
         ];
     }
@@ -109,33 +112,24 @@ class LayDeputyshipProcessor
         return $primaryDeputyUser;
     }
 
-    /*
-     * @returns ['client' => Client, 'isNewClient' => bool, 'existingReport' => ?Report, 'oldReportType' => ?string]
-     * client is either an existing active client or a new one
-     * isNewClient is true if client is a new one
-     * existingReport is only set if an existing report is going to be used for this row/DTO
-     * oldReportType is only set if the report type on the existing report was changed (i.e. it became a hybrid)
-     */
-    private function handleNewClient(LayDeputyshipDto $dto): array
+    // returns null if a new client is not created
+    private function handleNewClient(LayDeputyshipDto $dto): ?Client
     {
         $clientMatch = $this->clientMatcher->matchDto($dto);
-        $client = $clientMatch->client;
 
-        $isNewClient = false;
-        if (is_null($client)) {
-            // only create a new client if one doesn't already exist;
-            // or if all the clients are discharged, and we are creating a client for a deputy that is not associated
-            // with this case number already
+        // Only create a new client if this is a multi-client, i.e. we found no candidate client
+        // with a compatible report and there is not an existing active client for this case number.
+        //
+        // * If there is an active client for this case, creating another client here would turn this deputy into
+        //   a dual
+        // * If there is a compatible report, creating a client here would create an unnecessary duplicate client
+        //   when a co-deputy would be more appropriate
+        $client = null;
+        if (is_null($clientMatch->client) && !$clientMatch->activeClientExistsForCase) {
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
-            $isNewClient = true;
         }
 
-        return [
-            'client' => $client,
-            'existingReport' => $clientMatch->report,
-            'reportTypeWasChangedFrom' => $clientMatch->reportTypeWasChangedFrom,
-            'isNewClient' => $isNewClient,
-        ];
+        return $client;
     }
 
     // we only call this if we created a new client; otherwise we are reusing an existing client and report
@@ -147,32 +141,23 @@ class LayDeputyshipProcessor
         $reportEndDate = clone $reportStartDate;
         $reportEndDate->add(new \DateInterval('P364D'));
 
-        $newReport = new Report(
+        return new Report(
             $newClient,
             $determinedReportType,
             $reportStartDate,
             $reportEndDate,
             false
         );
-
-        $newReport->setClient($newClient);
-
-        return $newReport;
     }
 
     private function getEntityDetails(
-        array $clientHandleResult,
-        array $deputyUids,
+        Client $client,
         Report $report,
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
-        /** @var Client $client */
-        $client = $clientHandleResult['client'];
+        $deputyUids = array_map(function ($user) { return $user->getDeputyUid(); }, $client->getUsers());
 
         return [
-            // was a new client created for this row?
-            'isNewClient' => $clientHandleResult['isNewClient'],
-
             // ID of the client used for this row
             'clientId' => $client->getId(),
 
@@ -182,19 +167,11 @@ class LayDeputyshipProcessor
             // UIDs of deputies associated with the client (including the deputy from the row)
             'clientDeputyUids' => $deputyUids,
 
-            // was a new report created for this row?
-            'isNewReport' => is_null($clientHandleResult['existingReport']),
-
             // ID of the report used for this row
             'reportId' => $report->getId(),
 
             // type of the report used for this row; '102', '103', '104', '102-4', '103-4'
             'reportType' => $report->getType(),
-
-            // type of the existing report which was updated for this row, e.g.
-            // if we received a '102-4' marked HYBRID and the existing report was a '102', this would
-            // contain '102' (the report type before we updated it to '102-4')
-            'reportTypeWasChangedFrom' => $clientHandleResult['reportTypeWasChangedFrom'],
 
             // data from the CSV parsed into the DTO
             'dto.caseNumber' => $layDeputyshipDto->getCaseNumber(),
