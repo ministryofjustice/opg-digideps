@@ -48,7 +48,7 @@ trait SelfRegistrationTrait
     /**
      * @Given the lay deputy :name @ :jsonFile registers as a deputy
      *
-     * e.g. 'Given the lay deputy "Marbo Vantz" @ "ingest.lay.multiclient.codeputies.sirius.json" registers as a deputy'
+     * e.g. 'Given the lay deputy "Marbo Vantz" @ "ingest.lay.multiclient.sirius.json" registers as a deputy'
      *
      * This looks up a deputy in a specific json fixture file :jsonFile, using :name as a key into the JSON,
      * and registers them through the frontend. See the file referenced above for an example of the JSON format.

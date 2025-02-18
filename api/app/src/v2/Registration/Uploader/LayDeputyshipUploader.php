@@ -118,11 +118,10 @@ class LayDeputyshipUploader
                 $errors[] = $error;
             } else {
                 $entities = $rowResult['entityDetails'];
-                if ($entities['isNewClient']) {
+                if (!empty($entities)) {
                     $clientsAdded[] = $entities['clientCaseNumber'];
+                    $entityDetails[] = $entities;
                 }
-
-                $entityDetails[] = $entities;
             }
         }
 
