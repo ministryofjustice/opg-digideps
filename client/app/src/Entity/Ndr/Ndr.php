@@ -24,6 +24,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("integer")
+     *
      * @JMS\Groups({"ndr", "ndr_id"})
      *
      * @var int
@@ -32,6 +33,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("boolean")
+     *
      * @JMS\Groups({"submit"})
      *
      * @var bool
@@ -39,15 +41,19 @@ class Ndr implements ReportInterface
     private $submitted;
 
     /**
-     * @var DateTime
+     * @var \DateTime
+     *
      * @JMS\Type("DateTime")
+     *
      * @JMS\Groups({"start_date"})
      */
     private $startDate;
 
     /**
-     * @var DateTime
+     * @var \DateTime
+     *
      * @JMS\Type("DateTime")
+     *
      * @JMS\Groups({"submit"})
      */
     private $submitDate;
@@ -75,6 +81,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("array<App\Entity\Ndr\Debt>")
+     *
      * @JMS\Groups({"debt"})
      *
      * @var Debt[]
@@ -83,7 +90,9 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"ndr-debt-management"})
+     *
      * @Assert\NotBlank(message="ndr.debt.debts-management.notBlank", groups={"ndr-debt-management"})
      *
      * @var string
@@ -92,6 +101,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"debt"})
      *
      * @Assert\NotBlank(message="ndr.debt.notBlank", groups={"debts"})
@@ -102,6 +112,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"debt"})
      *
      * @var float
@@ -117,6 +128,7 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("boolean")
+     *
      * @JMS\Groups({"noAssetsToAdd"})
      *
      * @var bool
@@ -132,7 +144,9 @@ class Ndr implements ReportInterface
 
     /**
      * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
+     *
      * @Assert\Valid(groups={"client-benefits-check"})
+     *
      * @JMS\Groups({"client-benefits-check"})
      *
      * @var ?ClientBenefitsCheck
@@ -172,8 +186,6 @@ class Ndr implements ReportInterface
 
     /**
      * @param int $id
-     *
-     * @return Ndr
      */
     public function setId($id): self
     {
@@ -183,7 +195,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -191,9 +203,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param DateTime $startDate
-     *
-     * @return Ndr
+     * @param \DateTime $startDate
      */
     public function setStartDate($startDate): self
     {
@@ -203,7 +213,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getSubmitDate()
     {
@@ -211,9 +221,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param DateTime $submitDate
-     *
-     * @return Ndr
+     * @param \DateTime $submitDate
      */
     public function setSubmitDate($submitDate): self
     {
@@ -230,9 +238,6 @@ class Ndr implements ReportInterface
         return $this->client;
     }
 
-    /**
-     * @param mixed $client
-     */
     public function setClient($client)
     {
         $this->client = $client;
@@ -302,11 +307,11 @@ class Ndr implements ReportInterface
     /**
      * Return the due date (calculated as court order date + 40 days).
      *
-     * @return DateTime|null $dueDate
+     * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
-        if (!$this->getStartDate() instanceof DateTime) {
+        if (!$this->getStartDate() instanceof \DateTime) {
             return null;
         }
 
@@ -635,5 +640,35 @@ class Ndr implements ReportInterface
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
         return $this;
+    }
+
+    /**
+     * Checks if NDR is in submittable state.
+     *
+     * @return array
+     */
+    public function validForSubmission()
+    {
+        $valid = true;
+        $msg = [];
+        if (empty($this->getClient()->getCourtDate())) {
+            $valid = false;
+            $msg[] = 'Missing Court Date on Client';
+        }
+        if (empty($this->getClient()->getCaseNumber())) {
+            $valid = false;
+            $msg[] = 'Missing CaseNumber on Client';
+        }
+        if (empty($this->getClient()->getAddress())) {
+            $msg[] = 'Missing Address on Client';
+        }
+        if (empty($this->getClient()->getPostcode())) {
+            $msg[] = 'Missing Postcode on Client';
+        }
+
+        return [
+            'valid' => $valid,
+            'msg' => $msg,
+        ];
     }
 }
