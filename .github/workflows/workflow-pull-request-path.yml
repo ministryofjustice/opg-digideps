@@ -144,7 +144,6 @@ jobs:
     needs:
       - client_unit_tests
       - miscellaneous_tests
-      - api_unit_tests
       - api_unit_tests_3
 
   terraform_plan_account_development:
