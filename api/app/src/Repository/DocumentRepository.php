@@ -37,33 +37,33 @@ class DocumentRepository extends ServiceEntityRepository
     public function getQueuedDocumentsAndSetToInProgress(string $limit)
     {
         $queuedDocumentsQuery = "
-SELECT d.id as document_id,
-d.created_on as document_created_on,
-d.report_submission_id as report_submission_id,
-d.is_report_pdf as is_report_pdf,
-d.filename as filename,
-d.storage_reference as storage_reference,
-d.report_id as report_id,
-d.ndr_id as ndr_id,
-d.sync_attempts as document_sync_attempts,
-r.start_date as report_start_date,
-r.end_date as report_end_date,
-r.submit_date as report_submit_date,
-r.type as report_type,
-rs.opg_uuid as opg_uuid,
-rs.created_on as report_submission_created_on,
-o.start_date as ndr_start_date,
-o.submit_date as ndr_submit_date,
-coalesce(c1.case_number, c2.case_number) AS case_number
-FROM document as d
-LEFT JOIN report as r on d.report_id = r.id
-LEFT JOIN odr as o on d.ndr_id = o.id
-LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
-LEFT JOIN client as c1 on r.client_id = c1.id
-LEFT JOIN client as c2 on o.client_id = c2.id
-WHERE synchronisation_status='QUEUED'
-ORDER BY is_report_pdf DESC, report_submission_id ASC
-LIMIT $limit;";
+        SELECT d.id as document_id,
+        d.created_on as document_created_on,
+        d.report_submission_id as report_submission_id,
+        d.is_report_pdf as is_report_pdf,
+        d.filename as filename,
+        d.storage_reference as storage_reference,
+        d.report_id as report_id,
+        d.ndr_id as ndr_id,
+        d.sync_attempts as document_sync_attempts,
+        r.start_date as report_start_date,
+        r.end_date as report_end_date,
+        r.submit_date as report_submit_date,
+        r.type as report_type,
+        rs.opg_uuid as opg_uuid,
+        rs.created_on as report_submission_created_on,
+        o.start_date as ndr_start_date,
+        o.submit_date as ndr_submit_date,
+        coalesce(c1.case_number, c2.case_number) AS case_number
+        FROM document as d
+        LEFT JOIN report as r on d.report_id = r.id
+        LEFT JOIN odr as o on d.ndr_id = o.id
+        LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
+        LEFT JOIN client as c1 on r.client_id = c1.id
+        LEFT JOIN client as c2 on o.client_id = c2.id
+        WHERE synchronisation_status='QUEUED'
+        ORDER BY is_report_pdf DESC, report_submission_id ASC
+        LIMIT $limit;";
 
         $conn = $this->getEntityManager()->getConnection();
 
@@ -95,8 +95,13 @@ LIMIT $limit;";
                 'document_sync_attempts' => $row['document_sync_attempts'],
             ];
 
-            $reportIds[] = $row['report_id'];
-            $ndrIds[] = $row['ndr_id'];
+            if (!empty($row['report_id'])) {
+                $reportIds[] = $row['report_id'];
+            }
+
+            if (!empty($row['ndr_id'])) {
+                $ndrIds[] = $row['ndr_id'];
+            }
         }
 
         if (count($documents) > 0) {
