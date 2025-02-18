@@ -269,19 +269,22 @@ class LayDeputyshipUploaderTest extends KernelTestCase
             ->willReturnCallback(function (LayDeputyshipDto $dto) use ($case1, $case2, $case3) {
                 if ($dto->getCaseNumber() === $case1['Case']) {
                     return [
-                        'entityDetails' => ['clientCaseNumber' => '11111111', 'isNewClient' => false],
+                        'entityDetails' => ['clientCaseNumber' => '11111111'],
+                        'message' => '',
                         'error' => null,
                     ];
                 }
                 if ($dto->getCaseNumber() === $case2['Case']) {
                     return [
-                        'entityDetails' => ['clientCaseNumber' => '22222222', 'isNewClient' => true],
+                        'entityDetails' => ['clientCaseNumber' => '22222222'],
+                        'message' => '',
                         'error' => null,
                     ];
                 }
                 if ($dto->getCaseNumber() === $case3['Case']) {
                     return [
                         'entityDetails' => [],
+                        'message' => '',
                         'error' => 'an error occurred',
                     ];
                 }
@@ -292,7 +295,7 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $actual = $this->sut->handleNewMultiClients();
 
         $this->assertEquals(3, $actual['new-clients-found']);
-        $this->assertEquals(1, $actual['clients-added']);
+        $this->assertEquals(2, $actual['clients-added']);
         $this->assertEquals(['an error occurred'], $actual['errors']);
     }
 }

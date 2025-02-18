@@ -9,20 +9,18 @@ use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\v2\Assembler\ClientAssembler;
-use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\Uploader\ClientMatch;
 use App\v2\Registration\Uploader\LayClientMatcher;
 use App\v2\Registration\Uploader\LayDeputyshipProcessor;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NoResultException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class LayDeputyshipProcessorTest extends TestCase
 {
     private EntityManagerInterface $mockEm;
-    private SiriusToLayDeputyshipDtoAssembler $mockLayDeputyAssembler;
     private ClientAssembler $mockClientAssembler;
     private LoggerInterface $mockLogger;
     private LayClientMatcher $mockClientMatcher;
@@ -53,16 +51,16 @@ class LayDeputyshipProcessorTest extends TestCase
     {
         // Expectations
         $layDeputyshipDto = new LayDeputyshipDto();
-        $layDeputyshipDto->setDeputyUid('111111111')
-            ->setCaseNumber('99999999');
+        $layDeputyshipDto->setDeputyUid('11111111');
+        $layDeputyshipDto->setCaseNumber('99999999');
 
-        $this->mockEm->expects($this->once())->method('beginTransaction');
-        $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
+        $this->mockClientMatcher->expects($this->once())
+            ->method('matchDto')
+            ->willThrowException(new Exception('Error matching Lay Deputy DTO to database'));
 
-        $this->mockUserRepository->expects($this->once())
-            ->method('findPrimaryUserByDeputyUid')
-            ->with('111111111')
-            ->willThrowException(new NoResultException());
+        $this->mockLogger->expects($this->once())
+            ->method('warning')
+            ->with($this->matchesRegularExpression('/Error matching Lay Deputy DTO to database/'));
 
         // Test
         $output = $this->sut->processLayDeputyship($layDeputyshipDto);
@@ -70,11 +68,12 @@ class LayDeputyshipProcessorTest extends TestCase
         // Assert
         $this->assertEquals([], $output['entityDetails']);
         $this->assertStringContainsString(
-            'Error when creating entities for deputyUID 111111111 for case 99999999',
+            'Error when creating entities for deputyUID 11111111 for case 99999999',
             $output['error']
         );
     }
 
+    // matching client and report -> possible co-deputy, so do nothing
     public function testProcessRowMatchingClientAndReport()
     {
         // Expectations
@@ -96,18 +95,11 @@ class LayDeputyshipProcessorTest extends TestCase
         $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
         $existingReport->expects($this->once())->method('getId')->willReturn(1);
 
-        $this->mockEm->expects($this->once())->method('beginTransaction');
-        $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
-
-        $this->mockUserRepository->expects($this->once())
-            ->method('findPrimaryUserByDeputyUid')
-            ->with('222222222')
-            ->willReturn($user);
-
         $clientMatch = new ClientMatch(
             client: $existingClient,
             report: $existingReport,
-            reportTypeWasChangedFrom: null,
+            reportTypeShouldChangeTo: null,
+            activeClientExistsForCase: true,
         );
 
         $this->mockClientMatcher->expects($this->once())
@@ -115,43 +107,20 @@ class LayDeputyshipProcessorTest extends TestCase
             ->with($layDeputyshipDto)
             ->willReturn($clientMatch);
 
-        $existingClient->expects($this->once())
-            ->method('addUser')
-            ->with($user);
-
-        $this->mockEm->expects($this->exactly(2))->method('persist');
-        $this->mockEm->expects($this->once())->method('flush');
-        $this->mockEm->expects($this->once())->method('commit');
-        $this->mockEm->expects($this->once())->method('clear');
-
-        $existingClient->expects($this->once())->method('getUsers')->willReturn([$user]);
-        $existingClient->expects($this->once())->method('getId')->willReturn(33333333);
-        $existingClient->expects($this->once())->method('getCaseNumber')->willReturn('88888888');
-
         // Test
         $output = $this->sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $expected = [
-            'isNewClient' => false,
-            'clientId' => 33333333,
-            'clientCaseNumber' => '88888888',
-            'clientDeputyUids' => [222222222],
-            'isNewReport' => false,
-            'reportId' => 1,
-            'reportType' => '102',
-            'reportTypeWasChangedFrom' => null,
-            'dto.caseNumber' => '88888888',
-            'dto.deputyUid' => '222222222',
-            'dto.orderType' => 'pfa',
-            'dto.typeOfReport' => 'OPG102',
-            'dto.orderDate' => $orderDate,
+            'entityDetails' => [],
+            'message' => 'Found a potential co-deputy or dual; will not create new multi-client entities',
+            'errorMessage' => null,
         ];
 
-        $this->assertEquals(null, $output['error']);
-        $this->assertEquals($expected, $output['entityDetails']);
+        $this->assertEquals($expected, $output);
     }
 
+    // no matching client -> create a new client and report
     public function testProcessRowNoMatchingClient()
     {
         // Expectations
@@ -167,7 +136,6 @@ class LayDeputyshipProcessorTest extends TestCase
         $user = new User();
         $user->setDeputyUid(222222222);
 
-        $this->mockEm->expects($this->once())->method('beginTransaction');
         $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
 
         $this->mockUserRepository->expects($this->once())
@@ -178,7 +146,8 @@ class LayDeputyshipProcessorTest extends TestCase
         $clientMatch = new ClientMatch(
             client: null,
             report: null,
-            reportTypeWasChangedFrom: null,
+            reportTypeShouldChangeTo: null,
+            activeClientExistsForCase: false,
         );
 
         $this->mockClientMatcher->expects($this->once())
@@ -209,14 +178,11 @@ class LayDeputyshipProcessorTest extends TestCase
 
         // Assert
         $expected = [
-            'isNewClient' => true,
             'clientId' => 33333333,
             'clientCaseNumber' => '88888888',
             'clientDeputyUids' => [222222222],
-            'isNewReport' => true,
             'reportId' => null, // in reality this will be a database ID, but we currently can't mock the created report
             'reportType' => '104',
-            'reportTypeWasChangedFrom' => null,
             'dto.caseNumber' => '88888888',
             'dto.deputyUid' => '222222222',
             'dto.orderType' => 'hw',
