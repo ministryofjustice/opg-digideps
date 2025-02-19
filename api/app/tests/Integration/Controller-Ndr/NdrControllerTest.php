@@ -4,7 +4,7 @@ namespace App\Tests\Integration\Controller\Ndr;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\ReportSubmission;
-use App\Tests\Integratiopn\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 
 class NdrControllerTest extends AbstractTestController
 {
