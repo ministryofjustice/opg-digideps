@@ -101,3 +101,17 @@ Feature: Lay Deputy Self Registration
         When I visit the admin Search Users page
         And I search for the co-deputy using their email address
         Then the co-deputy should appear in the search results
+
+    @super-admin
+    Scenario: A Lay user can enter a 10 digit case number when self registering
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
+        When I run the lay CSV command the file contains 4 new pre-registration entities
+        And a Lay Deputy registers to deputise for a client with a 10 digit case number
+        Then an incorrect case number length error is 'not thrown'
+
+    @super-admin
+    Scenario: A Lay user cannot enter a 9 digit case number when self registering
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
+        When I run the lay CSV command the file contains 4 new pre-registration entities
+        And a Lay Deputy registers to deputise for a client with a 9 digit case number
+        Then an incorrect case number length error is 'thrown'

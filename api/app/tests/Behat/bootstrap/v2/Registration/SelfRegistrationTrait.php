@@ -15,6 +15,7 @@ trait SelfRegistrationTrait
     private string $invalidDeputyLastnameError = 'Your last name you provided does not match our records.';
     private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
+    private string $incorrectCaseNumberLengthError = 'The case number should be 8 or 10 characters long. Please check your case reference number and try again.';
     private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
     private string $deputyAlreadyLinkedToCaseNumberError = 'You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0115 934 2700.';
     private string $reportingPeriodGreaterThanFifteenMonths = 'Check the end date: your reporting period cannot be more than 15 months';
@@ -151,6 +152,18 @@ trait SelfRegistrationTrait
     public function iShouldSeeAnInvalidClientLastnameError()
     {
         $this->assertOnErrorMessage($this->invalidClientLastnameError);
+    }
+
+    /**
+     * @Then /^an incorrect case number length error is \'([^\']*)\'$/
+     */
+    public function anIncorrectCaseNumberLengthErrorIs($arg1)
+    {
+        if ('not thrown' == $arg1) {
+            $this->assertPageContainsText(sprintf("We've sent you a link to %s that you need to click to activate your deputy service account.", $this->userEmail));
+        } else {
+            $this->assertOnErrorMessage($this->incorrectCaseNumberLengthError);
+        }
     }
 
     /**
@@ -739,5 +752,26 @@ trait SelfRegistrationTrait
         $client = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
 
         $this->visitPath('/client/'.$client->getId());
+    }
+
+    /**
+     * @Given /^a Lay Deputy registers to deputise for a client with a (\d+) digit case number$/
+     */
+    public function aLayDeputyRegistersToDeputiseForAClientWithADigitCaseNumber($arg1)
+    {
+        $this->userEmail = 'maria@vanderquack.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $caseNumber = str_pad('32323232', intval($arg1), '0');
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Maria',
+            'Vanderquack',
+            $this->userEmail,
+            'SW1',
+            'Alisha',
+            'Dewey',
+            $caseNumber,
+        );
     }
 }
