@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;

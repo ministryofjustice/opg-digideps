@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\DBAL;
+namespace App\Tests\Integration\DBAL;
 
 use App\DBAL\ConnectionWrapper;
 use Aws\SecretsManager\SecretsManagerClient;

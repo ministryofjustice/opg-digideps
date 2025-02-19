@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Role;
 use App\Entity\User;

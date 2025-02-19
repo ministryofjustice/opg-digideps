@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service\RestHandler\Report;
+namespace App\Tests\Integration\Service\RestHandler\Report;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;

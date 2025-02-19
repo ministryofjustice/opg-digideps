@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Entity\Command;
+namespace App\Tests\Integration\Entity\Command;
 
 use App\Command\ProcessOrgCSVCommand;
 use App\Repository\PreRegistrationRepository;

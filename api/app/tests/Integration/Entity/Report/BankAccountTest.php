@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Entity\Report;
+namespace App\Tests\Integration\Entity\Report;
 
 use App\Entity\Report\BankAccount;
 use PHPUnit\Framework\TestCase;

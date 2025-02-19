@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service\Stats\Query;
+namespace App\Tests\Integration\Service\Stats\Query;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace App\Tests\Integration\Security;
 
 use App\Entity\Organisation;
 use App\Entity\User;

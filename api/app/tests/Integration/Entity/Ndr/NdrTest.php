@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Entity\Ndr;
+namespace App\Tests\Integration\Entity\Ndr;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;

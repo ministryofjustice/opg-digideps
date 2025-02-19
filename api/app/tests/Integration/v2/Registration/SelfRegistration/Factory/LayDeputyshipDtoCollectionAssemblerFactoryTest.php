@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
+namespace App\Tests\Integration\v2\Registration\SelfRegistration\Factory;
 
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;

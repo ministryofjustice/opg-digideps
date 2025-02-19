@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service;
+namespace App\Tests\Integration\Service;
 
 use App\Repository\PreRegistrationRepository;
 use App\Repository\UserRepository;

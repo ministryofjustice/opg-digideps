@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Unit\Entity;
+namespace App\Tests\Integration\Entity;
 
 use App\TestHelpers\ReportSubmissionHelper;
-use App\Tests\Unit\ApiBaseTestCase;
+use App\Tests\Integration\ApiBaseTestCase;
 
 /**
  * User Entity test.

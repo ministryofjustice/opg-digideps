@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service\RestHandler;
+namespace App\Tests\Integration\Service\RestHandler;
 
 use App\Entity\Organisation;
 use App\Factory\OrganisationFactory;

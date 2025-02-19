@@ -6,7 +6,7 @@ use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Unit\Fixtures;
+use App\Tests\Integration\Fixtures;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

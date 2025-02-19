@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\v2\Transformer;
+namespace App\Tests\Integration\v2\Transformer;
 
 use App\v2\DTO\DeputyDto;
 use App\v2\Transformer\DeputyTransformer;

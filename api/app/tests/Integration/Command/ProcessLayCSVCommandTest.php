@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Command;
+namespace App\Tests\Integration\Command;
 
 use App\Command\ProcessLayCSVCommand;
 use App\Repository\PreRegistrationRepository;

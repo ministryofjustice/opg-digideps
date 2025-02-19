@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service\Stats;
+namespace App\Tests\Integration\Service\Stats;
 
 use App\Service\Stats\StatsQueryParameters;
 use PHPUnit\Framework\TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service;
+namespace App\Tests\Integration\Service;
 
 use App\Entity\Client;
 use App\Entity\Organisation;

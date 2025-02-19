@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\Uploader;
+namespace App\Tests\Integration\v2\Registration\Uploader;
 
 use App\Entity\Client;
 use App\Entity\Deputy;
@@ -12,7 +12,7 @@ use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
-use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use DateTime;

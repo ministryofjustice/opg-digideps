@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Transformer\ReportSubmission;
+namespace App\Tests\Integration\Transformer\ReportSubmission;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;

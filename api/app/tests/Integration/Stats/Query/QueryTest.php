@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service\Stats\Metrics;
+namespace App\Tests\Integration\Service\Stats\Metrics;
 
 use App\Entity\User;
 use App\Service\Stats\Query\Query;

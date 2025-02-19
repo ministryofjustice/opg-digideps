@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\v2\Registration\Assembler;
+namespace App\Tests\Integration\v2\Registration\Assembler;
 
 use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
 use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;

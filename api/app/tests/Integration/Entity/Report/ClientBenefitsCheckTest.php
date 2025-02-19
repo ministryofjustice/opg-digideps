@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Report;
+namespace App\Tests\Integration\Entity\Report;
 
 use App\Entity\Report\ClientBenefitsCheck;
 use PHPUnit\Framework\TestCase;

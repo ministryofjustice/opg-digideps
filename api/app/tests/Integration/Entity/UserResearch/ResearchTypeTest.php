@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\UserResearch;
+namespace App\Tests\Integration\Entity\UserResearch;
 
 use App\Entity\UserResearch\ResearchType;
 use PHPUnit\Framework\TestCase;

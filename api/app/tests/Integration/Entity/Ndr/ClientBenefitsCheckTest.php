@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Ndr;
+namespace App\Tests\Integration\Entity\Ndr;
 
 use App\Entity\Ndr\ClientBenefitsCheck;
 use PHPUnit\Framework\TestCase;

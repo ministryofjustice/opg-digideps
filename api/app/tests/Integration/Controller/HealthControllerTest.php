@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 class HealthControllerTest extends AbstractTestController
 {

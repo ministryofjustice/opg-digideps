@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\EventSubscriber;
+namespace App\Tests\Integration\EventSubscriber;
 
 use App\Entity\User;
 use App\Event\UserRetentionPolicyCommandEvent;

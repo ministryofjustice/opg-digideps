@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\Assembler;
+namespace App\Tests\Integration\v2\Registration\Assembler;
 
 use App\Service\ReportUtils;
-use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

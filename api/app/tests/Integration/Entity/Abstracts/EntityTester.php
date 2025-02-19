@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Entity\Abstracts;
+namespace App\Tests\Integration\Entity\Abstracts;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Entity;
+namespace App\Tests\Integration\Entity;
 
 use App\Entity\CourtOrder;
 use App\TestHelpers\DeputyTestHelper;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Unit\v2\Controller;
+namespace App\Tests\Integration\v2\Controller;
 
 use App\Entity\Organisation;
 use App\Entity\User;
-use App\Tests\Unit\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 

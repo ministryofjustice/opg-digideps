@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Security;
+namespace App\Tests\Integration\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;

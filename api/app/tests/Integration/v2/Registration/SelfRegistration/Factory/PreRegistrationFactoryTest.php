@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
+namespace App\Tests\Integration\v2\Registration\SelfRegistration\Factory;
 
 use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;

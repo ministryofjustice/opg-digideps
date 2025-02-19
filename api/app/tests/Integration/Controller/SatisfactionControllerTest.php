@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;

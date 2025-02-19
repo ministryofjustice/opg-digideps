@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\v2\Registration\Uploader;
+namespace App\Tests\Integration\v2\Registration\Uploader;
 
 use App\Entity\Client;
 use App\Entity\PreRegistration;

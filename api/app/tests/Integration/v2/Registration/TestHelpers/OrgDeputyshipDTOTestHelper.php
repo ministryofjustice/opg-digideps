@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\TestHelpers;
+namespace App\Tests\Integration\v2\Registration\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\Deputy;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace App\Tests\Integration\Factory;
 
 use App\Entity\Client;
 use App\Entity\Report\ClientBenefitsCheck;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Search;
+namespace App\Tests\Integration\Search;
 
 use App\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\Configuration;

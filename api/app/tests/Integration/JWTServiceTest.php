@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace App\Tests\Integration\Service;
 
 use App\Entity\User;
 use App\Service\JWT\JWTService;

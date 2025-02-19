@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\Satisfaction;
 use App\TestHelpers\ClientTestHelper;

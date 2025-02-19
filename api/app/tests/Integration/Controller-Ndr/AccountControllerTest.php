@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Unit\Controller\Ndr;
+namespace App\Tests\Integration\Controller\Ndr;
 
-use App\Tests\Unit\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {

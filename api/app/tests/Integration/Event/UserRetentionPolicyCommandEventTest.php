@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Event;
+namespace App\Tests\Integration\Event;
 
 use App\Entity\User;
 use App\Event\UserRetentionPolicyCommandEvent;

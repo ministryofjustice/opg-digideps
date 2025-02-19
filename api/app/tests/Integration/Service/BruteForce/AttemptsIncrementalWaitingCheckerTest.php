@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Service\BruteForce;
+namespace App\Tests\Integration\Service\BruteForce;
 
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use MockeryStub as m;

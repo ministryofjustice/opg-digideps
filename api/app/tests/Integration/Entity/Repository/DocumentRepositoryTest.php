@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Repository;
+namespace App\Tests\Integration\Repository;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;

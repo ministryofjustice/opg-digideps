@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Formatter;
+namespace App\Tests\Integration\Service\Formatter;
 
 use App\EventListener\RestInputOuputFormatter;
 use App\Service\Formatter\RestFormatter;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Unit\Controller\Ndr;
+namespace App\Tests\Integration\Controller\Ndr;
 
 use App\Entity\Ndr\AssetOther;
 use App\Entity\Ndr\AssetProperty;
-use App\Tests\Unit\Controller\AbstractTestController;
+use App\Tests\Integration\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {
