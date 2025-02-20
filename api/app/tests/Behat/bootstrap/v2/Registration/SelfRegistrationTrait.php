@@ -317,10 +317,16 @@ trait SelfRegistrationTrait
     }
 
     /**
-     * @Then /^they should be able to register to deputise for a client with valid details$/
+     * @Then /^they should be able to register to deputise for a client with valid details including an (\d+) digit case number$/
      */
-    public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails()
+    public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails($caseNumLength)
     {
+        if (8 == $caseNumLength) {
+            $caseNumber = '1717171T';
+        } else {
+            $caseNumber = '1717171T00';
+        }
+
         $this->coDeputyUid = '85462817';
 
         $this->visitPath('/logout');
@@ -340,7 +346,7 @@ trait SelfRegistrationTrait
         $this->fillInField('co_deputy_addressCountry', 'GB');
         $this->fillInField('co_deputy_phoneMain', '01789432876');
         $this->fillInField('co_deputy_clientLastname', 'Louie');
-        $this->fillInField('co_deputy_clientCaseNumber', '1717171T');
+        $this->fillInField('co_deputy_clientCaseNumber', $caseNumber);
 
         $this->pressButton('co_deputy_save');
     }
