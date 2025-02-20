@@ -209,7 +209,7 @@ class PreRegistrationVerificationService
     private function formatPreRegistrationMatchesForErrorOutput(array $matches): mixed
     {
         $matches = json_decode(
-            $this->serializer->serialize($matches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
+            $this->serializer->serialize($matches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]) ?? '',
             true
         );
 

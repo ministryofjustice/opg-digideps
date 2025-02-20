@@ -16,6 +16,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "App\\Tests\\Integration\\": "tests\\Integration",
             "App\\Tests\\Unit\\": "tests\\Unit",
             "App\\Tests\\Behat\\": "tests\\Behat\\bootstrap"
         }

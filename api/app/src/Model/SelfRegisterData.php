@@ -217,9 +217,9 @@ class SelfRegisterData
      */
     public function replaceUnicodeChars()
     {
-        $this->firstname = str_replace('’', '\'', $this->firstname);
-        $this->lastname = str_replace('’', '\'', $this->lastname);
-        $this->clientFirstname = str_replace('’', '\'', $this->clientFirstname);
-        $this->clientLastname = str_replace('’', '\'', $this->clientLastname);
+        $this->firstname = str_replace('’', '\'', $this->firstname ?? '');
+        $this->lastname = str_replace('’', '\'', $this->lastname ?? '');
+        $this->clientFirstname = str_replace('’', '\'', $this->clientFirstname ?? '');
+        $this->clientLastname = str_replace('’', '\'', $this->clientLastname ?? '');
     }
 }

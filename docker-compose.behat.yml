@@ -1,5 +1,5 @@
 services:
-  integration-tests:
+  end-to-end-tests:
     build:
       dockerfile: api/docker/app/Dockerfile
       context: .
