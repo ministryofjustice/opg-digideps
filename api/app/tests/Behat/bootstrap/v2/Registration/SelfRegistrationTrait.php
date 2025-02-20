@@ -317,9 +317,9 @@ trait SelfRegistrationTrait
     }
 
     /**
-     * @Then /^they should be able to register to deputise for a client with valid details including an (\d+) digit case number$/
+     * @Given /^they register to deputise for a client with valid details that includes a (\d+) digit case number$/
      */
-    public function theyShouldBeAbleToRegisterToDeputiseForAClientWithValidDetails($caseNumLength)
+    public function theyRegisterToDeputiseForAClientWithValidDetailsThatIncludesADigitCaseNumber($caseNumLength)
     {
         if (8 == $caseNumLength) {
             $caseNumber = '1717171T';

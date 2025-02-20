@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @self-register
+@v2 @v2_sequential_1 @registration @self-register @mia
 Feature: Lay Deputy Self Registration
 
     @super-admin
@@ -84,7 +84,7 @@ Feature: Lay Deputy Self Registration
         Then I should see an 'invalid reporting period' error
 
     @super-admin @lay-pfa-high-completed
-    Scenario: A multi-client deputy can invite a co-deputy to report on a client attached to their secondary account
+    Scenario: A multi-client deputy can invite a co-deputy to report on a client attached to their secondary account and co-deputy can register with a 10 digit case number
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
         When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
         Given one of the Lay deputies listed in the lay csv already has an existing account
@@ -94,7 +94,7 @@ Feature: Lay Deputy Self Registration
         Then they should be on the Choose a Client homepage
         And I select the new client from the csv on the Choose a Client page
         Then I invite a Co-Deputy to the service
-        Then they should be able to register to deputise for a client with valid details including an 8 digit case number
+        And they register to deputise for a client with valid details that includes a 10 digit case number
         Then the co-deputy details should be saved to the co-deputy's account
         And they should be on the Lay homepage
         Given a super admin user accesses the admin app
@@ -115,13 +115,3 @@ Feature: Lay Deputy Self Registration
         When I run the lay CSV command the file contains 4 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with a 9 digit case number
         Then an incorrect case number length error is 'thrown'
-
-    @super-admin
-    Scenario: A co-deputy can enter a 10 digit case number when registering for the service
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
-        When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
-        And one of the Lay Deputies registers to deputise for a client with valid details
-        Then I invite a Co-Deputy to the service
-        Then they should be able to register to deputise for a client with valid details including an 10 digit case number
-        Then the co-deputy details should be saved to the co-deputy's account
-        And they should be on the Lay homepage
