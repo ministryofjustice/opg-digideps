@@ -105,11 +105,11 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
 
-  api_unit_tests_3:
-    name: api unit tests 3
+  api_unit_tests:
+    name: api unit tests
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
-      selection: selection-3
+      selection: selection-all
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
@@ -135,7 +135,7 @@ jobs:
     needs:
       - client_unit_tests
       - miscellaneous_tests
-      - api_unit_tests_3
+      - api_unit_tests
 
   terraform_plan_account_development:
     name: account plan terraform development
