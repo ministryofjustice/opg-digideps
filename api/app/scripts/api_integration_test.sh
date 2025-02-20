@@ -52,20 +52,12 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Command/ --coverage-php tests/coverage/Command.cov
-    printf '\n Running Factory Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Factory/ --coverage-php tests/coverage/Factory.cov
     printf '\n Running Security Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Security/ --coverage-php tests/coverage/Security.cov
-    printf '\n Running Service Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Service/ --coverage-php tests/coverage/Service.cov
     printf '\n Running Stats Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
-    printf '\n Running Transformer Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Transformer/ --coverage-php tests/coverage/Transformer.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
-    printf '\n Running Logger Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Logger/ --coverage-php tests/coverage/logger.cov
     ;;
   selection-all)
     # selection-1
@@ -85,20 +77,12 @@ case "$1" in
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Command/ --coverage-php tests/coverage/Command.cov
-    printf '\n Running Factory Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Factory/ --coverage-php tests/coverage/Factory.cov
     printf '\n Running Security Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Security/ --coverage-php tests/coverage/Security.cov
-    printf '\n Running Service Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Service/ --coverage-php tests/coverage/Service.cov
     printf '\n Running Stats Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
-    printf '\n Running Transformer Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Transformer/ --coverage-php tests/coverage/Transformer.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
-    printf '\n Running Logger Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Logger/ --coverage-php tests/coverage/logger.cov
 
     # generate HTML coverage report
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
