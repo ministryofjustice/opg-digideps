@@ -27,6 +27,24 @@ jobs:
           name: api-unit-tests-selection-all
           path: ./
 
+      - name: download artifact for api integration tests 1
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        with:
+          name: api-integration-tests-selection-1
+          path: ./
+
+      - name: download artifact for api integration tests 2
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        with:
+          name: api-integration-tests-selection-2
+          path: ./
+
+      - name: download artifact for api integration tests 3
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        with:
+          name: api-integration-tests-selection-3
+          path: ./
+
       - name: service client codecov upload
         uses: codecov/codecov-action@v3
         with:
@@ -37,11 +55,21 @@ jobs:
           verbose: true
           token: ${{ secrets.codecov_token }}
 
-      - name: service api codecov upload
+      - name: service api unit codecov upload
         uses: codecov/codecov-action@v3
         with:
           name: digideps-api-unit-tests
           files: ./api-unit-tests-selection-all.xml
+          fail_ci_if_error: true
+          flags: api
+          verbose: true
+          token: ${{ secrets.codecov_token }}
+
+      - name: service api integration codecov upload
+        uses: codecov/codecov-action@v3
+        with:
+          name: digideps-api-integration-tests
+          files: ./api-integration-tests-selection-1.xml,./api-integration-tests-selection-2.xml,./api-integration-tests-selection-3.xml
           fail_ci_if_error: true
           flags: api
           verbose: true

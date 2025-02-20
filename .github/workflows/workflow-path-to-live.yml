@@ -81,6 +81,33 @@ jobs:
     needs:
       - workflow_variables
 
+  api_integration_tests_1:
+    name: api integration tests 1
+    uses: ./.github/workflows/_integration-tests-api.yml
+    with:
+      selection: selection-1
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
+  api_integration_tests_2:
+    name: api integration tests 2
+    uses: ./.github/workflows/_integration-tests-api.yml
+    with:
+      selection: selection-2
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
+  api_integration_tests_3:
+    name: api integration tests 3
+    uses: ./.github/workflows/_integration-tests-api.yml
+    with:
+      selection: selection-3
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml
@@ -96,6 +123,9 @@ jobs:
     needs:
       - client_unit_tests
       - api_unit_tests
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
 
   miscellaneous_tests:
     name: miscellaneous tests
@@ -127,6 +157,9 @@ jobs:
       - miscellaneous_tests
       - client_unit_tests
       - api_unit_tests
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
