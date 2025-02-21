@@ -102,8 +102,11 @@ class Client
      *
      * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"lay-deputy-client", "verify-codeputy"})
      *
-     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1", groups={"lay-deputy-client", "verify-codeputy"})
-     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2", groups={"lay-deputy-client", "verify-codeputy"})
+     * @Assert\Regex(
+     *       pattern="/^.{8}$|^.{10}$/",
+     *       message="client.caseNumber.exactMessage",
+     *       groups={"lay-deputy-client", "verify-codeputy"}
+     *   )
      *
      * @var string
      */

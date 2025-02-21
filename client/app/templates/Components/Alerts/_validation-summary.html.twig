@@ -10,7 +10,7 @@
                 {% endfor %}
             {% endif %}
             {% for formErrorMessage in formErrorMessages %}
-                <li><a href="#form-group-{{ formErrorMessage.elementId }}">{{ formErrorMessage.message }}</a></li>
+                <li><a href="#form-group-{{ formErrorMessage.elementId }}">{{ formErrorMessage.message | nl2br}}</a></li>
             {% endfor %}
             </ul>
         </div>

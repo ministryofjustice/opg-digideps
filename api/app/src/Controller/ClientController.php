@@ -42,6 +42,9 @@ class ClientController extends RestController
         /** @var EntityDir\User|null $user */
         $user = $this->getUser();
 
+        // truncate case number if length is 10 digits long before persisting
+        $data['case_number'] = 10 == strlen($data['case_number']) ? substr($data['case_number'], 0, -2) : $data['case_number'];
+
         if ($user && 'POST' == $request->getMethod()) {
             $client = new EntityDir\Client();
             $client->addUser($user);

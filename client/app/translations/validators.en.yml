@@ -75,8 +75,9 @@ client:
     maxMessage: The last name cannot be longer than {{ limit }} letters
   caseNumber:
     notBlank: Enter your case number
-    exactMessage1: The case number should be 8 characters long.
-    exactMessage2: Check the last 8 characters of your case reference number and try again
+    exactMessage: |
+      The case number should be 8 or 10 characters long.
+      Please check your case reference number and try again.
   courtDate:
     message: "Enter a valid date in this format: DD/MM/YYYY"
     notBlank: Enter the date of your court order
