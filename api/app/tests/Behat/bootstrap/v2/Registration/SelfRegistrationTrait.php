@@ -15,7 +15,7 @@ trait SelfRegistrationTrait
     private string $invalidDeputyLastnameError = 'Your last name you provided does not match our records.';
     private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
-    private string $incorrectCaseNumberLengthError = 'The case number should be 8 or 10 characters long. Please check your case reference number and try again.';
+    private string $incorrectCaseNumberLengthError = "The case number should be 8 or 10 characters long.\nPlease check your case reference number and try again.\n";
     private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
     private string $deputyAlreadyLinkedToCaseNumberError = 'You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0115 934 2700.';
     private string $reportingPeriodGreaterThanFifteenMonths = 'Check the end date: your reporting period cannot be more than 15 months';
@@ -119,7 +119,10 @@ trait SelfRegistrationTrait
      */
     public function iShouldSeeAnInvalidCaseNumberError()
     {
-        $this->assertOnErrorMessage($this->invalidCaseNumberError);
+        $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+        $actualErrorMessageStripped = strip_tags($actualErrorMessage);
+
+        $this->assertStringEqualsString($actualErrorMessageStripped, $this->invalidCaseNumberError, 'invalid case number error thrown');
     }
 
     /**
@@ -162,7 +165,10 @@ trait SelfRegistrationTrait
         if ('not thrown' == $arg1) {
             $this->assertPageContainsText(sprintf("We've sent you a link to %s that you need to click to activate your deputy service account.", $this->userEmail));
         } else {
-            $this->assertOnErrorMessage($this->incorrectCaseNumberLengthError);
+            $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+            $actualErrorMessageStripped = strip_tags($actualErrorMessage);
+
+            $this->assertStringEqualsString($actualErrorMessageStripped, $this->incorrectCaseNumberLengthError, 'incorrect case number length error thrown');
         }
     }
 
