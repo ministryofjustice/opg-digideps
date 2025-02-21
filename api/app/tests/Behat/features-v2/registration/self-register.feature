@@ -2,7 +2,7 @@
 Feature: Lay Deputy Self Registration
 
     @super-admin
-    Scenario: A Lay user entering an invalid case numberΩ cannot self register
+    Scenario: A Lay user entering an invalid case number cannot self register
         Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
         When I run the lay CSV command the file contains 4 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with an invalid case number
