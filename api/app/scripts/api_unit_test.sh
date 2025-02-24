@@ -27,7 +27,7 @@ case "$1" in
 #    # generate HTML coverage report
 #    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
 #    ;;
-  *)
+#  *)
     echo "Invalid argument. Please provide one of the following arguments: selection-all"
     exit 1
     ;;
