@@ -23,7 +23,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function dontSaveUnvalidUserToDB()
+    public function dontSaveInvalidUserToDB()
     {
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -42,6 +42,31 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@example.org']);
+        $this->assertNull($user);
+    }
+
+    /** @test */
+    public function dontSaveUserToDBWithInvalidCaseNumber()
+    {
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $response = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'dontsavewithinvalidcasenum@example.org',
+                'client_firstname' => 'James',
+                'client_lastname' => 'Morrison',
+                'case_number' => '123456789',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'dontsavewithinvalidcasenum@example.org']);
+
+        $this->assertStringContainsString('Invalid registration data', $response['message']);
         $this->assertNull($user);
     }
 
@@ -87,6 +112,45 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('John', $theClient->getFirstname());
         $this->assertEquals('Cross-Tolley', $theClient->getLastname());
         $this->assertEquals('12345678', $theClient->getCaseNumber());
+    }
+
+    /** @test */
+    public function saveUserToDBWithTruncated10DigitCaseNumber()
+    {
+        $preRegistration = $this->generatePreRegistration('12345677', 'Morrison', '700000019958', 'Zac', 'Tolley');
+
+        $this->fixtures()->persist($preRegistration);
+        $this->fixtures()->flush($preRegistration);
+
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'valid10digitcasenum@example.org',
+                'client_firstname' => 'James',
+                'client_lastname' => 'Morrison',
+                'case_number' => '1234567790',
+            ],
+            'ClientSecret' => API_TOKEN_DEPUTY,
+        ]);
+
+        $id = $responseArray['data']['id'];
+
+        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]); /* @var $user User */
+        $this->assertEquals('Tolley', $user->getLastname());
+        $this->assertEquals('Zac', $user->getFirstname());
+        $this->assertEquals('valid10digitcasenum@example.org', $user->getEmail());
+
+        /** @var Client $theClient */
+        $theClient = $user->getClients()->first();
+
+        $this->assertEquals('James', $theClient->getFirstname());
+        $this->assertEquals('Morrison', $theClient->getLastname());
+        $this->assertEquals('12345677', $theClient->getCaseNumber());
     }
 
     /**
