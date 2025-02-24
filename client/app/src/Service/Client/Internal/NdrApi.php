@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
-use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
-use App\Entity\User;
 use App\Event\NdrSubmittedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
@@ -42,8 +40,6 @@ class NdrApi
             $ndrToSubmit,
             ['submit']
         );
-
-        // Debug here and see what we have with the User -> client -> report getting mailfactory 419 error on cloning non-object
 
         $submittedByWithClientsAndReports = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
         $client = $submittedByWithClientsAndReports->getClients()[0];
