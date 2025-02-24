@@ -1,0 +1,51 @@
+{
+    "Guuts Brineg": {
+        "__comment__": "Deputy; corresponds with a CSV row in sirius-csvs/lay-multiclient-codeputies*.csv",
+        "caseNumber": "61513119",
+        "deputy": {
+            "deputyUid": "61573940",
+            "firstName": "Guuts",
+            "lastName": "Brineg",
+            "email": "guuts.brineg@nowhere.1111.com",
+            "address1": "21 Test Road",
+            "postcode": "AB1 2CD",
+            "country": "GB",
+            "phone": "01000 321234"
+        },
+        "client": {
+            "firstName": "Virta",
+            "lastName": "Plool",
+            "address1": "8 South Parade",
+            "postcode": "NG1 2HT",
+            "country": "GB",
+            "phone": "01789432876",
+            "courtDateDay": "14",
+            "courtDateMonth": "04",
+            "courtDateYear": "2024"
+        },
+        "report": {
+            "startDay": "14",
+            "startMonth": "04",
+            "startYear": "2025",
+            "endDay": "13",
+            "endMonth": "04",
+            "endYear": "2026"
+        }
+    },
+    "Ulu Frine": {
+        "__comment__": "Co-deputy; corresponds with a CSV row in sirius-csvs/lay-multiclient-codeputies*.csv",
+        "caseNumber": "61513119",
+        "codeputy": {
+            "firstName": "Ulu",
+            "lastName": "Frine",
+            "email": "ulu.frine@nowhere.1111.com",
+            "address1": "21 Test Road",
+            "postcode": "AB1 2CD",
+            "country": "GB",
+            "phone": "01789432876"
+        },
+        "client": {
+            "lastName": "Plool"
+        }
+    }
+}
