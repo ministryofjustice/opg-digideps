@@ -24,9 +24,9 @@ case "$1" in
     printf '\n Running Logger Suite \n\n'
     php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
 
-    # generate HTML coverage report
-    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
-    ;;
+#    # generate HTML coverage report
+#    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
+#    ;;
   *)
     echo "Invalid argument. Please provide one of the following arguments: selection-all"
     exit 1
