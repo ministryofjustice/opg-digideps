@@ -7,7 +7,11 @@ resource "aws_ecs_task_definition" "front" {
   container_definitions    = "[${local.front_web}, ${local.front_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_cpu_architecture    = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "front" {
