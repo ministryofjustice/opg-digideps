@@ -29,10 +29,10 @@ jobs:
   send-slack-notification:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
+        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -41,7 +41,7 @@ jobs:
         run: pip install -r lambdas/functions/monitor_notify_lambda/requirements.txt
 
       - name: configure OIDC AWS credentials for slack notification
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
         with:
           role-to-assume: arn:aws:iam::${{ inputs.account }}:role/digideps-gh-actions-slack-notifier
           role-session-name: github-actions-slack-notifier
