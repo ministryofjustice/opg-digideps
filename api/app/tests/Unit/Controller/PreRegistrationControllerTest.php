@@ -308,4 +308,20 @@ class PreRegistrationControllerTest extends AbstractTestController
             'assertResponseCode' => 425,
         ]);
     }
+
+    public function testVerifyPreRegistrationWith10DigitCaseNumber()
+    {
+        $this->buildAndPersistPreRegistrationEntity('12345678');
+        $this->fixtures()->flush();
+        $this->fixtures()->clear();
+
+        $this->assertJsonRequest('POST', '/pre-registration/verify', [
+            'data' => [
+                'case_number' => '1234567800',
+                'lastname' => 'I should get deleted',
+            ],
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+    }
 }
