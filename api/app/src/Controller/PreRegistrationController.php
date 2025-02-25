@@ -29,6 +29,7 @@ class PreRegistrationController extends RestController
 
     /**
      * @Route("/delete", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return array|JsonResponse
@@ -52,6 +53,9 @@ class PreRegistrationController extends RestController
         $clientData = $this->formatter->deserializeBodyContent($request);
         /** @var User $user */
         $user = $this->getUser();
+
+        // truncate case number if length is 10 digits long
+        $clientData['case_number'] = 10 == strlen($clientData['case_number']) ? substr($clientData['case_number'], 0, -2) : $clientData['case_number'];
 
         $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
         $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($clientData['case_number']);
@@ -98,6 +102,7 @@ class PreRegistrationController extends RestController
 
     /**
      * @Route("/count", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
      */
     public function userCount()
