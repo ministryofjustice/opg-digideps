@@ -95,33 +95,31 @@ jobs:
         if: |
           (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver' || matrix.svc_name == 'htmltopdf')
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.4.0
+
       - name: build docker image
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
           DOCKERFILE: ${{ matrix.docker_file }}
           BRANCH_NAME: ${{ inputs.branch_name }}
-          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          ECR_REGISTRY_ALIAS: digideps
-          IMAGE_TAG: ${{ inputs.tag }}
         run: |
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --tag $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG \
             --platform linux/amd64,linux/arm64 \
+            --tag ${IMAGE_NAME}:latest \
             --output type=docker \
-            --push \
             .
           else
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --tag $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG \
             --platform linux/amd64,linux/arm64 \
+            --tag ${IMAGE_NAME}:latest \
             --output type=docker \
-            --push \
             .
           fi
         working-directory: ${{ matrix.sub_folder }}
