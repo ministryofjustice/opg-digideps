@@ -58,10 +58,10 @@ class DoctrineListener
 
         $conn = $entityManager->getConnection();
 
-        $queryResults = $conn->executeQuery('SHOW random_page_cost;');
+        //         $queryResults = $conn->executeQuery('SHOW random_page_cost;');
 
         error_log(print_r($queryResults->fetchAssociative(), true));
-        file_put_contents('php://stderr', print_r($queryResults->fetchAssociative(), true));
+        //         file_put_contents('php://stderr', print_r($queryResults->fetchAssociative(), true));
     }
 
     public function preRemove(LifecycleEventArgs $args)
