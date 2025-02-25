@@ -47,6 +47,10 @@ variable "admin_fully_qualified_domain_name" {
   type = string
 }
 
+variable "state_role" {
+  type = string
+}
+
 module "allow_list" {
   source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.0.3"
 }
@@ -84,7 +88,7 @@ data "terraform_remote_state" "shared" {
     key    = "opg-digideps-account/terraform.tfstate"
     region = "eu-west-1"
     assume_role = {
-      role_arn = "arn:aws:iam::311462405659:role/digideps-state-write"
+      role_arn = "arn:aws:iam::311462405659:role/${var.state_role}"
     }
   }
 }
