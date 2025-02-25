@@ -12,58 +12,83 @@ class SelfRegisterData
 {
     /**
      * @var string
+     *
      * @JMS\Type("string")
+     *
      * @Assert\NotBlank( message="user.firstname.notBlank" )
+     *
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength" )
      */
     private $firstname;
 
     /**
      * @var string lastname
+     *
      * @JMS\Type("string")
+     *
      * @Assert\NotBlank(message="user.lastname.notBlank" )
+     *
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength" )
      */
     private $lastname;
 
     /**
      * @var string email
+     *
      * @JMS\Type("string")
+     *
      * @Assert\NotBlank( message="user.email.notBlank")
+     *
      * @Assert\Length( max=60, maxMessage="user.email.maxLength" )
+     *
      * @Assert\Email( message="user.email.invalid",  )
      */
     private $email;
 
     /**
      * @var string email
+     *
      * @JMS\Type("string")
+     *
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength" )
      */
     private $postcode;
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
+     *
      * @Assert\NotBlank( message="client.firstname.notBlank" )
+     *
      * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
      */
     private $clientFirstname;
 
     /**
      * @var string clientLastName
+     *
      * @JMS\Type("string")
+     *
      * @Assert\NotBlank( message="client.lastname.notBlank" )
+     *
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
      */
     private $clientLastname;
 
     /**
      * @var string caseNumber
+     *
      * @JMS\Type("string")
+     *
+     * @JMS\Groups({"caseNumber"})
+     *
      * @Assert\NotBlank( message="client.caseNumber.notBlank")
-     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1")
-     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2")
+     *
+     * @Assert\Regex(
+     *      pattern="/^.{8}$|^.{10}$/",
+     *      message="client.caseNumber.exactMessage"
+     *  )
      */
     private $caseNumber;
 
@@ -77,8 +102,6 @@ class SelfRegisterData
 
     /**
      * @param string $firstname
-     *
-     * @return SelfRegisterData
      */
     public function setFirstname($firstname): self
     {
@@ -97,8 +120,6 @@ class SelfRegisterData
 
     /**
      * @param string $lastname
-     *
-     * @return SelfRegisterData
      */
     public function setLastname($lastname): self
     {
@@ -117,8 +138,6 @@ class SelfRegisterData
 
     /**
      * @param string $email
-     *
-     * @return SelfRegisterData
      */
     public function setEmail($email): self
     {
@@ -137,8 +156,6 @@ class SelfRegisterData
 
     /**
      * @param string $postcode
-     *
-     * @return SelfRegisterData
      */
     public function setPostcode($postcode): self
     {
@@ -157,8 +174,6 @@ class SelfRegisterData
 
     /**
      * @param string $clientFirstname
-     *
-     * @return SelfRegisterData
      */
     public function setClientFirstname($clientFirstname): self
     {
@@ -177,8 +192,6 @@ class SelfRegisterData
 
     /**
      * @param string $clientLastname
-     *
-     * @return SelfRegisterData
      */
     public function setClientLastname($clientLastname): self
     {
@@ -197,8 +210,6 @@ class SelfRegisterData
 
     /**
      * @param string $caseNumber
-     *
-     * @return SelfRegisterData
      */
     public function setCaseNumber($caseNumber): self
     {
