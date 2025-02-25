@@ -13,6 +13,11 @@ class DoctrineListener
 {
     public function prePersist(LifecycleEventArgs $args)
     {
+        file_put_contents('php://stderr', print_r('JIMMMMMMYPREPERSIST', true));
+        $entityManager = $args->getEntityManager();
+        $conn = $entityManager->getConnection();
+        $queryResults = $conn->executeQuery('SHOW random_page_cost;');
+        file_put_contents('php://stderr', print_r($queryResults->fetchAssociative(), true));
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
 
@@ -49,6 +54,20 @@ class DoctrineListener
             $reportSubmissionRepo = $entityManager->getRepository(EntityDir\Report\ReportSubmission::class);
             $reportSubmissionRepo->updateArchivedStatus($entity->getReportSubmission());
         }
+    }
+
+    public function postLoad(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+        $entityManager = $args->getEntityManager();
+
+        $conn = $entityManager->getConnection();
+
+        $queryResults = $conn->executeQuery('SHOW random_page_cost;');
+
+        error_log(print_r($queryResults->fetchAssociative(), true));
+        file_put_contents('php://stderr', print_r($queryResults->fetchAssociative(), true));
+        file_put_contents('php://stderr', print_r('JIMMMMMMY', true));
     }
 
     public function preRemove(LifecycleEventArgs $args)
