@@ -52,7 +52,7 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
-RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
+RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-arm64" \
     && chmod +x /usr/local/bin/confd
 # Add Waitforit to wait on API starting
 ENV WAITFORIT_VERSION="v2.4.1"

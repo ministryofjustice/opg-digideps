@@ -10,7 +10,7 @@ RUN apk --no-cache add wget libcap
 
 # Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
-ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
+ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-arm64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 
 # Add Waitforit to wait on app starting
