@@ -32,32 +32,53 @@ jobs:
           - svc_name: "client-webserver"
             sub_folder: "."
             docker_file: "client/docker/web/Dockerfile"
+            platform: "linux/arm64"
+
           - svc_name: "client"
             sub_folder: "."
             docker_file: "client/docker/app/Dockerfile"
+            platform: "linux/arm64"
+
           - svc_name: "api-webserver"
             sub_folder: "."
             docker_file: "api/docker/web/Dockerfile"
+            platform: "linux/amd64"
+
           - svc_name: "api"
             sub_folder: "."
             docker_file: "api/docker/app/Dockerfile"
+            platform: "linux/amd64"
+
           - svc_name: "sync"
             sub_folder: "orchestration"
             docker_file: "Dockerfile"
+            platform: "linux/amd64"
+
           - svc_name: "htmltopdf"
             sub_folder: "."
             docker_file: "htmltopdf/Dockerfile"
+            platform: "linux/amd64"
+
           - svc_name: "file-scanner"
             sub_folder: "."
             docker_file: "file-scanner/Dockerfile"
+            platform: "linux/amd64"
+
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
             docker_file: "Dockerfile"
+            platform: "linux/amd64"
+
           - svc_name: "custom-sql-lambda"
             sub_folder: "lambdas/functions/custom_sql_query"
             docker_file: "Dockerfile"
+            platform: "linux/amd64"
+
     steps:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.4.0
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@f7ce87c1d6bead3e36075b2ce75da1f6cc28aaca
@@ -100,28 +121,26 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
           DOCKERFILE: ${{ matrix.docker_file }}
           BRANCH_NAME: ${{ inputs.branch_name }}
-          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          ECR_REGISTRY_ALIAS: digideps
-          IMAGE_TAG: ${{ inputs.tag }}
+          PLATFORM: ${{ matrix.platform }}
         run: |
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --tag $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG \
-            --platform linux/amd64,linux/arm64 \
+            --platform ${PLATFORM} \
+            --load \
+            --tag ${IMAGE_NAME}:latest \
             --output type=docker \
-            --push \
             .
           else
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --tag $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG \
-            --platform linux/amd64,linux/arm64 \
+            --platform ${PLATFORM} \
+            --tag ${IMAGE_NAME}:latest \
+            --load \
             --output type=docker \
-            --push \
             .
           fi
         working-directory: ${{ matrix.sub_folder }}
@@ -138,6 +157,20 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: configure OIDC AWS credentials for ECR push
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-push
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@5987c53246a4cdb9fb822a0b17a98df3cdc62942 # pin@v1.5.1
+        with:
+          registries: 311462405659
 
       - name: trivy image scanning
         id: trivy_scan

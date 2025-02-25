@@ -4,6 +4,12 @@ variable "DEFAULT_ROLE" {
   default     = "digideps-ci"
 }
 
+variable "STATE_ROLE" {
+  type        = string
+  description = "Default state role to use"
+  default     = "digideps-state-write"
+}
+
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
   type        = string
