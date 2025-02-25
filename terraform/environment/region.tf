@@ -16,6 +16,7 @@ module "eu_west_1" {
   complete_deputy_report_cert_arn   = aws_acm_certificate_validation.complete_deputy_report_wildcard.certificate_arn
   front_fully_qualified_domain_name = aws_route53_record.front.fqdn
   admin_fully_qualified_domain_name = aws_route53_record.admin.fqdn
+  state_role                        = var.STATE_ROLE
 
   providers = {
     aws            = aws.digideps_eu_west_1
@@ -39,6 +40,7 @@ module "eu_west_2" {
   complete_deputy_report_cert_arn   = aws_acm_certificate_validation.complete_deputy_report_wildcard.certificate_arn
   front_fully_qualified_domain_name = aws_route53_record.front.fqdn
   admin_fully_qualified_domain_name = aws_route53_record.admin.fqdn
+  state_role                        = var.STATE_ROLE
 
   providers = {
     aws            = aws.digideps_eu_west_2
