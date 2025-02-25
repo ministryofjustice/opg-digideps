@@ -20,3 +20,4 @@ services:
       - ./api/app/tests/Behat/test.env
     volumes:
       - ./build/coverage-api:/var/www/build/coverage-api
+    command: sleep infinity
