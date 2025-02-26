@@ -36,13 +36,15 @@ class LayDeputyshipProcessor
      *               'error' => null || '<error which occurred while processing the row>'
      *               ]
      */
-    public function processLayDeputyship(LayDeputyshipDto $layDeputyshipDto): array
+    public function processLayDeputyship(LayDeputyshipDto $layDeputyshipDto, bool $multiclientApplyDbChanges = true): array
     {
         $entityDetails = [];
         $message = null;
         $errorMessage = null;
 
         try {
+            $this->em->beginTransaction();
+
             $client = $this->handleNewClient($layDeputyshipDto);
 
             if (is_null($client)) {
@@ -61,11 +63,17 @@ class LayDeputyshipProcessor
 
             $this->em->persist($report);
             $this->em->persist($client);
-            $this->em->flush();
-            $this->em->commit();
+
+            if ($multiclientApplyDbChanges) {
+                $this->em->flush();
+                $this->em->commit();
+            } else {
+                $this->em->rollback();
+            }
+
             $this->em->clear();
 
-            // record what has been added to the db
+            // log db changes
             $entityDetails = $this->getEntityDetails(
                 $client,
                 $report,
@@ -95,7 +103,7 @@ class LayDeputyshipProcessor
      * If there is no user in this table, we won't get any potential new clients as we don't have anything to attach
      * them to.
      */
-    private function findUser(string $deputyUid): ?User
+    private function findUser(string $deputyUid): User
     {
         $userRepo = $this->em->getRepository(User::class);
 
@@ -150,12 +158,16 @@ class LayDeputyshipProcessor
         );
     }
 
+    // note that the reportId and clientId will be null if this is a dry run (database changes are not applied)
     private function getEntityDetails(
         Client $client,
         Report $report,
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
-        $deputyUids = array_map(function ($user) { return $user->getDeputyUid(); }, $client->getUsers());
+        $deputyUids = array_map(
+            function ($user) { return $user->getDeputyUid(); },
+            iterator_to_array($client->getUsers())
+        );
 
         return [
             // ID of the client used for this row
