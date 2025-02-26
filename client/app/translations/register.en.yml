@@ -41,7 +41,7 @@ clientLastname:
   hint: ""
 caseNumber:
   label: "Case number"
-  hint: This is 8 characters long and usually starts with a 1 or 9
+  hint: This is 8 or 10 characters long and can be found on your court order
 save:
   label: "Sign up"
 

@@ -11,7 +11,6 @@ module "restore_from_production" {
   execution_role_arn    = aws_iam_role.execution_role_db.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
-  vpc_id                = data.aws_vpc.vpc.id
   security_group_id     = module.db_access_task_security_group.id
 }
 
