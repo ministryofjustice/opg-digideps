@@ -42,12 +42,12 @@ jobs:
           - svc_name: "api-webserver"
             sub_folder: "."
             docker_file: "api/docker/web/Dockerfile"
-            platform: "linux/amd64"
+            platform: "linux/arm64"
 
           - svc_name: "api"
             sub_folder: "."
             docker_file: "api/docker/app/Dockerfile"
-            platform: "linux/amd64"
+            platform: "linux/arm64"
 
           - svc_name: "sync"
             sub_folder: "orchestration"
@@ -131,7 +131,7 @@ jobs:
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
             --platform ${PLATFORM} \
             --load \
-            --build-arg ${PACKAGE} \
+            --build-arg PACKAGE=${PACKAGE} \
             --tag ${IMAGE_NAME}:latest \
             --output type=docker \
             .
@@ -143,7 +143,7 @@ jobs:
             --platform ${PLATFORM} \
             --tag ${IMAGE_NAME}:latest \
             --load \
-            --build-arg ${PACKAGE} \
+            --build-arg PACKAGE=${PACKAGE} \
             --output type=docker \
             .
           fi

@@ -7,7 +7,11 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions    = "[${local.api_web}, ${local.api_container}]"
   task_role_arn            = aws_iam_role.api.arn
   execution_role_arn       = aws_iam_role.execution_role_db.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "api" {
