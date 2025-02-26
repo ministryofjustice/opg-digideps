@@ -83,9 +83,9 @@ $ XDEBUG_MODE=coverage PACT_MOCK_SERVER_HOST=localhost PACT_MOCK_SERVER_PORT=123
 
 The coverage report is output to build/coverage-client.
 
-### Integration tests
+### End to End tests
 
-In order to run the integration tests locally, create an .env file in the root of the repo and add the test
+In order to run the end to end tests locally, create an .env file in the root of the repo and add the test
 key found in AWS secrets manager under the Digideps developer account, e.g.
 
 ```shell script
@@ -94,10 +94,10 @@ key found in AWS secrets manager under the Digideps developer account, e.g.
 NOTIFY_API_KEY=fakeKeyGetRealValueFromAWS-123abcabc-abc1-12bn-65pp-12344567abc12-8j11j8d-4532-856s-7d55
 ```
 
-Run all integration (Behat) tests:
+Run all end to end (Behat) tests:
 
 ```shell script
-$ make integration-tests
+$ make end-to-end-tests
 ```
 
 Run a specific suite:
