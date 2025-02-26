@@ -78,6 +78,9 @@ COPY --chown=www-data:www-data api/app/tests tests
 COPY --chown=www-data:www-data api/app/api.env api.env
 COPY --chown=www-data:www-data api/app/postgres.env postgres.env
 COPY --chown=www-data:www-data api/app/phpstan.neon .
+COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
+
+RUN chmod 544 /var/www/wait-for-db.sh
 # Behat
 RUN mkdir -p /tmp/html
 RUN mkdir -p /tmp/sql
@@ -96,7 +99,7 @@ RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https:/
 FROM application AS ci-tests
 # We use this setup for certain commands as part of the CI processing of unit tests
 CMD ["sh", "-c", "confd -onetime -backend env \
-    && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
+    && /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && php-fpm"]
@@ -108,7 +111,7 @@ RUN /harden.sh www-data && rm /harden.sh
 USER www-data
 
 CMD ["sh", "-c", "confd -onetime -backend env \
-    && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
+    && /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && php-fpm"]

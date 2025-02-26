@@ -139,6 +139,7 @@ services:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
     restart: always
+  #    command: sleep infinity
 
   htmltopdf:
     build:
