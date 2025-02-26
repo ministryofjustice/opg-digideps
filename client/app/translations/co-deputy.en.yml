@@ -69,6 +69,6 @@ clientLastname:
   label: Last name
 clientCaseNumber:
   label: Case number
-  hint: You will find the case number on the first page of the court order (top right-hand corner)
+  hint: This is 8 or 10 characters long and can be found on your court order
 saveAndContinue:
   label: Save and continue
