@@ -81,7 +81,7 @@ class LayDeputyshipUploader
         ];
     }
 
-    public function handleNewMultiClients(): array
+    public function handleNewMultiClients(bool $multiclientApplyDbChanges = true): array
     {
         $preRegistrationNewClients = $this->em->getRepository(PreRegistration::class)->getNewClientsForExistingDeputiesArray();
         $numMultiClients = count($preRegistrationNewClients);
@@ -95,7 +95,7 @@ class LayDeputyshipUploader
 
             'errors' => [],
 
-            // entities added/changed; remains empty unless $detailedInfo is true
+            // entities added/changed
             'details' => [],
         ];
 
@@ -111,7 +111,7 @@ class LayDeputyshipUploader
 
         foreach ($preRegistrationNewClients as $preReg) {
             $dto = $this->layDeputyAssembler->assembleFromArray($preReg);
-            $rowResult = $this->layDeputyProcessor->processLayDeputyship($dto);
+            $rowResult = $this->layDeputyProcessor->processLayDeputyship($dto, $multiclientApplyDbChanges);
 
             $error = $rowResult['error'];
             if (!is_null($error)) {

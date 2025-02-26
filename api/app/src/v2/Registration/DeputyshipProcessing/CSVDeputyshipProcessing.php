@@ -59,9 +59,9 @@ class CSVDeputyshipProcessing
         return $result;
     }
 
-    public function layProcessingHandleNewMultiClients(): array
+    public function layProcessingHandleNewMultiClients(bool $multiclientApplyDbChanges = true): array
     {
-        return $this->layUploader->handleNewMultiClients();
+        return $this->layUploader->handleNewMultiClients($multiclientApplyDbChanges);
     }
 
     public function orgProcessing(array $data)
