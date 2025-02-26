@@ -13,6 +13,7 @@ use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\Uploader\ClientMatch;
 use App\v2\Registration\Uploader\LayClientMatcher;
 use App\v2\Registration\Uploader\LayDeputyshipProcessor;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -169,7 +170,7 @@ class LayDeputyshipProcessorTest extends TestCase
         $this->mockEm->expects($this->once())->method('commit');
         $this->mockEm->expects($this->once())->method('clear');
 
-        $mockClient->expects($this->once())->method('getUsers')->willReturn([$user]);
+        $mockClient->expects($this->once())->method('getUsers')->willReturn(new ArrayCollection([$user]));
         $mockClient->expects($this->once())->method('getId')->willReturn(33333333);
         $mockClient->expects($this->once())->method('getCaseNumber')->willReturn('88888888');
 
