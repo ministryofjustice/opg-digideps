@@ -74,7 +74,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
                 'source' => 'sirius',
             ]);
 
-        $this->csvProcessing->layProcessingHandleNewMultiClients()
+        $this->csvProcessing->layProcessingHandleNewMultiClients(Argument::any())
             ->shouldBeCalled()
             ->willReturn([
                 'new-clients-found' => 0,
