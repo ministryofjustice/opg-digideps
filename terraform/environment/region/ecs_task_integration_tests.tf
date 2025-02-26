@@ -13,6 +13,8 @@ module "integration_tests" {
   security_group_id     = module.integration_tests_security_group.id
   cpu                   = 4096
   memory                = 8192
+  architecture          = "ARM64"
+  os                    = "LINUX"
   override              = ["sh", "./tests/Behat/run-tests-parallel.sh"]
   service_name          = "integration-tests"
 }

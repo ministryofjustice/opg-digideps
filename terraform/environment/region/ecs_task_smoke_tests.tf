@@ -78,6 +78,8 @@ module "smoke_tests" {
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.smoke_tests.arn
   vpc_id                = data.aws_vpc.vpc.id
+  architecture          = "ARM64"
+  os                    = "LINUX"
   security_group_id     = module.smoke_tests_security_group.id
 }
 
