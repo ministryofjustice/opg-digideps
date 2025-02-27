@@ -69,11 +69,21 @@ resource "aws_ecs_service" "admin" {
 locals {
   admin_web = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client-webserver,
-      mountPoints = [],
-      name        = "admin_web",
+      cpu                    = 0,
+      essential              = true,
+      image                  = local.images.client-webserver,
+      mountPoints            = [],
+      name                   = "admin_web",
+      readonlyRootFilesystem = true,
+      linuxParameters = {
+        tmpfs = [
+          {
+            containerPath = "/tmp",
+            size          = 64,
+            mountOptions  = ["rw", "nosuid", "noexec"]
+          }
+        ]
+      },
       portMappings = [
         {
           name : "admin-port",
@@ -108,11 +118,21 @@ locals {
   )
   admin_container = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client,
-      mountPoints = [],
-      name        = "admin_app",
+      cpu                    = 0,
+      essential              = true,
+      image                  = local.images.client,
+      mountPoints            = [],
+      name                   = "admin_app",
+      readonlyRootFilesystem = true,
+      linuxParameters = {
+        tmpfs = [
+          {
+            containerPath = "/tmp",
+            size          = 64,
+            mountOptions  = ["rw", "nosuid", "noexec"]
+          }
+        ]
+      },
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
