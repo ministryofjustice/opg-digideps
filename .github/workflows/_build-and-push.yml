@@ -150,11 +150,30 @@ jobs:
         working-directory: ${{ matrix.sub_folder }}
 
       - name: build docker image development
-        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
+        if: matrix.svc_name == 'client-webserver'
+        #        && inputs.branch_name == 'main'
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
           DOCKERFILE: ${{ matrix.docker_file }}
-        run: docker build --file client/docker/app/Dockerfile-dev --tag ${IMAGE_NAME}-dev:latest .
+          BRANCH_NAME: ${{ inputs.branch_name }}
+          PLATFORM: ${{ matrix.platform }}
+          # We can default to arm64 as this isn't used unless specified in the dockerfile
+          PACKAGE: arm64
+        run: |
+          docker image ls
+          export DOCKER_BUILDKIT=0
+
+          docker buildx build \
+          -f client/docker/app/Dockerfile-dev \
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --platform ${PLATFORM} \
+          --load \
+          --pull=false \
+          --tag ${IMAGE_NAME}-dev:latest \
+          --build-arg PACKAGE=${PACKAGE} \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --output type=docker \
+          .
         working-directory: ${{ matrix.sub_folder }}
 
       - name: Move cache
