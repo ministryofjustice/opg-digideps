@@ -149,14 +149,6 @@ jobs:
           fi
         working-directory: ${{ matrix.sub_folder }}
 
-      - name: build docker image development
-        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
-        env:
-          IMAGE_NAME: ${{ matrix.svc_name }}
-          DOCKERFILE: ${{ matrix.docker_file }}
-        run: docker build --file client/docker/app/Dockerfile-dev --tag ${IMAGE_NAME}-dev:latest .
-        working-directory: ${{ matrix.sub_folder }}
-
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
@@ -210,7 +202,7 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
           export IMAGE_TAG_DEV="development-${IMAGE_TAG}"
-          docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
+          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
 
       - name: tag and push container
         env:
