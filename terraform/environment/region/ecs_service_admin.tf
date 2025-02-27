@@ -7,7 +7,11 @@ resource "aws_ecs_task_definition" "admin" {
   container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "admin" {
@@ -75,15 +79,6 @@ locals {
       mountPoints            = [],
       name                   = "admin_web",
       readonlyRootFilesystem = true,
-      linuxParameters = {
-        tmpfs = [
-          {
-            containerPath = "/tmp",
-            size          = 64,
-            mountOptions  = ["rw", "nosuid", "noexec"]
-          }
-        ]
-      },
       portMappings = [
         {
           name : "admin-port",
@@ -124,15 +119,6 @@ locals {
       mountPoints            = [],
       name                   = "admin_app",
       readonlyRootFilesystem = true,
-      linuxParameters = {
-        tmpfs = [
-          {
-            containerPath = "/tmp",
-            size          = 64,
-            mountOptions  = ["rw", "nosuid", "noexec"]
-          }
-        ]
-      },
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
