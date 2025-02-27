@@ -70,7 +70,7 @@ variable "cpu" {
 variable "architecture" {
   description = "Architecture for the task."
   type        = string
-  default     = "AMD64"
+  default     = "X86_64"
 }
 
 variable "os" {

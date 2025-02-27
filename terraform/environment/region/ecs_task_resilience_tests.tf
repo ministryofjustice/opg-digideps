@@ -109,6 +109,8 @@ module "resilience_tests" {
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.resilience_tests.arn
+  architecture          = "ARM64"
+  os                    = "LINUX"
   security_group_id     = module.resilience_tests_security_group.id
 }
 
