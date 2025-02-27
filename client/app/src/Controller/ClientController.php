@@ -239,6 +239,12 @@ class ClientController extends AbstractController
                         if ($decodedError['matching_errors']['client_lastname']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.clientLastname', [], 'register')));
                         }
+                        if ($decodedError['matching_errors']['deputy_lastname'] ||
+                            $decodedError['matching_errors']['deputy_firstname'] ||
+                            $decodedError['matching_errors']['deputy_postcode']
+                        ) {
+                            $form->addError(new FormError('Please click back'));
+                        }
                         if ($decodedError['matching_errors']['deputy_lastname']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
