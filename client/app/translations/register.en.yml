@@ -78,6 +78,6 @@ matchingErrors:
     The case number you provided does not match our records.
     Please call 0115 934 2700 to make sure we have a record of your deputyship.
   clientLastname: The client's last name you provided does not match our records.
-  deputyLastname: Your last name you provided does not match our records.
-  deputyPostcode: The postcode you provided does not match our records.
-  deputyFirstname: Your first name you provided does not match our records.
+  deputyLastname: Your last name you provided does not match our records, please click back.
+  deputyPostcode: The postcode you provided does not match our records, please click back.
+  deputyFirstname: Your first name you provided does not match our records, please click back.

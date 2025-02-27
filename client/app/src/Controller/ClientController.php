@@ -267,6 +267,7 @@ class ClientController extends AbstractController
             'form' => $form->createView(),
             'client_validated' => $client_validated,
             'client' => $client,
+            'backLink' => $this->generateUrl('user_details')
         ];
     }
 }
