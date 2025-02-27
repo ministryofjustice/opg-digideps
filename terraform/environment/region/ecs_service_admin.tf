@@ -7,7 +7,19 @@ resource "aws_ecs_task_definition" "admin" {
   container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  volume {
+    name = "admin-efs-volume"
+    efs_volume_configuration {
+      file_system_id     = aws_efs_file_system.admin_efs.id
+      root_directory     = "/"
+      transit_encryption = "ENABLED"
+    }
+  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "admin" {
@@ -75,15 +87,18 @@ locals {
       mountPoints            = [],
       name                   = "admin_web",
       readonlyRootFilesystem = true,
-      linuxParameters = {
-        tmpfs = [
-          {
-            containerPath = "/tmp",
-            size          = 64,
-            mountOptions  = ["rw", "nosuid", "noexec"]
-          }
-        ]
-      },
+      mountPoints = [
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/tmp", # Adjust this to a required writable path
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/www/data", # Adjust this to a required writable path
+          readOnly      = false
+        }
+      ],
       portMappings = [
         {
           name : "admin-port",
@@ -124,15 +139,18 @@ locals {
       mountPoints            = [],
       name                   = "admin_app",
       readonlyRootFilesystem = true,
-      linuxParameters = {
-        tmpfs = [
-          {
-            containerPath = "/tmp",
-            size          = 64,
-            mountOptions  = ["rw", "nosuid", "noexec"]
-          }
-        ]
-      },
+      mountPoints = [
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/tmp", # Adjust this to a required writable path
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/var/www", # Adjust this to a required writable path
+          readOnly      = false
+        }
+      ],
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
@@ -161,4 +179,21 @@ locals {
       ])
     }
   )
+}
+
+resource "aws_efs_file_system" "admin_efs" {
+  creation_token   = "admin-efs-${local.environment}"
+  encrypted        = true
+  performance_mode = "generalPurpose"
+  throughput_mode  = "bursting"
+  tags = {
+    Name = "admin-efs-${local.environment}"
+  }
+}
+
+resource "aws_efs_mount_target" "admin_mount" {
+  for_each        = toset(data.aws_subnet.private[*].id)
+  file_system_id  = aws_efs_file_system.admin_efs.id
+  subnet_id       = each.value
+  security_groups = [module.admin_service_security_group.id]
 }
