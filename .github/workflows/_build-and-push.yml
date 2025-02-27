@@ -52,22 +52,22 @@ jobs:
           - svc_name: "sync"
             sub_folder: "orchestration"
             docker_file: "Dockerfile"
-            platform: "linux/amd64"
+            platform: "linux/arm64"
 
           - svc_name: "htmltopdf"
             sub_folder: "."
             docker_file: "htmltopdf/Dockerfile"
-            platform: "linux/amd64"
+            platform: "linux/arm64"
 
           - svc_name: "file-scanner"
             sub_folder: "."
             docker_file: "file-scanner/Dockerfile"
-            platform: "linux/amd64"
+            platform: "linux/arm64"
 
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
             docker_file: "Dockerfile"
-            platform: "linux/amd64"
+            platform: "linux/arm64"
 
           - svc_name: "custom-sql-lambda"
             sub_folder: "lambdas/functions/custom_sql_query"

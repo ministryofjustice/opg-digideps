@@ -7,7 +7,11 @@ resource "aws_ecs_task_definition" "mock_sirius_integration" {
   container_definitions    = "[${local.mock_sirius_integration_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "mock_sirius_integration" {
