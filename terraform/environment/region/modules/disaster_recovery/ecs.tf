@@ -7,10 +7,6 @@ resource "aws_ecs_task_definition" "dr_backup" {
   container_definitions    = "[${local.dr_backup}]"
   task_role_arn            = aws_iam_role.dr_backup.arn
   execution_role_arn       = var.execution_role_arn
-  runtime_platform {
-    cpu_architecture        = "ARM64"
-    operating_system_family = "LINUX"
-  }
   tags = merge(var.default_tags,
     { "Role" = "backup-cross-account-${var.environment}" },
   )
