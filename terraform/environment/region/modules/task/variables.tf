@@ -1,3 +1,8 @@
+variable "vpc_id" {
+  description = "The ID of the VPC where the ECS task will be deployed."
+  type        = string
+}
+
 variable "tags" {
   description = "A map of tags to be applied to the ECS resources."
   type        = map(string)
@@ -65,16 +70,4 @@ variable "cpu" {
   description = "The CPU units to allocate to the containers."
   type        = number
   default     = 256
-}
-
-variable "architecture" {
-  description = "Architecture for the task."
-  type        = string
-  default     = "X86_64"
-}
-
-variable "os" {
-  description = "Operating system for the task."
-  type        = string
-  default     = "LINUX"
 }
