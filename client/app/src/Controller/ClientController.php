@@ -248,6 +248,12 @@ class ClientController extends AbstractController
                         if ($decodedError['matching_errors']['deputy_postcode']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
+                        if ($decodedError['matching_errors']['deputy_lastname'] ||
+                            $decodedError['matching_errors']['deputy_firstname'] ||
+                            $decodedError['matching_errors']['deputy_postcode']
+                        ) {
+                            $form->addError(new FormError('Please click back'));
+                        }
 
                         break;
 
@@ -267,6 +273,7 @@ class ClientController extends AbstractController
             'form' => $form->createView(),
             'client_validated' => $client_validated,
             'client' => $client,
+            'backLink' => $this->generateUrl('user_details')
         ];
     }
 }
