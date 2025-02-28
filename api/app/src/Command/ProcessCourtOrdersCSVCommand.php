@@ -6,7 +6,6 @@ namespace App\Command;
 
 use App\Service\DataImporter\CsvToArray;
 use App\Service\File\Storage\S3Storage;
-use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
@@ -39,7 +38,6 @@ class ProcessCourtOrdersCSVCommand extends Command
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
         private readonly LoggerInterface $verboseLogger,
-        private readonly CSVDeputyshipProcessing $csvProcessing,
     ) {
         parent::__construct();
     }
@@ -139,9 +137,6 @@ class ProcessCourtOrdersCSVCommand extends Command
 
             foreach ($chunks as $index => $chunk) {
                 $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
-                // Handle processing & output of CSV below
-                //$result = $this->csvProcessing->courtOrderProcessing($chunk, $index);
-                //$this->storeOutput($result);
             }
 
             return true;
