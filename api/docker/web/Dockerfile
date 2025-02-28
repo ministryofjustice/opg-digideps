@@ -1,5 +1,5 @@
 FROM nginxinc/nginx-unprivileged:stable-alpine
-
+ARG PACKAGE=${PACKAGE:-amd64}
 USER root
 
 WORKDIR /www/data
@@ -10,13 +10,8 @@ RUN apk --no-cache add wget libcap
 
 # Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
-ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
+ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-${PACKAGE} /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
-
-# Add Waitforit to wait on app starting
-ENV WAITFORIT_VERSION="v2.4.1"
-ADD https://github.com/maxclaus/waitforit/releases/download/${WAITFORIT_VERSION}/waitforit-linux_amd64 /usr/local/bin/waitforit
-RUN chmod +x /usr/local/bin/waitforit
 
 COPY --chown=nginx client/docker/web/confd /etc/confd
 COPY --chown=nginx client/resources/public/ /www/data/public/

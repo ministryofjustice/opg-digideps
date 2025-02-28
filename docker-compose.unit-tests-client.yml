@@ -18,6 +18,7 @@ services:
       - ./client/app/frontend.env
     volumes:
       - ./build/coverage-client:/var/www/build/coverage-client
+    command: sleep infinity
 
   pact-mock:
     container_name: client-unit-tests-pact

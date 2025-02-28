@@ -83,7 +83,7 @@ class SelfRegisterData
      *
      * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"self_registration", "verify_codeputy"})
      *
-     * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage", groups={"self_registration", "verify_codeputy"})
+     * @Assert\Length(min=8, max=8, groups={"self_registration", "verify_codeputy"})
      */
     private $caseNumber;
 
@@ -217,9 +217,9 @@ class SelfRegisterData
      */
     public function replaceUnicodeChars()
     {
-        $this->firstname = str_replace('’', '\'', $this->firstname);
-        $this->lastname = str_replace('’', '\'', $this->lastname);
-        $this->clientFirstname = str_replace('’', '\'', $this->clientFirstname);
-        $this->clientLastname = str_replace('’', '\'', $this->clientLastname);
+        $this->firstname = str_replace('’', '\'', $this->firstname ?? '');
+        $this->lastname = str_replace('’', '\'', $this->lastname ?? '');
+        $this->clientFirstname = str_replace('’', '\'', $this->clientFirstname ?? '');
+        $this->clientLastname = str_replace('’', '\'', $this->clientLastname ?? '');
     }
 }

@@ -83,7 +83,13 @@ class CoDeputyController extends AbstractController
                 $selfRegisterData->setEmail($form['email']->getData());
                 $selfRegisterData->setPostcode($form['addressPostcode']->getData());
                 $selfRegisterData->setClientLastname($form['clientLastname']->getData());
-                $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
+
+                // truncate case number if length is 10 digits long before setting
+                if (10 == strlen($form['clientCaseNumber']->getData())) {
+                    $selfRegisterData->setCaseNumber(substr($form['clientCaseNumber']->getData(), 0, -2));
+                } else {
+                    $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
+                }
 
                 $clientId = $this->restClient->get('v2/client/case-number/'.$selfRegisterData->getCaseNumber(), 'Client')->getId();
                 $mainClient = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
