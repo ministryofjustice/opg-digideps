@@ -349,7 +349,7 @@ resource "aws_cloudwatch_event_target" "court_order_csv_processing_check" {
       scheduled-event-detail = {
         job-name                   = "court_order_csv_processing_check"
         log-group                  = terraform.workspace,
-        log-entries                = ["court_order_csv_processing"],
+        log-entries                = ["courtorder_csv_processing"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
         channel-identifier-absent  = "team",

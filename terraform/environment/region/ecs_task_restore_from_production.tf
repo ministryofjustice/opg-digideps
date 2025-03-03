@@ -55,7 +55,7 @@ locals {
           },
           {
             name  = "ANONYMISE",
-            value = "yes"
+            value = "no"
           },
           {
             name  = "ANON_PATH",

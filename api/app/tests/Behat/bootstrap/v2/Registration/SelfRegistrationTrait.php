@@ -11,8 +11,8 @@ use App\Tests\Behat\v2\Common\UserDetails;
 trait SelfRegistrationTrait
 {
     private string $invalidCaseNumberError = "The case number you provided does not match our records.\nPlease call 0115 934 2700 to make sure we have a record of your deputyship.";
-    private string $invalidDeputyFirstnameError = 'Your first name you provided does not match our records.';
-    private string $invalidDeputyLastnameError = 'Your last name you provided does not match our records.';
+    private string $invalidDeputyFirstnameError = "The deputy's first name you provided does not match our records.";
+    private string $invalidDeputyLastnameError = "The deputy's last name you provided does not match our records.";
     private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
     private string $incorrectCaseNumberLengthError = "The case number should be 8 or 10 characters long.\nPlease check your case reference number and try again.\n";
