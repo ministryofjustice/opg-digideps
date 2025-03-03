@@ -24,7 +24,7 @@ on:
 
 jobs:
   docker_build_scan_push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     strategy:
       fail-fast: false
       matrix:
@@ -138,7 +138,6 @@ jobs:
           else
             docker buildx build \
             -f ${DOCKERFILE} \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
             --platform ${PLATFORM} \
             --tag ${IMAGE_NAME}:latest \
