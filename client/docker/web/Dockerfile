@@ -36,4 +36,4 @@ RUN /opt/scripts/harden-nginx.sh && rm /opt/scripts/harden-nginx.sh
 USER nginx
 
 # Start services
-CMD ["sh", "-c", "confd -onetime -backend env && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "id -u && ls -alt /etc/nginx && ls -alt /etc && confd -onetime -backend env && nginx -g 'daemon off;'"]
