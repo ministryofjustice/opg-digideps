@@ -1,6 +1,7 @@
 FROM nginxinc/nginx-unprivileged:stable-alpine
 
-ARG PACKAGE=${PACKAGE:-amd64}
+ARG PLATFORM=${PLATFORM:-amd64}
+
 USER root
 
 WORKDIR /www/data
@@ -11,7 +12,7 @@ RUN apk --no-cache add wget libcap
 
 # Add Confd to configure nginx on start
 ENV CONFD_VERSION="0.16.0"
-ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-${PACKAGE} /usr/local/bin/confd
+ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-${PLATFORM} /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 
 COPY --chown=nginx client/docker/web/confd /etc/confd
