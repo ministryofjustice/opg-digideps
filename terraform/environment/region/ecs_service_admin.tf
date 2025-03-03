@@ -93,6 +93,11 @@ locals {
           sourceVolume  = "admin-efs-volume",
           containerPath = "/www/data", # Adjust this to a required writable path
           readOnly      = false
+        },
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/etc/nginx", # Adjust this to a required writable path
+          readOnly      = false
         }
       ],
       portMappings = [
@@ -145,6 +150,11 @@ locals {
           sourceVolume  = "admin-efs-volume",
           containerPath = "/var/www", # Adjust this to a required writable path
           readOnly      = false
+        },
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/usr/local/etc", # Adjust this to a required writable path
+          readOnly      = false
         }
       ],
       portMappings = [{
@@ -191,5 +201,5 @@ resource "aws_efs_mount_target" "admin_mount" {
   for_each        = toset(data.aws_subnet.private[*].id)
   file_system_id  = aws_efs_file_system.admin_efs.id
   subnet_id       = each.value
-  security_groups = [module.admin_service_security_group.id]
+  security_groups = [module.admin_efs_security_group.id]
 }
