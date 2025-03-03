@@ -9,8 +9,7 @@ module "sleep_mode" {
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.sleep_mode.arn
-  architecture          = "ARM64"
-  os                    = "LINUX"
+  vpc_id                = data.aws_vpc.vpc.id
   security_group_id     = module.sleep_mode_security_group.id
 }
 
