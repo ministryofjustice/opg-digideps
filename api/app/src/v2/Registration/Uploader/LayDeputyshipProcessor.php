@@ -125,13 +125,14 @@ class LayDeputyshipProcessor
     {
         $clientMatch = $this->clientMatcher->matchDto($dto);
 
-        // Only create a new client if this is a multi-client, there is not an existing active client for this case
+        // Only create a new client if this is a multi-client and there is not an existing active client for this case
         // number.
         //
         // * If there is a compatible report (i.e. we found a candidate client), creating a client here would create
         //   an unnecessary duplicate client when a co-deputy would be more appropriate
         // * If there is no compatible report (i.e. no candidate client), but there is an active client,
-        //   creating another client here would turn this deputy into a dual on the case
+        //   creating another client here would turn this deputy into a dual on the case, which we don't want to do
+        //   automatically
         $client = null;
         if (!$clientMatch->activeClientExistsForCase) {
             $client = $this->clientAssembler->assembleFromLayDeputyshipDto($dto);
