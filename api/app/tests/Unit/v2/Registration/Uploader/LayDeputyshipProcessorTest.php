@@ -115,7 +115,7 @@ class LayDeputyshipProcessorTest extends TestCase
         $expected = [
             'entityDetails' => [],
             'message' => 'Found a potential co-deputy or dual; will not create new multi-client entities',
-            'errorMessage' => null,
+            'error' => null,
         ];
 
         $this->assertEquals($expected, $output);
