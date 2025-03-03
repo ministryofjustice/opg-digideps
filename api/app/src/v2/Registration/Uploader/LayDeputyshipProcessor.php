@@ -51,7 +51,7 @@ class LayDeputyshipProcessor
                 return [
                     'entityDetails' => $entityDetails,
                     'message' => 'Found a potential co-deputy or dual; will not create new multi-client entities',
-                    'errorMessage' => $errorMessage,
+                    'error' => $errorMessage,
                 ];
             }
 
