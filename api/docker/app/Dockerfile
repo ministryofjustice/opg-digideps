@@ -1,4 +1,6 @@
-FROM composer:2.5.7 AS composer
+ARG PLATFORM=${PLATFORM:-amd64}
+
+FROM --platform=linux/${PLATFORM} composer:2.5.7 AS composer
 
 WORKDIR /app
 # Install composer dependencies
@@ -12,8 +14,8 @@ COPY api/app/src src
 RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.28-fpm-alpine3.19 AS base
-ARG PACKAGE=${PACKAGE:-amd64}
+FROM --platform=linux/${PLATFORM} php:8.1.28-fpm-alpine3.19 AS base
+
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -49,7 +51,7 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
-RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-${PACKAGE}" \
+RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-${PLATFORM}" \
     && chmod +x /usr/local/bin/confd
 
 # Create var directories
