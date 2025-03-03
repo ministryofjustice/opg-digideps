@@ -27,7 +27,10 @@ RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && apk del libcap
 # Copy and secure health-check script
 RUN mkdir /opt/scripts
 COPY client/docker/web/health-check.sh /opt/scripts/health-check.sh
-RUN chown nginx:nginx /opt/scripts/health-check.sh && chmod 550 /opt/scripts/health-check.sh
+RUN chown nginx:nginx /opt/scripts/health-check.sh \
+    && chmod 550 /opt/scripts/health-check.sh \
+    && chown -R nginx:nginx /etc/nginx \
+    && chmod -R 755 /etc/nginx
 
 # Harden nginx security
 COPY scripts/hardening/harden-nginx.sh /opt/scripts/harden-nginx.sh
@@ -36,4 +39,4 @@ RUN /opt/scripts/harden-nginx.sh && rm /opt/scripts/harden-nginx.sh
 USER nginx
 
 # Start services
-CMD ["sh", "-c", "confd -onetime -backend env && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "df -h && id -u && ls -alt /etc/nginx && ls -alt /etc && confd -onetime -backend env && ls -alt /etc/nginx && nginx -g 'daemon off;'"]
