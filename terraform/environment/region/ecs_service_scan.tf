@@ -7,11 +7,7 @@ resource "aws_ecs_task_definition" "scan" {
   container_definitions    = "[${local.file_scanner_rest_container}]"
   task_role_arn            = aws_iam_role.scan.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  runtime_platform {
-    cpu_architecture        = "ARM64"
-    operating_system_family = "LINUX"
-  }
-  tags = var.default_tags
+  tags                     = var.default_tags
 }
 
 resource "aws_ecs_service" "scan" {

@@ -13,7 +13,6 @@ RUN composer run-script post-install-cmd --no-interaction
 RUN composer dump-autoload --optimize
 
 FROM php:8.1.28-fpm-alpine3.19 as base
-ARG PACKAGE=${PACKAGE:-amd64}
 WORKDIR /var/www
 ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
@@ -53,8 +52,12 @@ RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
 
 # Add Confd to configure parameters on start
 ENV CONFD_VERSION="0.16.0"
-RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-${PACKAGE}" \
+RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
     && chmod +x /usr/local/bin/confd
+# Add Waitforit to wait on API starting
+ENV WAITFORIT_VERSION="v2.4.1"
+RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxclaus/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
+    && chmod +x /usr/local/bin/waitforit
 
 # Create var directories
 RUN mkdir -p var/cache \

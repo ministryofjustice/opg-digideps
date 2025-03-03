@@ -9,11 +9,10 @@ module "integration_tests" {
   execution_role_arn    = aws_iam_role.execution_role_db.arn
   subnet_ids            = data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.integration_tests.arn
+  vpc_id                = data.aws_vpc.vpc.id
   security_group_id     = module.integration_tests_security_group.id
   cpu                   = 4096
   memory                = 8192
-  architecture          = "ARM64"
-  os                    = "LINUX"
   override              = ["sh", "./tests/Behat/run-tests-parallel.sh"]
   service_name          = "integration-tests"
 }
