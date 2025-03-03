@@ -8,10 +8,24 @@ resource "aws_ecs_task_definition" "admin" {
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   volume {
-    name = "admin-efs-volume"
+    name = "nginx-volume"
     efs_volume_configuration {
-      file_system_id     = aws_efs_file_system.admin_efs.id
-      root_directory     = "/"
+      file_system_id = aws_efs_file_system.admin_efs.id
+      authorization_config {
+        access_point_id = aws_efs_access_point.nginx.id
+        iam             = "ENABLED"
+      }
+      transit_encryption = "ENABLED"
+    }
+  }
+  volume {
+    name = "www-data-volume"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.admin_efs.id
+      authorization_config {
+        access_point_id = aws_efs_access_point.application.id
+        iam             = "ENABLED"
+      }
       transit_encryption = "ENABLED"
     }
   }
@@ -93,6 +107,11 @@ locals {
           sourceVolume  = "admin-efs-volume",
           containerPath = "/www/data", # Adjust this to a required writable path
           readOnly      = false
+        },
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/etc/nginx", # Adjust this to a required writable path
+          readOnly      = false
         }
       ],
       portMappings = [
@@ -145,6 +164,11 @@ locals {
           sourceVolume  = "admin-efs-volume",
           containerPath = "/var/www", # Adjust this to a required writable path
           readOnly      = false
+        },
+        {
+          sourceVolume  = "admin-efs-volume",
+          containerPath = "/usr/local/etc", # Adjust this to a required writable path
+          readOnly      = false
         }
       ],
       portMappings = [{
@@ -191,5 +215,37 @@ resource "aws_efs_mount_target" "admin_mount" {
   for_each        = toset(data.aws_subnet.private[*].id)
   file_system_id  = aws_efs_file_system.admin_efs.id
   subnet_id       = each.value
-  security_groups = [module.admin_service_security_group.id]
+  security_groups = [module.admin_efs_security_group.id]
+}
+
+resource "aws_efs_access_point" "nginx" {
+  file_system_id = aws_efs_file_system.admin_efs.id
+  posix_user {
+    uid = 101
+    gid = 101
+  }
+  root_directory {
+    path = "/"
+    creation_info {
+      owner_uid   = 101
+      owner_gid   = 101
+      permissions = "0755"
+    }
+  }
+}
+
+resource "aws_efs_access_point" "application" {
+  file_system_id = aws_efs_file_system.admin_efs.id
+  posix_user {
+    uid = 82
+    gid = 82
+  }
+  root_directory {
+    path = "/"
+    creation_info {
+      owner_uid   = 82
+      owner_gid   = 82
+      permissions = "0755"
+    }
+  }
 }
