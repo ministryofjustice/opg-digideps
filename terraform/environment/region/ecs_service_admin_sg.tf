@@ -59,5 +59,35 @@ locals {
       target_type = "security_group_id"
       target      = module.mock_sirius_integration_security_group.id
     }
+    admin_efs = {
+      port        = 2049
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.admin_efs_security_group.id
+    }
+  }
+}
+
+# Admin EFS Security Group
+module "admin_efs_security_group" {
+  source      = "./modules/security_group"
+  description = "Admin EFS"
+  rules       = local.admin_efs_sg_rules
+  name        = "admin-efs"
+  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
+  environment = local.environment
+}
+
+locals {
+  admin_efs_sg_rules = {
+    admin_efs = {
+      port        = 2049
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.admin_service_security_group.id
+    }
   }
 }

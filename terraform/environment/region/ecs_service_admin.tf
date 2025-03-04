@@ -7,7 +7,29 @@ resource "aws_ecs_task_definition" "admin" {
   container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  volume {
+    name = "nginx-volume"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.admin_efs.id
+      authorization_config {
+        access_point_id = aws_efs_access_point.nginx.id
+        iam             = "ENABLED"
+      }
+      transit_encryption = "ENABLED"
+    }
+  }
+  #  volume {
+  #    name = "www-data-volume"
+  #    efs_volume_configuration {
+  #      file_system_id = aws_efs_file_system.admin_efs.id
+  #      authorization_config {
+  #        access_point_id = aws_efs_access_point.application.id
+  #        iam             = "ENABLED"
+  #      }
+  #      transit_encryption = "ENABLED"
+  #    }
+  #  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "admin" {
@@ -69,11 +91,30 @@ resource "aws_ecs_service" "admin" {
 locals {
   admin_web = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client-webserver,
-      mountPoints = [],
-      name        = "admin_web",
+      cpu                    = 0,
+      essential              = true,
+      image                  = local.images.client-webserver,
+      mountPoints            = [],
+      name                   = "admin_web",
+      user                   = "101:101"
+      readonlyRootFilesystem = true,
+      mountPoints = [
+        {
+          sourceVolume  = "nginx-volume",
+          containerPath = "/tmp", # Adjust this to a required writable path
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "nginx-volume",
+          containerPath = "/www/data", # Adjust this to a required writable path
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "nginx-volume",
+          containerPath = "/etc/nginx", # Adjust this to a required writable path
+          readOnly      = false
+        }
+      ],
       portMappings = [
         {
           name : "admin-port",
@@ -113,6 +154,24 @@ locals {
       image       = local.images.client,
       mountPoints = [],
       name        = "admin_app",
+      #      readonlyRootFilesystem = true,
+      #      mountPoints = [
+      #        {
+      #          sourceVolume  = "www-data-volume",
+      #          containerPath = "/tmp", # Adjust this to a required writable path
+      #          readOnly      = false
+      #        },
+      #        {
+      #          sourceVolume  = "www-data-volume",
+      #          containerPath = "/var/www", # Adjust this to a required writable path
+      #          readOnly      = false
+      #        },
+      #        {
+      #          sourceVolume  = "www-data-volume",
+      #          containerPath = "/usr/local/etc", # Adjust this to a required writable path
+      #          readOnly      = false
+      #        }
+      #      ],
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
@@ -142,3 +201,52 @@ locals {
     }
   )
 }
+
+resource "aws_efs_file_system" "admin_efs" {
+  creation_token   = "admin-efs-${local.environment}"
+  encrypted        = true
+  performance_mode = "generalPurpose"
+  throughput_mode  = "bursting"
+  tags = {
+    Name = "admin-efs-${local.environment}"
+  }
+}
+
+resource "aws_efs_mount_target" "admin_mount" {
+  for_each        = toset(data.aws_subnet.private[*].id)
+  file_system_id  = aws_efs_file_system.admin_efs.id
+  subnet_id       = each.value
+  security_groups = [module.admin_efs_security_group.id]
+}
+
+resource "aws_efs_access_point" "nginx" {
+  file_system_id = aws_efs_file_system.admin_efs.id
+  posix_user {
+    uid = 101
+    gid = 101
+  }
+  root_directory {
+    path = "/"
+    creation_info {
+      owner_uid   = 101
+      owner_gid   = 101
+      permissions = "0777"
+    }
+  }
+}
+
+#resource "aws_efs_access_point" "application" {
+#  file_system_id = aws_efs_file_system.admin_efs.id
+#  posix_user {
+#    uid = 82
+#    gid = 82
+#  }
+#  root_directory {
+#    path = "/"
+#    creation_info {
+#      owner_uid   = 82
+#      owner_gid   = 82
+#      permissions = "0755"
+#    }
+#  }
+#}

@@ -98,7 +98,7 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 FROM application as ci-tests
 # We use this setup for certain commands as part of the CI processing of unit tests
-CMD ["sh", "-c", "confd -onetime -backend env \
+CMD ["sh", "-c", "id -u && confd -onetime -backend env \
     && php-fpm"]
 
 FROM application as production
@@ -107,5 +107,5 @@ RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
 
-CMD ["sh", "-c", "confd -onetime -backend env \
+CMD ["sh", "-c", "id -u && confd -onetime -backend env \
     && php-fpm"]
