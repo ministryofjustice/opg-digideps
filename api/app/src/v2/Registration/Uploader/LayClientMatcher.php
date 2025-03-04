@@ -73,11 +73,14 @@ class LayClientMatcher
 
             $existingReport = $potentialClient->getCurrentReport();
             $existingReportType = $existingReport?->getType();
+            $isCompatibleReport = false;
 
             // if the report type we have calculated is at the start of the existing report's type
             // then we potentially have a compatible report; if the existing report is a hybrid (ends with '-4'),
             // our calculated report is also only compatible if it is also marked as a HYBRID row
-            $isCompatibleReport = str_starts_with($determinedReportType, $existingReportType);
+            if (!is_null($existingReportType)) {
+                $isCompatibleReport = str_starts_with($determinedReportType, $existingReportType);
+            }
             if (str_ends_with($determinedReportType, '-4')) {
                 $isCompatibleReport &= 'HYBRID' === $dto->getHybrid();
             }
