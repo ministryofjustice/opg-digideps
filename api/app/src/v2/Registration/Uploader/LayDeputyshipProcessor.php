@@ -48,6 +48,9 @@ class LayDeputyshipProcessor
             $client = $this->handleNewClient($layDeputyshipDto);
 
             if (is_null($client)) {
+                $this->em->rollback();
+                $this->em->clear();
+
                 return [
                     'entityDetails' => $entityDetails,
                     'message' => 'Found a potential co-deputy or dual; will not create new multi-client entities',
@@ -61,10 +64,9 @@ class LayDeputyshipProcessor
             $report = $this->handleNewReport($layDeputyshipDto, $client);
             $report->setClient($client);
 
-            $this->em->persist($report);
-            $this->em->persist($client);
-
             if ($multiclientApplyDbChanges) {
+                $this->em->persist($report);
+                $this->em->persist($client);
                 $this->em->flush();
                 $this->em->commit();
             } else {
@@ -82,6 +84,9 @@ class LayDeputyshipProcessor
 
             $message = 'Added new client and report to multi-client deputy';
         } catch (\Throwable $e) {
+            $this->em->rollback();
+            $this->em->clear();
+
             $errorMessage = sprintf('Error when creating entities for deputyUID %s for case %s: %s',
                 $layDeputyshipDto->getDeputyUid(),
                 $layDeputyshipDto->getCaseNumber(),
