@@ -37,4 +37,29 @@ class FileNameFixer extends FileUtility
 
         return preg_replace('/[.](?=.*[.])/', '_', $specialCharsRemoved);
     }
+
+    public function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile
+    {
+        // lowercase file extension
+        $originalFileExtension = $uploadedFile->getClientOriginalExtension();
+        $lowerCaseFileExtension = strtolower($originalFileExtension);
+
+        if ($originalFileExtension === $lowerCaseFileExtension) {
+            return $uploadedFile;
+        }
+
+        $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $updatedFileName = $originalName.'.'.$lowerCaseFileExtension;
+
+        // copy file to temporary location with corrected file extension
+        $tempFileLocation = sys_get_temp_dir().'/'.$updatedFileName;
+        copy($uploadedFile->getPathname(), $tempFileLocation);
+
+        // create new instance of file object as uploadedFile objects are immutable
+        return new UploadedFile(
+            $tempFileLocation,
+            $updatedFileName,
+            $uploadedFile->getMimeType()
+        );
+    }
 }
