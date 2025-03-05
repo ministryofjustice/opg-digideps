@@ -7,7 +7,11 @@ resource "aws_ecs_task_definition" "sirius_files_sync" {
   container_definitions    = "[${local.sirius_files_sync_container}]"
   task_role_arn            = aws_iam_role.sirius_files_sync.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  tags = var.default_tags
 }
 
 resource "aws_ecs_service" "sirius_files_sync" {

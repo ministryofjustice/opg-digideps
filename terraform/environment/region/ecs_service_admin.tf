@@ -7,16 +7,20 @@ resource "aws_ecs_task_definition" "admin" {
   container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  volume {
-    name = "nginx-volume"
-    efs_volume_configuration {
-      file_system_id = aws_efs_file_system.admin_efs.id
-      authorization_config {
-        access_point_id = aws_efs_access_point.nginx.id
-        iam             = "ENABLED"
-      }
-      transit_encryption = "ENABLED"
-    }
+  #  volume {
+  #    name = "nginx-volume"
+  #    efs_volume_configuration {
+  #      file_system_id = aws_efs_file_system.admin_efs.id
+  #      authorization_config {
+  #        access_point_id = aws_efs_access_point.nginx.id
+  #        iam             = "ENABLED"
+  #      }
+  #      transit_encryption = "ENABLED"
+  #    }
+  #  }
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
   }
   tags = var.default_tags
 }
@@ -89,20 +93,20 @@ locals {
       readonlyRootFilesystem = true,
       mountPoints = [
         {
-          sourceVolume  = "nginx-volume",
-          containerPath = "/tmp", # Adjust this to a required writable path
-          readOnly      = false
-        },
-        {
-          sourceVolume  = "nginx-volume",
-          containerPath = "/www/data", # Adjust this to a required writable path
-          readOnly      = false
-        },
-        {
-          sourceVolume  = "nginx-volume",
+          sourceVolume  = "nginx-root",
           containerPath = "/etc/nginx", # Adjust this to a required writable path
           readOnly      = false
         }
+        #        {
+        #          sourceVolume  = "nginx-volume",
+        #          containerPath = "/www/data", # Adjust this to a required writable path
+        #          readOnly      = false
+        #        },
+        #        {
+        #          sourceVolume  = "nginx-conf",
+        #          containerPath = "/etc/nginx/conf.d", # Adjust this to a required writable path
+        #          readOnly      = false
+        #        }
       ],
       portMappings = [
         {
@@ -121,7 +125,11 @@ locals {
         timeout  = 5,
         retries  = 3
       },
-      volumesFrom = [],
+      "volumes" : [
+        {
+          "name" : "nginx-root"
+        }
+      ]
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -197,11 +205,11 @@ resource "aws_efs_access_point" "nginx" {
     gid = 101
   }
   root_directory {
-    path = "/etc/nginx"
+    path = "/etc/nginx/conf.d"
     creation_info {
       owner_uid   = 101
       owner_gid   = 101
-      permissions = "0777"
+      permissions = "0755"
     }
   }
 }
