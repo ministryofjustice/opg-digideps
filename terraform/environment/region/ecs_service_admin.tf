@@ -18,6 +18,10 @@ resource "aws_ecs_task_definition" "admin" {
       transit_encryption = "ENABLED"
     }
   }
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
   tags = var.default_tags
 }
 
@@ -93,14 +97,14 @@ locals {
           containerPath = "/tmp", # Adjust this to a required writable path
           readOnly      = false
         },
+        #        {
+        #          sourceVolume  = "nginx-volume",
+        #          containerPath = "/www/data", # Adjust this to a required writable path
+        #          readOnly      = false
+        #        },
         {
           sourceVolume  = "nginx-volume",
-          containerPath = "/www/data", # Adjust this to a required writable path
-          readOnly      = false
-        },
-        {
-          sourceVolume  = "nginx-volume",
-          containerPath = "/etc/nginx", # Adjust this to a required writable path
+          containerPath = "/etc/nginx/conf.d", # Adjust this to a required writable path
           readOnly      = false
         }
       ],
@@ -197,11 +201,11 @@ resource "aws_efs_access_point" "nginx" {
     gid = 101
   }
   root_directory {
-    path = "/etc/nginx"
+    path = "/etc/nginx/conf.d"
     creation_info {
       owner_uid   = 101
       owner_gid   = 101
-      permissions = "0777"
+      permissions = "0755"
     }
   }
 }
