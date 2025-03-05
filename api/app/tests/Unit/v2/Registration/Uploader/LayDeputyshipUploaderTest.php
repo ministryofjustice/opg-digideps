@@ -6,51 +6,47 @@ use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
+use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
+use App\v2\Registration\Uploader\LayDeputyshipProcessor;
 use App\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class LayDeputyshipUploaderTest extends KernelTestCase
 {
-    /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject */
-    protected $em;
+    protected EntityManager|MockObject $em;
+    protected ReportRepository|MockObject $reportRepository;
+    private PreRegistrationFactory|MockObject $factory;
+    private SiriusToLayDeputyshipDtoAssembler|MockObject $layDeputyAssembler;
+    private LayDeputyshipProcessor|MockObject $layDeputyProcessor;
+    private LoggerInterface $logger;
 
-    /** @var ReportRepository|\PHPUnit_Framework_MockObject_MockObject */
-    protected $reportRepository;
-
-    /** @var PreRegistrationFactory|\PHPUnit_Framework_MockObject_MockObject */
-    private $factory;
-
-    /** @var LayDeputyshipUploader */
-    private $sut;
-
-    /** @var LoggerInterface */
-    private $logger;
+    private LayDeputyshipUploader $sut;
 
     protected function setUp(): void
     {
-        $container = static::getContainer();
-        $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
-        $this->factory = $this->getMockBuilder(PreRegistrationFactory::class)->disableOriginalConstructor()->enableArgumentCloning()->getMock();
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
-        $layDeputyshipDtoAssembler = $container->get('App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler');
-        $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
+        $this->em = $this->createMock(EntityManager::class);
+        $this->reportRepository = $this->createMock(ReportRepository::class);
+        $this->factory = $this->createMock(PreRegistrationFactory::class);
+        $this->layDeputyAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
+        $this->layDeputyProcessor = $this->createMock(LayDeputyshipProcessor::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
             $this->reportRepository,
             $this->factory,
+            $this->layDeputyAssembler,
+            $this->layDeputyProcessor,
             $this->logger,
-            $layDeputyshipDtoAssembler,
-            $clientAssembler
         );
     }
 
@@ -130,14 +126,14 @@ class LayDeputyshipUploaderTest extends KernelTestCase
 
         // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
 
-        $existingClient = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
+        $existingClient = $this->createMock(Client::class);
         $existingClient
             ->expects($this->once())
             ->method('getCaseNumber')
             ->willReturn('case-1');
 
         if ($isDualCase) {
-            $deputy = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
+            $deputy = $this->createMock(User::class);
             $deputy
                 ->expects($this->once())
                 ->method('getDeputyNo')
@@ -214,5 +210,92 @@ class LayDeputyshipUploaderTest extends KernelTestCase
             ->method('findAllActiveReportsByCaseNumbersAndRole')
             ->with([], User::ROLE_LAY_DEPUTY)
             ->willReturn([]);
+    }
+
+    /**
+     * @test
+     */
+    public function testHandleNewMultiClientsNoNewClientsToAdd()
+    {
+        $mockPreRegistrationRepo = $this->createMock(PreRegistrationRepository::class);
+
+        $mockPreRegistrationRepo->expects($this->once())
+            ->method('getNewClientsForExistingDeputiesArray')
+            ->willReturn([]);
+
+        $this->logger->expects($this->once())
+            ->method('info')
+            ->with('No new multi clients to add');
+
+        $this->em->expects($this->once())
+            ->method('getRepository')
+            ->with(PreRegistration::class)
+            ->willReturn($mockPreRegistrationRepo);
+
+        $actual = $this->sut->handleNewMultiClients();
+
+        $this->assertEquals(0, $actual['new-clients-found']);
+        $this->assertEquals(0, $actual['clients-added']);
+        $this->assertEquals([], $actual['errors']);
+    }
+
+    /**
+     * @test
+     */
+    public function testHandleNewMultiClients()
+    {
+        $case1 = ['Case' => '11111111'];
+        $case2 = ['Case' => '22222222'];
+        $case3 = ['Case' => '33333333'];
+
+        $mockPreRegistrationRepo = $this->createMock(PreRegistrationRepository::class);
+        $mockPreRegistrationRepo->expects($this->once())
+            ->method('getNewClientsForExistingDeputiesArray')
+            ->willReturn([$case1, $case2, $case3]);
+
+        $this->em->expects($this->once())
+            ->method('getRepository')
+            ->with(PreRegistration::class)
+            ->willReturn($mockPreRegistrationRepo);
+
+        $this->layDeputyAssembler->expects($this->exactly(3))
+            ->method('assembleFromArray')
+            ->willReturnCallback(function ($case) {
+                return (new LayDeputyshipDto())->setCaseNumber($case['Case']);
+            });
+
+        $this->layDeputyProcessor->expects($this->exactly(3))
+            ->method('processLayDeputyship')
+            ->willReturnCallback(function (LayDeputyshipDto $dto) use ($case1, $case2, $case3) {
+                if ($dto->getCaseNumber() === $case1['Case']) {
+                    return [
+                        'entityDetails' => ['clientCaseNumber' => '11111111'],
+                        'message' => '',
+                        'error' => null,
+                    ];
+                }
+                if ($dto->getCaseNumber() === $case2['Case']) {
+                    return [
+                        'entityDetails' => ['clientCaseNumber' => '22222222'],
+                        'message' => '',
+                        'error' => null,
+                    ];
+                }
+                if ($dto->getCaseNumber() === $case3['Case']) {
+                    return [
+                        'entityDetails' => [],
+                        'message' => '',
+                        'error' => 'an error occurred',
+                    ];
+                }
+
+                return null;
+            });
+
+        $actual = $this->sut->handleNewMultiClients();
+
+        $this->assertEquals(3, $actual['new-clients-found']);
+        $this->assertEquals(2, $actual['clients-added']);
+        $this->assertEquals(['an error occurred'], $actual['errors']);
     }
 }

@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -48,11 +49,11 @@ class ProcessLayCSVCommand extends Command
         'MadeDate',
         'OrderType',
         'CoDeputy',
-        'Hybrid'
+        'Hybrid',
     ];
-    
+
     protected const OPTIONAL_COLUMNS = [
-        'CourtOrderUid'
+        'CourtOrderUid',
     ];
 
     private array $processingOutput = [
@@ -77,7 +78,15 @@ class ProcessLayCSVCommand extends Command
     {
         $this
             ->setDescription('Process the Lay Deputies CSV from the S3 bucket')
-            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
+            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive')
+            ->addOption(
+                'multiclient-apply-db-changes',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'If true (default), generate multi-clients and save to database;
+                if false, log multi-client changes which would be made but don\'t apply them',
+                'true'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -87,6 +96,7 @@ class ProcessLayCSVCommand extends Command
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $input->getArgument('csv-filename');
         $fileLocation = sprintf('/tmp/%s', $layReportFile);
+        $multiclientApplyDbChanges = 'true' === $input->getOption('multiclient-apply-db-changes');
 
         try {
             $this->s3->getObject([
@@ -109,7 +119,7 @@ class ProcessLayCSVCommand extends Command
         }
 
         $data = $this->csvToArray($fileLocation);
-        if (count($data) >= 1 && $this->process($data)) {
+        if (count($data) >= 1 && $this->process($data, $multiclientApplyDbChanges)) {
             if (!unlink($fileLocation)) {
                 $logMessage = sprintf('Unable to delete file %s.', $fileLocation);
 
@@ -162,7 +172,7 @@ class ProcessLayCSVCommand extends Command
         return [];
     }
 
-    private function process(mixed $data): bool
+    private function process(mixed $data, bool $multiclientApplyDbChanges = true): bool
     {
         $this->preReg->deleteAll();
 
@@ -176,7 +186,17 @@ class ProcessLayCSVCommand extends Command
                 $this->storeOutput($result);
             }
             $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
-            $this->csvProcessing->layProcessingHandleNewMultiClients();
+            $result = $this->csvProcessing->layProcessingHandleNewMultiClients($multiclientApplyDbChanges);
+
+            if (!$multiclientApplyDbChanges) {
+                $this->verboseLogger->notice(
+                    'MULTI-CLIENT CHANGES: '.json_encode($result)
+                );
+            }
+
+            if (0 == $result['new-clients-found']) {
+                $this->verboseLogger->notice('No new multiclients were found, so none were added');
+            }
 
             return true;
         }
