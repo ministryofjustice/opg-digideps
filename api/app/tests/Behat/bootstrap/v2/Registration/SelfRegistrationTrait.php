@@ -7,6 +7,7 @@ namespace App\Tests\Behat\v2\Registration;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\v2\Common\UserDetails;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 
 trait SelfRegistrationTrait
 {
@@ -23,6 +24,137 @@ trait SelfRegistrationTrait
     private string $coDeputyEmail;
     private string $deputyUid;
     private string $coDeputyUid;
+
+    private array $cachedFixtures = [];
+
+    private function getFixtureJson(string $jsonFile)
+    {
+        if (array_key_exists($jsonFile, $this->cachedFixtures)) {
+            return $this->cachedFixtures[$jsonFile];
+        }
+
+        $file = file_get_contents(__DIR__.'/../../../fixtures/'.$jsonFile);
+
+        $out = json_decode($file, true);
+        if (is_null($out)) {
+            throw new JsonException("Unable to parse JSON from file {$jsonFile}");
+        }
+
+        $this->cachedFixtures[$jsonFile] = $out;
+
+        return $out;
+    }
+
+    /**
+     * @Given the lay deputy :name @ :jsonFile registers as a deputy
+     *
+     * e.g. 'Given the lay deputy "Marbo Vantz" @ "ingest.lay.multiclient.sirius.json" registers as a deputy'
+     *
+     * This looks up a deputy in a specific json fixture file :jsonFile, using :name as a key into the JSON,
+     * and registers them through the frontend. See the file referenced above for an example of the JSON format.
+     */
+    public function aLayDeputyWithRefRegistersToDeputise(string $jsonFile, string $name)
+    {
+        $fixture = $this->getFixtureJson($jsonFile);
+        $regDetails = $fixture[$name];
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            $regDetails['deputy']['firstName'],
+            $regDetails['deputy']['lastName'],
+            $regDetails['deputy']['email'],
+            $regDetails['deputy']['postcode'],
+            $regDetails['client']['firstName'],
+            $regDetails['client']['lastName'],
+            $regDetails['caseNumber'],
+        );
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $regDetails['deputy']['email'], 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->loginToFrontendAs($regDetails['deputy']['email']);
+
+        $this->fillInField('user_details_address1', $regDetails['deputy']['address1']);
+        $this->fillInField('user_details_addressCountry', $regDetails['deputy']['country']);
+        $this->fillInField('user_details_phoneMain', $regDetails['deputy']['phone']);
+        $this->pressButton('user_details_save');
+
+        $this->fillInField('client_address', $regDetails['client']['address1']);
+        $this->fillInField('client_postcode', $regDetails['client']['postcode']);
+        $this->fillInField('client_country', $regDetails['client']['country']);
+        $this->fillInField('client_phone', $regDetails['client']['phone']);
+        $this->fillInField('client_courtDate_day', $regDetails['client']['courtDateDay']);
+        $this->fillInField('client_courtDate_month', $regDetails['client']['courtDateMonth']);
+        $this->fillInField('client_courtDate_year', $regDetails['client']['courtDateYear']);
+        $this->pressButton('client_save');
+
+        $this->fillInField('report_startDate_day', $regDetails['report']['startDay']);
+        $this->fillInField('report_startDate_month', $regDetails['report']['startMonth']);
+        $this->fillInField('report_startDate_year', $regDetails['report']['startYear']);
+        $this->fillInField('report_endDate_day', $regDetails['report']['endDay']);
+        $this->fillInField('report_endDate_month', $regDetails['report']['endMonth']);
+        $this->fillInField('report_endDate_year', $regDetails['report']['endYear']);
+        $this->pressButton('report_save');
+
+        $this->visitFrontendPath('/logout');
+    }
+
+    /**
+     * @Given a lay deputy :name @ :jsonFile is invited to be a co-deputy for case :caseNumber
+     *
+     * See aLayDeputyWithRefRegistersToDeputise for an explanation of the reference and JSON format.
+     *
+     * NB a user on the case referenced must be logged in for this sequence to work.
+     */
+    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $caseNumber)
+    {
+        $fixture = $this->getFixtureJson($jsonFile);
+        $codeputy = $fixture[$name]['codeputy'];
+
+        $clientId = $this->getClientIdByCaseNumber($caseNumber);
+        $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
+
+        $this->fillInField('co_deputy_invite_firstname', $codeputy['firstName']);
+        $this->fillInField('co_deputy_invite_lastname', $codeputy['lastName']);
+        $this->fillInField('co_deputy_invite_email', $codeputy['email']);
+        $this->pressButton('co_deputy_invite_submit');
+    }
+
+    /**
+     * @When a lay deputy :name @ :jsonFile completes their registration as a co-deputy for case :caseNumber
+     */
+    public function aLayDeputyCompletesTheirRegistration(string $name, string $jsonFile, string $caseNumberIn)
+    {
+        $fixture = $this->getFixtureJson($jsonFile);
+        $regDetails = $fixture[$name];
+        $caseNumber = $regDetails['caseNumber'];
+
+        $this->assertStringEqualsString($caseNumberIn, $regDetails['caseNumber'], 'caseNumber');
+
+        $codeputy = $regDetails['codeputy'];
+        $client = $regDetails['client'];
+
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $codeputy['email'], 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $codeputy['email']);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillInField('co_deputy_firstname', $codeputy['firstName']);
+        $this->fillInField('co_deputy_lastname', $codeputy['lastName']);
+        $this->fillInField('co_deputy_address1', $codeputy['address1']);
+        $this->fillInField('co_deputy_addressPostcode', $codeputy['postcode']);
+        $this->fillInField('co_deputy_addressCountry', $codeputy['country']);
+        $this->fillInField('co_deputy_phoneMain', $codeputy['phone']);
+        $this->fillInField('co_deputy_clientLastname', $client['lastName']);
+        $this->fillInField('co_deputy_clientCaseNumber', $caseNumber);
+
+        $this->pressButton('co_deputy_save');
+    }
 
     /**
      * @Given a Lay Deputy registers to deputise for a client with valid details
@@ -101,7 +233,7 @@ trait SelfRegistrationTrait
         string $postcode,
         string $clientFirstname,
         string $clientLastname,
-        string $caseNumber
+        string $caseNumber,
     ) {
         $this->fillInField('self_registration_firstname', $firstname);
         $this->fillInField('self_registration_lastname', $lastname);
