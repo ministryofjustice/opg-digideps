@@ -8,7 +8,7 @@ resource "aws_ecs_task_definition" "admin" {
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   volume {
-    name = "nginx-volume"
+    name = "nginx_root"
     efs_volume_configuration {
       file_system_id = aws_efs_file_system.admin_efs.id
       authorization_config {
@@ -17,6 +17,10 @@ resource "aws_ecs_task_definition" "admin" {
       }
       transit_encryption = "ENABLED"
     }
+  }
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
   }
   tags = var.default_tags
 }
@@ -89,18 +93,8 @@ locals {
       readonlyRootFilesystem = true,
       mountPoints = [
         {
-          sourceVolume  = "nginx-volume",
-          containerPath = "/tmp", # Adjust this to a required writable path
-          readOnly      = false
-        },
-        {
-          sourceVolume  = "nginx-volume",
-          containerPath = "/www/data", # Adjust this to a required writable path
-          readOnly      = false
-        },
-        {
-          sourceVolume  = "nginx-volume",
-          containerPath = "/etc/nginx", # Adjust this to a required writable path
+          sourceVolume  = "nginx_root",
+          containerPath = "/etc/nginx",
           readOnly      = false
         }
       ],
@@ -121,7 +115,11 @@ locals {
         timeout  = 5,
         retries  = 3
       },
-      volumesFrom = [],
+      "volumes" : [
+        {
+          "name" : "nginx_root"
+        }
+      ]
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -201,7 +199,7 @@ resource "aws_efs_access_point" "nginx" {
     creation_info {
       owner_uid   = 101
       owner_gid   = 101
-      permissions = "0777"
+      permissions = "0755"
     }
   }
 }
