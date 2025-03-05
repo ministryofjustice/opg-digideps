@@ -18,6 +18,10 @@ resource "aws_ecs_task_definition" "admin" {
       transit_encryption = "ENABLED"
     }
   }
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
   tags = var.default_tags
 }
 
