@@ -67,7 +67,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", "--multiclient-apply-db-changes=false", "--env=prod", "--no-debug", local.lay_report_csv_file]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", "--env=prod", "--no-debug", local.lay_report_csv_file]
         }
       ]
     }
