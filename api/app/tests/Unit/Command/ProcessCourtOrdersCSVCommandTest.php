@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
+use App\v2\Registration\DeputyshipProcessing\CourtOrdersCsvProcessor;
 use App\v2\Registration\DeputyshipProcessing\CSVProcessingResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
@@ -19,7 +19,7 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
     private string $csvFilename;
     private S3Client|MockObject $s3;
     private ParameterBag $params;
-    private CourtOrdersCSVProcessor|MockObject $courtOrdersCSVProcessor;
+    private CourtOrdersCsvProcessor|MockObject $courtOrdersCsvProcessor;
     private LoggerInterface $logger;
     private CommandTester $commandTester;
 
@@ -36,13 +36,13 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
             ->addMethods(['getObject'])
             ->getMock();
         $this->params = new ParameterBag(['s3_sirius_bucket' => 'bucket']);
-        $this->courtOrdersCSVProcessor = $this->createMock(CourtOrdersCSVProcessor::class);
+        $this->courtOrdersCsvProcessor = $this->createMock(CourtOrdersCsvProcessor::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $setUp = new ProcessCourtOrdersCSVCommand(
             $this->s3,
             $this->params,
-            $this->courtOrdersCSVProcessor,
+            $this->courtOrdersCsvProcessor,
             $this->logger
         );
 
@@ -72,14 +72,29 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
         );
     }
 
+    public function testExecuteWithFailedWriteToLocalFile(): void
+    {
+        $this->s3->expects($this->once())
+            ->method('getObject')
+            ->willReturn(new Result());
+
+        $this->commandTester->execute(['csv-filename' => 'nonexistent.csv']);
+
+        $output = $this->commandTester->getDisplay();
+        $this->assertStringContainsString(
+            'failure - could not read CSV from file: /tmp/nonexistent.csv',
+            $output
+        );
+    }
+
     public function testExecuteWithSuccessfulFilePull(): void
     {
         $this->s3->expects($this->once())
             ->method('getObject')
             ->willReturn(new Result());
 
-        $this->courtOrdersCSVProcessor->expects($this->once())
-            ->method('processFile')
+        $this->courtOrdersCsvProcessor->expects($this->once())
+            ->method('processCsv')
             ->with('/tmp/'.$this->csvFilename)
             ->willReturn(new CSVProcessingResult(true, 'success'));
 
