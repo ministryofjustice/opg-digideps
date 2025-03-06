@@ -7,6 +7,39 @@ resource "aws_ecs_task_definition" "admin" {
   container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
+  volume {
+    name = "nginx_root"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.admin_efs.id
+      authorization_config {
+        access_point_id = aws_efs_access_point.nginx_root.id
+        iam             = "ENABLED"
+      }
+      transit_encryption = "ENABLED"
+    }
+  }
+  volume {
+    name = "nginx_cache"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.admin_efs.id
+      authorization_config {
+        access_point_id = aws_efs_access_point.nginx_cache.id
+        iam             = "ENABLED"
+      }
+      transit_encryption = "ENABLED"
+    }
+  }
+  volume {
+    name = "nginx_tmp"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.admin_efs.id
+      authorization_config {
+        access_point_id = aws_efs_access_point.nginx_tmp.id
+        iam             = "ENABLED"
+      }
+      transit_encryption = "ENABLED"
+    }
+  }
   runtime_platform {
     cpu_architecture        = "ARM64"
     operating_system_family = "LINUX"
@@ -73,11 +106,29 @@ resource "aws_ecs_service" "admin" {
 locals {
   admin_web = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client-webserver,
-      mountPoints = [],
-      name        = "admin_web",
+      cpu                    = 0,
+      essential              = true,
+      image                  = local.images.client-webserver,
+      name                   = "admin_web",
+      user                   = "101:101"
+      readonlyRootFilesystem = true,
+      mountPoints = [
+        {
+          sourceVolume  = "nginx_root",
+          containerPath = "/etc/nginx",
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "nginx_cache",
+          containerPath = "/var/cache/nginx",
+          readOnly      = false
+        },
+        {
+          sourceVolume  = "nginx_cache",
+          containerPath = "/tmp",
+          readOnly      = false
+        }
+      ],
       portMappings = [
         {
           name : "admin-port",
@@ -95,7 +146,17 @@ locals {
         timeout  = 5,
         retries  = 3
       },
-      volumesFrom = [],
+      "volumes" : [
+        {
+          "name" : "nginx_root"
+        },
+        {
+          "name" : "nginx_cache"
+        },
+        {
+          "name" : "nginx_tmp"
+        }
+      ]
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -145,4 +206,69 @@ locals {
       ])
     }
   )
+}
+
+resource "aws_efs_file_system" "admin_efs" {
+  creation_token   = "admin-efs-${local.environment}"
+  encrypted        = true
+  performance_mode = "generalPurpose"
+  throughput_mode  = "bursting"
+  tags = {
+    Name = "admin-efs-${local.environment}"
+  }
+}
+
+resource "aws_efs_mount_target" "admin_mount" {
+  for_each        = toset(data.aws_subnet.private[*].id)
+  file_system_id  = aws_efs_file_system.admin_efs.id
+  subnet_id       = each.value
+  security_groups = [module.admin_efs_security_group.id]
+}
+
+resource "aws_efs_access_point" "nginx_root" {
+  file_system_id = aws_efs_file_system.admin_efs.id
+  posix_user {
+    uid = 101
+    gid = 101
+  }
+  root_directory {
+    path = "/etc/nginx"
+    creation_info {
+      owner_uid   = 101
+      owner_gid   = 101
+      permissions = "0755"
+    }
+  }
+}
+
+resource "aws_efs_access_point" "nginx_cache" {
+  file_system_id = aws_efs_file_system.admin_efs.id
+  posix_user {
+    uid = 101
+    gid = 101
+  }
+  root_directory {
+    path = "/var/cache/nginx"
+    creation_info {
+      owner_uid   = 101
+      owner_gid   = 101
+      permissions = "0755"
+    }
+  }
+}
+
+resource "aws_efs_access_point" "nginx_tmp" {
+  file_system_id = aws_efs_file_system.admin_efs.id
+  posix_user {
+    uid = 101
+    gid = 101
+  }
+  root_directory {
+    path = "/tmp"
+    creation_info {
+      owner_uid   = 101
+      owner_gid   = 101
+      permissions = "0755"
+    }
+  }
 }
