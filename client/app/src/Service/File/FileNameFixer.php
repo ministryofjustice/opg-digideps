@@ -42,20 +42,27 @@ class FileNameFixer extends FileUtility
     {
         // lowercase file extension
         $originalFileExtension = $uploadedFile->getClientOriginalExtension();
+
+        if ('' == $originalFileExtension) {
+            return $uploadedFile;
+        }
+
         $lowerCaseFileExtension = strtolower($originalFileExtension);
 
         if ($originalFileExtension === $lowerCaseFileExtension) {
             return $uploadedFile;
         }
 
+        // get temporary path of current uploaded file
+        $tempFileLocation = $uploadedFile->getRealPath();
+
         $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
         $updatedFileName = $originalName.'.'.$lowerCaseFileExtension;
 
-        // copy file to temporary location with corrected file extension
-        $tempFileLocation = sys_get_temp_dir().'/'.$updatedFileName;
+        // copy file to temporary location with corrected file extension, this is the same path as the original file
         copy($uploadedFile->getPathname(), $tempFileLocation);
 
-        // create new instance of file object as uploadedFile objects are immutable
+        // create new file object with corrected extension
         return new UploadedFile(
             $tempFileLocation,
             $updatedFileName,

@@ -21,6 +21,7 @@ class FileNameFixerTest extends KernelTestCase
 
     /**
      * @test
+     *
      * @dataProvider fileNameProvider
      */
     public function removeWhiteSpaceBeforeFileExtension(string $originalFileName, string $expectedFileName)
@@ -41,6 +42,7 @@ class FileNameFixerTest extends KernelTestCase
 
     /**
      * @dataProvider missingExtensionFilesProvider
+     *
      * @test
      */
     public function addMissingFileExtension(string $relativeFilePath, string $fileName, string $expectedFilename)
@@ -64,6 +66,7 @@ class FileNameFixerTest extends KernelTestCase
 
     /**
      * @test
+     *
      * @dataProvider unusualCharactersProvider
      */
     public function removeUnusualCharacters($fileName, $expectedFileName)
@@ -81,6 +84,27 @@ class FileNameFixerTest extends KernelTestCase
             'file extension dot remains, any others transformed to underscores' => ['My_File.png.pdf', 'My_File_png.pdf'],
             'HTML constructs are not allowed' => ['<a href="myhostilefile.exe">Report</a>.pdf', 'a_hrefmyhostilefile_exeReporta.pdf'],
             'Directory constructs are not allowed' => ['../../', '___.'],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider uploadedFileDataProvider
+     */
+    public function lowerCaseFileExtension($filePath, $uploadedFileNameAndExtension, $expectedFileNameAndExtension)
+    {
+        $uploadedFile = new UploadedFile(sprintf('%s'.$filePath, $this->projectDir), $uploadedFileNameAndExtension);
+        $uploadedFileExtensionCheck = $this->sut->lowerCaseFileExtension($uploadedFile);
+
+        self::assertEquals($expectedFileNameAndExtension, $uploadedFileExtensionCheck->getClientOriginalName());
+    }
+
+    public function uploadedFileDataProvider()
+    {
+        return [
+            'file extension is lowercased' => ['/tests/phpunit/TestData/upperCaseFileExt.PNG', 'upperCaseFileExt.PNG', 'upperCaseFileExt.png'],
+            'file extension remains the same' => ['/tests/phpunit/TestData/good-jpeg.jpeg', 'good-jpeg.jpeg', 'good-jpeg.jpeg'],
         ];
     }
 }
