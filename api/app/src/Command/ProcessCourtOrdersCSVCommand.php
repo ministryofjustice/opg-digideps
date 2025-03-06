@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\File\Storage\S3Storage;
-use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
+use App\v2\Registration\DeputyshipProcessing\CourtOrdersCsvProcessor;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use League\Csv\Reader;
+use League\Csv\UnavailableStream;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +25,7 @@ class ProcessCourtOrdersCSVCommand extends Command
     public function __construct(
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
-        private readonly CourtOrdersCSVProcessor $courtOrdersCSVProcessor,
+        private readonly CourtOrdersCsvProcessor $courtOrdersCSVProcessor,
         private readonly LoggerInterface $verboseLogger,
     ) {
         parent::__construct();
@@ -62,7 +64,21 @@ class ProcessCourtOrdersCSVCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $this->courtOrdersCSVProcessor->processFile($fileLocation);
+        try {
+            $csvFile = Reader::createFromPath($fileLocation);
+        } catch (UnavailableStream) {
+            $output->writeln(
+                sprintf(
+                    '%s - failure - could not read CSV from file: %s',
+                    self::JOB_NAME,
+                    $fileLocation
+                )
+            );
+
+            return Command::FAILURE;
+        }
+
+        $result = $this->courtOrdersCSVProcessor->processCsv($csvFile);
 
         if (!$result->success) {
             $output->writeln(
