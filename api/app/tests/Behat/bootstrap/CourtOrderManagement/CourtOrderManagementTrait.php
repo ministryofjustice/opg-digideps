@@ -11,6 +11,8 @@ trait CourtOrderManagementTrait
     {
         $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
+
+        // next two lines are not a typo: the second click is to confirm the deputy discharge
         $this->clickLink('Discharge deputy');
         $this->clickLink('Discharge deputy');
     }
