@@ -51,10 +51,9 @@ class ProcessCourtOrdersCSVCommand extends Command
                 'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
+            $logMessage = 'Error retrieving file %s from bucket %s';
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $logMessage = 'File %s not found in bucket %s';
-            } else {
-                $logMessage = 'Error retrieving file %s from bucket %s';
+                $logMessage .= ' - file %s not found in bucket %s';
             }
             $logMessage = sprintf($logMessage, $courtOrdersFile, $bucket);
 
@@ -98,7 +97,7 @@ class ProcessCourtOrdersCSVCommand extends Command
             $this->verboseLogger->error($logMessage);
             $output->writeln(
                 sprintf(
-                    '%s failure - (partial) - %s processing Output: %s',
+                    '%s failure - (partial) - %s Output: %s',
                     self::JOB_NAME,
                     $logMessage,
                     'successfully processed court order CSV, but could not remove file'
@@ -110,7 +109,7 @@ class ProcessCourtOrdersCSVCommand extends Command
 
         $output->writeln(
             sprintf(
-                '%s - success - Finished processing CourtOrdersCSV, Output: %s',
+                '%s - success - Finished processing CourtOrders CSV, Output: %s',
                 self::JOB_NAME,
                 $result->message
             )
