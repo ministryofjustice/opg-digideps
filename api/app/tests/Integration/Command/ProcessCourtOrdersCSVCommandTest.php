@@ -89,6 +89,26 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
         );
     }
 
+    public function testExecuteWithFailedCSVProcessing(): void
+    {
+        $this->s3->expects($this->once())
+            ->method('getObject')
+            ->willReturn(new Result());
+
+        $this->courtOrdersCSVProcessor->expects($this->once())
+            ->method('processCsv')
+            ->with(self::isInstanceOf(Reader::class))
+            ->willReturn(new CSVProcessingResult(false, 'unable to parse file'));
+
+        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
+        $output = $this->commandTester->getDisplay();
+
+        $this->assertStringContainsString(
+            'failure - Output: unable to parse file',
+            $output
+        );
+    }
+
     public function testExecuteWithSuccessfulFilePull(): void
     {
         $this->s3->expects($this->once())
@@ -105,10 +125,8 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            "CSV {$this->csvFilename} processed",
+            "success - Finished processing CourtOrders CSV, Output: CSV {$this->csvFilename} processed",
             $output
         );
     }
-
-    // TODO add test for !$result->success from the CourtOrdersCSVProcessor
 }
