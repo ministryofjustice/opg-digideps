@@ -7,5 +7,9 @@ resource "aws_ecs_task_definition" "task" {
   container_definitions    = var.container_definitions
   task_role_arn            = var.task_role_arn
   execution_role_arn       = var.execution_role_arn
-  tags                     = var.tags
+  runtime_platform {
+    cpu_architecture        = var.architecture
+    operating_system_family = var.os
+  }
+  tags = var.tags
 }

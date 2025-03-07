@@ -19,6 +19,10 @@
 
 {% block helpline %}{% endblock %}
 
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
 {% block pageContent %}
     {% set gaCategory = 'addClient.pageTitle' | trans %}
     {% set gaAction = 'Click: Button: Save Client Details' %}
