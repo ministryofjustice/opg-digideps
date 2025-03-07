@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Command;
+namespace App\Tests\Integration\Entity\Command;
 
+use App\Command\ProcessCourtOrdersCSVCommand;
 use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
 use App\v2\Registration\DeputyshipProcessing\CSVProcessingResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use League\Csv\Reader;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -95,16 +97,18 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
 
         $this->courtOrdersCSVProcessor->expects($this->once())
             ->method('processCsv')
-            ->with('/tmp/'.$this->csvFilename)
-            ->willReturn(new CSVProcessingResult(true, 'success'));
+            ->with(self::isInstanceOf(Reader::class))
+            ->willReturn(new CSVProcessingResult(true, "CSV {$this->csvFilename} processed"));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'success - Finished processing CourtOrderCSV, Output:',
+            "CSV {$this->csvFilename} processed",
             $output
         );
     }
+
+    // TODO add test for !$result->success from the CourtOrdersCSVProcessor
 }
