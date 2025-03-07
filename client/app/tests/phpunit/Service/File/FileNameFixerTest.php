@@ -105,6 +105,7 @@ class FileNameFixerTest extends KernelTestCase
         return [
             'file extension is lowercased' => ['/tests/phpunit/TestData/upperCaseFileExt.PNG', 'upperCaseFileExt.PNG', 'upperCaseFileExt.png'],
             'file extension remains the same' => ['/tests/phpunit/TestData/good-jpeg.jpeg', 'good-jpeg.jpeg', 'good-jpeg.jpeg'],
+            'file is returned because of missing extension' => ['/tests/phpunit/TestData/good-jpeg', 'good-jpeg', 'good-jpeg'],
         ];
     }
 }
