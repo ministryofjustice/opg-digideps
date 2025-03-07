@@ -2,9 +2,9 @@
 
 namespace App\Tests\Integration\Entity\Command;
 
-use App\Command\ProcessCourtOrdersCSVCommand;
-use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
-use App\v2\Registration\DeputyshipProcessing\CSVProcessingResult;
+use App\Command\IngestDeputyshipsCSVCommand;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
@@ -16,12 +16,12 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
+class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 {
     private string $csvFilename;
     private S3Client|MockObject $s3;
     private ParameterBag $params;
-    private CourtOrdersCSVProcessor|MockObject $courtOrdersCSVProcessor;
+    private DeputyshipsCSVIngester|MockObject $deputyshipsCSVIngester;
     private LoggerInterface $logger;
     private CommandTester $commandTester;
 
@@ -38,19 +38,19 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
             ->addMethods(['getObject'])
             ->getMock();
         $this->params = new ParameterBag(['s3_sirius_bucket' => 'bucket']);
-        $this->courtOrdersCSVProcessor = $this->createMock(CourtOrdersCSVProcessor::class);
+        $this->deputyshipsCSVIngester = $this->createMock(DeputyshipsCSVIngester::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
-        $setUp = new ProcessCourtOrdersCSVCommand(
+        $setUp = new IngestDeputyshipsCSVCommand(
             $this->s3,
             $this->params,
-            $this->courtOrdersCSVProcessor,
+            $this->deputyshipsCSVIngester,
             $this->logger
         );
 
         $app->add($setUp);
 
-        $command = $app->find(ProcessCourtOrdersCSVCommand::$defaultName);
+        $command = $app->find(IngestDeputyshipsCSVCommand::$defaultName);
         $this->commandTester = new CommandTester($command);
     }
 
@@ -95,10 +95,10 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
             ->method('getObject')
             ->willReturn(new Result());
 
-        $this->courtOrdersCSVProcessor->expects($this->once())
+        $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
             ->with(self::isInstanceOf(Reader::class))
-            ->willReturn(new CSVProcessingResult(false, 'unable to parse file'));
+            ->willReturn(new DeputyshipsCSVIngestResult(false, 'unable to parse file'));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
@@ -115,10 +115,10 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
             ->method('getObject')
             ->willReturn(new Result());
 
-        $this->courtOrdersCSVProcessor->expects($this->once())
+        $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
             ->with(self::isInstanceOf(Reader::class))
-            ->willReturn(new CSVProcessingResult(true, "CSV {$this->csvFilename} processed"));
+            ->willReturn(new DeputyshipsCSVIngestResult(true, "CSV {$this->csvFilename} processed"));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
