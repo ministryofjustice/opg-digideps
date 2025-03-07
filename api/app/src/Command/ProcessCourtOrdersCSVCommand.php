@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\File\Storage\S3Storage;
-use App\v2\Registration\DeputyshipProcessing\CourtOrdersCsvProcessor;
+use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use League\Csv\Reader;
@@ -25,7 +25,7 @@ class ProcessCourtOrdersCSVCommand extends Command
     public function __construct(
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
-        private readonly CourtOrdersCsvProcessor $courtOrdersCSVProcessor,
+        private readonly CourtOrdersCSVProcessor $courtOrdersCSVProcessor,
         private readonly LoggerInterface $verboseLogger,
     ) {
         parent::__construct();
@@ -85,7 +85,7 @@ class ProcessCourtOrdersCSVCommand extends Command
                 sprintf(
                     '%s - failure - Output: %s',
                     self::JOB_NAME,
-                    '...error from the processor...'
+                    $result->message
                 )
             );
 
@@ -110,9 +110,9 @@ class ProcessCourtOrdersCSVCommand extends Command
 
         $output->writeln(
             sprintf(
-                '%s - success - Finished processing CourtOrderCSV, Output: %s',
+                '%s - success - Finished processing CourtOrdersCSV, Output: %s',
                 self::JOB_NAME,
-                '...success output from the processor...'
+                $result->message
             )
         );
 
