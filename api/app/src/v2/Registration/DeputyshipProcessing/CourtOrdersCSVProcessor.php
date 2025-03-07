@@ -15,7 +15,7 @@ class CSVProcessingResult
     }
 }
 
-class CourtOrdersCsvProcessor
+class CourtOrdersCSVProcessor
 {
     /**
      * Process the CSV file through the reader $csvFile.

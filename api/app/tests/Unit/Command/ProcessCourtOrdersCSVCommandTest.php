@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\v2\Registration\DeputyshipProcessing\CourtOrdersCsvProcessor;
+use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
 use App\v2\Registration\DeputyshipProcessing\CSVProcessingResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
@@ -19,7 +19,7 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
     private string $csvFilename;
     private S3Client|MockObject $s3;
     private ParameterBag $params;
-    private CourtOrdersCsvProcessor|MockObject $courtOrdersCsvProcessor;
+    private CourtOrdersCSVProcessor|MockObject $courtOrdersCSVProcessor;
     private LoggerInterface $logger;
     private CommandTester $commandTester;
 
@@ -36,13 +36,13 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
             ->addMethods(['getObject'])
             ->getMock();
         $this->params = new ParameterBag(['s3_sirius_bucket' => 'bucket']);
-        $this->courtOrdersCsvProcessor = $this->createMock(CourtOrdersCsvProcessor::class);
+        $this->courtOrdersCSVProcessor = $this->createMock(CourtOrdersCSVProcessor::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $setUp = new ProcessCourtOrdersCSVCommand(
             $this->s3,
             $this->params,
-            $this->courtOrdersCsvProcessor,
+            $this->courtOrdersCSVProcessor,
             $this->logger
         );
 
@@ -93,7 +93,7 @@ class ProcessCourtOrdersCSVCommandTest extends KernelTestCase
             ->method('getObject')
             ->willReturn(new Result());
 
-        $this->courtOrdersCsvProcessor->expects($this->once())
+        $this->courtOrdersCSVProcessor->expects($this->once())
             ->method('processCsv')
             ->with('/tmp/'.$this->csvFilename)
             ->willReturn(new CSVProcessingResult(true, 'success'));
