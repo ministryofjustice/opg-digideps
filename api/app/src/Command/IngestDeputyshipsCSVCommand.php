@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\File\Storage\S3Storage;
-use App\v2\Registration\DeputyshipProcessing\CourtOrdersCSVProcessor;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use League\Csv\Reader;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ProcessCourtOrdersCSVCommand extends Command
+class IngestDeputyshipsCSVCommand extends Command
 {
     public static $defaultName = 'digideps:api:process-court-orders-csv';
     private const JOB_NAME = 'courtorder_csv_processing';
@@ -25,7 +25,7 @@ class ProcessCourtOrdersCSVCommand extends Command
     public function __construct(
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
-        private readonly CourtOrdersCSVProcessor $courtOrdersCSVProcessor,
+        private readonly DeputyshipsCSVIngester $deputyshipsCSVIngester,
         private readonly LoggerInterface $verboseLogger,
     ) {
         parent::__construct();
@@ -77,7 +77,7 @@ class ProcessCourtOrdersCSVCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $this->courtOrdersCSVProcessor->processCsv($csvFile);
+        $result = $this->deputyshipsCSVIngester->processCsv($csvFile);
 
         if (!$result->success) {
             $output->writeln(
