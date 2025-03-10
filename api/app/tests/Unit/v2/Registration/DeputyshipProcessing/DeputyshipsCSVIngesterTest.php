@@ -5,35 +5,38 @@ declare(strict_types=1);
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipEntityMatcher;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPipelineState;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use App\v2\Registration\DTO\DeputyshipRowDto;
 use App\v2\Registration\Enum\DeputyshipProcessingStatus;
-use League\Csv\Reader;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DeputyshipsCSVIngesterTest extends TestCase
 {
-    private DeputyshipEntityMatcher|MockObject $mockDeputyshipEntityMatcher;
+    private DeputyshipsCSVLoader|MockObject $mockDeputyshipsCSVLoader;
+    private DeputyshipsCandidatesSelector|MockObject $mockDeputyshipsCandidatesSelector;
     private DeputyshipBuilder|MockObject $mockDeputyshipBuilder;
-    private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
     private DeputyshipPersister|MockObject $mockDeputyshipPersister;
+    private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
     private DeputyshipsCSVIngester $sut;
 
     public function setUp(): void
     {
-        $this->mockDeputyshipEntityMatcher = $this->createMock(DeputyshipEntityMatcher::class);
+        $this->mockDeputyshipsCSVLoader = $this->createMock(DeputyshipsCSVLoader::class);
+        $this->mockDeputyshipsCandidatesSelector = $this->createMock(DeputyshipsCandidatesSelector::class);
         $this->mockDeputyshipBuilder = $this->createMock(DeputyshipBuilder::class);
-        $this->mockDeputyshipsIngestResultRecorder = $this->createMock(DeputyshipsIngestResultRecorder::class);
         $this->mockDeputyshipPersister = $this->createMock(DeputyshipPersister::class);
+        $this->mockDeputyshipsIngestResultRecorder = $this->createMock(DeputyshipsIngestResultRecorder::class);
 
         $this->sut = new DeputyshipsCSVIngester(
-            $this->mockDeputyshipEntityMatcher,
+            $this->mockDeputyshipsCSVLoader,
+            $this->mockDeputyshipsCandidatesSelector,
             $this->mockDeputyshipBuilder,
             $this->mockDeputyshipPersister,
             $this->mockDeputyshipsIngestResultRecorder
@@ -58,15 +61,27 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $dto = new DeputyshipRowDto();
         $state = new DeputyshipPipelineState($dto, $expectedStatus);
 
-        $reader = $this->createMock(Reader::class);
-        $reader->expects($this->once())
-            ->method('getRecordsAsObject')
-            ->willReturn(new \ArrayIterator([$dto]));
+        $candidates = [$state];
 
-        $this->mockDeputyshipEntityMatcher->expects($this->once())
-            ->method('match')
-            ->with(self::isInstanceOf(DeputyshipPipelineState::class))
-            ->willReturn($state);
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('reset');
+
+        $this->mockDeputyshipsCSVLoader->expects($this->once())
+            ->method('load')
+            ->with('/tmp/deputyships.csv')
+            ->willReturn(true);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('recordCsvLoadResult')
+            ->with('/tmp/deputyships.csv', true);
+
+        $this->mockDeputyshipsCandidatesSelector->expects($this->once())
+            ->method('select')
+            ->willReturn($candidates);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('recordDeputyshipCandidates')
+            ->with($candidates);
 
         $this->mockDeputyshipBuilder->expects($this->once())
             ->method('build')
@@ -86,7 +101,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
             ->method('result')
             ->willReturn(new DeputyshipsCSVIngestResult(true, ''));
 
-        $result = $this->sut->processCsv($reader);
+        $result = $this->sut->processCsv('/tmp/deputyships.csv');
 
         $this->assertTrue($result->success);
     }
