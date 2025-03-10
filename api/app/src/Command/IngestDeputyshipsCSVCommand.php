@@ -8,8 +8,6 @@ use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use League\Csv\Reader;
-use League\Csv\UnavailableStream;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -63,21 +61,7 @@ class IngestDeputyshipsCSVCommand extends Command
             return Command::FAILURE;
         }
 
-        try {
-            $csvFile = Reader::createFromPath($fileLocation);
-        } catch (UnavailableStream) {
-            $output->writeln(
-                sprintf(
-                    '%s - failure - could not read CSV from file: %s',
-                    self::JOB_NAME,
-                    $fileLocation
-                )
-            );
-
-            return Command::FAILURE;
-        }
-
-        $result = $this->deputyshipsCSVIngester->processCsv($csvFile);
+        $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
 
         if (!$result->success) {
             $output->writeln(
