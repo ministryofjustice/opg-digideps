@@ -6,15 +6,10 @@ namespace App\v2\CSV;
 
 class CSVChunker
 {
-    private \Iterator $csvFile;
-    private int $chunkSize;
-
     public function __construct(
-        \Iterator $csvFile,
-        int $chunkSize,
+        private readonly \Iterator $csvFile,
+        private readonly int $chunkSize,
     ) {
-        $this->csvFile = $csvFile;
-        $this->chunkSize = $chunkSize;
     }
 
     /**

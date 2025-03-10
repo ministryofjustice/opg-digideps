@@ -8,8 +8,6 @@ use App\Entity\StagingDeputyship;
 use App\v2\CSV\CSVChunkerFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\Persistence\Mapping\MappingException;
 use League\Csv\Exception as CSVException;
 use League\Csv\UnavailableStream;
 use Psr\Log\LoggerInterface;
@@ -26,12 +24,14 @@ class DeputyshipsCSVLoader
     public function load(string $fileLocation): bool
     {
         $conn = $this->em->getConnection();
-        $stagingDeputyshipTableName = $this->em->getClassMetadata(StagingDeputyship::class)->getTableName();
+        $meta = $this->em->getClassMetadata(StagingDeputyship::class);
+        $stagingDeputyshipSchemaName = $meta->getSchemaName();
+        $stagingDeputyshipTableName = $meta->getTableName();
 
         try {
             // delete records from staging table
             $this->em->beginTransaction();
-            $conn->executeStatement("DELETE FROM {$stagingDeputyshipTableName}");
+            $conn->executeStatement("DELETE FROM {$stagingDeputyshipSchemaName}.{$stagingDeputyshipTableName}");
             $this->em->commit();
 
             // dump CSV into staging table
@@ -48,7 +48,7 @@ class DeputyshipsCSVLoader
             $this->em->clear();
 
             return true;
-        } catch (ORMException|MappingException|Exception|UnavailableStream|CSVException $e) {
+        } catch (Exception|UnavailableStream|CSVException $e) {
             $this->logger->error(
                 'Error loading CSV into staging table: exception type = '.get_class($e).'; message = '.$e->getMessage()
             );
