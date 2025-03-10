@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\v2\Registration\DTO\DeputyshipRowDto;
+use App\v2\Registration\Enum\DeputyshipProcessingStatus;
 
 class DeputyshipPipelineState
 {

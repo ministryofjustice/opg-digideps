@@ -8,6 +8,6 @@ class DeputyshipEntityMatcher
 {
     public function match(DeputyshipPipelineState $state): DeputyshipPipelineState
     {
-        return new DeputyshipPipelineState();
+        return $state;
     }
 }
