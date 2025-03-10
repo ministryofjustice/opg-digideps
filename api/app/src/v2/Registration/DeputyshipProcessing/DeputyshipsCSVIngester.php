@@ -31,6 +31,12 @@ class DeputyshipsCSVIngester
         $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
         $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
 
+        // TODO test for this
+        if (!$loadedOk) {
+            // early return if CSV load failed
+            return $this->deputyshipsIngestResultRecorder->result();
+        }
+
         // find the candidate deputyships which have changed or need to be added;
         // note that we return state objects which are used as the start state for processing each row
         $candidates = $this->deputyshipsCandidatesSelector->select();
