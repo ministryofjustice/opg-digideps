@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
+use App\Entity\StagingDeputyship;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPipelineState;
@@ -12,7 +13,6 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
-use App\v2\Registration\DTO\DeputyshipRowDto;
 use App\v2\Registration\Enum\DeputyshipProcessingStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -58,7 +58,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
      */
     public function testProcessCsvWithSkippedRow(DeputyshipProcessingStatus $expectedStatus, string $expectedMethodCall): void
     {
-        $dto = new DeputyshipRowDto();
+        $dto = new StagingDeputyship();
         $state = new DeputyshipPipelineState($dto, $expectedStatus);
 
         $candidates = [$state];

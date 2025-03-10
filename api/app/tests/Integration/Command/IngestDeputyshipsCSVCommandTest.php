@@ -29,7 +29,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         $kernel = static::createKernel();
         $app = new Application($kernel);
 
-        $this->csvFilename = 'courtOrders.csv';
+        $this->csvFilename = 'deputyships.csv';
         copy(dirname(dirname(__DIR__)).'/csv/'.$this->csvFilename, '/tmp/'.$this->csvFilename);
 
         $this->s3 = $this->getMockBuilder(S3Client::class)
@@ -68,7 +68,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            'failure - Error retrieving file courtOrders.csv from bucket',
+            'failure - Error retrieving file deputyships.csv from bucket',
             $output
         );
     }
