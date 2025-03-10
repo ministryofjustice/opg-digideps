@@ -8,7 +8,6 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use League\Csv\Reader;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -74,21 +73,6 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         );
     }
 
-    public function testExecuteWithFailedWriteToLocalFile(): void
-    {
-        $this->s3->expects($this->once())
-            ->method('getObject')
-            ->willReturn(new Result());
-
-        $this->commandTester->execute(['csv-filename' => 'nonexistent.csv']);
-
-        $output = $this->commandTester->getDisplay();
-        $this->assertStringContainsString(
-            'failure - could not read CSV from file: /tmp/nonexistent.csv',
-            $output
-        );
-    }
-
     public function testExecuteWithFailedCSVProcessing(): void
     {
         $this->s3->expects($this->once())
@@ -97,7 +81,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
         $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
-            ->with(self::isInstanceOf(Reader::class))
+            ->with('/tmp/'.$this->csvFilename)
             ->willReturn(new DeputyshipsCSVIngestResult(false, 'unable to parse file'));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
@@ -117,7 +101,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
         $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
-            ->with(self::isInstanceOf(Reader::class))
+            ->with('/tmp/'.$this->csvFilename)
             ->willReturn(new DeputyshipsCSVIngestResult(true, "CSV {$this->csvFilename} processed"));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);

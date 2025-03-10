@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Registration\DTO\DeputyshipRowDto;
 use App\v2\Registration\Enum\DeputyshipProcessingStatus;
-use League\Csv\Reader;
 
 /**
  * Ingest the deputyship CSV exported from Sirius.
@@ -14,26 +12,32 @@ use League\Csv\Reader;
 class DeputyshipsCSVIngester
 {
     public function __construct(
-        private readonly DeputyshipEntityMatcher $deputyshipEntityMatcher,
+        private readonly DeputyshipsCSVLoader $deputyshipsCSVLoader,
+        private readonly DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
         private readonly DeputyshipBuilder $deputyshipBuilder,
         private readonly DeputyshipPersister $deputyshipPersister,
-        private readonly DeputyshipsIngestResultRecorder $deputyshipIngestResultRecorder,
+        private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
     ) {
     }
 
     /**
-     * Process the CSV file through the reader $csvFile.
+     * Process the CSV file at $fileLocation.
      */
-    public function processCsv(Reader $csvFile): DeputyshipsCSVIngestResult
+    public function processCsv(string $fileLocation): DeputyshipsCSVIngestResult
     {
-        /** @var DeputyshipRowDto $deputyShipRowDto */
-        foreach ($csvFile->getRecordsAsObject(DeputyshipRowDto::class) as $deputyShipRowDto) {
-            $state = new DeputyshipPipelineState($deputyShipRowDto);
+        $this->deputyshipsIngestResultRecorder->reset();
 
-            // find existing deputy, client, and report which match the row
-            $state = $this->deputyshipEntityMatcher->match($state);
+        // load the CSV into the staging table in the database
+        $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
+        $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
 
-            // build the entities without saving them
+        // find the candidate deputyships which have changed or need to be added;
+        // note that we return state objects which are used as the start state for processing each row
+        $candidates = $this->deputyshipsCandidatesSelector->select();
+        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
+
+        foreach ($candidates as $state) {
+            // build the CourtOrder and related entities without saving them
             $state = $this->deputyshipBuilder->build($state);
 
             // persist the entities to the database
@@ -41,14 +45,14 @@ class DeputyshipsCSVIngester
 
             $status = $state->status;
             if (DeputyshipProcessingStatus::SKIPPED === $status) {
-                $this->deputyshipIngestResultRecorder->recordSkippedRow($state);
+                $this->deputyshipsIngestResultRecorder->recordSkippedRow($state);
             } elseif (DeputyshipProcessingStatus::FAILED === $status) {
-                $this->deputyshipIngestResultRecorder->recordFailedRow($state);
+                $this->deputyshipsIngestResultRecorder->recordFailedRow($state);
             } elseif (DeputyshipProcessingStatus::SUCCEEDED == $status) {
-                $this->deputyshipIngestResultRecorder->recordProcessedRow($state);
+                $this->deputyshipsIngestResultRecorder->recordProcessedRow($state);
             }
         }
 
-        return $this->deputyshipIngestResultRecorder->result();
+        return $this->deputyshipsIngestResultRecorder->result();
     }
 }
