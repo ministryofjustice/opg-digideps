@@ -39,13 +39,13 @@ class IngestDeputyshipsCSVCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $bucket = $this->params->get('s3_sirius_bucket');
-        $courtOrdersFile = $input->getArgument('csv-filename');
-        $fileLocation = sprintf('/tmp/%s', $courtOrdersFile);
+        $deputyshipsCSVFile = $input->getArgument('csv-filename');
+        $fileLocation = sprintf('/tmp/%s', $deputyshipsCSVFile);
 
         try {
             $this->s3->getObject([
                 'Bucket' => $bucket,
-                'Key' => $courtOrdersFile,
+                'Key' => $deputyshipsCSVFile,
                 'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
@@ -53,7 +53,7 @@ class IngestDeputyshipsCSVCommand extends Command
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
                 $logMessage .= ' - file %s not found in bucket %s';
             }
-            $logMessage = sprintf($logMessage, $courtOrdersFile, $bucket);
+            $logMessage = sprintf($logMessage, $deputyshipsCSVFile, $bucket);
 
             $this->verboseLogger->error($logMessage);
             $output->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));
@@ -84,7 +84,7 @@ class IngestDeputyshipsCSVCommand extends Command
                     '%s failure - (partial) - %s Output: %s',
                     self::JOB_NAME,
                     $logMessage,
-                    'successfully processed court order CSV, but could not remove file'
+                    'successfully processed deputyships CSV, but could not remove file'
                 )
             );
 
@@ -93,7 +93,7 @@ class IngestDeputyshipsCSVCommand extends Command
 
         $output->writeln(
             sprintf(
-                '%s - success - Finished processing CourtOrders CSV, Output: %s',
+                '%s - success - Finished processing deputyships CSV, Output: %s',
                 self::JOB_NAME,
                 $result->message
             )

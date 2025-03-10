@@ -6,6 +6,13 @@ namespace App\v2\Registration\DeputyshipProcessing;
 
 class DeputyshipsIngestResultRecorder
 {
+    public const SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
+
+    private bool $csvLoadedSuccessfully = false;
+
+    /** @var string[] */
+    private array $errorMessages = [];
+
     /**
      * Prepare the recorder for a new ingest (remove any existing logging).
      */
@@ -18,6 +25,11 @@ class DeputyshipsIngestResultRecorder
      */
     public function recordCsvLoadResult(string $fileLocation, bool $loadedOk): void
     {
+        $this->csvLoadedSuccessfully = $loadedOk;
+
+        if (!$loadedOk) {
+            $this->errorMessages[] = "failed to load CSV from $fileLocation";
+        }
     }
 
     /**
@@ -25,7 +37,7 @@ class DeputyshipsIngestResultRecorder
      *
      * @param DeputyshipPipelineState[] $candidates
      */
-    public function recordDeputyshipCandidates(array $candidates)
+    public function recordDeputyshipCandidates(array $candidates): void
     {
     }
 
@@ -43,6 +55,13 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        return new DeputyshipsCSVIngestResult(true, '');
+        $success = $this->csvLoadedSuccessfully;
+
+        $message = self::SUCCESS_MESSAGE;
+        if (!$success) {
+            $message = implode('; ', $this->errorMessages);
+        }
+
+        return new DeputyshipsCSVIngestResult($success, $message);
     }
 }
