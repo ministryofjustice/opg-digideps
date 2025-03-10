@@ -17,6 +17,7 @@ class CSVChunkerFactory
     public function create(string $fileLocation, string $entityClass, int $chunkSize = 10000): CSVChunker
     {
         $reader = Reader::createFromPath($fileLocation);
+        $reader->setHeaderOffset(0);
         $csvFile = $reader->getRecordsAsObject($entityClass);
 
         return new CSVChunker($csvFile, $chunkSize);
