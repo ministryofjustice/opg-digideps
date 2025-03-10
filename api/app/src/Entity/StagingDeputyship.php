@@ -15,15 +15,14 @@ use League\Csv\Serializer;
  * Column names in the database (as defined here) *must* match the column names in the CSV, as we do no
  * transformation/translation when dumping data into this table.
  *
- * @ORM\Table(name="deputyship", schema="staging")
+ * @ORM\Table(name="deputyship", schema="staging", indexes={
+ *
+ *   @ORM\Index(name="deputy_uid_idx", columns={"DeputyUid"}),
+ *   @ORM\Index(name="case_number_idx", columns={"CaseNumber"}),
+ *   @ORM\Index(name="order_uid_idx", columns={"OrderUid"})
+ * })
  *
  * @ORM\Entity
- *
- * , indexes={
- * ORM\Index(name="deputy_uid_idx", columns={"DeputyUid"}),
- * ORM\Index(name="case_number_idx", columns={"CaseNumber"}),
- * ORM\Index(name="order_uid_idx", columns={"OrderUid"})
- *  }
  */
 class StagingDeputyship
 {
@@ -33,7 +32,7 @@ class StagingDeputyship
      * @ORM\Column(name="OrderUid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'OrderUid')]
-    public ?string $orderUid;
+    public string $orderUid;
 
     /**
      * @ORM\Id
@@ -41,7 +40,7 @@ class StagingDeputyship
      * @ORM\Column(name="DeputyUid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'DeputyUid')]
-    public ?string $deputyUid;
+    public string $deputyUid;
 
     /**
      * @ORM\Column(name="OrderType", type="string", length=30)
