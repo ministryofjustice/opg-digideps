@@ -9,6 +9,7 @@ class DeputyshipsCSVIngestResult
     public function __construct(
         public readonly bool $success,
         public readonly string $message,
+        public readonly \DateTimeInterface $dateTimeCompleted = new \DateTimeImmutable(),
     ) {
     }
 }

@@ -109,7 +109,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            "success - Finished processing CourtOrders CSV, Output: CSV {$this->csvFilename} processed",
+            "success - Finished processing deputyships CSV, Output: CSV $this->csvFilename processed",
             $output
         );
     }
