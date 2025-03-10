@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingDeputyship;
+use App\v2\CSV\CSVChunkerFactory;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\Mapping\MappingException;
 use League\Csv\Exception as CSVException;
@@ -16,7 +17,7 @@ use Psr\Log\LoggerInterface;
 class DeputyshipsCSVLoader
 {
     public function __construct(
-        private readonly EntityManager $em,
+        private readonly EntityManagerInterface $em,
         private readonly CSVChunkerFactory $chunkerFactory,
         private readonly LoggerInterface $logger,
     ) {
