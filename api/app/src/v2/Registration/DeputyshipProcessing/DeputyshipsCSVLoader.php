@@ -44,6 +44,7 @@ class DeputyshipsCSVLoader
                 }
                 $this->em->flush();
             }
+
             $this->em->commit();
             $this->em->clear();
 

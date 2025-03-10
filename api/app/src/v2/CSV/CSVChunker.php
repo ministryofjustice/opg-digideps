@@ -19,6 +19,7 @@ class CSVChunker
      */
     public function getChunk(): ?array
     {
+        $this->csvFile->next();
         if (!$this->csvFile->valid()) {
             return null;
         }

@@ -33,7 +33,7 @@ class DeputyshipsIngestResultRecorder
     }
 
     /**
-     * Record the candidate records found which will result in some database processing.
+     * Record the candidate records found which will result in database activity.
      *
      * @param DeputyshipPipelineState[] $candidates
      */
