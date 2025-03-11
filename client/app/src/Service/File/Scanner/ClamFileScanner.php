@@ -63,7 +63,7 @@ class ClamFileScanner
 
     private function fileIsPdf(UploadedFile $file): bool
     {
-        $getClientOriginalExtensionLower = isnull($file->getClientOriginalExtension()) ? '' : strtolower($file->getClientOriginalExtension());
+        $getClientOriginalExtensionLower = is_null($file->getClientOriginalExtension()) ? '' : strtolower($file->getClientOriginalExtension());
 
         return 'pdf' === $getClientOriginalExtensionLower;
     }

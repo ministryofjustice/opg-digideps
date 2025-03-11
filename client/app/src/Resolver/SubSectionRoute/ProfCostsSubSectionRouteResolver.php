@@ -143,7 +143,7 @@ class ProfCostsSubSectionRouteResolver
      */
     private function interimExists(Report $report)
     {
-        $getProfDeputyCostsHasInterimLower = isnull($report->getProfDeputyCostsHasInterim()) ? '' : strtolower($report->getProfDeputyCostsHasInterim());
+        $getProfDeputyCostsHasInterimLower = is_null($report->getProfDeputyCostsHasInterim()) ? '' : strtolower($report->getProfDeputyCostsHasInterim());
 
         return 'yes' == $getProfDeputyCostsHasInterimLower;
     }

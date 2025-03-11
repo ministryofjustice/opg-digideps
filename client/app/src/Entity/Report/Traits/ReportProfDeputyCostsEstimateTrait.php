@@ -119,7 +119,7 @@ trait ReportProfDeputyCostsEstimateTrait
      */
     public function hasProfDeputyCostsEstimateHowChargedFixedOnly()
     {
-        $getProfDeputyCostsEstimateHowChargedLower = isnull($this->getProfDeputyCostsEstimateHowCharged()) ? '' : strtolower($this->getProfDeputyCostsEstimateHowCharged());
+        $getProfDeputyCostsEstimateHowChargedLower = is_null($this->getProfDeputyCostsEstimateHowCharged()) ? '' : strtolower($this->getProfDeputyCostsEstimateHowCharged());
 
         return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $getProfDeputyCostsEstimateHowChargedLower;
     }
