@@ -54,9 +54,37 @@ class DeputyshipsCSVIngesterTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function testCsvLoadFailed(): void
+    {
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('reset');
+
+        $this->mockDeputyshipsCSVLoader->expects($this->once())
+            ->method('load')
+            ->with('/tmp/(DigiDeps)_Deputyships_Report.csv')
+            ->willReturn(false);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('recordCsvLoadResult')
+            ->with('/tmp/(DigiDeps)_Deputyships_Report.csv', false);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('result')
+            ->willReturn(new DeputyshipsCSVIngestResult(false, 'failed to load CSV'));
+
+        $result = $this->sut->processCsv('/tmp/(DigiDeps)_Deputyships_Report.csv');
+
+        $this->assertFalse($result->success);
+    }
+
+    /**
+     * @test
+     *
      * @dataProvider rowFixtures
      */
-    public function testProcessCsvWithSkippedRow(DeputyshipProcessingStatus $expectedStatus, string $expectedMethodCall): void
+    public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus, string $expectedMethodCall): void
     {
         $dto = new StagingDeputyship();
         $state = new DeputyshipPipelineState($dto, $expectedStatus);

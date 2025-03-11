@@ -31,7 +31,6 @@ class DeputyshipsCSVIngester
         $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
         $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
 
-        // TODO test for this
         if (!$loadedOk) {
             // early return if CSV load failed
             return $this->deputyshipsIngestResultRecorder->result();
