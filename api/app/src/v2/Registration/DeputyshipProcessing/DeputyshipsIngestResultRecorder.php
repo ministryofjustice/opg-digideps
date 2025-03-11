@@ -6,7 +6,7 @@ namespace App\v2\Registration\DeputyshipProcessing;
 
 class DeputyshipsIngestResultRecorder
 {
-    public const SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
+    private const SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
 
     private bool $csvLoadedSuccessfully = false;
 
