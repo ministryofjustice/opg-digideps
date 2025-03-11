@@ -48,7 +48,7 @@ class Redirector
         protected RouterInterface $router,
         protected Session $session,
         protected string $env,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -156,7 +156,7 @@ class Redirector
             }
 
             if (!$user->isNdrEnabled()) {
-                return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+                return $this->router->generate('report_create', ['clientId' => $activeClient->getId()]);
             }
         }
 
