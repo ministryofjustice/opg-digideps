@@ -83,7 +83,7 @@ class ComponentsExtension extends AbstractExtension
                 $string = str_replace('_', ' ', $string);             // treat underscores as spaces
                 $string = preg_replace('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
                 $string = preg_replace('/[-\s]+/', '-', $string);     // convert spaces to hyphens
-                $string = strtolower($string);                        // convert to lowercase
+                $string = is_null($string) ? '' : strtolower($string); // convert to lowercase
 
                 return $string;
             }),
@@ -213,10 +213,6 @@ class ComponentsExtension extends AbstractExtension
         return $ret;
     }
 
-    /**
-     * @param string $barName
-     * @param int    $activeStepNumber
-     */
     public function progressBarRegistration(Environment $env, User $user, $selectedStepId)
     {
         if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN_MANAGER])) {

@@ -32,7 +32,7 @@ class ClamFileScanner
     }
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function scanFile(UploadedFile $file)
     {
@@ -63,7 +63,9 @@ class ClamFileScanner
 
     private function fileIsPdf(UploadedFile $file): bool
     {
-        return 'pdf' === strtolower($file->getClientOriginalExtension());
+        $getClientOriginalExtensionLower = is_null($file->getClientOriginalExtension()) ? '' : strtolower($file->getClientOriginalExtension());
+
+        return 'pdf' === $getClientOriginalExtensionLower;
     }
 
     private function pdfContainsBadKeywords(UploadedFile $file): bool
@@ -75,22 +77,22 @@ class ClamFileScanner
     }
 
     /**
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed|ResponseInterface
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function attemptScan(UploadedFile $file): ResponseInterface
     {
         return $this
             ->client
             ->request('POST', '/scan', [
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'contents' => fopen($file->getPathName(), 'r'),
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => fopen($file->getPathName(), 'r'),
+                    ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     private function scanResultIsPass(Response $response): bool
