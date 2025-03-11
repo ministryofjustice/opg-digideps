@@ -6,7 +6,6 @@ namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingDeputyship;
 use App\v2\CSV\CSVChunkerFactory;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Exception as CSVException;
 use League\Csv\UnavailableStream;
@@ -26,14 +25,9 @@ class DeputyshipsCSVLoader
         try {
             $chunker = $this->chunkerFactory->create($fileLocation, StagingDeputyship::class);
 
-            $conn = $this->em->getConnection();
-            $meta = $this->em->getClassMetadata(StagingDeputyship::class);
-            $stagingDeputyshipSchemaName = $meta->getSchemaName();
-            $stagingDeputyshipTableName = $meta->getTableName();
-
             // delete records from staging table
             $this->em->beginTransaction();
-            $conn->executeStatement("DELETE FROM {$stagingDeputyshipSchemaName}.{$stagingDeputyshipTableName}");
+            $this->em->createQuery('DELETE FROM App\Entity\StagingDeputyship sd')->execute();
             $this->em->commit();
 
             // dump CSV into staging table
@@ -50,7 +44,7 @@ class DeputyshipsCSVLoader
             $this->em->commit();
 
             return true;
-        } catch (Exception|UnavailableStream|CSVException $e) {
+        } catch (UnavailableStream|CSVException $e) {
             $this->logger->error(
                 'Error loading CSV into staging table: exception type = '.get_class($e).'; message = '.$e->getMessage()
             );

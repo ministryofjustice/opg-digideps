@@ -8,9 +8,8 @@ use App\Entity\StagingDeputyship;
 use App\v2\CSV\CSVChunker;
 use App\v2\CSV\CSVChunkerFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query;
 use League\Csv\Exception as CSVException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -81,17 +80,6 @@ class DeputyshipsCSVLoaderTest extends TestCase
             ->with($fileLocation, StagingDeputyship::class, $chunkSize)
             ->willReturn($mockChunker);
 
-        $mockConnection = $this->createMock(Connection::class);
-        $this->mockEm->expects($this->once())->method('getConnection')->willReturn($mockConnection);
-
-        $mockMeta = $this->createMock(ClassMetadata::class);
-        $mockMeta->method('getSchemaName')->willReturn('staging');
-        $mockMeta->method('getTableName')->willReturn('deputyship');
-
-        $this->mockEm->method('getClassMetadata')
-            ->with(StagingDeputyship::class)
-            ->willReturn($mockMeta);
-
         $this->mockEm->expects($this->exactly(2))->method('beginTransaction');
         $this->mockEm->expects($this->exactly(2))->method('commit');
         $this->mockEm->expects($this->exactly(3))->method('flush');
@@ -105,9 +93,13 @@ class DeputyshipsCSVLoaderTest extends TestCase
                 $this->assertContains($record, $validValues);
             });
 
-        $mockConnection->expects($this->once())
-            ->method('executeStatement')
-            ->with('DELETE FROM staging.deputyship');
+        $mockQuery = $this->createMock(Query::class);
+        $mockQuery->expects($this->once())->method('execute');
+
+        $this->mockEm->expects($this->once())
+            ->method('createQuery')
+            ->with('DELETE FROM App\Entity\StagingDeputyship sd')
+            ->willReturn($mockQuery);
 
         $result = $this->sut->load($fileLocation);
 
