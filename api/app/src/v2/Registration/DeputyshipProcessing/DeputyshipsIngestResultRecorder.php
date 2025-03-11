@@ -14,13 +14,6 @@ class DeputyshipsIngestResultRecorder
     private array $errorMessages = [];
 
     /**
-     * Prepare the recorder for a new ingest (remove any existing logging).
-     */
-    public function reset(): void
-    {
-    }
-
-    /**
      * Record the result of loading the CSV file into the staging table.
      */
     public function recordCsvLoadResult(string $fileLocation, bool $loadedOk): void

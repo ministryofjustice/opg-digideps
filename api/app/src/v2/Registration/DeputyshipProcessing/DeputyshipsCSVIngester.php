@@ -25,8 +25,6 @@ class DeputyshipsCSVIngester
      */
     public function processCsv(string $fileLocation): DeputyshipsCSVIngestResult
     {
-        $this->deputyshipsIngestResultRecorder->reset();
-
         // load the CSV into the staging table in the database
         $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
         $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
@@ -42,12 +40,14 @@ class DeputyshipsCSVIngester
         $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
 
         foreach ($candidates as $state) {
-            // build the CourtOrder and related entities without saving them
+            // build the CourtOrder and related entities without saving them; see matching rules at
+            // https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/4179689475/Ingesting+the+Sirius+deputyship+CSV
             $state = $this->deputyshipBuilder->build($state);
 
-            // persist the entities to the database
+            // persist the entities to the database (NB this could be chunked within the persister)
             $state = $this->deputyshipPersister->persist($state);
 
+            // record what happened for later logging
             $status = $state->status;
             if (DeputyshipProcessingStatus::SKIPPED === $status) {
                 $this->deputyshipsIngestResultRecorder->recordSkippedRow($state);
@@ -58,6 +58,7 @@ class DeputyshipsCSVIngester
             }
         }
 
+        // get a summary of what happened during the ingest
         return $this->deputyshipsIngestResultRecorder->result();
     }
 }
