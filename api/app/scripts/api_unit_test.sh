@@ -1,36 +1,16 @@
 #!/bin/bash
+# usage: api_unit_test.sh <cov-html (optional)>
+# if cov-html is supplied as an argument, will generate HTML coverage reports
 # exit on error
 set -e
 
-# Check the argument provided and run the corresponding test suites
+php vendor/bin/phpunit -c tests/Unit tests/Unit/ --coverage-php tests/coverage/api-unit.cov
+
 case "$1" in
-  selection-all)
-    printf '\n Running Entity Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Entity/ --coverage-php tests/coverage/Entity.cov
-    printf '\n Running Command Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Command/ --coverage-php tests/coverage/Command.cov
-    printf '\n Running Factory Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Factory/ --coverage-php tests/coverage/Factory.cov
-    printf '\n Running Security Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Security/ --coverage-php tests/coverage/Security.cov
-    printf '\n Running Service Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Service/ --coverage-php tests/coverage/Service.cov
-    printf '\n Running Stats Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Stats/ --coverage-php tests/coverage/Stats.cov
-    printf '\n Running Transformer Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Transformer/ --coverage-php tests/coverage/Transformer.cov
-    printf '\n Running v2 Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/v2/ --coverage-php tests/coverage/v2.cov
-    printf '\n Running Logger Suite \n\n'
-    php vendor/bin/phpunit -c tests/Unit tests/Unit/Logger/ --coverage-php tests/coverage/logger.cov
-    ;;
-#    # generate HTML coverage report
-#    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
-#    ;;
-  *)
-    echo "Invalid argument. Please provide one of the following arguments: selection-all"
-    exit 1
-    ;;
+    cov-html)
+        # generate HTML coverage report
+        php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
+        ;;
 esac
 
 php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-unit-tests.xml" "./tests/coverage"
