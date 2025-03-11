@@ -28,7 +28,7 @@ abstract class Asset
      */
     public static function factory($type)
     {
-        $typeLower = null !== $type ? strtolower($type) : '';
+        $typeLower = isnull($type) ? '' : strtolower($type);
         switch (strtolower($typeLower)) {
             case 'property':
                 return new AssetProperty();

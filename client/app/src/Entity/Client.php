@@ -845,7 +845,7 @@ class Client
                         $coDeps[strtolower($matches[0]).$user->getId()] = $user;
                     }
                 } else {
-                    if (null !== $user->getFirstname()) {
+                    if (!isnull($user->getFirstname())) {
                         $coDeps[strtolower($user->getFirstname()).$user->getId()] = $user;
                     }
                 }

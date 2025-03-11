@@ -569,7 +569,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function getEmail()
     {
-        return null !== $this->email ? strtolower($this->email) : '';
+        return isnull($this->email) ? '' : strtolower($this->email);
     }
 
     /**

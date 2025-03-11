@@ -83,7 +83,7 @@ class ComponentsExtension extends AbstractExtension
                 $string = str_replace('_', ' ', $string);             // treat underscores as spaces
                 $string = preg_replace('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
                 $string = preg_replace('/[-\s]+/', '-', $string);     // convert spaces to hyphens
-                $string = null !== $string ? strtolower($string) : '';                        // convert to lowercase
+                $string = is_null($string) ? '' : strtolower($string); // convert to lowercase
 
                 return $string;
             }),
