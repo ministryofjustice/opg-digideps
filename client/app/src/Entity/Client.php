@@ -845,7 +845,9 @@ class Client
                         $coDeps[strtolower($matches[0]).$user->getId()] = $user;
                     }
                 } else {
-                    $coDeps[strtolower($user->getFirstname()).$user->getId()] = $user;
+                    if (!is_null($user->getFirstname())) {
+                        $coDeps[strtolower($user->getFirstname()).$user->getId()] = $user;
+                    }
                 }
             }
             ksort($coDeps);
