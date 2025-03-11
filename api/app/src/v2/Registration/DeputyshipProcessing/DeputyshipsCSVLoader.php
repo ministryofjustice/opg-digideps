@@ -23,30 +23,31 @@ class DeputyshipsCSVLoader
 
     public function load(string $fileLocation): bool
     {
-        $conn = $this->em->getConnection();
-        $meta = $this->em->getClassMetadata(StagingDeputyship::class);
-        $stagingDeputyshipSchemaName = $meta->getSchemaName();
-        $stagingDeputyshipTableName = $meta->getTableName();
-
         try {
+            $chunker = $this->chunkerFactory->create($fileLocation, StagingDeputyship::class);
+
+            $conn = $this->em->getConnection();
+            $meta = $this->em->getClassMetadata(StagingDeputyship::class);
+            $stagingDeputyshipSchemaName = $meta->getSchemaName();
+            $stagingDeputyshipTableName = $meta->getTableName();
+
             // delete records from staging table
             $this->em->beginTransaction();
             $conn->executeStatement("DELETE FROM {$stagingDeputyshipSchemaName}.{$stagingDeputyshipTableName}");
             $this->em->commit();
 
             // dump CSV into staging table
-            $chunker = $this->chunkerFactory->create($fileLocation, StagingDeputyship::class);
-
             $this->em->beginTransaction();
+
             while (!is_null($chunk = $chunker->getChunk())) {
                 foreach ($chunk as $record) {
                     $this->em->persist($record);
                 }
                 $this->em->flush();
+                $this->em->clear();
             }
 
             $this->em->commit();
-            $this->em->clear();
 
             return true;
         } catch (Exception|UnavailableStream|CSVException $e) {

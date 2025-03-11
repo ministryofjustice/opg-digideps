@@ -27,8 +27,8 @@ class CSVChunker
         $count = 1;
 
         while ($count <= $this->chunkSize && $this->csvFile->valid()) {
-            ++$count;
             $records[] = $this->csvFile->current();
+            ++$count;
             $this->csvFile->next();
         }
 
