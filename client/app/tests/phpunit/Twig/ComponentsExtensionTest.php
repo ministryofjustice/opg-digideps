@@ -13,7 +13,7 @@ class ComponentsExtensionTest extends TestCase
         $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->reportSectionsLinkService = m::mock('App\Service\ReportSectionsLinkService');
         $this->twigEnvironment = m::mock('Twig\Environment');
-        $this->object = new \App\Twig\ComponentsExtension($this->translator, $this->reportSectionsLinkService, $this->twigEnvironment);
+        $this->object = new ComponentsExtension($this->translator, $this->reportSectionsLinkService, $this->twigEnvironment);
     }
 
     public static function accordionLinksProvider()
@@ -37,21 +37,21 @@ class ComponentsExtensionTest extends TestCase
     public function testRenderAccordionLinks($clickedPanel, $open1, $open2, $href1, $href2, $oneATime)
     {
         $options = ['clickedPanel' => $clickedPanel,
-                    'bothOpenHref' => 'money-both',
-                    'allClosedHref' => 'list',
-                    'firstPanelHref' => 'money-in',
-                    'secondPanelHref' => 'money-out',
-                    'onlyOneATime' => $oneATime, ];
+            'bothOpenHref' => 'money-both',
+            'allClosedHref' => 'list',
+            'firstPanelHref' => 'money-in',
+            'secondPanelHref' => 'money-out',
+            'onlyOneATime' => $oneATime, ];
 
-        $expected = [ //expected
+        $expected = [ // expected
             'first' => [
                 'open' => $open1,
                 'href' => $href1,
-             ],
+            ],
             'second' => [
                 'open' => $open2,
                 'href' => $href2,
-             ],
+            ],
         ];
 
         $actual = $this->object->renderAccordionLinks($options);
@@ -78,7 +78,9 @@ class ComponentsExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider formatLastLoginProvider
+     *
      * @doesNotPerformAssertions
      */
     public function formatTimeDifference($input, $expectedMethodCalled, $methodArgs)
@@ -122,6 +124,7 @@ class ComponentsExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider pad_day_monthProvider
      */
     public function padDayMonth($input, $expected)
@@ -143,6 +146,7 @@ class ComponentsExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider behat_namifyProvider
      */
     public function behatNamify($input, $expected)
@@ -163,6 +167,7 @@ class ComponentsExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider money_formatProvider
      */
     public function moneyFormat($input, $expected)
@@ -204,7 +209,7 @@ class ComponentsExtensionTest extends TestCase
     {
         $f = $this->object->getFilters()['lcfirst']->getCallable();
 
-        $this->assertEquals(null, $f(null));
+        $this->assertNull($f(null));
         $this->assertEquals('', $f(''));
         $this->assertEquals('123aBc', $f('123aBc'));
         $this->assertEquals('aBCd', $f('ABCd'));

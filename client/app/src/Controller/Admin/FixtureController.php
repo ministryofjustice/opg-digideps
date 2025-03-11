@@ -193,7 +193,7 @@ class FixtureController extends AbstractController
     {
         $submitted = $form->getData();
         $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
-        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', is_null($submitted['deputyType']) ? null : strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
         $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
         $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
