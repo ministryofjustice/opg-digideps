@@ -94,6 +94,10 @@ class ComponentsExtension extends AbstractExtension
                 return is_object($object) ? get_class($object) : null;
             }),
             'lcfirst' => new TwigFilter('lcfirst', function ($string) {
+                if (null === $string) {
+                    return null;
+                }
+
                 return lcfirst($string);
             }),
             'status_to_tag_css' => new TwigFilter('status_to_tag_css', function ($status) {
