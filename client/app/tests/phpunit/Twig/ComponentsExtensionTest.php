@@ -209,7 +209,7 @@ class ComponentsExtensionTest extends TestCase
     {
         $f = $this->object->getFilters()['lcfirst']->getCallable();
 
-        $this->assertNull($f(null)); // Handle null case separately
+        $this->assertNull($f(null));
         $this->assertEquals('', $f(''));
         $this->assertEquals('123aBc', $f('123aBc'));
         $this->assertEquals('aBCd', $f('ABCd'));
