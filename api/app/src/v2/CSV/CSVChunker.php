@@ -19,13 +19,12 @@ class CSVChunker
      */
     public function getChunk(): ?array
     {
-        $this->csvFile->next();
         if (!$this->csvFile->valid()) {
             return null;
         }
 
         $records = [];
-        $count = 0;
+        $count = 1;
 
         while ($count <= $this->chunkSize && $this->csvFile->valid()) {
             ++$count;
