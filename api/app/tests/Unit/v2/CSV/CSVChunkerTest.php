@@ -30,6 +30,25 @@ class CSVChunkerTest extends TestCase
         $this->assertEquals(null, $chunker->getChunk());
     }
 
+    public function testGetChunkReturnsMultipleChunksWhenChunkSizeIsOne(): void
+    {
+        $csvData = [
+            ['row1'],
+            ['row2'],
+            ['row3'],
+        ];
+
+        $chunkSize = 1;
+
+        $iterator = new \ArrayIterator($csvData);
+        $chunker = new CSVChunker($iterator, $chunkSize);
+
+        $this->assertEquals([['row1']], $chunker->getChunk());
+        $this->assertEquals([['row2']], $chunker->getChunk());
+        $this->assertEquals([['row3']], $chunker->getChunk());
+        $this->assertEquals(null, $chunker->getChunk());
+    }
+
     public function testGetChunkReturnsOneChunkWhenChunkSizeExceedsNumberOfItems(): void
     {
         $csvData = [
