@@ -44,8 +44,8 @@ class S3StorageTest extends TestCase
 
         // check localstack connection. To test why failing on the infrastructure
         if (!@fsockopen('localstack', '4572')) {
-//            $this->markTestSkipped('localstack not responding');
-//            echo "Can't connect to S3 ({$options['endpoint']})\n";
+            //            $this->markTestSkipped('localstack not responding');
+            //            echo "Can't connect to S3 ({$options['endpoint']})\n";
         }
     }
 
@@ -136,7 +136,6 @@ class S3StorageTest extends TestCase
     public function testSuccessfulUploadBinaryContent()
     {
         /** @var S3ClientInterface */
-
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
@@ -164,12 +163,11 @@ class S3StorageTest extends TestCase
     public function testFailedUploadBinaryContent()
     {
         /** @var S3ClientInterface */
-
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
 
-        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);;
+        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(false);
 
         // create timestamped file and key to undo effects of potential previous executions
@@ -180,7 +178,7 @@ class S3StorageTest extends TestCase
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs([
             'error',
-            'Failed to upload file to S3. Filename: '. $key
+            'Failed to upload file to S3. Filename: '.$key,
         ]);
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
@@ -330,7 +328,7 @@ class S3StorageTest extends TestCase
             $this->generateAwsResult(404)
         );
 
-        $awsClient->shouldNotReceive('deleteObjects')->never();
+        $awsClient->shouldNotReceive('deleteObjects');
 
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs();
@@ -354,7 +352,7 @@ class S3StorageTest extends TestCase
 
         $this->expectException('RuntimeException', 'Could not remove file');
 
-        $awsClient->shouldNotReceive('deleteObjects')->never();
+        $awsClient->shouldNotReceive('deleteObjects');
 
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs();
@@ -383,7 +381,7 @@ class S3StorageTest extends TestCase
             new AwsException('AWS is down', new Command('listObjectVersions'), ['code' => 500])
         );
 
-        $awsClient->shouldNotReceive('deleteObjects')->never();
+        $awsClient->shouldNotReceive('deleteObjects');
 
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs();
