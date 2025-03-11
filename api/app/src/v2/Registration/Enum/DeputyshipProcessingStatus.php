@@ -6,7 +6,7 @@ namespace App\v2\Registration\Enum;
 
 enum DeputyshipProcessingStatus
 {
-    case NOT_STARTED;
+    case STARTED;
     case SKIPPED;
     case FAILED;
     case SUCCEEDED;

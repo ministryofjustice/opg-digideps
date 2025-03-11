@@ -7,16 +7,14 @@ namespace App\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingDeputyship;
 use App\v2\Registration\Enum\DeputyshipProcessingStatus;
 
+/**
+ * Record the processing state for an individual deputyship (corresponding to a row in the CSV file).
+ */
 class DeputyshipPipelineState
 {
-    public StagingDeputyship $deputyShipRowDto;
-    public DeputyshipProcessingStatus $status;
-
     public function __construct(
-        StagingDeputyship $deputyShipRowDto,
-        DeputyshipProcessingStatus $status = DeputyshipProcessingStatus::NOT_STARTED,
+        public StagingDeputyship $stagingDeputyship,
+        public DeputyshipProcessingStatus $status = DeputyshipProcessingStatus::STARTED,
     ) {
-        $this->deputyShipRowDto = $deputyShipRowDto;
-        $this->status = $status;
     }
 }

@@ -11,6 +11,8 @@ use League\Csv\UnavailableStream;
 class CSVChunkerFactory
 {
     /**
+     * Create a CSV read which reads records in a series of chunks.
+     *
      * @throws UnavailableStream
      * @throws CSVException
      */

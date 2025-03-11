@@ -58,9 +58,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
      */
     public function testCsvLoadFailed(): void
     {
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
-            ->method('reset');
-
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
             ->with('/tmp/(DigiDeps)_Deputyships_Report.csv')
@@ -90,9 +87,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $state = new DeputyshipPipelineState($dto, $expectedStatus);
 
         $candidates = [$state];
-
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
-            ->method('reset');
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
