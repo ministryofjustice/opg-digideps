@@ -75,6 +75,7 @@ COPY --chown=www-data:www-data api/app/tests tests
 COPY --chown=www-data:www-data api/app/api.env api.env
 COPY --chown=www-data:www-data api/app/postgres.env postgres.env
 COPY --chown=www-data:www-data api/app/phpstan.neon .
+COPY --chown=www-data:www-data api/app/phpstan-baseline.neon .
 COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
 
 RUN chmod 544 /var/www/wait-for-db.sh
