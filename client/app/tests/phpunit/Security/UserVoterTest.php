@@ -20,6 +20,7 @@ class UserVoterTest extends TestCase
 
     /**
      * @dataProvider deleteUserProvider
+     *
      * @test
      */
     public function determineDeletePermission(User $deletor, User $deletee, int $expectedPermission)
@@ -30,7 +31,7 @@ class UserVoterTest extends TestCase
         /** @var UserVoter $sut */
         $sut = new UserVoter($dm->reveal());
 
-        $token = new UsernamePasswordToken($deletor, 'credentials', 'memory');
+        $token = new UsernamePasswordToken($deletor, 'firewall', $deletor->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
@@ -226,6 +227,7 @@ class UserVoterTest extends TestCase
 
     /**
      * @dataProvider addEditUserProvider
+     *
      * @test
      */
     public function determineAddEditPermission(User $actor, User $subject, int $expectedPermission)
@@ -233,7 +235,7 @@ class UserVoterTest extends TestCase
         /** @var UserVoter $sut */
         $sut = new UserVoter();
 
-        $token = new UsernamePasswordToken($actor, 'credentials', 'memory');
+        $token = new UsernamePasswordToken($actor, 'firewall', $actor->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, $subject, [UserVoter::EDIT_USER]));
         self::assertEquals($expectedPermission, $sut->vote($token, $subject, [UserVoter::ADD_USER]));
@@ -442,6 +444,7 @@ class UserVoterTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider canAddUserProvider
      */
     public function determineCanAddPermission(User $actor, int $expectedPermission)
@@ -449,7 +452,7 @@ class UserVoterTest extends TestCase
         /** @var UserVoter $sut */
         $sut = new UserVoter();
 
-        $token = new UsernamePasswordToken($actor, 'credentials', 'memory');
+        $token = new UsernamePasswordToken($actor, 'firewall', $actor->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, null, [UserVoter::CAN_ADD_USER]));
     }
