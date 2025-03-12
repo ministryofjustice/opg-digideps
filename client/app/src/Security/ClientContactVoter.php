@@ -29,12 +29,8 @@ class ClientContactVoter extends Voter
 
     /**
      * Does this voter support the attribute?
-     *
-     * @param string $attribute
-     *
-     * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, mixed $subject): bool
     {
         switch ($attribute) {
             case self::ADD_CLIENT_CONTACT:

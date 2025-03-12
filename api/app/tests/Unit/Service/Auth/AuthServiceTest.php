@@ -146,9 +146,6 @@ class AuthServiceTest extends TestCase
         ]);
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn($user);
 
-        $encoder = m::stub('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface', [
-                'encodePassword(plainPassword,salt)' => 'encodedPassword',
-        ]);
         $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(true);
 
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));

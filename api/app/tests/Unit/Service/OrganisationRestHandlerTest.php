@@ -14,6 +14,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandlerTest extends TestCase
@@ -79,7 +81,7 @@ class OrganisationRestHandlerTest extends TestCase
     public function createValidOrgDetails()
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn([]);
+        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList());
         $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
 
         $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
@@ -147,7 +149,9 @@ class OrganisationRestHandlerTest extends TestCase
     public function createOrgValidationFails()
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn(['an error']);
+        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList([
+            new ConstraintViolation('an error', null, [], null, null, null)
+        ]));
         $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
 
         self::expectException(OrganisationCreationException::class);
@@ -166,7 +170,7 @@ class OrganisationRestHandlerTest extends TestCase
 
         $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn([]);
+        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList());
 
         $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
@@ -230,7 +234,9 @@ class OrganisationRestHandlerTest extends TestCase
 
         $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn(['an error']);
+        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList([
+            new ConstraintViolation('an error', null, [], null, null, null)
+        ]));
 
         self::expectException(OrganisationCreationException::class);
 
