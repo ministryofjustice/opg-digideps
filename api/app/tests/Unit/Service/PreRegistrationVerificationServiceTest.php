@@ -6,7 +6,9 @@ use App\Repository\PreRegistrationRepository;
 use App\Repository\UserRepository;
 use App\Service\PreRegistrationVerificationService;
 use Mockery as m;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -15,6 +17,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
     use ProphecyTrait;
 
     private PreRegistrationVerificationService $preRegistrationVerificationService;
+    private ObjectProphecy|SerializerInterface $serializer;
 
     public static function setUpBeforeClass(): void
     {
@@ -118,9 +121,9 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $mockUserRepo = m::mock(UserRepository::class);
 
-        $serializer = self::prophesize(SerializerInterface::class);
+        $this->serializer = self::prophesize(SerializerInterface::class);
 
-        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer->reveal(), $mockPreRegRepo, $mockUserRepo);
+        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($this->serializer->reveal(), $mockPreRegRepo, $mockUserRepo);
     }
 
     public function tearDown(): void
@@ -151,6 +154,10 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
      */
     public function validateNonMLDWithPostcode()
     {
+        $this->serializer->shouldReceive('serialize')
+            ->getObject(Argument::any())
+            ->shouldBeCalled()->willReturn('a');
+
         $this->assertTrue($this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'Dfirs', 'DSurn', 'DPC123'));
 
         // test each fail individually
