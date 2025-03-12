@@ -149,13 +149,13 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 
 phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
 ifdef level
-	docker compose run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
 else
-	docker compose run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
 endif
 
 phpstan-api-baseline:
-	docker compose run --no-deps --rm --volume ${PWD}/api/app/phpstan-baseline.neon:/var/www/phpstan-baseline.neon api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max --generate-baseline
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max --generate-baseline
 
 phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1
 ifdef level
