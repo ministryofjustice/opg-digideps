@@ -55,23 +55,7 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function findAllClientIdsByUser(User $user)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-        $stmt = $conn->executeQuery(
-            'select deputy_case.client_id FROM deputy_case WHERE deputy_case.user_id = ?',
-            [$user->getId()]
-        );
-
-        return array_map('current', $stmt->fetchAll());
-    }
-
-    /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function saveUserToClient(User $user, int $clientId)
     {
@@ -116,14 +100,6 @@ class ClientRepository extends ServiceEntityRepository
         $result = $query->getArrayResult();
 
         return 0 === count($result) ? null : $result[0];
-    }
-
-    public function countAllEntities()
-    {
-        return $this
-            ->getEntityManager()
-            ->createQuery('SELECT COUNT(c.id) FROM App\Entity\Client c')
-            ->getSingleScalarResult();
     }
 
     public function findByCaseNumber(string $caseNumber): ?Client
