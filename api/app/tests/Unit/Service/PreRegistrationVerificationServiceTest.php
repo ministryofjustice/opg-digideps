@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use App\Service\PreRegistrationVerificationService;
 use Mockery as m;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -15,6 +16,7 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
     use ProphecyTrait;
 
     private PreRegistrationVerificationService $preRegistrationVerificationService;
+    private ObjectProphecy|SerializerInterface $serializer;
 
     public static function setUpBeforeClass(): void
     {
@@ -118,9 +120,9 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $mockUserRepo = m::mock(UserRepository::class);
 
-        $serializer = self::prophesize(SerializerInterface::class);
+        $this->serializer = $this->createMock(SerializerInterface::class);
 
-        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer->reveal(), $mockPreRegRepo, $mockUserRepo);
+        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($this->serializer, $mockPreRegRepo, $mockUserRepo);
     }
 
     public function tearDown(): void
