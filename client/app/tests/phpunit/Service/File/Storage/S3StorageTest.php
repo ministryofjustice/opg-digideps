@@ -26,27 +26,7 @@ class S3StorageTest extends TestCase
 
     public function setUp(): void
     {
-        // connect to localstack
-        // see docker-composer.yml for params
-
         $this->fileContent = 'FILE-CONTENT-'.microtime(1);
-
-        $options = [
-            'version' => 'latest',
-            'region' => 'eu-west-1',
-            'endpoint' => 'http://localstack:4572',
-            'validate' => false,
-            'credentials' => [
-                'key' => 'YOUR_ACCESS_KEY_ID',
-                'secret' => 'YOUR_SECRET_ACCESS_KEY',
-            ],
-        ];
-
-        // check localstack connection. To test why failing on the infrastructure
-        if (!@fsockopen('localstack', '4572')) {
-            //            $this->markTestSkipped('localstack not responding');
-            //            echo "Can't connect to S3 ({$options['endpoint']})\n";
-        }
     }
 
     public function testUploadDownloadDeleteTextContent()

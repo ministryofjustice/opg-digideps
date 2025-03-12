@@ -111,8 +111,8 @@ class SatisfactionController extends RestController
      */
     public function getSatisfactionData(Request $request)
     {
-        /* @var $repo EntityDir\Repository\SatisfactionRepository */
-        $repo = $this->getRepository(EntityDir\Satisfaction::class);
+        /* @var $repo SatisfactionRepository */
+        $repo = $this->getRepository(Satisfaction::class);
 
         $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
         $fromDate instanceof \DateTime ? $fromDate->setTime(0, 0, 1) : null;
