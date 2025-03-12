@@ -97,7 +97,7 @@ class ClientApiTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($clientWithUsers);
 
-        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $this->restClient->delete(sprintf('client/%s/delete', $clientWithUsers->getId()))->shouldBeCalled();
@@ -119,7 +119,7 @@ class ClientApiTest extends TestCase
 
         $this->restClient->put('client/upsert', $postUpdateClient, Argument::cetera())->shouldBeCalled();
 
-        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);

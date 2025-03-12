@@ -143,12 +143,4 @@ class OrganisationRepository extends ServiceEntityRepository
 
         return 0 === count($result) ? null : $result[0];
     }
-
-    public function countAllEntities()
-    {
-        return $this
-            ->getEntityManager()
-            ->createQuery('SELECT COUNT(o.id) FROM App\Entity\Organisation o')
-            ->getSingleScalarResult();
-    }
 }
