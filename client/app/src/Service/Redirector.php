@@ -148,7 +148,7 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-id', 'client-reports', 'report']);
 
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
