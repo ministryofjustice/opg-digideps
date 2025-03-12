@@ -7,17 +7,15 @@ use App\Entity\Report\Status;
 
 class ProfCostsSubSectionRouteResolver
 {
-    const SUMMARY_ROUTE = 'prof_deputy_costs_summary';
-    const PREVIOUS_RECEIVED_EXISTS_ROUTE = 'prof_deputy_costs_previous_received_exists';
-    const COSTS_RECEIVED_ROUTE = 'prof_deputy_costs_received';
-    const SCCO_AMOUNT_ROUTE = 'prof_deputy_costs_amount_scco';
-    const INTERIM_EXISTS_ROUTE = 'prof_deputy_costs_inline_interim_19b_exists';
-    const INTERIM_ROUTE = 'prof_deputy_costs_inline_interim_19b';
-    const BREAKDOWN_ROUTE = 'prof_deputy_costs_breakdown';
+    public const SUMMARY_ROUTE = 'prof_deputy_costs_summary';
+    public const PREVIOUS_RECEIVED_EXISTS_ROUTE = 'prof_deputy_costs_previous_received_exists';
+    public const COSTS_RECEIVED_ROUTE = 'prof_deputy_costs_received';
+    public const SCCO_AMOUNT_ROUTE = 'prof_deputy_costs_amount_scco';
+    public const INTERIM_EXISTS_ROUTE = 'prof_deputy_costs_inline_interim_19b_exists';
+    public const INTERIM_ROUTE = 'prof_deputy_costs_inline_interim_19b';
+    public const BREAKDOWN_ROUTE = 'prof_deputy_costs_breakdown';
 
     /**
-     * @param $state
-     *
      * @return string
      */
     public function resolve(Report $report, $state)
@@ -45,8 +43,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param $state
-     *
      * @return bool
      */
     private function sectionNotStarted($state)
@@ -55,8 +51,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param $state
-     *
      * @return bool
      */
     private function sectionIsComplete($state)
@@ -65,8 +59,6 @@ class ProfCostsSubSectionRouteResolver
     }
 
     /**
-     * @param $state
-     *
      * @return bool
      */
     private function previousRecievedExistsSubsectionIsIncomplete(Report $report)
@@ -151,7 +143,9 @@ class ProfCostsSubSectionRouteResolver
      */
     private function interimExists(Report $report)
     {
-        return 'yes' == strtolower($report->getProfDeputyCostsHasInterim());
+        $getProfDeputyCostsHasInterimLower = is_null($report->getProfDeputyCostsHasInterim()) ? '' : strtolower($report->getProfDeputyCostsHasInterim());
+
+        return 'yes' == $getProfDeputyCostsHasInterimLower;
     }
 
     /**
