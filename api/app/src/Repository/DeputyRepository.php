@@ -14,12 +14,4 @@ class DeputyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Deputy::class);
     }
-
-    public function countAllEntities()
-    {
-        return $this
-            ->getEntityManager()
-            ->createQuery('SELECT COUNT(d.id) FROM App\Entity\Deputy d')
-            ->getSingleScalarResult();
-    }
 }
