@@ -33,7 +33,7 @@ class UserController extends AbstractController
         private ClientApi $clientApi,
         private TranslatorInterface $translator,
         private LoggerInterface $logger,
-        private ObservableEventDispatcher $eventDispatcher
+        private ObservableEventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -52,7 +52,7 @@ class UserController extends AbstractController
         DeputyProvider $deputyProvider,
         string $action,
         string $token,
-        RateLimiterFactory $anonymousApiLimiter
+        RateLimiterFactory $anonymousApiLimiter,
     ): Response {
         $isActivatePage = 'activate' === $action;
 
@@ -137,7 +137,7 @@ class UserController extends AbstractController
 
             // set agree terms for user
             $this->userApi->agreeTermsUse($token);
-            $this->userApi->clearRegistrationToken($token);
+            // $this->userApi->clearRegistrationToken($token);
 
             if ($isActivatePage) {
                 $request->getSession()->set('login-context', 'password-create');
