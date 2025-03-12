@@ -9,7 +9,6 @@ use Alphagov\Notifications\Exception\NotifyException;
 use App\Model\Email;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\UserHelpers;
-use DateTime;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -35,10 +34,10 @@ class MailSenderTest extends WebTestCase
         $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
 
         $user = UserHelpers::createSuperAdminUser();
-        $token = new UsernamePasswordToken($user, 'password', 'key-id');
+        $token = new UsernamePasswordToken($user, 'firewall', $user->getRoles());
         $this->tokenStorage->getToken()->willReturn($token);
 
-        $this->dateTimeProvider->getDateTime()->willReturn(new DateTime());
+        $this->dateTimeProvider->getDateTime()->willReturn(new \DateTime());
 
         $this->sut = new MailSender(
             $this->logger->reveal(),
