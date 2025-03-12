@@ -4266,8 +4266,103 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$client with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$client2 with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$courtOrder with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$iteration with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$manager with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$multiClientSecondReport with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$offset with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$report with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$user2 with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$client with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$iteration with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$manager with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$offset with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$report with no type specified\\.$#"
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
 			message: "#^Parameter \\#2 \\$replace of function substr_replace expects array\\|string, int given\\.$#"
 			count: 6
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: "#^Parameter \\#3 \\$offset of function substr_replace expects array\\|int, float\\|int given\\.$#"
+			count: 3
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
@@ -4281,17 +4376,7 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: "#^Property App\\\\DataFixtures\\\\LayUserFixtures\\:\\:\\$deputyRepository is never read, only written\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
 			message: "#^Property App\\\\DataFixtures\\\\LayUserFixtures\\:\\:\\$userData has no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Variable \\$client2 might not be defined\\.$#"
 			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
 
@@ -4852,11 +4937,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$reports has no type specified\\.$#"
-			count: 1
-			path: src/Entity/CourtOrder.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$reports is unused\\.$#"
 			count: 1
 			path: src/Entity/CourtOrder.php
 
@@ -8616,37 +8696,7 @@ parameters:
 			path: src/EventListener/DoctrineListener.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Report\\>\\:\\:addDebtsToReportIfMissing\\(\\)\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Report\\>\\:\\:addFeesToReportIfMissing\\(\\)\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Report\\>\\:\\:addMoneyShortCategoriesIfMissing\\(\\)\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Call to method getDocuments\\(\\) on an unknown class App\\\\EventListener\\\\Report\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Call to method setWishToProvideDocumentation\\(\\) on an unknown class App\\\\EventListener\\\\Report\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
 			message: "#^Call to method updateArchivedStatus\\(\\) on an unknown class App\\\\Entity\\\\Repository\\\\ReportSubmissionRepository\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Class App\\\\EventListener\\\\Report not found\\.$#"
 			count: 1
 			path: src/EventListener/DoctrineListener.php
 
@@ -8971,11 +9021,6 @@ parameters:
 			path: src/Kernel.php
 
 		-
-			message: "#^Method App\\\\Kernel\\:\\:getRootDir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Kernel.php
-
-		-
 			message: "#^Offset 'line' does not exist on array\\{function\\: string, line\\?\\: int, file\\: string, class\\?\\: class\\-string, type\\?\\: '\\-\\>'\\|'\\:\\:', args\\?\\: array, object\\?\\: object\\}\\.$#"
 			count: 1
 			path: src/Logger/OpgJsonFormatter.php
@@ -9196,16 +9241,6 @@ parameters:
 			path: src/Repository/DeputyRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\DeputyRepository\\:\\:countAllEntities\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/DeputyRepository.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/DocumentRepository.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\DocumentRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/DocumentRepository.php
@@ -9237,11 +9272,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Repository\\\\DocumentRepository\\:\\:logFailedDocuments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/DocumentRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\DocumentRepository\\:\\:retrieveSoftDeleted\\(\\) should return array\\<App\\\\Entity\\\\Report\\\\Document\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Repository/DocumentRepository.php
 
@@ -9396,11 +9426,6 @@ parameters:
 			path: src/Repository/OrganisationRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\OrganisationRepository\\:\\:countAllEntities\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/OrganisationRepository.php
-
-		-
 			message: "#^Method App\\\\Repository\\\\OrganisationRepository\\:\\:findArrayById\\(\\) should return array\\|null but returns mixed\\.$#"
 			count: 1
 			path: src/Repository/OrganisationRepository.php
@@ -9421,11 +9446,6 @@ parameters:
 			path: src/Repository/PreRegistrationRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:countAllEntities\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/PreRegistrationRepository.php
-
-		-
 			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:deleteAll\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/PreRegistrationRepository.php
@@ -9436,22 +9456,12 @@ parameters:
 			path: src/Repository/PreRegistrationRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:findByRegistrationDetails\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/PreRegistrationRepository.php
-
-		-
 			message: "#^Cannot access offset 'checklist_id' on mixed\\.$#"
 			count: 1
 			path: src/Repository/ReportRepository.php
 
 		-
 			message: "#^Class App\\\\Repository\\\\ReportRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\ReportRepository\\:\\:countAllEntities\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/ReportRepository.php
 
@@ -9551,7 +9561,7 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\:\\:setPassword\\(\\)\\.$#"
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\PasswordAuthenticatedUserInterface\\:\\:setPassword\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php
 
@@ -9627,11 +9637,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findUserArrayById\\(\\) should return array\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findUserByEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php
 
@@ -9717,6 +9722,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: "#^Property App\\\\Repository\\\\UserRepository\\:\\:\\$serializer is never read, only written\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php
 
