@@ -7,7 +7,6 @@ namespace Tests\App\Entity\Ndr;
 use App\Entity\Ndr\ClientBenefitsCheck;
 use App\Entity\Ndr\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\NdrHelpers;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
@@ -16,11 +15,12 @@ class ClientBenefitsCheckTest extends TestCase
 {
     /**
      * @test
+     *
      * @dataProvider invalidDataProvider
      */
     public function validation(
         ?string $whenLastChecked,
-        ?DateTime $dateLastChecked,
+        ?\DateTime $dateLastChecked,
         ?string $neverCheckedExplanation,
         ?string $doOthersReceiveMoney,
         ?string $moneyExplanation,
@@ -39,7 +39,8 @@ class ClientBenefitsCheckTest extends TestCase
             ->setNdr($ndr);
 
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
+            ->enableAnnotationMapping(true)
+            ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
