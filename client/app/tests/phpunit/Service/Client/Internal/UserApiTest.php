@@ -68,7 +68,7 @@ class UserApiTest extends TestCase
 
         $this->restClient->put(sprintf('user/%s', $preUpdateUser->getId()), $postUpdateUser, $jmsGroups)->shouldBeCalled();
 
-        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $userUpdatedEvent = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
@@ -86,7 +86,7 @@ class UserApiTest extends TestCase
 
         $this->restClient->delete(sprintf('user/%s', $userToDelete->getId()))->shouldBeCalled();
 
-        $usernamePasswordToken = new UsernamePasswordToken($deletedBy, 'password', 'key');
+        $usernamePasswordToken = new UsernamePasswordToken($deletedBy, 'firewall', $deletedBy->getRoles());
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $userUpdatedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
@@ -116,7 +116,7 @@ class UserApiTest extends TestCase
 
         $trigger = 'ADMIN_MANAGER_MANUALLY_CREATED';
 
-        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
         $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
 
         $this->restClient->post('user', $userToCreate, ['admin_add_user'], 'User')->shouldBeCalled()->willReturn($userToCreate);

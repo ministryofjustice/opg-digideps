@@ -10,6 +10,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -237,24 +238,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result->fetchAllAssociative();
     }
 
-    /**
-     * Required to avoid lazy loading which is incompatible with Symfony Serializer.
-     */
-    public function findUserByEmail(string $email)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = <<<SQL
-SELECT * FROM dd_user as u
-WHERE lower(u.email) = lower(:email)
-SQL;
-
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery(['email' => $email]);
-
-        return $this->serializer->deserialize(json_encode($result->fetchAssociative()), 'App\Entity\User', 'json');
-    }
-
     public function getAllAdminAccounts()
     {
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')";
@@ -329,7 +312,7 @@ SQL;
         return $query->getResult();
     }
 
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newEncodedPassword): void
     {
         // set the new encoded password on the User object
         $user->setPassword($newEncodedPassword);

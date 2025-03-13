@@ -12,6 +12,7 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
 {
     /**
      * @test
+     *
      * @dataProvider invalidDataProvider
      */
     public function testValidation($moneyType, $amount, $amountDontKnow, $whoReceived, $expectedViolationCount)
@@ -23,7 +24,8 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
             ->setWhoReceivedMoney($whoReceived);
 
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
+            ->enableAnnotationMapping(true)
+            ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
