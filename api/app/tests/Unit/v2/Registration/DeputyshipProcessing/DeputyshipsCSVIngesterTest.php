@@ -60,18 +60,18 @@ class DeputyshipsCSVIngesterTest extends TestCase
     {
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
-            ->with('/tmp/(DigiDeps)_Deputyships_Report.csv')
+            ->with('/tmp/deputyshipsReport.csv')
             ->willReturn(false);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('recordCsvLoadResult')
-            ->with('/tmp/(DigiDeps)_Deputyships_Report.csv', false);
+            ->with('/tmp/deputyshipsReport.csv', false);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('result')
             ->willReturn(new DeputyshipsCSVIngestResult(false, 'failed to load CSV'));
 
-        $result = $this->sut->processCsv('/tmp/(DigiDeps)_Deputyships_Report.csv');
+        $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
 
         $this->assertFalse($result->success);
     }
@@ -90,12 +90,12 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
-            ->with('/tmp/(DigiDeps)_Deputyships_Report.csv')
+            ->with('/tmp/deputyshipsReport.csv')
             ->willReturn(true);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('recordCsvLoadResult')
-            ->with('/tmp/(DigiDeps)_Deputyships_Report.csv', true);
+            ->with('/tmp/deputyshipsReport.csv', true);
 
         $this->mockDeputyshipsCandidatesSelector->expects($this->once())
             ->method('select')
@@ -123,7 +123,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
             ->method('result')
             ->willReturn(new DeputyshipsCSVIngestResult(true, ''));
 
-        $result = $this->sut->processCsv('/tmp/(DigiDeps)_Deputyships_Report.csv');
+        $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
 
         $this->assertTrue($result->success);
     }
