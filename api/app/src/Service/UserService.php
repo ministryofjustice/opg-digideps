@@ -5,7 +5,9 @@ namespace App\Service;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\User;
+use App\Enum\UserMergeResult;
 use App\Repository\ClientRepository;
+use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,7 +16,8 @@ class UserService
     public function __construct(
         private EntityManagerInterface $em,
         private ClientRepository $clientRepository,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private ReportRepository $reportRepository,
     ) {
     }
 
@@ -31,7 +34,7 @@ class UserService
         match (true) {
             $loggedInUser->isLayDeputy() => $userToAdd->setRegistrationRoute(User::CO_DEPUTY_INVITE),
             $loggedInUser->hasAdminRole() => $userToAdd->setRegistrationRoute(User::ADMIN_INVITE),
-            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE)
+            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE),
         };
 
         $this->em->persist($userToAdd);
@@ -60,6 +63,62 @@ class UserService
             ->handleNdrStatusUpdate($updatedUser);
 
         $this->em->flush();
+    }
+
+    /**
+     * Merge the User with email $fromUserEmail into User with email $intoUserEmail.
+     *
+     * @param string $fromUserEmail Email of User to be merged into the "into" User
+     * @param string $intoUserEmail Email of User to have the "from" User being merged into it
+     */
+    public function mergeUsers(string $fromUserEmail, string $intoUserEmail): UserMergeResult
+    {
+        /** @var User $fromUser */
+        $fromUser = $this->userRepository->findOneBy(['email' => $fromUserEmail]);
+        if (is_null($fromUser)) {
+            return UserMergeResult::FROM_USER_NOT_FOUND;
+        }
+
+        /** @var User $intoUser */
+        $intoUser = $this->userRepository->findOneBy(['email' => $intoUserEmail]);
+        if (is_null($intoUser)) {
+            return UserMergeResult::INTO_USER_NOT_FOUND;
+        }
+
+        $fromDeputyUid = $fromUser->getDeputyUid();
+        $intoDeputyUid = $intoUser->getDeputyUid();
+        if ($fromDeputyUid !== $intoDeputyUid) {
+            return UserMergeResult::DEPUTY_UIDS_MISMATCHED;
+        }
+
+        $this->em->beginTransaction();
+
+        foreach ($fromUser->getClients() as $client) {
+            $users = [$intoUser];
+            foreach ($client->getUsers() as $user) {
+                if ($user !== $fromUser) {
+                    $users[] = $user;
+                }
+            }
+
+            $client->setUsers($users);
+            $this->em->persist($client);
+        }
+
+        $fromUser->setActive(false);
+        $fromUser->setIsPrimary(false);
+
+        $intoUser->setActive(true);
+        $intoUser->setIsPrimary(true);
+
+        $this->em->persist($fromUser);
+        $this->em->persist($intoUser);
+
+        $this->em->flush();
+        $this->em->commit();
+        $this->em->clear();
+
+        return UserMergeResult::MERGED;
     }
 
     /**
