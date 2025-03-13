@@ -48,7 +48,7 @@ class Redirector
         protected RouterInterface $router,
         protected Session $session,
         protected string $env,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -148,7 +148,7 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-id', 'client-reports', 'report']);
 
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
@@ -156,7 +156,7 @@ class Redirector
             }
 
             if (!$user->isNdrEnabled()) {
-                return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+                return $this->router->generate('report_create', ['clientId' => $activeClient->getId()]);
             }
         }
 
