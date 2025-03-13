@@ -161,7 +161,6 @@ class LayUserFixtures extends AbstractDataFixture
     ];
 
     private Deputy $deputy;
-    private ?Client $client2 = null;
     private ?Report $report = null;
     private ?CourtOrder $courtOrder = null;
     private ?User $user2 = null;
@@ -170,7 +169,7 @@ class LayUserFixtures extends AbstractDataFixture
     private array $deputyUids = [];
 
     public function __construct(
-        private DeputyRepository $deputyRepository
+        private DeputyRepository $deputyRepository,
     ) {
     }
 
@@ -293,26 +292,26 @@ class LayUserFixtures extends AbstractDataFixture
         $user->addClient($client);
 
         if ($data['multi-client']) {
-            $this->client2 = clone $client;
-            $this->client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
-            $this->client2->setLastname('Client '.$iteration.'-'.$iteration);
-            $this->client2->setFirstname('Client '.$iteration.'-'.$iteration);
-            $this->client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
+            $client2 = clone $client;
+            $client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
+            $client2->setLastname('Client '.$iteration.'-'.$iteration);
+            $client2->setFirstname('Client '.$iteration.'-'.$iteration);
+            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
 
-            $manager->persist($this->client2);
+            $manager->persist($client2);
             $manager->flush();
-            $this->client2->removeUser($user);
-            $duplicateUser->addClient($this->client2);
+            $client2->removeUser($user);
+            $duplicateUser->addClient($client2);
             $manager->persist($duplicateUser);
         } elseif ($data['duplicate-client']) {
-            $this->client2 = clone $client;
-            $this->client2->setLastname('Client '.$iteration.'-Discharged');
-            $this->client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
-            $this->client2->setDeletedAt(new \DateTime('now'));
-            $manager->persist($this->client2);
+            $client2 = clone $client;
+            $client2->setLastname('Client '.$iteration.'-Discharged');
+            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
+            $client2->setDeletedAt(new \DateTime('now'));
+            $manager->persist($client2);
             $manager->flush();
-            $this->client2->removeUser($user);
-            $duplicateUser->addClient($this->client2);
+            $client2->removeUser($user);
+            $duplicateUser->addClient($client2);
             $manager->persist($duplicateUser);
         }
 
@@ -336,7 +335,7 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($this->report);
 
             if ($data['multi-client']) {
-                $this->multiClientSecondReport = new Report($this->client2, $type, $startDate, $endDate);
+                $this->multiClientSecondReport = new Report($client2, $type, $startDate, $endDate);
                 $manager->persist($this->multiClientSecondReport);
             }
         }
@@ -362,7 +361,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         // handle hybrid, multi client and co-deputies
         if (str_contains($data['id'], '-4') || $data['multi-client'] || $data['coDeputy']) {
-            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client);
+            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client, $client2);
         }
     }
 
@@ -394,7 +393,7 @@ class LayUserFixtures extends AbstractDataFixture
         return $courtOrder;
     }
 
-    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client)
+    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client, $client2)
     {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
@@ -468,7 +467,7 @@ class LayUserFixtures extends AbstractDataFixture
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
             $additionalCourtOrder->setType($data['reportType']);
             $additionalCourtOrder->setActive(true);
-            $additionalCourtOrder->setClient($this->client2);
+            $additionalCourtOrder->setClient($client2);
             $additionalCourtOrder->setCreatedAt(new \DateTime());
             $additionalCourtOrder->setUpdatedAt(new \DateTime());
 
