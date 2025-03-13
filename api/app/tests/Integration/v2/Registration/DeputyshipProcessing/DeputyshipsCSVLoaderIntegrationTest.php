@@ -45,7 +45,7 @@ class DeputyshipsCSVLoaderIntegrationTest extends KernelTestCase
      */
     public function testLoadSuccess(): void
     {
-        $fileLocation = dirname(__FILE__).'/../../../../csv/(DigiDeps)_Deputyships_Report.csv';
+        $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport.csv';
 
         // count lines in the CSV file, minus the header; we expect one record in the StagingDeputyship table for
         // each row in the input CSV
