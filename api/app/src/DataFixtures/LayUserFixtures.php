@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
@@ -16,6 +17,7 @@ class LayUserFixtures extends AbstractDataFixture
     private $userData = [
         [
             'id' => 'Lay-OPG102',
+            'courtOrderUid' => '700000001100',
             'caseNumber' => '61111000',
             'deputyUid' => '700761111000',
             'reportType' => 'OPG102',
@@ -28,6 +30,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG103',
+            'courtOrderUid' => '700000002200',
             'caseNumber' => '62222000',
             'deputyUid' => '700762222000',
             'reportType' => 'OPG103',
@@ -40,6 +43,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG104',
+            'courtOrderUid' => '700000003300',
             'caseNumber' => '63333000',
             'deputyUid' => '700763333000',
             'reportType' => 'OPG104',
@@ -52,6 +56,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG102-4',
+            'courtOrderUid' => '700004400',
             'caseNumber' => '64444000',
             'deputyUid' => '700764444000',
             'reportType' => 'OPG102',
@@ -64,6 +69,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG103-4',
+            'courtOrderUid' => '700005500',
             'caseNumber' => '65555000',
             'deputyUid' => '700765555000',
             'reportType' => 'OPG103',
@@ -76,6 +82,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG102-NDR',
+            'courtOrderUid' => '700000006600',
             'caseNumber' => '66666000',
             'deputyUid' => '700766666000',
             'reportType' => 'OPG102',
@@ -88,6 +95,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG103-4-NDR',
+            'courtOrderUid' => '700007700',
             'caseNumber' => '67777000',
             'deputyUid' => '700767777000',
             'reportType' => 'OPG103',
@@ -100,6 +108,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG103-Co',
+            'courtOrderUid' => '700000008800',
             'caseNumber' => '68888000',
             'deputyUid' => '700768888000',
             'reportType' => 'OPG103',
@@ -112,6 +121,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-OPG103-4-Co',
+            'courtOrderUid' => '700009900',
             'caseNumber' => '69999000',
             'deputyUid' => '700769999000',
             'reportType' => 'OPG103',
@@ -124,6 +134,7 @@ class LayUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'Lay-Multi-Client-Deputy',
+            'courtOrderUid' => '700000011100',
             'caseNumber' => '50000000',
             'deputyUid' => '777700000000',
             'reportType' => 'OPG102',
@@ -137,6 +148,7 @@ class LayUserFixtures extends AbstractDataFixture
         [
             'id' => 'Lay-Duplicate-Client',
             'caseNumber' => '40000000',
+            'courtOrderUid' => null,
             'deputyUid' => '666600000000',
             'reportType' => 'OPG102',
             'orderType' => 'pfa',
@@ -149,6 +161,11 @@ class LayUserFixtures extends AbstractDataFixture
     ];
 
     private Deputy $deputy;
+    private ?Client $client2 = null;
+    private ?Report $report = null;
+    private ?CourtOrder $courtOrder = null;
+    private ?User $user2 = null;
+    private ?Report $multiClientSecondReport = null;
 
     private array $deputyUids = [];
 
@@ -222,7 +239,6 @@ class LayUserFixtures extends AbstractDataFixture
         }
 
         // Create PreRegistration record for lay deputies
-
         $preRegistrationData = [
             'Case' => substr_replace($data['caseNumber'], $iteration, -$offset),
             'ClientFirstname' => 'Client 1',
@@ -277,27 +293,26 @@ class LayUserFixtures extends AbstractDataFixture
         $user->addClient($client);
 
         if ($data['multi-client']) {
-            $client2 = clone $client;
-            $client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
-            $client2->setLastname('Client '.$iteration.'-'.$iteration);
-            $client2->setFirstname('Client '.$iteration.'-'.$iteration);
-            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
+            $this->client2 = clone $client;
+            $this->client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
+            $this->client2->setLastname('Client '.$iteration.'-'.$iteration);
+            $this->client2->setFirstname('Client '.$iteration.'-'.$iteration);
+            $this->client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
 
-            $manager->persist($client2);
+            $manager->persist($this->client2);
             $manager->flush();
-            $client2->removeUser($user);
-            $duplicateUser->addClient($client2);
+            $this->client2->removeUser($user);
+            $duplicateUser->addClient($this->client2);
             $manager->persist($duplicateUser);
         } elseif ($data['duplicate-client']) {
-            $client2 = clone $client;
-            $client2->setLastname('Client '.$iteration.'-Discharged');
-            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
-            $client2->setDeletedAt(new \DateTime('now'));
-
-            $manager->persist($client2);
+            $this->client2 = clone $client;
+            $this->client2->setLastname('Client '.$iteration.'-Discharged');
+            $this->client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
+            $this->client2->setDeletedAt(new \DateTime('now'));
+            $manager->persist($this->client2);
             $manager->flush();
-            $client2->removeUser($user);
-            $duplicateUser->addClient($client2);
+            $this->client2->removeUser($user);
+            $duplicateUser->addClient($this->client2);
             $manager->persist($duplicateUser);
         }
 
@@ -316,28 +331,155 @@ class LayUserFixtures extends AbstractDataFixture
             $endDate = $client->getExpectedReportEndDate();
             $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
-            $report = new Report($client, $type, $startDate, $endDate);
+            $this->report = new Report($client, $type, $startDate, $endDate);
 
-            $manager->persist($report);
+            $manager->persist($this->report);
 
             if ($data['multi-client']) {
-                $report = new Report($client2, $type, $startDate, $endDate);
-                $manager->persist($report);
+                $this->multiClientSecondReport = new Report($this->client2, $type, $startDate, $endDate);
+                $manager->persist($this->multiClientSecondReport);
             }
         }
 
         // If codeputy was enabled, add a secondary account
         if ($data['coDeputy']) {
-            $user2 = clone $user;
-            $newDeputyUid = substr_replace($user2->getDeputyNo(), $iteration, $offset, $offset);
+            $this->user2 = clone $user;
+            $newDeputyUid = substr_replace($this->user2->getDeputyNo(), $iteration, $offset, $offset);
 
-            $user2->setDeputyNo($newDeputyUid);
-            $user2->setDeputyUid($newDeputyUid);
-            $user2->setLastname($user->getLastname().'-codeputy');
-            $user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
-            $user2->addClient($client);
+            $this->user2->setDeputyNo($newDeputyUid);
+            $this->user2->setDeputyUid($newDeputyUid);
+            $this->user2->setLastname($user->getLastname().'-codeputy');
+            $this->user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
+            $this->user2->addClient($client);
 
-            $manager->persist($user2);
+            $manager->persist($this->user2);
+        }
+
+        // create court order and populate linked tables for non-hybrid reports (excluding duplicate clients)
+        if (!str_contains($data['id'], '-4') && 'Lay-Duplicate-Client' != $data['id']) {
+            $this->courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client);
+        }
+
+        // handle hybrid, multi client and co-deputies
+        if (str_contains($data['id'], '-4') || $data['multi-client'] || $data['coDeputy']) {
+            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client);
+        }
+    }
+
+    private function populateCourtOrderTable($data, $manager, $iteration, $offset, $client)
+    {
+        $courtOrder = new CourtOrder();
+        $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration, -$offset));
+
+        $courtOrder->setCourtOrderUid($courtOrderUid);
+        $courtOrder->setType($data['reportType']);
+        $courtOrder->setActive(true);
+        $courtOrder->setClient($client);
+        $courtOrder->setCreatedAt(new \DateTime());
+        $courtOrder->setUpdatedAt(new \DateTime());
+
+        // Associate deputy with court order
+        $this->deputy->associateWithCourtOrder($courtOrder);
+
+        // Associate court order with reports if it's not an NDR
+        if (!str_ends_with($data['id'], '-NDR')) {
+            $courtOrder->addReport($this->report);
+
+            $manager->persist($courtOrder);
+        }
+
+        $manager->persist($courtOrder);
+        $manager->persist($this->deputy);
+
+        return $courtOrder;
+    }
+
+    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client)
+    {
+        if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
+            // Populate court order table and link tables
+            $courtOrderPfa = new CourtOrder();
+            $courtOrderHW = new CourtOrder();
+
+            $courtOrderUidPfa = intval(substr_replace($data['courtOrderUid'], $iteration. 103, -$offset));
+            $courtOrderUidHW = intval(substr_replace($data['courtOrderUid'], $iteration. 102, -$offset));
+
+            $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
+            $courtOrderPfa->setType($data['reportType']);
+            $courtOrderPfa->setActive(true);
+            $courtOrderPfa->setClient($client);
+            $courtOrderPfa->setCreatedAt(new \DateTime());
+            $courtOrderPfa->setUpdatedAt(new \DateTime());
+
+            $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
+            $courtOrderHW->setType($data['reportType']);
+            $courtOrderHW->setActive(true);
+            $courtOrderHW->setClient($client);
+            $courtOrderHW->setCreatedAt(new \DateTime());
+            $courtOrderHW->setUpdatedAt(new \DateTime());
+
+            // Associate deputy with court orders
+            $this->deputy->associateWithCourtOrder($courtOrderPfa);
+            $this->deputy->associateWithCourtOrder($courtOrderHW);
+
+            // Associate court order with reports, excluding NDRs
+            if (!$data['ndr']) {
+                $courtOrderPfa->addReport($this->report);
+                $courtOrderHW->addReport($this->report);
+            }
+
+            $manager->persist($this->deputy);
+            $manager->persist($courtOrderPfa);
+            $manager->persist($courtOrderHW);
+
+            // create hybrid co-deputy and associate with court order
+            if (str_ends_with($data['id'], '-4-Co')) {
+                $coDeputy = clone $this->deputy;
+
+                $coDeputy->setDeputyUid($this->user2->getDeputyUid());
+                $coDeputy->setEmail1($this->user2->getEmail());
+                $coDeputy->setLastname($this->user2->getLastname());
+                $coDeputy->setUser($this->user2);
+
+                $coDeputy->associateWithCourtOrder($courtOrderPfa);
+                $coDeputy->associateWithCourtOrder($courtOrderHW);
+
+                $manager->persist($coDeputy);
+            }
+
+        // create non-hybrid co-deputy account and associate with court order
+        } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id']) {
+            $coDeputy = clone $this->deputy;
+
+            $coDeputy->setDeputyUid($this->user2->getDeputyUid());
+            $coDeputy->setEmail1($this->user2->getEmail());
+            $coDeputy->setLastname($this->user2->getLastname());
+            $coDeputy->setUser($this->user2);
+
+            // Associate deputy with court order
+            $coDeputy->associateWithCourtOrder($this->courtOrder);
+
+            $manager->persist($coDeputy);
+        } elseif ($data['multi-client']) {
+            // add court order for additional client
+            $additionalCourtOrder = new CourtOrder();
+            $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration. 2, -2));
+
+            $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
+            $additionalCourtOrder->setType($data['reportType']);
+            $additionalCourtOrder->setActive(true);
+            $additionalCourtOrder->setClient($this->client2);
+            $additionalCourtOrder->setCreatedAt(new \DateTime());
+            $additionalCourtOrder->setUpdatedAt(new \DateTime());
+
+            // Associate deputy with court order
+            $this->deputy->associateWithCourtOrder($additionalCourtOrder);
+
+            // Associate court order with report
+            $additionalCourtOrder->addReport($this->multiClientSecondReport);
+
+            $manager->persist($additionalCourtOrder);
+            $manager->persist($this->deputy);
         }
     }
 
