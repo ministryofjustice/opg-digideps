@@ -11,16 +11,16 @@ RUN go build -o anonymise main.go
 FROM alpine:3.20
 RUN apk update && apk upgrade
 
-ENV POSTGRES_DATABASE **None**
-ENV POSTGRES_HOST **None**
-ENV POSTGRES_PORT 5432
-ENV POSTGRES_USER **None**
-ENV POSTGRES_PASSWORD **None**
-ENV POSTGRES_EXTRA_OPTS ''
-ENV S3_BUCKET **None**
-ENV S3_ENDPOINT **None**
-ENV S3_PREFIX **None**
-ENV S3_S3V4 yes
+ENV POSTGRES_DATABASE=**None**
+ENV POSTGRES_HOST=**None**
+ENV POSTGRES_PORT=5432
+ENV POSTGRES_USER=**None**
+ENV POSTGRES_PASSWORD=**None**
+ENV POSTGRES_EXTRA_OPTS=''
+ENV S3_BUCKET=**None**
+ENV S3_ENDPOINT=**None**
+ENV S3_PREFIX=**None**
+ENV S3_S3V4=yes
 
 # install DB and JS tooling
 RUN apk add --no-cache --update postgresql python3 py3-pip

@@ -25,29 +25,6 @@ class PreRegistrationRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function countAllEntities()
-    {
-        return $this
-            ->getEntityManager()
-            ->createQuery('SELECT COUNT(p.id) FROM App\Entity\PreRegistration p')
-            ->getSingleScalarResult();
-    }
-
-    public function findByRegistrationDetails(string $caseNumber, string $clientLastname, string $deputySurname)
-    {
-        return $this
-            ->getEntityManager()
-            ->createQueryBuilder()
-            ->select('p')
-            ->from(PreRegistration::class, 'p')
-            ->where('LOWER(p.caseNumber) = LOWER(:caseNumber)')
-            ->andWhere('LOWER(p.clientLastname) = LOWER(:clientLastname)')
-            ->andWhere('LOWER(p.deputySurname) = LOWER(:deputySurname)')
-            ->setParameters(['caseNumber' => $caseNumber, 'clientLastname' => $clientLastname, 'deputySurname' => $deputySurname])
-            ->getQuery()
-            ->getResult();
-    }
-
     public function findByCaseNumber(string $caseNumber)
     {
         return $this

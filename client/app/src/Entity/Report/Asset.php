@@ -28,12 +28,13 @@ abstract class Asset
      */
     public static function factory($type)
     {
-        switch (strtolower($type)) {
+        $typeLower = is_null($type) ? '' : strtolower($type);
+        switch ($typeLower) {
             case 'property':
                 return new AssetProperty();
             default:
                 $other = new AssetOther();
-                $other->setTitle($type);
+                $other->setTitle($typeLower);
 
                 return $other;
         }
@@ -46,18 +47,24 @@ abstract class Asset
 
     /**
      * @Assert\NotBlank(message="asset.title.notBlank", groups={"title_only"})
+     *
      * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage", groups={"title_only"})
+     *
      * @JMS\Type("string")
      */
     private $title;
 
     /**
      * @Assert\NotBlank(message="asset.value.notBlank")
+     *
      * @Assert\Type( type="numeric", message="asset.value.type")
+     *
      * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.value.outOfRange")
      *
      * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property-value"})
+     *
      * @Assert\Type( type="numeric", message="asset.property.value.type", groups={"property-value"})
+     *
      * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.property.value.outOfRange", groups={"property-value"})
      *
      * @JMS\Type("string")
@@ -73,6 +80,7 @@ abstract class Asset
 
     /**
      * @Assert\Type(type="DateTimeInterface",message="asset.date.date")
+     *
      * @JMS\Type("DateTime")
      */
     private $valuationDate;
@@ -114,8 +122,6 @@ abstract class Asset
     }
 
     /**
-     * @param $value
-     *
      * @return static
      */
     public function setValue($value)
@@ -142,8 +148,6 @@ abstract class Asset
     }
 
     /**
-     * @param $valuationDate
-     *
      * @return static
      */
     public function setValuationDate($valuationDate)
