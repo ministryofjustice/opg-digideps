@@ -295,7 +295,6 @@ class LayUserFixtures extends AbstractDataFixture
             $duplicateUser->addClient($client2);
             $manager->persist($duplicateUser);
         } elseif ($data['duplicate-client']) {
-            $client2 = clone $client;
             $client2->setLastname('Client '.$iteration.'-Discharged');
             $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
             $client2->setDeletedAt(new \DateTime('now'));
@@ -336,6 +335,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         // If codeputy was enabled, add a secondary account
         $user2 = '';
+
         if ($data['coDeputy']) {
             $user2 = clone $user;
             $newDeputyUid = substr_replace($user2->getDeputyNo(), $iteration, $offset, $offset);
