@@ -25,13 +25,14 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/web/Dockerfile
+      args:
+        APP_HOST: frontend-app
+        APP_PORT: 9000
+        SERVICE: client
     ports:
       - 8070:80
     depends_on:
       - frontend-app
-    environment:
-      APP_HOST: frontend-app
-      APP_PORT: 9000
     healthcheck:
       test: /opt/scripts/health-check.sh
       interval: 30s
@@ -48,6 +49,7 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
+        ENVIRONMENT: local
     depends_on:
       - api-webserver
       - redis-frontend
@@ -68,13 +70,14 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/web/Dockerfile
+      args:
+        APP_HOST: admin-app
+        APP_PORT: 9000
+        SERVICE: client
     ports:
       - 8071:80
     depends_on:
       - admin-app
-    environment:
-      APP_HOST: admin-app
-      APP_PORT: 9000
     healthcheck:
       test: /opt/scripts/health-check.sh
       interval: 30s
@@ -91,6 +94,7 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
+        ENVIRONMENT: local
     depends_on:
       - api-webserver
       - redis-frontend
@@ -110,13 +114,14 @@ services:
     build:
       context: .
       dockerfile: ./api/docker/web/Dockerfile
+      args:
+        APP_HOST: api-app
+        APP_PORT: 9000
+        SERVICE: api
     ports:
       - 8072:80
     depends_on:
       - api-app
-    environment:
-      APP_HOST: api-app
-      APP_PORT: 9000
     restart: always
 
   api-app:
@@ -127,6 +132,7 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        ENVIRONMENT: local
     depends_on:
       - postgres
       - redis-api

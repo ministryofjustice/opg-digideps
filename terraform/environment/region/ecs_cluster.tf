@@ -190,6 +190,8 @@ locals {
     { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
     { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
     { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
-    { name = "WORKSPACE", value = local.environment }
+    { name = "WORKSPACE", value = local.environment },
+    { name = "FEEDBACK_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
+    { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
   ]
 }
