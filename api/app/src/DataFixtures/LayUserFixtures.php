@@ -9,7 +9,6 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Repository\DeputyRepository;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -161,18 +160,8 @@ class LayUserFixtures extends AbstractDataFixture
     ];
 
     private Deputy $deputy;
-    private ?Client $client2 = null;
-    private ?Report $report = null;
-    private ?CourtOrder $courtOrder = null;
-    private ?User $user2 = null;
-    private ?Report $multiClientSecondReport = null;
 
     private array $deputyUids = [];
-
-    public function __construct(
-        private DeputyRepository $deputyRepository
-    ) {
-    }
 
     public function doLoad(ObjectManager $manager)
     {
@@ -292,29 +281,33 @@ class LayUserFixtures extends AbstractDataFixture
         $manager->persist($client);
         $user->addClient($client);
 
-        if ($data['multi-client']) {
-            $this->client2 = clone $client;
-            $this->client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
-            $this->client2->setLastname('Client '.$iteration.'-'.$iteration);
-            $this->client2->setFirstname('Client '.$iteration.'-'.$iteration);
-            $this->client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
+        $client2 = clone $client;
 
-            $manager->persist($this->client2);
+        if ($data['multi-client']) {
+            $client2->setCaseNumber(substr_replace($data['caseNumber'], $iteration, $offset, $offset));
+            $client2->setLastname('Client '.$iteration.'-'.$iteration);
+            $client2->setFirstname('Client '.$iteration.'-'.$iteration);
+            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-'.$iteration.'@example.com');
+
+            $manager->persist($client2);
             $manager->flush();
-            $this->client2->removeUser($user);
-            $duplicateUser->addClient($this->client2);
+            $client2->removeUser($user);
+            $duplicateUser->addClient($client2);
             $manager->persist($duplicateUser);
         } elseif ($data['duplicate-client']) {
-            $this->client2 = clone $client;
-            $this->client2->setLastname('Client '.$iteration.'-Discharged');
-            $this->client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
-            $this->client2->setDeletedAt(new \DateTime('now'));
-            $manager->persist($this->client2);
+            $client2 = clone $client;
+            $client2->setLastname('Client '.$iteration.'-Discharged');
+            $client2->setEmail(strtolower($data['id']).'-client-'.$iteration.'-Discharged@example.com');
+            $client2->setDeletedAt(new \DateTime('now'));
+            $manager->persist($client2);
             $manager->flush();
-            $this->client2->removeUser($user);
-            $duplicateUser->addClient($this->client2);
+            $client2->removeUser($user);
+            $duplicateUser->addClient($client2);
             $manager->persist($duplicateUser);
         }
+
+        $report = '';
+        $multiClientSecondReport = '';
 
         if ($data['ndr']) {
             $ndr = new Ndr($client);
@@ -331,42 +324,44 @@ class LayUserFixtures extends AbstractDataFixture
             $endDate = $client->getExpectedReportEndDate();
             $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
-            $this->report = new Report($client, $type, $startDate, $endDate);
+            $report = new Report($client, $type, $startDate, $endDate);
 
-            $manager->persist($this->report);
+            $manager->persist($report);
 
             if ($data['multi-client']) {
-                $this->multiClientSecondReport = new Report($this->client2, $type, $startDate, $endDate);
-                $manager->persist($this->multiClientSecondReport);
+                $multiClientSecondReport = new Report($client2, $type, $startDate, $endDate);
+                $manager->persist($multiClientSecondReport);
             }
         }
 
         // If codeputy was enabled, add a secondary account
+        $user2 = '';
         if ($data['coDeputy']) {
-            $this->user2 = clone $user;
-            $newDeputyUid = substr_replace($this->user2->getDeputyNo(), $iteration, $offset, $offset);
+            $user2 = clone $user;
+            $newDeputyUid = substr_replace($user2->getDeputyNo(), $iteration, $offset, $offset);
 
-            $this->user2->setDeputyNo($newDeputyUid);
-            $this->user2->setDeputyUid($newDeputyUid);
-            $this->user2->setLastname($user->getLastname().'-codeputy');
-            $this->user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
-            $this->user2->addClient($client);
+            $user2->setDeputyNo($newDeputyUid);
+            $user2->setDeputyUid($newDeputyUid);
+            $user2->setLastname($user->getLastname().'-codeputy');
+            $user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
+            $user2->addClient($client);
 
-            $manager->persist($this->user2);
+            $manager->persist($user2);
         }
 
         // create court order and populate linked tables for non-hybrid reports (excluding duplicate clients)
+        $courtOrder = '';
         if (!str_contains($data['id'], '-4') && 'Lay-Duplicate-Client' != $data['id']) {
-            $this->courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client);
+            $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report);
         }
 
         // handle hybrid, multi client and co-deputies
         if (str_contains($data['id'], '-4') || $data['multi-client'] || $data['coDeputy']) {
-            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client);
+            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport);
         }
     }
 
-    private function populateCourtOrderTable($data, $manager, $iteration, $offset, $client)
+    private function populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report)
     {
         $courtOrder = new CourtOrder();
         $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration, -$offset));
@@ -383,7 +378,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         // Associate court order with reports if it's not an NDR
         if (!str_ends_with($data['id'], '-NDR')) {
-            $courtOrder->addReport($this->report);
+            $courtOrder->addReport($report);
 
             $manager->persist($courtOrder);
         }
@@ -394,7 +389,7 @@ class LayUserFixtures extends AbstractDataFixture
         return $courtOrder;
     }
 
-    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $client)
+    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport)
     {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
@@ -424,8 +419,8 @@ class LayUserFixtures extends AbstractDataFixture
 
             // Associate court order with reports, excluding NDRs
             if (!$data['ndr']) {
-                $courtOrderPfa->addReport($this->report);
-                $courtOrderHW->addReport($this->report);
+                $courtOrderPfa->addReport($report);
+                $courtOrderHW->addReport($report);
             }
 
             $manager->persist($this->deputy);
@@ -436,10 +431,10 @@ class LayUserFixtures extends AbstractDataFixture
             if (str_ends_with($data['id'], '-4-Co')) {
                 $coDeputy = clone $this->deputy;
 
-                $coDeputy->setDeputyUid($this->user2->getDeputyUid());
-                $coDeputy->setEmail1($this->user2->getEmail());
-                $coDeputy->setLastname($this->user2->getLastname());
-                $coDeputy->setUser($this->user2);
+                $coDeputy->setDeputyUid($user2->getDeputyUid());
+                $coDeputy->setEmail1($user2->getEmail());
+                $coDeputy->setLastname($user2->getLastname());
+                $coDeputy->setUser($user2);
 
                 $coDeputy->associateWithCourtOrder($courtOrderPfa);
                 $coDeputy->associateWithCourtOrder($courtOrderHW);
@@ -451,13 +446,13 @@ class LayUserFixtures extends AbstractDataFixture
         } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id']) {
             $coDeputy = clone $this->deputy;
 
-            $coDeputy->setDeputyUid($this->user2->getDeputyUid());
-            $coDeputy->setEmail1($this->user2->getEmail());
-            $coDeputy->setLastname($this->user2->getLastname());
-            $coDeputy->setUser($this->user2);
+            $coDeputy->setDeputyUid($user2->getDeputyUid());
+            $coDeputy->setEmail1($user2->getEmail());
+            $coDeputy->setLastname($user2->getLastname());
+            $coDeputy->setUser($user2);
 
             // Associate deputy with court order
-            $coDeputy->associateWithCourtOrder($this->courtOrder);
+            $coDeputy->associateWithCourtOrder($courtOrder);
 
             $manager->persist($coDeputy);
         } elseif ($data['multi-client']) {
@@ -468,7 +463,7 @@ class LayUserFixtures extends AbstractDataFixture
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
             $additionalCourtOrder->setType($data['reportType']);
             $additionalCourtOrder->setActive(true);
-            $additionalCourtOrder->setClient($this->client2);
+            $additionalCourtOrder->setClient($client2);
             $additionalCourtOrder->setCreatedAt(new \DateTime());
             $additionalCourtOrder->setUpdatedAt(new \DateTime());
 
@@ -476,7 +471,7 @@ class LayUserFixtures extends AbstractDataFixture
             $this->deputy->associateWithCourtOrder($additionalCourtOrder);
 
             // Associate court order with report
-            $additionalCourtOrder->addReport($this->multiClientSecondReport);
+            $additionalCourtOrder->addReport($multiClientSecondReport);
 
             $manager->persist($additionalCourtOrder);
             $manager->persist($this->deputy);
