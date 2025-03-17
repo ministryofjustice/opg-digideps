@@ -33,6 +33,10 @@ class S3FileUploader
     {
         foreach ($uploadedFiles as $uploadedFile) {
             $fileBody = file_get_contents($uploadedFile->getRealPath());
+
+            // check for uppercase extensions and lower if required
+            $uploadedFile = $this->fileNameFixer->lowerCaseFileExtension($uploadedFile);
+
             $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $fileBody);
 
             if (!$extensionAndMimeTypeMatch) {
