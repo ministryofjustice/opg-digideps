@@ -38,9 +38,13 @@ class IngestDeputyshipsCSVCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var string $bucket */
         $bucket = $this->params->get('s3_sirius_bucket');
+
+        /** @var string $deputyshipsCSVFile */
         $deputyshipsCSVFile = $input->getArgument('csv-filename');
-        $fileLocation = sprintf('/tmp/%s', $deputyshipsCSVFile);
+
+        $fileLocation = "/tmp/$deputyshipsCSVFile";
 
         try {
             $this->s3->getObject([
@@ -49,11 +53,10 @@ class IngestDeputyshipsCSVCommand extends Command
                 'SaveAs' => $fileLocation,
             ]);
         } catch (S3Exception $e) {
-            $logMessage = 'Error retrieving file %s from bucket %s';
+            $logMessage = "Error retrieving file $deputyshipsCSVFile from bucket $bucket";
             if (in_array($e->getAwsErrorCode(), S3Storage::MISSING_FILE_AWS_ERROR_CODES)) {
-                $logMessage .= ' - file %s not found in bucket %s';
+                $logMessage .= ' - file not found';
             }
-            $logMessage = sprintf($logMessage, $deputyshipsCSVFile, $bucket);
 
             $this->verboseLogger->error($logMessage);
             $output->writeln(sprintf('%s - failure - %s', self::JOB_NAME, $logMessage));

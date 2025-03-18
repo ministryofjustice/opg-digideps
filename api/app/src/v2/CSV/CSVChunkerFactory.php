@@ -13,6 +13,10 @@ class CSVChunkerFactory
     /**
      * Create a CSV read which reads records in a series of chunks.
      *
+     * @template T of object
+     *
+     * @param class-string<T> $entityClass
+     *
      * @throws UnavailableStream
      * @throws CSVException
      */
