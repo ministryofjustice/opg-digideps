@@ -54,7 +54,7 @@ class ClientRepositoryTest extends WebTestCase
         $this->em->persist($clientThree);
         $this->em->flush();
 
-        $clients = $this->sut->getAllClientsAndReportsByDeputyUid($activeUserOne->getDeputyUid());
+        $clients = $this->sut->getAllClientsAndReportsForDeputy($activeUserOne->getDeputyUid());
 
         self::assertCount(3, $clients);
         self::assertContains($clientOne, $clients);

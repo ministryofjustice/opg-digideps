@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -51,12 +51,12 @@ class Redirector
         private readonly Session $session,
         private readonly string $env,
         private readonly ClientApi $clientApi,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
-    private function getLoggedUser(): UserInterface
+    private function getLoggedUser(): User
     {
+        /* @var User */
         return $this->tokenStorage->getToken()->getUser();
     }
 
@@ -87,12 +87,11 @@ class Redirector
 
     /**
      * //TODO refactor remove. seem overcomplicated.
+     *
+     * @param Client[] $clients
      */
-    public function getCorrectRouteIfDifferent(UserInterface $user, string $currentRoute): bool|string
+    public function getCorrectRouteIfDifferent(UserInterface $user, string $currentRoute, ?array $clients = null): bool|string
     {
-        // Check if user has multiple clients
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
@@ -109,6 +108,10 @@ class Redirector
                 if (!$user->isDeputyOrg()) {
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
+                        if (is_null($clients)) {
+                            $clients = $this->clientApi->getAllClientsForDeputy($user->getId());
+                        }
+
                         if (0 == count($clients)) {
                             $route = 'client_add';
                         }
@@ -123,45 +126,6 @@ class Redirector
         }
 
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
-    }
-
-    private function getLayDeputyHomepage(UserInterface $user, ?int $activeClientId = null, bool $enabledLastAccessedUrl = false): string
-    {
-        // checks if user has missing details or is NDR
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
-            return $this->router->generate($route);
-        }
-
-        // last accessed url
-        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
-            return $lastUsedUri;
-        }
-
-        // redirect to create report if report is not created
-        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
-
-        $clientId = $user->getIdOfClientWithDetails();
-        foreach ($allActiveClients as $activeClient) {
-            if (count($activeClient->getReportIds()) >= 1) {
-                break;
-            }
-
-            if (!$user->isNdrEnabled()) {
-                if (is_null($clientId)) {
-                    $this->logger->info(
-                        "getIdOfClientWithDetails() for user {$user->getId()} returned a null value; ".
-                        "using active client ID {$activeClient->getId()} instead"
-                    );
-                    $clientId = $activeClient->getId();
-                }
-
-                return $this->router->generate('report_create', ['clientId' => $clientId]);
-            }
-        }
-
-        // check if last remaining active client is linked to non-primary account if so retrieve id
-        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $clientId]) :
-            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
     private function getLastAccessedUrl(): bool|string
@@ -239,18 +203,26 @@ class Redirector
     private function getCorrectLayHomepage()
     {
         $user = $this->getLoggedUser();
+        $clients = $this->clientApi->getAllClientsForDeputy($user->getId(), ['client-reports', 'report']);
 
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-        $activeClientId = count($clients) > 0 ? $clients[0]->getId() : null;
-
-        if (!is_null($clients)) {
-            if (count($clients) > 1) {
-                return $this->getChooseAClientHomepage($user);
-            } else {
-                return $this->getLayDeputyHomepage($user, $activeClientId);
-            }
-        } else {
-            return $this->getLayDeputyHomepage($user);
+        // checks if user has missing details or is NDR
+        $altRoute = $this->getCorrectRouteIfDifferent($user, 'lay_home', $clients);
+        if (false !== $altRoute) {
+            return $this->router->generate($altRoute);
         }
+
+        if (count($clients) > 1) {
+            return $this->getChooseAClientHomepage($user);
+        }
+
+        $client = $clients[0];
+        $clientId = $client->getId();
+
+        // redirect to create report if report has not yet been created and user is not doing an NDR
+        if (!$user->isNdrEnabled() && count($client->getReports()) < 1) {
+            return $this->router->generate('report_create', ['clientId' => $clientId]);
+        }
+
+        return $this->router->generate('lay_home', ['clientId' => $clientId]);
     }
 }

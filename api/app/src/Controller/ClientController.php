@@ -265,16 +265,17 @@ class ClientController extends RestController
     /**
      * Endpoint for getting the clients for a deputy uid.
      *
-     * @Route("/get-all-clients-by-deputy-uid/{deputyUid}", methods={"GET"})
+     * @Route("/get-all-clients-for-deputy/{deputyId}", methods={"GET"})
      *
      * @throws \Exception
      */
-    public function getAllClientsByDeputyUid(Request $request, int $deputyUid)
+    public function getAllClientsForDeputy(Request $request, int $deputyId)
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
+
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        return $this->repository->getAllClientsAndReportsByDeputyUid($deputyUid);
+        return $this->repository->getAllClientsAndReportsForDeputy($deputyId);
     }
 }

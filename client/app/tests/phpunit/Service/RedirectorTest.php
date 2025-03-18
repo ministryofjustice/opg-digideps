@@ -74,7 +74,6 @@ class RedirectorTest extends TestCase
             $this->session,
             'prod',
             $this->clientApi,
-            $this->logger
         );
     }
 
@@ -172,9 +171,8 @@ class RedirectorTest extends TestCase
         $this->user->shouldReceive('getIdOfClientWithDetails')->andReturn($clientKnown);
         $this->user->shouldReceive('hasAddressDetails')->andReturn($hasAddress);
         $this->user->shouldReceive('getRegistrationRoute')->andReturn($registrationRoute);
-        $this->parameterStoreService->shouldReceive('getFeatureFlag')->andReturn('0');
 
-        $correctRoute = $this->object->getCorrectRouteIfDifferent($this->user, $currentRoute);
+        $correctRoute = $this->object->getCorrectRouteIfDifferent($this->user, $currentRoute, []);
         $this->assertEquals($expectedRoute, $correctRoute);
     }
 

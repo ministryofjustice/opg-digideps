@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 
 trait LoginInfoTrait
@@ -27,20 +28,12 @@ trait LoginInfoTrait
      */
     private $numberOfReports;
 
-    /**
-     * @return int
-     */
-    public function getIdOfClientWithDetails()
+    public function getIdOfClientWithDetails(): ?int
     {
         return $this->idOfClientWithDetails;
     }
 
-    /**
-     * @param int $idOfClientWithDetails
-     *
-     * @return HasReportTrait
-     */
-    public function setIdOfClientWithDetails($idOfClientWithDetails)
+    public function setIdOfClientWithDetails($idOfClientWithDetails): self
     {
         $this->idOfClientWithDetails = $idOfClientWithDetails;
 

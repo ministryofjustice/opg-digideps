@@ -30,7 +30,7 @@ class ClientApi
 
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
 
-    private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
+    private const GET_ALL_CLIENTS_FOR_DEPUTY = 'client/get-all-clients-for-deputy/%s';
 
     /** @var RestClient */
     private $restClient;
@@ -60,7 +60,7 @@ class ClientApi
         UserApi $userApi,
         DateTimeProvider $dateTimeProvider,
         TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher
+        ObservableEventDispatcher $eventDispatcher,
     ) {
         $this->restClient = $restClient;
         $this->router = $router;
@@ -243,16 +243,16 @@ class ClientApi
     /**
      * @return Client[]
      */
-    public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
+    public function getAllClientsForDeputy(int $deputyId, $groups = [])
     {
         return $this->restClient->get(
-            sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
+            sprintf(self::GET_ALL_CLIENTS_FOR_DEPUTY, $deputyId),
             'Client[]', $groups
         );
     }
 
     public function checkDeputyHasMultiClients(User $user): bool
     {
-        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
+        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsForDeputy($user->getId())) > 1;
     }
 }
