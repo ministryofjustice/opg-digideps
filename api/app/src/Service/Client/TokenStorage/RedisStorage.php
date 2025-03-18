@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 class RedisStorage extends TokenStorage
 {
     public function __construct(
-        private PredisClientInterface $redis,
+        private readonly PredisClientInterface $redis,
         private readonly string $sessionPrefix
     ) {
     }
