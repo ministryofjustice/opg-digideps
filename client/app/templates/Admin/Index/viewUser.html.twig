@@ -62,13 +62,17 @@
                 {{ user.roleFullName }}
             </dd>
         </div>
-        {% if user.deputyUid %}
+        {% if 'ROLE_LAY_DEPUTY' == user.roleName or 'ROLE_DEPUTY' == user.roleName %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
                     {{ (page ~ '.summary.deputyUid') | trans }}
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    {{ user.deputyUid }}
+                    {% if user.deputyUid %}
+                        {{ user.deputyUid }}
+                    {% else %}
+                        No deputy UID set
+                    {% endif %}
                 </dd>
             </div>
         {% endif %}
