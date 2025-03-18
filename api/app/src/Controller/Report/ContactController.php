@@ -15,15 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ContactController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
     private array $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
     }
 
     /**

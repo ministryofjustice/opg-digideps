@@ -14,9 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class JWTController extends AbstractController
 {
     public function __construct(
-        private JWTService $JWTService,
-        private LoggerInterface $logger,
-        private AuthService $authService
+        private readonly JWTService $JWTService,
+        private readonly LoggerInterface $logger,
+        private readonly AuthService $authService
     ) {
     }
 

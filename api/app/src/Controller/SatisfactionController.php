@@ -18,19 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SatisfactionController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-    private ReportRepository $reportRepository;
-    private NdrRepository $ndrRepository;
-    private SatisfactionRepository $satisfactionRepository;
-
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter, ReportRepository $reportRepository, NdrRepository $ndrRepository, SatisfactionRepository $satisfactionRepository)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter, private readonly ReportRepository $reportRepository, private readonly NdrRepository $ndrRepository, private readonly SatisfactionRepository $satisfactionRepository)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
-        $this->reportRepository = $reportRepository;
-        $this->ndrRepository = $ndrRepository;
-        $this->satisfactionRepository = $satisfactionRepository;
     }
 
     /**
