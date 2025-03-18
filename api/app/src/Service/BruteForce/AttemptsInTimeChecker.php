@@ -7,31 +7,17 @@ use Predis\Client as PredisClient;
 class AttemptsInTimeChecker
 {
     /**
-     * @var PredisClient
-     */
-    private $redis;
-
-    /**
      * @var array
      */
     private $triggers;
 
     /**
-     * @var array
+     * @param mixed[] $prefix
+     * @param string $workspace
      */
-    private $redisPrefix;
-
-    /**
-     * @var string
-     */
-    private $workspace;
-
-    public function __construct(PredisClient $redis, $workspace, $prefix = null)
+    public function __construct(private readonly PredisClient $redis, private $workspace, private $redisPrefix = null)
     {
-        $this->redis = $redis;
-        $this->redisPrefix = $prefix;
         $this->triggers = [];
-        $this->workspace = $workspace;
     }
 
     public function setRedisPrefix($redisPrefix)

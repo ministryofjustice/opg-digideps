@@ -22,20 +22,17 @@ class ReportStatusService
     public const ENABLE_STATUS_CACHE = true;
 
     /**
-     * @JMS\Exclude
-     *
-     * @var Report
-     */
-    private $report;
-
-    /**
      * @var bool set to true to use the report status cached
      */
     private $useStatusCache = false;
 
-    public function __construct(Report $report)
+    public function __construct(
+        /**
+         * @JMS\Exclude
+         */
+        private readonly Report $report
+    )
     {
-        $this->report = $report;
     }
 
     /**

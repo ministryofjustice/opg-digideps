@@ -10,20 +10,11 @@ class ParameterStoreService
 {
     public const FLAG_DOCUMENT_SYNC = 'document-sync';
 
-    /** @var SsmClient */
-    private $ssmClient;
-
-    /** @var string */
-    private $parameterPrefix;
-
-    /** @var string */
-    private $flagPrefix;
-
-    public function __construct(SsmClient $ssmClient, string $parameterPrefix, string $flagPrefix)
-    {
-        $this->ssmClient = $ssmClient;
-        $this->parameterPrefix = $parameterPrefix;
-        $this->flagPrefix = $flagPrefix;
+    public function __construct(
+        private readonly SsmClient $ssmClient,
+        private readonly string $parameterPrefix,
+        private readonly string $flagPrefix
+    ) {
     }
 
     public function getParameter(string $parameterKey)

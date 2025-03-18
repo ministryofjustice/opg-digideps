@@ -42,8 +42,8 @@ class ReportService
     private $bankAccountRepository;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private ReportRepository $reportRepository
+        private readonly EntityManagerInterface $em,
+        private readonly ReportRepository $reportRepository
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
