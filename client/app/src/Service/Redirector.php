@@ -4,12 +4,14 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * getFirstPageAfterLogin() called after authentication
@@ -43,27 +45,22 @@ class Redirector
      * Redirector constructor.
      */
     public function __construct(
-        protected TokenStorageInterface $tokenStorage,
-        protected AuthorizationCheckerInterface $authChecker,
-        protected RouterInterface $router,
-        protected Session $session,
-        protected string $env,
-        private ClientApi $clientApi
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authChecker,
+        private readonly RouterInterface $router,
+        private readonly Session $session,
+        private readonly string $env,
+        private readonly ClientApi $clientApi,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * @return User
-     */
-    private function getLoggedUser()
+    private function getLoggedUser(): UserInterface
     {
         return $this->tokenStorage->getToken()->getUser();
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstPageAfterLogin(SessionInterface $session)
+    public function getFirstPageAfterLogin(SessionInterface $session): string
     {
         $user = $this->getLoggedUser();
 
@@ -90,12 +87,8 @@ class Redirector
 
     /**
      * //TODO refactor remove. seem overcomplicated.
-     *
-     * @param string $currentRoute
-     *
-     * @return bool|string
      */
-    public function getCorrectRouteIfDifferent(User $user, $currentRoute)
+    public function getCorrectRouteIfDifferent(UserInterface $user, string $currentRoute): bool|string
     {
         // Check if user has multiple clients
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
@@ -132,10 +125,7 @@ class Redirector
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    /**
-     * @return string
-     */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(UserInterface $user, ?int $activeClientId = null, bool $enabledLastAccessedUrl = false): string
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -150,25 +140,31 @@ class Redirector
         // redirect to create report if report is not created
         $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
 
+        $clientId = $user->getIdOfClientWithDetails();
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
                 break;
             }
 
             if (!$user->isNdrEnabled()) {
-                return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+                if (is_null($clientId)) {
+                    $this->logger->info(
+                        "getIdOfClientWithDetails() for user {$user->getId()} returned a null value; ".
+                        "using active client ID {$activeClient->getId()} instead"
+                    );
+                    $clientId = $activeClient->getId();
+                }
+
+                return $this->router->generate('report_create', ['clientId' => $clientId]);
             }
         }
 
         // check if last remaining active client is linked to non-primary account if so retrieve id
-        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
+        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $clientId]) :
             $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
-    /**
-     * @return bool|string
-     */
-    private function getLastAccessedUrl()
+    private function getLastAccessedUrl(): bool|string
     {
         $lastUsedUrl = $this->session->get('_security.secured_area.target_path');
         if (!$lastUsedUrl) {
@@ -193,15 +189,12 @@ class Redirector
         return false;
     }
 
-    public function removeLastAccessedUrl()
+    public function removeLastAccessedUrl(): void
     {
         $this->session->remove('_security.secured_area.target_path');
     }
 
-    /**
-     * @return string
-     */
-    public function getHomepageRedirect()
+    public function getHomepageRedirect(): string
     {
         if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
@@ -228,10 +221,7 @@ class Redirector
         return false;
     }
 
-    /**
-     * @return string
-     */
-    private function getChooseAClientHomepage(User $user, $enabledLastAccessedUrl = false)
+    private function getChooseAClientHomepage(UserInterface $user, bool $enabledLastAccessedUrl = false): string
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
@@ -251,10 +241,10 @@ class Redirector
         $user = $this->getLoggedUser();
 
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-        $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
+        $activeClientId = count($clients) > 0 ? $clients[0]->getId() : null;
 
-        if (!(null === $clients)) {
-            if (1 < count($clients)) {
+        if (!is_null($clients)) {
+            if (count($clients) > 1) {
                 return $this->getChooseAClientHomepage($user);
             } else {
                 return $this->getLayDeputyHomepage($user, $activeClientId);

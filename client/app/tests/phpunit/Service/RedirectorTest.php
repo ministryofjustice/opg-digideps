@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -64,9 +65,17 @@ class RedirectorTest extends TestCase
 
         $this->authChecker = m::mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface');
         $this->clientApi = m::mock(ClientApi::class);
-        $this->parameterStoreService = m::mock(ParameterStoreService::class);
+        $this->logger = m::mock(LoggerInterface::class);
 
-        $this->object = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi, $this->parameterStoreService);
+        $this->object = new Redirector(
+            $this->tokenStorage,
+            $this->authChecker,
+            $this->router,
+            $this->session,
+            'prod',
+            $this->clientApi,
+            $this->logger
+        );
     }
 
     public static function firstPageAfterLoginProvider()
@@ -152,7 +161,7 @@ class RedirectorTest extends TestCase
         $clientKnown,
         $hasAddress,
         $expectedRoute,
-        $registrationRoute = User::CO_DEPUTY_INVITE
+        $registrationRoute = User::CO_DEPUTY_INVITE,
     ) {
         $this->user->setRoleName($userRole);
 
