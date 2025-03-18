@@ -28,6 +28,7 @@ class DeputyshipsCSVLoader
             // delete records from staging table
             $this->em->beginTransaction();
             $this->em->createQuery('DELETE FROM App\Entity\StagingDeputyship sd')->execute();
+            $this->em->flush();
             $this->em->commit();
 
             // dump CSV into staging table

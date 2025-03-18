@@ -82,7 +82,7 @@ class DeputyshipsCSVLoaderTest extends TestCase
 
         $this->mockEm->expects($this->exactly(2))->method('beginTransaction');
         $this->mockEm->expects($this->exactly(2))->method('commit');
-        $this->mockEm->expects($this->exactly(3))->method('flush');
+        $this->mockEm->expects($this->exactly(4))->method('flush');
         $this->mockEm->expects($this->exactly(3))->method('clear');
 
         // chunker returns three chunks, then null
