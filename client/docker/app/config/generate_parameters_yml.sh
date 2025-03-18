@@ -32,7 +32,7 @@ parameters:
   s3_bucket_name: "%env(S3_BUCKETNAME)%"
   s3_sirius_bucket: "%env(S3_SIRIUS_BUCKET)%"
   file_scanner_url: "%env(FILESCANNER_URL)%"
-  file_scanner_sslverify: "%env(FILESCANNER_SSLVERIFY)%"
+  file_scanner_sslverify: "%env(bool:FILESCANNER_SSLVERIFY)%"
   pa_pro_report_csv_filename: "%env(PA_PRO_REPORT_CSV_FILENAME)%"
   lay_report_csv_filename: "%env(LAY_REPORT_CSV_FILENAME)%"
 EOF

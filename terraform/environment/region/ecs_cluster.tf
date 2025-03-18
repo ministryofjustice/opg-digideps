@@ -177,7 +177,7 @@ locals {
     { name = "EMAIL_SEND_INTERNAL", value = var.account.is_production == 1 ? "true" : "false" },
     { name = "ENVIRONMENT", value = local.environment },
     { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
-    { name = "FILESCANNER_SSLVERIFY", value = "False" },
+    { name = "FILESCANNER_SSLVERIFY", value = "false" },
     { name = "FILESCANNER_URL", value = "http://scan:8080" },
     { name = "GA_DEFAULT", value = var.account.ga_default },
     { name = "GA_GDS", value = var.account.ga_gds },

@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # 5.4.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -70,7 +70,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # 5.4.0
         with:
           python-version: "3.11"
           cache: "pip"
