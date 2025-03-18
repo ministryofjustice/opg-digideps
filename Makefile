@@ -62,22 +62,22 @@ up-app-xdebug-api-cachegrind: ##@application Brings the app up, rebuilds contain
 down-app: ##@application Tears down the app
 	docker compose down -v --remove-orphans
 
-end-to-end-tests: up-app reset-database reset-fixtures ##@end-to-end-tests Brings the app up using test env vars (see test.env)
+end-to-end-tests: up-app ##@end-to-end-tests Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app end-to-end-tests
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml up -d load-balancer
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
-end-to-end-tests-rerun: reset-fixtures ##@end-to-end-tests Rerun end to end tests (requires you to have run end-to-end-tests previously), argument in format: tag=your_tag
+end-to-end-tests-rerun: ##@end-to-end-tests Rerun end to end tests (requires you to have run end-to-end-tests previously), argument in format: tag=your_tag
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
-end-to-end-tests-tag: reset-fixtures ##@end-to-end-tests Rerun end to end tests with a tag (requires you to have run end-to-end-tests previously)
+end-to-end-tests-tag: ##@end-to-end-tests Rerun end to end tests with a tag (requires you to have run end-to-end-tests previously)
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @$(tag)
 
-end-to-end-tests-parallel: reset-fixtures ##@end-to-end-tests Rerun the end to end tests in parallel (requires you to have run end-to-end-tests previously)
+end-to-end-tests-parallel: ##@end-to-end-tests Rerun the end to end tests in parallel (requires you to have run end-to-end-tests previously)
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2_sequential
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
 
-end-to-end-tests-browserkit: reset-fixtures ##@end-to-end-tests Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
+end-to-end-tests-browserkit: ##@end-to-end-tests Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
 
 ifdef suite
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
