@@ -32,7 +32,7 @@ class IngestDeputyshipsCSVCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Processes the CourtOrder CSV Report from the S3 bucket.')
+            ->setDescription('Processes the Deputyships CSV Report from the S3 bucket.')
             ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
     }
 
