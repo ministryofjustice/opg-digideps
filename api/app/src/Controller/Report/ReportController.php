@@ -49,6 +49,7 @@ class ReportController extends RestController
 
     public function __construct(private readonly array $updateHandlers, private readonly ReportRepository $repository, private readonly ReportService $reportService, private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly ParameterStoreService $parameterStoreService)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -871,7 +872,7 @@ class ReportController extends RestController
     {
         $this->formatter->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
 
-        $checklist = $this
+        $checklist = $this->em
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
             ->findOneBy(['report' => $report_id]);
 
@@ -896,7 +897,7 @@ class ReportController extends RestController
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
         /** @var EntityDir\Report\ReviewChecklist|null $checklist */
-        $checklist = $this
+        $checklist = $this->em
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
             ->findOneBy(['report' => $report->getId()]);
 

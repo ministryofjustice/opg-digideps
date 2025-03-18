@@ -341,11 +341,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:createQueryBuilder\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getIdOfClientWithDetails\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -456,17 +451,7 @@ parameters:
 			path: src/Controller/DeputyController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:query\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:containerHealthAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\HealthController\\:\\:\\$restFormatter is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/HealthController.php
 
@@ -561,7 +546,7 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByNdr\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Asset\\>\\:\\:findByNdr\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
@@ -991,7 +976,7 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Ndr\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -1172,11 +1157,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Client\\>\\:\\:findByCaseNumber\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:createQueryBuilder\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/PreRegistrationController.php
 
@@ -1516,7 +1496,7 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Contact\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
@@ -2076,7 +2056,7 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Lifestyle\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
@@ -3306,22 +3286,22 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findAllReportSubmissionsRawSql\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findAllReportSubmissionsRawSql\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByFiltersWithCounts\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findByFiltersWithCounts\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findDownloadableOlderThan\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findDownloadableOlderThan\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findOneByIdUnfiltered\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findOneByIdUnfiltered\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
@@ -3346,12 +3326,12 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Cannot call method getDocuments\\(\\) on object\\|null\\.$#"
+			message: "#^Cannot call method getDocuments\\(\\) on App\\\\Entity\\\\Report\\\\ReportSubmission\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Cannot call method setDownloadable\\(\\) on object\\|null\\.$#"
+			message: "#^Cannot call method setDownloadable\\(\\) on App\\\\Entity\\\\Report\\\\ReportSubmission\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
@@ -3426,6 +3406,11 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
+			message: "#^Parameter \\#1 \\$storageReference of method App\\\\Entity\\\\Report\\\\Document\\:\\:setStorageReference\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
 			message: "#^Parameter \\#1 \\$user of method App\\\\Entity\\\\Report\\\\Document\\:\\:setSynchronisedBy\\(\\) expects App\\\\Entity\\\\User\\|null, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
@@ -3436,7 +3421,7 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\VisitsCare\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
 
@@ -3526,7 +3511,7 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\<App\\\\Entity\\\\User\\>\\:\\:findDeputyUidsForClient\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\User\\>\\:\\:findDeputyUidsForClient\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
@@ -3561,11 +3546,6 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:getRepository\\(\\) return type with generic interface Doctrine\\\\Persistence\\\\ObjectRepository does not specify its types\\: T$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
@@ -3586,7 +3566,7 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
+			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
@@ -3596,12 +3576,12 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\)$#"
+			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\)$#"
 			count: 1
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findAllSatisfactionSubmissions\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Satisfaction\\>\\:\\:findAllSatisfactionSubmissions\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/SatisfactionController.php
 
@@ -3759,21 +3739,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setContent\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\SettingController\\:\\:getSetting\\(\\) has no return type specified\\.$#"
