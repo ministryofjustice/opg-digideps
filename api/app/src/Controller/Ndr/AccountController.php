@@ -12,13 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccountController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
     }
 
     /**

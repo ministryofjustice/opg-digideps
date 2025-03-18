@@ -18,10 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ReportSubmissionController extends RestController
 {
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
     public const QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
@@ -47,11 +43,8 @@ class ReportSubmissionController extends RestController
         'synchronisation',
     ];
 
-    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
     }
 
     /**
