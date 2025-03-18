@@ -8,20 +8,14 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/checklist")
  */
 class ChecklistController extends RestController
 {
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
-    public function __construct(AuthService $authService, RestFormatter $formatter)
+    public function __construct(private readonly AuthService $authService, private readonly RestFormatter $formatter)
     {
-        $this->authService = $authService;
-        $this->formatter = $formatter;
     }
 
     /**

@@ -8,29 +8,14 @@ use App\Factory\UserResearchResponseFactory;
 use App\Repository\SatisfactionRepository;
 use App\Repository\UserResearchResponseRepository;
 use App\Service\Formatter\RestFormatter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class UserResearchController extends RestController
 {
-    private UserResearchResponseFactory $factory;
-    private UserResearchResponseRepository $userResearchResponseRepository;
-    private SatisfactionRepository $satisfactionRepository;
-    private RestFormatter $formatter;
-
-    public function __construct(
-        UserResearchResponseFactory $factory,
-        UserResearchResponseRepository $userResearchResponseRepository,
-        SatisfactionRepository $satisfactionRepository,
-        RestFormatter $formatter
-    ) {
-        $this->factory = $factory;
-        $this->userResearchResponseRepository = $userResearchResponseRepository;
-        $this->satisfactionRepository = $satisfactionRepository;
-        $this->formatter = $formatter;
+    public function __construct(private readonly UserResearchResponseFactory $factory, private readonly UserResearchResponseRepository $userResearchResponseRepository, private readonly SatisfactionRepository $satisfactionRepository, private readonly RestFormatter $formatter)
+    {
     }
 
     /**

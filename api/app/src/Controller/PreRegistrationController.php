@@ -10,10 +10,8 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/pre-registration")
@@ -21,9 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class PreRegistrationController extends RestController
 {
     public function __construct(
-        private PreRegistrationVerificationService $preRegistrationVerificationService,
-        private RestFormatter $formatter,
-        private EntityManagerInterface $em
+        private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
+        private readonly RestFormatter $formatter,
+        private readonly EntityManagerInterface $em
     ) {
     }
 

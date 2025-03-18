@@ -3,12 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Deputy;
-use App\Entity\User;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 // TODO
 // http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -19,8 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeputyController extends RestController
 {
     public function __construct(
-        private DeputyService $deputyService,
-        private RestFormatter $formatter,
+        private readonly DeputyService $deputyService,
+        private readonly RestFormatter $formatter,
     ) {
     }
 

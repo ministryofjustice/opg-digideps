@@ -14,11 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security as SecurityHelper;
 
@@ -31,16 +29,16 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
 class UserController extends RestController
 {
     public function __construct(
-        private UserService $userService,
-        private UserPasswordHasherInterface $passwordHasher,
-        private UserRepository $userRepository,
-        private ClientRepository $clientRepository,
-        private UserVoter $userVoter,
-        private SecurityHelper $securityHelper,
-        private EntityManagerInterface $em,
-        private AuthService $authService,
-        private RestFormatter $formatter,
-        private PasswordHasherFactoryInterface $hasherFactory,
+        private readonly UserService $userService,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly UserRepository $userRepository,
+        private readonly ClientRepository $clientRepository,
+        private readonly UserVoter $userVoter,
+        private readonly SecurityHelper $securityHelper,
+        private readonly EntityManagerInterface $em,
+        private readonly AuthService $authService,
+        private readonly RestFormatter $formatter,
+        private readonly PasswordHasherFactoryInterface $hasherFactory,
     ) {
     }
 

@@ -11,27 +11,12 @@ use App\Factory\ClientBenefitsCheckFactory;
 use App\Repository\ClientBenefitsCheckRepository;
 use App\Repository\NdrClientBenefitsCheckRepository;
 use App\Service\Formatter\RestFormatter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class ClientBenefitsCheckController extends RestController
 {
-    private ClientBenefitsCheckRepository $clientBenefitsCheckRepository;
-    private NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository;
-    private ClientBenefitsCheckFactory $factory;
-    private RestFormatter $formatter;
-
-    public function __construct(
-        ClientBenefitsCheckRepository $clientBenefitsCheckRepository,
-        NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository,
-        ClientBenefitsCheckFactory $factory,
-        RestFormatter $formatter
-    ) {
-        $this->clientBenefitsCheckRepository = $clientBenefitsCheckRepository;
-        $this->factory = $factory;
-        $this->formatter = $formatter;
-        $this->ndrClientBenefitsCheckRepository = $ndrClientBenefitsCheckRepository;
+    public function __construct(private readonly ClientBenefitsCheckRepository $clientBenefitsCheckRepository, private readonly NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository, private readonly ClientBenefitsCheckFactory $factory, private readonly RestFormatter $formatter)
+    {
     }
 
     /**

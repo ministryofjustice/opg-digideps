@@ -8,19 +8,12 @@ use App\Entity\Report\Document;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class NdrController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
     }
 
     /**

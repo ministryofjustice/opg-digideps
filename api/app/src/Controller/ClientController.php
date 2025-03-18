@@ -9,9 +9,7 @@ use App\Repository\ClientRepository;
 use App\Service\Audit\AuditEvents;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -20,11 +18,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ClientController extends RestController
 {
     public function __construct(
-        private ClientRepository $repository,
-        private EntityManagerInterface $em,
-        private RestFormatter $formatter,
-        private ObservableEventDispatcher $eventDispatcher,
-        private TokenStorageInterface $tokenStorage,
+        private readonly ClientRepository $repository,
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 

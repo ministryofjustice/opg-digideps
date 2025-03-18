@@ -7,9 +7,7 @@ use App\Entity as EntityDir;
 use App\Repository\MoneyTransactionRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransactionController extends RestController
 {
@@ -19,9 +17,9 @@ class MoneyTransactionController extends RestController
     ];
 
     public function __construct(
-       private EntityManagerInterface $em,
-       private RestFormatter $formatter,
-       private MoneyTransactionRepository $moneyTransactionRepository
+       private readonly EntityManagerInterface $em,
+       private readonly RestFormatter $formatter,
+       private readonly MoneyTransactionRepository $moneyTransactionRepository
     ) {
     }
 

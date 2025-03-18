@@ -7,24 +7,15 @@ use App\Service\CsvUploader;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/codeputy/")
  */
 class CoDeputyController extends RestController
 {
-    private UserService $userService;
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
-    public function __construct(UserService $userService, EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly UserService $userService, private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->userService = $userService;
-        $this->em = $em;
-        $this->formatter = $formatter;
     }
 
     /**

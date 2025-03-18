@@ -11,7 +11,6 @@ use App\Service\JWT\JWTService;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
@@ -21,11 +20,11 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 class AuthController extends RestController
 {
     public function __construct(
-        private RestFormatter $restFormatter,
-        private JWTService $JWTService,
-        private LoggerInterface $logger,
-        private TokenStorageInterface $tokenStorage,
-        private string $workspace
+        private readonly RestFormatter $restFormatter,
+        private readonly JWTService $JWTService,
+        private readonly LoggerInterface $logger,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly string $workspace
     ) {
     }
 
