@@ -343,7 +343,7 @@ resource "aws_cloudwatch_event_rule" "court_order_csv_processing_check" {
 resource "aws_cloudwatch_event_target" "court_order_csv_processing_check" {
   target_id = "check-org-csv-processing-${terraform.workspace}"
   arn       = data.aws_lambda_function.monitor_notify_lambda.arn
-  rule      = aws_cloudwatch_event_rule.org_csv_processing_check.name
+  rule      = aws_cloudwatch_event_rule.court_order_csv_processing_check.name
   input = jsonencode(
     {
       scheduled-event-detail = {
