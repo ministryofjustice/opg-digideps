@@ -23,15 +23,15 @@ jobs:
           - folder: "environment"
           - folder: "account"
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         with:
           terraform_directory: terraform/${{ matrix.folder }}
 
-      - uses: hashicorp/setup-terraform@7d2407faba0d9514aa95dc515182ee36200712a7 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
@@ -40,12 +40,12 @@ jobs:
         run: terraform fmt -check -recursive
         working-directory: terraform/${{ matrix.folder }}
 
-      - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # pin@v0.5.4
+      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:
           ssh-private-key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-development
           role-session-name: github-actions-terraform
@@ -70,7 +70,7 @@ jobs:
           echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
 
       - name: configure OIDC AWS credentials for Trivy DB Ecr
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-trivy-db
@@ -79,13 +79,13 @@ jobs:
 
       - name: ecr login for trivy db
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@5987c53246a4cdb9fb822a0b17a98df3cdc62942 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         with:
           registries: 311462405659
 
       - name: Trivy Terraform Config Scan
         id: trivy_scan
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
         with:
           scan-type: "config"
           target: terraform/${{ matrix.folder }}
