@@ -105,6 +105,14 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
 
+  api_phpstan:
+    name: api phpstan
+    uses: ./.github/workflows/_phpstan-api.yml
+    with:
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
   api_unit_tests:
     name: api unit tests
     uses: ./.github/workflows/_unit-tests-api.yml

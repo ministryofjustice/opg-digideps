@@ -1,5 +1,7 @@
 includes:
   - vendor/phpstan/phpstan-mockery/extension.neon
   - vendor/phpstan/phpstan-phpunit/extension.neon
+  - phpstan-baseline.neon
 parameters:
-  checkMissingIterableValueType: false
+    ignoreErrors:
+        - identifier: missingType.iterableValue
