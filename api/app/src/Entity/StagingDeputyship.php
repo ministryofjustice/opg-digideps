@@ -18,7 +18,6 @@ use League\Csv\Serializer;
  * @ORM\Table(name="deputyship", schema="staging", indexes={
  *
  *   @ORM\Index(name="deputy_uid_idx", columns={"DeputyUid"}),
- *   @ORM\Index(name="case_number_idx", columns={"CaseNumber"}),
  *   @ORM\Index(name="order_uid_idx", columns={"OrderUid"})
  * })
  *
@@ -29,7 +28,7 @@ class StagingDeputyship
     /**
      * @ORM\Id
      *
-     * @ORM\Column(name="OrderUid", type="string", length=30)
+     * @ORM\Column(name="order_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'OrderUid')]
     public string $orderUid;
@@ -37,91 +36,91 @@ class StagingDeputyship
     /**
      * @ORM\Id
      *
-     * @ORM\Column(name="DeputyUid", type="string", length=30)
+     * @ORM\Column(name="deputy_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'DeputyUid')]
     public string $deputyUid;
 
     /**
-     * @ORM\Column(name="OrderType", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_type", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'OrderType')]
     public ?string $orderType;
 
     /**
-     * @ORM\Column(name="OrderSubType", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_sub_type", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'OrderSubType')]
     public ?string $orderSubType;
 
     /**
-     * @ORM\Column(name="OrderMadeDate", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_made_date", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'OrderMadeDate')]
     public ?string $orderMadeDate;
 
     /**
-     * @ORM\Column(name="OrderStatus", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_status", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'OrderStatus')]
     public ?string $orderStatus;
 
     /**
-     * @ORM\Column(name="OrderUpdatedDate", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_updated_date", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'OrderUpdatedDate')]
     public ?string $orderUpdatedDate;
 
     /**
-     * @ORM\Column(name="CaseNumber", type="string", length=30, nullable=true)
+     * @ORM\Column(name="case_number", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'CaseNumber')]
     public ?string $caseNumber;
 
     /**
-     * @ORM\Column(name="ClientUid", type="string", length=30, nullable=true)
+     * @ORM\Column(name="client_uid", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'ClientUid')]
     public ?string $clientUid;
 
     /**
-     * @ORM\Column(name="ClientStatus", type="string", length=30, nullable=true)
+     * @ORM\Column(name="client_status", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'ClientStatus')]
     public ?string $clientStatus;
 
     /**
-     * @ORM\Column(name="ClientStatusDate", type="string", length=30, nullable=true)
+     * @ORM\Column(name="client_status_date", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'ClientStatusDate')]
     public ?string $clientStatusDate;
 
     /**
-     * @ORM\Column(name="DeputyType", type="string", length=30, nullable=true)
+     * @ORM\Column(name="deputy_type", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'DeputyType')]
     public ?string $deputyType;
 
     /**
-     * @ORM\Column(name="DeputyStatusOnOrder", type="string", length=30, nullable=true)
+     * @ORM\Column(name="deputy_status_on_order", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'DeputyStatusOnOrder')]
     public ?string $deputyStatusOnOrder;
 
     /**
-     * @ORM\Column(name="DeputyStatusChangeDate", type="string", length=30, nullable=true)
+     * @ORM\Column(name="deputy_status_change_date", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'DeputyStatusChangeDate')]
     public ?string $deputyStatusChangeDateString;
 
     /**
-     * @ORM\Column(name="ReportType", type="string", length=30, nullable=true)
+     * @ORM\Column(name="report_type", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'ReportType')]
     public ?string $reportType;
 
     /**
-     * @ORM\Column(name="IsHybrid", type="string", length=30, nullable=true)
+     * @ORM\Column(name="is_hybrid", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'IsHybrid')]
     public ?string $isHybrid;
