@@ -101,7 +101,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@36f1e144e1c8edb0a652766b484448563d8baf46 # pin@v3.0.8
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -115,7 +115,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
       - name: download resources artifact
-        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        uses: actions/download-artifact@81ba80daa45160feea2af6c09baecd2a002d759d
         with:
           name: web-distribution
           path: client/resources/public
@@ -168,7 +168,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@5987c53246a4cdb9fb822a0b17a98df3cdc62942 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@2d7337f0d3b7665fe22167bece86286325804cb6 # pin@v1.5.1
         with:
           registries: 311462405659
 

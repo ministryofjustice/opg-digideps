@@ -39,7 +39,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         with:
           terraform_directory: terraform/environment
 
@@ -50,7 +50,7 @@ jobs:
 
       - name: cache ecs-helper
         id: cache-ecs-helper
-        uses: actions/cache@v3
+        uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f # v3
         with:
           path: ecs-helper
           key: ecs-helper-${{ env.HELPER_VERSION }}

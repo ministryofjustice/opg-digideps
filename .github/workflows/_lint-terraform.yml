@@ -27,7 +27,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         with:
           terraform_directory: terraform/${{ matrix.folder }}
 
@@ -79,7 +79,7 @@ jobs:
 
       - name: ecr login for trivy db
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@5987c53246a4cdb9fb822a0b17a98df3cdc62942 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@2d7337f0d3b7665fe22167bece86286325804cb6 # pin@v1.5.1
         with:
           registries: 311462405659
 

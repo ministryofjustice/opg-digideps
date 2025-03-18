@@ -22,7 +22,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@36f1e144e1c8edb0a652766b484448563d8baf46 # pin@v3.0.8
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v3.0.8
         with:
           path: /tmp/.buildx-cache
           key: api-phpstan-${{ inputs.branch_name }}-${{ github.sha }}
