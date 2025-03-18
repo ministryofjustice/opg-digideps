@@ -3,7 +3,6 @@ FROM nginxinc/nginx-unprivileged:stable-alpine
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG APP_HOST=${APP_HOST:-127.0.0.1}
 ARG APP_PORT=${APP_PORT:-9000}
-ARG SERVICE=${SERVICE:-client}
 
 USER root
 

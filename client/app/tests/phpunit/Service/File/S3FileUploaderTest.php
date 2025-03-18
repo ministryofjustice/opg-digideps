@@ -10,12 +10,9 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\DocumentHelpers;
 use App\TestHelpers\ReportHelpers;
-use DateTime;
-use Exception;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -57,7 +54,7 @@ class S3FileUploaderTest extends KernelTestCase
     {
         $fileName = 'dd_fileuploadertest.pdf';
         $fileContent = 'testcontent';
-        $now = new DateTime();
+        $now = new \DateTime();
         $report = ReportHelpers::createReport();
         $expectedStorageRef = sprintf('dd_doc_%s_%s%s', $report->getId(), $now->format('U'), $now->format('v'));
 
@@ -80,12 +77,12 @@ class S3FileUploaderTest extends KernelTestCase
     public function uploadSupportingFilesAndPersistDocumentsSingleFile()
     {
         $filePath = sprintf('%s/tests/phpunit/TestData/good-jpeg', $this->projectDir);
-        $uploadedFile = new UploadedFile($filePath, 'good-jpeg');
-        $files = [$uploadedFile];
+        $uploadedFile = new UploadedFile($filePath, 'good-jpeg.jpeg', 'image/jpeg');
 
         $report = ReportHelpers::createReport();
-        $now = new DateTime();
+        $now = new \DateTime();
 
+        $this->fileNameFixer->lowerCaseFileExtension($uploadedFile)->shouldBeCalled()->willReturn($uploadedFile);
         $this->fileNameFixer->addMissingFileExtension($uploadedFile)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good-jpeg.jpeg');
         $this->fileNameFixer->removeUnusualCharacters('good-jpeg.jpeg')->shouldBeCalled()->willReturn('good_jpeg.jpeg');
@@ -96,6 +93,8 @@ class S3FileUploaderTest extends KernelTestCase
         $this->dateTimeProvider->getDateTime()->willReturn($now);
         $this->storage->store(Argument::cetera())->shouldBeCalled();
         $this->restClient->post(Argument::cetera())->shouldBeCalled();
+
+        $files = [$uploadedFile];
 
         $this->sut->uploadSupportingFilesAndPersistDocuments($files, $report);
     }
@@ -111,8 +110,9 @@ class S3FileUploaderTest extends KernelTestCase
         $files = [$jpeg, $png, $pdf, $heic, $jfif];
 
         $report = ReportHelpers::createReport();
-        $now = new DateTime();
+        $now = new \DateTime();
 
+        $this->fileNameFixer->lowerCaseFileExtension(Argument::cetera())->shouldBeCalledTimes(5)->shouldBeCalled()->willReturn($jpeg);
         $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
         $this->fileNameFixer->removeUnusualCharacters('the-fixed-file-name')->shouldBeCalledTimes(5)->willReturn('the_fixed_file_name');
@@ -140,7 +140,7 @@ class S3FileUploaderTest extends KernelTestCase
     /** @test */
     public function removeFileFromS3MissingStorageRef()
     {
-        self::expectException(Exception::class);
+        self::expectException(\Exception::class);
 
         $reportPdf = DocumentHelpers::createReportPdfDocument();
         $reportPdf->setStorageReference(null);

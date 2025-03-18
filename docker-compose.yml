@@ -28,7 +28,6 @@ services:
       args:
         APP_HOST: frontend-app
         APP_PORT: 9000
-        SERVICE: client
     ports:
       - 8070:80
     depends_on:
@@ -73,7 +72,6 @@ services:
       args:
         APP_HOST: admin-app
         APP_PORT: 9000
-        SERVICE: client
     ports:
       - 8071:80
     depends_on:
@@ -117,7 +115,6 @@ services:
       args:
         APP_HOST: api-app
         APP_PORT: 9000
-        SERVICE: api
     ports:
       - 8072:80
     depends_on:
