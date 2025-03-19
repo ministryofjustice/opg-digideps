@@ -16,10 +16,10 @@ class CSVDeputyshipProcessing
     protected const MAX_UPLOAD_BATCH_SIZE = 10000;
 
     public function __construct(
-        private LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
-        private LayDeputyshipUploader $layUploader,
-        private OrgDeputyshipUploader $orgUploader,
-        private LoggerInterface $verboseLogger,
+        private readonly LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
+        private readonly LayDeputyshipUploader $layUploader,
+        private readonly OrgDeputyshipUploader $orgUploader,
+        private readonly LoggerInterface $verboseLogger,
     ) {
     }
 

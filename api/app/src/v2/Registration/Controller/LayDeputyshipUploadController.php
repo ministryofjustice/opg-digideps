@@ -5,9 +5,7 @@ namespace App\v2\Registration\Controller;
 use App\Service\DataCompression;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/lay-deputyship")
@@ -15,9 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class LayDeputyshipUploadController
 {
     public function __construct(
-        private DataCompression $dataCompression,
-        private CSVDeputyshipProcessing $csvProcessing,
-        private LoggerInterface $logger
+        private readonly DataCompression $dataCompression,
+        private readonly CSVDeputyshipProcessing $csvProcessing,
+        private readonly LoggerInterface $logger
     ) {
     }
 

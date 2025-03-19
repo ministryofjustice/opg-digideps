@@ -7,7 +7,6 @@ use App\v2\Assembler\UserAssembler;
 use App\v2\Transformer\UserTransformer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/deputy")
@@ -16,20 +15,11 @@ class DeputyController
 {
     use ControllerTrait;
 
-    /** @var UserRepository */
-    private $repository;
-
-    /** @var UserAssembler */
-    private $assembler;
-
-    /** @var UserTransformer */
-    private $transformer;
-
-    public function __construct(UserRepository $repository, UserAssembler $assembler, UserTransformer $transformer)
-    {
-        $this->repository = $repository;
-        $this->assembler = $assembler;
-        $this->transformer = $transformer;
+    public function __construct(
+        private readonly UserRepository $repository,
+        private readonly UserAssembler $assembler,
+        private readonly UserTransformer $transformer
+    ) {
     }
 
     /**

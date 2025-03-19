@@ -12,16 +12,10 @@ class OrganisationAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var UserAssembler */
-    private $userDtoAssembler;
-
-    /** @var ClientAssembler */
-    private $clientDtoAssembler;
-
-    public function __construct(?UserAssembler $userDtoAssembler = null, ?ClientAssembler $clientDtoAssembler = null)
-    {
-        $this->userDtoAssembler = $userDtoAssembler;
-        $this->clientDtoAssembler = $clientDtoAssembler;
+    public function __construct(
+        private readonly UserAssembler $userDtoAssembler,
+        private readonly ClientAssembler $clientDtoAssembler
+    ) {
     }
 
     /**
