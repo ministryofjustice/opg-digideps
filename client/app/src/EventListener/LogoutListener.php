@@ -31,7 +31,7 @@ class LogoutListener
             $this->restClient->logout();
         }
 
-        // Handle session value setting (merged from AuthenticationHandler)
+        // Handle session value setting
         $notPrimaryAccount = $request->query->get('notPrimaryAccount');
 
         if (!$notPrimaryAccount) {
