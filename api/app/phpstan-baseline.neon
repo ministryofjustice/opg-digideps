@@ -11611,16 +11611,6 @@ parameters:
 			path: src/v2/Assembler/OrganisationAssembler.php
 
 		-
-			message: "#^Property App\\\\v2\\\\Assembler\\\\OrganisationAssembler\\:\\:\\$clientDtoAssembler \\(App\\\\v2\\\\Assembler\\\\ClientAssembler\\) does not accept App\\\\v2\\\\Assembler\\\\ClientAssembler\\|null\\.$#"
-			count: 1
-			path: src/v2/Assembler/OrganisationAssembler.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Assembler\\\\OrganisationAssembler\\:\\:\\$userDtoAssembler \\(App\\\\v2\\\\Assembler\\\\UserAssembler\\) does not accept App\\\\v2\\\\Assembler\\\\UserAssembler\\|null\\.$#"
-			count: 1
-			path: src/v2/Assembler/OrganisationAssembler.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getAvailableSections\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Assembler/Report/FullReportAssembler.php
@@ -11657,11 +11647,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\v2\\\\Assembler\\\\UserAssembler\\:\\:setPropertiesFromData\\(\\) has parameter \\$dto with no type specified\\.$#"
-			count: 1
-			path: src/v2/Assembler/UserAssembler.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Assembler\\\\UserAssembler\\:\\:\\$clientDtoAssembler \\(App\\\\v2\\\\Assembler\\\\ClientAssembler\\) does not accept App\\\\v2\\\\Assembler\\\\ClientAssembler\\|null\\.$#"
 			count: 1
 			path: src/v2/Assembler/UserAssembler.php
 
@@ -12531,11 +12516,6 @@ parameters:
 			path: src/v2/Registration/SelfRegistration/Factory/PreRegistrationFactory.php
 
 		-
-			message: "#^Property App\\\\v2\\\\Registration\\\\SelfRegistration\\\\Factory\\\\PreRegistrationFactory\\:\\:\\$dateProvider is never read, only written\\.$#"
-			count: 1
-			path: src/v2/Registration/SelfRegistration/Factory/PreRegistrationFactory.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Client\\>\\:\\:findByCaseNumberIncludingDischarged\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayClientMatcher.php
@@ -12841,16 +12821,6 @@ parameters:
 			path: src/v2/Transformer/NdrTransformer.php
 
 		-
-			message: "#^Property App\\\\v2\\\\Transformer\\\\OrganisationTransformer\\:\\:\\$clientTransformer \\(App\\\\v2\\\\Transformer\\\\ClientTransformer\\) does not accept App\\\\v2\\\\Transformer\\\\ClientTransformer\\|null\\.$#"
-			count: 1
-			path: src/v2/Transformer/OrganisationTransformer.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Transformer\\\\OrganisationTransformer\\:\\:\\$userTransformer \\(App\\\\v2\\\\Transformer\\\\UserTransformer\\) does not accept App\\\\v2\\\\Transformer\\\\UserTransformer\\|null\\.$#"
-			count: 1
-			path: src/v2/Transformer/OrganisationTransformer.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Transformer\\\\ReportTransformer\\:\\:transformDate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Transformer/ReportTransformer.php
@@ -12864,8 +12834,3 @@ parameters:
 			message: "#^Method App\\\\v2\\\\Transformer\\\\ReportTransformer\\:\\:transformDate\\(\\) has parameter \\$property with no type specified\\.$#"
 			count: 1
 			path: src/v2/Transformer/ReportTransformer.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Transformer\\\\UserTransformer\\:\\:\\$clientTransformer \\(App\\\\v2\\\\Transformer\\\\ClientTransformer\\) does not accept App\\\\v2\\\\Transformer\\\\ClientTransformer\\|null\\.$#"
-			count: 1
-			path: src/v2/Transformer/UserTransformer.php

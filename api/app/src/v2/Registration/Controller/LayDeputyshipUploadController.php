@@ -15,9 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class LayDeputyshipUploadController
 {
     public function __construct(
-        private DataCompression $dataCompression,
-        private CSVDeputyshipProcessing $csvProcessing,
-        private LoggerInterface $logger
+        private readonly DataCompression $dataCompression,
+        private readonly CSVDeputyshipProcessing $csvProcessing,
+        private readonly LoggerInterface $logger
     ) {
     }
 

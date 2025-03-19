@@ -8,16 +8,10 @@ use App\v2\DTO\UserDto;
 
 class OrganisationTransformer
 {
-    /** @var UserTransformer */
-    private $userTransformer;
-
-    /** @var ClientTransformer */
-    private $clientTransformer;
-
-    public function __construct(?UserTransformer $userTransformer = null, ?ClientTransformer $clientTransformer = null)
-    {
-        $this->userTransformer = $userTransformer;
-        $this->clientTransformer = $clientTransformer;
+    public function __construct(
+        private readonly UserTransformer $userTransformer,
+        private readonly ClientTransformer $clientTransformer
+    ) {
     }
 
     public function transform(OrganisationDto $dto, array $exclude = []): array

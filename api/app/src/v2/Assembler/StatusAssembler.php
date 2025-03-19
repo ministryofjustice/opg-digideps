@@ -8,12 +8,8 @@ use App\v2\DTO\StatusDto;
 
 class StatusAssembler
 {
-    /** @var ReportStatusServiceFactory */
-    private $statusServiceFactory;
-
-    public function __construct(ReportStatusServiceFactory $statusServiceFactory)
+    public function __construct(private readonly ReportStatusServiceFactory $statusServiceFactory)
     {
-        $this->statusServiceFactory = $statusServiceFactory;
     }
 
     /**
