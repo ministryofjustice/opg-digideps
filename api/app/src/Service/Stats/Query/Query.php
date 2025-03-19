@@ -8,18 +8,14 @@ use Doctrine\ORM\Query\ResultSetMapping;
 
 abstract class Query
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
     abstract protected function getAggregation(): string;
 
     abstract protected function getSupportedDimensions(): array;
 
     abstract protected function getSubquery(): string;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private readonly EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     /**

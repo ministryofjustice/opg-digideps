@@ -18,25 +18,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class SelfRegisterController extends RestController
 {
-    private LoggerInterface $logger;
-    private ValidatorInterface $validator;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
-    private EntityManagerInterface $em;
-
-    public function __construct(
-        LoggerInterface $logger,
-        ValidatorInterface $validator,
-        AuthService $authService,
-        RestFormatter $formatter,
-        EntityManagerInterface $em
-    ) {
-        $this->logger = $logger;
-        $this->validator = $validator;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
-        $this->em = $em;
+    public function __construct(private readonly LoggerInterface $logger, private readonly ValidatorInterface $validator, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly EntityManagerInterface $em)
+    {
     }
 
     /**

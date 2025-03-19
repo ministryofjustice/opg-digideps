@@ -14,14 +14,8 @@ final class AuditEvents
 
     public const USER_DELETED_AUTOMATION = 'USER_DELETED_AUTOMATION';
 
-    /**
-     * @var DateTimeProvider
-     */
-    private $dateTimeProvider;
-
-    public function __construct(DateTimeProvider $dateTimeProvider)
+    public function __construct(private readonly DateTimeProvider $dateTimeProvider)
     {
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
