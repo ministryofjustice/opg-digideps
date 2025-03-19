@@ -203,7 +203,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/logout", name="app_logout")
      */
-    public function logoutAction(Request $request)
+    public function logout()
     {
         // Handled as automatically as part of Symfony security component
     }
