@@ -7,12 +7,8 @@ use App\v2\DTO\UserDto;
 
 class UserTransformer
 {
-    /** @var ClientTransformer */
-    private $clientTransformer;
-
-    public function __construct(?ClientTransformer $clientTransformer = null)
+    public function __construct(private readonly ClientTransformer $clientTransformer)
     {
-        $this->clientTransformer = $clientTransformer;
     }
 
     /**
