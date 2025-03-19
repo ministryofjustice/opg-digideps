@@ -290,9 +290,22 @@ services:
           method: onKernelRequest,
         }
 
-  logout_listener:
-    class: App\EventListener\LogoutListener
+  App\EventListener\AuthenticationHandler:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: security.authentication.failure,
+          method: onAuthenticationFailure,
+        }
+
+  App\EventListener\LogoutListener:
     arguments: ["@security.token_storage", "@rest_client", "@router"]
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: security.logout,
+          method: onLogout,
+        }
 
   App\EventListener\ResponseNoCacheListener:
     tags:
