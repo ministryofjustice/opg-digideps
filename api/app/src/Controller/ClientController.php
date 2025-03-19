@@ -20,11 +20,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ClientController extends RestController
 {
     public function __construct(
-        private ClientRepository $repository,
-        private EntityManagerInterface $em,
-        private RestFormatter $formatter,
-        private ObservableEventDispatcher $eventDispatcher,
-        private TokenStorageInterface $tokenStorage,
+        private readonly ClientRepository $repository,
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 

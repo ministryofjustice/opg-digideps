@@ -19,19 +19,10 @@ class DocumentController extends RestController
     public const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
     public const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
     public const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
-
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-    private LoggerInterface $verboseLogger;
     private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
-    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter, LoggerInterface $verboseLogger)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly LoggerInterface $verboseLogger)
     {
-        $this->authService = $authService;
-        $this->em = $em;
-        $this->formatter = $formatter;
-        $this->verboseLogger = $verboseLogger;
     }
 
     /**
