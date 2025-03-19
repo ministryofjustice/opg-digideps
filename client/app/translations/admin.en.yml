@@ -89,6 +89,7 @@ viewUser:
     email: Email
     postcode: Postcode
     role: Role
+    deputyUid: Deputy UID
     editUser: Edit user
   clientTable:
     heading: Clients and reports

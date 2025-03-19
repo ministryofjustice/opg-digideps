@@ -17,21 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClientBenefitsCheckController extends RestController
 {
-    private ClientBenefitsCheckRepository $clientBenefitsCheckRepository;
-    private NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository;
-    private ClientBenefitsCheckFactory $factory;
-    private RestFormatter $formatter;
-
-    public function __construct(
-        ClientBenefitsCheckRepository $clientBenefitsCheckRepository,
-        NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository,
-        ClientBenefitsCheckFactory $factory,
-        RestFormatter $formatter
-    ) {
-        $this->clientBenefitsCheckRepository = $clientBenefitsCheckRepository;
-        $this->factory = $factory;
-        $this->formatter = $formatter;
-        $this->ndrClientBenefitsCheckRepository = $ndrClientBenefitsCheckRepository;
+    public function __construct(private readonly ClientBenefitsCheckRepository $clientBenefitsCheckRepository, private readonly NdrClientBenefitsCheckRepository $ndrClientBenefitsCheckRepository, private readonly ClientBenefitsCheckFactory $factory, private readonly RestFormatter $formatter)
+    {
     }
 
     /**

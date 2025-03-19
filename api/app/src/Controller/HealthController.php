@@ -11,15 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class HealthController extends RestController
 {
-    private string $symfonyEnvironment;
-    private LoggerInterface $logger;
-    private RestFormatter $restFormatter;
-
-    public function __construct(string $symfonyEnvironment, LoggerInterface $logger, RestFormatter $restFormatter)
+    public function __construct(private readonly string $symfonyEnvironment, private readonly LoggerInterface $logger, private readonly RestFormatter $restFormatter)
     {
-        $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->logger = $logger;
-        $this->restFormatter = $restFormatter;
     }
 
     /**

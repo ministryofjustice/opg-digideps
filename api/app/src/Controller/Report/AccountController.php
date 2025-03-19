@@ -13,15 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccountController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
     private $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
     }
 
     /**

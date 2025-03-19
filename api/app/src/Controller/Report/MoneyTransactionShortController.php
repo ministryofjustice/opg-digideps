@@ -19,9 +19,9 @@ class MoneyTransactionShortController extends RestController
     ];
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private RestFormatter $formatter,
-        private MoneyTransactionShortRepository $moneyTransactionShortRepository
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly MoneyTransactionShortRepository $moneyTransactionShortRepository
     ) {
     }
 

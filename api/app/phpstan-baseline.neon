@@ -9866,11 +9866,6 @@ parameters:
 			path: src/Service/Audit/AwsAuditLogHandler.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Audit\\\\AwsAuditLogHandler\\:\\:__construct\\(\\) has parameter \\$group with no type specified\\.$#"
-			count: 1
-			path: src/Service/Audit/AwsAuditLogHandler.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Audit\\\\AwsAuditLogHandler\\:\\:getLogStreams\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Audit/AwsAuditLogHandler.php
@@ -9912,16 +9907,6 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on mixed\\.$#"
-			count: 1
-			path: src/Service/BruteForce/AttemptsInTimeChecker.php
-
-		-
-			message: "#^Method App\\\\Service\\\\BruteForce\\\\AttemptsInTimeChecker\\:\\:__construct\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: src/Service/BruteForce/AttemptsInTimeChecker.php
-
-		-
-			message: "#^Method App\\\\Service\\\\BruteForce\\\\AttemptsInTimeChecker\\:\\:__construct\\(\\) has parameter \\$workspace with no type specified\\.$#"
 			count: 1
 			path: src/Service/BruteForce/AttemptsInTimeChecker.php
 
@@ -10006,11 +9991,6 @@ parameters:
 			path: src/Service/BruteForce/AttemptsInTimeChecker.php
 
 		-
-			message: "#^Property App\\\\Service\\\\BruteForce\\\\AttemptsInTimeChecker\\:\\:\\$redisPrefix \\(array\\) does not accept string\\.$#"
-			count: 1
-			path: src/Service/BruteForce/AttemptsInTimeChecker.php
-
-		-
 			message: "#^Cannot access offset 'freezeUntil' on mixed\\.$#"
 			count: 3
 			path: src/Service/BruteForce/AttemptsIncrementalWaitingChecker.php
@@ -10023,16 +10003,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'totalAttempts' on mixed\\.$#"
 			count: 3
-			path: src/Service/BruteForce/AttemptsIncrementalWaitingChecker.php
-
-		-
-			message: "#^Method App\\\\Service\\\\BruteForce\\\\AttemptsIncrementalWaitingChecker\\:\\:__construct\\(\\) has parameter \\$prefix with no type specified\\.$#"
-			count: 1
-			path: src/Service/BruteForce/AttemptsIncrementalWaitingChecker.php
-
-		-
-			message: "#^Method App\\\\Service\\\\BruteForce\\\\AttemptsIncrementalWaitingChecker\\:\\:__construct\\(\\) has parameter \\$workspace with no type specified\\.$#"
-			count: 1
 			path: src/Service/BruteForce/AttemptsIncrementalWaitingChecker.php
 
 		-
@@ -10117,11 +10087,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\BruteForce\\\\AttemptsIncrementalWaitingChecker\\:\\:setRedisPrefix\\(\\) has parameter \\$redisPrefix with no type specified\\.$#"
-			count: 1
-			path: src/Service/BruteForce/AttemptsIncrementalWaitingChecker.php
-
-		-
-			message: "#^Property App\\\\Service\\\\BruteForce\\\\AttemptsIncrementalWaitingChecker\\:\\:\\$redisPrefix \\(array\\) does not accept string\\.$#"
 			count: 1
 			path: src/Service/BruteForce/AttemptsIncrementalWaitingChecker.php
 

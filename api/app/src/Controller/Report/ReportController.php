@@ -27,13 +27,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ReportController extends RestController
 {
-    private array $updateHandlers;
-    private ReportRepository $repository;
-    private ReportService $reportService;
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
     /** @var array */
     private $checklistGroups = [
         'report-id',
@@ -54,24 +47,8 @@ class ReportController extends RestController
         'report-submission-id',
     ];
 
-    private ParameterStoreService $parameterStoreService;
-
-    public function __construct(
-        array $updateHandlers,
-        ReportRepository $repository,
-        ReportService $reportService,
-        EntityManagerInterface $em,
-        AuthService $authService,
-        RestFormatter $formatter,
-        ParameterStoreService $parameterStoreService
-    ) {
-        $this->updateHandlers = $updateHandlers;
-        $this->repository = $repository;
-        $this->reportService = $reportService;
-        $this->em = $em;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
-        $this->parameterStoreService = $parameterStoreService;
+    public function __construct(private readonly array $updateHandlers, private readonly ReportRepository $repository, private readonly ReportService $reportService, private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly ParameterStoreService $parameterStoreService)
+    {
     }
 
     /**
