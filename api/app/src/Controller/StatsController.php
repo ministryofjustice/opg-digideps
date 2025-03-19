@@ -28,14 +28,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class StatsController extends RestController
 {
     public function __construct(
-        private QueryFactory $QueryFactory,
-        private UserRepository $userRepository,
-        private ReportRepository $reportRepository,
-        private AssetRepository $assetRepository,
-        private BankAccountRepository $bankAccountRepository,
-        private NdrAssetRepository $ndrAssetRepository,
-        private NdrBankAccountRepository $ndrBankAccountRepository,
-        private AuthService $authService
+        private readonly QueryFactory $QueryFactory,
+        private readonly UserRepository $userRepository,
+        private readonly ReportRepository $reportRepository,
+        private readonly AssetRepository $assetRepository,
+        private readonly BankAccountRepository $bankAccountRepository,
+        private readonly NdrAssetRepository $ndrAssetRepository,
+        private readonly NdrBankAccountRepository $ndrBankAccountRepository,
+        private readonly AuthService $authService
     ) {
     }
 

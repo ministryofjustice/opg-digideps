@@ -15,9 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class MoneyReceivedOnClientsBehalfController extends RestController
 {
     public function __construct(
-        private MoneyReceivedOnClientsBehalfRepository $reportMoneyRepository,
-        private NdrMoneyReceivedOnClientsBehalfRepository $ndrMoneyRepository,
-        private RestFormatter $formatter
+        private readonly MoneyReceivedOnClientsBehalfRepository $reportMoneyRepository,
+        private readonly NdrMoneyReceivedOnClientsBehalfRepository $ndrMoneyRepository,
+        private readonly RestFormatter $formatter
     ) {
     }
 

@@ -19,10 +19,10 @@ class JWTService
     public const JKU_URL_TEMPLATE = '%s/v2/.well-known/jwks.json';
 
     public function __construct(
-        private SecretManagerService $secretManager,
-        private LoggerInterface $logger,
-        private string $frontendHost,
-        private DateTimeProvider $dateTimeProvider
+        private readonly SecretManagerService $secretManager,
+        private readonly LoggerInterface $logger,
+        private readonly string $frontendHost,
+        private readonly DateTimeProvider $dateTimeProvider
     ) {
     }
 
