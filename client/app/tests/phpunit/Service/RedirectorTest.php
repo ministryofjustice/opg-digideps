@@ -162,6 +162,62 @@ class RedirectorTest extends TestCase
     }
 
     /*
+     * Test the unlikely situation where the getFirstPageAfterLogin() method is called but there's no token.
+     *
+     * I think this is impossible, as the user can't be null and the authChecker return true, but the code
+     * does allow this as a possibility.
+     */
+    public function testGetFirstPageAfterLoginNoToken(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('login')
+            ->willReturn('/login');
+
+        $this->session->method('get')->with('login-context')->willReturn(null);
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        $this->assertEquals('/login', $actual);
+    }
+
+    /*
+     * Test the unlikely situation where the getFirstPageAfterLogin() method is called and there is a token
+     * but there's no user on the token.
+     *
+     * I think this is impossible, as the user can't be null and the authChecker return true, but the code
+     * does allow this as a possibility.
+     */
+    public function testGetFirstPageAfterLoginTokenButNoUser(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn(null);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('login')
+            ->willReturn('/login');
+
+        $this->session->method('get')->with('login-context')->willReturn(null);
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        $this->assertEquals('/login', $actual);
+    }
+
+    /*
      * All paths through this method are captured by the tests for getLayDeputyHomepage(), except for these two.
      */
     public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
