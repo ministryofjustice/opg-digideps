@@ -247,4 +247,10 @@ class RedirectorTest extends TestCase
         $actual = $sut->getHomepageRedirect();
         static::assertEquals($actual, '/choose-a-client');
     }
+
+    public function testRemoveLastAccessedUrl(): void
+    {
+        $this->session->expects($this->once())->method('remove')->with('_security.secured_area.target_path');
+        $this->sut->removeLastAccessedUrl();
+    }
 }
