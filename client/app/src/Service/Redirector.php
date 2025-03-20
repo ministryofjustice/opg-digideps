@@ -199,20 +199,7 @@ class Redirector
         return false;
     }
 
-    /**
-     * @return string
-     */
-    private function getChooseAClientHomepage(User $user)
-    {
-        // checks if user has missing details or is NDR
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
-            return $this->router->generate($route);
-        }
-
-        return $this->router->generate('choose_a_client');
-    }
-
-    private function getCorrectLayHomepage(User $user)
+    private function getCorrectLayHomepage(User $user): string
     {
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
 
@@ -220,8 +207,13 @@ class Redirector
             return $this->getLayDeputyHomepage($user);
         }
 
-        if (1 < count($clients)) {
-            return $this->getChooseAClientHomepage($user);
+        if (count($clients) > 1) {
+            // checks if user has missing details or is NDR
+            if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
+                return $this->router->generate($route);
+            }
+
+            return $this->router->generate('choose_a_client');
         } else {
             $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
