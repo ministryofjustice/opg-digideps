@@ -18,29 +18,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RestInputOuputFormatter
 {
     /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $defaultFormat;
-
-    /**
      * @var array
      */
     private $supportedFormats;
-
-    /**
-     * @var bool
-     */
-    private $debug;
 
     /**
      * @var \Closure[]
@@ -52,13 +32,14 @@ class RestInputOuputFormatter
      */
     private $contextModifiers = [];
 
-    public function __construct(SerializerInterface $serializer, LoggerInterface $logger, array $supportedFormats, $defaultFormat, $debug)
-    {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly SerializerInterface $serializer,
+        private readonly LoggerInterface $logger,
+        array $supportedFormats,
+        private readonly string $defaultFormat,
+        private readonly bool $debug
+    ) {
         $this->supportedFormats = array_values($supportedFormats);
-        $this->defaultFormat = $defaultFormat;
-        $this->debug = $debug;
     }
 
     /**
@@ -214,7 +195,7 @@ class RestInputOuputFormatter
             xdebug_disable();
         }
 
-        register_shutdown_function(function () {
+        register_shutdown_function(function (): void {
             $lastError = error_get_last();
             if (!$lastError) {
                 return;

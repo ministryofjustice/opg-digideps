@@ -10,7 +10,7 @@ use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRe
 
 class PreRegistrationFactory
 {
-    public function __construct(private PreRegistrationDTOFactory $preRegistrationFactory)
+    public function __construct(private readonly PreRegistrationDTOFactory $preRegistrationFactory)
     {
     }
 

@@ -80,10 +80,10 @@ class ProcessOrgCSVCommand extends Command
     private OutputInterface $cliOutput;
 
     public function __construct(
-        private S3Client $s3,
-        private ParameterBagInterface $params,
-        private LoggerInterface $verboseLogger,
-        private CSVDeputyshipProcessing $csvProcessing,
+        private readonly S3Client $s3,
+        private readonly ParameterBagInterface $params,
+        private readonly LoggerInterface $verboseLogger,
+        private readonly CSVDeputyshipProcessing $csvProcessing,
     ) {
         parent::__construct();
     }

@@ -26,9 +26,9 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public const HEADER_NAME = 'AuthToken';
 
     public function __construct(
-        private Client $redis,
-        private UserRepository $userRepository,
-        private LoggerInterface $logger
+        private readonly Client $redis,
+        private readonly UserRepository $userRepository,
+        private readonly LoggerInterface $logger
     ) {
     }
 

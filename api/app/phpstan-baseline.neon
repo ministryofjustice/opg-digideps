@@ -61,11 +61,6 @@ parameters:
 			path: src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: "#^Property App\\\\Command\\\\ReportStatusUpdaterCommand\\:\\:\\$entityManager has no type specified\\.$#"
-			count: 1
-			path: src/Command/ReportStatusUpdaterCommand.php
-
-		-
 			message: "#^Right side of && is always true\\.$#"
 			count: 1
 			path: src/Command/ReportStatusUpdaterCommand.php
@@ -8776,16 +8771,6 @@ parameters:
 			path: src/EventListener/FixDefaultSchemaListener.php
 
 		-
-			message: "#^Method App\\\\EventListener\\\\RestInputOuputFormatter\\:\\:__construct\\(\\) has parameter \\$debug with no type specified\\.$#"
-			count: 1
-			path: src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: "#^Method App\\\\EventListener\\\\RestInputOuputFormatter\\:\\:__construct\\(\\) has parameter \\$defaultFormat with no type specified\\.$#"
-			count: 1
-			path: src/EventListener/RestInputOuputFormatter.php
-
-		-
 			message: "#^Method App\\\\EventListener\\\\RestInputOuputFormatter\\:\\:addContextModifier\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/EventListener/RestInputOuputFormatter.php
@@ -9034,16 +9019,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, mixed given\\.$#"
 			count: 1
 			path: src/Logger/OpgLineFormatter.php
-
-		-
-			message: "#^Property App\\\\Migrations\\\\Factory\\\\MigrationFactoryDecorator\\:\\:\\$container has no type specified\\.$#"
-			count: 1
-			path: src/Migrations/Factory/MigrationFactoryDecorator.php
-
-		-
-			message: "#^Property App\\\\Migrations\\\\Factory\\\\MigrationFactoryDecorator\\:\\:\\$migrationFactory has no type specified\\.$#"
-			count: 1
-			path: src/Migrations/Factory/MigrationFactoryDecorator.php
 
 		-
 			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
@@ -9726,11 +9701,6 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Property App\\\\Repository\\\\UserRepository\\:\\:\\$serializer is never read, only written\\.$#"
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\UserResearchResponseRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/UserResearchResponseRepository.php
@@ -9807,11 +9777,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Security\\\\RedisUserProvider\\:\\:\\$em is never read, only written\\.$#"
-			count: 1
-			path: src/Security/RedisUserProvider.php
-
-		-
-			message: "#^Property App\\\\Security\\\\RedisUserProvider\\:\\:\\$options is never read, only written\\.$#"
 			count: 1
 			path: src/Security/RedisUserProvider.php
 

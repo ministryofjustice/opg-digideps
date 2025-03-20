@@ -12,17 +12,10 @@ class SatisfactionPerformanceStatsCommand extends Command
 {
     public static $defaultName = 'digideps:satisfaction-performance-stats';
 
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /** @var S3SatisfactionDataStorage */
-    private $s3SatisfactionDataStorage;
-
-    public function __construct(EntityManagerInterface $em, S3SatisfactionDataStorage $s3SatisfactionDataStorage)
-    {
-        $this->em = $em;
-        $this->s3SatisfactionDataStorage = $s3SatisfactionDataStorage;
-
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly S3SatisfactionDataStorage $s3SatisfactionDataStorage
+    ) {
         parent::__construct();
     }
 
