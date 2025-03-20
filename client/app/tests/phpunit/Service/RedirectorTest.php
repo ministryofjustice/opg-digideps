@@ -218,6 +218,44 @@ class RedirectorTest extends TestCase
     }
 
     /*
+     * Where the deputy UID returns no clients, we redirect the user to the appropriate lay homepage
+     */
+    public function testGetFirstPageAfterLoginNullClients(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->user->method('getDeputyUid')->willReturn(3322);
+
+        // avoid triggering any conditions in getCorrectRouteIfDifferent()
+        $this->user->method('hasAdminRole')->willReturn(false);
+        $this->user->method('getIsCoDeputy')->willReturn(false);
+        $this->user->method('isDeputyOrg')->willReturn(false);
+        $this->user->method('hasAddressDetails')->willReturn(true);
+
+        $this->clientApi
+            ->method('getAllClientsByDeputyUid')
+            ->willReturn(null);
+
+        // we shouldn't be generating this route without a client ID, but we are at the moment
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('lay_home')
+            ->willReturn('/client/');
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        // TODO this is the bug we're seeing, where we get a null value back from getAllClientsByDeputyUid
+        // or where the user has no deputy UID in the first place
+        self::assertEquals('/client/', $actual);
+    }
+
+    /*
      * All paths through this method are captured by the tests for getLayDeputyHomepage(), except for these two.
      */
     public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
