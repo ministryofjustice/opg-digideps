@@ -241,8 +241,6 @@ class ClientApi
     }
 
     /**
-     * TODO can this be null?
-     *
      * @return Client[]
      */
     public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
