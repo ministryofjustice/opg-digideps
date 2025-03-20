@@ -18,6 +18,7 @@ class CoDeputyController extends RestController
 {
     public function __construct(private readonly UserService $userService, private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -27,7 +28,7 @@ class CoDeputyController extends RestController
      */
     public function countMld(Request $request)
     {
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder()
+        $qb = $this->em->createQueryBuilder()
             ->select('count(u.id)')
             ->from('App\Entity\User', 'u')
             ->where('u.coDeputyClientConfirmed = ?1')

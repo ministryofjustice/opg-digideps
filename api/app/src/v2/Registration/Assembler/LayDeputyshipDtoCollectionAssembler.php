@@ -7,7 +7,7 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
 {
-    public function __construct(private LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
+    public function __construct(private readonly LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
     {
     }
 

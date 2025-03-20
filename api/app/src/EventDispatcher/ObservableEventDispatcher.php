@@ -9,17 +9,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ObservableEventDispatcher
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
     /** @var array */
     private $dispatchedEvents = [];
 
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(private readonly EventDispatcherInterface $dispatcher)
     {
-        $this->dispatcher = $dispatcher;
     }
 
     public function dispatch(Event $event, string $eventName)

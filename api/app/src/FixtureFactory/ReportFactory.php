@@ -9,12 +9,8 @@ use App\v2\Fixture\ReportSection;
 
 class ReportFactory
 {
-    /** @var ReportSection */
-    private $reportSection;
-
-    public function __construct(ReportSection $reportSection)
+    public function __construct(private readonly ReportSection $reportSection)
     {
-        $this->reportSection = $reportSection;
     }
 
     /**

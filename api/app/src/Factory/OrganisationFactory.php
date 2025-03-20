@@ -8,12 +8,8 @@ use App\Entity\Organisation;
 
 class OrganisationFactory
 {
-    /** @var array */
-    private $sharedDomains = [];
-
-    public function __construct(array $sharedDomains)
+    public function __construct(private readonly array $sharedDomains)
     {
-        $this->sharedDomains = $sharedDomains;
     }
 
     public function createFromFullEmail(string $name, string $email, bool $isActivated = false): Organisation

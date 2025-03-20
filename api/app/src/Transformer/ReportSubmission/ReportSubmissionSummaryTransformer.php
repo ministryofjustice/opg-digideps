@@ -8,12 +8,8 @@ use App\Service\DateTimeProvider;
 
 class ReportSubmissionSummaryTransformer
 {
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    public function __construct(DateTimeProvider $dateTimeProvider)
+    public function __construct(private readonly DateTimeProvider $dateTimeProvider)
     {
-        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
