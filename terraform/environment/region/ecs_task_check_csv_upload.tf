@@ -138,7 +138,7 @@ locals {
         },
         {
           name  = "FILESCANNER_SSLVERIFY",
-          value = "False"
+          value = "false"
         },
         {
           name  = "FILESCANNER_URL",

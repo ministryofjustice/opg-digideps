@@ -42,6 +42,7 @@ log/pact.log
 **/client/resources/public/images
 **/client/resources/public/*.png
 **/client/resources/public/*.ico
+**/parameters.yml
 lambdas/functions/block_ips_lambda/block_ips.zip
 ecs-helper
 opg-ecs-helper_*.tar.gz

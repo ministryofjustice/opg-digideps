@@ -177,7 +177,7 @@ locals {
     { name = "EMAIL_SEND_INTERNAL", value = var.account.is_production == 1 ? "true" : "false" },
     { name = "ENVIRONMENT", value = local.environment },
     { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
-    { name = "FILESCANNER_SSLVERIFY", value = "False" },
+    { name = "FILESCANNER_SSLVERIFY", value = "false" },
     { name = "FILESCANNER_URL", value = "http://scan:8080" },
     { name = "GA_DEFAULT", value = var.account.ga_default },
     { name = "GA_GDS", value = var.account.ga_gds },
@@ -190,6 +190,8 @@ locals {
     { name = "SESSION_REDIS_DSN", value = "redis://${aws_route53_record.frontend_redis.fqdn}" },
     { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
     { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
-    { name = "WORKSPACE", value = local.environment }
+    { name = "WORKSPACE", value = local.environment },
+    { name = "FEEDBACK_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
+    { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
   ]
 }

@@ -1,3 +1,0 @@
-[template]
-src  = "pool.conf.tmpl"
-dest = "/usr/local/etc/php-fpm.d/www.conf"
