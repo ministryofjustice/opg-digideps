@@ -251,8 +251,45 @@ class RedirectorTest extends TestCase
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
         // TODO this is the bug we're seeing, where we get a null value back from getAllClientsByDeputyUid
-        // or where the user has no deputy UID in the first place
+        // which can be caused when the user has no deputy UID in the first place
         self::assertEquals('/client/', $actual);
+    }
+
+    /*
+     * Deputy has multiple clients but has an NDR to complete
+     */
+    public function testGetFirstPageAfterLoginMulticlientWithNdr(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->user->method('getDeputyUid')->willReturn(3322);
+
+        // trigger the 'codep_verification' route to be returned by getCorrectRouteIfDifferent()
+        $this->user->method('hasAdminRole')->willReturn(false);
+        $this->user->method('getIsCoDeputy')->willReturn(true);
+        $this->user->method('getCoDeputyClientConfirmed')->willReturn(false);
+        $this->user->method('getRegistrationRoute')->willReturn(User::CO_DEPUTY_INVITE);
+
+        $client1 = $this->createMock(Client::class);
+        $client2 = $this->createMock(Client::class);
+        $this->clientApi
+            ->method('getAllClientsByDeputyUid')
+            ->willReturn([$client1, $client2]);
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('codep_verification')
+            ->willReturn('/codeputy/verification');
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        self::assertEquals('/codeputy/verification', $actual);
     }
 
     /*
