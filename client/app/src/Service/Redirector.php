@@ -94,39 +94,37 @@ class Redirector
         return $this->router->generate('access_denied');
     }
 
-    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
+    public function getCorrectRouteIfDifferent(User $user, string $currentRoute): bool|string
     {
         // none of these corrections apply to admin
-        if (!$user->hasAdminRole()) {
-            if ($user->getIsCoDeputy()) {
-                $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+        if ($user->hasAdminRole()) {
+            return $currentRoute;
+        }
 
+        if ($user->getIsCoDeputy()) {
+            if ($user->getCoDeputyClientConfirmed()) {
                 // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
+                if ('codep_verification' == $currentRoute) {
                     $route = 'lay_home';
                 }
-
+            } elseif (User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
                 // unverified codeputy invitation
-                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
-                    $route = 'codep_verification';
-                }
-            } else {
-                if (!$user->isDeputyOrg()) {
-                    // client is not added
-                    if (!$user->getIdOfClientWithDetails()) {
-                        // Check if user has multiple clients
-                        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+                $route = 'codep_verification';
+            }
+        } elseif (!$user->isDeputyOrg()) {
+            // client is not added
+            if (!$user->getIdOfClientWithDetails()) {
+                // Check if user has multiple clients
+                $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
 
-                        if (0 == count($clients)) {
-                            $route = 'client_add';
-                        }
-                    }
-
-                    // incomplete user info
-                    if (!$user->hasAddressDetails()) {
-                        $route = 'user_details';
-                    }
+                if (0 == count($clients)) {
+                    $route = 'client_add';
                 }
+            }
+
+            // incomplete user info
+            if (!$user->hasAddressDetails()) {
+                $route = 'user_details';
             }
         }
 
@@ -201,7 +199,7 @@ class Redirector
 
         // deputy: if logged, redirect to overview pages
         if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->getCorrectLayHomepage();
+            return $this->getCorrectLayHomepage($this->getLoggedUser());
         }
 
         return false;
@@ -220,12 +218,8 @@ class Redirector
         return $this->router->generate('choose_a_client');
     }
 
-    private function getCorrectLayHomepage(?User $user = null)
+    private function getCorrectLayHomepage(User $user)
     {
-        if (is_null($user)) {
-            $user = $this->getLoggedUser();
-        }
-
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
