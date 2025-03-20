@@ -12,16 +12,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ClientArchivedSubscriber implements EventSubscriberInterface
 {
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    public function __construct(LoggerInterface $logger, DateTimeProvider $dateTimeProvider)
-    {
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly DateTimeProvider $dateTimeProvider
+    ) {
     }
 
     public static function getSubscribedEvents()

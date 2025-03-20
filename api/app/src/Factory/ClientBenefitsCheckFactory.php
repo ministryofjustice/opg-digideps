@@ -17,15 +17,11 @@ use Ramsey\Uuid\Uuid;
 
 class ClientBenefitsCheckFactory
 {
-    private ReportRepository $reportRepository;
-    private NdrRepository $ndrRepository;
-    private EntityManagerInterface $em;
-
-    public function __construct(ReportRepository $reportRepository, NdrRepository $ndrRepository, EntityManagerInterface $em)
-    {
-        $this->reportRepository = $reportRepository;
-        $this->ndrRepository = $ndrRepository;
-        $this->em = $em;
+    public function __construct(
+        private readonly ReportRepository $reportRepository,
+        private readonly NdrRepository $ndrRepository,
+        private readonly EntityManagerInterface $em
+    ) {
     }
 
     public function createFromFormData(array $formData, string $reportOrNdr, ClientBenefitsCheckInterface $existingEntity = null)

@@ -28,13 +28,13 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     private string $bruteForceKey = '';
 
     public function __construct(
-        private UserRepository $userRepository,
-        private AttemptsInTimeChecker $attemptsInTimechecker,
-        private AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
-        private AuthService $authService,
-        private TokenStorageInterface $tokenStorage,
-        private LoggerInterface $logger,
-        private DateTimeProvider $dateTimeProvider
+        private readonly UserRepository $userRepository,
+        private readonly AttemptsInTimeChecker $attemptsInTimechecker,
+        private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
+        private readonly AuthService $authService,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly LoggerInterface $logger,
+        private readonly DateTimeProvider $dateTimeProvider
     ) {
     }
 
