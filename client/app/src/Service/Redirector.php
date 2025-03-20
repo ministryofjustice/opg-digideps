@@ -7,7 +7,6 @@ use App\Service\Client\Internal\ClientApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -137,16 +136,11 @@ class Redirector
     /**
      * @return string
      */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(User $user, $activeClientId = null)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
-        }
-
-        // last accessed url
-        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
-            return $lastUsedUri;
         }
 
         // redirect to create report if report is not created
@@ -176,34 +170,6 @@ class Redirector
         // check if last remaining active client is linked to non-primary account if so retrieve id
         return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
             $this->router->generate('lay_home', ['clientId' => $activeClientId]);
-    }
-
-    /**
-     * @return bool|string
-     */
-    private function getLastAccessedUrl()
-    {
-        $lastUsedUrl = $this->session->get('_security.secured_area.target_path');
-        if (!$lastUsedUrl) {
-            return false;
-        }
-
-        $urlPieces = parse_url($lastUsedUrl);
-        if (empty($urlPieces['path'])) {
-            return false;
-        }
-
-        try {
-            $route = $this->router->match($urlPieces['path'])['_route'];
-        } catch (ResourceNotFoundException $e) {
-            return false;
-        }
-
-        if (in_array($route, $this->redirectableRoutes)) {
-            return $lastUsedUrl;
-        }
-
-        return false;
     }
 
     public function removeLastAccessedUrl()
@@ -244,16 +210,11 @@ class Redirector
     /**
      * @return string
      */
-    private function getChooseAClientHomepage(User $user, $enabledLastAccessedUrl = false)
+    private function getChooseAClientHomepage(User $user)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
             return $this->router->generate($route);
-        }
-
-        // last accessed url
-        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
-            return $lastUsedUri;
         }
 
         return $this->router->generate('choose_a_client');
