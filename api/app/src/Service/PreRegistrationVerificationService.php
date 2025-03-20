@@ -15,8 +15,11 @@ class PreRegistrationVerificationService
      */
     private array $lastMatchedPreRegistrationUsers;
 
-    public function __construct(private SerializerInterface $serializer, private PreRegistrationRepository $preRegistrationRepository, private UserRepository $userRepository)
-    {
+    public function __construct(
+        private readonly SerializerInterface $serializer,
+        private readonly PreRegistrationRepository $preRegistrationRepository,
+        private readonly UserRepository $userRepository
+    ) {
         $this->lastMatchedPreRegistrationUsers = [];
     }
 

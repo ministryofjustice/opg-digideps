@@ -21,9 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class PreRegistrationController extends RestController
 {
     public function __construct(
-        private PreRegistrationVerificationService $preRegistrationVerificationService,
-        private RestFormatter $formatter,
-        private EntityManagerInterface $em
+        private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
+        private readonly RestFormatter $formatter,
+        private readonly EntityManagerInterface $em
     ) {
     }
 

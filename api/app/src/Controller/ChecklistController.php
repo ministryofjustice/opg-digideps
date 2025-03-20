@@ -15,13 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ChecklistController extends RestController
 {
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
-    public function __construct(AuthService $authService, RestFormatter $formatter)
+    public function __construct(private readonly AuthService $authService, private readonly RestFormatter $formatter)
     {
-        $this->authService = $authService;
-        $this->formatter = $formatter;
     }
 
     /**
