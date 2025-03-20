@@ -86,10 +86,7 @@ security:
         - App\Security\SessionAuthenticator
       logout:
         path: app_logout
-        target: /
-        success_handler: logout_listener
-        # needed to save custom login params
-        invalidate_session: false
+        invalidate_session: false # needed to save custom login params
 
   access_control:
     # /admin accessible only from ADMIN, super users and AD users
