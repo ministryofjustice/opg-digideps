@@ -7,12 +7,8 @@ use App\v2\DTO\StatusDto;
 
 class ReportTransformer
 {
-    /** @var StatusTransformer */
-    private $statusTransformer;
-
-    public function __construct(StatusTransformer $statusTransformer)
+    public function __construct(private readonly StatusTransformer $statusTransformer)
     {
-        $this->statusTransformer = $statusTransformer;
     }
 
     /**

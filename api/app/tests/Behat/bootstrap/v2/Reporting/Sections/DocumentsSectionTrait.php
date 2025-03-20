@@ -19,7 +19,6 @@ trait DocumentsSectionTrait
     // Invalid files
     private string $tooLargeFilename = 'too-big.jpg';
     private string $txtFilename = 'eicar.txt';
-    private string $csvFilename = 'behat-pa.csv';
     private string $pngFilenameWithJpegFileExtension = 'png-file.jpeg';
 
     // Expected validation errors
