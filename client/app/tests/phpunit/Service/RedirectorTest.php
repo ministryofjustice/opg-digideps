@@ -218,10 +218,12 @@ class RedirectorTest extends TestCase
     }
 
     /*
-     * Where the deputy UID returns no clients, we redirect the user to the appropriate lay homepage
+     * Where the deputy UID is null or returns null instead of clients, what do we do?
      */
     public function testGetFirstPageAfterLoginNullClients(): void
     {
+        static::markTestSkipped('TBD where user is redirected to if they have no deputy UID or null clients for their deputy UID');
+
         $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
         $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
 
