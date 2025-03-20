@@ -162,8 +162,136 @@ class RedirectorTest extends TestCase
     }
 
     /*
-     * All other paths through this method are captured by the tests for getLayDeputyHomepage(), except for these.
+     * Test the unlikely situation where the getFirstPageAfterLogin() method is called but there's no token.
+     *
+     * I think this is impossible, as the user can't be null and the authChecker return true, but the code
+     * does allow this as a possibility.
      */
+    public function testGetFirstPageAfterLoginNoToken(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('login')
+            ->willReturn('/login');
+
+        $this->session->method('get')->with('login-context')->willReturn(null);
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        $this->assertEquals('/login', $actual);
+    }
+
+    /*
+     * Test the unlikely situation where the getFirstPageAfterLogin() method is called and there is a token
+     * but there's no user on the token.
+     *
+     * I think this is impossible, as the user can't be null and the authChecker return true, but the code
+     * does allow this as a possibility.
+     */
+    public function testGetFirstPageAfterLoginTokenButNoUser(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn(null);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('login')
+            ->willReturn('/login');
+
+        $this->session->method('get')->with('login-context')->willReturn(null);
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        $this->assertEquals('/login', $actual);
+    }
+
+    /*
+     * Where the deputy UID returns no clients, we redirect the user to the appropriate lay homepage
+     */
+    public function testGetFirstPageAfterLoginNullClients(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->user->method('getDeputyUid')->willReturn(3322);
+
+        // avoid triggering any conditions in getCorrectRouteIfDifferent()
+        $this->user->method('hasAdminRole')->willReturn(false);
+        $this->user->method('getIsCoDeputy')->willReturn(false);
+        $this->user->method('isDeputyOrg')->willReturn(false);
+        $this->user->method('hasAddressDetails')->willReturn(true);
+
+        $this->clientApi
+            ->method('getAllClientsByDeputyUid')
+            ->willReturn(null);
+
+        // we shouldn't be generating this route without a client ID, but we are at the moment
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('lay_home')
+            ->willReturn('/client/');
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        // TODO this is the bug we're seeing, where we get a null value back from getAllClientsByDeputyUid
+        // which can be caused when the user has no deputy UID in the first place
+        self::assertEquals('/client/', $actual);
+    }
+
+    /*
+     * Deputy has multiple clients but has an NDR to complete
+     */
+    public function testGetFirstPageAfterLoginMulticlientWithNdr(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->user->method('getDeputyUid')->willReturn(3322);
+
+        // trigger the 'codep_verification' route to be returned by getCorrectRouteIfDifferent()
+        $this->user->method('hasAdminRole')->willReturn(false);
+        $this->user->method('getIsCoDeputy')->willReturn(true);
+        $this->user->method('getCoDeputyClientConfirmed')->willReturn(false);
+        $this->user->method('getRegistrationRoute')->willReturn(User::CO_DEPUTY_INVITE);
+
+        $client1 = $this->createMock(Client::class);
+        $client2 = $this->createMock(Client::class);
+        $this->clientApi
+            ->method('getAllClientsByDeputyUid')
+            ->willReturn([$client1, $client2]);
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('codep_verification')
+            ->willReturn('/codeputy/verification');
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        self::assertEquals('/codeputy/verification', $actual);
+    }
+
     public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
     {
         $this->user->expects($this->once())->method('hasAdminRole')->willReturn(false);
