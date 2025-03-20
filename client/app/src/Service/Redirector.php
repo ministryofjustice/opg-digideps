@@ -94,25 +94,20 @@ class Redirector
         return $this->router->generate('access_denied');
     }
 
-    /**
-     * //TODO refactor remove. seem overcomplicated.
-     *
-     * @param string $currentRoute
-     *
-     * @return bool|string
-     */
-    public function getCorrectRouteIfDifferent(User $user, $currentRoute)
+    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
     {
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
+                $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+
                 // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
+                if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
                     $route = 'lay_home';
                 }
 
                 // unverified codeputy invitation
-                if (!$user->getCoDeputyClientConfirmed() && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
                     $route = 'codep_verification';
                 }
             } else {
