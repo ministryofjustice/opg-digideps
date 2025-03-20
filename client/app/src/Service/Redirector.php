@@ -131,10 +131,7 @@ class Redirector
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    /**
-     * @return string
-     */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null)
+    private function getLayDeputyHomepage(User $user, ?int $activeClientId = null): string
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -175,10 +172,7 @@ class Redirector
         $this->session->remove('_security.secured_area.target_path');
     }
 
-    /**
-     * @return string
-     */
-    public function getHomepageRedirect()
+    public function getHomepageRedirect(): bool|string
     {
         if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
@@ -221,16 +215,17 @@ class Redirector
     private function getCorrectLayHomepage(User $user)
     {
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+
+        if (!is_array($clients)) {
+            return $this->getLayDeputyHomepage($user);
+        }
+
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
-        if (!(null === $clients)) {
-            if (1 < count($clients)) {
-                return $this->getChooseAClientHomepage($user);
-            } else {
-                return $this->getLayDeputyHomepage($user, $activeClientId);
-            }
+        if (1 < count($clients)) {
+            return $this->getChooseAClientHomepage($user);
         } else {
-            return $this->getLayDeputyHomepage($user);
+            return $this->getLayDeputyHomepage($user, $activeClientId);
         }
     }
 }
