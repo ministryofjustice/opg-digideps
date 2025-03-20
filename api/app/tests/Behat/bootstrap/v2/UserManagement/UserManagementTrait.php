@@ -860,23 +860,7 @@ trait UserManagementTrait
     {
         $user = is_null($this->interactingWithUserDetails) ? $this->profAdminCombinedHighNotStartedDetails : $this->interactingWithUserDetails;
 
-        switch (strtolower($whichName)) {
-            case 'first':
-                $searchName = $user->getUserFirstName();
-                break;
-            case 'last':
-                $searchName = $user->getUserLastName();
-                break;
-            case 'full':
-                $searchName = sprintf(
-                    '%s %s',
-                    $user->getUserFirstName(),
-                    $user->getUserLastName()
-                );
-                break;
-            default:
-                throw new BehatException('This step only supports "first|last|full" as a search term. Either update step argument or add a case statement.');
-        }
+        $searchName = $this->getSearchTerm($whichName);
 
         $this->searchForUserBy($searchName, $user);
     }
@@ -904,24 +888,7 @@ trait UserManagementTrait
 
         $searchResults = $this->getSearchResults();
 
-        switch (strtolower($whichName)) {
-            case 'first':
-                $searchName = $this->interactingWithUserDetails->getUserFirstName();
-                break;
-            case 'last':
-                $searchName = $this->interactingWithUserDetails->getUserLastName();
-                break;
-            case 'full':
-                $searchName = sprintf(
-                    '%s %s',
-                    $this->interactingWithUserDetails->getUserFirstName(),
-                    $this->interactingWithUserDetails->getUserLastName()
-                );
-                break;
-            default:
-                throw new BehatException('This step only supports "first|last|full" as a search term. Either update step argument or add a case statement.');
-        }
-
+        $searchName = $this->getSearchTerm($whichName);
         $searchResultsFound = implode(',', $searchResults);
         $userNamesFoundCount = substr_count($searchResultsFound, strtolower($searchName));
 
@@ -951,5 +918,28 @@ trait UserManagementTrait
         }
 
         return $formattedDataElements;
+    }
+
+    private function getSearchTerm(string $whichName)
+    {
+        switch (strtolower($whichName)) {
+            case 'first':
+                $searchName = $this->interactingWithUserDetails->getUserFirstName();
+                break;
+            case 'last':
+                $searchName = $this->interactingWithUserDetails->getUserLastName();
+                break;
+            case 'full':
+                $searchName = sprintf(
+                    '%s %s',
+                    $this->interactingWithUserDetails->getUserFirstName(),
+                    $this->interactingWithUserDetails->getUserLastName()
+                );
+                break;
+            default:
+                throw new BehatException('This step only supports "first|last|full" as a search term. Either update step argument or add a case statement.');
+        }
+
+        return $searchName;
     }
 }
