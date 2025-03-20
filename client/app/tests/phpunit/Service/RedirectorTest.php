@@ -154,7 +154,7 @@ class RedirectorTest extends TestCase
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
-        $this->assertEquals($actual, $expectedRoute);
+        $this->assertEquals($expectedRoute, $actual);
     }
 
     /*
