@@ -13,17 +13,10 @@ class UserCleanupCommand extends Command
 {
     protected static $defaultName = 'digideps:delete-zero-activity-users';
 
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /** @var UserRepository */
-    private $userRepository;
-
-    public function __construct(EntityManagerInterface $em, UserRepository $userRepository)
-    {
-        $this->em = $em;
-        $this->userRepository = $userRepository;
-
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository
+    ) {
         parent::__construct();
     }
 

@@ -3,13 +3,12 @@
 namespace App\v2\Registration\SelfRegistration\Factory;
 
 use App\Entity\PreRegistration;
-use App\Service\DateTimeProvider;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PreRegistrationFactory
 {
-    public function __construct(private ValidatorInterface $validator, private DateTimeProvider $dateProvider)
+    public function __construct(private readonly ValidatorInterface $validator)
     {
     }
 

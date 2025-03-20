@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -11,8 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class HealthController extends RestController
 {
-    public function __construct(private readonly string $symfonyEnvironment, private readonly LoggerInterface $logger, private readonly RestFormatter $restFormatter)
-    {
+    public function __construct(
+        private readonly string $symfonyEnvironment,
+        private readonly LoggerInterface $logger,
+        private EntityManagerInterface $em
+    ) {
+        parent::__construct($em);
     }
 
     /**
@@ -45,7 +49,7 @@ class HealthController extends RestController
     private function dbInfo()
     {
         try {
-            $this->getDoctrine()->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
+            $this->em->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
 
             return [true, ''];
         } catch (\Throwable $e) {

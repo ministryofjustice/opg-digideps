@@ -27,11 +27,11 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
     private string $bruteForceKey = '';
 
     public function __construct(
-        private UserRepository $userRepository,
-        private TokenStorageInterface $tokenStorage,
-        private AuthService $authService,
-        private AttemptsInTimeChecker $attemptsInTimeChecker,
-        private AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
+        private readonly UserRepository $userRepository,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthService $authService,
+        private readonly AttemptsInTimeChecker $attemptsInTimeChecker,
+        private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
     ) {
     }
 

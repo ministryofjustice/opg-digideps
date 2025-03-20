@@ -11,13 +11,8 @@ class ResyncResubmittableErrorChecklists extends Command
 {
     protected static $defaultName = 'digideps:resync-resubmittable-error-checklists';
 
-    /** @var ChecklistRepository */
-    private $checklistRepository;
-
-    public function __construct(ChecklistRepository $checklistRepository)
+    public function __construct(private readonly ChecklistRepository $checklistRepository)
     {
-        $this->checklistRepository = $checklistRepository;
-
         parent::__construct();
     }
 

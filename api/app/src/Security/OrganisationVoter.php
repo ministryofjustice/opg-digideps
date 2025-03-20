@@ -16,12 +16,8 @@ class OrganisationVoter extends Voter
     /** @var string */
     public const EDIT = 'edit';
 
-    /** @var Security */
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(private readonly Security $security)
     {
-        $this->security = $security;
     }
 
     protected function supports(string $attribute, mixed $subject): bool

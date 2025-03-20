@@ -11,13 +11,9 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class ClientRepository extends ServiceEntityRepository
 {
-    /** @var ClientSearchFilter */
-    private $filter;
-
-    public function __construct(ManagerRegistry $registry, ClientSearchFilter $filter)
+    public function __construct(ManagerRegistry $registry, private readonly ClientSearchFilter $filter)
     {
         parent::__construct($registry, Client::class);
-        $this->filter = $filter;
     }
 
     /**

@@ -21,6 +21,7 @@ class DecisionController extends RestController
         private readonly EntityManagerInterface $em,
         private readonly RestFormatter $formatter,
     ) {
+        parent::__construct($em);
     }
 
     /**
