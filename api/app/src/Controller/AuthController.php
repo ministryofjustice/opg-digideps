@@ -25,8 +25,10 @@ class AuthController extends RestController
         private readonly JWTService $JWTService,
         private readonly LoggerInterface $logger,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly string $workspace
+        private readonly string $workspace,
+        EntityManagerInterface $em,
     ) {
+       parent::__construct($em);
     }
 
     /**

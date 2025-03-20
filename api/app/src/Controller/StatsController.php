@@ -8,7 +8,6 @@ use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
-use App\Entity\Report\Report;
 use App\Exception\UnauthorisedException;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
@@ -20,6 +19,7 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,8 +35,10 @@ class StatsController extends RestController
         private readonly BankAccountRepository $bankAccountRepository,
         private readonly NdrAssetRepository $ndrAssetRepository,
         private readonly NdrBankAccountRepository $ndrBankAccountRepository,
-        private readonly AuthService $authService
+        private readonly AuthService $authService,
+        EntityManagerInterface $em
     ) {
+        parent::__construct($em);
     }
 
     /**
