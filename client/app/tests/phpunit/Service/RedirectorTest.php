@@ -34,11 +34,9 @@ class RedirectorTest extends TestCase
 
         $this->session = $this->createMock(Session::class);
 
-        $mockToken = $this->createMock(TokenInterface::class);
-        $mockToken->expects($this->once())->method('getUser')->willReturn($this->user);
+        $this->mockToken = $this->createMock(TokenInterface::class);
 
         $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($mockToken);
 
         $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
 
@@ -100,6 +98,9 @@ class RedirectorTest extends TestCase
         array $routeParams,
         string $expectedRoute,
     ): void {
+        $this->mockToken->expects($this->once())->method('getUser')->willReturn($this->user);
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->mockToken);
+
         $this->authChecker->expects($this->any())
             ->method('isGranted')
             ->willReturnCallback(function ($role) use ($grantedRole) {
@@ -160,77 +161,17 @@ class RedirectorTest extends TestCase
     }
 
     /*
-    public static function getCorrectRouteIfDifferentProvider()
-    {
-        // ROLE, current_route, isCoDeputy, coDeputyClientConfirmed, isNdrEnabled, isDeputyOrg,  clientKnown, hasAddress
-        return [
-            // Same URLs never get redirected
-            ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  false,  false, true, true, false],
-
-            // NDR deputy gets redirected to NDR index
-            ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  true,  false, true, true, false],
-            // Lay deputy gets redirected to LAY
-
-            // Correct URLs dont get redirected
-            ['ROLE_LAY_DEPUTY', 'lay_home',  false, false,  false,  false, true, true, false],
-
-            // User without client gets redirected to client_add
-            ['ROLE_LAY_DEPUTY', 'lay_home', false, false,  true, false, false, true, 'client_add'],
-
-            // User without user address gets redirected to user_details
-            ['ROLE_LAY_DEPUTY', 'lay_home', false, false,  true, false, true, false, 'user_details'],
-
-            // Unverified co deputies gets redirected to codep_verification
-            ['ROLE_LAY_DEPUTY', 'lay_home', true, false, false, false, true, false, 'codep_verification'],
-
-            // Verified co deputies dont get redirected
-            ['ROLE_LAY_DEPUTY', 'lay_home', true, true, false, false, true, false, false],
-
-            // Admins are not redirected
-            [User::ROLE_ADMIN, 'lay_home', true, true, false, false, true, false, false],
-
-            // Profs/PAs dont get redirected as we assume that we have client and address details
-            [User::ROLE_PA_NAMED, 'lay_home', true, true, false, false, true, false, false],
-            [User::ROLE_PA_ADMIN, 'lay_home', true, true, false, false, true, false, false],
-            [User::ROLE_PA_TEAM_MEMBER, 'lay_home', true, true, false, false, true, false, false],
-            [User::ROLE_PROF_NAMED, 'lay_home', true, true, false, false, true, false, false],
-            [User::ROLE_PROF_ADMIN, 'lay_home', true, true, false, false, true, false, false],
-            [User::ROLE_PROF_TEAM_MEMBER, 'lay_home', true, true, false, false, true, false, false],
-        ];
-    }*/
-
-    /*
-     * @dataProvider getCorrectRouteIfDifferentProvider
+     * All other paths through this method are captured by the tests for getLayDeputyHomepage(), except for this one,
+     * which I am frankly surprised ever happens.
      */
-    /*
-    public function testGetCorrectRouteIfDifferent(
-        $userRole,
-        $currentRoute,
-        $isCoDeputy,
-        $coDeputyClientConfirmed,
-        $isNdrEnabled,
-        $isDeputyOrg,
-        $clientKnown,
-        $hasAddress,
-        $expectedRoute,
-        $registrationRoute = User::CO_DEPUTY_INVITE,
-    ) {
-        $this->user->setRoleName($userRole);
-
-        $this->user->shouldReceive('isNdrEnabled')->andReturn($isNdrEnabled);
-        $this->user->shouldReceive('getIsCoDeputy')->andReturn($isCoDeputy);
-        $this->user->shouldReceive('getCoDeputyClientConfirmed')->andReturn($coDeputyClientConfirmed);
-        $this->user->shouldReceive('isDeputyOrg')->andReturn($isDeputyOrg);
-        $this->user->shouldReceive('getIdOfClientWithDetails')->andReturn($clientKnown);
-        $this->user->shouldReceive('hasAddressDetails')->andReturn($hasAddress);
-        $this->user->shouldReceive('getRegistrationRoute')->andReturn($registrationRoute);
-
-        $correctRoute = $this->sut->getCorrectRouteIfDifferent($this->user, $currentRoute);
-        $this->assertEquals($expectedRoute, $correctRoute);
-    }
-
-    public function tearDown(): void
+    public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
     {
-        m::close();
-    }*/
+        $this->user->expects($this->once())->method('hasAdminRole')->willReturn(false);
+        $this->user->expects($this->once())->method('getIsCoDeputy')->willReturn(true);
+        $this->user->expects($this->once())->method('getCoDeputyClientConfirmed')->willReturn(true);
+
+        $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
+
+        $this->assertEquals('lay_home', $correctedRoute);
+    }
 }
