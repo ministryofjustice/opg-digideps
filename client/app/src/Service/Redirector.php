@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\User;
@@ -20,28 +22,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class Redirector
 {
-    /**
-     * Routes the user can be redirected to, if accessed before timeout.
-     *
-     * @var array
-     */
-    private $redirectableRoutes = [
-        'user_details',
-        'user_edit',
-        'report_overview',
-        'account',
-        'accounts',
-        'contacts',
-        'decisions',
-        'assets',
-        'report_declaration',
-        'report_submit_confirmation',
-        'client',
-    ];
-
-    /**
-     * Redirector constructor.
-     */
     public function __construct(
         protected TokenStorageInterface $tokenStorage,
         protected AuthorizationCheckerInterface $authChecker,
@@ -53,17 +33,25 @@ class Redirector
     ) {
     }
 
-    /**
-     * @return User
-     */
-    private function getLoggedUser()
+    private function getLoggedUser(): ?User
     {
-        return $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+        if (is_null($token)) {
+            return null;
+        }
+
+        /* @var ?User */
+        return $token->getUser();
     }
 
-    private function getCorrectLayHomepage(User $user): string
+    private function getCorrectLayHomepage(?User $user): string
     {
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        if (is_null($user)) {
+            return $this->router->generate('login');
+        }
+
+        $deputyUid = $user->getDeputyUid();
+        $clients = !is_null($deputyUid) ? $this->clientApi->getAllClientsByDeputyUid($deputyUid) : [];
 
         if (!is_array($clients)) {
             return $this->getLayDeputyHomepage($user);
@@ -71,13 +59,14 @@ class Redirector
 
         if (count($clients) > 1) {
             // checks if user has missing details or is NDR
-            if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
+            $route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client');
+            if (is_string($route)) {
                 return $this->router->generate($route);
             }
 
             return $this->router->generate('choose_a_client');
         } else {
-            $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
+            $activeClientId = count($clients) > 0 ? $clients[0]->getId() : null;
 
             return $this->getLayDeputyHomepage($user, $activeClientId);
         }
@@ -86,12 +75,17 @@ class Redirector
     private function getLayDeputyHomepage(User $user, ?int $activeClientId = null): string
     {
         // checks if user has missing details or is NDR
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
+        $route = $this->getCorrectRouteIfDifferent($user, 'lay_home');
+        if (is_string($route)) {
             return $this->router->generate($route);
         }
 
-        // redirect to create report if report is not created
-        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+        // redirect to create report if report is not present
+        $allActiveClients = [];
+        $deputyUid = $user->getDeputyUid();
+        if (!is_null($deputyUid)) {
+            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
+        }
 
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
@@ -115,7 +109,7 @@ class Redirector
         $isAdminUser = $this->authChecker->isGranted(User::ROLE_ADMIN);
         $isAdUser = $this->authChecker->isGranted(User::ROLE_AD);
         $isLayDeputy = $this->authChecker->isGranted(User::ROLE_LAY_DEPUTY);
-        $isDeputyOrg = $user->isDeputyOrg();
+        $isDeputyOrg = !is_null($user) && $user->isDeputyOrg();
         $inPasswordCreateContext = 'password-create' === $session->get('login-context');
 
         if ($inPasswordCreateContext && ($isAdminUser || $isAdUser || $isDeputyOrg)) {
@@ -178,7 +172,7 @@ class Redirector
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    public function removeLastAccessedUrl()
+    public function removeLastAccessedUrl(): void
     {
         $this->session->remove('_security.secured_area.target_path');
     }
