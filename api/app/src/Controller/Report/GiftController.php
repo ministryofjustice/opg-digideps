@@ -16,6 +16,7 @@ class GiftController extends RestController
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -132,7 +133,7 @@ class GiftController extends RestController
         // update bank account
         $gift->setBankAccount(null);
         if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
-            $bankAccount = $this->getRepository(
+            $bankAccount = $this->em->getRepository(
                 EntityDir\Report\BankAccount::class
             )->findOneBy(
                 [

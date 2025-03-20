@@ -23,6 +23,7 @@ class DocumentController extends RestController
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly LoggerInterface $verboseLogger)
     {
+        parent::__construct($em);
     }
 
     /**

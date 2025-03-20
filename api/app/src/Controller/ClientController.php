@@ -26,6 +26,7 @@ class ClientController extends RestController
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly TokenStorageInterface $tokenStorage,
     ) {
+        parent::__construct($em);
     }
 
     /**

@@ -19,6 +19,7 @@ class VisitsCareController extends RestController
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -81,7 +82,7 @@ class VisitsCareController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $ret = $this->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
+        $ret = $this->em->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
 
         return $ret;
     }

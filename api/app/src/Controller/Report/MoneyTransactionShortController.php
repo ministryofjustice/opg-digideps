@@ -23,6 +23,7 @@ class MoneyTransactionShortController extends RestController
         private readonly RestFormatter $formatter,
         private readonly MoneyTransactionShortRepository $moneyTransactionShortRepository
     ) {
+        parent::__construct($em);
     }
 
     /**

@@ -25,6 +25,7 @@ class PreRegistrationController extends RestController
         private readonly RestFormatter $formatter,
         private readonly EntityManagerInterface $em
     ) {
+        parent::__construct($em);
     }
 
     /**
@@ -107,7 +108,7 @@ class PreRegistrationController extends RestController
      */
     public function userCount()
     {
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $qb = $this->em->createQueryBuilder();
         $qb->select('count(p.id)');
         $qb->from('App\Entity\PreRegistration', 'p');
 

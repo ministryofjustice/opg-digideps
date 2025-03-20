@@ -14,6 +14,7 @@ class AssetController extends RestController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -25,8 +26,8 @@ class AssetController extends RestController
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-
-        $assets = $this->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
+        
+        $assets = $this->em->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
 
         if (0 == count($assets)) {
             return [];

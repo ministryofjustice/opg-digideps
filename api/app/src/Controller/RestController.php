@@ -4,27 +4,25 @@ namespace App\Controller;
 
 use App\Entity as EntityDir;
 use App\Exception\NotFound;
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class RestController extends AbstractController
 {
-    /**
-     * @param $entityClass string
-     */
-    protected function getRepository(string $entityClass): ObjectRepository
+    public function __construct(private readonly EntityManagerInterface $em)
     {
-        return $this->getDoctrine()->getManager()->getRepository($entityClass);
     }
 
     /**
+     * @template T of object
+     * @param class-string<T> $entityClass
      * @param array|int $criteriaOrId
-     *
+     * @return T
      * @throws NotFound
      */
     protected function findEntityBy(string $entityClass, $criteriaOrId, $errorMessage = null): object
     {
-        $repo = $this->getRepository($entityClass);
+        $repo = $this->em->getRepository($entityClass);
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
         if (!$entity) {
@@ -92,7 +90,7 @@ abstract class RestController extends AbstractController
         if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
             $deputyUid = $this->getUser()->getDeputyUid();
             if ($deputyUid) {
-                $deputyUidArray = $this->getDoctrine()->getManager()->getRepository(EntityDir\User::class)->findDeputyUidsForClient($clientId);
+                $deputyUidArray = $this->em->getRepository(EntityDir\User::class)->findDeputyUidsForClient($clientId);
                 if (in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
                     $hasAccess = true;
                 }

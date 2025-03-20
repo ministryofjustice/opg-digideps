@@ -20,6 +20,7 @@ class SelfRegisterController extends RestController
 {
     public function __construct(private readonly LoggerInterface $logger, private readonly ValidatorInterface $validator, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly EntityManagerInterface $em)
     {
+        parent::__construct($em);
     }
 
     /**

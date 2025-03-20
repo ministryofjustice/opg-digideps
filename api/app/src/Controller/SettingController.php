@@ -16,6 +16,7 @@ class SettingController extends RestController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -23,7 +24,7 @@ class SettingController extends RestController
      */
     public function getSetting(Request $request, $id)
     {
-        $setting = $this->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
+        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
 
         $this->formatter->setJmsSerialiserGroups(['setting']);
 
@@ -42,7 +43,7 @@ class SettingController extends RestController
             'enabled' => 'mustExist',
         ]);
 
-        $setting = $this->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
+        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
         if ($setting) { // update
             $setting->setContent($data['content']);
             $setting->setEnabled($data['enabled']);

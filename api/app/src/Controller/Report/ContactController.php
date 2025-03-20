@@ -19,6 +19,7 @@ class ContactController extends RestController
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
+        parent::__construct($em);
     }
 
     /**
@@ -126,7 +127,7 @@ class ContactController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $contacts = $this->getRepository(EntityDir\Report\Contact::class)->findByReport($report);
+        $contacts = $this->em->getRepository(EntityDir\Report\Contact::class)->findByReport($report);
 
         if (0 == count($contacts)) {
             // throw new AppExceptions\NotFound("No contacts found for report id: $id", 404);

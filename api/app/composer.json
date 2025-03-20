@@ -62,7 +62,6 @@
         "symfony/yaml": "^5.4.0"
     },
     "require-dev": {
-        "ministryofjustice/mink-extension": "^2.7.3",
         "behat/behat": "^3.8",
         "behat/mink": "^1.8",
         "behat/mink-browserkit-driver": "^2.1.0",
@@ -72,6 +71,7 @@
         "friends-of-behat/symfony-extension": "^2.4",
         "guzzlehttp/guzzle": "^7.0",
         "liuggio/fastest": "^1.9",
+        "ministryofjustice/mink-extension": "^2.7.3",
         "mockery/mockery": "^1.0.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^1.0.0",
@@ -79,8 +79,9 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "5.4.47",
+        "rector/rector": "*",
         "symfony/browser-kit": "^5.4.0",
+        "symfony/http-client": "5.4.47",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^5.4.0",
         "symfony/phpunit-bridge": "^5.4.0",
