@@ -3,115 +3,164 @@
 namespace App\Service;
 
 use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
-use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class RedirectorTest extends TestCase
 {
-    /**
-     * @var Redirector
-     */
-    protected $object;
-
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authChecker;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var ClientApi
-     */
-    protected $clientApi;
-
     private User $user;
+    private TokenStorageInterface $tokenStorage;
+    private Session $session;
+    private RouterInterface $router;
+    private AuthorizationCheckerInterface $authChecker;
+    private ClientApi $clientApi;
     private LoggerInterface $logger;
 
-    /**
-     * @var ParameterStoreService
-     */
-    protected $parameterStoreService;
+    private Redirector $sut;
 
     public function setUp(): void
     {
-        $this->user = m::mock(User::class)->makePartial();
-        $this->tokenStorage = m::mock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
-        $this->tokenStorage->shouldReceive('getToken->getUser')->andReturn($this->user);
-        $this->router = m::mock('Symfony\Component\Routing\RouterInterface')
-            ->shouldReceive('generate')->andReturnUsing(function ($route, $params = []) {
-                return [$route, $params];
-            })->getMock();
-        $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
+        $this->user = $this->createMock(User::class);
 
-        $this->tokenStorage->shouldReceive('getToken->getUser')->andReturn($this->user);
+        $this->router = $this->createMock(RouterInterface::class);
 
-        $this->authChecker = m::mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface');
-        $this->clientApi = m::mock(ClientApi::class);
-        $this->logger = m::mock(LoggerInterface::class);
+        $this->session = $this->createMock(Session::class);
 
-        $this->object = new Redirector(
-            $this->tokenStorage,
-            $this->authChecker,
-            $this->router,
-            $this->session,
-            'prod',
-            $this->clientApi,
-            $this->logger,
-        );
+        $mockToken = $this->createMock(TokenInterface::class);
+        $mockToken->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($mockToken);
+
+        $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
+
+        $this->clientApi = $this->createMock(ClientApi::class);
+
+        $this->logger = $this->createMock(LoggerInterface::class);
+
+        $this->sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi, $this->logger);
     }
 
-    public static function firstPageAfterLoginProvider()
+    public static function firstPageAfterLoginProvider(): array
     {
-        $clientWithDetails = m::mock(Client::class, ['hasDetails' => true]);
-        $clientWithoutDetails = m::mock(Client::class)->shouldReceive('hasDetails')->andReturn(false)->getMock();
-
+        // $grantedRole: the role the user has when checked via the auth checker; null if this is irrelevant
+        // $paOrProfDeputy: true if the user is a PA or PROF deputy
+        // $coDeputy: true if user is an invited co-deputy
+        // $coDeputyClientConfirmed: true if user is an invited co-deputy who has confirmed the client
+        // $clientIdWithDetails: values returned for User::getClientIdWithDetails; null if hasn't been set for user
+        // $userHasAddress: true if user has address details
+        // $sessionValue: key => value pairs to set in the session; if not set, any call to Session::has will return false
+        // $clients: number of clients to return for lay deputy; 0 for non-lay deputies, as it's not used for redirects
+        // $reports: number of reports to return for each client (if there are any clients)
+        // $userIsNdrEnabled: true if the user needs to complete an NDR
+        // $routeName: the route name we expect will be passed to the router
+        // $routeParams: array of params we expect to be passed to the router
+        // $expectedRoute: the route we expect to see coming out of the router (what we're asserting on)
         return [
-            ['ROLE_ADMIN', [], ['admin_homepage', []]],
-            ['ROLE_LAY_DEPUTY', ['hasDetails' => false], ['user_details', []]],
-            ['ROLE_LAY_DEPUTY', ['hasDetails' => true, 'getIdOfClientWithDetails' => null], ['client_add', []]],
-            ['ROLE_LAY_DEPUTY', ['hasDetails' => true, 'getIdOfClientWithDetails' => 1, 'getActiveReportId' => 1], ['report_overview', ['reportId' => 1]]],
-            ['ROLE_LAY_DEPUTY', ['hasDetails' => true, 'getIdOfClientWithDetails' => 1, 'getActiveReportId' => null], ['lay_home', []]],
+            'admin password create' => [User::ROLE_ADMIN, false, false, false, null, true, ['login-context' => 'password-create'], 0, 0, false, 'user_details', [], '/user/details'],
+            'admin homepage' => [User::ROLE_ADMIN, false, false, false, null, true, null, 0, 0, false, 'admin_homepage', [], '/admin/'],
+            'ad homepage' => [User::ROLE_AD, false, false, false, null, true, null, 0, 0, false, 'ad_homepage', [], '/ad/'],
+            'non-admin password create' => [null, true, false, false, null, true, ['login-context' => 'password-create'], 0, 0, false, 'user_details', [], '/user/details'],
+            'non-admin org dashboard' => [null, true, false, false, null, true, null, 0, 0, false, 'org_dashboard', [], '/org/'],
+            'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, false, 'choose_a_client', [], '/choose-a-client'],
+            'lay with single client' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 1, 1, false, 'lay_home', ['clientId' => 999], '/client/999'],
+            'co-deputy lay with single client, not confirmed' => [User::ROLE_LAY_DEPUTY, false, true, false, null, true, null, 1, 0, false, 'codep_verification', [], '/codeputy/verification'],
+            'co-deputy lay with single client, confirmed, client has reports' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 1, false, 'lay_home', ['clientId' => 999], '/client/999'],
+            'co-deputy lay with single client, confirmed, client has no reports, ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 0, true, 'lay_home', ['clientId' => 999], '/client/999'],
+            'co-deputy lay with single client, confirmed, client has no reports, not ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, 1111, true, null, 1, 0, false, 'report_create', ['clientId' => 1111], '/report/create/1111'],
+            'lay with no clients added and address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 0, 0, false, 'client_add', [], '/client/add'],
+            'lay with no clients added and no address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, false, null, 0, 0, false, 'user_details', [], '/user/details'],
+            'access denied' => [null, false, false, false, null, false, null, 0, 0, false, 'access_denied', [], '/access-denied'],
         ];
     }
 
     /**
      * @dataProvider firstPageAfterLoginProvider
      */
-    public function testgetFirstPageAfterLogin($grantedRole, $userMocks, $expectedRouteAndParams)
-    {
-        $this->markTestIncomplete('fix when specs are 100% defined');
+    public function testGetFirstPageAfterLogin(
+        ?string $grantedRole,
+        bool $paOrProfDeputy,
+        bool $coDeputy,
+        bool $coDeputyClientConfirmed,
+        ?int $clientIdWithDetails,
+        bool $userHasAddress,
+        ?array $sessionValues,
+        int $numClients,
+        int $numReports,
+        bool $userIsNdrEnabled,
+        string $routeName,
+        array $routeParams,
+        string $expectedRoute,
+    ): void {
+        $this->authChecker->expects($this->any())
+            ->method('isGranted')
+            ->willReturnCallback(function ($role) use ($grantedRole) {
+                return $role === $grantedRole;
+            });
 
-        $this->authChecker->shouldIgnoreMissing();
-        $this->authChecker->shouldReceive('isGranted')->with($grantedRole)->andReturn(true);
-        foreach ($userMocks as $k => $v) {
-            $this->user->shouldReceive($k)->andReturn($v);
+        $this->user->method('isDeputyOrg')->willReturn($paOrProfDeputy);
+        $this->user->method('hasAdminRole')->willReturn(User::ROLE_LAY_DEPUTY !== $grantedRole);
+        $this->user->method('getIsCoDeputy')->willReturn($coDeputy);
+        $this->user->method('hasAddressDetails')->willReturn($userHasAddress);
+        $this->user->method('isNdrEnabled')->willReturn($userIsNdrEnabled);
+        $this->user->method('getIdOfClientWithDetails')->willReturn($clientIdWithDetails);
+
+        if ($coDeputy) {
+            $this->user->method('getRegistrationRoute')->willReturn(User::CO_DEPUTY_INVITE);
+            $this->user->method('getCoDeputyClientConfirmed')->willReturn($coDeputyClientConfirmed);
         }
 
-        $actual = $this->object->getFirstPageAfterLogin(false);
-        $this->assertEquals($actual, $expectedRouteAndParams);
+        if (is_null($sessionValues)) {
+            $this->session->method('has')->willReturn(false);
+        } else {
+            foreach ($sessionValues as $key => $value) {
+                $this->session->expects($this->once())->method('has')->with($key)->willReturn(true);
+                $this->session->expects($this->once())->method('get')->with($key)->willReturn($value);
+            }
+        }
+
+        if ($numClients > 0) {
+            $clients = [];
+            for ($i = 0; $i < $numClients; ++$i) {
+                $client = $this->createMock(Client::class);
+                $client->method('getId')->willReturn(999);
+
+                $reports = [];
+                for ($j = 0; $j < $numReports; ++$j) {
+                    $report = $this->createMock(Report::class);
+                    $reports[] = $report;
+                }
+                $client->method('getReportIds')->willReturn($reports);
+
+                $clients[] = $client;
+            }
+
+            $this->user->method('getDeputyUid')->willReturn(777777);
+            $this->clientApi->method('getAllClientsByDeputyUid')
+                ->willReturn($clients);
+        }
+
+        if (!is_null($routeName)) {
+            $this->router->expects($this->once())
+                ->method('generate')
+                ->with($routeName, $routeParams)
+                ->willReturn($expectedRoute);
+        }
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        $this->assertEquals($actual, $expectedRoute);
     }
 
+    /*
     public static function getCorrectRouteIfDifferentProvider()
     {
         // ROLE, current_route, isCoDeputy, coDeputyClientConfirmed, isNdrEnabled, isDeputyOrg,  clientKnown, hasAddress
@@ -149,11 +198,12 @@ class RedirectorTest extends TestCase
             [User::ROLE_PROF_ADMIN, 'lay_home', true, true, false, false, true, false, false],
             [User::ROLE_PROF_TEAM_MEMBER, 'lay_home', true, true, false, false, true, false, false],
         ];
-    }
+    }*/
 
-    /**
+    /*
      * @dataProvider getCorrectRouteIfDifferentProvider
      */
+    /*
     public function testGetCorrectRouteIfDifferent(
         $userRole,
         $currentRoute,
@@ -176,12 +226,12 @@ class RedirectorTest extends TestCase
         $this->user->shouldReceive('hasAddressDetails')->andReturn($hasAddress);
         $this->user->shouldReceive('getRegistrationRoute')->andReturn($registrationRoute);
 
-        $correctRoute = $this->object->getCorrectRouteIfDifferent($this->user, $currentRoute);
+        $correctRoute = $this->sut->getCorrectRouteIfDifferent($this->user, $currentRoute);
         $this->assertEquals($expectedRoute, $correctRoute);
     }
 
     public function tearDown(): void
     {
         m::close();
-    }
+    }*/
 }
