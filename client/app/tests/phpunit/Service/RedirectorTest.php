@@ -119,10 +119,9 @@ class RedirectorTest extends TestCase
         }
 
         if (is_null($sessionValues)) {
-            $this->session->method('has')->willReturn(false);
+            $this->session->method('get')->willReturn(null);
         } else {
             foreach ($sessionValues as $key => $value) {
-                $this->session->expects($this->once())->method('has')->with($key)->willReturn(true);
                 $this->session->expects($this->once())->method('get')->with($key)->willReturn($value);
             }
         }
