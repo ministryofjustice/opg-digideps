@@ -205,6 +205,7 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
+        file_put_contents('php://stderr', print_r('DEBUG - LOGOUT ROUTE', true));
         // Handled as automatically as part of Symfony security component
     }
 

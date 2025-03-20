@@ -19,6 +19,7 @@ class AuthenticationHandler implements AuthenticationFailureHandlerInterface, Lo
 
     public function onLogoutSuccess(Request $request)
     {
+        file_put_contents('php://stderr', print_r('DEBUG - AUTH LOGOUT', true));
         $request->getSession()->set('fromLogoutPage', 1);
 
         return new RedirectResponse('/login');
