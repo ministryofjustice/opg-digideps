@@ -87,6 +87,10 @@ class Redirector
             $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
         }
 
+        if (is_null($allActiveClients)) {
+            $allActiveClients = [];
+        }
+
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
                 break;
@@ -158,7 +162,7 @@ class Redirector
                 // Check if user has multiple clients
                 $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
 
-                if (0 == count($clients)) {
+                if (is_array($clients) && 0 == count($clients)) {
                     $route = 'client_add';
                 }
             }
