@@ -20,11 +20,10 @@ final class Version292 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE court_order ALTER court_order_uid TYPE BIGINT USING court_order_uid::bigint');
         $this->addSql('ALTER TABLE deputy DROP CONSTRAINT FK_28FA6B9FA76ED395');
         $this->addSql('ALTER TABLE deputy ADD CONSTRAINT FK_28FA6B9FA76ED395 FOREIGN KEY (user_id) REFERENCES dd_user (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE document ALTER sync_attempts SET DEFAULT 0');
-        $this->addSql('ALTER TABLE pre_registration ALTER hybrid TYPE VARCHAR(6)');
+        $this->addSql('ALTER TABLE pre_registration ALTER hybrid TYPE VARCHAR(12)');
         $this->addSql('ALTER TABLE pre_registration ALTER client_firstname TYPE VARCHAR(100)');
         $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT FK_3B9FE71A5423F28F');
         $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT FK_3B9FE71AA76ED395');
@@ -42,7 +41,6 @@ final class Version292 extends AbstractMigration
         $this->addSql('ALTER TABLE pre_registration ALTER client_firstname TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE pre_registration ALTER hybrid TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE document ALTER sync_attempts DROP DEFAULT');
-        $this->addSql('ALTER TABLE court_order ALTER court_order_uid TYPE VARCHAR(36)');
         $this->addSql('ALTER TABLE deputy DROP CONSTRAINT fk_28fa6b9fa76ed395');
         $this->addSql('ALTER TABLE deputy ADD CONSTRAINT fk_28fa6b9fa76ed395 FOREIGN KEY (user_id) REFERENCES dd_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
