@@ -61,32 +61,37 @@ class Redirector
         return $this->tokenStorage->getToken()->getUser();
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstPageAfterLogin(SessionInterface $session)
+    public function getFirstPageAfterLogin(SessionInterface $session): string
     {
         $user = $this->getLoggedUser();
 
-        if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
-            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
-                return $this->router->generate('user_details');
-            } else {
-                return $this->router->generate('admin_homepage');
-            }
-        } elseif ($this->authChecker->isGranted(User::ROLE_AD)) {
-            return $this->router->generate('ad_homepage');
-        } elseif ($user->isDeputyOrg()) {
-            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
-                return $this->router->generate('user_details');
-            } else {
-                return $this->router->generate('org_dashboard');
-            }
-        } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            return $this->getCorrectLayHomepage($user);
-        } else {
-            return $this->router->generate('access_denied');
+        $isAdminUser = $this->authChecker->isGranted(User::ROLE_ADMIN);
+        $isAdUser = $this->authChecker->isGranted(User::ROLE_AD);
+        $isLayDeputy = $this->authChecker->isGranted(User::ROLE_LAY_DEPUTY);
+        $isDeputyOrg = $user->isDeputyOrg();
+        $inPasswordCreateContext = 'password-create' === $session->get('login-context');
+
+        if ($inPasswordCreateContext && ($isAdminUser || $isAdUser || $isDeputyOrg)) {
+            return $this->router->generate('user_details');
         }
+
+        if ($isAdminUser) {
+            return $this->router->generate('admin_homepage');
+        }
+
+        if ($isAdUser) {
+            return $this->router->generate('ad_homepage');
+        }
+
+        if ($isDeputyOrg) {
+            return $this->router->generate('org_dashboard');
+        }
+
+        if ($isLayDeputy) {
+            return $this->getCorrectLayHomepage($user);
+        }
+
+        return $this->router->generate('access_denied');
     }
 
     /**
