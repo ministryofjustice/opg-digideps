@@ -48,7 +48,7 @@ class Redirector
         protected RouterInterface $router,
         protected Session $session,
         protected string $env,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -82,7 +82,7 @@ class Redirector
                 return $this->router->generate('org_dashboard');
             }
         } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            return $this->getCorrectLayHomepage();
+            return $this->getCorrectLayHomepage($user);
         } else {
             return $this->router->generate('access_denied');
         }
@@ -97,9 +97,6 @@ class Redirector
      */
     public function getCorrectRouteIfDifferent(User $user, $currentRoute)
     {
-        // Check if user has multiple clients
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
@@ -116,6 +113,9 @@ class Redirector
                 if (!$user->isDeputyOrg()) {
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
+                        // Check if user has multiple clients
+                        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+
                         if (0 == count($clients)) {
                             $route = 'client_add';
                         }
@@ -246,9 +246,11 @@ class Redirector
         return $this->router->generate('choose_a_client');
     }
 
-    private function getCorrectLayHomepage()
+    private function getCorrectLayHomepage(?User $user = null)
     {
-        $user = $this->getLoggedUser();
+        if (is_null($user)) {
+            $user = $this->getLoggedUser();
+        }
 
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;

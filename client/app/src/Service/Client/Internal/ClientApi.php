@@ -60,7 +60,7 @@ class ClientApi
         UserApi $userApi,
         DateTimeProvider $dateTimeProvider,
         TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher
+        ObservableEventDispatcher $eventDispatcher,
     ) {
         $this->restClient = $restClient;
         $this->router = $router;
@@ -241,6 +241,8 @@ class ClientApi
     }
 
     /**
+     * TODO can this be null?
+     *
      * @return Client[]
      */
     public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
