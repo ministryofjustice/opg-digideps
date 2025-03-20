@@ -9,23 +9,11 @@ use App\v2\DTO\StatusDto;
 
 class FullReportAssembler implements ReportAssemblerInterface
 {
-    /** @var ReportSummaryAssembler */
-    private $reportSummaryAssembler;
-
-    /** @var StatusAssembler */
-    private $statusDtoAssembler;
-
-    /** @var ReportRepository */
-    private $reportRepository;
-
     public function __construct(
-        ReportSummaryAssembler $reportSummaryAssembler,
-        StatusAssembler $statusDtoAssembler,
-        ReportRepository $reportRepository
+        private readonly ReportSummaryAssembler $reportSummaryAssembler,
+        private readonly StatusAssembler $statusDtoAssembler,
+        private readonly ReportRepository $reportRepository
     ) {
-        $this->reportSummaryAssembler = $reportSummaryAssembler;
-        $this->statusDtoAssembler = $statusDtoAssembler;
-        $this->reportRepository = $reportRepository;
     }
 
     /**

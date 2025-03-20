@@ -13,8 +13,8 @@ class UserRegistrationService
     private string $selfRegisterCaseNumber;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private PreRegistrationVerificationService $preRegistrationVerificationService
+        private readonly EntityManagerInterface $em,
+        private readonly PreRegistrationVerificationService $preRegistrationVerificationService
     ) {
         $this->selfRegisterCaseNumber = '';
     }

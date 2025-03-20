@@ -10,12 +10,8 @@ class UserAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var ClientAssembler */
-    private $clientDtoAssembler;
-
-    public function __construct(?ClientAssembler $clientDtoAssembler = null)
+    public function __construct(private readonly ClientAssembler $clientDtoAssembler)
     {
-        $this->clientDtoAssembler = $clientDtoAssembler;
     }
 
     /**

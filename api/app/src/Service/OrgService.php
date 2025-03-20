@@ -15,9 +15,9 @@ class OrgService
 
     public function __construct(
         protected EntityManagerInterface $em,
-        private UserRepository $userRepository,
-        private DeputyRepository $deputyRepository,
-        private DeputyFactory $deputyFactory,
+        private readonly UserRepository $userRepository,
+        private readonly DeputyRepository $deputyRepository,
+        private readonly DeputyFactory $deputyFactory,
         private array $added = []
     ) {
     }
