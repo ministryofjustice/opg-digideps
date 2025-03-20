@@ -220,11 +220,11 @@ class Redirector
             return $this->getLayDeputyHomepage($user);
         }
 
-        $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
-
         if (1 < count($clients)) {
             return $this->getChooseAClientHomepage($user);
         } else {
+            $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
+
             return $this->getLayDeputyHomepage($user, $activeClientId);
         }
     }
