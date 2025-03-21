@@ -53,16 +53,16 @@ class RedirectorTest extends TestCase
         // $grantedRole: the role the user has when checked via the auth checker; null if this is irrelevant
         // $paOrProfDeputy: true if the user is a PA or PROF deputy
         // $coDeputy: true if user is an invited co-deputy
-        // $coDeputyClientConfirmed: true if user is an invited co-deputy who has confirmed the client
-        // $clientIdWithDetails: values returned for User::getClientIdWithDetails; null if hasn't been set for user
+        // $coDeputyClientConfirmed: true if user is an invited co-deputy who has confirmed their registration
+        // $clientIdWithDetails: value returned for User::getClientIdWithDetails; null if this hasn't been set for user
         // $userHasAddress: true if user has address details
-        // $sessionValue: key => value pairs to set in the session; if not set, any call to Session::has will return false
-        // $clients: number of clients to return for lay deputy; 0 for non-lay deputies, as it's not used for redirects
+        // $sessionValue: key => value pairs to set in the session; if not set, any call to Session::get will return null
+        // $clients: number of clients to return for lay deputy; 0 for non-lay deputies, as it's not used for their redirects
         // $reports: number of reports to return for each client (if there are any clients)
         // $userIsNdrEnabled: true if the user needs to complete an NDR
         // $routeName: the route name we expect will be passed to the router
         // $routeParams: array of params we expect to be passed to the router
-        // $expectedRoute: the route we expect to see coming out of the router (what we're asserting on)
+        // $expectedRoute: the route we expect to see coming out of the router (this is what we're asserting about)
         return [
             'admin password create' => [User::ROLE_ADMIN, false, false, false, null, true, ['login-context' => 'password-create'], 0, 0, false, 'user_details', [], '/user/details'],
             'admin homepage' => [User::ROLE_ADMIN, false, false, false, null, true, null, 0, 0, false, 'admin_homepage', [], '/admin/'],
@@ -218,9 +218,9 @@ class RedirectorTest extends TestCase
     }
 
     /*
-     * Where the deputy UID is null or returns null instead of clients, what do we do?
+     * Where the deputy UID is null or returns null instead of a collection of clients
      */
-    public function testGetFirstPageAfterLoginNullClients(): void
+    public function testGetFirstPageAfterLoginRestApiReturnsNull(): void
     {
         static::markTestSkipped('TBD where user is redirected to if they have no deputy UID or null clients for their deputy UID');
 
@@ -295,7 +295,7 @@ class RedirectorTest extends TestCase
     }
 
     /*
-     * All paths through this method are captured by the tests for getLayDeputyHomepage(), except for these two.
+     * All paths through this method are captured by the tests for getLayDeputyHomepage(), except...
      */
     public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
     {
@@ -308,6 +308,9 @@ class RedirectorTest extends TestCase
         static::assertEquals('lay_home', $correctedRoute);
     }
 
+    /*
+     * All paths through this method are captured by the tests for getLayDeputyHomepage(), except...
+     */
     public function testGetCorrectRouteIfDifferentAdmin()
     {
         $this->user->expects($this->once())->method('hasAdminRole')->willReturn(true);
