@@ -6,6 +6,8 @@ namespace App\Tests\Behat\v2\UserManagement;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Tests\Behat\BehatException;
+use App\Tests\Behat\v2\Common\UserDetails;
 
 trait UserManagementTrait
 {
@@ -669,7 +671,7 @@ trait UserManagementTrait
     {
         $this->visitsTheForgottenYourPasswordPage();
     }
-    
+
     /**
      * @Then /^I can only view my user details$/
      */
@@ -678,7 +680,7 @@ trait UserManagementTrait
         $orgUserEmail = $this->interactingWithUserDetails->getUserEmail();
 
         $xpath = '//div[contains(@class, "govuk-summary-list__row")]';
-        
+
         $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
@@ -686,12 +688,11 @@ trait UserManagementTrait
         foreach ($listSummaryRows as $row) {
             $formattedDataElements[] = strtolower($row->getText());
         }
-        
+
         $expectedRowCount = 2;
         $this->assertIntEqualsInt($expectedRowCount, count($formattedDataElements), 'Row count for users email and password data only');
-       
-        $this->assertStringContainsString($orgUserEmail, $formattedDataElements[0], 'Asserting users email address found on page');
 
+        $this->assertStringContainsString($orgUserEmail, $formattedDataElements[0], 'Asserting users email address found on page');
     }
 
     /**
@@ -702,23 +703,22 @@ trait UserManagementTrait
         $newUser = [
             'firstName' => $this->faker->firstName(),
             'lastName' => $this->faker->lastName(),
-            'email' => $this->faker->email()
-            ];
-        
+            'email' => $this->faker->email(),
+        ];
+
         $this->fillField('organisation_member_firstname', $newUser['firstName']);
         $this->fillField('organisation_member_lastname', $newUser['lastName']);
         $this->fillField('organisation_member_email', $newUser['email']);
-        
+
         $this->selectOption('organisation_member[roleName]', 'ROLE_PROF_ADMIN');
         $this->pressButton('Save');
-        
+
         $this->iAmOnOrgSettingsPage();
-        
-        $this->assertElementContainsText('table', $newUser['firstName'] . " " . $newUser['lastName']);
+
+        $this->assertElementContainsText('table', $newUser['firstName'].' '.$newUser['lastName']);
         $this->assertElementContainsText('table', $newUser['email']);
     }
 
-    
     /**
      * @Then /^I attempt to remove an org user$/
      */
@@ -728,31 +728,28 @@ trait UserManagementTrait
 
         $orgUserToBeDeletedEmail = '';
 
-        foreach($orgUsersArray as $orgUser)
-        {
-            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
-            {
+        foreach ($orgUsersArray as $orgUser) {
+            if ($orgUser !== $this->loggedInUserDetails->getUserEmail()) {
                 $orgUserToBeDeletedEmail = $this->em->getRepository(User::class)->find($orgUser['id'])->getEmail();
             }
         }
-        
+
         $this->assertElementContainsText('table', $orgUserToBeDeletedEmail);
-  
-        //user with admin permissions can only remove other users, they can't remove themselves on this page
+
+        // user with admin permissions can only remove other users, they can't remove themselves on this page
         $this->clickLink('Remove');
         $this->pressButton('Yes, remove user from this organisation');
     }
-    
-    
+
     /**
      * @Then /^the user should be deleted from the organisation$/
      */
     public function theUserShouldBeDeletedFromTheOrganisation()
     {
         $orgUsersArray = $this->getAllOrgUsers()['users'];
-        
+
         $xpath = '//tr[contains(@class, "govuk-table__row behat")]';
-        
+
         $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
@@ -760,7 +757,7 @@ trait UserManagementTrait
         foreach ($listSummaryRows as $row) {
             $formattedDataElements[] = strtolower($row->getText());
         }
-        
+
         $expectedRowCount = 1;
         $this->assertIntEqualsInt($expectedRowCount, count($formattedDataElements), 'Only one row now exists for the logged in user');
 
@@ -768,7 +765,6 @@ trait UserManagementTrait
         $this->assertIntEqualsInt($expectedOrgUsers, count($orgUsersArray), 'Only one user now exists in the organisation');
     }
 
-    
     /**
      * @Then /^I can view the other org user but I cannot \'([^\']*)\' them$/
      */
@@ -778,15 +774,13 @@ trait UserManagementTrait
 
         $otherOrgUserDetails = [];
 
-        foreach($orgIdAndUsersArray['users'] as $orgUser)
-        {
-            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
-            {
+        foreach ($orgIdAndUsersArray['users'] as $orgUser) {
+            if ($orgUser !== $this->loggedInUserDetails->getUserEmail()) {
                 $otherOrgUserDetails[] = $orgUser['id'];
                 $otherOrgUserDetails[] = $orgUser['email'];
             }
         }
-        
+
         $this->assertElementContainsText('table', $otherOrgUserDetails[1]);
 
         $xpathLocator = sprintf(
@@ -799,7 +793,6 @@ trait UserManagementTrait
         $this->assertElementNotContainsText('table', '$arg1');
     }
 
-    
     /**
      * @Given /^I click to edit the other org user$/
      */
@@ -810,20 +803,18 @@ trait UserManagementTrait
 
         $orgUserIdToBeEdited = '';
 
-        foreach($orgIdAndUsersArray['users'] as $orgUser)
-        {
-            if($orgUser !== $this->loggedInUserDetails->getUserEmail())
-            {
+        foreach ($orgIdAndUsersArray['users'] as $orgUser) {
+            if ($orgUser !== $this->loggedInUserDetails->getUserEmail()) {
                 $orgUserIdToBeEdited = $orgUser['id'];
             }
         }
-        
+
         $xpathLocator = sprintf(
             "//a[contains(@href,'/org/settings/organisation/%s/edit/%s')]",
             $orgIdAndUsersArray['id'],
             $orgUserIdToBeEdited
         );
-        
+
         $this->getSession()->getPage()->find('xpath', $xpathLocator)->click();
     }
 
@@ -841,27 +832,114 @@ trait UserManagementTrait
 
         return $orgUsersArray;
     }
-    
-    
+
     /**
      * @When /^I edit the users account details$/
      */
     public function iEditTheUsersAccountDetails()
     {
         $this->iAmonOrgSettingsEditAnotherUserPage();
-        $this->fillInField('organisation_member[firstname]', $this->faker->lastName(),'firstname');
+        $this->fillInField('organisation_member[firstname]', $this->faker->lastName(), 'firstname');
         $this->pressButton('Save');
     }
 
-    
     /**
      * @Then /^the user should be updated$/
      */
     public function theUserShouldBeUpdated()
     {
         $this->iAmOnOrgUserAccountsPage();
-        
+
         $this->assertOnAlertMessage('The user has been edited');
     }
 
+    /**
+     * @When I search for one of the org users using :whichName name
+     */
+    public function iSearchForOneOfOrgUsersUsingName($whichName)
+    {
+        $user = is_null($this->interactingWithUserDetails) ? $this->profAdminCombinedHighNotStartedDetails : $this->interactingWithUserDetails;
+
+        $searchName = $this->getSearchTerm($whichName);
+
+        $this->searchForUserBy($searchName, $user);
+    }
+
+    private function searchForUserBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
+    {
+        $this->fillField('search_users_q', $searchTerm);
+        $this->pressButton('Search');
+
+        $this->interactingWithUserDetails = $userDetailsInteractingWith;
+    }
+
+    /**
+     * @Then I should see :occurances user details in the user list results with the same :whichName name
+     */
+    public function iShouldSeeBothUserDetailsInResults(int $occurances, string $whichName)
+    {
+        $this->userCount = $occurances;
+        $this->iShouldSeeNUserWithSameName($whichName);
+    }
+
+    private function iShouldSeeNUserWithSameName(string $whichName)
+    {
+        $this->assertUserCountSet();
+
+        $searchResults = $this->getSearchResults();
+
+        $searchName = $this->getSearchTerm($whichName);
+        $searchResultsFound = implode(',', $searchResults);
+        $userNamesFoundCount = substr_count($searchResultsFound, strtolower($searchName));
+
+        if ($userNamesFoundCount < $this->userCount) {
+            throw new BehatException(sprintf('The user search results list did not contain the required occurrences of the users full name. Expected: "%s" (at least %s times), got (full HTML): %s', $searchName, $this->userCount, $userNamesFoundCount));
+        }
+
+        $this->assertIntEqualsInt($userNamesFoundCount, $this->userCount, 'User rows visible');
+    }
+
+    private function assertUserCountSet()
+    {
+        if (is_null($this->userCount)) {
+            throw new BehatException(sprintf("You're attempting to run a step definition that requires this->userCount to be set but its null. Set it and try again."));
+        }
+    }
+
+    private function getSearchResults()
+    {
+        $xpath = '//td';
+        $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $formattedDataElements = [];
+
+        foreach ($tableDataElements as $td) {
+            $formattedDataElements[] = strtolower($td->getText());
+        }
+
+        return $formattedDataElements;
+    }
+
+    private function getSearchTerm(string $whichName)
+    {
+        switch (strtolower($whichName)) {
+            case 'first':
+                $searchName = $this->interactingWithUserDetails->getUserFirstName();
+                break;
+            case 'last':
+                $searchName = $this->interactingWithUserDetails->getUserLastName();
+                break;
+            case 'full':
+                $searchName = sprintf(
+                    '%s %s',
+                    $this->interactingWithUserDetails->getUserFirstName(),
+                    $this->interactingWithUserDetails->getUserLastName()
+                );
+                break;
+            default:
+                throw new BehatException('This step only supports "first|last|full" as a search term. Either update step argument or add a case statement.');
+        }
+
+        return $searchName;
+    }
 }

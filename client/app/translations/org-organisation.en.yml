@@ -51,3 +51,7 @@ form:
     hint: Administrator access will allow the new user to add and remove other users of the service
   save:
     label: Save
+
+searchForm:
+  labelText: Search by name or email address
+  clear: Clear filter

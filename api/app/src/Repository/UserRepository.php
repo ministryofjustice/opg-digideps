@@ -349,27 +349,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $q,
         $offset,
         $limit,
-        $id
-    ) {
+        $id,
+    ): array {
         // BASE QUERY BUILDER with filters (for both count and results)
-        $qb = $this->createQueryBuilder('u');
-        $qb->leftJoin('u.organisations', 'o');
-        $qb->andWhere('o.id = :id');
-        $qb->setParameter('id', $id);
+        $this->qb = $this->createQueryBuilder('u');
+        $this->qb->leftJoin('u.organisations', 'o');
+        $this->qb->andWhere('o.id = :id');
+        $this->qb->setParameter('id', $id);
 
         // search filter
         if ($q) {
-            $qb->andWhere(implode(' OR ', [
-                'lower(u.firstname) LIKE :qLike',
-                'lower(u.lastname) LIKE :qLike',
-            ]));
-
-            $qb->setParameter('qLike', '%'.strtolower($q).'%');
-            $qb->setParameter('q', strtolower($q));
+            $searchTerms = explode(' ', $q);
+            if (1 === count($searchTerms)) {
+                $this->addBroadMatchFilter($searchTerms[0], false);
+            } else {
+                $this->addFullNameBestMatchFilter($searchTerms[0], $searchTerms[1], false);
+            }
         }
 
         // get results (base query + ordered + pagination + status filter)
-        $qbSelect = clone $qb;
+        $qbSelect = clone $this->qb;
         $qbSelect->select('u');
         $qbSelect
             ->addOrderBy('u.lastname', 'ASC')
@@ -381,7 +380,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->getFilters()->enable('softdeleteable');
 
         // run counts on the base query for each status (new/archived)
-        $qbCount = clone $qb;
+        $qbCount = clone $this->qb;
         $queryCount = $qbCount->select('count(DISTINCT u.id)')->getQuery();
         $count = $queryCount->getSingleScalarResult();
 
@@ -417,6 +416,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getEntityManager()
             ->createQuery("SELECT u FROM App\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = True")
             ->setParameter('deputyUid', $deputyUid);
+
         return $query->getSingleResult();
     }
 }

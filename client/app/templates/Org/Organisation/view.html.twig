@@ -21,11 +21,29 @@
         'id': orgId
     } %}
 
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+    <div class="govuk-grid-row">
+        {{ form_input(form.q, 'Search', {
+            'labelText': 'searchForm.labelText' | trans,
+            'inputClass': 'govuk-!-width-full',
+            'formGroupClass': 'govuk-grid-column-full'}) }}
+    </div>
+
+    <div class="govuk-form-group">
+        {{ form_submit(form.search, '', {
+            'labelText': 'Search'}) }}
+        <a href="{{ path('org_organisation_view',{id:orgId}) }}" class="govuk-link button-link">{{ 'searchForm.clear' | trans }}</a>
+    </div>
+
+    {{ form_end(form) }}
+
     {% if not organisation.getIsDomainIdentifier %}
-    <p class="govuk-body">{{ 'viewPage.introPublicDomain' | trans }}</p>
+        <p class="govuk-body">{{ 'viewPage.introPublicDomain' | trans }}</p>
     {% else %}
-    <p class="govuk-body">{{ 'viewPage.intro' | trans }}</p>
+        <p class="govuk-body">{{ 'viewPage.intro' | trans }}</p>
     {% endif %}
+
     <table class="govuk-table">
         <caption class="govuk-table__caption">
             <div class="govuk-grid-row">

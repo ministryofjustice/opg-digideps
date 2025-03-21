@@ -240,7 +240,7 @@ trait FixturesTrait
 
         $newUserEmail = sprintf('%s-%s@t.uk', substr(User::ROLE_PROF_TEAM_MEMBER, 5), $this->testRunId);
 
-        $newUser = $this->fixtureHelper->createAndPersistUser(User::ROLE_PROF_TEAM_MEMBER, $newUserEmail);
+        $newUser = $this->fixtureHelper->createAndPersistUser(User::ROLE_PROF_TEAM_MEMBER, $newUserEmail, null, $existingUser->getUserFirstName(), 'Bell');
 
         $organisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($emailIdentifier);
 
