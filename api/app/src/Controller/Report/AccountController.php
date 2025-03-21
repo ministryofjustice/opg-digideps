@@ -20,11 +20,8 @@ class AccountController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/account", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/account', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addAccountAction(Request $request, $reportId)
     {
         $report = $this->findEntityBy(Report::class, $reportId);
@@ -48,11 +45,8 @@ class AccountController extends RestController
         return ['id' => $account->getId()];
     }
 
-    /**
-     * @Route("/report/account/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/account/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found');
@@ -65,11 +59,8 @@ class AccountController extends RestController
         return $account;
     }
 
-    /**
-     * @Route("/account/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/account/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function editAccountAction(Request $request, $id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
@@ -90,11 +81,8 @@ class AccountController extends RestController
         return $account;
     }
 
-    /**
-     * @Route("/account/{id}/dependent-records", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/account/{id}/dependent-records', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function accountDependentRecords($id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
@@ -135,11 +123,8 @@ class AccountController extends RestController
         return $ret;
     }
 
-    /**
-     * @Route("/account/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/account/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function accountDelete($id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */

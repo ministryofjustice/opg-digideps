@@ -26,10 +26,8 @@ class MoneyTransactionController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction", methods={"POST"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addMoneyTransactionAction(Request $request, $reportId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -72,10 +70,8 @@ class MoneyTransactionController extends RestController
         return $t->getId();
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"PUT"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction/{transactionId}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -108,10 +104,8 @@ class MoneyTransactionController extends RestController
         return $t->getId();
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"DELETE"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction/{transactionId}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -132,10 +126,8 @@ class MoneyTransactionController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction/soft-delete/{transactionId}", methods={"PUT"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction/soft-delete/{transactionId}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function softDeleteMoneyTransactionAction($transactionId)
     {
         $filter = $this->em->getFilters()->getFilter('softdeleteable');
@@ -154,10 +146,8 @@ class MoneyTransactionController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction/get-soft-delete", methods={"GET"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction/get-soft-delete', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getSoftDeletedMoneyTransactionItems($reportId)
     {
         $this->formatter->setJmsSerialiserGroups(['transaction']);

@@ -19,11 +19,8 @@ class ExpenseController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $reportId, $expenseId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -39,11 +36,8 @@ class ExpenseController extends RestController
         return $expense;
     }
 
-    /**
-     * @Route("/report/{reportId}/expense", requirements={"reportId":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/expense', requirements: ['reportId' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, $reportId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -70,11 +64,8 @@ class ExpenseController extends RestController
         return ['id' => $expense->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function edit(Request $request, $reportId, $expenseId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -94,11 +85,8 @@ class ExpenseController extends RestController
         return ['id' => $expense->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete($reportId, $expenseId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */

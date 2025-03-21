@@ -19,11 +19,8 @@ class MoneyTransferController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transfers", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transfers', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addMoneyTransferAction(Request $request, $reportId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -57,11 +54,8 @@ class MoneyTransferController extends RestController
         return $transfer->getId();
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transfers/{transferId}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transfers/{transferId}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function editMoneyTransferAction(Request $request, $reportId, $transferId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -90,11 +84,8 @@ class MoneyTransferController extends RestController
         return $transfer->getId();
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transfers/{transferId}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transfers/{transferId}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteMoneyTransferAction(Request $request, $reportId, $transferId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);

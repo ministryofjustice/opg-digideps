@@ -19,11 +19,8 @@ class ProfDeputyPrevCostController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/prof-deputy-previous-cost", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     */
+    #[Route(path: '/report/{reportId}/prof-deputy-previous-cost', methods: ['POST'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function addAction(Request $request, $reportId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -47,11 +44,8 @@ class ProfDeputyPrevCostController extends RestController
         return ['id' => $cost->getId()];
     }
 
-    /**
-     * @Route("/prof-deputy-previous-cost/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     */
+    #[Route(path: '/prof-deputy-previous-cost/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function updateAction(Request $request, $id)
     {
         /** @var EntityDir\Report\ProfDeputyPreviousCost $cost */
@@ -70,12 +64,10 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     /**
-     * @Route("/prof-deputy-previous-cost/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     *
      * @return object|null
      */
+    #[Route(path: '/prof-deputy-previous-cost/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
@@ -88,11 +80,8 @@ class ProfDeputyPrevCostController extends RestController
         return $cost;
     }
 
-    /**
-     * @Route("/report/{reportId}/prof-deputy-previous-cost/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     */
+    #[Route(path: '/report/{reportId}/prof-deputy-previous-cost/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function deleteProfDeputyPreviousCost($id)
     {
         $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id, 'Prof Service fee not found');
