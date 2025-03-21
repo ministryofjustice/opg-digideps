@@ -42,6 +42,7 @@ class UserController extends RestController
         private readonly RestFormatter $formatter,
         private readonly PasswordHasherFactoryInterface $hasherFactory,
     ) {
+        parent::__construct($em);
     }
 
     /**

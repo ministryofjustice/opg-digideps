@@ -61,11 +61,6 @@ parameters:
 			path: src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: "#^Property App\\\\Command\\\\ReportStatusUpdaterCommand\\:\\:\\$entityManager has no type specified\\.$#"
-			count: 1
-			path: src/Command/ReportStatusUpdaterCommand.php
-
-		-
 			message: "#^Right side of && is always true\\.$#"
 			count: 1
 			path: src/Command/ReportStatusUpdaterCommand.php
@@ -126,16 +121,6 @@ parameters:
 			path: src/Controller/AuthController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getClient\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/ClientContactController.php
@@ -181,16 +166,6 @@ parameters:
 			path: src/Controller/ClientContactController.php
 
 		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Client, object given\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Entity\\\\ClientContact\\:\\:setClient\\(\\) expects App\\\\Entity\\\\Client, object given\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
 			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\ClientContact\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/ClientContactController.php
@@ -199,46 +174,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getArchivedAt\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 6
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNdr\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setArchivedAt\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setCourtDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDateOfBirth\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDeletedAt\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDeputy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
 
 		-
 			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
@@ -291,18 +226,13 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Controller/ClientController.php
+
+		-
 			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
 			count: 3
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of class App\\\\Entity\\\\Ndr\\\\Ndr constructor expects App\\\\Entity\\\\Client, object given\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of class App\\\\Event\\\\ClientArchivedEvent constructor expects App\\\\Entity\\\\Client, object given\\.$#"
-			count: 1
 			path: src/Controller/ClientController.php
 
 		-
@@ -336,37 +266,12 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: src/Controller/ClientController.php
+
+		-
 			message: "#^Argument of an invalid type array\\|string supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:createQueryBuilder\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getIdOfClientWithDetails\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:isCoDeputy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setEmail\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setFirstname\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setLastname\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
@@ -421,17 +326,7 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Parameter \\#1 \\$originalUser of method App\\\\Service\\\\UserService\\:\\:editUser\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|string given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#2 \\$updatedUser of method App\\\\Service\\\\UserService\\:\\:editUser\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
@@ -456,17 +351,7 @@ parameters:
 			path: src/Controller/DeputyController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:query\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:containerHealthAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\HealthController\\:\\:\\$restFormatter is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/HealthController.php
 
@@ -474,16 +359,6 @@ parameters:
 			message: "#^Property App\\\\Controller\\\\JWTController\\:\\:\\$authService is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/JWTController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNdr\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Ndr/AccountController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:accountDelete\\(\\) has no return type specified\\.$#"
@@ -531,22 +406,7 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Parameter \\#1 \\$account of method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:fillAccountData\\(\\) expects App\\\\Entity\\\\Ndr\\\\BankAccount, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
 			message: "#^Parameter \\#1 \\$bank of method App\\\\Entity\\\\Ndr\\\\BankAccount\\:\\:setBank\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Entity\\\\Ndr\\\\BankAccount\\:\\:setNdr\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AccountController.php
 
@@ -561,22 +421,7 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByNdr\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNdr\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNoAssetToAdd\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Asset\\>\\:\\:findByNdr\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
@@ -661,39 +506,9 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Parameter \\#1 \\$asset of method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Ndr\\\\Asset, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 5
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Entity\\\\Ndr\\\\Asset\\:\\:setNdr\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr\\|null, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNdr\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPaidForAnything\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:add\\(\\) has no return type specified\\.$#"
@@ -761,173 +576,28 @@ parameters:
 			path: src/Controller/Ndr/ExpenseController.php
 
 		-
-			message: "#^Parameter \\#1 \\$expense of method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Ndr\\\\Expense, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of class App\\\\Entity\\\\Ndr\\\\Expense constructor expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 4
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Ndr/ExpenseController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getAssets\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getDebtByTypeId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getDebts\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getExpenses\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNoAssetToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getOneOffByTypeId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getStateBenefitByTypeId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionGiveGiftsToClient\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionGiveGiftsToClientDetails\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionMoreInfo\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionMoreInfoDetails\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionPropertyBuy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionPropertyMaintenance\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionPropertySellingRent\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setAgreedBehalfDeputy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setAgreedBehalfDeputyExplanation\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDebtManagement\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setExpectCompensationDamages\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setExpectCompensationDamagesDetails\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setHasDebts\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNoAssetToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPaidForAnything\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReceiveOtherIncome\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReceiveOtherIncomeDetails\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReceiveStatePension\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setStartDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setSubmitDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setSubmitted\\(\\)\\.$#"
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
 		-
 			message: "#^Call to method setMoreDetails\\(\\) on an unknown class App\\\\Entity\\\\Ndr\\\\IncomeBenefit\\.$#"
 			count: 2
+			path: src/Controller/Ndr/NdrController.php
+
+		-
+			message: "#^Cannot call method setAmount\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Controller/Ndr/NdrController.php
+
+		-
+			message: "#^Cannot call method setMoreDetails\\(\\) on mixed\\.$#"
+			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
 		-
@@ -961,13 +631,18 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Parameter \\#1 \\$currentReport of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
+			message: "#^Parameter \\#1 \\$agreedBehalfDeputyExplanation of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setAgreedBehalfDeputyExplanation\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 3
+			message: "#^Parameter \\#1 \\$expectCompensationDamagesDetails of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setExpectCompensationDamagesDetails\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: src/Controller/Ndr/NdrController.php
+
+		-
+			message: "#^Parameter \\#1 \\$receiveOtherIncomeDetails of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setReceiveOtherIncomeDetails\\(\\) expects string, null given\\.$#"
+			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
 		-
@@ -991,18 +666,8 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Ndr\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNdr\\(\\)\\.$#"
-			count: 3
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
@@ -1056,13 +721,8 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 2
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setNdr\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, object given\\.$#"
-			count: 1
+			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, mixed given\\.$#"
+			count: 3
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
@@ -1074,26 +734,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects App\\\\Entity\\\\Ndr\\\\date, null given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#2 \\$visitsCare of method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:updateEntity\\(\\) expects App\\\\Entity\\\\Ndr\\\\VisitsCare, object given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getClient\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setLastModifiedBy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:add\\(\\) has no return type specified\\.$#"
@@ -1151,17 +791,12 @@ parameters:
 			path: src/Controller/NoteController.php
 
 		-
-			message: "#^Parameter \\#1 \\$client of class App\\\\Entity\\\\Note constructor expects App\\\\Entity\\\\Client, object given\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Client, object given\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
 			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\Note\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: "#^Parameter \\#1 \\$lastModifiedBy of method App\\\\Entity\\\\Note\\:\\:setLastModifiedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/NoteController.php
 
@@ -1172,11 +807,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Client\\>\\:\\:findByCaseNumber\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:createQueryBuilder\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/PreRegistrationController.php
 
@@ -1206,13 +836,18 @@ parameters:
 			path: src/Controller/PreRegistrationController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 6
+			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Expense\\>\\.$#"
+			count: 1
 			path: src/Controller/Report/AccountController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
+			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Gift\\>\\.$#"
 			count: 1
+			path: src/Controller/Report/AccountController.php
+
+		-
+			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\MoneyTransaction\\>\\.$#"
+			count: 2
 			path: src/Controller/Report/AccountController.php
 
 		-
@@ -1271,22 +906,7 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
-			message: "#^Parameter \\#1 \\$account of method App\\\\Controller\\\\Report\\\\AccountController\\:\\:fillAccountData\\(\\) expects App\\\\Entity\\\\Report\\\\BankAccount, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
 			message: "#^Parameter \\#1 \\$bank of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setBank\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, object given\\.$#"
 			count: 1
 			path: src/Controller/Report/AccountController.php
 
@@ -1304,21 +924,6 @@ parameters:
 			message: "#^Property App\\\\Controller\\\\Report\\\\AccountController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getAction\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
@@ -1341,39 +946,14 @@ parameters:
 			path: src/Controller/Report/ActionController.php
 
 		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Controller/Report/ActionController.php
+
+		-
 			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\Action constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNoAssetToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/AssetController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:add\\(\\) has no return type specified\\.$#"
@@ -1441,21 +1021,6 @@ parameters:
 			path: src/Controller/Report/AssetController.php
 
 		-
-			message: "#^Parameter \\#1 \\$asset of method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Report\\\\Asset, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 4
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Asset\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Report/AssetController.php
@@ -1516,22 +1081,7 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 5
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setContactName\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Contact\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
@@ -1621,24 +1171,9 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 2
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Contact\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, object given\\.$#"
+			message: "#^Parameter \\#1 \\$reasonForNoContacts of method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoContacts\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 5
-			path: src/Controller/Report/DecisionController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:deleteDecision\\(\\) has no return type specified\\.$#"
@@ -1671,16 +1206,6 @@ parameters:
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Decision\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
@@ -1698,11 +1223,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Document\\>\\:\\:updateSupportingDocumentStatusByReportSubmissionIds\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
 			path: src/Controller/Report/DocumentController.php
 
 		-
@@ -1851,26 +1371,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPaidForAnything\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/ExpenseController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ExpenseController.php
@@ -1931,54 +1431,9 @@ parameters:
 			path: src/Controller/Report/ExpenseController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\Expense constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 2
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 4
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$expense of method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Report\\\\Expense, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
 			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setBankAccount\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setGiftsExist\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/GiftController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:add\\(\\) has no return type specified\\.$#"
@@ -2041,21 +1496,6 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\Gift constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 2
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 4
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/GiftController.php
@@ -2066,32 +1506,12 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Parameter \\#2 \\$gift of method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) expects App\\\\Entity\\\\Report\\\\Gift, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 5
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Lifestyle\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
@@ -2146,36 +1566,6 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 2
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Parameter \\#2 \\$lifestyle of method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateInfo\\(\\) expects App\\\\Entity\\\\Report\\\\Lifestyle, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getMentalCapacity\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
@@ -2196,17 +1586,12 @@ parameters:
 			path: src/Controller/Report/MentalCapacityController.php
 
 		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Controller/Report/MentalCapacityController.php
+
+		-
 			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\MentalCapacity constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
 
@@ -2223,46 +1608,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:isDeleted\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setAmount\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setBankAccount\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDeletedAt\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDescription\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 3
 			path: src/Controller/Report/MoneyTransactionController.php
 
 		-
@@ -2341,21 +1686,6 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\MoneyTransaction constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 3
 			path: src/Controller/Report/MoneyTransactionController.php
@@ -2368,31 +1698,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 4
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:isDeleted\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDeletedAt\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 3
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
@@ -2491,54 +1796,14 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 4
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Parameter \\#1 \\$t of method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:fillData\\(\\) expects App\\\\Entity\\\\Report\\\\MoneyTransactionShort, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:fillData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Parameter \\#2 \\$report of static method App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\:\\:factory\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDescription\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNoTransfersToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyTransferController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:addMoneyTransferAction\\(\\) has no return type specified\\.$#"
@@ -2586,31 +1851,6 @@ parameters:
 			path: src/Controller/Report/MoneyTransferController.php
 
 		-
-			message: "#^Parameter \\#1 \\$from of method App\\\\Entity\\\\Report\\\\MoneyTransfer\\:\\:setFrom\\(\\) expects App\\\\Entity\\\\Report\\\\BankAccount, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\MoneyTransfer\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#1 \\$to of method App\\\\Entity\\\\Report\\\\MoneyTransfer\\:\\:setTo\\(\\) expects App\\\\Entity\\\\Report\\\\BankAccount, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#1 \\$transfer of method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:fillEntity\\(\\) expects App\\\\Entity\\\\Report\\\\MoneyTransfer, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Report/MoneyTransferController.php
@@ -2624,21 +1864,6 @@ parameters:
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setProfDeputyCostsHasPrevious\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:addAction\\(\\) has no return type specified\\.$#"
@@ -2686,12 +1911,12 @@ parameters:
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\ProfDeputyPreviousCost constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
+			message: "#^Parameter \\#1 \\$profDeputyCostsHasPrevious of method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
+			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
@@ -2699,21 +1924,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setCurrentProfPaymentsReceived\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:addAction\\(\\) has no return type specified\\.$#"
@@ -2766,21 +1976,6 @@ parameters:
 			path: src/Controller/Report/ProfServiceFeeController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\ProfServiceFeeCurrent constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\ProfServiceFee\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -2788,261 +1983,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getAssets\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getAvailableSections\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getCurrentProfServiceFees\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getDebtByTypeId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getDebts\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getExpenses\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getFeeByTypeId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getFees\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getGifts\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getMoneyShortCategoryByTypeId\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getMoneyTransactionsShortIn\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getMoneyTransactionsShortOut\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getMoneyTransfers\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getNoAssetToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getProfDeputyOtherCostByTypeId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getProfDeputyOtherCostTypeIds\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionMoreInfo\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setActionMoreInfoDetails\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setAgreedBehalfDeputy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setAgreedBehalfDeputyExplanation\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setBalanceMismatchExplanation\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setCurrentProfPaymentsReceived\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDebtManagement\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setDueDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setEndDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setGiftsExist\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setHasDebts\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setMoneyInExists\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setMoneyOutExists\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setMoneyTransactionsShortInExist\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setMoneyTransactionsShortOutExist\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNoAssetToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNoTransfersToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPaidForAnything\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPreviousProfFeesEstimateGiven\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setProfFeesEstimateSccoReason\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReasonForNoContacts\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReasonForNoDecisions\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReasonForNoFees\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReasonForNoMoneyIn\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReasonForNoMoneyOut\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setReportSeen\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setSignificantDecisionsMade\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setStartDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setSubmitted\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setType\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setUnSubmitDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateDueDateBasedOnEndDate\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
-			count: 26
 			path: src/Controller/Report/ReportController.php
 
 		-
@@ -3061,12 +2001,12 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:addAction\\(\\) has no return type specified\\.$#"
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:getById\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns object\\.$#"
+			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:addAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -3241,27 +2181,22 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$client of class App\\\\Entity\\\\Report\\\\Report constructor expects App\\\\Entity\\\\Client, object given\\.$#"
+			message: "#^Parameter \\#1 \\$amount of method App\\\\Entity\\\\Report\\\\Debt\\:\\:setAmount\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Client, object given\\.$#"
+			message: "#^Parameter \\#1 \\$amount of method App\\\\Entity\\\\Report\\\\Fee\\:\\:setAmount\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Service\\\\ReportService\\:\\:getReportTypeBasedOnSirius\\(\\) expects App\\\\Entity\\\\Client, object given\\.$#"
+			message: "#^Parameter \\#1 \\$moreDetails of method App\\\\Entity\\\\Report\\\\Debt\\:\\:setMoreDetails\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$currentReport of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Parameter \\#1 \\$currentReport of method App\\\\Service\\\\ReportService\\:\\:submitAdditionalDocuments\\(\\) expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
+			message: "#^Parameter \\#1 \\$moreDetails of method App\\\\Entity\\\\Report\\\\Fee\\:\\:setMoreDetails\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -3271,17 +2206,27 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\ProfDeputyOtherCost constructor expects App\\\\Entity\\\\Report\\\\Report, object given\\.$#"
+			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:remove\\(\\) expects object, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 4
+			message: "#^Parameter \\#1 \\$previousProfFeesEstimateGiven of method App\\\\Entity\\\\Report\\\\Report\\:\\:setPreviousProfFeesEstimateGiven\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Parameter \\#1 \\$profFeesEstimateSccoReason of method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfFeesEstimateSccoReason\\(\\) expects string, null given\\.$#"
+			count: 2
 			path: src/Controller/Report/ReportController.php
 
 		-
 			message: "#^Parameter \\#1 \\$reportData of method App\\\\Controller\\\\Report\\\\ReportController\\:\\:transformReports\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Parameter \\#1 \\$unSubmitDate of method App\\\\Entity\\\\Report\\\\Report\\:\\:setUnSubmitDate\\(\\) expects DateTime\\|null, array given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -3306,52 +2251,27 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findAllReportSubmissionsRawSql\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findAllReportSubmissionsRawSql\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByFiltersWithCounts\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findDownloadableOlderThan\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findDownloadableOlderThan\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findOneByIdUnfiltered\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findOneByIdUnfiltered\\(\\)\\.$#"
+			message: "#^Cannot call method getDocuments\\(\\) on App\\\\Entity\\\\Report\\\\ReportSubmission\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setArchived\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setArchivedBy\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setUuid\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Cannot call method getDocuments\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Cannot call method setDownloadable\\(\\) on object\\|null\\.$#"
+			message: "#^Cannot call method setDownloadable\\(\\) on App\\\\Entity\\\\Report\\\\ReportSubmission\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
@@ -3421,12 +2341,57 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
+			message: "#^Parameter \\#1 \\$archivedBy of method App\\\\Entity\\\\Report\\\\ReportSubmission\\:\\:setArchivedBy\\(\\) expects App\\\\Entity\\\\User\\|null, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
 			message: "#^Parameter \\#1 \\$datetime of class DateTime constructor expects string, mixed given\\.$#"
 			count: 2
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
+			message: "#^Parameter \\#1 \\$status of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#1 \\$storageReference of method App\\\\Entity\\\\Report\\\\Document\\:\\:setStorageReference\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
 			message: "#^Parameter \\#1 \\$user of method App\\\\Entity\\\\Report\\\\Document\\:\\:setSynchronisedBy\\(\\) expects App\\\\Entity\\\\User\\|null, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#2 \\$q of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#3 \\$createdByRole of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#4 \\$offset of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#5 \\$limit of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#6 \\$orderBy of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportSubmissionController.php
+
+		-
+			message: "#^Parameter \\#7 \\$order of method App\\\\Repository\\\\ReportSubmissionRepository\\:\\:findByFiltersWithCounts\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
@@ -3436,22 +2401,7 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findByReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getReport\\(\\)\\.$#"
-			count: 5
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\VisitsCare\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
 
@@ -3506,27 +2456,12 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
-			count: 2
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects DateTime, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#2 \\$visitsCare of method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateInfo\\(\\) expects App\\\\Entity\\\\Report\\\\VisitsCare, object given\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\<App\\\\Entity\\\\User\\>\\:\\:findDeputyUidsForClient\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\User\\>\\:\\:findDeputyUidsForClient\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
@@ -3561,11 +2496,6 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:getRepository\\(\\) return type with generic interface Doctrine\\\\Persistence\\\\ObjectRepository does not specify its types\\: T$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
@@ -3586,22 +2516,12 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^Parameter \\$client of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) has invalid type App\\\\Controller\\\\Client\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\)$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\Persistence\\\\ObjectRepository\\:\\:findAllSatisfactionSubmissions\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Satisfaction\\>\\:\\:findAllSatisfactionSubmissions\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/SatisfactionController.php
 
@@ -3761,21 +2681,6 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setContent\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\SettingController\\:\\:getSetting\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/SettingController.php
@@ -3861,27 +2766,7 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getIsPrimary\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getRoleName\\(\\)\\.$#"
-			count: 6
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setAgreeTermsUse\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setRegistrationToken\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
@@ -4122,7 +3007,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
-			count: 1
+			count: 2
 			path: src/Controller/UserController.php
 
 		-
@@ -8776,16 +7661,6 @@ parameters:
 			path: src/EventListener/FixDefaultSchemaListener.php
 
 		-
-			message: "#^Method App\\\\EventListener\\\\RestInputOuputFormatter\\:\\:__construct\\(\\) has parameter \\$debug with no type specified\\.$#"
-			count: 1
-			path: src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: "#^Method App\\\\EventListener\\\\RestInputOuputFormatter\\:\\:__construct\\(\\) has parameter \\$defaultFormat with no type specified\\.$#"
-			count: 1
-			path: src/EventListener/RestInputOuputFormatter.php
-
-		-
 			message: "#^Method App\\\\EventListener\\\\RestInputOuputFormatter\\:\\:addContextModifier\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/EventListener/RestInputOuputFormatter.php
@@ -9034,16 +7909,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, mixed given\\.$#"
 			count: 1
 			path: src/Logger/OpgLineFormatter.php
-
-		-
-			message: "#^Property App\\\\Migrations\\\\Factory\\\\MigrationFactoryDecorator\\:\\:\\$container has no type specified\\.$#"
-			count: 1
-			path: src/Migrations/Factory/MigrationFactoryDecorator.php
-
-		-
-			message: "#^Property App\\\\Migrations\\\\Factory\\\\MigrationFactoryDecorator\\:\\:\\$migrationFactory has no type specified\\.$#"
-			count: 1
-			path: src/Migrations/Factory/MigrationFactoryDecorator.php
 
 		-
 			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
@@ -9726,11 +8591,6 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Property App\\\\Repository\\\\UserRepository\\:\\:\\$serializer is never read, only written\\.$#"
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\UserResearchResponseRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/UserResearchResponseRepository.php
@@ -9807,11 +8667,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Security\\\\RedisUserProvider\\:\\:\\$em is never read, only written\\.$#"
-			count: 1
-			path: src/Security/RedisUserProvider.php
-
-		-
-			message: "#^Property App\\\\Security\\\\RedisUserProvider\\:\\:\\$options is never read, only written\\.$#"
 			count: 1
 			path: src/Security/RedisUserProvider.php
 
@@ -11081,16 +9936,6 @@ parameters:
 			path: src/TestHelpers/ReportSubmissionHelper.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setBalanceMismatchExplanation\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setNoTransfersToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\VisitsCare\\|App\\\\Entity\\\\Report\\\\Contact\\:\\:setDoYouLiveWithClient\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
@@ -11132,11 +9977,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:isPAreport\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:isProfReport\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
@@ -11207,7 +10047,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setProfDeputyCostsEstimateHowCharged\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
@@ -11271,67 +10111,7 @@ parameters:
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
-			message: "#^Class App\\\\Entity\\\\Ndr\\\\Ndr\\\\Ndr not found\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeBalance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeBalance\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeExpenses\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeIncomeBenefits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeMoneyTransfers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeMoneyTransfers\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completePaFeeExpense\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completePaFeeExpense\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCosts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCosts\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCostsEstimate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCostsEstimate\\(\\) is unused\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
@@ -11649,11 +10429,6 @@ parameters:
 			message: "#^Method App\\\\v2\\\\Assembler\\\\UserAssembler\\:\\:setPropertiesFromData\\(\\) has parameter \\$dto with no type specified\\.$#"
 			count: 1
 			path: src/v2/Assembler/UserAssembler.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/v2/Controller/ClientController.php
 
 		-
 			message: "#^Method App\\\\v2\\\\Controller\\\\DeputyController\\:\\:getByIdAction\\(\\) has parameter \\$id with no type specified\\.$#"
