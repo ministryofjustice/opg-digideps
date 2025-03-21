@@ -20,10 +20,9 @@ class NdrController extends RestController
     }
 
     /**
-     * @Route("/ndr/{id}", methods={"GET"})
-     *
      * @param int $id
      */
+    #[Route(path: '/ndr/{id}', methods: ['GET'])]
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups') ? $request->query->all('groups') : ['ndr'];
@@ -40,11 +39,8 @@ class NdrController extends RestController
         return $report;
     }
 
-    /**
-     * @Route("/ndr/{id}/submit", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{id}/submit', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function submit(Request $request, $id, ReportService $reportService)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
@@ -87,9 +83,7 @@ class NdrController extends RestController
         return ['id' => $nextYearReport->getId()];
     }
 
-    /**
-     * @Route("/ndr/{id}", methods={"PUT"})
-     */
+    #[Route(path: '/ndr/{id}', methods: ['PUT'])]
     public function update(Request $request, $id)
     {
         /* @var $ndr EntityDir\Ndr\Ndr */
