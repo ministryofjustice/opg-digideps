@@ -37,8 +37,7 @@
     <div id="gaCustomElements"
         data-ga-default="{{ ga.default }}"
         data-ga-gds="{{ ga.gds }}"
-        data-tracking-id="{{ app.user.gaTrackingId() }}"
-        data-ga-custom-url="{{ gaCustomUrl }}"></d>
+        data-tracking-id="{{ app.user ? app.user.gaTrackingId() : null }}"></div>
     {% include '@App/Layouts/_google_analytics_events_gtag.html.twig' %}
 {% endif %}
 
