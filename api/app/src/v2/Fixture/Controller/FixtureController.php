@@ -29,9 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/fixture")
- */
+#[Route(path: '/fixture')]
 class FixtureController extends AbstractController
 {
     use ControllerTrait;
@@ -54,14 +52,12 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/court-order", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @return JsonResponse
      *
      * @throws \Exception
      */
+    #[Route(path: '/court-order', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function createCourtOrderAction(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -334,14 +330,12 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return JsonResponse
      *
      * @throws \Exception
      */
+    #[Route(path: '/complete-sections/{reportType}/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -371,11 +365,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);
     }
 
-    /**
-     * @Route("/createAdmin", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/createAdmin', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
     public function createAdmin(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -399,11 +390,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
-    /**
-     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/getUserIDByEmail/{email}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
     public function getUserIDByEmail(string $email)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -421,11 +409,9 @@ class FixtureController extends AbstractController
 
     /**
      * Used for creating non-prof/pa users only as Org ID is required for those types.
-     *
-     * @Route("/createUser", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
+    #[Route(path: '/createUser', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createUser(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -453,11 +439,9 @@ class FixtureController extends AbstractController
 
     /**
      * Used for deleting users to clean up after tests.
-     *
-     * @Route("/deleteUser", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
+    #[Route(path: '/deleteUser', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function deleteUser(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -474,11 +458,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User deleted', Response::HTTP_OK);
     }
 
-    /**
-     * @Route("/createClientAttachDeputy", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
+    #[Route(path: '/createClientAttachDeputy', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createClientAndAttachToDeputy(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -513,11 +494,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
 
-    /**
-     * @Route("/createClientAttachOrgs", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
+    #[Route(path: '/createClientAttachOrgs', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createClientAndAttachToOrgs(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -588,11 +566,8 @@ class FixtureController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/create-pre-registration", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
+    #[Route(path: '/create-pre-registration', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createPreRegistration(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -647,12 +622,10 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/move-users-clients-to-users-org/{userEmail}', name: 'move_users_clients_to_org', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function moveUsersClientsToUsersOrg(string $userEmail)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -683,12 +656,10 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/activateOrg/{orgName}', name: 'activate_org', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function activateOrg(string $orgName)
     {
         try {
