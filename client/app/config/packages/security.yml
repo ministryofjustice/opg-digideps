@@ -86,8 +86,6 @@ security:
         - App\Security\SessionAuthenticator
       logout:
         path: app_logout
-        target: /
-        success_handler: logout_listener
         # needed to save custom login params
         invalidate_session: false
 
