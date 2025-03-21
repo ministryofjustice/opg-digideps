@@ -102,8 +102,13 @@ class Redirector
         }
 
         // check if last remaining active client is linked to non-primary account if so retrieve id
-        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
-            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
+        if (is_null($activeClientId)) {
+            $activeClientId = $user->getIdOfClientWithDetails();
+        }
+
+        // TODO if $activeClientId is still null, redirect to appropriate page
+
+        return $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
     public function getFirstPageAfterLogin(SessionInterface $session): string
@@ -146,6 +151,8 @@ class Redirector
             return $currentRoute;
         }
 
+        $route = null;
+
         if ($user->getIsCoDeputy()) {
             if ($user->getCoDeputyClientConfirmed()) {
                 // already verified - shouldn't be on verification page
@@ -160,7 +167,12 @@ class Redirector
             // client is not added
             if (!$user->getIdOfClientWithDetails()) {
                 // Check if user has multiple clients
-                $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+                $clients = [];
+                $deputyUid = $user->getDeputyUid();
+                if (!is_null($deputyUid)) {
+                    // TODO might this make $clients null?
+                    $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
+                }
 
                 if (is_array($clients) && 0 == count($clients)) {
                     $route = 'client_add';
@@ -173,7 +185,11 @@ class Redirector
             }
         }
 
-        return (!empty($route) && $route !== $currentRoute) ? $route : false;
+        if (!is_null($route) && $route !== $currentRoute) {
+            return $route;
+        }
+
+        return false;
     }
 
     public function removeLastAccessedUrl(): void
