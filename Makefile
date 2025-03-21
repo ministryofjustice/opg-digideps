@@ -93,7 +93,7 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 
 api-unit-tests: ##@unit-tests Run the api unit tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml build api-unit-tests
-	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh selection-all
+	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
 
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml build api-integration-tests
