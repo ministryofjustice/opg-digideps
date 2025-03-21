@@ -10,12 +10,12 @@ use App\Entity\User;
 use App\Event\ClientDeletedEvent;
 use App\Event\ClientUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
-use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ClientApi
 {
@@ -24,34 +24,18 @@ class ClientApi
     private const UPDATE_CLIENT = 'client/upsert';
     private const CREATE_CLIENT = 'client/upsert';
     private const UNARCHIVE_CLIENT = 'client/%s/unarchive';
-
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
-
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
-
     private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var ObservableEventDispatcher */
-    private $eventDispatcher;
+    private RestClientInterface $restClient;
+    private RouterInterface $router;
+    private LoggerInterface $logger;
+    private UserApi $userApi;
+    private DateTimeProvider $dateTimeProvider;
+    private TokenStorageInterface $tokenStorage;
+    private ObservableEventDispatcher $eventDispatcher;
 
     public function __construct(
         RestClientInterface $restClient,
@@ -72,28 +56,13 @@ class ClientApi
     }
 
     /**
-     * @param string[] $jmsGroups
-     *
-     * @return Client|null
-     */
-    public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
-    {
-        $user = $this->userApi->getUserWithData($jmsGroups);
-        $clients = $user->getClients();
-
-        return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
-    }
-
-    /**
      * Generates client profile link. We cannot guarantee the passed client has access to current report
      * So we need to make another API call with the correct JMS groups
      * thus ensuring the client is retrieved with the current report.
      *
-     * @return string
-     *
      * @throws \Exception
      */
-    public function generateClientProfileLink(Client $client)
+    public function generateClientProfileLink(Client $client): string
     {
         /** @var Client $client */
         $client = $this->restClient->get(
@@ -118,34 +87,19 @@ class ClientApi
     }
 
     /**
-     * @return Client
+     * @param string[] $jmsGroups
+     *
+     * @return Client|null
      */
-    public function getWithUsers(int $clientId, array $includes = [])
+    public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
     {
-        return $this->restClient->get(
-            sprintf(self::GET_CLIENT_BY_ID, $clientId),
-            'Client',
-            [
-                'client',
-                'client-users',
-                'user',
-                'client-reports',
-                'client-ndr',
-                'ndr',
-                'report',
-                'status',
-                'client-deputy',
-                'deputy',
-                'client-organisations',
-                'organisation',
-            ]
-        );
+        $user = $this->userApi->getUserWithData($jmsGroups);
+        $clients = $user->getClients();
+
+        return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
     }
 
-    /**
-     * @return Client
-     */
-    public function getWithUsersV2(int $clientId, array $includes = [])
+    public function getWithUsersV2(int $clientId): Client
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
@@ -167,10 +121,7 @@ class ClientApi
         );
     }
 
-    /**
-     * @return Client
-     */
-    public function getById(int $clientId, array $includes = [])
+    public function getById(int $clientId): Client
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID, $clientId),
@@ -190,7 +141,7 @@ class ClientApi
         );
     }
 
-    public function delete(int $id, string $trigger)
+    public function delete(int $id, string $trigger): void
     {
         $clientWithUsers = $this->getWithUsersV2($id);
         $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -202,7 +153,7 @@ class ClientApi
         $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
     }
 
-    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
+    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger): ResponseInterface
     {
         $response = $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -214,21 +165,18 @@ class ClientApi
         return $response;
     }
 
-    /**
-     * @return Client
-     */
-    public function getByCaseNumber(string $caseNumber)
+    public function getByCaseNumber(string $caseNumber): Client
     {
         return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
     }
 
-    public function unarchiveClient(string $id)
+    public function unarchiveClient(string $id): void
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $this->restClient->put(sprintf(self::UNARCHIVE_CLIENT, $id), $currentUser);
     }
 
-    public function create(Client $client)
+    public function create(Client $client): bool
     {
         return $this->restClient->post(self::CREATE_CLIENT, $client);
     }
