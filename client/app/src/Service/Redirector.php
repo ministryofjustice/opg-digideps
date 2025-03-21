@@ -53,8 +53,8 @@ class Redirector
         $deputyUid = $user->getDeputyUid();
         $clients = !is_null($deputyUid) ? $this->clientApi->getAllClientsByDeputyUid($deputyUid) : [];
 
-        // TODO can this be a null value?
-        if (is_null($clients)) {
+        // $clients might be null or '' if no clients are found for the given deputy UID
+        if (empty($clients)) {
             return $this->getLayDeputyHomepage($user);
         }
 
@@ -174,10 +174,10 @@ class Redirector
                 $clients = [];
                 $deputyUid = $user->getDeputyUid();
                 if (!is_null($deputyUid)) {
-                    // TODO might this make $clients null?
                     $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid());
                 }
 
+                // $clients might be null or '' if no clients are found for the given deputy UID
                 if (is_array($clients) && 0 == count($clients)) {
                     $route = 'client_add';
                 }
