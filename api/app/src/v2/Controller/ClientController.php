@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/client")
- */
+#[Route(path: '/client')]
 class ClientController extends RestController
 {
     use ControllerTrait;
@@ -33,11 +31,8 @@ class ClientController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")]
     public function getByIdAction(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayById($id))) {
@@ -68,11 +63,8 @@ class ClientController extends RestController
         return $this->buildSuccessResponse($transformedDto);
     }
 
-    /**
-     * @Route("/case-number/{caseNumber}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/case-number/{caseNumber}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")]
     public function getByCaseNumber(string $caseNumber): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayByCaseNumber($caseNumber))) {

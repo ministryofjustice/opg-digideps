@@ -16,9 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/tools")
- */
+#[Route(path: '/tools')]
 class ToolsController extends AbstractController
 {
     use ControllerTrait;
@@ -32,14 +30,12 @@ class ToolsController extends AbstractController
     }
 
     /**
-     * @Route("/reassign-reports", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @return JsonResponse
      *
      * @throws \Exception
      */
+    #[Route(path: '/reassign-reports', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function reassignReports(Request $request)
     {
         $fromRequest = json_decode($request->getContent(), true);
