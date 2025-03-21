@@ -26,19 +26,17 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
-    /**
-     * @return Report
-     */
-    public function generateReport(EntityManager $em, Client $client = null, string $type = null, \DateTime $startDate = null, \DateTime $endDate = null)
+    public function generateReport(EntityManager $em, Client $client = null, string $type = null, DateTime $startDate = null, DateTime $endDate = null): Report
     {
         $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
         $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
+        $startDate = $startDate ? $startDate : new DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
 
         $report = new Report($client, $type, $startDate, $endDate);
@@ -67,7 +65,7 @@ class ReportTestHelper
         $this->completeVisitsCare($report);
         $this->completeActions($report);
         $this->completeOtherInfo($report);
-        $this->completeDocuments($report, $em);
+        $this->completeDocuments($report);
         $this->completeDeputyExpenses($report);
         $this->completeGifts($report);
         $this->completeMoneyIn($report);
@@ -107,7 +105,7 @@ class ReportTestHelper
         $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
         $reportPdf->setStorageReference('dd_doc_1234_9876543219876');
         $reportPdf->setIsReportPdf(true);
-        $reportPdf->setCreatedOn(new \DateTime());
+        $reportPdf->setCreatedOn(new DateTime());
         $reportPdf->setCreatedBy($submittedBy);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
@@ -116,12 +114,12 @@ class ReportTestHelper
             ->setCreatedOn($submitDate)
             ->addDocument($reportPdf);
 
-        if (!($report instanceof Ndr\Ndr)) {
+        if (!($report instanceof Ndr)) {
             $supportingDocument = new Document($report);
             $supportingDocument->setFileName('fake-file.pdf');
             $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
             $supportingDocument->setIsReportPdf(false);
-            $supportingDocument->setCreatedOn(new \DateTime());
+            $supportingDocument->setCreatedOn(new DateTime());
             $supportingDocument->setCreatedBy($submittedBy);
             $supportingDocument->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
@@ -165,7 +163,7 @@ class ReportTestHelper
     private function completeDecisions(ReportInterface $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
     }
 
     private function completeContacts(ReportInterface $report): void
@@ -222,7 +220,7 @@ class ReportTestHelper
         $report->setLifestyle($ls);
     }
 
-    private function completeDocuments(ReportInterface $report, EntityManager $em): void
+    private function completeDocuments(ReportInterface $report): void
     {
         $report->setWishToProvideDocumentation('no');
     }
@@ -352,11 +350,6 @@ class ReportTestHelper
         }
     }
 
-    private function completeExpenses(ReportInterface $report): void
-    {
-        $this->completeDeputyExpenses($report);
-    }
-
     private function completeIncomeBenefits(ReportInterface $report)
     {
         if (!$report instanceof Ndr) {
@@ -369,55 +362,20 @@ class ReportTestHelper
             ->setExpectCompensationDamages('no');
     }
 
-    private function completeMoneyTransfers(ReportInterface $report)
-    {
-        if (!$report instanceof Ndr) {
-            return;
-        }
-
-        $report->setNoTransfersToAdd(true);
-    }
-
-    private function completeBalance(ReportInterface $report)
-    {
-        if (!$report instanceof Ndr) {
-            return;
-        }
-
-        $report->setBalanceMismatchExplanation('no reason');
-    }
-
-    private function completeProfDeputyCosts(ReportInterface $report)
-    {
-        $this->completeDeputyExpenses($report);
-    }
-
-    private function completeProfDeputyCostsEstimate(ReportInterface $report)
-    {
-        if ($report->isProfReport()) {
-            $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
-        }
-    }
-
-    private function completePaFeeExpense(ReportInterface $report)
-    {
-        $this->completeDeputyExpenses($report);
-    }
-
     private function completeClientBenefitsCheck(ReportInterface $report): void
     {
         $typeOfIncome = $report instanceof Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
         $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
-        $typeOfIncome->setCreated(new \DateTime())
+        $typeOfIncome->setCreated(new DateTime())
             ->setAmount(100.50)
             ->setWhoReceivedMoney('Some other bloke')
             ->setMoneyType('Universal Credit');
 
         $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
-            ->setDateLastCheckedEntitlement(new \DateTime())
-            ->setCreated(new \DateTime())
+            ->setDateLastCheckedEntitlement(new DateTime())
+            ->setCreated(new DateTime())
             ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
             ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
