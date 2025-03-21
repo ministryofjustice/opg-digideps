@@ -53,9 +53,12 @@ class Redirector
         $deputyUid = $user->getDeputyUid();
         $clients = !is_null($deputyUid) ? $this->clientApi->getAllClientsByDeputyUid($deputyUid) : [];
 
-        if (!is_array($clients)) {
+        // TODO can this be a null value?
+        if (is_null($clients)) {
             return $this->getLayDeputyHomepage($user);
         }
+
+        $clients = array_values($clients);
 
         if (count($clients) > 1) {
             // checks if user has missing details or is NDR
@@ -157,6 +160,7 @@ class Redirector
             if ($user->getCoDeputyClientConfirmed()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute) {
+                    // TODO lay_home needs a client ID otherwise it produces an invalid route
                     $route = 'lay_home';
                 }
             } elseif (User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
