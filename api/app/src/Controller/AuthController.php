@@ -15,9 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
-/**
- * @Route("/auth")
- */
+#[Route(path: '/auth')]
 class AuthController extends RestController
 {
     public function __construct(
@@ -32,12 +30,11 @@ class AuthController extends RestController
     }
 
     /**
-     * @Route("/login", methods={"POST"}, name="api_login")
-     *
      * @return User
      *
      * @throws \Throwable
      */
+    #[Route(path: '/login', methods: ['POST'], name: 'api_login')]
     public function login(
         RestInputOuputFormatter $restInputOutputFormatter,
         EntityManagerInterface $em,
@@ -60,7 +57,7 @@ class AuthController extends RestController
                 $redis->set($authToken, serialize($this->tokenStorage->getToken()));
 
                 // add token into response
-                $restInputOutputFormatter->addResponseModifier(function ($response) use ($authToken) {
+                $restInputOutputFormatter->addResponseModifier(function ($response) use ($authToken): void {
                     $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $authToken);
                 });
             } else {
@@ -70,7 +67,7 @@ class AuthController extends RestController
             if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
                 $jwt = $this->JWTService->createNewJWT($user);
 
-                $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt) {
+                $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt): void {
                     $response->headers->set('JWT', $jwt);
                 });
             }
@@ -85,9 +82,7 @@ class AuthController extends RestController
         }
     }
 
-    /**
-     * @Route("/logout", methods={"POST"})
-     */
+    #[Route(path: '/logout', methods: ['POST'])]
     public function logout(RedisUserProvider $userProvider)
     {
         $authToken = $this->tokenStorage->getToken();
@@ -97,9 +92,8 @@ class AuthController extends RestController
 
     /**
      * Test endpoint used for testing to check auth permissions.
-     *
-     * @Route("/get-logged-user", methods={"GET"})
      */
+    #[Route(path: '/get-logged-user', methods: ['GET'])]
     public function getLoggedUser()
     {
         $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);

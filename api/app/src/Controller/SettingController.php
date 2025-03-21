@@ -9,9 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/setting")
- */
+#[Route(path: '/setting')]
 class SettingController extends RestController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
@@ -19,9 +17,7 @@ class SettingController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/{id}", methods={"GET"})
-     */
+    #[Route(path: '/{id}', methods: ['GET'])]
     public function getSetting(Request $request, $id)
     {
         $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
@@ -31,11 +27,8 @@ class SettingController extends RestController
         return $setting ?: [];
     }
 
-    /**
-     * @Route("/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function upsertSetting(Request $request, $id)
     {
         $data = $this->formatter->deserializeBodyContent($request, [

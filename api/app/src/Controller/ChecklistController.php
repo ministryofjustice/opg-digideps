@@ -10,9 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/checklist")
- */
+#[Route(path: '/checklist')]
 class ChecklistController extends RestController
 {
     public function __construct(
@@ -23,9 +21,7 @@ class ChecklistController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/{id}", methods={"PUT"})
-     */
+    #[Route(path: '/{id}', methods: ['PUT'])]
     public function update(Request $request, int $id, EntityManagerInterface $em): Checklist
     {
         if (!$this->authService->isSecretValid($request)) {
