@@ -9,6 +9,7 @@ use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\ClientTransformer;
 use App\v2\Transformer\OrganisationTransformer;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -26,8 +27,10 @@ class ClientController extends RestController
         private readonly ClientAssembler $clientAssembler,
         private readonly OrganisationAssembler $orgAssembler,
         private readonly ClientTransformer $clientTransformer,
-        private readonly OrganisationTransformer $orgTransformer
+        private readonly OrganisationTransformer $orgTransformer,
+        EntityManagerInterface $em
     ) {
+        parent::__construct($em);
     }
 
     /**

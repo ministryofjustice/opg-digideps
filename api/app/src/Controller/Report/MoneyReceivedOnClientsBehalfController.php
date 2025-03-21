@@ -8,6 +8,7 @@ use App\Controller\RestController;
 use App\Repository\MoneyReceivedOnClientsBehalfRepository;
 use App\Repository\NdrMoneyReceivedOnClientsBehalfRepository;
 use App\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +18,10 @@ class MoneyReceivedOnClientsBehalfController extends RestController
     public function __construct(
         private readonly MoneyReceivedOnClientsBehalfRepository $reportMoneyRepository,
         private readonly NdrMoneyReceivedOnClientsBehalfRepository $ndrMoneyRepository,
-        private readonly RestFormatter $formatter
+        private readonly RestFormatter $formatter,
+        EntityManagerInterface $em
     ) {
+        parent::__construct($em);
     }
 
     /**
