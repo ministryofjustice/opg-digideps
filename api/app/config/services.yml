@@ -183,7 +183,6 @@ services:
     App\Security\RedisUserProvider:
         arguments:
             [
-                "@em",
                 "@snc_redis.default",
                 "@logger",
                 { "timeout_seconds": "%user_provider_timeout_seconds%" },

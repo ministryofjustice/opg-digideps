@@ -20,10 +20,9 @@ class UserVoterTest extends KernelTestCase
      */
     public function determineDeletePermission(User $deletor, User $deletee, int $expectedPermission)
     {
-        /** @var UserVoter $sut */
         $sut = new UserVoter();
 
-        $token = new UsernamePasswordToken($deletor, 'credentials', 'memory');
+        $token = new UsernamePasswordToken($deletor, 'private-firewall');
 
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
@@ -261,7 +260,7 @@ class UserVoterTest extends KernelTestCase
         /** @var UserVoter $sut */
         $sut = new UserVoter();
 
-        $token = new UsernamePasswordToken($editor, 'credentials', 'memory');
+        $token = new UsernamePasswordToken($editor, 'private-firewall');
 
         self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::EDIT_USER]));
         self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::ADD_USER]));

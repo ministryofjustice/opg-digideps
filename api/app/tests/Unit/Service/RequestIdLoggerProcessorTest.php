@@ -12,10 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestIdLoggerProcessorTest extends TestCase
 {
-    /**
-     * @var RequestIdLoggerProcessor
-     */
-    private $object;
+    private RequestIdLoggerProcessor $object;
 
     private $record = ['key1' => 'abc', 'key2' => 2];
 
@@ -30,7 +27,7 @@ class RequestIdLoggerProcessorTest extends TestCase
 
     public function testProcessRecordNoReqStack()
     {
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn(false);
+        $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
