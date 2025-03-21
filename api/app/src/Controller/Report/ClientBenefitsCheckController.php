@@ -28,13 +28,8 @@ class ClientBenefitsCheckController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/{reportOrNdr}/client-benefits-check", methods={"POST"}, name="persist"), requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * })))
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{reportOrNdr}/client-benefits-check', requirements: ['reportOrNdr' => '(report|ndr)'], methods: ['POST'], name: 'persist')]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function create(Request $request, string $reportOrNdr)
     {
         $this->setJmsGroups($request);
@@ -44,13 +39,8 @@ class ClientBenefitsCheckController extends RestController
         return $this->processEntity($clientBenefitsCheck, $reportOrNdr);
     }
 
-    /**
-     * @Route("/{reportOrNdr}/client-benefits-check/{id}", methods={"GET"}, name="read", requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * })))
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{reportOrNdr}/client-benefits-check/{id}', methods: ['GET'], name: 'read', requirements: ['reportOrNdr' => '(report|ndr)'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function read(Request $request, string $id, string $reportOrNdr)
     {
         $this->setJmsGroups($request);
@@ -59,13 +49,8 @@ class ClientBenefitsCheckController extends RestController
             $this->clientBenefitsCheckRepository->findBy(['id' => $id], ['created' => 'ASC']);
     }
 
-    /**
-     * @Route("/{reportOrNdr}/client-benefits-check/{id}", methods={"PUT"}, name="update", requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * }))))
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{reportOrNdr}/client-benefits-check/{id}', methods: ['PUT'], name: 'update', requirements: ['reportOrNdr' => '(report|ndr)'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function update(Request $request, $id, string $reportOrNdr)
     {
         $this->setJmsGroups($request);

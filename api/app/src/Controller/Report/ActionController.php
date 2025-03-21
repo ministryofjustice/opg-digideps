@@ -19,11 +19,8 @@ class ActionController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/action", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/action', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateAction(Request $request, $reportId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -46,12 +43,10 @@ class ActionController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/action", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     *
      * @param int $id
      */
+    #[Route(path: '/report/{reportId}/action', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $action = $this->findEntityBy(EntityDir\Report\Action::class, $id, 'Action with id:'.$id.' not found');
