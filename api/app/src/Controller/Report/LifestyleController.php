@@ -10,9 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/report")
- */
+#[Route(path: '/report')]
 class LifestyleController extends RestController
 {
     private array $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
@@ -22,11 +20,8 @@ class LifestyleController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/lifestyle", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/lifestyle', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addAction(Request $request)
     {
         $lifestyle = new EntityDir\Report\Lifestyle();
@@ -47,11 +42,8 @@ class LifestyleController extends RestController
         return ['id' => $lifestyle->getId()];
     }
 
-    /**
-     * @Route("/lifestyle/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/lifestyle/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateAction(Request $request, $id)
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id);
@@ -69,12 +61,12 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @Route("/{reportId}/lifestyle", methods={"GET"})
      *
-     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $reportId
      */
+    #[Route(path: '/{reportId}/lifestyle', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function findByReportIdAction($reportId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -86,12 +78,12 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @Route("/lifestyle/{id}", methods={"GET"})
      *
-     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      */
+    #[Route(path: '/lifestyle/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
@@ -104,11 +96,8 @@ class LifestyleController extends RestController
         return $lifestyle;
     }
 
-    /**
-     * @Route("/lifestyle/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/lifestyle/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteLifestyle($id)
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'VisitsCare not found');

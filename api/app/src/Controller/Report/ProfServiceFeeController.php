@@ -19,11 +19,8 @@ class ProfServiceFeeController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/prof-service-fee", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     */
+    #[Route(path: '/report/{reportId}/prof-service-fee', methods: ['POST'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function addAction(Request $request, $reportId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -46,11 +43,8 @@ class ProfServiceFeeController extends RestController
         return ['id' => $profServiceFee->getId()];
     }
 
-    /**
-     * @Route("/prof-service-fee/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     */
+    #[Route(path: '/prof-service-fee/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function updateAction(Request $request, $id)
     {
         /** @var EntityDir\Report\ProfServiceFee $profServiceFee */
@@ -69,12 +63,12 @@ class ProfServiceFeeController extends RestController
     }
 
     /**
-     * @Route("/prof-service-fee/{id}", methods={"GET"})
      *
-     * @Security("is_granted('ROLE_PROF')")
      *
      * @return object|null
      */
+    #[Route(path: '/prof-service-fee/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
@@ -87,11 +81,8 @@ class ProfServiceFeeController extends RestController
         return $profServiceFee;
     }
 
-    /**
-     * @Route("/prof-service-fee/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_PROF')")
-     */
+    #[Route(path: '/prof-service-fee/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_PROF')")]
     public function deleteProfServiceFee($id)
     {
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service fee not found');

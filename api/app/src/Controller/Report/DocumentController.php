@@ -26,14 +26,8 @@ class DocumentController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/document/{reportType}/{reportId}", requirements={
-     *     "reportId":"\d+",
-     *     "reportType" = "(report|ndr)"
-     * }, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/document/{reportType}/{reportId}', requirements: ['reportId' => '\d+', 'reportType' => '(report|ndr)'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, $reportType, $reportId)
     {
         if ('report' === $reportType) {
@@ -68,14 +62,8 @@ class DocumentController extends RestController
         return ['id' => $document->getId()];
     }
 
-    /**
-     * @Route("/document/{reportType}/{reportId}/overwrite", requirements={
-     *     "reportId":"\d+",
-     *     "reportType" = "(report|ndr)"
-     * }, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: '/document/{reportType}/{reportId}/overwrite', requirements: ['reportId' => '\d+', 'reportType' => '(report|ndr)'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function overwriteReportPdf(Request $request, $reportType, $reportId)
     {
         if ('report' === $reportType) {
@@ -124,10 +112,10 @@ class DocumentController extends RestController
     /**
      * GET document by id.
      *
-     * @Route("/document/{id}", requirements={"id":"\d+"}, methods={"GET"})
      *
-     * @Security("is_granted('ROLE_DEPUTY')")
      */
+    #[Route(path: '/document/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
@@ -146,14 +134,14 @@ class DocumentController extends RestController
      * Delete document.
      * Accessible only from deputy area.
      *
-     * @Route("/document/{id}", methods={"DELETE"})
      *
-     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      *
      * @return array
      */
+    #[Route(path: '/document/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete($id)
     {
         /** @var $document EntityDir\Report\Document */
@@ -179,9 +167,8 @@ class DocumentController extends RestController
 
     /**
      * Get queued documents.
-     *
-     * @Route("/document/queued", methods={"GET"})
      */
+    #[Route(path: '/document/queued', methods: ['GET'])]
     public function getQueuedDocuments(Request $request, EntityManagerInterface $em): string
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -210,9 +197,8 @@ class DocumentController extends RestController
 
     /**
      * Get queued documents.
-     *
-     * @Route("/document/update-related-statuses", methods={"PUT"})
      */
+    #[Route(path: '/document/update-related-statuses', methods: ['PUT'])]
     public function updateRelatedDocumentStatuses(Request $request, EntityManagerInterface $em): string
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -230,9 +216,8 @@ class DocumentController extends RestController
 
     /**
      * Update a Document.
-     *
-     * @Route("/document/{id}", methods={"PUT"})
      */
+    #[Route(path: '/document/{id}', methods: ['PUT'])]
     public function update(Request $request, int $id, EntityManagerInterface $em): Document
     {
         if (!$this->authService->isSecretValid($request)) {

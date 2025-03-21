@@ -9,9 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/lay-deputyship")
- */
+#[Route(path: '/lay-deputyship')]
 class LayDeputyshipUploadController
 {
     public function __construct(
@@ -22,12 +20,12 @@ class LayDeputyshipUploadController
     }
 
     /**
-     * @Route("/upload", methods={"POST"})
      *
-     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return array
      */
+    #[Route(path: '/upload', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function upload(Request $request)
     {
         ini_set('memory_limit', '1024M');

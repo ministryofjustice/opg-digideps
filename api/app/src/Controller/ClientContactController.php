@@ -10,9 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("")
- */
+#[Route(path: '')]
 class ClientContactController extends RestController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
@@ -20,11 +18,8 @@ class ClientContactController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/clients/{clientId}/clientcontacts', name: 'clientcontact_add', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function add(Request $request, $clientId)
     {
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId);
@@ -59,10 +54,10 @@ class ClientContactController extends RestController
      * Update contact
      * Only the creator can update the note.
      *
-     * @Route("/clientcontacts/{id}", methods={"PUT"})
      *
-     * @Security("is_granted('ROLE_ORG')")
      */
+    #[Route(path: '/clientcontacts/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function update(Request $request, $id)
     {
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
@@ -87,11 +82,8 @@ class ClientContactController extends RestController
         return $clientContact->getId();
     }
 
-    /**
-     * @Route("/clientcontacts/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/clientcontacts/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
@@ -109,10 +101,10 @@ class ClientContactController extends RestController
      * Delete contact
      * Only the creator can delete the note.
      *
-     * @Route("/clientcontacts/{id}", methods={"DELETE"})
      *
-     * @Security("is_granted('ROLE_ORG')")
      */
+    #[Route(path: '/clientcontacts/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function delete($id, LoggerInterface $logger)
     {
         try {

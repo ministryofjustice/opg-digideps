@@ -10,9 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/report")
- */
+#[Route(path: '/report')]
 class VisitsCareController extends RestController
 {
     private array $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
@@ -22,11 +20,8 @@ class VisitsCareController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/visits-care", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/visits-care', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addAction(Request $request)
     {
         $visitsCare = new EntityDir\Report\VisitsCare();
@@ -47,11 +42,8 @@ class VisitsCareController extends RestController
         return ['id' => $visitsCare->getId()];
     }
 
-    /**
-     * @Route("/visits-care/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/visits-care/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateAction(Request $request, $id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
@@ -69,12 +61,12 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/{reportId}/visits-care", methods={"GET"})
      *
-     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $reportId
      */
+    #[Route(path: '/{reportId}/visits-care', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function findByReportIdAction($reportId)
     {
         $this->formatter->setJmsSerialiserGroups(['visits-care']);
@@ -88,12 +80,12 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/visits-care/{id}", methods={"GET"})
      *
-     * @Security("is_granted('ROLE_DEPUTY')")
      *
      * @param int $id
      */
+    #[Route(path: '/visits-care/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
@@ -106,11 +98,8 @@ class VisitsCareController extends RestController
         return $visitsCare;
     }
 
-    /**
-     * @Route("/visits-care/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/visits-care/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteVisitsCare($id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare not found');

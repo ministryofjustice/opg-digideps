@@ -6,9 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/health-check")
- */
+#[Route(path: '/health-check')]
 class HealthController extends RestController
 {
     public function __construct(
@@ -19,19 +17,16 @@ class HealthController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("", name="health-check", methods={"GET"})
-     */
+    #[Route(path: '', name: 'health-check', methods: ['GET'])]
     public function containerHealthAction()
     {
         return 'ok';
     }
 
     /**
-     * @Route("/service", methods={"GET"})
-     *
      * @return array
      */
+    #[Route(path: '/service', methods: ['GET'])]
     public function serviceHealthAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();

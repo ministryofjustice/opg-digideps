@@ -26,10 +26,8 @@ class MoneyTransactionShortController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction-short", methods={"POST"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction-short', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addMoneyTransactionAction(Request $request, $reportId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
@@ -56,10 +54,8 @@ class MoneyTransactionShortController extends RestController
         return $t->getId();
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", methods={"PUT"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -79,10 +75,8 @@ class MoneyTransactionShortController extends RestController
         return $t->getId();
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", methods={"DELETE"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -103,10 +97,8 @@ class MoneyTransactionShortController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", requirements={"reportId":"\d+", "transactionId":"\d+"}, methods={"GET"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', requirements: ['reportId' => '\d+', 'transactionId' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById($reportId, $transactionId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -130,10 +122,8 @@ class MoneyTransactionShortController extends RestController
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction-short/soft-delete/{transactionId}", methods={"PUT"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction-short/soft-delete/{transactionId}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function softDeleteMoneyTransactionShortAction($transactionId)
     {
         $filter = $this->em->getFilters()->getFilter('softdeleteable');
@@ -152,10 +142,8 @@ class MoneyTransactionShortController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-transaction-short/get-soft-delete", methods={"GET"})
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/money-transaction-short/get-soft-delete', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getSoftDeletedMoneyTransactionShortItems($reportId)
     {
         return $this->moneyTransactionShortRepository->retrieveSoftDeleted($reportId);

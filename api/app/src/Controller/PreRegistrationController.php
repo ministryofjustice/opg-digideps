@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/pre-registration")
- */
+#[Route(path: '/pre-registration')]
 class PreRegistrationController extends RestController
 {
     public function __construct(
@@ -29,14 +27,14 @@ class PreRegistrationController extends RestController
     }
 
     /**
-     * @Route("/delete", methods={"DELETE"})
      *
-     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @return array|JsonResponse
      *
      * @throws NonUniqueResultException
      */
+    #[Route(path: '/delete', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function delete(PreRegistrationRepository $preRegistrationRepository)
     {
         $result = $preRegistrationRepository->deleteAll();
@@ -46,9 +44,8 @@ class PreRegistrationController extends RestController
 
     /**
      * Verify Deputy first and last names, Client last name, Postcode, and Case Number.
-     *
-     * @Route("/verify", methods={"POST"})
      */
+    #[Route(path: '/verify', methods: ['POST'])]
     public function verify(Request $request, PreRegistrationVerificationService $verificationService)
     {
         $clientData = $this->formatter->deserializeBodyContent($request);
@@ -101,11 +98,8 @@ class PreRegistrationController extends RestController
         return ['verified' => $verified];
     }
 
-    /**
-     * @Route("/count", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/count', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function userCount()
     {
         $qb = $this->em->createQueryBuilder();
@@ -116,10 +110,9 @@ class PreRegistrationController extends RestController
     }
 
     /**
-     * @Route("/clientHasCoDeputies/{caseNumber}", methods={"GET"})
-     *
      * @return array|JsonResponse
      */
+    #[Route(path: '/clientHasCoDeputies/{caseNumber}', methods: ['GET'])]
     public function clientHasCoDeputies(string $caseNumber)
     {
         return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);

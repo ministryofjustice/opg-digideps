@@ -27,11 +27,8 @@ class UserResearchController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/user-research", name="create_user_research", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/user-research', name: 'create_user_research', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')")]
     public function create(Request $request)
     {
         try {
@@ -52,11 +49,8 @@ class UserResearchController extends RestController
         }
     }
 
-    /**
-     * @Route("/user-research", name="get_user_research", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: '/user-research', name: 'get_user_research', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getAll(Request $request)
     {
         try {

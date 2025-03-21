@@ -14,9 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/report-submission")
- */
+#[Route(path: '/report-submission')]
 class ReportSubmissionController extends RestController
 {
     public const QUEUEABLE_STATUSES = [
@@ -49,11 +47,8 @@ class ReportSubmissionController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getAll(Request $request)
     {
         /** @var ReportSubmissionRepository $repo */
@@ -74,11 +69,8 @@ class ReportSubmissionController extends RestController
         return $ret;
     }
 
-    /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getOneById(Request $request, $id)
     {
         $ret = $this->em->getRepository(ReportSubmission::class)->findOneByIdUnfiltered($id);
@@ -92,10 +84,10 @@ class ReportSubmissionController extends RestController
      * Update documents
      * return array of storage references, for admin area to delete if needed.
      *
-     * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"}, methods={"PUT"})
      *
-     * @Security("is_granted('ROLE_ADMIN')")
      */
+    #[Route(path: '/{reportSubmissionId}', requirements: ['reportSubmissionId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function update(Request $request, $reportSubmissionId)
     {
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
@@ -116,9 +108,8 @@ class ReportSubmissionController extends RestController
     /**
      * Separating this from update() as it needs to be accessible via client secret which removes the
      * User from the request.
-     *
-     * @Route("/{reportSubmissionId}/update-uuid", requirements={"reportSubmissionId":"\d+"}, methods={"PUT"})
      */
+    #[Route(path: '/{reportSubmissionId}/update-uuid', requirements: ['reportSubmissionId' => '\d+'], methods: ['PUT'])]
     public function updateUuid(Request $request, $reportSubmissionId)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -142,9 +133,8 @@ class ReportSubmissionController extends RestController
     /**
      * Get old report submissions.
      * Called from ADMIN cron.
-     *
-     * @Route("/old", methods={"GET"})
      */
+    #[Route(path: '/old', methods: ['GET'])]
     public function getOld(Request $request)
     {
         if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
@@ -163,9 +153,8 @@ class ReportSubmissionController extends RestController
     /**
      * Set report undownloadable (and remove the storage reference for the files.
      * Called from ADMIN cron.
-     *
-     * @Route("/{id}/set-undownloadable", requirements={"id":"\d+"}, methods={"PUT"})
      */
+    #[Route(path: '/{id}/set-undownloadable', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function setUndownloadable($id, Request $request)
     {
         if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
@@ -187,10 +176,10 @@ class ReportSubmissionController extends RestController
     /**
      * Queue submission documents which have been synced yet.
      *
-     * @Route("/{id}/queue-documents", requirements={"id":"\d+"}, methods={"PUT"})
      *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
+    #[Route(path: '/{id}/queue-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function queueDocuments($id)
     {
         /** @var ReportSubmission $reportSubmission */
@@ -214,12 +203,12 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @Route("/pre-registration-data", name="pre_registration_data", methods={"GET"})
      *
-     * @Security("is_granted('ROLE_ADMIN')")
      *
      * @throws \Exception
      */
+    #[Route(path: '/pre-registration-data', name: 'pre_registration_data', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getPreRegistrationData(Request $request): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */

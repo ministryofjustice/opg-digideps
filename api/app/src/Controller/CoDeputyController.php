@@ -11,9 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/codeputy/")
- */
+#[Route(path: '/codeputy/')]
 class CoDeputyController extends RestController
 {
     public function __construct(private readonly UserService $userService, private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
@@ -21,11 +19,8 @@ class CoDeputyController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("{count}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '{count}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function countMld(Request $request)
     {
         $qb = $this->em->createQueryBuilder()
@@ -37,11 +32,8 @@ class CoDeputyController extends RestController
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * @Route("add/{clientId}", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: 'add/{clientId}', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, int $clientId)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -67,11 +59,8 @@ class CoDeputyController extends RestController
         return $newUser;
     }
 
-    /**
-     * @Route("{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function update(Request $request, $id)
     {
         $user = $this->findEntityBy(User::class, $id, 'User not found'); /* @var $user User */
@@ -101,10 +90,10 @@ class CoDeputyController extends RestController
      * Max 10k otherwise failing (memory reach 128M).
      * Borrows heavily from CasRecController:addBulk.
      *
-     * @Route("{mldupgrade}", methods={"POST"})
      *
-     * @Security("is_granted('ROLE_ADMIN')")
      */
+    #[Route(path: '{mldupgrade}', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function upgradeToMld(Request $request)
     {
         $maxRecords = 10000;
