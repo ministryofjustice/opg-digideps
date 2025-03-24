@@ -6,6 +6,7 @@ use App\Entity\Deputy;
 use App\Entity\User;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +22,9 @@ class DeputyController extends RestController
     public function __construct(
         private readonly DeputyService $deputyService,
         private readonly RestFormatter $formatter,
+        EntityManagerInterface $em
     ) {
+        parent::__construct($em);
     }
 
     /**

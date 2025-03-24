@@ -17,15 +17,15 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private mixed $timeoutSeconds;
+    private readonly mixed $timeoutSeconds;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private Client $redis,
-        private LoggerInterface $logger,
-        private array $options,
-        private UserRepository $userRepository,
-        private string $workspace
+        private readonly EntityManagerInterface $em,
+        private readonly Client $redis,
+        private readonly LoggerInterface $logger,
+        readonly array $options,
+        private readonly UserRepository $userRepository,
+        private readonly string $workspace
     ) {
         $this->timeoutSeconds = $options['timeout_seconds'];
     }
