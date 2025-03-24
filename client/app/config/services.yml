@@ -62,6 +62,8 @@ services:
         "@router",
         "@session",
         "%env(ROLE)%",
+        '@App\Service\Client\Internal\ClientApi',
+        "@logger",
       ]
 
   App\Service\HtmlToPdfGenerator:
