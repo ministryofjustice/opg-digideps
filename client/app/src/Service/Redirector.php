@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -29,7 +28,6 @@ class Redirector
         protected Session $session,
         protected string $env,
         private ClientApi $clientApi,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
