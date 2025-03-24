@@ -13,42 +13,28 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CoDeputyController extends AbstractController
 {
-    private ClientApi $clientApi;
-    private UserApi $userApi;
-    private DeputyApi $deputyApi;
-    private RestClient $restClient;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ClientApi $clientApi,
-        UserApi $userApi,
-        DeputyApi $deputyApi,
-        RestClient $restClient,
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
+        private readonly ClientApi $clientApi,
+        private readonly UserApi $userApi,
+        private readonly DeputyApi $deputyApi,
+        private readonly RestClient $restClient,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->clientApi = $clientApi;
-        $this->userApi = $userApi;
-        $this->deputyApi = $deputyApi;
-        $this->restClient = $restClient;
-        $this->translator = $translator;
-        $this->logger = $logger;
     }
 
-    /**
-     * @Route("/codeputy/verification", name="codep_verification")
-     *
-     * @Template("@App/CoDeputy/verification.html.twig")
-     */
+    #[Route('/codeputy/verification', name: 'codep_verification')]
+    #[Template('@App/CoDeputy/verification.html.twig')]
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
     {
         $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
@@ -162,14 +148,12 @@ class CoDeputyController extends AbstractController
     }
 
     /**
-     * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
-     *
-     * @Template("@App/CoDeputy/add.html.twig")
-     *
      * @return array|RedirectResponse
      *
      * @throws \Throwable
      */
+    #[Route('/codeputy/{clientId}/add', name: 'add_co_deputy')]
+    #[Template('@App/CoDeputy/add.html.twig')]
     public function addAction(Request $request, Redirector $redirector, $clientId)
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
@@ -219,14 +203,12 @@ class CoDeputyController extends AbstractController
     }
 
     /**
-     * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
-     *
-     * @Template("@App/CoDeputy/resendActivation.html.twig")
-     *
      * @return array|RedirectResponse
      *
      * @throws \Throwable
      */
+    #[Route('/codeputy/re-invite/{email}', name: 'codep_resend_activation')]
+    #[Template('@App/CoDeputy/resendActivation.html.twig')]
     public function resendActivationAction(Request $request, string $email)
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
