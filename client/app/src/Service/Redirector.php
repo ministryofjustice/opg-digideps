@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -28,6 +29,7 @@ class Redirector
         protected Session $session,
         protected string $env,
         private ClientApi $clientApi,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -49,7 +51,7 @@ class Redirector
         }
 
         $deputyUid = $user->getDeputyUid();
-        $clients = !is_null($deputyUid) ? $this->clientApi->getAllClientsByDeputyUid($deputyUid) : [];
+        $clients = is_null($deputyUid) ? [] : $this->clientApi->getAllClientsByDeputyUid($deputyUid);
 
         // $clients might be null or '' if no clients are found for the given deputy UID
         if (empty($clients)) {
@@ -98,7 +100,18 @@ class Redirector
             }
 
             if (!$user->isNdrEnabled()) {
-                return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
+                $clientId = $user->getIdOfClientWithDetails();
+                if (is_null($clientId)) {
+                    $this->logger->error(
+                        "Unable to get client ID for user with ID {$user->getId()}; ".
+                        'getIdOfClientWithDetails() returned a null value (DDLS-521)'
+                    );
+
+                    // attempt to rectify failed client ID fetch by using the active client's ID instead
+                    $clientId = $activeClient->getId();
+                }
+
+                return $this->router->generate('report_create', ['clientId' => $clientId]);
             }
         }
 
