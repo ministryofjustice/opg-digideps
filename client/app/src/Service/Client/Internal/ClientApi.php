@@ -203,10 +203,16 @@ class ClientApi
 
     public function checkDeputyHasMultiClients(User $user): bool
     {
-        // if we can't find the user's deputy UID, we can't look up their clients by UID; this only has the
-        // effect of hiding or showing a menu item
+        // if we can't find the user's deputy UID, we can't look up their clients by UID using
+        // getAllClientsByDeputyUid, so we don't know if they are a single or multi client deputy, and default to
+        // single; this will disable the "choose a client" breadcrumb link
         $deputyUid = $user->getDeputyUid();
         if (is_null($deputyUid)) {
+            $this->logger->error(
+                "Deputy with ID {$user->getId()} has null deputy UID; ".
+                'returning false from checkDeputyHasMultiClients() (unsure if they are a multi-client deputy)'
+            );
+
             return false;
         }
 
