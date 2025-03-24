@@ -201,6 +201,13 @@ class ClientApi
 
     public function checkDeputyHasMultiClients(User $user): bool
     {
-        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
+        // if we can't find the user's deputy UID, we can't look up their clients by UID; this only has the
+        // effect of hiding or showing a menu item
+        $deputyUid = $user->getDeputyUid();
+        if (is_null($deputyUid)) {
+            return false;
+        }
+
+        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($deputyUid)) > 1;
     }
 }
