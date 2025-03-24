@@ -13,11 +13,9 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -36,7 +34,7 @@ class CoDeputyController extends AbstractController
         DeputyApi $deputyApi,
         RestClient $restClient,
         TranslatorInterface $translator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->clientApi = $clientApi;
         $this->userApi = $userApi;
@@ -55,8 +53,11 @@ class CoDeputyController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
-        // redirect if user has missing details or is on wrong page
-        if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
+        if ($user->getCoDeputyClientConfirmed()) {
+            // user has already done codeputy verification, redirect to their homepage
+            return $this->redirectToRoute($redirector->getFirstPageAfterLogin($request->getSession()));
+        } elseif ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
+            // redirect if user has missing details or is on wrong page
             return $this->redirectToRoute($route);
         }
 

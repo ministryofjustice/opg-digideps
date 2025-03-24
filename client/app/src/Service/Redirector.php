@@ -167,17 +167,9 @@ class Redirector
 
         $route = null;
 
-        if ($user->getIsCoDeputy()) {
-            if ($user->getCoDeputyClientConfirmed()) {
-                // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute) {
-                    // TODO lay_home needs a client ID otherwise it produces an invalid route
-                    $route = 'lay_home';
-                }
-            } elseif (User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
-                // unverified codeputy invitation
-                $route = 'codep_verification';
-            }
+        if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed() && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+            // unverified codeputy invitation
+            $route = 'codep_verification';
         } elseif (!$user->isDeputyOrg()) {
             // client is not added
             if (!$user->getIdOfClientWithDetails()) {
