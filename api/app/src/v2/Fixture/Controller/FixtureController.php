@@ -49,7 +49,7 @@ class FixtureController extends AbstractController
         private NdrRepository $ndrRepository,
         private PreRegistrationFactory $preRegistrationFactory,
         private DeputyRepository $deputyRepository,
-        private string $symfonyEnvironment
+        private string $symfonyEnvironment,
     ) {
     }
 
@@ -107,23 +107,7 @@ class FixtureController extends AbstractController
             }
 
             if ($fromRequest['coDeputyEnabled']) {
-                $deputy->setCoDeputyClientConfirmed(true);
-                $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
-
-                $coDeputyPreRegistration = $this->preRegistrationFactory->create(
-                    [
-                        'caseNumber' => $client->getCaseNumber(),
-                        'clientLastName' => $client->getLastname(),
-                        'deputyPostCode' => $coDeputy->getAddressPostcode(),
-                        'deputyLastName' => $coDeputy->getLastname(),
-                        'deputyFirstName' => $coDeputy->getFirstName(),
-                        'reportType' => $fromRequest['reportType'],
-                        'deputyUid' => $coDeputy->getDeputyUid(),
-                    ]
-                );
-
-                $this->em->persist($coDeputyPreRegistration);
-                $this->em->persist($coDeputy);
+                $this->createCoDeputy($deputy, $fromRequest, $client);
             }
         }
 
@@ -135,10 +119,6 @@ class FixtureController extends AbstractController
         $this->em->flush();
 
         $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $deputy->getId()] : $multiClientDeputy['deputyIds'];
-
-        if (isset($coDeputy)) {
-            $deputyIds['coDeputy'] = $coDeputy->getId();
-        }
 
         if (!$fromRequest['multiClientEnabled']) {
             return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'Court order created', Response::HTTP_CREATED]);
@@ -175,6 +155,11 @@ class FixtureController extends AbstractController
 
         $this->em->persist($deputyPreRegistration);
         $this->em->persist($deputy);
+
+        // Attach co-deputy to the primary client
+        if ($fromRequest['coDeputyEnabled']) {
+            $this->createCoDeputy($deputy, $fromRequest, $client);
+        }
 
         // create second deputy account and client
         $fromRequest['deputyEmail'] = str_replace(['lay-multi-client-deputy-primary'], 'lay-multi-client-deputy-secondary', $fromRequest['deputyEmail']);
@@ -696,5 +681,26 @@ class FixtureController extends AbstractController
         } catch (\Throwable $e) {
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
         }
+    }
+
+    private function createCoDeputy(User $deputy, $fromRequest, $client)
+    {
+        $deputy->setCoDeputyClientConfirmed(true);
+        $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
+
+        $coDeputyPreRegistration = $this->preRegistrationFactory->create(
+            [
+                'caseNumber' => $client->getCaseNumber(),
+                'clientLastName' => $client->getLastname(),
+                'deputyPostCode' => $coDeputy->getAddressPostcode(),
+                'deputyLastName' => $coDeputy->getLastname(),
+                'deputyFirstName' => $coDeputy->getFirstName(),
+                'reportType' => $fromRequest['reportType'],
+                'deputyUid' => $coDeputy->getDeputyUid(),
+            ]
+        );
+
+        $this->em->persist($coDeputyPreRegistration);
+        $this->em->persist($coDeputy);
     }
 }
