@@ -10566,11 +10566,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:setCoDeputyClientConfirmed\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:setIsPrimary\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10697,7 +10692,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'reportType' on mixed\\.$#"
-			count: 3
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10732,6 +10727,21 @@ parameters:
 
 		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClientAndAttachToOrgs\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) has parameter \\$client with no type specified\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -10801,6 +10811,11 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
+			message: "#^Parameter \\#1 \\$deputy of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\Deputy\\:\\:setDeputyUid\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10832,11 +10847,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$organisation of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createGenericOrgUser\\(\\) expects App\\\\Entity\\\\Organisation, object given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$originalDeputy of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -10878,11 +10888,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
-			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
