@@ -245,6 +245,21 @@ class IndexController extends AbstractController
     }
 
     /**
+     * There is an issue with a user's data which has to be manually corrected; for example, a missing deputy UID
+     * or a client without the necessary address data.
+     *
+     * @Route("/invalid-data", name="invalid_data")
+     */
+    public function invalidDataAction(): Response
+    {
+        $helplineNo = $this->translator->trans(id: 'helpline', domain: 'common');
+        $description = $this->translator->trans(id: '422.description', parameters: ['helplineNo' => $helplineNo], domain: 'error');
+        $text = $this->renderView('bundles/TwigBundle/Exception/error422.html.twig', ['description' => $description]);
+
+        return new Response($text, 422);
+    }
+
+    /**
      * Get referer, only if matching an existing route.
      *
      * @return string|null referer URL, null if not existing or inside the $excludedRoutes
