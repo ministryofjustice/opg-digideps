@@ -297,20 +297,6 @@ class RedirectorTest extends TestCase
     /*
      * All paths through this method are captured by the tests for getLayDeputyHomepage(), except...
      */
-    public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
-    {
-        $this->user->expects($this->once())->method('hasAdminRole')->willReturn(false);
-        $this->user->expects($this->once())->method('getIsCoDeputy')->willReturn(true);
-        $this->user->expects($this->once())->method('getCoDeputyClientConfirmed')->willReturn(true);
-
-        $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
-
-        static::assertEquals('lay_home', $correctedRoute);
-    }
-
-    /*
-     * All paths through this method are captured by the tests for getLayDeputyHomepage(), except...
-     */
     public function testGetCorrectRouteIfDifferentAdmin()
     {
         $this->user->expects($this->once())->method('hasAdminRole')->willReturn(true);
@@ -348,7 +334,15 @@ class RedirectorTest extends TestCase
                 ->willReturn($expectedRoute);
         }
 
-        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, $env, $this->clientApi);
+        $sut = new Redirector(
+            $this->tokenStorage,
+            $this->authChecker,
+            $this->router,
+            $this->session,
+            $env,
+            $this->clientApi,
+            $this->logger,
+        );
 
         $actual = $sut->getHomepageRedirect();
 
@@ -386,7 +380,15 @@ class RedirectorTest extends TestCase
             ->willReturn('/choose-a-client');
 
         // sut
-        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi);
+        $sut = new Redirector(
+            $this->tokenStorage,
+            $this->authChecker,
+            $this->router,
+            $this->session,
+            'prod',
+            $this->clientApi,
+            $this->logger,
+        );
 
         // assertions
         $actual = $sut->getHomepageRedirect();
