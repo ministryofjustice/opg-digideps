@@ -117,7 +117,6 @@ jobs:
     name: api unit tests
     uses: ./.github/workflows/_unit-tests-api.yml
     with:
-      selection: selection-all
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
