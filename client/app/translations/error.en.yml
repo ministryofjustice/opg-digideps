@@ -6,3 +6,7 @@ generic:
 404:
   title: Page not found
   description: If you entered a web address please check it was correct.
+422:
+  title: Invalid data
+  description: "Your account needs to be updated by an administrator.
+    Please call us on helplineNo and ask for your account to be updated."
