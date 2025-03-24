@@ -10,23 +10,11 @@ use App\v2\DTO\UserDto;
 
 class ClientTransformer
 {
-    /** @var ReportTransformer */
-    private $reportTransformer;
-
-    /** @var NdrTransformer */
-    private $ndrTransformer;
-
-    /** @var DeputyTransformer */
-    private $deputyTransformer;
-
     public function __construct(
-        ReportTransformer $reportTransformer,
-        NdrTransformer $ndrTransformer,
-        DeputyTransformer $deputyTransformer,
+        private readonly ReportTransformer $reportTransformer,
+        private readonly NdrTransformer $ndrTransformer,
+        private readonly DeputyTransformer $deputyTransformer
     ) {
-        $this->reportTransformer = $reportTransformer;
-        $this->ndrTransformer = $ndrTransformer;
-        $this->deputyTransformer = $deputyTransformer;
     }
 
     /**

@@ -15,26 +15,14 @@ class ClientAssembler
 {
     use DtoPropertySetterTrait;
 
-    /** @var ReportAssemblerInterface */
-    private $reportDtoAssembler;
-
-    /** @var NdrAssembler */
-    private $ndrDtoAssembler;
-
-    /** @var DeputyAssembler */
-    private $deputyAssembler;
-
     /**
      * ClientAssembler constructor.
      */
     public function __construct(
-        ReportAssemblerInterface $reportDtoAssembler,
-        NdrAssembler $ndrDtoAssembler,
-        DeputyAssembler $deputyDtoAssembler
+        private readonly ReportAssemblerInterface $reportDtoAssembler,
+        private readonly NdrAssembler $ndrDtoAssembler,
+        private readonly DeputyAssembler $deputyAssembler
     ) {
-        $this->reportDtoAssembler = $reportDtoAssembler;
-        $this->ndrDtoAssembler = $ndrDtoAssembler;
-        $this->deputyAssembler = $deputyDtoAssembler;
     }
 
     /**

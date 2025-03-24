@@ -10,13 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RestFormatter
 {
-    private RestInputOuputFormatter $formatter;
-    private RestArrayValidator $validator;
-
-    public function __construct(RestInputOuputFormatter $formatter, RestArrayValidator $validator)
+    public function __construct(private readonly RestInputOuputFormatter $formatter, private readonly RestArrayValidator $validator)
     {
-        $this->formatter = $formatter;
-        $this->validator = $validator;
     }
 
     /**
@@ -38,7 +33,7 @@ class RestFormatter
      */
     public function setJmsSerialiserGroups(array $groups)
     {
-        $this->formatter->addContextModifier(function ($context) use ($groups) {
+        $this->formatter->addContextModifier(function ($context) use ($groups): void {
             $context->setGroups($groups);
         });
     }

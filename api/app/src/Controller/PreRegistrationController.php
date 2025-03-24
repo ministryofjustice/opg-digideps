@@ -21,10 +21,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class PreRegistrationController extends RestController
 {
     public function __construct(
-        private PreRegistrationVerificationService $preRegistrationVerificationService,
-        private RestFormatter $formatter,
-        private EntityManagerInterface $em
+        private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
+        private readonly RestFormatter $formatter,
+        private readonly EntityManagerInterface $em
     ) {
+        parent::__construct($em);
     }
 
     /**
@@ -107,7 +108,7 @@ class PreRegistrationController extends RestController
      */
     public function userCount()
     {
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $qb = $this->em->createQueryBuilder();
         $qb->select('count(p.id)');
         $qb->from('App\Entity\PreRegistration', 'p');
 

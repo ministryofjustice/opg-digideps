@@ -9,14 +9,8 @@ use App\v2\Registration\DTO\OrgDeputyshipDto;
 
 class SiriusToOrgDeputyshipDtoAssembler
 {
-    /**
-     * @var ReportUtils
-     */
-    private $reportUtils;
-
-    public function __construct(ReportUtils $reportUtils)
+    public function __construct(private readonly ReportUtils $reportUtils)
     {
-        $this->reportUtils = $reportUtils;
     }
 
     public function assembleMultipleDtosFromArray(array $rows)

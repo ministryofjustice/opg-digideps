@@ -19,10 +19,11 @@ class MoneyTransactionController extends RestController
     ];
 
     public function __construct(
-       private EntityManagerInterface $em,
-       private RestFormatter $formatter,
-       private MoneyTransactionRepository $moneyTransactionRepository
+       private readonly EntityManagerInterface $em,
+       private readonly RestFormatter $formatter,
+       private readonly MoneyTransactionRepository $moneyTransactionRepository
     ) {
+        parent::__construct($em);
     }
 
     /**
@@ -49,7 +50,7 @@ class MoneyTransactionController extends RestController
         // update bank account
         $t->setBankAccount(null);
         if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
-            $bankAccount = $this->getRepository(
+            $bankAccount = $this->em->getRepository(
                 EntityDir\Report\BankAccount::class
             )->findOneBy(
                 [

@@ -21,12 +21,14 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 class AuthController extends RestController
 {
     public function __construct(
-        private RestFormatter $restFormatter,
-        private JWTService $JWTService,
-        private LoggerInterface $logger,
-        private TokenStorageInterface $tokenStorage,
-        private string $workspace
+        private readonly RestFormatter $restFormatter,
+        private readonly JWTService $JWTService,
+        private readonly LoggerInterface $logger,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly string $workspace,
+        EntityManagerInterface $em,
     ) {
+       parent::__construct($em);
     }
 
     /**

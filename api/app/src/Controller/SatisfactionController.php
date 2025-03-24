@@ -18,19 +18,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SatisfactionController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-    private ReportRepository $reportRepository;
-    private NdrRepository $ndrRepository;
-    private SatisfactionRepository $satisfactionRepository;
-
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter, ReportRepository $reportRepository, NdrRepository $ndrRepository, SatisfactionRepository $satisfactionRepository)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter, private readonly ReportRepository $reportRepository, private readonly NdrRepository $ndrRepository, private readonly SatisfactionRepository $satisfactionRepository)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
-        $this->reportRepository = $reportRepository;
-        $this->ndrRepository = $ndrRepository;
-        $this->satisfactionRepository = $satisfactionRepository;
+        parent::__construct($em);
     }
 
     /**
@@ -112,7 +102,7 @@ class SatisfactionController extends RestController
     public function getSatisfactionData(Request $request)
     {
         /* @var $repo SatisfactionRepository */
-        $repo = $this->getRepository(Satisfaction::class);
+        $repo = $this->em->getRepository(Satisfaction::class);
 
         $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
         $fromDate instanceof \DateTime ? $fromDate->setTime(0, 0, 1) : null;
@@ -123,8 +113,6 @@ class SatisfactionController extends RestController
         return $repo->findAllSatisfactionSubmissions(
             $fromDate,
             $toDate,
-            $request->get('orderBy', 'createdAt'),
-            $request->get('order', 'ASC')
         );
     }
 

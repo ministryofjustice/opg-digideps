@@ -12,15 +12,13 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     /** @var QueryBuilder */
     private $qb;
 
-    public function __construct(ManagerRegistry $registry, private SerializerInterface $serializer)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }

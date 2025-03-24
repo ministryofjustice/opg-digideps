@@ -13,8 +13,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class UserRetentionPolicyCommandSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private DateTimeProvider $dateTimeProvider
+        private readonly LoggerInterface $logger,
+        private readonly DateTimeProvider $dateTimeProvider
     ) {
     }
 

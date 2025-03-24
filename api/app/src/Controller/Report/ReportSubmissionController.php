@@ -6,6 +6,7 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
+use App\Repository\ReportSubmissionRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,10 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ReportSubmissionController extends RestController
 {
-    private EntityManagerInterface $em;
-    private AuthService $authService;
-    private RestFormatter $formatter;
-
     public const QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
@@ -47,11 +44,9 @@ class ReportSubmissionController extends RestController
         'synchronisation',
     ];
 
-    public function __construct(EntityManagerInterface $em, AuthService $authService, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->authService = $authService;
-        $this->formatter = $formatter;
+        parent::__construct($em);
     }
 
     /**
@@ -61,7 +56,8 @@ class ReportSubmissionController extends RestController
      */
     public function getAll(Request $request)
     {
-        $repo = $this->getRepository(ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        /** @var ReportSubmissionRepository $repo */
+        $repo = $this->em->getRepository(ReportSubmission::class);
 
         $ret = $repo->findByFiltersWithCounts(
             $request->get('status'),
@@ -85,7 +81,7 @@ class ReportSubmissionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $ret = $this->getRepository(ReportSubmission::class)->findOneByIdUnfiltered($id);
+        $ret = $this->em->getRepository(ReportSubmission::class)->findOneByIdUnfiltered($id);
 
         $this->formatter->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
 
@@ -155,7 +151,7 @@ class ReportSubmissionController extends RestController
             throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
-        $repo = $this->getRepository(ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        $repo = $this->em->getRepository(ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findDownloadableOlderThan(new \DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
 
@@ -177,7 +173,7 @@ class ReportSubmissionController extends RestController
         }
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
-        $reportSubmission = $this->getRepository(ReportSubmission::class)->find($id);
+        $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
         $reportSubmission->setDownloadable(false);
         foreach ($reportSubmission->getDocuments() as $document) {
             $document->setStorageReference(null);
@@ -198,7 +194,7 @@ class ReportSubmissionController extends RestController
     public function queueDocuments($id)
     {
         /** @var ReportSubmission $reportSubmission */
-        $reportSubmission = $this->getRepository(ReportSubmission::class)->find($id);
+        $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
 
         if ($reportSubmission->getArchived()) {
             throw new \InvalidArgumentException('Cannot queue documents for an archived report submission');
@@ -227,7 +223,7 @@ class ReportSubmissionController extends RestController
     public function getPreRegistrationData(Request $request): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
-        $repo = $this->getRepository(ReportSubmission::class);
+        $repo = $this->em->getRepository(ReportSubmission::class);
 
         $fromDate = $request->get('fromDate') ? new \DateTime($request->get('fromDate')) : null;
         $toDate = $request->get('toDate') ? new \DateTime($request->get('toDate')) : null;

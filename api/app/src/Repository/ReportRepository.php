@@ -22,16 +22,12 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepository extends ServiceEntityRepository
 {
-    /** @var ClientSearchFilter */
-    private $filter;
-
     public const USER_DETERMINANT = 1;
     public const ORG_DETERMINANT = 2;
 
-    public function __construct(ManagerRegistry $registry, ClientSearchFilter $filter)
+    public function __construct(ManagerRegistry $registry, private readonly ClientSearchFilter $filter)
     {
         parent::__construct($registry, Report::class);
-        $this->filter = $filter;
     }
 
     /**

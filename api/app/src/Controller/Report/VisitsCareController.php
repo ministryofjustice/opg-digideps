@@ -16,13 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class VisitsCareController extends RestController
 {
     private array $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
+        parent::__construct($em);
     }
 
     /**
@@ -85,7 +82,7 @@ class VisitsCareController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $ret = $this->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
+        $ret = $this->em->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
 
         return $ret;
     }

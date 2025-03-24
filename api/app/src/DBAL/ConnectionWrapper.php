@@ -25,7 +25,7 @@ class ConnectionWrapper extends Connection
      * @var array|mixed[]
      */
     private array $params;
-    private bool $autoCommit;
+    private readonly bool $autoCommit;
     private SecretsManagerClient $secretClient;
 
     public function __construct(

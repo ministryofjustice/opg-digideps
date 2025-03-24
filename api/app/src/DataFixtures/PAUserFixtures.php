@@ -143,9 +143,9 @@ class PAUserFixtures extends AbstractDataFixture
     ];
 
     public function __construct(
-        private OrganisationRepository $orgRepository,
-        private OrganisationFactory $orgFactory,
-        private DeputyRepository $deputyRepository
+        private readonly OrganisationRepository $orgRepository,
+        private readonly OrganisationFactory $orgFactory,
+        private readonly DeputyRepository $deputyRepository
     ) {
     }
 

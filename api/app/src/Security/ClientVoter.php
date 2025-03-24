@@ -20,12 +20,8 @@ class ClientVoter extends Voter
     /** @var string */
     public const DELETE = 'delete';
 
-    /** @var Security */
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(private readonly Security $security)
     {
-        $this->security = $security;
     }
 
     protected function supports(string $attribute, mixed $subject): bool
