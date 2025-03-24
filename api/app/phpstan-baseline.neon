@@ -8456,11 +8456,6 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findByFiltersWithCounts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
 			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findByFiltersWithCounts\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php

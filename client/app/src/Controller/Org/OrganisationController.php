@@ -40,7 +40,7 @@ class OrganisationController extends AbstractController
         UserApi $userApi,
         RestClient $restClient,
         OrganisationApi $organisationApi,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->dateTimeProvider = $dateTimeProvider;
         $this->logger = $logger;
@@ -52,6 +52,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("", name="org_organisation_list")
+     *
      * @Template("@App/Org/Organisation/list.html.twig")
      */
     public function listAction(Request $request)
@@ -73,6 +74,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", name="org_organisation_view")
+     *
      * @Template("@App/Org/Organisation/view.html.twig")
      */
     public function viewAction(Request $request, int $id)
@@ -81,6 +83,12 @@ class OrganisationController extends AbstractController
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
 
         $currentFilters = self::getFiltersFromRequest($request);
+
+        $form = $this->createForm(FormDir\User\SearchUserType::class, null, ['method' => 'GET']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $currentFilters = $form->getData() + $currentFilters;
+        }
 
         $result = $this->restClient->get('/v2/organisation/'.$id.'/users?'.http_build_query($currentFilters), 'array');
 
@@ -92,11 +100,13 @@ class OrganisationController extends AbstractController
             'orgId' => $organisation->getId(),
             'users' => $users,
             'count' => $result['count'],
+            'form' => $form->createView(),
         ];
     }
 
     /**
      * @Route("/{id}/add-user", name="org_organisation_add_member")
+     *
      * @Template("@App/Org/Organisation/add.html.twig")
      */
     public function addAction(Request $request, int $id)
@@ -174,6 +184,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{orgId}/edit/{userId}", name="org_organisation_edit_member")
+     *
      * @Template("@App/Org/Organisation/edit.html.twig")
      */
     public function editAction(Request $request, int $orgId, int $userId)
@@ -244,6 +255,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{orgId}/delete-user/{userId}", name="org_organisation_delete_member")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      */
     public function deleteConfirmAction(Request $request, int $orgId, int $userId)
@@ -340,6 +352,7 @@ class OrganisationController extends AbstractController
     private static function getFiltersFromRequest(Request $request)
     {
         return [
+            'q' => $request->query->get('q') ?: '',
             'limit' => $request->query->get('limit') ?: 15,
             'offset' => $request->query->get('offset') ?: 0,
         ];
