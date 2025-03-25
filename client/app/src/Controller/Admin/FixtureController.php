@@ -42,7 +42,7 @@ class FixtureController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         DeputyProvider $deputyProvider,
-        string $symfonyEnvironment
+        string $symfonyEnvironment,
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
@@ -447,6 +447,7 @@ class FixtureController extends AbstractController
 
         $form = $this->createForm(PreRegistrationFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
+            'multiClientEnabled' => $request->get('multiClientEnabled', false),
             'reportType' => $request->get('report-type', 'OPG102'),
             'createCoDeputy' => $request->get('create-co-deputy', false),
         ]);
@@ -457,6 +458,7 @@ class FixtureController extends AbstractController
 
             $response = $this->restClient->post('v2/fixture/create-pre-registration', json_encode([
                 'deputyType' => $submitted['deputyType'],
+                'multiClientEnabled' => $submitted['multiClientEnabled'],
                 'reportType' => $submitted['reportType'],
                 'createCoDeputy' => $submitted['createCoDeputy'],
             ]), [], 'array');
