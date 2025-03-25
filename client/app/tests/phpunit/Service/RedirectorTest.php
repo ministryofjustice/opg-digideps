@@ -71,7 +71,6 @@ class RedirectorTest extends TestCase
             'non-admin org dashboard' => [null, true, false, false, null, true, null, 0, 0, false, 'org_dashboard', [], '/org/'],
             'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, false, 'choose_a_client', [], '/choose-a-client'],
             'lay with single client' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 1, 1, false, 'lay_home', ['clientId' => 999], '/client/999'],
-            'lay with no clients' => [User::ROLE_LAY_DEPUTY, false, false, false, 1, true, null, 0, 0, false, 'invalid_data', [], '/invalid-data'],
             'co-deputy lay with single client, not confirmed' => [User::ROLE_LAY_DEPUTY, false, true, false, null, true, null, 1, 0, false, 'codep_verification', [], '/codeputy/verification'],
             'co-deputy lay with single client, confirmed, client has reports' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 1, false, 'lay_home', ['clientId' => 999], '/client/999'],
             'co-deputy lay with single client, confirmed, client has no reports, ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 0, true, 'lay_home', ['clientId' => 999], '/client/999'],
@@ -223,8 +222,6 @@ class RedirectorTest extends TestCase
      */
     public function testGetFirstPageAfterLoginRestApiReturnsNull(): void
     {
-        static::markTestSkipped('TBD where user is redirected to if they have no deputy UID or null clients for their deputy UID');
-
         $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
         $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
 
@@ -248,14 +245,12 @@ class RedirectorTest extends TestCase
         // we shouldn't be generating this route without a client ID, but we are at the moment
         $this->router->expects($this->once())
             ->method('generate')
-            ->with('lay_home')
-            ->willReturn('/client/');
+            ->with('invalid_data')
+            ->willReturn('/invalid-data');
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
-        // TODO this is the bug we're seeing, where we get a null value back from getAllClientsByDeputyUid
-        // which can be caused when the user has no deputy UID in the first place
-        self::assertEquals('/client/', $actual);
+        self::assertEquals('/invalid-data', $actual);
     }
 
     /*
