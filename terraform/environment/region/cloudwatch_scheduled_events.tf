@@ -29,7 +29,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-court-orders-csv", "--env=prod", "--no-debug", local.deputyships_report_csv_file]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:ingest-deputyships-csv", "--env=prod", "--no-debug", local.deputyships_report_csv_file]
         }
       ]
     }
