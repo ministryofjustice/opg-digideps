@@ -24,7 +24,7 @@ jobs:
       - name: download artifact for api tests
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
-          name: api-unit-tests-selection-all
+          name: api-unit-tests
           path: ./
 
       - name: download artifact for api integration tests 1
@@ -59,7 +59,7 @@ jobs:
         uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3
         with:
           name: digideps-api-unit-tests
-          files: ./api-unit-tests-selection-all.xml
+          files: ./api-unit-tests.xml
           fail_ci_if_error: true
           flags: api
           verbose: true
