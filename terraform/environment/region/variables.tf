@@ -77,7 +77,7 @@ locals {
 
   pa_pro_report_csv_filename  = "paProDeputyReport.csv"
   lay_report_csv_file         = "layDeputyReport.csv"
-  court_order_report_csv_file = "(DigiDeps)_Deputyships_Report.csv"
+  deputyships_report_csv_file = "deputyshipsReport.csv"
 }
 
 data "terraform_remote_state" "shared" {
