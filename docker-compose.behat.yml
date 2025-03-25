@@ -3,6 +3,8 @@ services:
     build:
       dockerfile: api/docker/app/Dockerfile
       context: .
+      args:
+        ENVIRONMENT: local
     depends_on:
       - localstack
       - mock-sirius-integration
