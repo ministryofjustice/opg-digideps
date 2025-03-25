@@ -28,7 +28,7 @@ trait LoginInfoTrait
     private $numberOfReports;
 
     /**
-     * @return int
+     * @return ?int
      */
     public function getIdOfClientWithDetails()
     {
