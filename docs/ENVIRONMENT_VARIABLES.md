@@ -22,33 +22,14 @@ Please understand that when these are set, what it actually means is that they w
 the container. You can see a list of all environment variables available by going into the container
 and running `printenv`
 
-### Templating with confd
-
-Confd is used for templating out some files with values that are often set in environment variables.
-We run confd as part of the start up of our frontend and api apps (see the relevant dockerfiles).
-We do this so that whenever we start our app with different environment variables, we regenerate
-the templated files with the new variables.
-
-Confd is somewhat odd in that you must map the environment variable to a format like this `/var/name`.
-Example: MY_FOO_BAR becomes `/my/foo/bar` in the `.tmpl` file.
-
-If you want to use your env vars in confd then you will find the confd folders under api or client
-then `/docker/confd`. These folders hold a conf.d folder and a template folder.
-
-You should add the value in the .toml file under keys (`keys = [ "/my/foo/bar" ]`) and then also in
-the .tmpl file as `{{ getv "/my/foo/bar" }}`.
-
-These files are then templated out to the location mentioned in the .toml files under `dest`.
-
 ### Making variables accessible across your symfony app
 
-One of the files that gets created with confd is the `parameters.yml` file. This file is of
-particular use to our symfony application. It loads parameters that can be injected into
-our application through the `services.yml` file.
+Symfony requires environment variables to be loaded in at run time if we want them to be wired into services.
 
-Although we use confd to template the `parameters.yml` file out, we still use the `parameters.yml.dist`
-as part of our build process for the php cache:warmup. As such, you should add any new var to that as well
-with some default value (doesn't really matter what the value is).
+To achieve this, we have a `parameters.yml` file that takes env vars and assigns them to arguments that are then
+available to use in the `service.yml`. In turn, this can then inject those variables into different services available in symfony.
+As some of the config for the parameters file is dependent on it being available
+locally or in AWS (largely for localstack vs real config), we generate the `parameters.yml` at build time using a shell script.
 
 The parameters can either be injected in as arguments for a particular service or can be autowired to be
 made available to the whole app under:
@@ -68,10 +49,10 @@ in our class SomeThing() in frontend then we would probably want to add to the f
 and also to the terraform task definition for frontend.
 
 This means the env vars will be set both locally and in AWS. We then need to load it in so we can
-treat it as a service level argument so we add it to the confd toml and tmpl files as `/some/var`
-with a key of some_var.
+treat it as a service level argument so we add it to the shell script (`generate_parameters_yml.sh`)
+that generates the `parameters.yml` file
 
-We then use the key from the tmpl file and add it as argument to our SomeThing service in frontend
+We then use the key from the `parameters.yml` and add it as argument to our SomeThing service in frontend
 services.yml as `%some_var%`.
 
 Finally in our SomeThing class we can then instantiate it with the argument of `$some_var` of type string.
