@@ -120,7 +120,9 @@ class Redirector
             $activeClientId = $user->getIdOfClientWithDetails();
         }
 
-        // TODO if $activeClientId is still null, redirect to appropriate page
+        if (is_null($activeClientId)) {
+            return $this->router->generate('invalid_data');
+        }
 
         return $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
