@@ -252,7 +252,11 @@ class IndexController extends AbstractController
      */
     public function invalidDataAction(): Response
     {
-        return $this->renderError(description: 'Data error', statusCode: 422, message: 'INVALID DATA');
+        $helplineNo = $this->translator->trans(id: 'helpline', domain: 'common');
+        $description = $this->translator->trans(id: '422.description', parameters: ['helplineNo' => $helplineNo], domain: 'error');
+        $text = $this->renderView('bundles/TwigBundle/Exception/error422.html.twig', ['description' => $description]);
+
+        return new Response($text, 422);
     }
 
     /**
