@@ -1,4 +1,4 @@
 .git
-config/parameters.yml
 .sass-cache
+config/parameters.yml
 node_modules
