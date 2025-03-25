@@ -10731,21 +10731,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createDeputy\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10872,6 +10857,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$deputy of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createOrgAndAttachParticipants\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: "#^Parameter \\#2 \\$fromRequest of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 

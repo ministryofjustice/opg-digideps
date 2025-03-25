@@ -683,7 +683,7 @@ class FixtureController extends AbstractController
         }
     }
 
-    private function createCoDeputy(User $deputy, $fromRequest, $client)
+    private function createCoDeputy(User $deputy, array $fromRequest, Client $client): void
     {
         $deputy->setCoDeputyClientConfirmed(true);
         $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
