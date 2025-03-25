@@ -248,7 +248,7 @@ class IndexController extends AbstractController
      * There is an issue with a user's data which has to be manually corrected; for example, a missing deputy UID
      * or a client without the necessary address data.
      *
-     * @Route("/invalid-data", name="invalid_data_action")
+     * @Route("/invalid-data", name="invalid_data")
      */
     public function invalidDataAction(): Response
     {
