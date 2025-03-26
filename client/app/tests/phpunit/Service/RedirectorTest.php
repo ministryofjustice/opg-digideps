@@ -172,15 +172,79 @@ class RedirectorTest extends TestCase
 
         $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
 
-        $this->assertEquals('lay_home', $correctedRoute);
+        static::assertEquals('lay_home', $correctedRoute);
     }
 
-    public function testGetCorrectRouteIfDifferentAdmin()
+    public function homepageRedirectProvider(): array
     {
-        $this->user->expects($this->once())->method('hasAdminRole')->willReturn(true);
+        return [
+            ['admin', User::ROLE_ADMIN, 'admin_homepage', '/admin/'],
+            ['admin', User::ROLE_AD, 'ad_homepage', '/ad/'],
+            ['admin', User::ROLE_LAY_DEPUTY, 'login', '/login'],
+            ['prod', User::ROLE_ORG, 'org_dashboard', '/org/'],
+            ['prod', User::ROLE_LAY_DEPUTY, null, false],
+        ];
+    }
 
-        $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
+    /**
+     * @dataProvider homepageRedirectProvider
+     */
+    public function testGetHomepageRedirect(string $env, string $userRole, ?string $routeName, string|bool $expectedRoute): void
+    {
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) use ($userRole) {
+                return $role === $userRole;
+            });
 
-        $this->assertEquals('codep_verification', $correctedRoute);
+        if (!is_null($routeName)) {
+            $this->router->expects($this->once())
+                ->method('generate')
+                ->with($routeName)
+                ->willReturn($expectedRoute);
+        }
+
+        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, $env, $this->clientApi, $this->logger);
+
+        $actual = $sut->getHomepageRedirect();
+
+        static::assertEquals($actual, $expectedRoute);
+    }
+
+    /*
+     * As this homepage redirect is really convoluted, I've put it in a separate test rather than figuring out how to
+     * use the existing data provider.
+     */
+    public function testGetHomepageRedirectLayDeputy(): void
+    {
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return 'IS_AUTHENTICATED_FULLY' === $role;
+            });
+
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->user->method('getDeputyUid')->willReturn(4422);
+
+        // avoid triggering any conditions in getCorrectRouteIfDifferent()
+        $this->user->method('hasAdminRole')->willReturn(false);
+        $this->user->method('getIsCoDeputy')->willReturn(false);
+        $this->user->method('isDeputyOrg')->willReturn(true);
+
+        $client1 = $this->createMock(Client::class);
+        $client2 = $this->createMock(Client::class);
+        $this->clientApi->method('getAllClientsByDeputyUid')->willReturn([$client1, $client2]);
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('choose_a_client')
+            ->willReturn('/choose-a-client');
+
+        // sut
+        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi, $this->logger);
+
+        // assertions
+        $actual = $sut->getHomepageRedirect();
+        static::assertEquals($actual, '/choose-a-client');
     }
 }
