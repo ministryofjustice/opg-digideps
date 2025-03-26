@@ -188,9 +188,9 @@ class ClientApi
     }
 
     /**
-     * TODO can this be null?
+     * Return value can be null if deputy UID does not exist in the client table.
      *
-     * @return Client[]
+     * @return ?Client[]
      */
     public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
     {
