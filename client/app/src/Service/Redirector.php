@@ -92,38 +92,34 @@ class Redirector
                 if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
                     $route = 'codep_verification';
                 }
-            } else {
-                if (!$user->isDeputyOrg()) {
-                    // client is not added
-                    if (!$user->getIdOfClientWithDetails()) {
-                        $clients = [];
-                        $deputyUid = $user->getDeputyUid();
-                        if (is_null($deputyUid)) {
-                            $this->logger->error(
-                                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
-                                '(via Redirector::getCorrectRouteIfDifferent)'
-                            );
-                        } else {
-                            // Check if user has multiple clients
-                            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
-                        }
-
-                        if (is_null($clients)) {
-                            $this->logger->error(
-                                "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
-                                '(via Redirector::getCorrectRouteIfDifferent)'
-                            );
-                        }
-
-                        if (is_array($clients) && 0 == count($clients)) {
-                            $route = 'client_add';
-                        }
+            } elseif (!$user->isDeputyOrg()) {
+                // client is not added
+                if (!$user->getIdOfClientWithDetails()) {
+                    $clients = [];
+                    $deputyUid = $user->getDeputyUid();
+                    if (is_null($deputyUid)) {
+                        $this->logger->error(
+                            "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                            '(via Redirector::getCorrectRouteIfDifferent)'
+                        );
+                    } else {
+                        // Check if user has multiple clients
+                        $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
                     }
 
-                    // incomplete user info
-                    if (!$user->hasAddressDetails()) {
-                        $route = 'user_details';
+                    if (is_null($clients)) {
+                        $this->logger->error(
+                            "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
+                            '(via Redirector::getCorrectRouteIfDifferent)'
+                        );
+                    } elseif (0 == count($clients)) {
+                        $route = 'client_add';
                     }
+                }
+
+                // incomplete user info
+                if (!$user->hasAddressDetails()) {
+                    $route = 'user_details';
                 }
             }
         }
