@@ -21,12 +21,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class Redirector
 {
     public function __construct(
-        protected TokenStorageInterface $tokenStorage,
-        protected AuthorizationCheckerInterface $authChecker,
-        protected RouterInterface $router,
-        protected Session $session,
-        protected string $env,
-        private ClientApi $clientApi,
+        protected readonly TokenStorageInterface $tokenStorage,
+        protected readonly AuthorizationCheckerInterface $authChecker,
+        protected readonly RouterInterface $router,
+        protected readonly Session $session,
+        protected readonly string $env,
+        private readonly ClientApi $clientApi,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -47,22 +47,88 @@ class Redirector
     {
         $deputyUid = $user->getDeputyUid();
 
-        $clients = null;
-
         if (is_null($deputyUid)) {
             $this->logger->error("User with ID {$user->getId()} has a null deputy UID");
-        } else {
-            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
 
-            if (is_null($clients)) {
-                $this->logger->error(
-                    "getAllClientsByDeputyUid with deputy UID {$deputyUid} returned null; ".
-                    'deputy UID may not exist in the clients table'
-                );
+            return null;
+        }
+
+        $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
+
+        if (is_null($clients)) {
+            $this->logger->error(
+                "getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null; ".
+                'deputy UID may not exist in the clients table'
+            );
+
+            return null;
+        }
+
+        return array_values($clients);
+    }
+
+    private function getLayDeputyHomepage(User $user, array $allActiveClients, $activeClientId = null): string
+    {
+        // checks if user has missing details or is NDR
+        if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
+            return $this->router->generate($route);
+        }
+
+        // redirect to create report if report is not created
+        foreach ($allActiveClients as $activeClient) {
+            if (count($activeClient->getReportIds()) >= 1) {
+                break;
+            }
+
+            if (!$user->isNdrEnabled()) {
+                $clientId = $user->getIdOfClientWithDetails();
+                if (is_null($clientId)) {
+                    $this->logger->error(
+                        "Unable to get client ID for user with ID {$user->getId()}; ".
+                        'getIdOfClientWithDetails() returned a null value'
+                    );
+
+                    // attempt to rectify failed client ID fetch by using the active client's ID instead
+                    $clientId = $activeClient->getId();
+                }
+
+                return $this->router->generate('report_create', ['clientId' => $clientId]);
             }
         }
 
-        return $clients;
+        // check if last remaining active client is linked to non-primary account if so retrieve id
+        return is_null($activeClientId) ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
+            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
+    }
+
+    private function getChooseAClientHomepage(User $user): string
+    {
+        // checks if user has missing details or is NDR
+        if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
+            return $this->router->generate($route);
+        }
+
+        return $this->router->generate('choose_a_client');
+    }
+
+    private function getCorrectLayHomepage(?User $user = null): string
+    {
+        if (is_null($user)) {
+            return $this->router->generate('login');
+        }
+
+        $clients = $this->getActiveClients($user);
+        if (is_null($clients)) {
+            $clients = [];
+        }
+
+        if (count($clients) > 1) {
+            return $this->getChooseAClientHomepage($user);
+        }
+
+        $activeClientId = 1 === count($clients) ? $clients[0]->getId() : null;
+
+        return $this->getLayDeputyHomepage($user, $clients, $activeClientId);
     }
 
     public function getFirstPageAfterLogin(SessionInterface $session): string
@@ -140,49 +206,12 @@ class Redirector
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    private function getLayDeputyHomepage(User $user, array $allActiveClients, $activeClientId = null): string
-    {
-        // checks if user has missing details or is NDR
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
-            return $this->router->generate($route);
-        }
-
-        // redirect to create report if report is not created
-        foreach ($allActiveClients as $activeClient) {
-            if (count($activeClient->getReportIds()) >= 1) {
-                break;
-            }
-
-            if (!$user->isNdrEnabled()) {
-                $clientId = $user->getIdOfClientWithDetails();
-                if (is_null($clientId)) {
-                    $this->logger->error(
-                        "Unable to get client ID for user with ID {$user->getId()}; ".
-                        'getIdOfClientWithDetails() returned a null value (DDLS-521)'
-                    );
-
-                    // attempt to rectify failed client ID fetch by using the active client's ID instead
-                    $clientId = $activeClient->getId();
-                }
-
-                return $this->router->generate('report_create', ['clientId' => $clientId]);
-            }
-        }
-
-        // check if last remaining active client is linked to non-primary account if so retrieve id
-        return is_null($activeClientId) ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
-            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
-    }
-
     public function removeLastAccessedUrl()
     {
         $this->session->remove('_security.secured_area.target_path');
     }
 
-    /**
-     * @return string
-     */
-    public function getHomepageRedirect()
+    public function getHomepageRedirect(): string
     {
         if ('admin' === $this->env) {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
@@ -207,37 +236,5 @@ class Redirector
         }
 
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    private function getChooseAClientHomepage(User $user)
-    {
-        // checks if user has missing details or is NDR
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
-            return $this->router->generate($route);
-        }
-
-        return $this->router->generate('choose_a_client');
-    }
-
-    private function getCorrectLayHomepage(?User $user = null)
-    {
-        if (is_null($user)) {
-            return $this->router->generate('login');
-        }
-
-        $clients = $this->getActiveClients($user);
-        if (is_null($clients)) {
-            $clients = [];
-        }
-        $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
-
-        if (count($clients) > 1) {
-            return $this->getChooseAClientHomepage($user);
-        }
-
-        return $this->getLayDeputyHomepage($user, $clients, $activeClientId);
     }
 }
