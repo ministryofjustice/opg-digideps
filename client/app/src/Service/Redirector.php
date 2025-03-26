@@ -179,9 +179,20 @@ class Redirector
             }
         }
 
-        // check if last remaining active client is linked to non-primary account if so retrieve id
-        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
-            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
+        if (is_null($activeClientId)) {
+            $activeClientId = $user->getIdOfClientWithDetails();
+
+            if (is_null($activeClientId)) {
+                $this->logger->error(
+                    "Unable to get client ID for user with ID {$user->getId()}; ".
+                    'getIdOfClientWithDetails() returned a null value'
+                );
+
+                return $this->router->generate('invalid_data');
+            }
+        }
+
+        return $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
     public function removeLastAccessedUrl()
