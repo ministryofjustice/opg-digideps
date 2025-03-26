@@ -53,12 +53,16 @@ class Redirector
     ) {
     }
 
-    /**
-     * @return User
-     */
-    private function getLoggedUser()
+    private function getLoggedUser(): ?User
     {
-        return $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+
+        if (is_null($token)) {
+            return null;
+        }
+
+        /* @var ?User */
+        return $token->getUser();
     }
 
     public function getFirstPageAfterLogin(SessionInterface $session): string
@@ -68,7 +72,7 @@ class Redirector
         $isAdminUser = $this->authChecker->isGranted(User::ROLE_ADMIN);
         $isAdUser = $this->authChecker->isGranted(User::ROLE_AD);
         $isLayDeputy = $this->authChecker->isGranted(User::ROLE_LAY_DEPUTY);
-        $isDeputyOrg = $user->isDeputyOrg();
+        $isDeputyOrg = !is_null($user) && $user->isDeputyOrg();
         $inPasswordCreateContext = 'password-create' === $session->get('login-context');
 
         if ($inPasswordCreateContext && ($isAdminUser || $isAdUser || $isDeputyOrg)) {
@@ -117,7 +121,9 @@ class Redirector
                         // Check if user has multiple clients
                         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
 
-                        if (0 == count($clients)) {
+                        // TODO null clients returned
+
+                        if (is_array($clients) && 0 == count($clients)) {
                             $route = 'client_add';
                         }
                     }
@@ -144,7 +150,14 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+        $allActiveClients = [];
+        $deputyUid = $user->getDeputyUid();
+        if (!is_null($deputyUid)) {
+            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
+        }
+        if (is_null($allActiveClients)) {
+            $allActiveClients = [];
+        }
 
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
@@ -201,7 +214,7 @@ class Redirector
 
         // deputy: if logged, redirect to overview pages
         if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->getCorrectLayHomepage();
+            return $this->getCorrectLayHomepage($this->getLoggedUser());
         }
 
         return false;
@@ -223,10 +236,13 @@ class Redirector
     private function getCorrectLayHomepage(?User $user = null)
     {
         if (is_null($user)) {
-            $user = $this->getLoggedUser();
+            return $this->router->generate('login');
         }
 
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        if (is_null($clients)) {
+            $clients = [];
+        }
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
         if (!(null === $clients)) {
