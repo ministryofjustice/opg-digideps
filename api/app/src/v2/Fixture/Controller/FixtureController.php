@@ -594,7 +594,7 @@ class FixtureController extends AbstractController
 
         $preRegistration = $this->preRegistrationFactory->create($fromRequest);
 
-        $data = [
+        $primaryData = [
             'caseNumber' => $preRegistration->getCaseNumber(),
             'clientLastName' => $preRegistration->getClientLastname(),
             'deputyLastName' => $preRegistration->getDeputySurname(),
@@ -605,15 +605,36 @@ class FixtureController extends AbstractController
         if ($fromRequest['createCoDeputy']) {
             $coDeputy = $this->preRegistrationFactory->createCoDeputy($preRegistration->getCaseNumber(), $fromRequest);
             $this->em->persist($coDeputy);
-            $data['coDeputyLastName'] = $coDeputy->getDeputySurname();
-            $data['coDeputyFirstName'] = $coDeputy->getDeputyFirstname();
-            $data['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
+            $primaryData['coDeputyLastName'] = $coDeputy->getDeputySurname();
+            $primaryData['coDeputyFirstName'] = $coDeputy->getDeputyFirstname();
+            $primaryData['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
         }
 
+        $data[] = $primaryData;
         $this->em->persist($preRegistration);
+
+        if ($fromRequest['multiClientEnabled']) {
+            $preRegistrationSecondaryClient = $this->preRegistrationFactory->create([
+                'deputyUid' => $preRegistration->getDeputyUid(),
+                'clientFirstName' => 'Joe',
+                'clientLastName' => 'Snow',
+                $fromRequest,
+            ]
+            );
+            $this->em->persist($preRegistrationSecondaryClient);
+
+            $data[] = [
+                'caseNumber' => $preRegistrationSecondaryClient->getCaseNumber(),
+                'clientLastName' => $preRegistrationSecondaryClient->getClientLastname(),
+                'deputyLastName' => $preRegistrationSecondaryClient->getDeputySurname(),
+                'deputyFirstName' => $preRegistrationSecondaryClient->getDeputyFirstname(),
+                'deputyPostCode' => $preRegistrationSecondaryClient->getDeputyPostCode(),
+            ];
+        }
+
         $this->em->flush();
 
-        return $this->buildSuccessResponse($data, 'PreRegistration row created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($data, 'PreRegistration rows created', Response::HTTP_OK);
     }
 
     /**
