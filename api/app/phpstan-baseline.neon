@@ -10667,7 +10667,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'multiClientEnabled' on mixed\\.$#"
-			count: 2
+			count: 3
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
