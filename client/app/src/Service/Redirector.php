@@ -167,38 +167,40 @@ class Redirector
     public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
     {
         // none of these corrections apply to admin
-        if (!$user->hasAdminRole()) {
-            if ($user->getIsCoDeputy()) {
-                $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+        if ($user->hasAdminRole()) {
+            return false;
+        }
 
-                // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
-                    $route = 'lay_home';
-                }
+        if ($user->getIsCoDeputy()) {
+            $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
 
-                // unverified codeputy invitation
-                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
-                    $route = 'codep_verification';
-                }
-            } else {
-                if (!$user->isDeputyOrg()) {
+            // already verified - shouldn't be on verification page
+            if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
+                $route = 'lay_home';
+            }
+
+            // unverified codeputy invitation
+            if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+                $route = 'codep_verification';
+            }
+        } else {
+            if (!$user->isDeputyOrg()) {
+                if (!$user->getIdOfClientWithDetails()) {
+                    $clients = $this->getActiveClients($user);
+
+                    if (is_null($clients)) {
+                        $route = 'invalid_data';
+                    }
+
                     // client is not added
-                    if (!$user->getIdOfClientWithDetails()) {
-                        $clients = $this->getActiveClients($user);
-
-                        if (is_null($clients)) {
-                            $route = 'invalid_data';
-                        }
-
-                        if (is_array($clients) && 0 == count($clients)) {
-                            $route = 'client_add';
-                        }
+                    if (is_array($clients) && 0 == count($clients)) {
+                        $route = 'client_add';
                     }
+                }
 
-                    // incomplete user info
-                    if (!$user->hasAddressDetails()) {
-                        $route = 'user_details';
-                    }
+                // incomplete user info
+                if (!$user->hasAddressDetails()) {
+                    $route = 'user_details';
                 }
             }
         }
