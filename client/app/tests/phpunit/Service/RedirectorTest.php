@@ -218,7 +218,7 @@ class RedirectorTest extends TestCase
     }
 
     /*
-     * Where the deputy UID returns no clients, we redirect the user to the appropriate lay homepage
+     * Where the deputy UID returns null clients for a lay deputy, we redirect the user to the appropriate lay homepage
      */
     public function testGetFirstPageAfterLoginNullClients(): void
     {
@@ -242,17 +242,14 @@ class RedirectorTest extends TestCase
             ->method('getAllClientsByDeputyUid')
             ->willReturn(null);
 
-        // we shouldn't be generating this route without a client ID, but we are at the moment
         $this->router->expects($this->once())
             ->method('generate')
-            ->with('lay_home')
-            ->willReturn('/client/');
+            ->with('invalid_data')
+            ->willReturn('/invalid-data');
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
-        // TODO this is the bug we're seeing, where we get a null value back from getAllClientsByDeputyUid
-        // which can be caused when the user has no deputy UID in the first place
-        self::assertEquals('/client/', $actual);
+        self::assertEquals('/invalid-data', $actual);
     }
 
     /*
