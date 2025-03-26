@@ -151,11 +151,14 @@ class Redirector
 
         // redirect to create report if report is not created
         $allActiveClients = [];
+
+        // TODO log null deputy UID
         $deputyUid = $user->getDeputyUid();
         if (!is_null($deputyUid)) {
             $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
         }
         if (is_null($allActiveClients)) {
+            // TODO log null clients
             $allActiveClients = [];
         }
 
@@ -239,8 +242,10 @@ class Redirector
             return $this->router->generate('login');
         }
 
+        // TODO log null deputy UID
         $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
         if (is_null($clients)) {
+            // TODO log null clients
             $clients = [];
         }
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
