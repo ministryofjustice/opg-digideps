@@ -97,9 +97,23 @@ class Redirector
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
                         // Check if user has multiple clients
-                        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+                        $deputyUid = $user->getDeputyUid();
 
-                        // TODO log null clients
+                        $clients = null;
+                        if (is_null($deputyUid)) {
+                            $this->logger->error("User with ID {$user->getId()} has a null deputy UID");
+                            $route = 'invalid_data';
+                        } else {
+                            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
+
+                            if (is_null($clients)) {
+                                $this->logger->error(
+                                    "getAllClientsByDeputyUid with deputy UID {$deputyUid} returned null; ".
+                                    'deputy UID may not exist in the clients table'
+                                );
+                                $route = 'invalid_data';
+                            }
+                        }
 
                         if (is_array($clients) && 0 == count($clients)) {
                             $route = 'client_add';
