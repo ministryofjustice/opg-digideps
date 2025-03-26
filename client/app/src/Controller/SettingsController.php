@@ -90,6 +90,7 @@ class SettingsController extends AbstractController
 
             return [
                 'hasOrganisations' => count($user->getOrganisations()),
+                'deputyHasMultiClients' => false,
             ];
         }
 
