@@ -15,7 +15,6 @@ use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ClientApi
 {
@@ -153,7 +152,7 @@ class ClientApi
         $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
     }
 
-    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger): ResponseInterface
+    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
         $response = $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
