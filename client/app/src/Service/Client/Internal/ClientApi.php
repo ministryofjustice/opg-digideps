@@ -15,7 +15,6 @@ use App\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ClientApi
 {
@@ -99,7 +98,7 @@ class ClientApi
         return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
     }
 
-    public function getWithUsersV2(int $clientId): Client
+    public function getWithUsersV2(int $clientId)
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
@@ -121,7 +120,7 @@ class ClientApi
         );
     }
 
-    public function getById(int $clientId): Client
+    public function getById(int $clientId)
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID, $clientId),
@@ -153,7 +152,7 @@ class ClientApi
         $this->eventDispatcher->dispatch($clientDeletedEvent, ClientDeletedEvent::NAME);
     }
 
-    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger): ResponseInterface
+    public function update(Client $preUpdateClient, Client $postUpdateClient, string $trigger)
     {
         $response = $this->restClient->put(self::UPDATE_CLIENT, $postUpdateClient, ['pa-edit', 'edit']);
         $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -165,7 +164,7 @@ class ClientApi
         return $response;
     }
 
-    public function getByCaseNumber(string $caseNumber): Client
+    public function getByCaseNumber(string $caseNumber)
     {
         return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
     }
@@ -176,7 +175,7 @@ class ClientApi
         $this->restClient->put(sprintf(self::UNARCHIVE_CLIENT, $id), $currentUser);
     }
 
-    public function create(Client $client): bool
+    public function create(Client $client)
     {
         return $this->restClient->post(self::CREATE_CLIENT, $client);
     }
