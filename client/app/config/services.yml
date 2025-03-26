@@ -45,6 +45,11 @@ services:
       $sessionPrefix: "%session_prefix%"
       $workspace: "%workspace%"
 
+  redis:
+    class: Redis
+    calls:
+      - [connect, ["%env(REDIS_HOST)%", "%env(int:REDIS_PORT)%"]]
+
   App\:
     resource: "../src/"
     exclude: "../src/{Entity,Event,Kernel.php}"

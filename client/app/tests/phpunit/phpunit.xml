@@ -49,7 +49,7 @@
         <env name="PACT_CONSUMER_NAME" value="Complete the deputy report"/>
         <env name="PACT_PROVIDER_NAME" value="OPG Data"/>
         <env name="KERNEL_CLASS" value="App\Kernel"/>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
     </php>
     <listeners>
         <listener class="App\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
