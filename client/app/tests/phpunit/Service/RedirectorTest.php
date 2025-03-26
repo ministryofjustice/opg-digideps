@@ -18,6 +18,7 @@ class RedirectorTest extends TestCase
 {
     private User $user;
     private TokenStorageInterface $tokenStorage;
+    private TokenInterface $token;
     private Session $session;
     private RouterInterface $router;
     private AuthorizationCheckerInterface $authChecker;
@@ -34,7 +35,7 @@ class RedirectorTest extends TestCase
 
         $this->session = $this->createMock(Session::class);
 
-        $this->mockToken = $this->createMock(TokenInterface::class);
+        $this->token = $this->createMock(TokenInterface::class);
 
         $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
 
@@ -98,8 +99,8 @@ class RedirectorTest extends TestCase
         array $routeParams,
         string $expectedRoute,
     ): void {
-        $this->mockToken->expects($this->once())->method('getUser')->willReturn($this->user);
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->mockToken);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
 
         $this->authChecker->expects($this->any())
             ->method('isGranted')
@@ -161,8 +162,7 @@ class RedirectorTest extends TestCase
     }
 
     /*
-     * All other paths through this method are captured by the tests for getLayDeputyHomepage(), except for this one,
-     * which I am frankly surprised ever happens.
+     * All other paths through this method are captured by the tests for getLayDeputyHomepage(), except for these.
      */
     public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
     {
@@ -173,5 +173,14 @@ class RedirectorTest extends TestCase
         $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
 
         $this->assertEquals('lay_home', $correctedRoute);
+    }
+
+    public function testGetCorrectRouteIfDifferentAdmin()
+    {
+        $this->user->expects($this->once())->method('hasAdminRole')->willReturn(true);
+
+        $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
+
+        $this->assertEquals('codep_verification', $correctedRoute);
     }
 }
