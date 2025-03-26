@@ -20,28 +20,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class Redirector
 {
-    /**
-     * Routes the user can be redirected to, if accessed before timeout.
-     *
-     * @var array
-     */
-    private $redirectableRoutes = [
-        'user_details',
-        'user_edit',
-        'report_overview',
-        'account',
-        'accounts',
-        'contacts',
-        'decisions',
-        'assets',
-        'report_declaration',
-        'report_submit_confirmation',
-        'client',
-    ];
-
-    /**
-     * Redirector constructor.
-     */
     public function __construct(
         protected TokenStorageInterface $tokenStorage,
         protected AuthorizationCheckerInterface $authChecker,
