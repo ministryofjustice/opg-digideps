@@ -43,6 +43,28 @@ class Redirector
         return $token->getUser();
     }
 
+    private function getActiveClients(User $user): ?array
+    {
+        $deputyUid = $user->getDeputyUid();
+
+        $clients = null;
+
+        if (is_null($deputyUid)) {
+            $this->logger->error("User with ID {$user->getId()} has a null deputy UID");
+        } else {
+            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
+
+            if (is_null($clients)) {
+                $this->logger->error(
+                    "getAllClientsByDeputyUid with deputy UID {$deputyUid} returned null; ".
+                    'deputy UID may not exist in the clients table'
+                );
+            }
+        }
+
+        return $clients;
+    }
+
     public function getFirstPageAfterLogin(SessionInterface $session): string
     {
         $user = $this->getLoggedUser();
@@ -96,23 +118,10 @@ class Redirector
                 if (!$user->isDeputyOrg()) {
                     // client is not added
                     if (!$user->getIdOfClientWithDetails()) {
-                        // Check if user has multiple clients
-                        $deputyUid = $user->getDeputyUid();
+                        $clients = $this->getActiveClients($user);
 
-                        $clients = null;
-                        if (is_null($deputyUid)) {
-                            $this->logger->error("User with ID {$user->getId()} has a null deputy UID");
+                        if (is_null($clients)) {
                             $route = 'invalid_data';
-                        } else {
-                            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
-
-                            if (is_null($clients)) {
-                                $this->logger->error(
-                                    "getAllClientsByDeputyUid with deputy UID {$deputyUid} returned null; ".
-                                    'deputy UID may not exist in the clients table'
-                                );
-                                $route = 'invalid_data';
-                            }
                         }
 
                         if (is_array($clients) && 0 == count($clients)) {
@@ -131,10 +140,7 @@ class Redirector
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    /**
-     * @return string
-     */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null)
+    private function getLayDeputyHomepage(User $user, array $allActiveClients, $activeClientId = null): string
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -142,18 +148,6 @@ class Redirector
         }
 
         // redirect to create report if report is not created
-        $allActiveClients = [];
-
-        // TODO log null deputy UID
-        $deputyUid = $user->getDeputyUid();
-        if (!is_null($deputyUid)) {
-            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
-        }
-        if (is_null($allActiveClients)) {
-            // TODO log null clients
-            $allActiveClients = [];
-        }
-
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
                 break;
@@ -176,7 +170,7 @@ class Redirector
         }
 
         // check if last remaining active client is linked to non-primary account if so retrieve id
-        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
+        return is_null($activeClientId) ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
             $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
@@ -234,22 +228,16 @@ class Redirector
             return $this->router->generate('login');
         }
 
-        // TODO log null deputy UID
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
+        $clients = $this->getActiveClients($user);
         if (is_null($clients)) {
-            // TODO log null clients
             $clients = [];
         }
         $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
 
-        if (!(null === $clients)) {
-            if (1 < count($clients)) {
-                return $this->getChooseAClientHomepage($user);
-            } else {
-                return $this->getLayDeputyHomepage($user, $activeClientId);
-            }
-        } else {
-            return $this->getLayDeputyHomepage($user);
+        if (count($clients) > 1) {
+            return $this->getChooseAClientHomepage($user);
         }
+
+        return $this->getLayDeputyHomepage($user, $clients, $activeClientId);
     }
 }
