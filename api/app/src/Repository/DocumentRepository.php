@@ -204,8 +204,8 @@ LIMIT $limit;";
 
         $queuedDocumentsQuery = "
 SELECT
-  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$queuedStatus}' AND rs.created_on < NOW() - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS queued_over_1_hour,
-  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$inProgressStatus}' AND rs.created_on < NOW() - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS in_progress_over_1_hour,
+  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$queuedStatus}' AND rs.created_on < (NOW() AT TIME ZONE 'UTC') AT TIME ZONE 'Europe/London' - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS queued_over_1_hour,
+  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$inProgressStatus}' AND rs.created_on < (NOW() AT TIME ZONE 'UTC') AT TIME ZONE 'Europe/London' - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS in_progress_over_1_hour,
   COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$temporaryErrorStatus}' THEN 1 ELSE 0 END), 0) AS temporary_error_count,
   COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$permanentErrorStatus}' THEN 1 ELSE 0 END), 0) AS permanent_error_count
 FROM document d
