@@ -15,7 +15,7 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'admin-organisation-users' }}) }}
 
-    {% if user is defined and user.id %}
+    {% if user is defined and user is not empty and user.id is not null %}
         {% set infoText = 'addPage.informationBannerText' | trans( {'%user%': user.fullName} ) %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
