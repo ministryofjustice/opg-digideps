@@ -25,18 +25,14 @@ final class Version293 extends AbstractMigration
         $this->addSql('ALTER TABLE document ALTER sync_attempts SET DEFAULT 0');
         $this->addSql('ALTER TABLE pre_registration ALTER hybrid TYPE VARCHAR(12)');
         $this->addSql('ALTER TABLE pre_registration ALTER client_firstname TYPE VARCHAR(100)');
-        $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT FK_3B9FE71A5423F28F');
         $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT FK_3B9FE71AA76ED395');
-        $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT FK_3B9FE71A5423F28F FOREIGN KEY (researchType_id) REFERENCES research_type (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT FK_3B9FE71AA76ED395 FOREIGN KEY (user_id) REFERENCES dd_user (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT fk_3b9fe71a5423f28f');
         $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT fk_3b9fe71aa76ed395');
-        $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT fk_3b9fe71a5423f28f FOREIGN KEY (researchtype_id) REFERENCES research_type (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_research_response ADD CONSTRAINT fk_3b9fe71aa76ed395 FOREIGN KEY (user_id) REFERENCES dd_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE pre_registration ALTER client_firstname TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE pre_registration ALTER hybrid TYPE VARCHAR(255)');
