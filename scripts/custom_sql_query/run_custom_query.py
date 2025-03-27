@@ -197,6 +197,8 @@ def main(
     expected_before=None,
     expected_after=None,
 ):
+    sql_file = f"/function/{sql_file}"
+    verification_sql_file = f"/function/{verification_sql_file}"
     calling_user = get_current_user()
     lambda_client = get_lambda_client(environment)
 

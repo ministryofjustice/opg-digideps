@@ -11,21 +11,6 @@ parameters:
 			path: src/Command/MigrationsMigrateLockCommand.php
 
 		-
-			message: "#^Method App\\\\Command\\\\ProcessCourtOrdersCSVCommand\\:\\:storeOutput\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Command/ProcessCourtOrdersCSVCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 2
-			path: src/Command/ProcessCourtOrdersCSVCommand.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 1
-			path: src/Command/ProcessCourtOrdersCSVCommand.php
-
-		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
 			path: src/Command/ProcessLayCSVCommand.php
@@ -8452,11 +8437,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findActiveClientsCountForDeputyUid\\(\\) should return int but returns bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findByFiltersWithCounts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php
 
