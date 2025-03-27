@@ -363,14 +363,13 @@ resource "aws_cloudwatch_log_metric_filter" "document_permanent_error" {
   }
 }
 
-# Adding unrealistically high thresholds at the moment as we have to clear up some old document data
 resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   alarm_name          = "${local.environment}-document-queued-over-1hr"
   statistic           = "Maximum"
   metric_name         = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = 1
-  period              = 300
+  period              = 60
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
@@ -385,7 +384,7 @@ resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
   metric_name         = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = 1
-  period              = 300
+  period              = 60
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].namespace
@@ -400,7 +399,7 @@ resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
   metric_name         = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = 1
-  period              = 300
+  period              = 60
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].namespace
@@ -415,7 +414,7 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
   metric_name         = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = 1
-  period              = 300
+  period              = 60
   evaluation_periods  = 1
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].namespace
