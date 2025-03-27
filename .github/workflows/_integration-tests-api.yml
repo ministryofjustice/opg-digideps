@@ -40,6 +40,7 @@ jobs:
           -f api/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+          --build-arg ENVIRONMENT=local \
           --tag api-integration-tests:latest \
           --target ci-tests \
           --output type=docker .
