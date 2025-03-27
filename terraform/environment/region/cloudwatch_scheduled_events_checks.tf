@@ -330,26 +330,26 @@ resource "aws_cloudwatch_event_target" "resubmit_error_checklists_check" {
   )
 }
 
-# CourtOrder CSV Processing Check
 
-resource "aws_cloudwatch_event_rule" "court_order_csv_processing_check" {
-  name                = "check-court-order-csv-processing-${terraform.workspace}"
-  description         = "Execute the Court Order CSV user processing check for ${terraform.workspace}"
+# Deputyships CSV Processing Check
+resource "aws_cloudwatch_event_rule" "deputyships_csv_processing_check" {
+  name                = "check-deputyships-csv-processing-${terraform.workspace}"
+  description         = "Execute the Deputyships CSV processing check for ${terraform.workspace}"
   schedule_expression = "cron(18 09 * * ? *)"
   is_enabled          = var.account.is_production == 1 ? true : false
 }
 
 
-resource "aws_cloudwatch_event_target" "court_order_csv_processing_check" {
-  target_id = "check-org-csv-processing-${terraform.workspace}"
+resource "aws_cloudwatch_event_target" "deputyships_csv_processing_check" {
+  target_id = "check-deputyships-csv-processing-${terraform.workspace}"
   arn       = data.aws_lambda_function.monitor_notify_lambda.arn
-  rule      = aws_cloudwatch_event_rule.court_order_csv_processing_check.name
+  rule      = aws_cloudwatch_event_rule.deputyships_csv_processing_check.name
   input = jsonencode(
     {
       scheduled-event-detail = {
-        job-name                   = "court_order_csv_processing_check"
+        job-name                   = "deputyships_csv_processing_check"
         log-group                  = terraform.workspace,
-        log-entries                = ["courtorder_csv_processing"],
+        log-entries                = ["deputyships_csv_processing"],
         search-timespan            = "24 hours",
         bank-holidays              = "true",
         channel-identifier-absent  = "team",
