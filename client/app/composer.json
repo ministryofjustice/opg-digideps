@@ -27,7 +27,6 @@
         "fakerphp/faker": "^1.16",
         "gbprod/uuid-normalizer": "^1.2",
         "guzzlehttp/guzzle": "^7.4.0",
-        "incenteev/composer-parameter-handler": "^2.1.3",
         "jms/serializer-bundle": "^5.0.0",
         "jolicode/slack-php-api": "^4.4",
         "lcobucci/jwt": "^4.1",
@@ -72,20 +71,9 @@
         "twig/intl-extra": "^3.3",
         "web-token/jwt-core": "^2.2"
     },
-    "scripts": {
-        "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
-        ],
-        "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
-        ]
-    },
     "minimum-stability": "stable",
     "extra": {
         "symfony-app-dir": "app",
-        "incenteev-parameters": {
-            "file": "config/parameters.yml"
-        },
         "branch-alias": {
             "dev-master": "2.3-dev"
         },

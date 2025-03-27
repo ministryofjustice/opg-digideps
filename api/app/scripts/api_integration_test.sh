@@ -2,9 +2,6 @@
 # exit on error
 set -e
 
-# Generate config files so test bootstrap can address the DB
-confd -onetime -backend env
-
 ATTEMPTS=0
 
 while curl -s http://localstack:4566/health | grep -v "\"initScripts\": \"initialized\""; do
