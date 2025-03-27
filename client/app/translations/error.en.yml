@@ -9,4 +9,4 @@ generic:
 422:
   title: Invalid data
   description: "Your account needs to be updated by an administrator.
-    Please call us on helplineNo and ask for your account to be updated."
+    Please call us on %helplineNo% and ask for your account to be updated."
