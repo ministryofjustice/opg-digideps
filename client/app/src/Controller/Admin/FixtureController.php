@@ -118,12 +118,21 @@ class FixtureController extends AbstractController
                 $deputyEmails[] = $deputy->getEmail();
             }
 
+            // More deputy emails than case numbers implies co-deputy user and therefore needs matching to primary case number
             $deputyAndCaseNumber = [];
             if (count($caseNumber) > 1) {
-                for ($i = 0; $i < min(count($deputyEmails), count($caseNumber)); ++$i) {
+                if (count($deputyEmails) > count($caseNumber)) {
                     $deputyAndCaseNumber[] = [
-                        $deputyEmails[$i] => $caseNumber[$i],
+                        $deputyEmails[0] => $caseNumber[0],
+                        $deputyEmails[1] => $caseNumber[0],
+                        $deputyEmails[2] => $caseNumber[1],
                     ];
+                } else {
+                    for ($i = 0; $i < min(count($deputyEmails), count($caseNumber)); ++$i) {
+                        $deputyAndCaseNumber[] = [
+                            $deputyEmails[$i] => $caseNumber[$i],
+                        ];
+                    }
                 }
             }
 

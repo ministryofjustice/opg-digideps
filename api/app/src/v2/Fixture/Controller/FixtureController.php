@@ -107,7 +107,7 @@ class FixtureController extends AbstractController
             }
 
             if ($fromRequest['coDeputyEnabled']) {
-                $this->createCoDeputy($deputy, $fromRequest, $client);
+                $coDeputy = $this->createCoDeputy($deputy, $fromRequest, $client);
             }
         }
 
@@ -119,6 +119,10 @@ class FixtureController extends AbstractController
         $this->em->flush();
 
         $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $deputy->getId()] : $multiClientDeputy['deputyIds'];
+
+        if (!$fromRequest['multiClientEnabled'] && isset($coDeputy)) {
+            $deputyIds['coDeputy'] = $coDeputy->getId();
+        }
 
         if (!$fromRequest['multiClientEnabled']) {
             return $this->buildSuccessResponse(['deputyEmail' => $deputy->getEmail(), 'deputyIds' => $deputyIds, 'Court order created', Response::HTTP_CREATED]);
@@ -158,7 +162,7 @@ class FixtureController extends AbstractController
 
         // Attach co-deputy to the primary client
         if ($fromRequest['coDeputyEnabled']) {
-            $this->createCoDeputy($deputy, $fromRequest, $client);
+            $coDeputy = $this->createCoDeputy($deputy, $fromRequest, $client);
         }
 
         // create second deputy account and client
@@ -187,8 +191,13 @@ class FixtureController extends AbstractController
         $this->em->persist($secondDeputyAccount);
         $this->em->flush();
 
+        $deputyIds = ['original deputy' => $deputy->getId(), 'second deputy' => $secondDeputyAccount->getId()];
+        if (isset($coDeputy)) {
+            $deputyIds['coDeputy'] = $coDeputy->getId();
+        }
+
         return [
-            'deputyIds' => ['original deputy' => $deputy->getId(), 'second deputy' => $secondDeputyAccount->getId()],
+            'deputyIds' => $deputyIds,
             'multiClientCaseNumbers' => [$deputyPreRegistration->getCaseNumber(), $secondDeputyPreRegistration->getCaseNumber()],
         ];
     }
@@ -704,7 +713,7 @@ class FixtureController extends AbstractController
         }
     }
 
-    private function createCoDeputy(User $deputy, array $fromRequest, Client $client): void
+    private function createCoDeputy(User $deputy, array $fromRequest, Client $client): User
     {
         $deputy->setCoDeputyClientConfirmed(true);
         $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
@@ -723,5 +732,7 @@ class FixtureController extends AbstractController
 
         $this->em->persist($coDeputyPreRegistration);
         $this->em->persist($coDeputy);
+
+        return $coDeputy;
     }
 }
