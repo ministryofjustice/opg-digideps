@@ -17,7 +17,7 @@ framework:
     email_validation_mode: strict
   default_locale: "%locale%"
   session:
-    handler_id: snc_redis.session.handler
+    handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
     name: digideps
     # force session usage, no cookie (we want to logout when the browser closes)
     cookie_lifetime: 0
