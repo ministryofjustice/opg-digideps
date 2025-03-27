@@ -6,6 +6,8 @@ services:
     build:
       dockerfile: client/docker/app/Dockerfile
       context: .
+      args:
+        ENVIRONMENT: local
     depends_on:
       - pact-mock
     environment:
