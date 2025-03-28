@@ -6,11 +6,12 @@ namespace App\Event;
 
 use App\Entity\Client;
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientDeletedEvent extends Event
 {
-    const NAME = 'client.deleted';
+    public const NAME = 'client.deleted';
 
     /** @var User */
     private $currentUser;
@@ -24,7 +25,7 @@ class ClientDeletedEvent extends Event
     /**
      * ClientDeletedEvent constructor.
      */
-    public function __construct(Client $clientWithUsers, User $currentUser, string $trigger)
+    public function __construct(Client $clientWithUsers, ?UserInterface $currentUser, string $trigger)
     {
         $this->setClientWithUsers($clientWithUsers);
         $this->setCurrentUser($currentUser);
@@ -60,7 +61,7 @@ class ClientDeletedEvent extends Event
         return $this->currentUser;
     }
 
-    public function setCurrentUser(User $currentUser): ClientDeletedEvent
+    public function setCurrentUser(?UserInterface $currentUser): ClientDeletedEvent
     {
         $this->currentUser = $currentUser;
 

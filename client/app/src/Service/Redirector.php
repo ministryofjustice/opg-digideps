@@ -7,7 +7,6 @@ use App\Service\Client\Internal\ClientApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -21,28 +20,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class Redirector
 {
-    /**
-     * Routes the user can be redirected to, if accessed before timeout.
-     *
-     * @var array
-     */
-    private $redirectableRoutes = [
-        'user_details',
-        'user_edit',
-        'report_overview',
-        'account',
-        'accounts',
-        'contacts',
-        'decisions',
-        'assets',
-        'report_declaration',
-        'report_submit_confirmation',
-        'client',
-    ];
-
-    /**
-     * Redirector constructor.
-     */
     public function __construct(
         protected TokenStorageInterface $tokenStorage,
         protected AuthorizationCheckerInterface $authChecker,
@@ -54,79 +31,95 @@ class Redirector
     ) {
     }
 
-    /**
-     * @return User
-     */
-    private function getLoggedUser()
+    private function getLoggedUser(): ?User
     {
-        return $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+
+        if (is_null($token)) {
+            return null;
+        }
+
+        /* @var ?User */
+        return $token->getUser();
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstPageAfterLogin(SessionInterface $session)
+    public function getFirstPageAfterLogin(SessionInterface $session): string
     {
         $user = $this->getLoggedUser();
 
-        if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
-            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
-                return $this->router->generate('user_details');
-            } else {
-                return $this->router->generate('admin_homepage');
-            }
-        } elseif ($this->authChecker->isGranted(User::ROLE_AD)) {
-            return $this->router->generate('ad_homepage');
-        } elseif ($user->isDeputyOrg()) {
-            if ($session->has('login-context') && 'password-create' === $session->get('login-context')) {
-                return $this->router->generate('user_details');
-            } else {
-                return $this->router->generate('org_dashboard');
-            }
-        } elseif ($this->authChecker->isGranted(User::ROLE_LAY_DEPUTY)) {
-            return $this->getCorrectLayHomepage();
-        } else {
-            return $this->router->generate('access_denied');
+        $isAdminUser = $this->authChecker->isGranted(User::ROLE_ADMIN);
+        $isAdUser = $this->authChecker->isGranted(User::ROLE_AD);
+        $isLayDeputy = $this->authChecker->isGranted(User::ROLE_LAY_DEPUTY);
+        $isDeputyOrg = !is_null($user) && $user->isDeputyOrg();
+        $inPasswordCreateContext = 'password-create' === $session->get('login-context');
+
+        if ($inPasswordCreateContext && ($isAdminUser || $isAdUser || $isDeputyOrg)) {
+            return $this->router->generate('user_details');
         }
+
+        if ($isAdminUser) {
+            return $this->router->generate('admin_homepage');
+        }
+
+        if ($isAdUser) {
+            return $this->router->generate('ad_homepage');
+        }
+
+        if ($isDeputyOrg) {
+            return $this->router->generate('org_dashboard');
+        }
+
+        if ($isLayDeputy) {
+            return $this->getCorrectLayHomepage($user);
+        }
+
+        return $this->router->generate('access_denied');
     }
 
-    /**
-     * //TODO refactor remove. seem overcomplicated.
-     *
-     * @param string $currentRoute
-     *
-     * @return bool|string
-     */
-    public function getCorrectRouteIfDifferent(User $user, $currentRoute)
+    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
     {
-        // Check if user has multiple clients
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
+                $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+
                 // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
+                if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
                     $route = 'lay_home';
                 }
 
                 // unverified codeputy invitation
-                if (!$user->getCoDeputyClientConfirmed() && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
                     $route = 'codep_verification';
                 }
-            } else {
-                if (!$user->isDeputyOrg()) {
-                    // client is not added
-                    if (!$user->getIdOfClientWithDetails()) {
-                        if (0 == count($clients)) {
-                            $route = 'client_add';
-                        }
+            } elseif (!$user->isDeputyOrg()) {
+                // client is not added
+                if (!$user->getIdOfClientWithDetails()) {
+                    $clients = [];
+                    $deputyUid = $user->getDeputyUid();
+                    if (is_null($deputyUid)) {
+                        $this->logger->error(
+                            "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                            '(via Redirector::getCorrectRouteIfDifferent)'
+                        );
+                    } else {
+                        // Check if user has multiple clients
+                        $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
                     }
 
-                    // incomplete user info
-                    if (!$user->hasAddressDetails()) {
-                        $route = 'user_details';
+                    if (is_null($clients)) {
+                        $this->logger->error(
+                            "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
+                            '(via Redirector::getCorrectRouteIfDifferent)'
+                        );
+                    } elseif (0 == count($clients)) {
+                        $route = 'client_add';
                     }
+                }
+
+                // incomplete user info
+                if (!$user->hasAddressDetails()) {
+                    $route = 'user_details';
                 }
             }
         }
@@ -137,20 +130,33 @@ class Redirector
     /**
      * @return string
      */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null, $enabledLastAccessedUrl = false)
+    private function getLayDeputyHomepage(User $user, $activeClientId = null)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
         }
 
-        // last accessed url
-        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
-            return $lastUsedUri;
+        // redirect to create report if report is not created
+        $allActiveClients = [];
+
+        $deputyUid = $user->getDeputyUid();
+        if (is_null($deputyUid)) {
+            $this->logger->error(
+                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                '(via Redirector::getLayDeputyHomepage)'
+            );
+        } else {
+            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
         }
 
-        // redirect to create report if report is not created
-        $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), ['client-reports', 'report']);
+        if (is_null($allActiveClients)) {
+            $this->logger->error(
+                "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
+                '(via Redirector::getLayDeputyHomepage)'
+            );
+            $allActiveClients = [];
+        }
 
         foreach ($allActiveClients as $activeClient) {
             if (count($activeClient->getReportIds()) >= 1) {
@@ -160,10 +166,9 @@ class Redirector
             if (!$user->isNdrEnabled()) {
                 $clientId = $user->getIdOfClientWithDetails();
                 if (is_null($clientId)) {
-                    // TODO remove once DDLS-521 hypothesis is proven or not
                     $this->logger->error(
                         "Unable to get client ID for user with ID {$user->getId()}; ".
-                        'getIdOfClientWithDetails() returned a null value (DDLS-521)'
+                        'getIdOfClientWithDetails() returned a null value'
                     );
 
                     // attempt to rectify failed client ID fetch by using the active client's ID instead
@@ -174,37 +179,20 @@ class Redirector
             }
         }
 
-        // check if last remaining active client is linked to non-primary account if so retrieve id
-        return null == $activeClientId ? $this->router->generate('lay_home', ['clientId' => $user->getIdOfClientWithDetails()]) :
-            $this->router->generate('lay_home', ['clientId' => $activeClientId]);
-    }
+        if (is_null($activeClientId)) {
+            $activeClientId = $user->getIdOfClientWithDetails();
 
-    /**
-     * @return bool|string
-     */
-    private function getLastAccessedUrl()
-    {
-        $lastUsedUrl = $this->session->get('_security.secured_area.target_path');
-        if (!$lastUsedUrl) {
-            return false;
+            if (is_null($activeClientId)) {
+                $this->logger->error(
+                    "Unable to get client ID for user with ID {$user->getId()}; ".
+                    'getIdOfClientWithDetails() returned a null value'
+                );
+
+                return $this->router->generate('invalid_data');
+            }
         }
 
-        $urlPieces = parse_url($lastUsedUrl);
-        if (empty($urlPieces['path'])) {
-            return false;
-        }
-
-        try {
-            $route = $this->router->match($urlPieces['path'])['_route'];
-        } catch (ResourceNotFoundException $e) {
-            return false;
-        }
-
-        if (in_array($route, $this->redirectableRoutes)) {
-            return $lastUsedUrl;
-        }
-
-        return false;
+        return $this->router->generate('lay_home', ['clientId' => $activeClientId]);
     }
 
     public function removeLastAccessedUrl()
@@ -236,7 +224,7 @@ class Redirector
 
         // deputy: if logged, redirect to overview pages
         if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->getCorrectLayHomepage();
+            return $this->getCorrectLayHomepage($this->getLoggedUser());
         }
 
         return false;
@@ -245,36 +233,52 @@ class Redirector
     /**
      * @return string
      */
-    private function getChooseAClientHomepage(User $user, $enabledLastAccessedUrl = false)
+    private function getChooseAClientHomepage(User $user)
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'choose_a_client')) {
             return $this->router->generate($route);
         }
 
-        // last accessed url
-        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
-            return $lastUsedUri;
-        }
-
         return $this->router->generate('choose_a_client');
     }
 
-    private function getCorrectLayHomepage()
+    private function getCorrectLayHomepage(?User $user = null)
     {
-        $user = $this->getLoggedUser();
-
-        $clients = !is_null($user->getDeputyUid()) ? $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid()) : [];
-        $activeClientId = count($clients) > 0 ? array_values($clients)[0]->getId() : null;
-
-        if (!(null === $clients)) {
-            if (1 < count($clients)) {
-                return $this->getChooseAClientHomepage($user);
-            } else {
-                return $this->getLayDeputyHomepage($user, $activeClientId);
-            }
-        } else {
-            return $this->getLayDeputyHomepage($user);
+        if (is_null($user)) {
+            return $this->router->generate('login');
         }
+
+        $clients = [];
+        $deputyUid = $user->getDeputyUid();
+        if (is_null($deputyUid)) {
+            $this->logger->error(
+                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                '(via Redirector::getCorrectLayHomepage)'
+            );
+        } else {
+            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
+            if (is_null($clients)) {
+                $this->logger->error(
+                    "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
+                    '(via Redirector::getCorrectLayHomepage)'
+                );
+                $clients = [];
+            } else {
+                $clients = array_values($clients);
+            }
+        }
+
+        $numClients = count($clients);
+
+        if (0 === $numClients) {
+            return $this->getLayDeputyHomepage($user);
+        } elseif (1 === $numClients) {
+            $activeClientId = $clients[0]->getId();
+
+            return $this->getLayDeputyHomepage($user, $activeClientId);
+        }
+
+        return $this->getChooseAClientHomepage($user);
     }
 }

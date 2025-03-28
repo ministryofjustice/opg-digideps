@@ -6,6 +6,7 @@ namespace App\Event;
 
 use App\Entity\Client;
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientUpdatedEvent extends Event
@@ -25,8 +26,8 @@ class ClientUpdatedEvent extends Event
     public function __construct(
         Client $preUpdateClient,
         Client $postUpdateClient,
-        User $changedBy,
-        string $trigger
+        UserInterface $changedBy,
+        string $trigger,
     ) {
         $this->setPreUpdateClient($preUpdateClient);
         $this->setPostUpdateClient($postUpdateClient);
@@ -58,12 +59,12 @@ class ClientUpdatedEvent extends Event
         return $this;
     }
 
-    public function getChangedBy(): User
+    public function getChangedBy(): UserInterface
     {
         return $this->changedBy;
     }
 
-    public function setChangedBy(User $changedBy): ClientUpdatedEvent
+    public function setChangedBy(UserInterface $changedBy): ClientUpdatedEvent
     {
         $this->changedBy = $changedBy;
 
