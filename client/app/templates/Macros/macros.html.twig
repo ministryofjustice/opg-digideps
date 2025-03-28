@@ -250,21 +250,36 @@
             <div class="opg-alert opg-alert--success">
                 {{ _self.icon('tick', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
-                    <p class="govuk-body">Created PreRegistration {% if message.coDeputyLastName is defined %} entries {% else %} entry {% endif %}</p>
+                    <p class="govuk-body">Created PreRegistration
+                    {% if message|length > 1 %}
+                    entries
+                    {% else %}
+                        {% for details in message %}
+                            {% if details.coDeputyLastName is defined %}
+                                entries
+                            {% else %}
+                                entry
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    </p>
                     <p class="govuk-body">{{ 'alert.instructions' | trans({}, 'admin-fixtures') }}</p>
-                    <ul>
-                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{message.caseNumber}}</strong></li>
-                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.clientLastName' | trans({}, 'admin-fixtures') }}: <strong>{{message.clientLastName}}</strong></li>
+                    {% for details in message %}
+                        <ul>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{details.caseNumber}}</strong></li>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.clientLastName' | trans({}, 'admin-fixtures') }}: <strong>{{details.clientLastName}}</strong></li>
+                            <br/>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{details.deputyFirstName}}</strong></li>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{details.deputyLastName}}</strong></li>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ details.deputyPostCode }}</strong></li>
+                            {% if details.coDeputyLastName is defined %}
+                                <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{ details.coDeputyFirstName }}</strong></li>
+                                <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{ details.coDeputyLastName }}</strong></li>
+                                <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ details.coDeputyPostCode }}</strong></li>
+                            {% endif %}
+                        </ul>
                         <br/>
-                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{message.deputyFirstName}}</strong></li>
-                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{message.deputyLastName}}</strong></li>
-                        <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.deputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ message.deputyPostCode }}</strong></li>
-                        {% if message.coDeputyLastName is defined %}
-                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyFirstName' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyFirstName }}</strong></li>
-                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyLastName' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyLastName }}</strong></li>
-                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.coDeputyPostCode' | trans({}, 'admin-fixtures') }}: <strong>{{ message.coDeputyPostCode }}</strong></li>
-                        {% endif %}
-                    </ul>
+                    {% endfor %}
                 </div>
             </div>
         {% elseif alertType == 'courtOrderFixture' %}
