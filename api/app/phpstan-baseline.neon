@@ -216,11 +216,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
-			count: 3
-			path: src/Controller/ClientController.php
-
-		-
 			message: "#^Parameter \\#1 \\$query of method App\\\\Repository\\\\ClientRepository\\:\\:searchClients\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
