@@ -1,9 +1,13 @@
 {% extends '@App/Layouts/application.html.twig'%}
 
-{% trans_default_domain 'deputyship-details' %}
+{% trans_default_domain 'deputyship' %}
 {% block htmlTitle %}{{ 'clients.title' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'clients.title' | trans }}{% endblock %}
 
 {% block pageContent %}
-    <p>CLIENT LIST GOES HERE</p>
+    <p>CLIENT LIST FOR DEPUTY {{ deputyUid }} GOES HERE</p>
+
+    {% for client in clients %}
+        <p>{{ client.firstName }}</p>
+    {% endfor %}
 {% endblock %}
