@@ -20,6 +20,10 @@ class PreRegistrationFixtureType extends AbstractType
                 'choices' => ['Lay' => User::TYPE_LAY],
                 'data' => $options['deputyType'],
             ])
+            ->add('multiClientEnabled', ChoiceType::class, [
+                'choices' => ['Enabled' => true, 'Disabled' => false],
+                'data' => $options['multiClientEnabled'],
+            ])
             ->add('reportType', ChoiceType::class, [
                 'choices' => ['Property and financial affairs high assets' => 'OPG102'],
                 'data' => $options['reportType'],
@@ -35,6 +39,6 @@ class PreRegistrationFixtureType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-fixtures',
-        ])->setRequired(['deputyType', 'reportType', 'createCoDeputy']);
+        ])->setRequired(['deputyType', 'multiClientEnabled', 'reportType', 'createCoDeputy']);
     }
 }
