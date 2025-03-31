@@ -19,6 +19,7 @@ node_modules/
 var/
 vendor/
 !ecs-helper/vendor/
+client/cache
 
 # Terraform
 **/.terraform/
