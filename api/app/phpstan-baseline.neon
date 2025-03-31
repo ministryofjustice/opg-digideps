@@ -7776,11 +7776,6 @@ parameters:
 			path: src/FixtureFactory/UserFactory.php
 
 		-
-			message: "#^Generator expects value type Symfony\\\\Component\\\\HttpKernel\\\\Bundle\\\\BundleInterface, object given\\.$#"
-			count: 1
-			path: src/Kernel.php
-
-		-
 			message: "#^Method App\\\\Kernel\\:\\:__construct\\(\\) has parameter \\$debug with no type specified\\.$#"
 			count: 1
 			path: src/Kernel.php
