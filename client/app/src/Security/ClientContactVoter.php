@@ -5,26 +5,19 @@ namespace App\Security;
 use App\Entity\Client as ClientEntity;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, ClientEntity>
+ */
 class ClientContactVoter extends Voter
 {
     public const ADD_CLIENT_CONTACT = 'add-client-contact';
     public const EDIT_CLIENT_CONTACT = 'edit-client-contact';
     public const DELETE_CLIENT_CONTACT = 'delete-client-contact';
 
-    /**
-     * @var AccessDecisionManagerInterface
-     */
-    private $decisionManager;
-
-    /**
-     * ClientContactVoter constructor.
-     */
-    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    public function __construct()
     {
-        $this->decisionManager = $decisionManager;
     }
 
     /**
@@ -49,12 +42,8 @@ class ClientContactVoter extends Voter
 
     /**
      * Vote on whether to grant attribute permission on subject.
-     *
-     * @param string $attribute
-     *
-     * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         /** @var User $loggedInUser */
         $loggedInUser = $token->getUser();
@@ -65,16 +54,9 @@ class ClientContactVoter extends Voter
         }
 
         switch ($attribute) {
-            case self::ADD_CLIENT_CONTACT:
-                if ($subject instanceof ClientEntity) {
-                    /* @var Client $subject */
-                    return $subject->hasUser($loggedInUser);
-                }
-
-                return false;
-            case self::EDIT_CLIENT_CONTACT:
             case self::DELETE_CLIENT_CONTACT:
-                /** @var ClientEntity $subject */
+            case self::EDIT_CLIENT_CONTACT:
+            case self::ADD_CLIENT_CONTACT:
                 if ($subject instanceof ClientEntity) {
                     return $subject->hasUser($loggedInUser);
                 }

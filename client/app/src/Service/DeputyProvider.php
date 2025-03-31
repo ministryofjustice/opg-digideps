@@ -11,22 +11,15 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class DeputyProvider implements UserProviderInterface
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(RestClientInterface $restClient, LoggerInterface $logger)
-    {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -68,15 +61,10 @@ class DeputyProvider implements UserProviderInterface
             );
     }
 
-    public function loadUserByUsername(string $username)
-    {
-        throw new \RuntimeException('Method should not be called, and removed after symfony 6 upgrade');
-    }
-
     /**
      * @codeCoverageIgnore
      *
-     * @return User
+     * @return \App\Entity\User
      *
      *@throws UnsupportedUserException
      */
