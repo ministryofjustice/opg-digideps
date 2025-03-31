@@ -33,4 +33,4 @@ RUN /opt/scripts/harden-nginx.sh && rm /opt/scripts/harden-nginx.sh
 USER nginx
 
 # Start services
-CMD ["sh", "-c", "nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "/opt/scripts/health-check.sh && nginx -g 'daemon off;'"]
