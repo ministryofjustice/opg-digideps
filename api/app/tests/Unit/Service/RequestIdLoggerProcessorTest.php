@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestIdLoggerProcessorTest extends TestCase
 {
+    private Container $container;
+    private RequestStack $reqStack;
     private RequestIdLoggerProcessor $object;
 
     private $record = ['key1' => 'abc', 'key2' => 2];
