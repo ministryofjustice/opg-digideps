@@ -11,21 +11,6 @@ parameters:
 			path: src/Command/MigrationsMigrateLockCommand.php
 
 		-
-			message: "#^Method App\\\\Command\\\\ProcessCourtOrdersCSVCommand\\:\\:storeOutput\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Command/ProcessCourtOrdersCSVCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 2
-			path: src/Command/ProcessCourtOrdersCSVCommand.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 1
-			path: src/Command/ProcessCourtOrdersCSVCommand.php
-
-		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
 			path: src/Command/ProcessLayCSVCommand.php
@@ -213,11 +198,6 @@ parameters:
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
-			count: 3
 			path: src/Controller/ClientController.php
 
 		-
@@ -8371,11 +8351,6 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findByFiltersWithCounts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
 			message: "#^Method App\\\\Repository\\\\UserRepository\\:\\:findByFiltersWithCounts\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php
@@ -9836,16 +9811,6 @@ parameters:
 			path: src/TestHelpers/ReportSubmissionHelper.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setBalanceMismatchExplanation\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setNoTransfersToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\VisitsCare\\|App\\\\Entity\\\\Report\\\\Contact\\:\\:setDoYouLiveWithClient\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
@@ -9887,11 +9852,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:isPAreport\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:isProfReport\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
@@ -9962,7 +9922,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setProfDeputyCostsEstimateHowCharged\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
@@ -10026,67 +9986,7 @@ parameters:
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
-			message: "#^Class App\\\\Entity\\\\Ndr\\\\Ndr\\\\Ndr not found\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeBalance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeBalance\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeExpenses\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeIncomeBenefits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeMoneyTransfers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeMoneyTransfers\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completePaFeeExpense\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completePaFeeExpense\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCosts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCosts\\(\\) is unused\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCostsEstimate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeProfDeputyCostsEstimate\\(\\) is unused\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
@@ -10546,11 +10446,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:setCoDeputyClientConfirmed\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:setIsPrimary\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10652,7 +10547,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'multiClientEnabled' on mixed\\.$#"
-			count: 2
+			count: 3
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10677,7 +10572,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'reportType' on mixed\\.$#"
-			count: 3
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10781,6 +10676,11 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
+			message: "#^Parameter \\#1 \\$deputy of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\Deputy\\:\\:setDeputyUid\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10816,11 +10716,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Parameter \\#1 \\$originalDeputy of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\v2\\\\Fixture\\\\ReportSection\\:\\:completeSection\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10846,6 +10741,11 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
+			message: "#^Parameter \\#2 \\$fromRequest of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
 			message: "#^Parameter \\#2 \\$organisation of method App\\\\FixtureFactory\\\\ClientFactory\\:\\:createGenericOrgClient\\(\\) expects App\\\\Entity\\\\Organisation, object given\\.$#"
 			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10858,11 +10758,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
-			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-

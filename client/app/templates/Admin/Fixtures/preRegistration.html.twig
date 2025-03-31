@@ -9,6 +9,7 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_select(form.deputyType, 'preRegistration.deputyType') }}
+    {{ form_select(form.multiClientEnabled, 'preRegistration.multiClientEnabled') }}
     {{ form_select(form.reportType, 'preRegistration.reportType') }}
     {{ form_select(form.createCoDeputy, 'preRegistration.createCoDeputy') }}
     {{ form_submit(form.submit, 'preRegistration.submit') }}

@@ -2,8 +2,8 @@
 node_modules
 public/assets
 public/images
+config/parameters.yml
 
 application/app/SymfonyRequirements.php
 application/app/bootstrap.php.cache
 application/app/check.php
-config/parameters.yml

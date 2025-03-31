@@ -13,7 +13,7 @@ courtOrders:
   multiClientEnabled:
     label: Multi-Client Deputy Enabled
   coDeputyEnabled:
-    label: Co-Deputy Enabled (for single client deputies)
+    label: Co-Deputy Enabled
   createCoDeputy:
     label: Create Co-Deputy
   activated:
@@ -27,6 +27,8 @@ courtOrders:
 preRegistration:
   deputyType:
     label: Deputy Role
+  multiClientEnabled:
+    label: Multi-Client Deputy Enabled
   reportType:
     label: Report Type
   createCoDeputy:

@@ -62,6 +62,8 @@ services:
         "@router",
         "@session",
         "%env(ROLE)%",
+        '@App\Service\Client\Internal\ClientApi',
+        "@logger",
       ]
 
   App\Service\HtmlToPdfGenerator:
@@ -290,9 +292,12 @@ services:
           method: onKernelRequest,
         }
 
-  logout_listener:
-    class: App\EventListener\LogoutListener
-    arguments: ["@security.token_storage", "@rest_client", "@router"]
+  App\EventSubscriber\LogoutSubscriber:
+    arguments:
+      $tokenStorage: "@security.token_storage"
+      $restClient: "@rest_client"
+      $router: "@router"
+    tags: ["kernel.event_subscriber"]
 
   App\EventListener\ResponseNoCacheListener:
     tags:

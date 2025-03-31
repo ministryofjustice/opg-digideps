@@ -5,8 +5,6 @@ export APP_ENV=dev
 
 start=$(date +%s)
 
-confd -onetime -backend env
-
 echo "==== Starting test run ===="
 set -o pipefail
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --profile v2-tests-browserkit --list-scenarios $@ | ./vendor/liuggio/fastest/fastest -vv "./vendor/bin/behat --profile v2-tests-browserkit --tags @v2 --config=./tests/Behat/behat.yml {}" | tee /tmp/behat_failure_output.txt
