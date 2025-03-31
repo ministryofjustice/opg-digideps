@@ -6,7 +6,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.27"
+            "php": "8.2.28"
         }
     },
     "autoload": {
@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "aws/aws-sdk-php": "3.329.0",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -53,6 +53,7 @@
         "symfony/http-kernel": "^6.0",
         "symfony/monolog-bundle": "^3.8",
         "symfony/password-hasher": "^6.0",
+        "symfony/property-info": "^6.0",
         "symfony/routing": "^6.0",
         "symfony/security-bundle": "^6.0",
         "symfony/security-core": "^6.0",
