@@ -25,7 +25,7 @@ class FullReviewChecklistType extends AbstractType
         ];
 
         $builder
-            ->add('decisionExplanation', FormTypes\TextAreaType::class)
+            ->add('decisionExplanation', FormTypes\TextareaType::class)
             ->add('fullBankStatementsExist', FormTypes\ChoiceType::class, $yesNoNaOptions)
             ->add('anyLodgingConcerns', FormTypes\ChoiceType::class, $yesNoNaOptions)
             ->add('spendingAcceptable', FormTypes\ChoiceType::class, $yesNoNaOptions)
