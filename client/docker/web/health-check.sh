@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "RUNNING HEALTHCHECK"
+
 # Define the health check URLs
 HEALTH_CHECK_URL="http://127.0.0.1:80/health-check"
 SERVICE_HEALTH_CHECK_URL="http://127.0.0.1:80/health-check/service"
