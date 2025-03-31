@@ -86,6 +86,10 @@ services:
 
   admin-app:
     container_name: opg-digideps-admin-app
+    #    read_only: true
+    #    tmpfs:
+    #      - /tmp
+    #      - /var/www/var/cache
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile

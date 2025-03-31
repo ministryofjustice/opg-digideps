@@ -4,12 +4,18 @@ resource "aws_ecs_task_definition" "admin" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
+  container_definitions    = "[${local.app_init_container}, ${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   runtime_platform {
     cpu_architecture        = "ARM64"
     operating_system_family = "LINUX"
+  }
+  volume {
+    name = "app_tmp"
+  }
+  volume {
+    name = "app_cache"
   }
   tags = var.default_tags
 }
@@ -71,13 +77,45 @@ resource "aws_ecs_service" "admin" {
 }
 
 locals {
+  app_init_container = jsonencode(
+    {
+      name  = "permissions-app-init",
+      image = "public.ecr.aws/docker/library/busybox:stable",
+      entryPoint = [
+        "sh",
+        "-c"
+      ],
+      command = [
+        "echo 'HELLO APP' && chmod 777 /tmp/ && chmod 777 /var/www/var/cache/"
+      ],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.admin.name}.app-init"
+        }
+      },
+      mountPoints = [
+        {
+          containerPath = "/tmp",
+          sourceVolume  = "app_tmp"
+        },
+        {
+          containerPath = "/var/www/var/cache",
+          sourceVolume  = "app_cache"
+        },
+      ],
+      essential = false
+    }
+  )
+
   admin_web = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client-webserver,
-      mountPoints = [],
-      name        = "admin_web",
+      cpu       = 0,
+      essential = true,
+      image     = local.images.client-webserver,
+      name      = "admin_web",
       portMappings = [
         {
           name : "admin-port",
@@ -89,7 +127,7 @@ locals {
       healthCheck = {
         command : [
           "CMD-SHELL",
-          "/opt/scripts/health-check.sh"
+          "curl -f http://127.0.0.1:80/health-check || exit 1"
         ],
         interval = 30,
         timeout  = 5,
@@ -104,19 +142,36 @@ locals {
           awslogs-stream-prefix = "${aws_iam_role.admin.name}.web"
         }
       },
+      dependsOn = [
+        {
+          containerName = "permissions-web-init",
+          condition     = "SUCCESS"
+        }
+      ],
       environment = [
         { name = "APP_HOST", value = "127.0.0.1" },
         { name = "APP_PORT", value = "9000" }
       ]
     }
   )
+
   admin_container = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client,
-      mountPoints = [],
-      name        = "admin_app",
+      cpu       = 0,
+      essential = true,
+      image     = local.images.client,
+      mountPoints : [
+        {
+          "containerPath" : "/tmp",
+          "sourceVolume" : "app_tmp"
+        },
+        {
+          containerPath = "/var/www/var/cache",
+          sourceVolume  = "app_cache"
+        },
+      ],
+      #      readonlyRootFilesystem = true,
+      name = "admin_app",
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
@@ -131,6 +186,12 @@ locals {
           awslogs-stream-prefix = "${aws_iam_role.admin.name}.app"
         }
       },
+      dependsOn = [
+        {
+          containerName = "permissions-app-init",
+          condition     = "SUCCESS"
+        }
+      ],
       secrets = [
         { name = "API_CLIENT_SECRET", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.admin_api_client_secret.name}" },
         { name = "NOTIFY_API_KEY", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
