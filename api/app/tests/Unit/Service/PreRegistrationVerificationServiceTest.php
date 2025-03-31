@@ -118,9 +118,9 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
 
         $mockUserRepo = m::mock(UserRepository::class);
 
-        $serializer = self::prophesize(SerializerInterface::class);
+        $serializer = $this->createMock(SerializerInterface::class);
 
-        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer->reveal(), $mockPreRegRepo, $mockUserRepo);
+        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer, $mockPreRegRepo, $mockUserRepo);
     }
 
     public function tearDown(): void
