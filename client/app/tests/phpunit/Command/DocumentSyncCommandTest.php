@@ -53,6 +53,7 @@ class DocumentSyncCommandTest extends KernelTestCase
         $this->syncService = self::prophesize(DocumentSyncService::class);
         $this->restClient = self::prophesize(RestClient::class);
         $this->serializer = self::bootKernel()->getContainer()->get('serializer');
+//        $this->serializer = self::bootKernel()->getContainer()->get(SerializerInterface::class);
         $this->parameterStore = self::prophesize(ParameterStoreService::class);
 
         $app->add(new DocumentSyncCommand($this->syncService->reveal(), $this->restClient->reveal(), $this->serializer, $this->parameterStore->reveal()));

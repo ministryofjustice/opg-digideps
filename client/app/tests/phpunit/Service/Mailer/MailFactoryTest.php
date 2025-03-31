@@ -269,6 +269,8 @@ class MailFactoryTest extends TestCase
      */
     public function createReportSubmissionConfirmationEmailForLayDeputy($reportType)
     {
+        $this->router->generate('homepage', [])->willReturn('');
+
         $this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans(Argument::any())->shouldNotBeCalled();
 
@@ -314,6 +316,8 @@ class MailFactoryTest extends TestCase
      */
     public function createReportSubmissionConfirmationEmailForOrgDeputy($reportType, $role)
     {
+        $this->router->generate('homepage', [])->willReturn('');
+
         $this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
 
         $clientFullName = $this->client->getFullname();
@@ -370,6 +374,8 @@ class MailFactoryTest extends TestCase
      */
     public function createNdrSubmissionConfirmationEmailTest()
     {
+        $this->router->generate('homepage', [])->willReturn('');
+
         $this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
 
         $ndr = (new Ndr())->setClient($this->client);

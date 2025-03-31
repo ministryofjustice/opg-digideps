@@ -11,22 +11,15 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class DeputyProvider implements UserProviderInterface
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(RestClientInterface $restClient, LoggerInterface $logger)
-    {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -58,19 +51,6 @@ class DeputyProvider implements UserProviderInterface
     }
 
     /**
-     * Finds user by id.
-     *
-     * @param int $id
-     */
-    public function loadUserByUsername($id)
-    {
-        return $this->restClient
-            // the userId needs to be told to the RestClient, as the user is not logged in yet
-            ->setLoggedUserId($id)
-            ->get('user/'.$id, 'User', ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']);
-    }
-
-    /**
      * @codeCoverageIgnore
      *
      * @return \App\Entity\User
@@ -84,7 +64,7 @@ class DeputyProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
-        return $this->loadUserByUsername($user->getId());
+        return $this->loadUserByIdentifier($user->getId());
     }
 
     /**
@@ -95,5 +75,13 @@ class DeputyProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return 'App\Entity\User' === $class;
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        return $this->restClient
+            // the userId needs to be told to the RestClient, as the user is not logged in yet
+            ->setLoggedUserId(intval($identifier))
+            ->get('user/'.$identifier, 'User', ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']);
     }
 }

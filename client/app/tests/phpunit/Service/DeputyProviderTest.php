@@ -6,6 +6,8 @@ use App\Service\Client\RestClient;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DeputyProviderTest extends TestCase
 {
@@ -56,7 +58,7 @@ class DeputyProviderTest extends TestCase
 
     public function testLoginFail()
     {
-        $this->expectException(\Symfony\Component\Security\Core\Exception\UsernameNotFoundException::class);
+        $this->expectException(UserNotFoundException::class);
 
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
@@ -66,12 +68,16 @@ class DeputyProviderTest extends TestCase
         $this->object->login($credentials);
     }
 
-    public function testLoadUserByUsername()
+    public function testLoadUserByIdentifier()
     {
-        $this->restClient->shouldReceive('setLoggedUserId')->with(1)->andReturn($this->restClient);
-        $this->restClient->shouldReceive('get')->with('user/1', 'User', m::any())->andReturn('user');
+        $mockUser = $this->createMock(UserInterface::class);
 
-        $this->assertEquals('user', $this->object->LoadUserByUsername(1));
+        $this->restClient->shouldReceive('setLoggedUserId')->with(1)->andReturn($this->restClient);
+        $this->restClient->shouldReceive('get')
+            ->with('user/1', 'User', m::any())
+            ->andReturn($mockUser);
+
+        $this->assertEquals($mockUser, $this->object->loadUserByIdentifier(1));
     }
 
     public function testSupportsClass()

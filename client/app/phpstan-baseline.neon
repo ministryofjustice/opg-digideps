@@ -26,11 +26,6 @@ parameters:
 			path: src/Command/CheckCSVUploadedCommand.php
 
 		-
-			message: "#^Method App\\\\Command\\\\DocumentRecoverCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Command/DocumentRecoverCommand.php
-
-		-
 			message: "#^Method App\\\\Command\\\\DocumentRecoverCommand\\:\\:execute\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: src/Command/DocumentRecoverCommand.php
@@ -137,11 +132,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Validator\\\\Mapping\\\\MetadataInterface\\:\\:getMemberMetadatas\\(\\)\\.$#"
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: "#^Method App\\\\Command\\\\ValidationCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Command/ValidationCommand.php
 
@@ -9491,11 +9481,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:eraseCredentials\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:getActiveReportId\\(\\) should return int but returns int\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -9921,16 +9906,6 @@ parameters:
 			path: src/EventListener/AuthenticationHandler.php
 
 		-
-			message: "#^Instantiated class App\\\\EventListener\\\\RedirectResponse not found\\.$#"
-			count: 1
-			path: src/EventListener/AuthenticationHandler.php
-
-		-
-			message: "#^Method App\\\\EventListener\\\\AuthenticationHandler\\:\\:onAuthenticationFailure\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\Response but returns App\\\\EventListener\\\\RedirectResponse\\.$#"
-			count: 1
-			path: src/EventListener/AuthenticationHandler.php
-
-		-
 			message: "#^Method App\\\\EventListener\\\\ForbiddenExceptionListener\\:\\:onKernelException\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/EventListener/ForbiddenExceptionListener.php
@@ -10201,39 +10176,9 @@ parameters:
 			path: src/Exception/RestClientException.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ad\\\\AddUserType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ad/AddUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ad\\\\AddUserType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ad/AddUserType.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function array_flip expects array\\<int\\|string\\>, mixed given\\.$#"
 			count: 1
 			path: src/Form/Ad/AddUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\AdLoginAsUserType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/AdLoginAsUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\AdLoginAsUserType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/AdLoginAsUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\AddAnotherRecordType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/AddAnotherRecordType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\AddAnotherRecordType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/AddAnotherRecordType.php
 
 		-
 			message: "#^Cannot access offset 'roleName' on mixed\\.$#"
@@ -10266,16 +10211,6 @@ parameters:
 			path: src/Form/Admin/AddUserType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\AddUserType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/AddUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\AddUserType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/AddUserType.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function ucfirst expects string, mixed given\\.$#"
 			count: 1
 			path: src/Form/Admin/AddUserType.php
@@ -10291,34 +10226,9 @@ parameters:
 			path: src/Form/Admin/BenefitsMetricsFilterType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\BenefitsMetricsFilterType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/BenefitsMetricsFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\BenefitsMetricsFilterType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/BenefitsMetricsFilterType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\BenefitsMetricsFilterType\\:\\:onPostSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Admin/BenefitsMetricsFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\CloseReportConfirmType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/CloseReportConfirmType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\CloseReportConfirmType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/CloseReportConfirmType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\CloseReportType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/CloseReportType.php
 
 		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\CloseReportType\\:\\:setTranslator\\(\\) has no return type specified\\.$#"
@@ -10351,59 +10261,9 @@ parameters:
 			path: src/Form/Admin/EditUserType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\EditUserType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/EditUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\EditUserType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/EditUserType.php
-
-		-
 			message: "#^Parameter \\#1 \\$operatingUser of method App\\\\Form\\\\Admin\\\\EditUserType\\:\\:getEventListener\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
 			count: 1
 			path: src/Form/Admin/EditUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Fixture\\\\LayCourtOrderFixtureType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Fixture/LayCourtOrderFixtureType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Fixture\\\\LayCourtOrderFixtureType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Fixture/LayCourtOrderFixtureType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Fixture\\\\OrgCourtOrderFixtureType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Fixture/OrgCourtOrderFixtureType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Fixture\\\\OrgCourtOrderFixtureType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Fixture/OrgCourtOrderFixtureType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Fixture\\\\PreRegistrationFixtureType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Fixture/PreRegistrationFixtureType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Fixture\\\\PreRegistrationFixtureType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Fixture/PreRegistrationFixtureType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\FullReviewChecklistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/FullReviewChecklistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\FullReviewChecklistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/FullReviewChecklistType.php
 
 		-
 			message: "#^Cannot call method getEndDate\\(\\) on mixed\\.$#"
@@ -10416,29 +10276,9 @@ parameters:
 			path: src/Form/Admin/ImbalanceMetricsFilterType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ImbalanceMetricsFilterType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ImbalanceMetricsFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ImbalanceMetricsFilterType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ImbalanceMetricsFilterType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\ImbalanceMetricsFilterType\\:\\:onPostSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Admin/ImbalanceMetricsFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\InactiveAdminReportFilterType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/InactiveAdminReportFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\InactiveAdminReportFilterType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/InactiveAdminReportFilterType.php
 
 		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\ManageActiveReportType\\:\\:setTranslator\\(\\) has no return type specified\\.$#"
@@ -10471,16 +10311,6 @@ parameters:
 			path: src/Form/Admin/ManageReportConfirmType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ManageReportConfirmType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ManageReportConfirmType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ManageReportConfirmType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ManageReportConfirmType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\ManageSubmittedReportType\\:\\:setTranslator\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Admin/ManageSubmittedReportType.php
@@ -10506,26 +10336,6 @@ parameters:
 			path: src/Form/Admin/ManageSubmittedReportType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\OrganisationAddUserType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/OrganisationAddUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\OrganisationAddUserType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/OrganisationAddUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\OrganisationEditType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/OrganisationEditType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\OrganisationEditType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/OrganisationEditType.php
-
-		-
 			message: "#^Cannot access offset 'emailAddress'\\|'emailDomain' on mixed\\.$#"
 			count: 1
 			path: src/Form/Admin/OrganisationType.php
@@ -10541,28 +10351,8 @@ parameters:
 			path: src/Form/Admin/OrganisationType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\OrganisationType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/OrganisationType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\OrganisationType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/OrganisationType.php
-
-		-
 			message: "#^Cannot call method hasSection\\(\\) on mixed\\.$#"
 			count: 8
-			path: src/Form/Admin/ReportChecklistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ReportChecklistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ReportChecklistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ReportChecklistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Form/Admin/ReportChecklistType.php
 
 		-
@@ -10581,29 +10371,9 @@ parameters:
 			path: src/Form/Admin/ReportSubmissionDownloadFilterType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ReportSubmissionDownloadFilterType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ReportSubmissionDownloadFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ReportSubmissionDownloadFilterType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ReportSubmissionDownloadFilterType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\ReportSubmissionDownloadFilterType\\:\\:onPostSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Admin/ReportSubmissionDownloadFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ReviewChecklistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ReviewChecklistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\ReviewChecklistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/ReviewChecklistType.php
 
 		-
 			message: "#^Cannot call method getEndDate\\(\\) on mixed\\.$#"
@@ -10616,49 +10386,9 @@ parameters:
 			path: src/Form/Admin/SatisfactionFilterType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SatisfactionFilterType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SatisfactionFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SatisfactionFilterType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SatisfactionFilterType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Admin\\\\SatisfactionFilterType\\:\\:onPostSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Admin/SatisfactionFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SearchClientType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SearchClientType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SearchClientType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SearchClientType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SearchType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SearchType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SearchType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SearchType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SettingType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SettingType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\SettingType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/SettingType.php
 
 		-
 			message: "#^Cannot access offset 'endDate' on mixed\\.$#"
@@ -10676,52 +10406,12 @@ parameters:
 			path: src/Form/Admin/StatPeriodType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\StatPeriodType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/StatPeriodType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\StatPeriodType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/StatPeriodType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Tool\\\\ReportReassignmentType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Tool/ReportReassignmentType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\Tool\\\\ReportReassignmentType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/Tool/ReportReassignmentType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\UnsubmittedSectionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/UnsubmittedSectionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\UnsubmittedSectionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/UnsubmittedSectionType.php
-
-		-
 			message: "#^Cannot call method getEndDate\\(\\) on mixed\\.$#"
 			count: 2
 			path: src/Form/Admin/UserResearchResponseFilterType.php
 
 		-
 			message: "#^Cannot call method setEndDate\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Admin/UserResearchResponseFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\UserResearchResponseFilterType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Admin/UserResearchResponseFilterType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Admin\\\\UserResearchResponseFilterType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Admin/UserResearchResponseFilterType.php
 
@@ -10741,26 +10431,6 @@ parameters:
 			path: src/Form/ChangeEmailType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\ChangeEmailType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ChangeEmailType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ChangeEmailType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ChangeEmailType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ChangePasswordType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ChangePasswordType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ChangePasswordType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ChangePasswordType.php
-
-		-
 			message: "#^Cannot access offset 'firstname' on mixed\\.$#"
 			count: 2
 			path: src/Form/ClientType.php
@@ -10771,84 +10441,9 @@ parameters:
 			path: src/Form/ClientType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\ClientType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ClientType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ClientType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ClientType.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strip_tags expects string, mixed given\\.$#"
 			count: 2
 			path: src/Form/ClientType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ClientVerifyType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ClientVerifyType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ClientVerifyType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ClientVerifyType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\CoDeputyInviteType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/CoDeputyInviteType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\CoDeputyInviteType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/CoDeputyInviteType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\CoDeputyVerificationType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/CoDeputyVerificationType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\CoDeputyVerificationType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/CoDeputyVerificationType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ConfirmDeleteType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ConfirmDeleteType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\CookiePermissionsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/CookiePermissionsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\CookiePermissionsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/CookiePermissionsType.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, mixed given\\.$#"
-			count: 1
-			path: src/Form/DataTransformer/ArrayToStringTransformer.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, mixed given\\.$#"
-			count: 2
-			path: src/Form/DataTransformer/ArrayToStringTransformer.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, mixed given\\.$#"
-			count: 1
-			path: src/Form/DataTransformer/ArrayToStringTransformer.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Form/DataTransformer/ArrayToStringTransformer.php
 
 		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, float\\|int given\\.$#"
@@ -10864,16 +10459,6 @@ parameters:
 			message: "#^Property App\\\\Form\\\\DataTransformer\\\\ArrayToStringTransformer\\:\\:\\$keys has no type specified\\.$#"
 			count: 1
 			path: src/Form/DataTransformer/ArrayToStringTransformer.php
-
-		-
-			message: "#^Method App\\\\Form\\\\FeedbackReportType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/FeedbackReportType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\FeedbackReportType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/FeedbackReportType.php
 
 		-
 			message: "#^Method App\\\\Form\\\\FeedbackReportType\\:\\:setTranslator\\(\\) has no return type specified\\.$#"
@@ -10901,42 +10486,12 @@ parameters:
 			path: src/Form/FeedbackReportType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\FeedbackType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/FeedbackType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\FeedbackType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/FeedbackType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\LoginType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/LoginType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\LoginType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/LoginType.php
-
-		-
 			message: "#^Cannot call method getActionGiveGiftsToClient\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Ndr/ActionType.php
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Ndr/ActionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\ActionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/ActionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\ActionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/ActionType.php
 
@@ -10961,29 +10516,9 @@ parameters:
 			path: src/Form/Ndr/Asset/AbstractAssetType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AbstractAssetType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AbstractAssetType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AbstractAssetType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AbstractAssetType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AbstractAssetType\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/Asset/AbstractAssetType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeOther\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AssetTypeOther.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeOther\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AssetTypeOther.php
 
 		-
 			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeOther\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
@@ -11031,16 +10566,6 @@ parameters:
 			path: src/Form/Ndr/Asset/AssetTypeProperty.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeProperty\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeProperty\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AssetTypeProperty.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeProperty\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/Asset/AssetTypeProperty.php
@@ -11054,21 +10579,6 @@ parameters:
 			message: "#^Property App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeProperty\\:\\:\\$step has no type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\AssetTypeTitle\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/AssetTypeTitle.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\NoAssetToAddType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/NoAssetToAddType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Asset\\\\NoAssetToAddType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Asset/NoAssetToAddType.php
 
 		-
 			message: "#^Cannot call method requiresBankName\\(\\) on mixed\\.$#"
@@ -11086,29 +10596,9 @@ parameters:
 			path: src/Form/Ndr/BankAccountType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\BankAccountType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/BankAccountType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\BankAccountType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/BankAccountType.php
-
-		-
 			message: "#^Property App\\\\Form\\\\Ndr\\\\BankAccountType\\:\\:\\$step has no type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/BankAccountType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Debt\\\\DebtManagementType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Debt/DebtManagementType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Debt\\\\DebtManagementType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Debt/DebtManagementType.php
 
 		-
 			message: "#^Cannot call method getAmount\\(\\) on mixed\\.$#"
@@ -11119,36 +10609,6 @@ parameters:
 			message: "#^Cannot call method getHasMoreDetails\\(\\) on mixed\\.$#"
 			count: 2
 			path: src/Form/Ndr/Debt/DebtSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Debt\\\\DebtSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Debt/DebtSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Debt\\\\DebtSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Debt/DebtSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Debt\\\\DebtsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Debt/DebtsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\Debt\\\\DebtsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/Debt/DebtsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\DeputyExpenseType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/DeputyExpenseType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\DeputyExpenseType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/DeputyExpenseType.php
 
 		-
 			message: "#^Cannot call method getExpectCompensationDamages\\(\\) on mixed\\.$#"
@@ -11162,16 +10622,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Ndr/IncomeBenefitType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\IncomeBenefitType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/IncomeBenefitType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\IncomeBenefitType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/IncomeBenefitType.php
 
@@ -11196,16 +10646,6 @@ parameters:
 			path: src/Form/Ndr/IncomeBenefitType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\OneOffType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/OneOffType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\OneOffType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/OneOffType.php
-
-		-
 			message: "#^Property App\\\\Form\\\\Ndr\\\\OtherInfoType\\:\\:\\$translationDomain has no type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/OtherInfoType.php
@@ -11216,27 +10656,7 @@ parameters:
 			path: src/Form/Ndr/ReportDeclarationType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\ReportDeclarationType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/ReportDeclarationType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\ReportDeclarationType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/ReportDeclarationType.php
-
-		-
 			message: "#^Cannot call method getHasMoreDetails\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Ndr/StateBenefitType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\StateBenefitType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/StateBenefitType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\StateBenefitType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/StateBenefitType.php
 
@@ -11291,16 +10711,6 @@ parameters:
 			path: src/Form/Ndr/VisitsCareType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\VisitsCareType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/VisitsCareType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Ndr\\\\VisitsCareType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Ndr/VisitsCareType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Ndr\\\\VisitsCareType\\:\\:translate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Ndr/VisitsCareType.php
@@ -11321,31 +10731,6 @@ parameters:
 			path: src/Form/Ndr/VisitsCareType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\NdrType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/NdrType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\ClientArchiveType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/ClientArchiveType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\ClientArchiveType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/ClientArchiveType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\ClientContactType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/ClientContactType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\ClientContactType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/ClientContactType.php
-
-		-
 			message: "#^PHPDoc tag @param for parameter \\$resolver with type App\\\\Form\\\\Org\\\\OptionsResolverInterface is not subtype of native type Symfony\\\\Component\\\\OptionsResolver\\\\OptionsResolver\\.$#"
 			count: 1
 			path: src/Form/Org/ClientContactType.php
@@ -11356,26 +10741,6 @@ parameters:
 			path: src/Form/Org/ClientContactType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Org\\\\ClientType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/ClientType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\ClientType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/ClientType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\NoteType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/NoteType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\NoteType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/NoteType.php
-
-		-
 			message: "#^Cannot call method getActive\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Org/OrganisationMemberType.php
@@ -11384,36 +10749,6 @@ parameters:
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Org/OrganisationMemberType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\OrganisationMemberType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/OrganisationMemberType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Org\\\\OrganisationMemberType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Org/OrganisationMemberType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\PasswordForgottenType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/PasswordForgottenType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\PasswordForgottenType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/PasswordForgottenType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ProcessCSVType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ProcessCSVType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ProcessCSVType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ProcessCSVType.php
 
 		-
 			message: "#^Cannot call method getDoYouExpectFinancialDecisions\\(\\) on mixed\\.$#"
@@ -11427,16 +10762,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/ActionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ActionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ActionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ActionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/ActionType.php
 
@@ -11459,16 +10784,6 @@ parameters:
 			message: "#^Property App\\\\Form\\\\Report\\\\ActionType\\:\\:\\$translator is never read, only written\\.$#"
 			count: 1
 			path: src/Form/Report/ActionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeOther\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeOther.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeOther\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeOther.php
 
 		-
 			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeOther\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
@@ -11516,16 +10831,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeProperty.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeProperty\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeProperty\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeProperty\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/Asset/AssetTypeProperty.php
@@ -11551,16 +10856,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeTitle.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeTitle\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeTitle.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeTitle\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeTitle.php
-
-		-
 			message: "#^Property App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeTitle\\:\\:\\$translator \\(App\\\\Form\\\\Report\\\\Asset\\\\Translator\\) does not accept Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\.$#"
 			count: 1
 			path: src/Form/Report/Asset/AssetTypeTitle.php
@@ -11582,16 +10877,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\BankAccountType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\BankAccountType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/BankAccountType.php
 
@@ -11646,49 +10931,9 @@ parameters:
 			path: src/Form/Report/ClientBenefitsCheckType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ClientBenefitsCheckType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ClientBenefitsCheckType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
 			count: 1
 			path: src/Form/Report/ContactExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ContactExistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ContactExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ContactExistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ContactExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ContactType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ContactType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ContactType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ContactType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Debt\\\\DebtManagementType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Debt/DebtManagementType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Debt\\\\DebtManagementType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Debt/DebtManagementType.php
 
 		-
 			message: "#^Cannot call method getAmount\\(\\) on mixed\\.$#"
@@ -11701,49 +10946,9 @@ parameters:
 			path: src/Form/Report/Debt/DebtSingleType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Debt\\\\DebtSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Debt/DebtSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Debt\\\\DebtSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Debt/DebtSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Debt\\\\DebtsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Debt/DebtsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Debt\\\\DebtsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Debt/DebtsType.php
-
-		-
 			message: "#^Cannot call method getSignificantDecisionsMade\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/DecisionExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DecisionExistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DecisionExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DecisionExistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DecisionExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DecisionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DecisionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DecisionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DecisionType.php
 
 		-
 			message: "#^Cannot call method canLinkToBankAccounts\\(\\) on mixed\\.$#"
@@ -11757,16 +10962,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getType\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DeputyExpenseType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DeputyExpenseType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/DeputyExpenseType.php
 
@@ -11776,36 +10971,6 @@ parameters:
 			path: src/Form/Report/DocumentType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DocumentType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DocumentType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DocumentType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DocumentType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DoesMoneyInExistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DoesMoneyInExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DoesMoneyInExistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DoesMoneyInExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DoesMoneyOutExistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DoesMoneyOutExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\DoesMoneyOutExistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/DoesMoneyOutExistType.php
-
-		-
 			message: "#^Cannot call method getAmount\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/FeeSingleType.php
@@ -11814,26 +10979,6 @@ parameters:
 			message: "#^Cannot call method getHasMoreDetails\\(\\) on mixed\\.$#"
 			count: 2
 			path: src/Form/Report/FeeSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\FeeSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/FeeSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\FeeSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/FeeSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\FeesType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/FeesType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\FeesType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/FeesType.php
 
 		-
 			message: "#^Cannot call method canLinkToBankAccounts\\(\\) on mixed\\.$#"
@@ -11847,16 +10992,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getType\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/GiftType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\GiftType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/GiftType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\GiftType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/GiftType.php
 
@@ -11867,16 +11002,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/LifestyleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\LifestyleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/LifestyleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\LifestyleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/LifestyleType.php
 
@@ -11901,59 +11026,9 @@ parameters:
 			path: src/Form/Report/MentalAssessment.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MentalAssessment\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MentalAssessment.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MentalAssessment\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MentalAssessment.php
-
-		-
 			message: "#^Cannot call method getHasCapacityChanged\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/MentalCapacityType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MentalCapacityType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MentalCapacityType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MentalCapacityType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MentalCapacityType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyShortCategoryType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyShortCategoryType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyShortCategoryType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyShortCategoryType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyShortTransactionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyShortTransactionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyShortTransactionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyShortTransactionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyShortType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyShortType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyShortType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyShortType.php
 
 		-
 			message: "#^Parameter \\#1 \\$child of method Symfony\\\\Component\\\\Form\\\\FormBuilderInterface\\:\\:add\\(\\) expects string\\|Symfony\\\\Component\\\\Form\\\\FormBuilderInterface, mixed given\\.$#"
@@ -11982,16 +11057,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyTransactionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyTransactionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/MoneyTransactionType.php
 
@@ -12036,57 +11101,7 @@ parameters:
 			path: src/Form/Report/MoneyTransferType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyTransferType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyTransferType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\MoneyTransferType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/MoneyTransferType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\NoAssetToAddType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/NoAssetToAddType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\NoAssetToAddType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/NoAssetToAddType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\NoMoneyInType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/NoMoneyInType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\NoMoneyInType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/NoMoneyInType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\NoMoneyOutType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/NoMoneyOutType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\NoMoneyOutType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/NoMoneyOutType.php
-
-		-
 			message: "#^Cannot call method getActionMoreInfo\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/OtherInfoType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\OtherInfoType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/OtherInfoType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\OtherInfoType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/OtherInfoType.php
 
@@ -12096,159 +11111,19 @@ parameters:
 			path: src/Form/Report/PaFeeExistType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\PaFeeExistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/PaFeeExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\PaFeeExistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/PaFeeExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostHowType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostHowType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostHowType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostHowType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostInterimSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostInterimSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostInterimSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostInterimSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostInterimType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostInterimType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostInterimType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostInterimType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostPreviousType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostPreviousType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostPreviousType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostPreviousType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostSccoType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostSccoType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostSccoType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostSccoType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostsEstimateHowType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostsEstimateHowType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostsEstimateHowType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostsEstimateHowType.php
-
-		-
 			message: "#^Cannot call method getProfDeputyCostsEstimateHasMoreInfo\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/ProfDeputyCostsEstimateMoreInfoType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostsEstimateMoreInfoType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostsEstimateMoreInfoType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyCostsEstimateMoreInfoType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyCostsEstimateMoreInfoType.php
-
-		-
 			message: "#^Cannot call method getHasMoreDetails\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/ProfDeputyEstimateCostSingleType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyEstimateCostSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyEstimateCostSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyEstimateCostSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyEstimateCostSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyEstimateCostsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyEstimateCostsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyEstimateCostsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyEstimateCostsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyFixedCostType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyFixedCostType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyFixedCostType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyFixedCostType.php
-
-		-
 			message: "#^Cannot call method getHasMoreDetails\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/ProfDeputyOtherCostSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyOtherCostSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyOtherCostSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyOtherCostSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyOtherCostSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyOtherCostsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyOtherCostsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfDeputyOtherCostsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfDeputyOtherCostsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfServiceFeeExistType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfServiceFeeExistType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfServiceFeeExistType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfServiceFeeExistType.php
 
 		-
 			message: "#^Cannot call method getPaymentReceived\\(\\) on mixed\\.$#"
@@ -12257,16 +11132,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/ProfServiceFeeType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfServiceFeeType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfServiceFeeType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfServiceFeeType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/ProfServiceFeeType.php
 
@@ -12291,49 +11156,9 @@ parameters:
 			path: src/Form/Report/ProfServicePreviousFeesEstimateType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfServicePreviousFeesEstimateType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfServicePreviousFeesEstimateType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ProfServicePreviousFeesEstimateType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ProfServicePreviousFeesEstimateType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReasonForBalanceType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReasonForBalanceType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReasonForBalanceType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReasonForBalanceType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReasonForNoContactType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReasonForNoContactType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReasonForNoContactType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReasonForNoContactType.php
-
-		-
 			message: "#^Parameter \\#1 \\$action of method Symfony\\\\Component\\\\Form\\\\FormConfigBuilderInterface\\:\\:setAction\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Form/Report/ReasonForNoContactType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReasonForNoDecisionType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReasonForNoDecisionType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReasonForNoDecisionType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReasonForNoDecisionType.php
 
 		-
 			message: "#^Parameter \\#1 \\$action of method Symfony\\\\Component\\\\Form\\\\FormConfigBuilderInterface\\:\\:setAction\\(\\) expects string, mixed given\\.$#"
@@ -12356,59 +11181,9 @@ parameters:
 			path: src/Form/Report/ReportDeclarationType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReportDeclarationType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReportDeclarationType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReportDeclarationType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReportDeclarationType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReportResubmitType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReportResubmitType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReportResubmitType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReportResubmitType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReportType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReportType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\ReportType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/ReportType.php
-
-		-
 			message: "#^Cannot call method getHasMoreDetails\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Report/TransactionSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\TransactionSingleType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/TransactionSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\TransactionSingleType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/TransactionSingleType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\UploadType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/UploadType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\UploadType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/UploadType.php
 
 		-
 			message: "#^Cannot access offset 'day' on mixed\\.$#"
@@ -12456,16 +11231,6 @@ parameters:
 			path: src/Form/Report/VisitsCareType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\VisitsCareType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/VisitsCareType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\VisitsCareType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/VisitsCareType.php
-
-		-
 			message: "#^Method App\\\\Form\\\\Report\\\\VisitsCareType\\:\\:translate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/Report/VisitsCareType.php
@@ -12486,36 +11251,6 @@ parameters:
 			path: src/Form/Report/VisitsCareType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\ResetPasswordType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ResetPasswordType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\ResetPasswordType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/ResetPasswordType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\SelfRegisterDataType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/SelfRegisterDataType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\SelfRegisterDataType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/SelfRegisterDataType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\SetPasswordType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/SetPasswordType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\SetPasswordType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/SetPasswordType.php
-
-		-
 			message: "#^Cannot call method isDeputyOrg\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Form/Settings/ProfileType.php
@@ -12526,114 +11261,9 @@ parameters:
 			path: src/Form/Settings/ProfileType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Settings\\\\ProfileType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Settings/ProfileType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Settings\\\\ProfileType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Settings/ProfileType.php
-
-		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\Form\\\\Subscriber\\\\ReportTypeChoicesSubscriber\\:\\:resolveReportTypeOptions\\(\\) expects App\\\\Entity\\\\Report\\\\Report, mixed given\\.$#"
 			count: 1
 			path: src/Form/Subscriber/ReportTypeChoicesSubscriber.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Type\\\\SortCodeType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Type/SortCodeType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\UploadCsvType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/UploadCsvType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\UploadCsvType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/UploadCsvType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\AgreeTermsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/AgreeTermsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\AgreeTermsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/AgreeTermsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\SearchUserType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/SearchUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\SearchUserType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/SearchUserType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UpdateTermsType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UpdateTermsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UpdateTermsType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UpdateTermsType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UserDetailsBasicType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UserDetailsBasicType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UserDetailsBasicType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UserDetailsBasicType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UserDetailsFullType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UserDetailsFullType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UserDetailsFullType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UserDetailsFullType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UserDetailsPaType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UserDetailsPaType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\User\\\\UserDetailsPaType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/User/UserDetailsPaType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\UserResearchResponseType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/UserResearchResponseType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\UserResearchResponseType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/UserResearchResponseType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\YesNoType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/YesNoType.php
-
-		-
-			message: "#^Method App\\\\Form\\\\YesNoType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/YesNoType.php
 
 		-
 			message: "#^Parameter \\#1 \\$child of method Symfony\\\\Component\\\\Form\\\\FormBuilderInterface\\:\\:add\\(\\) expects string\\|Symfony\\\\Component\\\\Form\\\\FormBuilderInterface, mixed given\\.$#"
@@ -13006,11 +11636,6 @@ parameters:
 			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
 
 		-
-			message: "#^Property App\\\\Security\\\\ClientContactVoter\\:\\:\\$decisionManager is never read, only written\\.$#"
-			count: 1
-			path: src/Security/ClientContactVoter.php
-
-		-
 			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Security/ClientContactVoter.php
@@ -13056,11 +11681,6 @@ parameters:
 			path: src/Security/LoginFormAuthenticator.php
 
 		-
-			message: "#^Property App\\\\Security\\\\NoteVoter\\:\\:\\$decisionManager is never read, only written\\.$#"
-			count: 1
-			path: src/Security/NoteVoter.php
-
-		-
 			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Security/NoteVoter.php
@@ -13081,27 +11701,12 @@ parameters:
 			path: src/Security/UserProvider.php
 
 		-
-			message: "#^Method App\\\\Security\\\\UserProvider\\:\\:loadUserByIdentifier\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Security/UserProvider.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Security/UserProvider.php
 
 		-
 			message: "#^Method App\\\\Security\\\\UserVoter\\:\\:determineCanAddPermission\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Security/UserVoter.php
-
-		-
-			message: "#^Parameter \\#2 \\$deletee of method App\\\\Security\\\\UserVoter\\:\\:determineDeletePermission\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Security/UserVoter.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of method App\\\\Security\\\\UserVoter\\:\\:determineAddEditPermission\\(\\) expects App\\\\Entity\\\\User\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Security/UserVoter.php
 
@@ -13116,17 +11721,7 @@ parameters:
 			path: src/Service/AWS/RequestSigner.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ApiCollector\\:\\:collect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ApiCollector.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ApiCollector\\:\\:getCalls\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ApiCollector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ApiCollector\\:\\:reset\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/ApiCollector.php
 
@@ -14001,17 +12596,7 @@ parameters:
 			path: src/Service/CssClassCollector.php
 
 		-
-			message: "#^Method App\\\\Service\\\\CssClassCollector\\:\\:collect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/CssClassCollector.php
-
-		-
 			message: "#^Method App\\\\Service\\\\CssClassCollector\\:\\:getData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/CssClassCollector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\CssClassCollector\\:\\:reset\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/CssClassCollector.php
 
@@ -14187,21 +12772,6 @@ parameters:
 
 		-
 			message: "#^Cannot use array destructuring on App\\\\Entity\\\\User\\.$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DeputyProvider\\:\\:refreshUser\\(\\) should return App\\\\Entity\\\\User but returns Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\.$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: "#^Parameter \\#1 \\$id \\(int\\) of method App\\\\Service\\\\DeputyProvider\\:\\:loadUserByUsername\\(\\) should be compatible with parameter \\$username \\(string\\) of method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface\\:\\:loadUserByUsername\\(\\)$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: "#^Property App\\\\Service\\\\DeputyProvider\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
 			count: 1
 			path: src/Service/DeputyProvider.php
 
@@ -15096,26 +13666,6 @@ parameters:
 			path: src/Service/SiriusApiErrorTranslator.php
 
 		-
-			message: "#^Cannot call method getCode\\(\\) on App\\\\Model\\\\Sirius\\\\SiriusApiError\\|string\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Cannot call method getDetail\\(\\) on App\\\\Model\\\\Sirius\\\\SiriusApiError\\|string\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:deserializeError\\(\\) should return App\\\\Model\\\\Sirius\\\\SiriusApiError\\|string but returns mixed\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:jsonIsInUnexpectedFormat\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
 			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:translateApiError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/SiriusApiErrorTranslator.php
@@ -15277,11 +13827,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|object supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: "#^Cannot call method deserialize\\(\\) on object\\|null\\.$#"
 			count: 1
 			path: src/TestHelpers/UserHelpers.php
 
