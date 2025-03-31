@@ -191,7 +191,7 @@ jobs:
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@1b549b9259bda1cb5ddde3b41741a82a2d15a841 # v3
+        uses: github/codeql-action/upload-sarif@70df9def86d22bf0ea4e7f8b956e7b92e7c1ea22 # v2.20.7
         with:
           sarif_file: "trivy-results.sarif"
 
