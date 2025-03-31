@@ -4,7 +4,7 @@ resource "aws_ecs_task_definition" "admin" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
+  container_definitions    = "[${local.app_init_container}, ${local.admin_web}, ${local.admin_container}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   runtime_platform {
@@ -71,13 +71,39 @@ resource "aws_ecs_service" "admin" {
 }
 
 locals {
+  app_init_container = jsonencode(
+    {
+      name  = "permissions-init",
+      image = "public.ecr.aws/docker/library/busybox:stable",
+      entryPoint = [
+        "sh",
+        "-c"
+      ],
+      command = [
+        "chmod 766 /tmp/"
+      ],
+      mountPoints = [
+        {
+          containerPath = "/tmp",
+          sourceVolume  = "app_tmp"
+        }
+      ],
+      essential = false
+    }
+  )
+
   admin_web = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client-webserver,
-      mountPoints = [],
-      name        = "admin_web",
+      cpu       = 0,
+      essential = true,
+      image     = local.images.client-webserver,
+      mountPoints : [
+        {
+          "containerPath" : "/tmp",
+          "sourceVolume" : "app_tmp"
+        }
+      ],
+      name = "admin_web",
       portMappings = [
         {
           name : "admin-port",
@@ -110,13 +136,19 @@ locals {
       ]
     }
   )
+
   admin_container = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = local.images.client,
-      mountPoints = [],
-      name        = "admin_app",
+      cpu       = 0,
+      essential = true,
+      image     = local.images.client,
+      mountPoints : [
+        {
+          "containerPath" : "/tmp",
+          "sourceVolume" : "app_tmp"
+        }
+      ],
+      name = "admin_app",
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
@@ -131,6 +163,12 @@ locals {
           awslogs-stream-prefix = "${aws_iam_role.admin.name}.app"
         }
       },
+      dependsOn = [
+        {
+          containerName = "permissions-init",
+          condition     = "SUCCESS"
+        }
+      ],
       secrets = [
         { name = "API_CLIENT_SECRET", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.admin_api_client_secret.name}" },
         { name = "NOTIFY_API_KEY", valueFrom = "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_notify_api_key.name}" },
