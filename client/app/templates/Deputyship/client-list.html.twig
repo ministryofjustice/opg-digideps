@@ -5,9 +5,11 @@
 {% block pageTitle %}{{ 'clients.title' | trans }}{% endblock %}
 
 {% block pageContent %}
-    <p>CLIENT LIST FOR DEPUTY {{ deputyUid }} GOES HERE</p>
-
-    {% for client in clients %}
-        <p>{{ client.firstName }}</p>
-    {% endfor %}
+    {% if clients|length == 0 %}
+        <p>No clients to show</p>
+    {% else %}
+        {% for client in clients %}
+            <p>{{ client.firstName }} {{ client.lastName }}</p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

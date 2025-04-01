@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -28,7 +28,7 @@ class DeputyshipController extends AbstractController
      *
      * @Template("@App/Deputyship/client-list.html.twig")
      */
-    public function clientListAction(Request $request): RedirectResponse|array
+    public function clientListAction(): RedirectResponse|array
     {
         /** @var ?User $user */
         $user = $this->tokenStorage?->getToken()?->getUser();
@@ -41,8 +41,18 @@ class DeputyshipController extends AbstractController
             return new RedirectResponse($this->generateUrl('invalid_data'));
         }
 
+        /** @var ?Client[] $clients */
         $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client', 'client-name']);
+        if (is_null($clients)) {
+            $clients = [];
+        }
 
-        return ['deputyUid' => $user->getDeputyUid(), 'clients' => $clients];
+        if (count($clients) > 0) {
+            $clients = uasort($clients, function ($client1, $client2) {
+                return strnatcmp($client1->getFirstName(), $client2->getFirstName());
+            });
+        }
+
+        return ['clients' => $clients];
     }
 }
