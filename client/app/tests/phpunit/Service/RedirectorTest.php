@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -34,6 +35,8 @@ class RedirectorTest extends TestCase
         $this->router = $this->createMock(RouterInterface::class);
 
         $this->session = $this->createMock(Session::class);
+        $mockRequestStack = $this->createMock(RequestStack::class);
+        $mockRequestStack->method('getSession')->willReturn($this->session);
 
         $this->token = $this->createMock(TokenInterface::class);
 
@@ -45,7 +48,15 @@ class RedirectorTest extends TestCase
 
         $this->logger = $this->createMock(LoggerInterface::class);
 
-        $this->sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi, $this->logger);
+        $this->sut = new Redirector(
+            $this->tokenStorage,
+            $this->authChecker,
+            $this->router,
+            $mockRequestStack,
+            'prod',
+            $this->clientApi,
+            $this->logger
+        );
     }
 
     public static function firstPageAfterLoginProvider(): array
@@ -328,7 +339,10 @@ class RedirectorTest extends TestCase
                 ->willReturn($expectedRoute);
         }
 
-        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, $env, $this->clientApi, $this->logger);
+        $mockRequestStack = $this->createMock(RequestStack::class);
+        $mockRequestStack->method('getSession')->willReturn($this->session);
+
+        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $mockRequestStack, $env, $this->clientApi, $this->logger);
 
         $actual = $sut->getHomepageRedirect();
 
@@ -365,8 +379,11 @@ class RedirectorTest extends TestCase
             ->with('choose_a_client')
             ->willReturn('/choose-a-client');
 
+        $mockRequestStack = $this->createMock(RequestStack::class);
+        $mockRequestStack->method('getSession')->willReturn($this->session);
+
         // sut
-        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod', $this->clientApi, $this->logger);
+        $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $mockRequestStack, 'prod', $this->clientApi, $this->logger);
 
         // assertions
         $actual = $sut->getHomepageRedirect();
