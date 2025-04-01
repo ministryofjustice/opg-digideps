@@ -8,6 +8,7 @@ use App\Service\Client\Internal\ClientApi;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -62,7 +63,10 @@ class RedirectorTest extends TestCase
             ->shouldReceive('generate')->andReturnUsing(function ($route, $params = []) {
                 return [$route, $params];
             })->getMock();
-        $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
+
+        $session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
+        $mockRequestStack = $this->createMock(RequestStack::class);
+        $mockRequestStack->method('getSession')->willReturn($session);
 
         $this->tokenStorage->shouldReceive('getToken->getUser')->andReturn($this->user);
 
@@ -74,7 +78,7 @@ class RedirectorTest extends TestCase
             $this->tokenStorage,
             $this->authChecker,
             $this->router,
-            $this->session,
+            $mockRequestStack,
             'prod',
             $this->clientApi,
             $this->logger,
