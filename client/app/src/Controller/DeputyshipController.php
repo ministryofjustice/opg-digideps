@@ -48,7 +48,7 @@ class DeputyshipController extends AbstractController
         }
 
         if (count($clients) > 0) {
-            $clients = uasort($clients, function ($client1, $client2) {
+            usort($clients, function ($client1, $client2) {
                 return strnatcmp($client1->getFirstName(), $client2->getFirstName());
             });
         }
