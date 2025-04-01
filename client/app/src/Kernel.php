@@ -7,7 +7,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use function dirname;
 
 class Kernel extends BaseKernel
 {
@@ -34,24 +34,9 @@ class Kernel extends BaseKernel
         }
     }
 
-    public function getRootDir()
-    {
-        return dirname(__DIR__);
-    }
-
-    public function getCacheDir()
-    {
-        return dirname(__DIR__).'/var/cache';
-    }
-
-    public function getLogDir()
-    {
-        return dirname(__DIR__).'/var/log';
-    }
-
     public function getProjectDir(): string
     {
-        return \dirname(__DIR__);
+        return dirname(__DIR__);
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
