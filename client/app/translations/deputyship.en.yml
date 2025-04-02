@@ -1,3 +1,5 @@
 clients:
   title: Your clients
   caseNumber: Case number
+  manageLinkText: Manage
+  noClientsMessage: No clients to show
