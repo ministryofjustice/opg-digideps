@@ -52,6 +52,11 @@ def assume_custom_sql_role(environment):
     return session
 
 
+def get_user_token():
+    user_input = input("Enter your token string: ")
+    return user_input
+
+
 def get_lambda_client(environment):
     if environment == "local":
         # Return a wrapper client for local Lambda invocation via HTTP POST
@@ -126,6 +131,7 @@ def run_insert(
         "validation_query": sql_verification_cleaned,
         "expected_before": expected_before,
         "expected_after": expected_after,
+        "user_token": get_user_token(),
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
@@ -136,7 +142,11 @@ def run_get(lambda_client, function_name, query_id):
         print("Supply the query_id argument")
         sys.exit(1)
 
-    payload = {"procedure": "get_custom_query", "query_id": query_id}
+    payload = {
+        "procedure": "get_custom_query",
+        "query_id": query_id,
+        "user_token": get_user_token(),
+    }
 
     return lambda_invoke(lambda_client, function_name, payload)
 
@@ -150,6 +160,7 @@ def run_sign_off(lambda_client, function_name, query_id, calling_user):
         "procedure": "sign_off_custom_query",
         "query_id": query_id,
         "calling_user": calling_user,
+        "user_token": get_user_token(),
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
@@ -160,7 +171,11 @@ def run_revoke(lambda_client, function_name, query_id):
         print("Supply the query_id argument")
         sys.exit(1)
 
-    payload = {"procedure": "revoke_custom_query", "query_id": query_id}
+    payload = {
+        "procedure": "revoke_custom_query",
+        "query_id": query_id,
+        "user_token": get_user_token(),
+    }
 
     return lambda_invoke(lambda_client, function_name, payload)
 
@@ -174,6 +189,7 @@ def run_execute(lambda_client, function_name, query_id, calling_user):
         "procedure": "execute_custom_query",
         "query_id": query_id,
         "calling_user": calling_user,
+        "user_token": get_user_token(),
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
