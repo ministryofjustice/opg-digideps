@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\DeputyshipDetails;
+namespace App\Tests\Behat\v2\Deputyship;
 
 use App\Entity\User;
 use App\Tests\Behat\v2\Common\BaseFeatureContext;
