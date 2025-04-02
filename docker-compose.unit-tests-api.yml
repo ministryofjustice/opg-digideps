@@ -21,4 +21,6 @@ services:
       - ./api/app/tests/Behat/test.env
     volumes:
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./api/app/src:/var/www/src
+      - ./api/app/tests:/var/www/tests
     command: sleep infinity
