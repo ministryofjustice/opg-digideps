@@ -9,9 +9,6 @@ export PGDATABASE=${DATABASE_NAME:=api}
 export PGUSER=${DATABASE_USERNAME:=api}
 export SSL=${DATABASE_SSL:=allow}
 
-# We need below to create the params file on container start
-confd -onetime -backend env
-
 #Apply migrations to rebuild database
 php app/console doctrine:database:drop --force --if-exists
 php app/console doctrine:database:create

@@ -24,7 +24,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-client-unit-tests-build-${{ github.sha }}
@@ -46,6 +46,7 @@ jobs:
           -f client/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+          --build-arg ENVIRONMENT=local \
           --tag frontend-unit-tests:latest \
           --target ci-tests \
           --output type=docker .
@@ -68,13 +69,13 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: archive pact results
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: pact.json
           path: pact.json
 
       - name: archive test results
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: client-unit-tests
           path: client-unit-tests.xml

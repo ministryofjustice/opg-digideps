@@ -31,11 +31,6 @@ parameters:
 			path: src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: "#^Method App\\\\Command\\\\ReportStatusUpdaterCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Command/ReportStatusUpdaterCommand.php
-
-		-
 			message: "#^Method App\\\\Command\\\\ReportStatusUpdaterCommand\\:\\:execute\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: src/Command/ReportStatusUpdaterCommand.php
@@ -61,11 +56,6 @@ parameters:
 			path: src/Command/ResyncResubmittableErrorDocuments.php
 
 		-
-			message: "#^Method App\\\\Command\\\\SatisfactionPerformanceStatsCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Command/SatisfactionPerformanceStatsCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Command/SatisfactionPerformanceStatsCommand.php
@@ -82,11 +72,6 @@ parameters:
 
 		-
 			message: "#^Caught class App\\\\Command\\\\Exception not found\\.$#"
-			count: 1
-			path: src/Command/UserRetentionPolicyCommand.php
-
-		-
-			message: "#^Method App\\\\Command\\\\UserRetentionPolicyCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Command/UserRetentionPolicyCommand.php
 
@@ -213,11 +198,6 @@ parameters:
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
-			count: 3
 			path: src/Controller/ClientController.php
 
 		-
@@ -2761,32 +2741,12 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Cannot call method getClients\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getFirstClient\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
 		-
 			message: "#^Cannot call method getRoleName\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getRoleName\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
@@ -2986,33 +2946,13 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:remove\\(\\) expects object, object\\|null given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
 			count: 2
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$token of method Symfony\\\\Component\\\\Security\\\\Core\\\\Authorization\\\\Voter\\\\Voter\\:\\:vote\\(\\) expects Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Variable \\$user in PHPDoc tag @var does not match assigned variable \\$deletee\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Variable \\$user in PHPDoc tag @var does not match assigned variable \\$token\\.$#"
-			count: 1
 			path: src/Controller/UserController.php
 
 		-
@@ -3087,11 +3027,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:doLoad\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/AbstractDataFixture.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:setContainer\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/DataFixtures/AbstractDataFixture.php
 
@@ -7311,11 +7246,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Client\\>\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Cannot call method first\\(\\) on array\\<App\\\\Entity\\\\Client\\>\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -7341,17 +7271,7 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:eraseCredentials\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:getActiveReportId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:getClientByCaseNumber\\(\\) has parameter \\$caseNumber with no type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -7381,22 +7301,12 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:getSalt\\(\\) should return string\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:hasReports\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:padDeputyNumber\\(\\) has parameter \\$deputyNo with no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:removeClient\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -7864,11 +7774,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\User\\:\\:setDeputyUid\\(\\) expects int\\|null, string given\\.$#"
 			count: 1
 			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: "#^Generator expects value type Symfony\\\\Component\\\\HttpKernel\\\\Bundle\\\\BundleInterface, object given\\.$#"
-			count: 1
-			path: src/Kernel.php
 
 		-
 			message: "#^Method App\\\\Kernel\\:\\:__construct\\(\\) has parameter \\$debug with no type specified\\.$#"
@@ -8631,22 +8536,12 @@ parameters:
 			path: src/Security/RedisUserProvider.php
 
 		-
-			message: "#^Method App\\\\Security\\\\RedisUserProvider\\:\\:refreshUser\\(\\) should return Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface but return statement is missing\\.$#"
-			count: 1
-			path: src/Security/RedisUserProvider.php
-
-		-
 			message: "#^Method App\\\\Security\\\\RedisUserProvider\\:\\:removeToken\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Security/RedisUserProvider.php
 
 		-
 			message: "#^Method App\\\\Security\\\\RedisUserProvider\\:\\:removeToken\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Security/RedisUserProvider.php
-
-		-
-			message: "#^Property App\\\\Security\\\\RedisUserProvider\\:\\:\\$em is never read, only written\\.$#"
 			count: 1
 			path: src/Security/RedisUserProvider.php
 
@@ -8674,16 +8569,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
 			count: 3
 			path: src/Security/RegistrationTokenAuthenticator.php
-
-		-
-			message: "#^Parameter \\#2 \\$deletee of method App\\\\Security\\\\UserVoter\\:\\:determineDeletePermission\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Security/UserVoter.php
-
-		-
-			message: "#^Parameter \\#2 \\$editee of method App\\\\Security\\\\UserVoter\\:\\:determineAddEditPermission\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Security/UserVoter.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Audit\\\\AuditEvents\\:\\:userAccountAutomatedDeletion\\(\\) has no return type specified\\.$#"
@@ -9542,6 +9427,11 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getCurrentRequest\\(\\)\\.$#"
+			count: 1
+			path: src/Service/RequestIdLoggerProcessor.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
 			count: 1
 			path: src/Service/RequestIdLoggerProcessor.php
 
@@ -10551,11 +10441,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:setCoDeputyClientConfirmed\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:setIsPrimary\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10657,7 +10542,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'multiClientEnabled' on mixed\\.$#"
-			count: 2
+			count: 3
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10682,7 +10567,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'reportType' on mixed\\.$#"
-			count: 3
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10786,6 +10671,11 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
+			message: "#^Parameter \\#1 \\$deputy of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\Deputy\\:\\:setDeputyUid\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10821,11 +10711,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Parameter \\#1 \\$originalDeputy of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\v2\\\\Fixture\\\\ReportSection\\:\\:completeSection\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10851,6 +10736,11 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
+			message: "#^Parameter \\#2 \\$fromRequest of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
 			message: "#^Parameter \\#2 \\$organisation of method App\\\\FixtureFactory\\\\ClientFactory\\:\\:createGenericOrgClient\\(\\) expects App\\\\Entity\\\\Organisation, object given\\.$#"
 			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10863,11 +10753,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
-			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
