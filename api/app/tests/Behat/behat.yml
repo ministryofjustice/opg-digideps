@@ -107,9 +107,9 @@ v2-tests-browserkit:
 
         deputyship:
             description: Coverage of pages which show deputies details of their clients and reports
-            paths: ["%paths.base%/features-v2/deputyship"]
+            paths: ["%paths.base%/features-v2/deputyship-details"]
             contexts:
-                - App\Tests\Behat\v2\DeputyshipDetails\DeputyshipFeatureContext
+                - App\Tests\Behat\v2\Deputyship\DeputyshipFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback
