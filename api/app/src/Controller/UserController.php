@@ -390,10 +390,10 @@ class UserController extends RestController
      */
     public function delete($id)
     {
-        /** @var User $user */
+        /** @var User $deletee */
         $deletee = $this->userRepository->find($id);
 
-        /** @var TokenInterface $user */
+        /** @var TokenInterface $token */
         $token = $this->securityHelper->getToken();
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);

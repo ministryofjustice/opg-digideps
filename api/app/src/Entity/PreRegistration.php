@@ -236,7 +236,7 @@ class PreRegistration
     private ?string $orderType;
 
     /**
-     * @ORM\Column(name="hybrid", type="string", length=6, nullable=true)
+     * @ORM\Column(name="hybrid", type="string", length=12, nullable=true)
      */
     private ?string $hybrid;
 
