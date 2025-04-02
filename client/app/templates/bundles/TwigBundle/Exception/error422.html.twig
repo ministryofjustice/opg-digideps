@@ -1,0 +1,6 @@
+{% trans_default_domain "error" %}
+
+{% include '@Twig/Exception/template.html.twig' with {
+    message: '422.title' | trans,
+    description: description
+} %}
