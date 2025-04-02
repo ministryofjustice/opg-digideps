@@ -88,17 +88,30 @@ RUN chown -R www-data:www-data scripts \
     && sed "s|TAG|${TAG}|" /var/www/public/meta.json.tmpl > /var/www/public/meta.json
 RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml
 
-# Prebuild cache
-RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
+RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup \
+    && mkdir -p /var/www/cache_backup && chown www-data:www-data /var/www/cache_backup \
+    && cp -R /var/www/var/cache/. /var/www/cache_backup/
 
-FROM application AS ci-tests
-# We use this setup for certain commands as part of the CI processing of unit tests
-CMD ["sh", "-c", "php-fpm"]
-
-FROM application AS production
-COPY scripts/hardening/harden.sh /harden.sh
-RUN /harden.sh www-data && rm /harden.sh
+#FROM application AS ci-tests
+## We use this setup for certain commands as part of the CI processing of unit tests
+#CMD ["sh", "-c", "php-fpm"]
+#
+#FROM application AS production
+#COPY scripts/hardening/harden.sh /harden.sh
+#RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
 
-CMD ["sh", "-c", "php-fpm"]
+CMD (while true; do find / -mmin -1 -type f | grep -v '/sys/' | grep -v '/proc/'; sleep 60; done &) && \
+    cp -R /var/www/cache_backup/. /var/www/var/cache/ && \
+    php-fpm
+#CMD ["sh", "-c", "cp -R /var/www/cache_backup/. /var/www/var/cache/ && php-fpm"]
+#CMD ["sh", "-c", "php-fpm"]
+
+#COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+#RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+#
+#
+#ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+## This is the command that will be passed to the entrypoint script's "$@"
+#CMD ["php-fpm"]
