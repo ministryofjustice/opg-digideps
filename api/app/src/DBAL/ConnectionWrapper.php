@@ -29,7 +29,7 @@ class ConnectionWrapper extends Connection
     private SecretsManagerClient $secretClient;
 
     public function __construct(
-        array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null
+        array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null
     ) {
         parent::__construct($params, $driver, $config, $eventManager);
 
@@ -63,6 +63,9 @@ class ConnectionWrapper extends Connection
         if (false === $this->autoCommit) {
             $this->beginTransaction();
         }
+
+        //      Add the show for the var in here.
+        $this->executeQuery('SET random_page_cost = 0.1;');
 
         if ($this->_eventManager->hasListeners(Events::postConnect)) {
             $eventArgs = new ConnectionEventArgs($this);
