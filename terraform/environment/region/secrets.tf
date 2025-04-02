@@ -62,3 +62,9 @@ data "aws_secretsmanager_secret" "anonymise-default-pw" {
 data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
   name = "alias/digideps_secret_encryption_key"
 }
+
+#resource "aws_secretsmanager_secret" "custom_sql_users" {
+#  name        = "${var.secrets_prefix}/custom-sql-users"
+#  description = "Additional security for custom SQL users"
+#  tags        = var.default_tags
+#}

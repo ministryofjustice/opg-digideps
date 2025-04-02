@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 from datetime import datetime
@@ -76,6 +77,65 @@ def run_insert_custom_query(event, conn):
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
         return {"message": "Stored procedure failed to execute", "result": e}
+
+
+def get_secret(secret_name):
+    client = boto3.client("secretsmanager")
+    response = client.get_secret_value(SecretId=secret_name)
+    return json.loads(response["SecretString"])
+
+
+def update_secret(secret_name, secret_data):
+    client = boto3.client("secretsmanager")
+    client.update_secret(SecretId=secret_name, SecretString=json.dumps(secret_data))
+
+
+def hash_password(password, salt):
+    return hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 310000).hex()
+
+
+def generate_secure_password(length=12):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    while True:
+        password = "".join(random.choice(characters) for _ in range(length))
+        if (
+            any(c.islower() for c in password)
+            and any(c.isupper() for c in password)
+            and any(c.isdigit() for c in password)
+            and any(c in string.punctuation for c in password)
+        ):
+            return password
+
+
+def authenticate_or_store_password(secret_name, username, password):
+    secret_data = get_secret(secret_name)
+
+    if username in secret_data and secret_data[username]["password_hash"]:
+        stored_hash = secret_data[username]["password_hash"]
+        salt = secret_data[username]["salt"]
+        computed_hash = hash_password(password, salt)
+
+        # Zero out password from memory
+        password = ""
+        return computed_hash == stored_hash
+
+    # If no password exists, enforce secure password policy
+    if (
+        len(password) < 12
+        or not any(c.isdigit() for c in password)
+        or not any(c.isalpha() for c in password)
+        or not any(c in string.punctuation for c in password)
+    ):
+        password = generate_secure_password()
+
+    salt = os.urandom(16).hex()
+    password_hash = hash_password(password, salt)
+    secret_data[username] = {"password_hash": password_hash, "salt": salt}
+    update_secret(secret_name, secret_data)
+
+    # Zero out password from memory
+    password = ""
+    return True
 
 
 def run_sign_off_custom_query(event, conn):
