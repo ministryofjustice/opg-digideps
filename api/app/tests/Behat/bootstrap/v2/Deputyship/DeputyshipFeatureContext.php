@@ -23,9 +23,9 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     }
 
     /**
-     * @Given a lay deputy with multiple clients exists
+     * @Given a lay deputy with surname Tefooliant exists
      */
-    public function aLayDeputyWithMultipleClientsExists(): void
+    public function aLayDeputyWithSurnameExists(): void
     {
         $email = (new Uuid())->uuid3().'@opg-testing.gov.uk';
         $this->user = $this->fixtureHelper->createAndPersistUser(
@@ -35,6 +35,15 @@ class DeputyshipFeatureContext extends BaseFeatureContext
             lastName: 'Tefooliant',
         );
 
+        $this->em->flush();
+        $this->em->persist($this->user);
+    }
+
+    /**
+     * @Given they have multiple clients
+     */
+    public function layDeputyHasMultipleClients(): void
+    {
         $client1 = $this->fixtureHelper->generateClient($this->user);
         $client1->setFirstname(self::FIRST_NAMES[0]);
 
@@ -53,7 +62,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     }
 
     /**
-     * @When that lay deputy logs in
+     * @When they log in
      */
     public function layDeputyLogsIn(): void
     {
@@ -69,6 +78,14 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     public function navigateToClientsListPage(): void
     {
         $this->visitPath('/deputyship-details/clients');
+    }
+
+    /**
+     * @Then they should see the no clients message
+     */
+    public function clientListShowsNoClientsMessage(): void
+    {
+        $this->assertPageContainsText('No clients to show');
     }
 
     /**
