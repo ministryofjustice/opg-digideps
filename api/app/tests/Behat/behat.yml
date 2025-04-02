@@ -105,11 +105,11 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
 
-        deputyship-details:
+        deputyship:
             description: Coverage of pages which show deputies details of their clients and reports
-            paths: ["%paths.base%/features-v2/deputyship-details"]
+            paths: ["%paths.base%/features-v2/deputyship"]
             contexts:
-                - App\Tests\Behat\v2\DeputyshipDetails\DeputyshipDetailsFeatureContext
+                - App\Tests\Behat\v2\DeputyshipDetails\DeputyshipFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback
