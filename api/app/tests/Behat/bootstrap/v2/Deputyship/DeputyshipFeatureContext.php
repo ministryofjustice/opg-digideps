@@ -8,7 +8,7 @@ use App\Entity\User;
 use App\Tests\Behat\v2\Common\BaseFeatureContext;
 use Faker\Core\Uuid;
 
-class DeputyshipDetailsFeatureContext extends BaseFeatureContext
+class DeputyshipFeatureContext extends BaseFeatureContext
 {
     private User $user;
     private const FIRST_NAMES = ['Zardome', 'Ablent', 'Giga'];
