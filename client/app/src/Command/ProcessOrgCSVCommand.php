@@ -149,6 +149,8 @@ class ProcessOrgCSVCommand extends Command
         } catch (\Throwable $e) {
             $this->logger->error(sprintf('Error processing CSV: %s', $e->getMessage()));
         }
+
+        return [];
     }
 
     private function process(mixed $data, string $email): bool
