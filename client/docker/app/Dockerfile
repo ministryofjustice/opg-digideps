@@ -79,6 +79,7 @@ COPY --chown=www-data:www-data client/resources/assets assets
 COPY --chown=www-data:www-data client/app/translations translations
 COPY --chown=www-data:www-data client/app/tests tests
 COPY --chown=www-data:www-data client/app/phpstan.neon .
+COPY --chown=www-data:www-data client/app/phpstan-baseline.neon .
 COPY --chown=www-data:www-data client/app/frontend.env frontend.env
 COPY --chown=www-data:www-data client/app/admin.env admin.env
 COPY --chown=www-data:www-data client/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
