@@ -148,6 +148,14 @@ jobs:
     needs:
       - workflow_variables
 
+  client_phpstan:
+    name: client phpstan
+    uses: ./.github/workflows/_phpstan-client.yml
+    with:
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml

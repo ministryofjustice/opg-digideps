@@ -63,47 +63,50 @@ def update_secret(secret_name, secret_data, region_name="eu-west-1"):
     client.update_secret(SecretId=secret_name, SecretString=json.dumps(secret_data))
 
 
-def hash_password(password, salt):
-    return hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 310000).hex()
+def hash_token(token, salt):
+    return hashlib.pbkdf2_hmac("sha256", token.encode(), salt.encode(), 310000).hex()
 
 
 def authenticate_or_store_token(secret_name, username, user_token):
-    secret_data = get_secret(secret_name)
+    response = get_secret(secret_name)
+    secret_data = json.loads(response)
 
-    # Only preset users can be used
     if username not in secret_data:
         return False, "User not authorised"
 
     if username in secret_data and secret_data[username]["token_hash"]:
         stored_hash = secret_data[username]["token_hash"]
         salt = secret_data[username]["salt"]
-        computed_hash = hash_password(user_token, salt)
+        computed_hash = hash_token(user_token, salt)
 
-        # Zero out password from memory
-        password = ""
+        # Zero out user_token from memory
+        user_token = ""
 
         if computed_hash == stored_hash:
-            return True, ""
+            return True, "Token Success"
 
         return False, "User not authorised"
 
-    # If no password exists, enforce secure password policy
+    # If no user_token exists, enforce secure user_token policy
     if (
         len(user_token) < 12
         or not any(c.isdigit() for c in user_token)
         or not any(c.isalpha() for c in user_token)
         or not any(c in string.punctuation for c in user_token)
     ):
-        return False, "token does not meet policy"
+        return (
+            False,
+            "Token does not meet policy (Min 12 char length, alpha, numeric and special chars needed)",
+        )
 
     salt = os.urandom(16).hex()
-    token_hash = hash_password(user_token, salt)
+    token_hash = hash_token(user_token, salt)
     secret_data[username] = {"token_hash": token_hash, "salt": salt}
     update_secret(secret_name, secret_data)
 
-    # Zero out password from memory
-    password = ""
-    return True, ""
+    # Zero out user_token from memory
+    user_token = ""
+    return True, "Created New Token"
 
 
 def run_insert_custom_query(event, conn):
