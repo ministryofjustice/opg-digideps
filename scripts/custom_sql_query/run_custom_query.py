@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+import getpass
 from io import BytesIO
 from botocore.response import StreamingBody
 
@@ -53,7 +54,7 @@ def assume_custom_sql_role(environment):
 
 
 def get_user_token():
-    user_input = input("Enter your token string: ")
+    user_input = getpass.getpass("Enter your token string: ")
     return user_input
 
 

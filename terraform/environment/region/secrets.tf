@@ -50,6 +50,10 @@ data "aws_secretsmanager_secret" "custom_sql_db_password" {
   name = join("/", compact([var.secrets_prefix, "custom-sql-db-password"]))
 }
 
+data "aws_secretsmanager_secret" "custom_sql_users" {
+  name = join("/", compact([var.secrets_prefix, "custom-sql-users"]))
+}
+
 data "aws_secretsmanager_secret" "readonly_sql_db_password" {
   name = join("/", compact([var.secrets_prefix, "readonly-sql-db-password"]))
 }
@@ -61,10 +65,4 @@ data "aws_secretsmanager_secret" "anonymise-default-pw" {
 ##### Shared Application KMS key for logs #####
 data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
   name = "alias/digideps_secret_encryption_key"
-}
-
-resource "aws_secretsmanager_secret" "custom_sql_users" {
-  name        = "${var.secrets_prefix}/custom-sql-users"
-  description = "Additional security for custom SQL users"
-  tags        = var.default_tags
 }

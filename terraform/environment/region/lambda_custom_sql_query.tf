@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "custom_sql_query_secretsmanager" {
     ]
     resources = [
       data.aws_secretsmanager_secret.custom_sql_db_password.arn,
-      aws_secretsmanager_secret.custom_sql_users.arn
+      data.aws_secretsmanager_secret.custom_sql_users.arn
     ]
   }
 
@@ -82,7 +82,7 @@ data "aws_iam_policy_document" "custom_sql_query_secretsmanager" {
       "secretsmanager:PutSecretValue"
     ]
     resources = [
-      aws_secretsmanager_secret.custom_sql_users.arn
+      data.aws_secretsmanager_secret.custom_sql_users.arn
     ]
   }
 
