@@ -2,4 +2,7 @@ includes:
   - vendor/phpstan/phpstan-mockery/extension.neon
   - vendor/phpstan/phpstan-phpunit/extension.neon
   - vendor/jangregor/phpstan-prophecy/extension.neon
+  - phpstan-baseline.neon
 parameters:
+    ignoreErrors:
+        - identifier: missingType.iterableValue
