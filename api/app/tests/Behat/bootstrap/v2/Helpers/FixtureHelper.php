@@ -226,6 +226,11 @@ class FixtureHelper
         return $user;
     }
 
+    public function generateClient(User $user, ?Organisation $org = null, ?string $caseNumber = null): Client
+    {
+        return $this->clientTestHelper->generateClient($this->em, $user, $org, $caseNumber);
+    }
+
     private function addClientsAndReportsToLayDeputy(
         User $deputy,
         bool $completed = false,

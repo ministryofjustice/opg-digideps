@@ -328,30 +328,6 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^a Lay Deputy has multiple client accounts$/
-     */
-    public function aDeputyHasMultipleClientAccounts()
-    {
-        // create primary user
-        $primaryUser = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
-        $primaryUserId = $primaryUser->getUserId();
-        $primaryDeputyUid = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId])->getDeputyUid();
-
-        // create non-primary user
-        $nonPrimaryUser = $this->createPfaHighNotStartedNonPrimaryUser(null, $this->testRunId.mt_rand(1, 10000));
-        $nonPrimaryUserId = $nonPrimaryUser->getUserId();
-
-        // set the same deputy uid for both accounts
-        $nonPrimaryUser = $this->em->getRepository(User::class)->findOneBy(['id' => $nonPrimaryUserId]);
-        $nonPrimaryUser->setDeputyUid($primaryDeputyUid);
-
-        $this->em->persist($nonPrimaryUser);
-        $this->em->flush();
-
-        $this->primaryEmailAddress = $this->em->getRepository(User::class)->findOneBy(['id' => $primaryUserId])->getEmail();
-    }
-
-    /**
      * @Given /^a Lay Deputy tries to login with their "(primary|non-primary)" email address$/
      */
     public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary)
