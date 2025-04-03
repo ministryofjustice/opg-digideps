@@ -31,7 +31,7 @@ class DeputyshipController extends AbstractController
     public function clientListAction(): RedirectResponse|array
     {
         /** @var ?User $user */
-        $user = $this->tokenStorage?->getToken()?->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if (is_null($user)) {
             return new RedirectResponse($this->generateUrl('login'));
         }
