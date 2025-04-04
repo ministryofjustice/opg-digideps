@@ -3816,7 +3816,7 @@ parameters:
 			path: src/Entity/Deputy.php
 
 		-
-			message: "#^Cannot call method isDischarged\\(\\) on mixed\\.$#"
+			message: "#^Cannot call method isActive\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Entity/Deputy.php
 
