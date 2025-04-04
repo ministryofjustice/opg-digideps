@@ -35,7 +35,7 @@ class DeputyIntegrationTest extends KernelTestCase
         $courtOrder
             ->setCourtOrderUid($fakeUid)
             ->setType('hybrid')
-            ->setActive(true);
+            ->setStatus('ACTIVE');
 
         $deputy->associateWithCourtOrder($courtOrder);
 

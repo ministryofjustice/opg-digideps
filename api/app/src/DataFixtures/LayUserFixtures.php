@@ -368,7 +368,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setType($data['reportType']);
-        $courtOrder->setActive(true);
+        $courtOrder->setStatus('ACTIVE');
         $courtOrder->setClient($client);
         $courtOrder->setCreatedAt(new \DateTime());
         $courtOrder->setUpdatedAt(new \DateTime());
@@ -401,14 +401,14 @@ class LayUserFixtures extends AbstractDataFixture
 
             $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
             $courtOrderPfa->setType($data['reportType']);
-            $courtOrderPfa->setActive(true);
+            $courtOrderPfa->setStatus('ACTIVE');
             $courtOrderPfa->setClient($client);
             $courtOrderPfa->setCreatedAt(new \DateTime());
             $courtOrderPfa->setUpdatedAt(new \DateTime());
 
             $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
             $courtOrderHW->setType($data['reportType']);
-            $courtOrderHW->setActive(true);
+            $courtOrderHW->setStatus('ACTIVE');
             $courtOrderHW->setClient($client);
             $courtOrderHW->setCreatedAt(new \DateTime());
             $courtOrderHW->setUpdatedAt(new \DateTime());
@@ -462,7 +462,7 @@ class LayUserFixtures extends AbstractDataFixture
 
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
             $additionalCourtOrder->setType($data['reportType']);
-            $additionalCourtOrder->setActive(true);
+            $additionalCourtOrder->setStatus('ACTIVE');
             $additionalCourtOrder->setClient($client2);
             $additionalCourtOrder->setCreatedAt(new \DateTime());
             $additionalCourtOrder->setUpdatedAt(new \DateTime());

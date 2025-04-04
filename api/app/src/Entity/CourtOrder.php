@@ -56,13 +56,13 @@ class CourtOrder
     private $type;
 
     /**
-     * @var bool
+     * @var string
      *
-     * @JMS\Type("boolean")
+     * @JMS\Type("string")
      *
-     * @ORM\Column(name="active", type="boolean", options = { "default": true })
+     * @ORM\Column(name="status", type="string", length=10, nullable=false)
      */
-    private $active;
+    private $status;
 
     /**
      * @var Client
@@ -136,14 +136,14 @@ class CourtOrder
         return $this;
     }
 
-    public function isActive(): bool
+    public function getStatus(): string
     {
-        return $this->active;
+        return $this->status;
     }
 
-    public function setActive(bool $active): CourtOrder
+    public function setStatus(string $status): CourtOrder
     {
-        $this->active = $active;
+        $this->status = $status;
 
         return $this;
     }
