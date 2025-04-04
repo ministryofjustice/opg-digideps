@@ -1,4 +1,4 @@
-name: "[Tests] API PHPStan"
+name: "[Tests] Client PHPStan"
 
 defaults:
   run:
@@ -12,7 +12,7 @@ on:
         required: true
         type: string
 jobs:
-  api-phpstan:
+  client-phpstan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -22,22 +22,22 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
         with:
           path: /tmp/.buildx-cache
-          key: api-phpstan-${{ inputs.branch_name }}-${{ github.sha }}
+          key: client-phpstan-${{ inputs.branch_name }}-${{ github.sha }}
           restore-keys: |
-            api-phpstan-${{ inputs.branch_name }}
-            api-phpstan-main
+            client-phpstan-${{ inputs.branch_name }}
+            client-phpstan-main
 
       - name: build docker images
         run: |
           docker buildx build \
-          -f api/docker/app/Dockerfile \
+          -f client/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --build-arg ENVIRONMENT=local \
-          --tag api-phpstan:latest \
+          --tag client-phpstan:latest \
           --target ci-tests \
           --output type=docker .
 
@@ -46,7 +46,7 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - name: run api phpstan
-        id: api-phpstan
+      - name: run client phpstan
+        id: client-phpstan
         run: |
-          make phpstan-api
+          make phpstan-client

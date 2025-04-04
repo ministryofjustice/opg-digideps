@@ -128,6 +128,8 @@ class ProcessLayCSVCommand extends Command
         } catch (Throwable $e) {
             $this->verboseLogger->error(sprintf('Error processing CSV file: %s', $e->getMessage()));
         }
+
+        return [];
     }
 
     private function process(mixed $data, string $email): void
