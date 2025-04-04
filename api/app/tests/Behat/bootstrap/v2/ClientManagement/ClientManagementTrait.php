@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\ClientManagement;
 
 use App\Entity\Client;
+use App\Entity\Organisation;
 use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 
 trait ClientManagementTrait
 {
     private ?int $clientCount = null;
+    private string $organisationEmail = '';
+    private int $dischargedClient = 0;
 
     /**
      * @When I search for an existing client by their first name
@@ -349,6 +352,8 @@ MESSAGE;
 
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
+        $this->organisationEmail = $this->interactingWithUserDetails->getOrganisationEmailIdentifier();
+
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
         $clientDt = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
 
@@ -360,6 +365,7 @@ MESSAGE;
         $todayString = (new \DateTime())->format('j M Y');
 
         $clientIsDischarged = str_contains($clientDtHtml, $todayString);
+        ++$this->dischargedClient;
 
         if (!$clientIsDischarged) {
             throw new BehatException(sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml));
@@ -495,5 +501,33 @@ MESSAGE;
     {
         $clientName = $this->loggedInUserDetails->getClientFirstName();
         $this->clickLink(sprintf('Edit %s\'s details', $clientName));
+    }
+
+    /**
+     * @Given /^I can see a count of active and discharged clients on the organisations page$/
+     */
+    public function iCanSeeTheActiveAndDishargedClientCountOnTheOrganisationsPage()
+    {
+        $this->visitAdminPath('/admin/organisations');
+
+        $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $this->organisationEmail]);
+
+        $this->clickLink($organisation->getName());
+
+        $this->iAmOnAdminOrganisationOverviewPage();
+
+        $activeClients = $this->em->getRepository(Client::class)->findBy(['organisation' => $organisation->getId()]);
+
+        $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
+        $listSummaryRowItems = $this->getSession()->getPage()->findAll('xpath', $xpath);
+
+        $rows = [];
+        foreach ($listSummaryRowItems as $row) {
+            $rows[] = strtolower($row->getText());
+        }
+
+        $this->assertStringEqualsString(sprintf('clients %s', count($activeClients)), $rows[2], 'Asserting active and archived client count found on page');
+
+        $this->assertStringEqualsString("discharged clients $this->dischargedClient", $rows[3], 'Asserting discharged client count found on page');
     }
 }
