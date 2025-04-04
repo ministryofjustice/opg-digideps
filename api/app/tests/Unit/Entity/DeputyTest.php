@@ -22,16 +22,16 @@ class DeputyTest extends TestCase
         $courtOrder
             ->setCourtOrderUid($fakeUid)
             ->setType('hybrid')
-            ->setActive(true);
+            ->setStatus('ACTIVE');
 
         $deputy->associateWithCourtOrder($courtOrder);
 
         $actual = $deputy->getCourtOrdersWithStatus();
-        $actualDischarged = $actual[0]['discharged'];
+        $actualIsActive = $actual[0]['isActive'];
         $actualCourtOrder = $actual[0]['courtOrder'];
 
         $this->assertEquals(1, count($actual));
-        $this->assertEquals(false, $actualDischarged);
+        $this->assertEquals(true, $actualIsActive);
         $this->assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
         $this->assertEquals('hybrid', $actualCourtOrder->getType());
     }
