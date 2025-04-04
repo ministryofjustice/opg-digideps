@@ -11,6 +11,8 @@ use Faker\Core\Uuid;
 class DeputyshipFeatureContext extends BaseFeatureContext
 {
     private User $user;
+    private int $deputyHasASingleClient_id;
+    private string $deputyHasASingleClient_familyName;
     private const FIRST_NAMES = ['Zardome', 'Ablent', 'Giga'];
 
     /**
@@ -23,16 +25,16 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     }
 
     /**
-     * @Given a lay deputy with surname Tefooliant exists
+     * @Given a lay deputy with surname :surname exists
      */
-    public function aLayDeputyWithSurnameExists(): void
+    public function deputyWithSurnameExists(string $surname): void
     {
         $email = (new Uuid())->uuid3().'@opg-testing.gov.uk';
         $this->user = $this->fixtureHelper->createAndPersistUser(
             roleName: User::ROLE_LAY_DEPUTY,
             email: $email,
             firstName: 'Maabaganttt',
-            lastName: 'Tefooliant',
+            lastName: $surname,
         );
 
         $this->em->flush();
@@ -42,7 +44,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     /**
      * @Given they have multiple clients
      */
-    public function layDeputyHasMultipleClients(): void
+    public function deputyHasMultipleClients(): void
     {
         $client1 = $this->fixtureHelper->generateClient($this->user);
         $client1->setFirstname(self::FIRST_NAMES[0]);
@@ -62,9 +64,26 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     }
 
     /**
+     * @Given they have a single client with family name :familyName
+     */
+    public function deputyHasASingleClient(string $familyName): void
+    {
+        $client = $this->fixtureHelper->generateClient($this->user);
+        $client->setLastname($familyName);
+
+        $this->user->addClient($client);
+
+        $this->em->flush();
+        $this->em->persist($this->user);
+
+        $this->deputyHasASingleClient_id = $client->getId();
+        $this->deputyHasASingleClient_familyName = $familyName;
+    }
+
+    /**
      * @When they log in
      */
-    public function layDeputyLogsIn(): void
+    public function deputyLogsIn(): void
     {
         $this->visitPath('/login');
         $this->fillField('login_email', $this->user->getEmail());
@@ -118,5 +137,16 @@ class DeputyshipFeatureContext extends BaseFeatureContext
                 implode(',', $actualFirstNames)
             )
         );
+    }
+
+    /**
+     * @Then they should be redirected to the page for their single client
+     */
+    public function deputyIsRedirectedToTheirSingleClient()
+    {
+        // check we're on the /client/<id> page for the right client
+        assert(str_contains($this->getCurrentUrl(), '/client/'.$this->deputyHasASingleClient_id));
+
+        $this->assertPageContainsText($this->deputyHasASingleClient_familyName);
     }
 }
