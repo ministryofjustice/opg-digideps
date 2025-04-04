@@ -66,11 +66,14 @@ class OrganisationController extends AbstractController
     {
         /** @var $organisation Organisation */
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        assert($organisation instanceof Organisation);
 
         $tab = $request->get('tab', 'users');
         $currentFilters = self::getFiltersFromRequest($request);
 
-        $clientCount = $this->restClient->get('/v2/organisation/'.$id.'/clients', 'array')['count'];
+        /** @var array $count */
+        $count = $this->restClient->get('/v2/organisation/'.$id.'/clients', 'array');
+        $clientCount = $count['count'];
 
         $dischargedClients = null;
         $activeAndArchivedClients = $organisation->getTotalClientCount();
@@ -78,6 +81,7 @@ class OrganisationController extends AbstractController
             $dischargedClients = $clientCount - $activeAndArchivedClients;
         }
 
+        /** @var array $result */
         $result = $this->restClient->get('/v2/organisation/'.$id.'/'.$tab.'?'.http_build_query($currentFilters), 'array');
 
         if ('clients' == $tab) {
