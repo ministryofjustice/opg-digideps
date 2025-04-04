@@ -31,11 +31,11 @@ class CourtOrder
     private $type;
 
     /**
-     * @var bool
+     * @var string
      *
-     * @JMS\Type("boolean")
+     * @JMS\Type("string")
      */
-    private $active;
+    private $status;
 
     public function getId(): int
     {
@@ -73,14 +73,14 @@ class CourtOrder
         return $this;
     }
 
-    public function isActive(): bool
+    public function getStatus(): string
     {
-        return $this->active;
+        return $this->status;
     }
 
-    public function setActive(bool $active): CourtOrder
+    public function setStatus(string $status): CourtOrder
     {
-        $this->active = $active;
+        $this->status = $status;
 
         return $this;
     }
