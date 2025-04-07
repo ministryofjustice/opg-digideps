@@ -108,7 +108,7 @@ jobs:
           aws_iam_role: digideps-ci
           register_workspace: ${{ inputs.workspace }}
           time_to_protect: 3
-          oidc_role: arn:aws:iam::631181914621:role/oidc-digideps-development
+          oidc_role: arn:aws:iam::248804316466:role/digideps-gh-actions-workspace-cleanup
 
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply
