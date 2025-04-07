@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
 use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
@@ -21,7 +20,6 @@ class SettingsController extends AbstractController
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UserApi $userApi,
-        private readonly ClientApi $clientApi,
         private readonly RestClient $restClient,
     ) {
     }

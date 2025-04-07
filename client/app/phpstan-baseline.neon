@@ -1821,11 +1821,6 @@ parameters:
 			path: src/Controller/Ndr/BankAccountController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:\\$clientApi has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/BankAccountController.php
@@ -2011,11 +2006,6 @@ parameters:
 			path: src/Controller/Ndr/DeputyExpenseController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:\\$clientApi has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/DeputyExpenseController.php
@@ -2071,11 +2061,6 @@ parameters:
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:\\$clientApi has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/IncomeBenefitController.php
@@ -2111,17 +2096,7 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getAllClientsByDeputyUid\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Model\\\\FeedbackReport, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\<App\\\\Entity\\\\Client\\>\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
@@ -2196,11 +2171,6 @@ parameters:
 			path: src/Controller/Ndr/OtherInfoController.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Service\\\\StepRedirector\\:\\:checkDeputyHasMultiClients\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
@@ -2247,11 +2217,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:\\$clientApi \\(App\\\\Service\\\\StepRedirector\\) does not accept App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -5056,11 +5021,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:reviewAction\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\RedirectResponse but returns array\\<string, mixed\\>\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:submitConfirmationAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -5091,22 +5051,12 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getAllClientsByDeputyUid\\(\\) expects int, int\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:returnPrimaryEmail\\(\\) expects int, int\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Report/ReportController.php
 
 		-
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Model\\\\FeedbackReport, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\<App\\\\Entity\\\\Client\\>\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -5252,31 +5202,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$postUpdateUser of method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:update\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\SettingsController\\:\\:\\$dateTimeProvider is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\SettingsController\\:\\:\\$eventDispatcher is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\SettingsController\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\SettingsController\\:\\:\\$mailFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\SettingsController\\:\\:\\$mailSender is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/SettingsController.php
 
