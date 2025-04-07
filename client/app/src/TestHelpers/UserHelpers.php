@@ -7,6 +7,7 @@ namespace App\TestHelpers;
 use App\Entity\User;
 use Faker;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Serializer\Serializer;
 
 class UserHelpers extends KernelTestCase
 {
@@ -16,6 +17,7 @@ class UserHelpers extends KernelTestCase
     public static function createUser(?array $data = null)
     {
         $container = self::bootKernel()->getContainer();
+        /** @var Serializer $serializer */
         $serializer = $container->get('serializer');
         $faker = Faker\Factory::create();
 
