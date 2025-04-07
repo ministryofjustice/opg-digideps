@@ -14,7 +14,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
 {
     private string $translationDomain = 'report-client-benefits-check';
 
-    public function validate($value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof MoneyReceivedOnClientsBehalfConstraint) {
             throw new UnexpectedTypeException($constraint, MoneyReceivedOnClientsBehalfConstraint::class);
