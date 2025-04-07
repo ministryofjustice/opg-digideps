@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -24,7 +24,7 @@ class Redirector
         protected TokenStorageInterface $tokenStorage,
         protected AuthorizationCheckerInterface $authChecker,
         protected RouterInterface $router,
-        protected Session $session,
+        protected RequestStack $requestStack,
         protected string $env,
         private ClientApi $clientApi,
         private readonly LoggerInterface $logger,
@@ -197,7 +197,7 @@ class Redirector
 
     public function removeLastAccessedUrl()
     {
-        $this->session->remove('_security.secured_area.target_path');
+        $this->requestStack->getSession()->remove('_security.secured_area.target_path');
     }
 
     /**

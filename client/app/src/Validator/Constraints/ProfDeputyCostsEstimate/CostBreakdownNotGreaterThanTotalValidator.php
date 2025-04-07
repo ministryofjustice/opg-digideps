@@ -8,19 +8,16 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class CostBreakdownNotGreaterThanTotalValidator extends ConstraintValidator
 {
-    /**
-     * @param mixed $data
-     */
-    public function validate($data, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
-        if (!$data instanceof ReportInterface) {
+        if (!$value instanceof ReportInterface) {
             throw new \InvalidArgumentException(sprintf('Validation data must implement %s interface', ReportInterface::class));
         }
 
-        $totalNotToExceed = $data->getProfDeputyManagementCostAmount();
+        $totalNotToExceed = $value->getProfDeputyManagementCostAmount();
         $valueToVerify = 0;
 
-        foreach ($data->getProfDeputyEstimateCosts() as $profDeputyEstimateCost) {
+        foreach ($value->getProfDeputyEstimateCosts() as $profDeputyEstimateCost) {
             $valueToVerify += $profDeputyEstimateCost->getAmount();
         }
 
