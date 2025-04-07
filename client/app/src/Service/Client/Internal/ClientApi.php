@@ -6,7 +6,6 @@ namespace App\Service\Client\Internal;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Event\ClientDeletedEvent;
 use App\Event\ClientUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
@@ -198,23 +197,5 @@ class ClientApi
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
             'Client[]', $groups
         );
-    }
-
-    public function checkDeputyHasMultiClients(User $user): bool
-    {
-        // if we can't find the user's deputy UID, we can't look up their clients by UID using
-        // getAllClientsByDeputyUid, so we don't know if they are a single or multi client deputy, and default to
-        // single; this will disable the "choose a client" breadcrumb link
-        $deputyUid = $user->getDeputyUid();
-        if (is_null($deputyUid)) {
-            $this->logger->error(
-                "Deputy with ID {$user->getId()} has null deputy UID; ".
-                'returning false from checkDeputyHasMultiClients() (unsure if they are a multi-client deputy)'
-            );
-
-            return false;
-        }
-
-        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($deputyUid)) > 1;
     }
 }

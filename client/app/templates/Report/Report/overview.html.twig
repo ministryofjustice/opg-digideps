@@ -15,14 +15,11 @@
 {% block pageTitle %}{{ report.period }} {{ 'reportOverviewTitle' | trans() }}{% endblock %}
 
 {% block breadcrumbs %}
-    {% if deputyHasMultiClients %}
-        {{ macros.breadcrumbsArray([
-            { href: url('choose_a_client'), text: 'Choose a client' },
-            { href: url('lay_home', {clientId: client.id}), text: client.firstname ~ '\'s reports' }
-        ]) }}
-    {% else %}
-        {{ macros.homepage }}
-    {% endif %}
+    {{ macros.breadcrumbsArray([
+        { href: url('deputyship_details_clients'), text: 'Client details' },
+        { href: url('lay_home', {clientId: client.id}), text: client.firstname ~ '\'s reports' }
+    ]) }}
+
 {% endblock %}
 
 {% block pageContent %}
