@@ -25,6 +25,7 @@ jobs:
     with:
       workspace: production02
       account_id: 515688267891
+      account_name: production
       task_name: "backup"
       timeout: "700"
     secrets:
@@ -38,6 +39,7 @@ jobs:
     with:
       workspace: preproduction
       account_id: 454262938596
+      account_name: preproduction
       task_name: "restore_from_production"
       timeout: "3600"
     secrets:

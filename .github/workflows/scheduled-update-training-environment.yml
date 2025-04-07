@@ -25,6 +25,7 @@ jobs:
     with:
       workspace: training
       account_id: 454262938596
+      account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
     secrets:

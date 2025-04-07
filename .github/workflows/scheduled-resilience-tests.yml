@@ -36,6 +36,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "resilience_tests"
       timeout: "3600"
     secrets:

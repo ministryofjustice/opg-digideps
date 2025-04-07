@@ -206,6 +206,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
 
@@ -220,6 +221,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
@@ -235,6 +237,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
@@ -250,6 +253,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
@@ -265,6 +269,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
@@ -280,6 +285,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
@@ -295,6 +301,7 @@ jobs:
     with:
       workspace: integration
       account_id: 454262938596
+      account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
@@ -394,6 +401,7 @@ jobs:
     with:
       workspace: production02
       account_id: 515688267891
+      account_name: production
       task_name: "smoke_tests"
       timeout: "900"
 
