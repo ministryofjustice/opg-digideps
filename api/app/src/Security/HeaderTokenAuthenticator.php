@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
@@ -37,7 +38,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         return $request->headers->has(self::HEADER_NAME) && !empty($request->headers->get(self::HEADER_NAME));
     }
 
-    public function authenticate(Request $request)
+    public function authenticate(Request $request): Passport
     {
         $authTokenKey = $request->headers->get(self::HEADER_NAME);
 
