@@ -8,13 +8,8 @@ use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\Logger;
-use App\Service\Mailer\MailFactory;
-use App\Service\Mailer\MailSender;
 use App\Service\Redirector;
-use App\Service\Time\DateTimeProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,58 +18,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SettingsController extends AbstractController
 {
-    /** @var MailFactory */
-    private $mailFactory;
-
-    /** @var MailSender */
-    private $mailSender;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var Logger */
-    private $logger;
-
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /**
-     * @var UserApi
-     */
-    private $userApi;
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     public function __construct(
-        MailFactory $mailFactory,
-        MailSender $mailSender,
-        TranslatorInterface $translator,
-        Logger $logger,
-        DateTimeProvider $dateTimeProvider,
-        UserApi $userApi,
-        ClientApi $clientApi,
-        RestClient $restClient,
-        EventDispatcherInterface $eventDispatcher
+        private readonly TranslatorInterface $translator,
+        private readonly UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly RestClient $restClient,
     ) {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
-        $this->translator = $translator;
-        $this->logger = $logger;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->userApi = $userApi;
-        $this->clientApi = $clientApi;
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -90,7 +39,6 @@ class SettingsController extends AbstractController
 
             return [
                 'hasOrganisations' => count($user->getOrganisations()),
-                'deputyHasMultiClients' => false,
             ];
         }
 
@@ -100,9 +48,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
-        return ['deputyHasMultiClients' => $deputyHasMultiClients];
+        return [];
     }
 
     /**
@@ -133,11 +79,8 @@ class SettingsController extends AbstractController
             return $this->redirect($this->generateUrl($successRoute));
         }
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
         return [
             'form' => $form->createView(),
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -185,12 +128,8 @@ class SettingsController extends AbstractController
      **/
     public function profileAction()
     {
-        $user = $this->userApi->getUserWithData();
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
         return [
             'user' => $this->getUser(),
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -256,13 +195,10 @@ class SettingsController extends AbstractController
             }
         }
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($preUpdateDeputy);
-
         return [
             'user' => $preUpdateDeputy,
             'form' => $form->createView(),
             'client_validated' => false, // to allow change of name/postcode/email
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 

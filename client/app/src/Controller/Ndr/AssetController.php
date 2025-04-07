@@ -4,9 +4,7 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -20,36 +18,11 @@ class AssetController extends AbstractController
 {
     private static $jmsGroups = ['ndr-asset'];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly StepRedirector $stepRedirector,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -61,10 +34,6 @@ class AssetController extends AbstractController
      */
     public function startAction($ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getAssetsState()['state']) {
             return $this->redirectToRoute('ndr_assets_summary', ['ndrId' => $ndrId]);
@@ -72,7 +41,6 @@ class AssetController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -126,8 +94,7 @@ class AssetController extends AbstractController
     public function typeAction(Request $request, $ndrId)
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeTitle::class, new EntityDir\Ndr\AssetOther(), [
-        ]);
+        $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeTitle::class, new EntityDir\Ndr\AssetOther(), []);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

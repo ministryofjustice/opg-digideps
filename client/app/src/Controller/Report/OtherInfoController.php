@@ -4,7 +4,6 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -26,7 +25,7 @@ class OtherInfoController extends AbstractController
         private RestClient $restClient,
         private ReportApi $reportApi,
         private StepRedirector $stepRedirector,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -39,10 +38,6 @@ class OtherInfoController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
@@ -50,7 +45,6 @@ class OtherInfoController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -110,10 +104,6 @@ class OtherInfoController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getOtherInfoState()['state'] && 'skip-step' != $fromPage) {
@@ -123,7 +113,6 @@ class OtherInfoController extends AbstractController
         return [
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
