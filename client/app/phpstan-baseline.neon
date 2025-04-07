@@ -15591,11 +15591,6 @@ parameters:
 			path: src/Validator/Constraints/ChainValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\ChainValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ChainValidator.php
-
-		-
 			message: "#^Property App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheck\\:\\:\\$mode has no type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheck.php
@@ -15672,11 +15667,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:typesOfMoneyReceivedOnClientsBehalfValid\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
@@ -15761,11 +15751,6 @@ parameters:
 			path: src/Validator/Constraints/ClientBenefitsCheck/MoneyReceivedOnClientsBehalfValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\MoneyReceivedOnClientsBehalfValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/MoneyReceivedOnClientsBehalfValidator.php
-
-		-
 			message: "#^Property App\\\\Validator\\\\Constraints\\\\CommonPassword\\:\\:\\$message has no type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/CommonPassword.php
@@ -15782,11 +15767,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Validator\\\\Constraints\\\\CommonPasswordValidator\\:\\:passwordMatchesCommonPasswords\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/CommonPasswordValidator.php
-
-		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\CommonPasswordValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/CommonPasswordValidator.php
 
@@ -15827,11 +15807,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Validator\\\\Constraints\\\\DUserPasswordValidator\\:\\:isOldPasswordValid\\(\\) has parameter \\$user with no type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/DUserPasswordValidator.php
-
-		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\DUserPasswordValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/DUserPasswordValidator.php
 
@@ -15911,11 +15886,6 @@ parameters:
 			path: src/Validator/Constraints/EmailSameDomainValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\EmailSameDomainValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/EmailSameDomainValidator.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Validator/Constraints/EmailSameDomainValidator.php
@@ -15931,17 +15901,7 @@ parameters:
 			path: src/Validator/Constraints/EndDateNotBeforeStartDateValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\EndDateNotBeforeStartDateValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/EndDateNotBeforeStartDateValidator.php
-
-		-
 			message: "#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Validator/Constraints/EndDateNotGreaterThanFifteenMonthsValidator.php
-
-		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\EndDateNotGreaterThanFifteenMonthsValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/EndDateNotGreaterThanFifteenMonthsValidator.php
 
@@ -15961,11 +15921,6 @@ parameters:
 			path: src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\ProfDeputyCostsEstimate\\\\CostBreakdownNotGreaterThanTotalValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
-
-		-
 			message: "#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#"
 			count: 2
 			path: src/Validator/Constraints/YearMustBeFourDigitsAndValidValidator.php
@@ -15981,26 +15936,11 @@ parameters:
 			path: src/Validator/Constraints/YearMustBeFourDigitsAndValidValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\YearMustBeFourDigitsAndValidValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YearMustBeFourDigitsAndValidValidator.php
-
-		-
 			message: "#^Property App\\\\Validator\\\\Constraints\\\\YesNoNa\\:\\:\\$message has no type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/YesNoNa.php
 
 		-
 			message: "#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YesNoNaValidator.php
-
-		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\YesNoNaValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YesNoNaValidator.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$data$#"
 			count: 1
 			path: src/Validator/Constraints/YesNoNaValidator.php

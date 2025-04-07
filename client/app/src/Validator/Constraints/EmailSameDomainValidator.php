@@ -14,15 +14,13 @@ class EmailSameDomainValidator extends ConstraintValidator
 
     /**
      * Validates a given email address matches the same domain as the logged in user.
-     *
-     * @param mixed $email
      */
-    public function validate($email, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         $creatorEmail = $this->getLoggedUserEmail();
 
         $creatorDomain = $this->getDomain($creatorEmail);
-        $targetDomain = $this->getDomain($email);
+        $targetDomain = $this->getDomain($value);
 
         if (!empty($targetDomain) && $targetDomain !== $creatorDomain) {
             $this->context->buildViolation($constraint->message, ['creatorDomain' => $creatorDomain])->atPath('email')->addViolation();
