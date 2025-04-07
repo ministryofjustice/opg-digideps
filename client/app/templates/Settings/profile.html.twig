@@ -9,10 +9,7 @@
 {% block pageTitle %}{{ 'pageTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsArray([
-        { href: url('deputyship_details_clients'), text: 'Your reports' },
-        { href: url('account_settings'), text: 'Deputyship details' }
-    ]) }}
+    {{ macros.breadcrumbsSettings("settings-profile") }}
 {% endblock %}
 
 {% block pageContent %}

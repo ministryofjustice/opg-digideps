@@ -9,9 +9,7 @@
 {% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsArray([
-        { href: url('deputyship_details_clients'), text: 'Your reports' }
-    ]) }}
+    {{ macros.breadcrumbsSettings('settings') }}
 {% endblock %}
 
 {% block pageContent %}
