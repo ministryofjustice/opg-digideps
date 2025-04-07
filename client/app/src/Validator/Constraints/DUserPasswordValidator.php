@@ -27,7 +27,7 @@ class DUserPasswordValidator extends UserPasswordValidator
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function validate($password, Constraint $constraint)
+    public function validate(mixed $password, Constraint $constraint): void
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
