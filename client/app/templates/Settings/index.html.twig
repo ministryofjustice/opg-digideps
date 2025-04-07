@@ -9,13 +9,9 @@
 {% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page' : 'pageTitle.settings-page') | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {% if deputyHasMultiClients %}
-        {{ macros.breadcrumbsArray([
-            { href: url('choose_a_client'), text: 'Choose a client' }
-        ]) }}
-    {% else %}
-        {{ macros.breadcrumbsSettings('settings') }}
-    {% endif %}
+    {{ macros.breadcrumbsArray([
+        { href: url('deputyship_details_clients'), text: 'Client details' }
+    ]) }}
 {% endblock %}
 
 {% block pageContent %}
