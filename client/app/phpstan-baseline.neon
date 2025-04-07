@@ -13356,17 +13356,7 @@ parameters:
 			path: src/Service/Client/Internal/ClientApi.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\<App\\\\Entity\\\\Client\\>\\|null given\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
 			message: "#^Parameter \\#3 \\$changedBy of class App\\\\Event\\\\ClientUpdatedEvent constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:\\$dateTimeProvider is never read, only written\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/ClientApi.php
 
