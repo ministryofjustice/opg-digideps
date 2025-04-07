@@ -41,10 +41,6 @@ class BankAccountController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getBankAccountsState()['state']) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
@@ -52,7 +48,6 @@ class BankAccountController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -208,10 +203,6 @@ class BankAccountController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getBankAccountsState()['state']) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
@@ -219,7 +210,6 @@ class BankAccountController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

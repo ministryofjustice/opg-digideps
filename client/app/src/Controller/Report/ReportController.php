@@ -194,8 +194,6 @@ class ReportController extends AbstractController
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
         if (is_string($route)) {
@@ -208,7 +206,6 @@ class ReportController extends AbstractController
         $resultsArray = [
             'coDeputies' => $coDeputies,
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
 
         if ($ndrEnabled) {
@@ -431,15 +428,12 @@ class ReportController extends AbstractController
 
         $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
-        $deputyHasMultiClients = !$user->isDeputyOrg() && count($this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
-
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'deputy' => $deputy,
             'report' => $report,
             'activeReport' => $activeReport,
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ]);
     }
 
@@ -535,14 +529,11 @@ class ReportController extends AbstractController
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
 
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($currentUser);
-
         return [
             'report' => $report,
             'client' => $report->getClient(),
             'contactDetails' => $this->getAssociatedContactDetails($deputy, $report),
             'form' => $form->createView(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -589,7 +580,7 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Report/Report/review.html.twig")
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|array
      *
      * @throws \Exception
      */
@@ -618,15 +609,12 @@ class ReportController extends AbstractController
             }
         }
 
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         return [
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

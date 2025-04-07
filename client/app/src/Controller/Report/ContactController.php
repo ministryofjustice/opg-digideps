@@ -4,7 +4,6 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -25,7 +24,7 @@ class ContactController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -38,10 +37,6 @@ class ContactController extends AbstractController
      */
     public function startAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getContactsState()['state']) {
@@ -50,7 +45,6 @@ class ContactController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -208,10 +202,6 @@ class ContactController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getContactsState()['state']) {
@@ -220,7 +210,6 @@ class ContactController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
