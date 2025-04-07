@@ -270,7 +270,11 @@ class ReportController extends AbstractController
         }
 
         $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
-        $clients = $this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid(), $groups);
+        $clients = [];
+        $deputyUid = $user->getDeputyUid();
+        if (!is_null($deputyUid)) {
+            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, $groups);
+        }
 
         if (empty($clients)) {
             throw $this->createNotFoundException('Client not added');

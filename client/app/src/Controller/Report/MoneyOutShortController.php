@@ -7,7 +7,6 @@ use App\Entity as EntityDir;
 use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\Status;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,7 +25,6 @@ class MoneyOutShortController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
-        private ClientApi $clientApi,
     ) {
     }
 
