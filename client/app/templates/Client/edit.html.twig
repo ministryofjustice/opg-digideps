@@ -12,7 +12,7 @@
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsArray([
-        { href: url('deputyship_details_clients'), text: 'Client details' },
+        { href: url('deputyship_details_clients'), text: 'Your reports' },
         { href: url('lay_home', {clientId: client.id}), text: client.firstname ~ '\'s reports' },
         { href: url('client_show', {clientId: client.id}), text: client.firstname ~ '\'s details' }
     ]) }}
