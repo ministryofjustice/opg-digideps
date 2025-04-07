@@ -6,7 +6,6 @@ use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\Status;
-use App\Entity\User;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -32,7 +31,7 @@ class MoneyInController extends AbstractController
         private RestClient $restClient,
         private ReportApi $reportApi,
         private StepRedirector $stepRedirector,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -45,10 +44,6 @@ class MoneyInController extends AbstractController
      */
     public function startAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInState()['state']) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
@@ -56,7 +51,6 @@ class MoneyInController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -328,10 +322,6 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInState()['state'] && 'skip-step' != $fromPage) {
@@ -342,7 +332,6 @@ class MoneyInController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

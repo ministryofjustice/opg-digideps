@@ -6,7 +6,6 @@ use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\Status;
-use App\Entity\User;
 use App\Form as FormDir;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -27,7 +26,7 @@ class MoneyInShortController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
-        private ClientApi $clientApi
+        private ClientApi $clientApi,
     ) {
     }
 
@@ -40,10 +39,6 @@ class MoneyInShortController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInShortState()['state']) {
@@ -52,7 +47,6 @@ class MoneyInShortController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -393,10 +387,6 @@ class MoneyInShortController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -408,7 +398,6 @@ class MoneyInShortController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

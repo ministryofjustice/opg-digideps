@@ -61,10 +61,6 @@ class DocumentController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED !== $report->getStatus()->getDocumentsState()['state']) {
@@ -79,7 +75,6 @@ class DocumentController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -155,7 +150,7 @@ class DocumentController extends AbstractController
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
         string $reportId,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
         list($nextLink, $backLink) = $this->buildNavigationLinks($report);
@@ -354,10 +349,6 @@ class DocumentController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
             return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
@@ -370,7 +361,6 @@ class DocumentController extends AbstractController
             'report' => $report,
             'backLink' => $this->generateUrl('report_documents', ['reportId' => $report->getId()]),
             'status' => $report->getStatus(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
