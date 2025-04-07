@@ -53,7 +53,7 @@ class DeputyshipController extends AbstractController
             /** @var Client $client */
             $client = reset($clients);
 
-            return new RedirectResponse($this->generateUrl('lay_home', ['clientId' => $client->getId()]));
+            return new RedirectResponse($this->generateUrl('client_show', ['clientId' => $client->getId()]));
         }
 
         if ($numClients > 1) {
