@@ -10,8 +10,6 @@ use App\Event\ClientDeletedEvent;
 use App\Event\ClientUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\RestClientInterface;
-use App\Service\Time\DateTimeProvider;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -27,30 +25,13 @@ class ClientApi
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
     private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
-    private RestClientInterface $restClient;
-    private RouterInterface $router;
-    private LoggerInterface $logger;
-    private UserApi $userApi;
-    private DateTimeProvider $dateTimeProvider;
-    private TokenStorageInterface $tokenStorage;
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        RestClientInterface $restClient,
-        RouterInterface $router,
-        LoggerInterface $logger,
-        UserApi $userApi,
-        DateTimeProvider $dateTimeProvider,
-        TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher,
+        private readonly RestClientInterface $restClient,
+        private readonly RouterInterface $router,
+        private readonly UserApi $userApi,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
-        $this->restClient = $restClient;
-        $this->router = $router;
-        $this->logger = $logger;
-        $this->userApi = $userApi;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
