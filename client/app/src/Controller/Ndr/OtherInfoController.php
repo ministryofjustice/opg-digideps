@@ -3,9 +3,7 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -20,36 +18,11 @@ class OtherInfoController extends AbstractController
         'ndr-action-more-info',
     ];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly StepRedirector $stepRedirector,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -59,10 +32,6 @@ class OtherInfoController extends AbstractController
      */
     public function startAction(Request $request, $ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('ndr_other_info_summary', ['ndrId' => $ndrId]);
@@ -70,7 +39,6 @@ class OtherInfoController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

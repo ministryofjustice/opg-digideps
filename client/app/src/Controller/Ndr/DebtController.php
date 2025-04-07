@@ -3,9 +3,7 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -17,29 +15,10 @@ class DebtController extends AbstractController
 {
     private static $jmsGroups = ['ndr-debt', 'ndr-debt-management'];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -49,11 +28,6 @@ class DebtController extends AbstractController
      */
     public function startAction(Request $request, $ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getDebtsState()['state']) {
             return $this->redirectToRoute('ndr_debts_summary', ['ndrId' => $ndr->getId()]);
@@ -61,7 +35,6 @@ class DebtController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
