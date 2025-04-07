@@ -35,7 +35,7 @@ jobs:
       - scale_services_up
     with:
       workspace: integration
-      account_name: preproduction
+      account_id: 454262938596
       task_name: "resilience_tests"
       timeout: "3600"
     secrets:
