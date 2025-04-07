@@ -5,7 +5,6 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -25,7 +24,6 @@ class LifestyleController extends AbstractController
         private RestClient $restClient,
         private ReportApi $reportApi,
         private StepRedirector $stepRedirector,
-        private ClientApi $clientApi,
     ) {
     }
 

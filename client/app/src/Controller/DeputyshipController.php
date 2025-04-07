@@ -50,7 +50,10 @@ class DeputyshipController extends AbstractController
         $numClients = count($clients);
 
         if (1 === $numClients) {
-            return new RedirectResponse($this->generateUrl('lay_home', ['clientId' => reset($clients)->getId()]));
+            /** @var Client $client */
+            $client = reset($clients);
+
+            return new RedirectResponse($this->generateUrl('lay_home', ['clientId' => $client->getId()]));
         }
 
         if ($numClients > 1) {

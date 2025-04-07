@@ -12,7 +12,6 @@ use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
 use App\Service\Client\Internal\NdrApi;
@@ -39,7 +38,6 @@ class ClientBenefitsCheckController extends AbstractController
         private StepRedirector $stepRedirector,
         private MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
         private NdrApi $ndrApi,
-        private ClientApi $clientApi,
     ) {
     }
 
