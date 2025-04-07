@@ -7,17 +7,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class EndDateNotBeforeStartDateValidator extends ConstraintValidator
 {
-    /**
-     * @param mixed $data
-     */
-    public function validate($data, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
-        if (!$data instanceof StartEndDateComparableInterface) {
+        if (!$value instanceof StartEndDateComparableInterface) {
             throw new \InvalidArgumentException(sprintf('Validation data must implement %s interface', StartEndDateComparableInterface::class));
         }
 
-        $startDate = $data->getStartDate();
-        $endDate = $data->getEndDate();
+        $startDate = $value->getStartDate();
+        $endDate = $value->getEndDate();
 
         if (!$startDate instanceof \DateTime || !$endDate instanceof \DateTime) {
             return;
