@@ -14181,16 +14181,6 @@ parameters:
 			path: src/Service/DeputyProvider.php
 
 		-
-			message: "#^Method App\\\\Service\\\\DeputyProvider\\:\\:refreshUser\\(\\) should return App\\\\Entity\\\\User but returns Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\.$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: "#^Parameter \\#1 \\$id \\(int\\) of method App\\\\Service\\\\DeputyProvider\\:\\:loadUserByUsername\\(\\) should be compatible with parameter \\$username \\(string\\) of method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface\\:\\:loadUserByUsername\\(\\)$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
 			message: "#^Property App\\\\Service\\\\DeputyProvider\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
 			count: 1
 			path: src/Service/DeputyProvider.php
