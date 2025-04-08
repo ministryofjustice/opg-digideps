@@ -46,12 +46,6 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     public function loadUserByUsername(string $username)
     {
-        $user = $this->userApi->getByEmail($username, ['user', 'user-organisations']);
-
-        if (!$user) {
-            throw new UserNotFoundException('User not found');
-        }
-
-        return $user;
+        throw new \RuntimeException('Method should not be called, and removed after symfony 6 upgrade');
     }
 }

@@ -29,14 +29,14 @@ class RequestIdLoggerProcessorTest extends TestCase
 
     public function testProcessRecordNoReqStack()
     {
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn(false);
+        $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequest()
     {
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(false);
+        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(null);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));

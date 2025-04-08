@@ -604,7 +604,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null;
     }
@@ -832,10 +832,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    /**
-     * @return array $roles
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
         return [$this->roleName];
     }
@@ -1452,7 +1449,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getUserIdentifier(): ?string
+    public function getUserIdentifier(): string
     {
         return $this->email;
     }
