@@ -19,15 +19,16 @@ class MoneyTransactionController extends RestController
     ];
 
     public function __construct(
-       private readonly EntityManagerInterface $em,
-       private readonly RestFormatter $formatter,
-       private readonly MoneyTransactionRepository $moneyTransactionRepository
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly MoneyTransactionRepository $moneyTransactionRepository,
     ) {
         parent::__construct($em);
     }
 
     /**
      * @Route("/report/{reportId}/money-transaction", methods={"POST"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
@@ -36,8 +37,8 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [
-           'category' => 'notEmpty',
-           'amount' => 'notEmpty',
+            'category' => 'notEmpty',
+            'amount' => 'notEmpty',
         ]);
 
         $t = new EntityDir\Report\MoneyTransaction($report);
@@ -74,6 +75,7 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -110,6 +112,7 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"DELETE"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -124,6 +127,7 @@ class MoneyTransactionController extends RestController
         $this->em->flush();
 
         // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
+        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, null);
         $this->em->remove($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
@@ -134,6 +138,7 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/soft-delete/{transactionId}", methods={"PUT"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function softDeleteMoneyTransactionAction($transactionId)
@@ -156,6 +161,7 @@ class MoneyTransactionController extends RestController
 
     /**
      * @Route("/report/{reportId}/money-transaction/get-soft-delete", methods={"GET"})
+     *
      * @Security("is_granted('ROLE_DEPUTY')")
      */
     public function getSoftDeletedMoneyTransactionItems($reportId)
