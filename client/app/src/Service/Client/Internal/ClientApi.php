@@ -6,13 +6,10 @@ namespace App\Service\Client\Internal;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Event\ClientDeletedEvent;
 use App\Event\ClientUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\RestClientInterface;
-use App\Service\Time\DateTimeProvider;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -28,30 +25,13 @@ class ClientApi
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
     private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
-    private RestClientInterface $restClient;
-    private RouterInterface $router;
-    private LoggerInterface $logger;
-    private UserApi $userApi;
-    private DateTimeProvider $dateTimeProvider;
-    private TokenStorageInterface $tokenStorage;
-    private ObservableEventDispatcher $eventDispatcher;
-
     public function __construct(
-        RestClientInterface $restClient,
-        RouterInterface $router,
-        LoggerInterface $logger,
-        UserApi $userApi,
-        DateTimeProvider $dateTimeProvider,
-        TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher,
+        private readonly RestClientInterface $restClient,
+        private readonly RouterInterface $router,
+        private readonly UserApi $userApi,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
-        $this->restClient = $restClient;
-        $this->router = $router;
-        $this->logger = $logger;
-        $this->userApi = $userApi;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -198,23 +178,5 @@ class ClientApi
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
             'Client[]', $groups
         );
-    }
-
-    public function checkDeputyHasMultiClients(User $user): bool
-    {
-        // if we can't find the user's deputy UID, we can't look up their clients by UID using
-        // getAllClientsByDeputyUid, so we don't know if they are a single or multi client deputy, and default to
-        // single; this will disable the "choose a client" breadcrumb link
-        $deputyUid = $user->getDeputyUid();
-        if (is_null($deputyUid)) {
-            $this->logger->error(
-                "Deputy with ID {$user->getId()} has null deputy UID; ".
-                'returning false from checkDeputyHasMultiClients() (unsure if they are a multi-client deputy)'
-            );
-
-            return false;
-        }
-
-        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($deputyUid)) > 1;
     }
 }

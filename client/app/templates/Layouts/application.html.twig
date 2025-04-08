@@ -43,22 +43,11 @@
                             {{ 'nav.userAccount' | trans }}
                         </a>
                     </li>
-                    {% if client is defined and client is not null %}
-                        {% set clientId = client.id %}
-                    {% elseif report is defined and report is not null %}
-                        {% set clientId = report.client.id %}
-                    {% elseif ndr is defined and ndr is not null %}
-                        {% set clientId = ndr.client.id %}
-                    {% endif %}
-
-                    {% if clientId is defined and clientId is not null %}
                     <li class="govuk-header__navigation-item">
-                        <a href="{{ path('client_show', {'clientId': clientId}) }}" class="govuk-header__link behat-link-user-account">
-                            {{ 'nav.clientAccount' | trans }}
+                        <a href="{{ path('deputyship_details_clients') }}" class="govuk-header__link behat-link-user-account">
+                            {{ 'nav.clients' | trans }}
                         </a>
                     </li>
-                    {% endif %}
-
                 {% endif %}
                 {% if app.user.isDeputyOrg() %}
                     <li class="govuk-header__navigation-item">

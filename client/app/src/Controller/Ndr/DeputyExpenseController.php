@@ -4,9 +4,7 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -23,26 +21,11 @@ class DeputyExpenseController extends AbstractController
         'ndr-expenses',
     ];
 
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        RouterInterface $router,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly RouterInterface $router,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->router = $router;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -54,10 +37,6 @@ class DeputyExpenseController extends AbstractController
      */
     public function startAction($ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getExpensesState()['state']) {
@@ -66,7 +45,6 @@ class DeputyExpenseController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

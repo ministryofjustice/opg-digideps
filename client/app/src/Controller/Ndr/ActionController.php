@@ -3,9 +3,7 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -17,42 +15,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ActionController extends AbstractController
 {
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-
     private static $jmsGroups = [
         'ndr-action-give-gifts',
         'ndr-action-property',
         'ndr-action-more-info',
     ];
 
-    /**
-     * @var ClientApi
-     */
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly StepRedirector $stepRedirector,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -64,10 +37,6 @@ class ActionController extends AbstractController
      */
     public function startAction($ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getActionsState()['state']) {
             return $this->redirectToRoute('ndr_actions_summary', ['ndrId' => $ndrId]);
@@ -75,7 +44,6 @@ class ActionController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

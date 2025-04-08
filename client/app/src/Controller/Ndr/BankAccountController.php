@@ -6,7 +6,6 @@ use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -20,32 +19,11 @@ class BankAccountController extends AbstractController
 {
     private static $jmsGroups = ['ndr-account'];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly StepRedirector $stepRedirector,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -57,10 +35,6 @@ class BankAccountController extends AbstractController
      */
     public function startAction($ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getBankAccountsState()['state']) {
             return $this->redirectToRoute('ndr_bank_accounts_summary', ['ndrId' => $ndrId]);
@@ -68,7 +42,6 @@ class BankAccountController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

@@ -3,9 +3,7 @@
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -39,7 +37,6 @@ class BalanceController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
-        private ClientApi $clientApi,
     ) {
     }
 
@@ -52,10 +49,6 @@ class BalanceController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ReasonForBalanceType::class, $report);
         $form->handleRequest($request);
@@ -71,7 +64,6 @@ class BalanceController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

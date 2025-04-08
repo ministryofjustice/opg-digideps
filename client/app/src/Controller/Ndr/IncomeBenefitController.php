@@ -4,9 +4,7 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity\Ndr\Ndr;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -26,32 +24,11 @@ class IncomeBenefitController extends AbstractController
         'one-off',
     ];
 
-    /**
-     * @var ReportApi
-     */
-    private $reportApi;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var StepRedirector
-     */
-    private $stepRedirector;
-    private $clientApi;
-
     public function __construct(
-        ReportApi $reportApi,
-        RestClient $restClient,
-        StepRedirector $stepRedirector,
-        ClientApi $clientApi
+        private readonly ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly StepRedirector $stepRedirector,
     ) {
-        $this->reportApi = $reportApi;
-        $this->restClient = $restClient;
-        $this->stepRedirector = $stepRedirector;
-        $this->clientApi = $clientApi;
     }
 
     /**
@@ -63,10 +40,6 @@ class IncomeBenefitController extends AbstractController
      */
     public function startAction($ndrId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getIncomeBenefitsState()['state']) {
             return $this->redirectToRoute('ndr_income_benefits_summary', ['ndrId' => $ndrId]);
@@ -74,7 +47,6 @@ class IncomeBenefitController extends AbstractController
 
         return [
             'ndr' => $ndr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
