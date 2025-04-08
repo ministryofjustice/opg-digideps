@@ -9921,16 +9921,6 @@ parameters:
 			path: src/EventListener/AuthenticationHandler.php
 
 		-
-			message: "#^Instantiated class App\\\\EventListener\\\\RedirectResponse not found\\.$#"
-			count: 1
-			path: src/EventListener/AuthenticationHandler.php
-
-		-
-			message: "#^Method App\\\\EventListener\\\\AuthenticationHandler\\:\\:onAuthenticationFailure\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\Response but returns App\\\\EventListener\\\\RedirectResponse\\.$#"
-			count: 1
-			path: src/EventListener/AuthenticationHandler.php
-
-		-
 			message: "#^Method App\\\\EventListener\\\\ForbiddenExceptionListener\\:\\:onKernelException\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/EventListener/ForbiddenExceptionListener.php
@@ -14191,16 +14181,6 @@ parameters:
 			path: src/Service/DeputyProvider.php
 
 		-
-			message: "#^Method App\\\\Service\\\\DeputyProvider\\:\\:refreshUser\\(\\) should return App\\\\Entity\\\\User but returns Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\.$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: "#^Parameter \\#1 \\$id \\(int\\) of method App\\\\Service\\\\DeputyProvider\\:\\:loadUserByUsername\\(\\) should be compatible with parameter \\$username \\(string\\) of method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface\\:\\:loadUserByUsername\\(\\)$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
 			message: "#^Property App\\\\Service\\\\DeputyProvider\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
 			count: 1
 			path: src/Service/DeputyProvider.php
@@ -15096,22 +15076,7 @@ parameters:
 			path: src/Service/SiriusApiErrorTranslator.php
 
 		-
-			message: "#^Cannot call method getCode\\(\\) on App\\\\Model\\\\Sirius\\\\SiriusApiError\\|string\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Cannot call method getDetail\\(\\) on App\\\\Model\\\\Sirius\\\\SiriusApiError\\|string\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:deserializeError\\(\\) should return App\\\\Model\\\\Sirius\\\\SiriusApiError\\|string but returns mixed\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:jsonIsInUnexpectedFormat\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:deserializeError\\(\\) should return App\\\\Model\\\\Sirius\\\\SiriusApiError but returns mixed\\.$#"
 			count: 1
 			path: src/Service/SiriusApiErrorTranslator.php
 
@@ -15281,11 +15246,6 @@ parameters:
 			path: src/TestHelpers/UserHelpers.php
 
 		-
-			message: "#^Cannot call method deserialize\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
 			message: "#^Cannot call method setEmail\\(\\) on array\\|object\\.$#"
 			count: 1
 			path: src/TestHelpers/UserHelpers.php
@@ -15293,6 +15253,11 @@ parameters:
 		-
 			message: "#^Cannot call method setRoleName\\(\\) on array\\|object\\.$#"
 			count: 12
+			path: src/TestHelpers/UserHelpers.php
+
+		-
+			message: "#^Method App\\\\TestHelpers\\\\UserHelpers\\:\\:createUser\\(\\) should return array\\|object but returns mixed\\.$#"
+			count: 1
 			path: src/TestHelpers/UserHelpers.php
 
 		-
