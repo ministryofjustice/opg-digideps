@@ -38,4 +38,4 @@ Feature: View client details
         Then I should see "Client details"
         When I select the "Client details" link I should see the details of the chosen client
         And I click on the button to edit my client's details
-        Then the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+        Then the Lay deputy navigates to the Choose a client page
