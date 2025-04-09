@@ -35,7 +35,8 @@ class DeputyIntegrationTest extends KernelTestCase
         $courtOrder
             ->setCourtOrderUid($fakeUid)
             ->setType('hybrid')
-            ->setStatus('ACTIVE');
+            ->setStatus('ACTIVE')
+            ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 
