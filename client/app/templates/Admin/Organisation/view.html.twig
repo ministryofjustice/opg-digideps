@@ -71,6 +71,16 @@
                 {{ organisation.totalClientCount ?: '0' }}
             </dd>
         </div>
+        {% if dischargedClients is not null %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.summary.dischargedClients') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ dischargedClients }}
+            </dd>
+        </div>
+        {% endif %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.summary.status.label') | trans }}
