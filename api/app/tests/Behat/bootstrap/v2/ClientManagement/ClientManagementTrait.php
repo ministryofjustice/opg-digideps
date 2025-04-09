@@ -352,7 +352,9 @@ MESSAGE;
 
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
-        $this->organisationEmail = $this->interactingWithUserDetails->getOrganisationEmailIdentifier();
+        if (null != $this->interactingWithUserDetails->getOrganisationName()) {
+            $this->organisationEmail = $this->interactingWithUserDetails->getOrganisationEmailIdentifier();
+        }
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
         $clientDt = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
