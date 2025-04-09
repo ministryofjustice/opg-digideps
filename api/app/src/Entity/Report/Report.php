@@ -229,7 +229,7 @@ class Report implements ReportInterface
     /**
      * @var string TYPE_ constants
      *
-     * @JMS\Groups({"report", "report-type"})
+     * @JMS\Groups({"report", "report-type", "deputy-court-order-basic"})
      *
      * @JMS\Type("string")
      *

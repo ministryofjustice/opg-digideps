@@ -92,7 +92,7 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-case-number"})
+     * @JMS\Groups({"client", "client-case-number", "deputy-court-order-basic"})
      *
      * @var string
      *
@@ -192,7 +192,7 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-name"})
+     * @JMS\Groups({"client", "client-name", "deputy-court-order-basic"})
      *
      * @var string
      *
@@ -203,7 +203,7 @@ class Client implements ClientInterface
     /**
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-name"})
+     * @JMS\Groups({"client", "client-name", "deputy-court-order-basic"})
      *
      * @var string
      *

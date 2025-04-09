@@ -41,6 +41,8 @@ class CourtOrder
      * @var int
      *
      * @JMS\Type("integer")
+     * 
+     * @JMS\Groups("deputy-court-order-basic")
      *
      * @ORM\Column(name="court_order_uid", type="bigint", nullable=false, unique=true)
      */
