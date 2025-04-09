@@ -34,10 +34,10 @@ class SearchController extends AbstractController
      */
     public function searchAction(Request $request)
     {
-        $searchQuery = $request->query->get('search_clients');
+        $searchQuery = $request->query->all('search_clients');
         $form = $this->createForm(SearchClientType::class, null, ['method' => 'GET']);
 
-        if (null === $searchQuery) {
+        if (empty($searchQuery)) {
             return $this->buildViewParams($form);
         }
 

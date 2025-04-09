@@ -90,7 +90,7 @@ class AssetProperty extends Asset
     /**
      * @Assert\NotBlank(message="asset.property.mortgageOutstandingAmount.notBlank", groups={"property-mortgage-outstanding-amount"})
      * @Assert\Type( type="numeric", message="asset.property.mortgageOutstandingAmount.type", groups={"property-mortgage-outstanding-amount"})
-     * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.property.mortgageOutstandingAmount.outOfRange", groups={"property-mortgage-outstanding-amount"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.mortgageOutstandingAmount.outOfRange", groups={"property-mortgage-outstanding-amount"})
      *
      * @var string
      * @JMS\Type("integer")

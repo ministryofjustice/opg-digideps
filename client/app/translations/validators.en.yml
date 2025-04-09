@@ -290,8 +290,7 @@ moneyTransactionShort:
   amount:
     notBlank: Please enter an amount
     type: Enter a valid amount
-    minMessage: Please input a value of at least £1,000
-    maxMessage: The amount must be less than £100,000,000,000
+    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
   description:
     notBlank: Please enter a description
 
@@ -517,8 +516,7 @@ profDeputyCostsScco:
 profDeputyOtherCost:
   amount:
     notNumeric: Please enter a valid amount
-    minMessage: The amount must be positive
-    maxMessage: The amount must be less than £100,000,000,000
+    notInRangeMessage: The amount must be between £{{ min }} and £100,000,000,000
   moreDetails:
     notBlank: Please give us some more information
 
