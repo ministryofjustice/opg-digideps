@@ -62,6 +62,9 @@ services:
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./client/app/frontend.env
+    volumes:
+      - ./client/app/src:/var/www/src
+      - ./client/app/config/packages:/var/www/config/packages
     restart: always
 
   admin-webserver:
@@ -102,6 +105,9 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
+    volumes:
+      - ./client/app/src:/var/www/src
+      - ./client/app/config/packages:/var/www/config/packages
     env_file:
       - ./client/app/frontend.env
       - ./client/app/admin.env
