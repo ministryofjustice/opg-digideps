@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -63,6 +64,15 @@ class CourtOrder
      * @ORM\Column(name="status", type="string", length=10, nullable=false)
      */
     private $status;
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("datetime")
+     *
+     * @ORM\Column(name="order_made_date", type="datetime", nullable=false)
+     */
+    private $orderMadeDate;
 
     /**
      * @var Client
@@ -156,6 +166,18 @@ class CourtOrder
     public function setClient(Client $client): CourtOrder
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getOrderMadeDate(): \DateTime
+    {
+        return $this->orderMadeDate;
+    }
+
+    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    {
+        $this->orderMadeDate = $orderMadeDate;
 
         return $this;
     }

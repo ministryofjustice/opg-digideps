@@ -369,6 +369,7 @@ class LayUserFixtures extends AbstractDataFixture
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setType($data['reportType']);
         $courtOrder->setStatus('ACTIVE');
+        $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
         $courtOrder->setCreatedAt(new \DateTime());
         $courtOrder->setUpdatedAt(new \DateTime());
@@ -402,6 +403,7 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
             $courtOrderPfa->setType($data['reportType']);
             $courtOrderPfa->setStatus('ACTIVE');
+            $courtOrderPfa->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderPfa->setClient($client);
             $courtOrderPfa->setCreatedAt(new \DateTime());
             $courtOrderPfa->setUpdatedAt(new \DateTime());
@@ -409,6 +411,7 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
             $courtOrderHW->setType($data['reportType']);
             $courtOrderHW->setStatus('ACTIVE');
+            $courtOrderHW->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderHW->setClient($client);
             $courtOrderHW->setCreatedAt(new \DateTime());
             $courtOrderHW->setUpdatedAt(new \DateTime());
@@ -463,6 +466,7 @@ class LayUserFixtures extends AbstractDataFixture
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
             $additionalCourtOrder->setType($data['reportType']);
             $additionalCourtOrder->setStatus('ACTIVE');
+            $additionalCourtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
             $additionalCourtOrder->setClient($client2);
             $additionalCourtOrder->setCreatedAt(new \DateTime());
             $additionalCourtOrder->setUpdatedAt(new \DateTime());
