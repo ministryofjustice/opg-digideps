@@ -24,6 +24,7 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     with:
       workspace: training
+      account_id: 454262938596
       account_name: preproduction
       task_name: "reset_database"
       timeout: "500"

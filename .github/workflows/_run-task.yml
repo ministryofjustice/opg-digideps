@@ -9,8 +9,12 @@ on:
         required: true
         type: string
       account_name:
+        required: true
+        type: string
+        description: "Account name for oidc"
+      account_id:
         required: false
-        default: "development"
+        default: "248804316466"
         type: string
         description: "Account to get credentials for"
       task_name:
@@ -28,7 +32,7 @@ on:
         default: ""
         type: string
 env:
-  HELPER_VERSION: "0.8.0"
+  HELPER_VERSION: "0.10.1"
 jobs:
   run-task:
     runs-on: ubuntu-latest
@@ -71,8 +75,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}"
-          role-session-name: github-actions-terraform-run-task
-          role-duration-seconds: 3600
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 900
           aws-region: eu-west-1
 
       - name: terraform init
@@ -89,6 +93,14 @@ jobs:
           terraform output -json > terraform.output.json
         working-directory: terraform/environment
 
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        with:
+          role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"
+          role-session-name: github-actions-terraform-run-task
+          role-duration-seconds: 3600
+          aws-region: eu-west-1
+
       - name: run task
         env:
           OVERRIDE: ${{ inputs.override }}
@@ -100,9 +112,9 @@ jobs:
           echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT}
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -assumeRoleFromTFOut false
           else
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE}
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE} -assumeRoleFromTFOut false
           fi
         working-directory: terraform/environment
 

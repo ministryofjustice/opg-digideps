@@ -70,7 +70,19 @@ data "aws_iam_policy_document" "custom_sql_query_secretsmanager" {
       "secretsmanager:GetSecretValue"
     ]
     resources = [
-      data.aws_secretsmanager_secret.custom_sql_db_password.arn
+      data.aws_secretsmanager_secret.custom_sql_db_password.arn,
+      data.aws_secretsmanager_secret.custom_sql_users.arn
+    ]
+  }
+
+  statement {
+    sid    = "AllowPutSecretsmanagerSecrets"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:PutSecretValue"
+    ]
+    resources = [
+      data.aws_secretsmanager_secret.custom_sql_users.arn
     ]
   }
 
