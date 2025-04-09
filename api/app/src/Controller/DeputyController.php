@@ -4,10 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Deputy;
 use App\Entity\User;
+use App\Repository\DeputyRepository;
+use App\Service\Auth\AuthService;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,7 +24,8 @@ class DeputyController extends RestController
     public function __construct(
         private readonly DeputyService $deputyService,
         private readonly RestFormatter $formatter,
-        EntityManagerInterface $em
+        private readonly LoggerInterface $logger,
+        protected readonly EntityManagerInterface $em
     ) {
         parent::__construct($em);
     }
@@ -81,5 +87,26 @@ class DeputyController extends RestController
         $deputy = $this->findEntityBy(Deputy::class, $id);
 
         return $deputy;
+    }
+
+    /**
+     * @Route("/{uid}/reports", name="deputy_find_by_uid", requirements={"uid":"\d+"}, methods={"GET"})
+     * 
+     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
+     *
+     * @return array<string>
+     */
+    public function getAllDeputyReports(Request $request, int $uid): array
+    {
+        $inactive = $request->query->has('inactive') ? $request->query->get('inactive') : null;
+
+        try {
+            $this->formatter->setJmsSerialiserGroups(['deputy-court-order-basic']);
+            $results = $this->em->getRepository(Deputy::class)->findReportsInfoByUid($uid, (bool) $inactive);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+        
+        return $results;
     }
 }

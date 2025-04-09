@@ -40,7 +40,7 @@ class CourtOrder
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
     #[JMS\Type('string')]
-    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
     private string $courtOrderUid;
 
     /**
