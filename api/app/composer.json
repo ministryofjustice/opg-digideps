@@ -56,7 +56,7 @@
         "symfony/routing": "^6.0",
         "symfony/security-bundle": "^6.0",
         "symfony/security-core": "^6.0",
-        "symfony/security-http": "^6.0",
+        "symfony/security-http": "6.2.13",
         "symfony/serializer": "^6.0",
         "symfony/validator": "^6.0",
         "symfony/yaml": "^6.0"
@@ -79,7 +79,7 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "^6.0",
+        "symfony/http-client": "6.2.13",
         "symfony/browser-kit": "^6.0",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^6.0",
