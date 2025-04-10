@@ -21,11 +21,15 @@ final class Version296 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE court_order ADD order_made_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
+        $this->addSql('ALTER TABLE staging.selectedCandidates ADD order_type VARCHAR(5) DEFAULT NULL');
+        $this->addSql('ALTER TABLE court_order RENAME COLUMN type TO order_type');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE court_order DROP order_made_date');
+        $this->addSql('ALTER TABLE staging.selectedCandidates DROP order_type');
+        $this->addSql('ALTER TABLE court_order RENAME COLUMN order_type TO type');
     }
 }

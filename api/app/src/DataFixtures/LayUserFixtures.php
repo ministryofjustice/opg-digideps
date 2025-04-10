@@ -367,7 +367,7 @@ class LayUserFixtures extends AbstractDataFixture
         $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration, -$offset));
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setType($data['reportType']);
+        $courtOrder->setOrderType($data['orderType']);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
@@ -401,7 +401,7 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderUidHW = intval(substr_replace($data['courtOrderUid'], $iteration. 102, -$offset));
 
             $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
-            $courtOrderPfa->setType($data['reportType']);
+            $courtOrderPfa->setOrderType($data['orderType']);
             $courtOrderPfa->setStatus('ACTIVE');
             $courtOrderPfa->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderPfa->setClient($client);
@@ -409,7 +409,7 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderPfa->setUpdatedAt(new \DateTime());
 
             $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
-            $courtOrderHW->setType($data['reportType']);
+            $courtOrderHW->setOrderType($data['orderType']);
             $courtOrderHW->setStatus('ACTIVE');
             $courtOrderHW->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderHW->setClient($client);
@@ -464,7 +464,7 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration. 2, -2));
 
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
-            $additionalCourtOrder->setType($data['reportType']);
+            $additionalCourtOrder->setOrderType($data['orderType']);
             $additionalCourtOrder->setStatus('ACTIVE');
             $additionalCourtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
             $additionalCourtOrder->setClient($client2);

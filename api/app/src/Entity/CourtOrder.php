@@ -52,9 +52,9 @@ class CourtOrder
      *
      * @JMS\Type("string")
      *
-     * @ORM\Column(name="type", type="string", length=10, nullable=false)
+     * @ORM\Column(name="order_type", type="string", length=10, nullable=false)
      */
-    private $type;
+    private $orderType;
 
     /**
      * @var string
@@ -134,14 +134,14 @@ class CourtOrder
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
-        return $this->type;
+        return $this->orderType;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $orderType): CourtOrder
     {
-        $this->type = $type;
+        $this->orderType = $orderType;
 
         return $this;
     }
