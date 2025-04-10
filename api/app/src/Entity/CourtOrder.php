@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -23,9 +23,9 @@ class CourtOrder
     use CreateUpdateTimestamps;
 
     /**
-     * @var int
-     *
      * @JMS\Type("integer")
+     *
+     * @JMS\Groups({"court-order-base"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -35,48 +35,39 @@ class CourtOrder
      *
      * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var int
-     *
      * @JMS\Type("integer")
+     *
+     * @JMS\Groups({"court-order-base", "court-order-full"})
      *
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
-    private $courtOrderUid;
+    private int $courtOrderUid;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
+     *
+     * @JMS\Groups({"court-order-base", "court-order-full"})
      *
      * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var bool
-     *
      * @JMS\Type("boolean")
+     *
+     * @JMS\Groups({"court-order-base", "court-order-full"})
      *
      * @ORM\Column(name="active", type="boolean", options = { "default": true })
      */
-    private $active;
-
-    /**
-     * @var Client
-     *
-     * @JMS\Type("App\Entity\Client")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-     */
-    private $client;
+    private bool $active;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
+     *
+     * @JMS\Groups({"court-order-full"})
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY")
      *
@@ -85,9 +76,22 @@ class CourtOrder
      *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
      *     )
      */
-    private $reports;
+    private Collection $reports;
 
     /**
+     * @JMS\Type("App\Entity\Client")
+     *
+     * @JMS\Groups({"court-order-full"})
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
+     *
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     */
+    private Client $client;
+
+    /**
+     * @JMS\Type("ArrayCollection<App\Entity\CourtOrderDeputy>")
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="id", referencedColumnName="court_order_id")
@@ -165,5 +169,28 @@ class CourtOrder
         $this->reports->add($report);
 
         return $this;
+    }
+
+    /**
+     * Active = not discharged.
+     *
+     * @JMS\VirtualProperty
+     *
+     * @JMS\Groups({"court-order-full"})
+     *
+     * @return Deputy[]
+     */
+    public function getActiveDeputies(): array
+    {
+        $activeDeputies = [];
+
+        /** @var CourtOrderDeputy $rel */
+        foreach ($this->courtOrderDeputyRelationships as $rel) {
+            if (!$rel->isDischarged()) {
+                $activeDeputies[] = $rel->getDeputy();
+            }
+        }
+
+        return $activeDeputies;
     }
 }
