@@ -21,7 +21,7 @@ class DeputyTest extends TestCase
         $courtOrder = new CourtOrder();
         $courtOrder
             ->setCourtOrderUid($fakeUid)
-            ->setType('hybrid')
+            ->setOrderType('hybrid')
             ->setStatus('ACTIVE')
             ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
@@ -34,6 +34,6 @@ class DeputyTest extends TestCase
         $this->assertEquals(1, count($actual));
         $this->assertEquals(true, $actualIsActive);
         $this->assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
-        $this->assertEquals('hybrid', $actualCourtOrder->getType());
+        $this->assertEquals('hybrid', $actualCourtOrder->getOrderType());
     }
 }

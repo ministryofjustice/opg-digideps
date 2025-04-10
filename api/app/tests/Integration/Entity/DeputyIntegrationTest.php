@@ -34,7 +34,7 @@ class DeputyIntegrationTest extends KernelTestCase
         $courtOrder = new CourtOrder();
         $courtOrder
             ->setCourtOrderUid($fakeUid)
-            ->setType('hybrid')
+            ->setOrderType('hybrid')
             ->setStatus('ACTIVE')
             ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
@@ -55,6 +55,6 @@ class DeputyIntegrationTest extends KernelTestCase
         $this->assertEquals(1, count($actual));
         $this->assertEquals(false, $actualDischarged);
         $this->assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
-        $this->assertEquals('hybrid', $actualCourtOrder->getType());
+        $this->assertEquals('hybrid', $actualCourtOrder->getOrderType());
     }
 }
