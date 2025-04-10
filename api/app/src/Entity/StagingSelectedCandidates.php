@@ -52,6 +52,11 @@ class StagingSelectedCandidates
     public ?string $status;
 
     /**
+     * @ORM\Column(name="order_type", type="string", length=5, nullable=true)
+     */
+    public ?string $orderType;
+
+    /**
      * @ORM\Column(name="report_type", type="string", length=30, nullable=true)
      */
     public ?string $reportType;
@@ -82,17 +87,22 @@ class StagingSelectedCandidates
     public ?string $isHybrid;
 
     /**
+     * @ORM\Column(name="order_id", type="integer",nullable=true)
+     */
+    public ?int $orderId;
+
+    /**
      * @ORM\Column(name="client_id", type="integer",nullable=true)
      */
-    public ?string $clientId;
+    public ?int $clientId;
 
     /**
      * @ORM\Column(name="report_id", type="integer",nullable=true)
      */
-    public ?string $reportId;
+    public ?int $reportId;
 
     /**
      * @ORM\Column(name="deputy_id", type="integer",nullable=true)
      */
-    public ?string $deputyId;
+    public ?int $deputyId;
 }
