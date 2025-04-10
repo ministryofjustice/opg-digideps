@@ -25,7 +25,7 @@ class CourtOrder
     /**
      * @JMS\Type("integer")
      *
-     * @JMS\Groups({"court-order-base"})
+     * @JMS\Groups({"court-order-basic"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -40,7 +40,7 @@ class CourtOrder
     /**
      * @JMS\Type("integer")
      *
-     * @JMS\Groups({"court-order-base", "court-order-full"})
+     * @JMS\Groups({"court-order-basic", "court-order-full"})
      *
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
@@ -49,7 +49,7 @@ class CourtOrder
     /**
      * @JMS\Type("string")
      *
-     * @JMS\Groups({"court-order-base", "court-order-full"})
+     * @JMS\Groups({"court-order-basic", "court-order-full"})
      *
      * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
@@ -58,7 +58,7 @@ class CourtOrder
     /**
      * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"court-order-base", "court-order-full"})
+     * @JMS\Groups({"court-order-basic", "court-order-full"})
      *
      * @ORM\Column(name="active", type="boolean", options = { "default": true })
      */
