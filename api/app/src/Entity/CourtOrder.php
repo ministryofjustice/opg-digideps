@@ -104,6 +104,29 @@ class CourtOrder
         $this->reports = new ArrayCollection();
     }
 
+    /**
+     * active means "not discharged".
+     *
+     * @JMS\VirtualProperty
+     *
+     * @JMS\Groups({"court-order-full"})
+     *
+     * @return Deputy[]
+     */
+    public function getActiveDeputies(): array
+    {
+        $activeDeputies = [];
+
+        /** @var CourtOrderDeputy $rel */
+        foreach ($this->courtOrderDeputyRelationships as $rel) {
+            if (!$rel->isDischarged()) {
+                $activeDeputies[] = $rel->getDeputy();
+            }
+        }
+
+        return $activeDeputies;
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -169,28 +192,5 @@ class CourtOrder
         $this->reports->add($report);
 
         return $this;
-    }
-
-    /**
-     * Active = not discharged.
-     *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
-     * @return Deputy[]
-     */
-    public function getActiveDeputies(): array
-    {
-        $activeDeputies = [];
-
-        /** @var CourtOrderDeputy $rel */
-        foreach ($this->courtOrderDeputyRelationships as $rel) {
-            if (!$rel->isDischarged()) {
-                $activeDeputies[] = $rel->getDeputy();
-            }
-        }
-
-        return $activeDeputies;
     }
 }
