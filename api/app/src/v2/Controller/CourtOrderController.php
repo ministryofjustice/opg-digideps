@@ -54,12 +54,10 @@ class CourtOrderController extends RestController
         // rather than returning a 403 or similar, as the latter might reveal information about whether the court order
         // UID exists or not (a 403 would imply the resource exists but the user doesn't have permission to see it)
         if (is_null($courtOrder)) {
-            return $this->buildNotFoundResponse(message: 'Could not find court order');
+            return $this->buildNotFoundResponse('Could not find court order');
         }
 
-        $ctx = SerializationContext::create()->setGroups(
-            ['court-order-full', 'client', 'deputy', 'report']
-        );
+        $ctx = SerializationContext::create()->setGroups(['court-order-full', 'client', 'deputy', 'report']);
 
         $body = $this->serializer->serialize($courtOrder, 'json', $ctx);
 
