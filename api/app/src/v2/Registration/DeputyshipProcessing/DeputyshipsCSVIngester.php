@@ -36,8 +36,9 @@ class DeputyshipsCSVIngester
 
         // find the candidate deputyships which have changed or need to be added;
         // note that we return state objects which are used as the start state for processing each row
-        $candidates = $this->deputyshipsCandidatesSelector->select();
-        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
+        $candidates = [];
+        $this->deputyshipsCandidatesSelector->select();
+        //        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
 
         foreach ($candidates as $state) {
             // build the CourtOrder and related entities without saving them; see matching rules at
