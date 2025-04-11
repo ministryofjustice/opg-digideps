@@ -227,8 +227,6 @@ class Deputy
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
      */
     private Collection $courtOrderDeputyRelationships;
 
