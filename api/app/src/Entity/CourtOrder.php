@@ -93,8 +93,6 @@ class CourtOrder
      * @JMS\Type("ArrayCollection<App\Entity\CourtOrderDeputy>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="id", referencedColumnName="court_order_id")
      */
     private Collection $courtOrderDeputyRelationships;
 
