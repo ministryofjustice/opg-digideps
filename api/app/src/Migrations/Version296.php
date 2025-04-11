@@ -24,6 +24,7 @@ final class Version296 extends AbstractMigration
         $this->addSql('ALTER TABLE staging.selectedCandidates ADD order_type VARCHAR(5) DEFAULT NULL');
         $this->addSql('ALTER TABLE staging.selectedCandidates ADD order_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE court_order RENAME COLUMN type TO order_type');
+        $this->addSql('ALTER TABLE staging.selectedcandidates DROP order_updated_date');
     }
 
     public function down(Schema $schema): void
@@ -33,5 +34,6 @@ final class Version296 extends AbstractMigration
         $this->addSql('ALTER TABLE staging.selectedCandidates DROP order_type');
         $this->addSql('ALTER TABLE staging.selectedCandidates DROP order_id');
         $this->addSql('ALTER TABLE court_order RENAME COLUMN order_type TO type');
+        $this->addSql('ALTER TABLE staging.selectedCandidates ADD order_updated_date VARCHAR(30) DEFAULT NULL');
     }
 }

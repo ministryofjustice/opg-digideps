@@ -67,11 +67,6 @@ class StagingSelectedCandidates
     public ?string $orderMadeDate;
 
     /**
-     * @ORM\Column(name="order_updated_date", type="string", length=30, nullable=true)
-     */
-    public ?string $orderUpdatedDate;
-
-    /**
      * @ORM\Column(name="deputy_type", type="string", length=30, nullable=true)
      */
     public ?string $deputyType;
