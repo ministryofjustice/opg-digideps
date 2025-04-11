@@ -94,7 +94,7 @@ class ClientBenefitsCheckController extends RestController
 
     private function setJmsGroups(Request $request)
     {
-        $groups = $request->get('groups') ? $request->get('groups') : ['client-benefits-check', 'report', 'ndr-client', 'ndr'];
+        $groups = $request->request->all('groups') ? $request->request->all('groups') : ['client-benefits-check', 'report', 'ndr-client', 'ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
     }
 
