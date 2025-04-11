@@ -6,15 +6,20 @@ use App\Entity\Client;
 use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Mockery\MockInterface;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase
 {
-    private static $deputy1;
-    private static $codeputy1;
+    private User $user;
+    private EntityManager&MockInterface $em;
+    private ClientRepository&MockInterface $clientRepository;
+    private UserRepository&MockInterface $userRepository;
+    private UserService $sut;
 
     public function setUp(): void
     {
@@ -22,7 +27,7 @@ class UserServiceTest extends TestCase
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new \DateTime('2014-06-06'));
+        $client->setCourtDate(new DateTime('2014-06-06'));
         $email = 'test@tester.co.uk';
 
         $this->em = m::mock(EntityManager::class);

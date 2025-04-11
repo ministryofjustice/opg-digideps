@@ -33,7 +33,7 @@ class ExpenseController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['expenses', 'account'];
+            ? $request->query->all('groups') : ['expenses', 'account'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $expense;
