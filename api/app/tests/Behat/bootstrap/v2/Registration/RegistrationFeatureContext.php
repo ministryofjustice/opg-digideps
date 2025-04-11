@@ -17,8 +17,6 @@ class RegistrationFeatureContext extends BaseFeatureContext
     use AdminManagementTrait;
     use AuthenticationTrait;
     use CourtOrderManagementTrait;
-    use FixturesTrait;
-    use FormTrait;
     use IngestTrait;
     use ReportingSectionsTrait;
     use SelfRegistrationTrait;
