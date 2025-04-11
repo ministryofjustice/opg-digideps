@@ -101,7 +101,7 @@ class ReportController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['report'];
+            ? $request->query->all('groups') : ['report'];
 
         $this->formatter->setJmsSerialiserGroups($groups);
 

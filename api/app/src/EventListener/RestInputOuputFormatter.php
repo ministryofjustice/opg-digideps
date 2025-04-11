@@ -7,6 +7,7 @@ use App\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -150,6 +151,7 @@ class RestInputOuputFormatter
         // transform message and code
         if ($code < 400 || $code > 599) {
             $code = 500;
+            $level = LogLevel::ERROR;
         }
 
         if ($e instanceof BusinessRulesException) {
@@ -177,9 +179,10 @@ class RestInputOuputFormatter
             'success' => false,
             'data' => ($e instanceof HasDataInterface) ? $e->getData() : '',
             'message' => $message,
-            'stacktrace' => ($this->debug) ?
-                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 64000))
-                    : 'enable debug mode to see it',
+//            'stacktrace' => ($this->debug) ?
+//                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 64000))
+//                    : 'enable debug mode to see it',
+            'stacktrace' => sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 64000)),
             'code' => $code,
         ];
 
