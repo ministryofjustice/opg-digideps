@@ -7,11 +7,13 @@ namespace App\v2\Service;
 use App\Entity\CourtOrder;
 use App\Entity\User;
 use App\Repository\CourtOrderRepository;
+use Psr\Log\LoggerInterface;
 
 class CourtOrderService
 {
     public function __construct(
         private readonly CourtOrderRepository $courtOrderRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -27,6 +29,8 @@ class CourtOrderService
         $deputyUid = $user->getDeputyUid();
 
         if (is_null($deputyUid)) {
+            $this->logger->error("Access denied to court order {$uid} as user with ID {$user->getId()} has null deputy UID");
+
             return null;
         }
 
@@ -45,6 +49,10 @@ class CourtOrderService
         }
 
         if (!$isDeputyOnCourtOrder) {
+            $this->logger->error(
+                "Access denied to court order {$uid} for deputy with UID {$deputyUid} as they are not a deputy on order"
+            );
+
             return null;
         }
 
