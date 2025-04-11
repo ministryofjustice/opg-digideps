@@ -112,7 +112,7 @@ class AccountControllerTest extends AbstractTestController
         $url = '/report/'.self::$report1->getId();
 
         // assert accounts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=account', [
+        $data = $this->assertJsonRequest('GET', $url . '?' . http_build_query(['groups' => ['account']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data']['bank_accounts'];

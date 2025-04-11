@@ -235,35 +235,35 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('end_date', $data);
 
         // assert decisions
-        $data = $this->assertJsonRequest('GET', $url.'?groups=decision', [
+        $data = $this->assertJsonRequest('GET', $url.'?'.http_build_query(['groups' => ['decision']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('decisions', $data);
 
         // assert assets
-        $data = $this->assertJsonRequest('GET', $url.'?groups=asset', [
+        $data = $this->assertJsonRequest('GET', $url.'?'.http_build_query(['groups' => ['asset']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('assets', $data);
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=debt', [
+        $data = $this->assertJsonRequest('GET', $url.'?'.http_build_query(['groups' => ['debt']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('debts', $data);
 
         // assert fees
-        $data = $this->assertJsonRequest('GET', $url.'?groups=fee', [
+        $data = $this->assertJsonRequest('GET', $url.'?'.http_build_query(['groups' => ['fee']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('fees', $data);
 
         // assert report-submitted-by + user info
-        $data = $this->assertJsonRequest('GET', $url.'?groups=report-submitted-by', [
+        $data = $this->assertJsonRequest('GET', $url.'?'.http_build_query(['groups' => ['report-submitted-by']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -271,7 +271,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $data['submitted_by']['email']);
 
         // assert status
-        $data = $this->assertJsonRequest('GET', $url.'?groups=status', [
+        $data = $this->assertJsonRequest('GET', $url.'?'.http_build_query(['groups' => ['status']]), [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data']['status'];

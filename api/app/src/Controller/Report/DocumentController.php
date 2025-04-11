@@ -131,7 +131,7 @@ class DocumentController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['documents'];
+            ? $request->query->all('groups') : ['documents'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         /* @var $document EntityDir\Report\Document */
@@ -246,7 +246,7 @@ class DocumentController extends RestController
         $document = $documentRepository->find($id);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['synchronisation', 'document-id'];
+            ? $request->query->all('groups') : ['synchronisation', 'document-id'];
 
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 

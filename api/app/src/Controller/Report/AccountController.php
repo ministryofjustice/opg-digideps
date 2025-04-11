@@ -59,7 +59,7 @@ class AccountController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['account'];
+            ? $request->query->all('groups') : ['account'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $account;

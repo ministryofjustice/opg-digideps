@@ -83,7 +83,7 @@ class DecisionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['decision'];
+        $serialisedGroups = $request->query->has('groups') ? $request->query->all('groups') : ['decision'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:'.$id.' not found');

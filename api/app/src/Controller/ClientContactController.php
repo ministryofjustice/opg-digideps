@@ -95,7 +95,7 @@ class ClientContactController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups')
+            ? $request->query->all('groups')
             : ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
