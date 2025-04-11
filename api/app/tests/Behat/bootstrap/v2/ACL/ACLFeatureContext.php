@@ -12,5 +12,4 @@ class ACLFeatureContext extends BaseFeatureContext
 {
     use ACLTrait;
     use DeputyManagementTrait;
-    use FormTrait;
 }

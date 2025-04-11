@@ -123,9 +123,9 @@ trait ActivateTrait
         $this->fillInField('client_courtDate_year', '2020');
 
         if ($this->getSession()->getPage()->findById('client_caseNumber')) {
-            $this->fillInField('client_firstname', $this->faker->firstName());
-            $this->fillInField('client_lastname', $this->existingPreRegistration->getClientLastname());
-            $this->fillInField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
+            $this->fillComplexField('client_firstname', $this->faker->firstName());
+            $this->fillComplexField('client_lastname', $this->existingPreRegistration->getClientLastname());
+            $this->fillComplexField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
         }
 
         $this->pressButton('client_save');
@@ -304,5 +304,73 @@ trait ActivateTrait
         $this->completeClientDetailsSectionUsingUnicode();
 
         $this->completeFinalRegistrationSection($this->getUserForTestRun()['type']);
+    }
+
+    public function fillComplexField($field, $value): void
+    {
+        $driver = $this->getSession()->getDriver();
+        $field = $this->fixStepArgument($field);
+        $value = $this->fixStepArgument($value);
+
+        if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
+            $field = '#'.$field;
+        }
+
+        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+            $this->scrollTo($field);
+
+            $javascript = <<<EOT
+            var field = $('$field');
+            var value = '$value';
+
+            $(':focus').trigger('blur').trigger('change');
+            var tag = field.prop('tagName');
+
+            if (field.prop('type') === 'checkbox' ||
+                field.prop('type') === 'radio')
+            {
+
+                field.prop('checked', true);
+
+            } else if (tag === 'SELECT') {
+
+                field.focus().val(value).trigger('change');
+
+            } else {
+                var pos = 0,
+                    length = value.length,
+                    character, charCode;
+
+                for (;pos < length; pos += 1) {
+
+                    character = value[pos];
+                    charCode = character.charCodeAt(0);
+
+                    var keyPressEvent = $.Event('keypress', {which: charCode}),
+                        keyDownEvent = $.Event('keydown', {which: charCode}),
+                        keyUpEvent = $.Event('keyup', {which: charCode});
+
+                    field
+                        .focus()
+                        .trigger(keyDownEvent)
+                        .trigger(keyPressEvent)
+                        .val(value.substr(0,pos+1))
+                        .trigger(keyUpEvent);
+
+                }
+            }
+
+EOT;
+
+            $this->getSession()->executeScript($javascript);
+        } else {
+            $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
+
+            if (empty($elementsFound)) {
+                throw new \RuntimeException("Element $field not found");
+            }
+
+            $elementsFound[0]->setValue($value);
+        }
     }
 }
