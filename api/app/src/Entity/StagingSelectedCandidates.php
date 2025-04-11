@@ -72,9 +72,9 @@ class StagingSelectedCandidates
     public ?string $deputyType;
 
     /**
-     * @ORM\Column(name="deputy_status_on_order", type="string", length=30, nullable=true)
+     * @ORM\Column(name="deputy_status_on_order", type="boolean", nullable=true)
      */
-    public ?string $deputyStatusOnOrder;
+    public ?bool $deputyStatusOnOrder;
 
     /**
      * @ORM\Column(name="is_hybrid", type="string", length=30, nullable=true)

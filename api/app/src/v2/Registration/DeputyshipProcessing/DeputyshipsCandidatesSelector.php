@@ -71,12 +71,12 @@ class DeputyshipsCandidatesSelector
                     $changes->action = 'UPDATE DEPUTY STATUS ON ORDER';
                     $changes->orderId = $courtOrderId;
                     $changes->deputyId = $deputyId;
-                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus ? 'true' : 'false';
+                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
                 } else {
                     $changes->action = 'INSERT ORDER DEPUTY';
                     $changes->orderId = $courtOrderId;
                     $changes->deputyId = $deputyId;
-                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus ? 'true' : 'false';
+                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
                 }
                 $selectionCandidates[] = $changes;
             }
@@ -102,7 +102,7 @@ class DeputyshipsCandidatesSelector
                     $changes->action = 'INSERT ORDER DEPUTY';
                     $changes->orderUid = $csvDeputyship->orderUid;
                     $changes->deputyId = $deputyId;
-                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus ? 'true' : 'false';
+                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
                     $selectionCandidates[] = $changes;
 
                     // Need all reports for client (compatibility later???)
