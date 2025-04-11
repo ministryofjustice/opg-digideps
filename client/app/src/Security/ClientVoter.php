@@ -11,6 +11,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * @extends Voter<string, Client>
+ */
 class ClientVoter extends Voter
 {
     /** @var string */
@@ -36,18 +39,12 @@ class ClientVoter extends Voter
      *
      * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::VIEW, self::EDIT, self::DELETE]) && $subject instanceof Client;
     }
 
-    /**
-     * @param string $attribute
-     * @param Client $client
-     *
-     * @return bool
-     */
-    protected function voteOnAttribute($attribute, $client, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
@@ -59,7 +56,7 @@ class ClientVoter extends Voter
         switch ($attribute) {
             case self::VIEW:
             case self::EDIT:
-                return $this->canManage($client, $user);
+                return $this->canManage($subject, $user);
             case self::DELETE:
                 return $this->canDelete($user);
 

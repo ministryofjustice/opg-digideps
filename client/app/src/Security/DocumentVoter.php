@@ -8,6 +8,9 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Report|Document>
+ */
 class DocumentVoter extends Voter
 {
     const ADD_DOCUMENT = 'add-note';
@@ -15,13 +18,8 @@ class DocumentVoter extends Voter
 
     /**
      * Does this voter support the attribute?
-     *
-     * @param string $attribute
-     * @param mixed  $subject
-     *
-     * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return
             self::ADD_DOCUMENT === $attribute ||
@@ -30,13 +28,8 @@ class DocumentVoter extends Voter
 
     /**
      * Vote on whether to grant attribute permission on subject.
-     *
-     * @param string $attribute
-     * @param mixed  $subject
-     *
-     * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         /** @var User $loggedInUser */
         $loggedInUser = $token->getUser();

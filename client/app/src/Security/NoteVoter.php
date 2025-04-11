@@ -9,33 +9,23 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Client|Note>
+ */
 class NoteVoter extends Voter
 {
     public const ADD_NOTE = 'add-note';
     public const EDIT_NOTE = 'edit-note';
     public const DELETE_NOTE = 'delete-note';
 
-    /**
-     * @var AccessDecisionManagerInterface
-     */
-    private $decisionManager;
-
-    /**
-     * NoteVoter constructor.
-     */
-    public function __construct(AccessDecisionManagerInterface $decisionManager)
+    public function __construct()
     {
-        $this->decisionManager = $decisionManager;
     }
 
     /**
      * Does this voter support the attribute?
-     *
-     * @param string $attribute
-     *
-     * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, mixed $subject): bool
     {
         switch ($attribute) {
             case self::ADD_NOTE:
@@ -54,12 +44,8 @@ class NoteVoter extends Voter
 
     /**
      * Vote on whether to grant attribute permission on subject.
-     *
-     * @param string $attribute
-     *
-     * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         /** @var User $loggedInUser */
         $loggedInUser = $token->getUser();
@@ -72,7 +58,6 @@ class NoteVoter extends Voter
         switch ($attribute) {
             case self::ADD_NOTE:
                 if ($subject instanceof Client) {
-                    /* @var Client $subject */
                     return $subject->hasUser($loggedInUser);
                 }
 
@@ -82,7 +67,6 @@ class NoteVoter extends Voter
                 if ($subject instanceof Note) {
                     $client = $subject->getClient();
                     if ($client instanceof Client) {
-                        /* @var Note $subject */
                         return $subject->getClient()->hasUser($loggedInUser);
                     }
                 }

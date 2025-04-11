@@ -20,6 +20,8 @@ services:
       - ./client/app/frontend.env
     volumes:
       - ./build/coverage-client:/var/www/build/coverage-client
+      - ./client/app/src:/var/www/src
+      - ./client/app/tests:/var/www/tests
     command: sleep infinity
 
   pact-mock:

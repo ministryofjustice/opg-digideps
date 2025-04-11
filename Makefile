@@ -37,7 +37,7 @@ build-app: down-app build-js ##@application Brings up app with a full no-cache b
 	docker compose build --no-cache
 
 up-app: ##@application Brings the app up and mounts local folders
-	COMPOSE_HTTP_TIMEOUT=90 docker compose up -d --remove-orphans load-balancer
+	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml -f docker-compose.behat.yml up -d --remove-orphans load-balancer
 
 up-app-rebuild: ##@application Brings up app with a basic rebuild
 	docker compose down

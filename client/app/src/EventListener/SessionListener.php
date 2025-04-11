@@ -68,7 +68,12 @@ class SessionListener
     private function hasReachedTimeout(RequestEvent $event)
     {
         $session = $event->getRequest()->getSession();
-        $lastUsed = (int) $session->getMetadataBag()->getLastUsed();
+
+        if ($session->getMetadataBag()->getCreated() === 0) {
+            return false;
+        }
+
+        $lastUsed = $session->getMetadataBag()->getLastUsed();
         if (!$lastUsed) {
             return false;
         }

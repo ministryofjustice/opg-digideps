@@ -5,9 +5,11 @@ monolog:
       type: stream
       path: php://stderr
       level: warning
-      formatter: opg_json_formatter
+#      formatter: opg_json_formatter
+      formatter: line_formatter
       channels: ["!translation", "!verbose"]
       bubble: false
+      include_stacktraces: true
     csv:
       type: stream
       path: php://stderr
