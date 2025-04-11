@@ -8,5 +8,4 @@ use App\Tests\Behat\v2\Common\BaseFeatureContext;
 
 class AnalyticsFeatureContext extends BaseFeatureContext
 {
-    use AnalyticsTrait;
 }
