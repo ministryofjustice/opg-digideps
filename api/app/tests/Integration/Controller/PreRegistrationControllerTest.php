@@ -8,13 +8,11 @@ use App\Tests\Integration\Fixtures;
 
 class PreRegistrationControllerTest extends AbstractTestController
 {
-    private static User $deputy1;
-    private static User $admin1;
-    private static User $deputy2;
     private static $tokenAdmin;
     private static $tokenDeputy;
     private static $tokenProf;
     private static $tokenPa;
+    private ?PreRegistration $c1;
 
     /**
      * clear fixtures.
@@ -30,9 +28,9 @@ class PreRegistrationControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
-        self::$deputy2 = self::fixtures()->createUser();
+//        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+//        self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
+//        self::$deputy2 = self::fixtures()->createUser();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
