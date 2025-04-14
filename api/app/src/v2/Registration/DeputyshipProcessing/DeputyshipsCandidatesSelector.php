@@ -22,11 +22,11 @@ class DeputyshipsCandidatesSelector
     {
         $selectionCandidates = [];
 
-        $csvDeputyships = $this->em->createQuery(
+        $csvDeputyships[] = $this->em->createQuery(
             "SELECT sd FROM App\Entity\StagingDeputyship sd ORDER BY sd.orderUid"
         )->getResult();
 
-        $knownCourtOrders = $this->em->getRepository(CourtOrder::class)
+        $knownCourtOrders[] = $this->em->getRepository(CourtOrder::class)
             ->createQueryBuilder('co')
             ->select('co.courtOrderUid', 'co.id', 'co.status')
             ->getQuery()
@@ -36,7 +36,7 @@ class DeputyshipsCandidatesSelector
         $lookupKnownCourtOrdersId = array_column($knownCourtOrders, 'id', 'courtOrderUid');
 
         // Not implemented - check against dd user table for being active
-        $knownDeputies = $this->em->createQuery(
+        $knownDeputies[] = $this->em->createQuery(
             "SELECT d.id,d.deputyUid FROM App\Entity\Deputy d"
         )->getResult();
 
@@ -82,12 +82,18 @@ class DeputyshipsCandidatesSelector
             }
 
             $client = $this->getClient($csvDeputyship->caseNumber);
+            $reportTypeIsCompatible = false;
+            $reportId = null;
+
             if (!$courtOrderFound && 'ACTIVE' == $csvDeputyship->orderStatus && !is_null($client)) {
-                $reportTypeIsCompatible = $this->checkReportTypeIsCompatible(
-                    $client->getCurrentReport()->getId(),
-                    $csvDeputyship->reportType,
-                    $csvDeputyship->isHybrid
-                );
+                if (!is_null($client->getCurrentReport())) {
+                    $reportTypeIsCompatible = $this->checkReportTypeIsCompatible(
+                        $client->getCurrentReport()->getId(),
+                        $csvDeputyship->reportType,
+                        $csvDeputyship->isHybrid
+                    );
+                    $reportId = $client->getCurrentReport()->getId();
+                }
                 if ($reportTypeIsCompatible) {
                     $changes = new StagingSelectedCandidates();
                     $changes->action = 'INSERT ORDER';
@@ -110,7 +116,7 @@ class DeputyshipsCandidatesSelector
                     $changes->action = 'INSERT ORDER REPORT';
                     $changes->orderUid = $csvDeputyship->orderUid;
                     // How to bring back previous reports
-                    $changes->reportId = $client->getCurrentReport()->getId(); // need more than one
+                    $changes->reportId = $reportId; // need more than one
                     $selectionCandidates[] = $changes;
                 } else {
                     // if report not compatible DO WE DO ANYTHING IN THIS SITUATION
@@ -147,7 +153,7 @@ class DeputyshipsCandidatesSelector
     private function checkReportTypeIsCompatible(int $reportId, string $csvReportType, string $isHybrid): bool
     {
         $report = $this->em->getRepository(Report::class)->findOneBy(['id' => $reportId]);
-        $reportType = $report->getType();
+        $reportType = !is_null($report) ? $report->getType() : '';
         $adjustedCsvReportType = substr($csvReportType, 3);
 
         if ($isHybrid && ('102-4' == $reportType || '103-4' == $reportType) && ($reportType == $adjustedCsvReportType || '104' == $adjustedCsvReportType)) {
