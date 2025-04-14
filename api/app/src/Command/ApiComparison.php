@@ -191,8 +191,16 @@ class ApiComparison extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $failed = false;
-        $legacyRoute = (string) $input->getArgument('legacyRoute');
-        $newRoute = (string) $input->getArgument('newRoute');
+
+        $legacyRoute = $input->getArgument('legacyRoute');
+        if (!is_string($legacyRoute)) {
+            throw new \InvalidArgumentException('Expected legacyRoute argument to be a string.');
+        }
+
+        $newRoute = $input->getArgument('newRoute');
+        if (!is_string($newRoute)) {
+            throw new \InvalidArgumentException('Expected newRoute argument to be a string.');
+        }
 
         $comparer = $this->comparerMap[$legacyRoute] ?? throw new \InvalidArgumentException("No comparer defined for route: $legacyRoute");
 

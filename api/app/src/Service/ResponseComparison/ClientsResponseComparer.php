@@ -27,18 +27,21 @@ class ClientsResponseComparer extends ResponseComparer
         $newDecoded = json_decode($newResponse->getBody()->getContents(), true);
 
         if (
-            !is_array($legacyDecoded) || !isset($legacyDecoded['data']) || !is_array($legacyDecoded['data'])
-            || !is_array($newDecoded) || !isset($newDecoded['data']) || !is_array($newDecoded['data'])
+            !is_array($legacyDecoded) || !is_array($newDecoded)
+            || !isset($legacyDecoded['data']) || !is_array($legacyDecoded['data'])
+            || !isset($newDecoded['data']) || !is_array($newDecoded['data'])
         ) {
             throw new \RuntimeException('Invalid response format. Expected "data" key with array value.');
         }
-
-        $legacyId = $legacyDecoded['data']['id'] ?? null;
-        $newId = $newDecoded['data']['id'] ?? null;
-
-        if (!is_scalar($legacyId) || !is_scalar($newId)) {
-            throw new \RuntimeException('Invalid "id" format in data.');
+        if (
+            !isset($legacyDecoded['data']['id']) || !is_numeric($legacyDecoded['data']['id'])
+            || !isset($newDecoded['data']['id']) || !is_numeric($newDecoded['data']['id'])
+        ) {
+            throw new \RuntimeException('Invalid response format. Expected "id" key with numeric value.');
         }
+
+        $legacyId = $legacyDecoded['data']['id'];
+        $newId = $newDecoded['data']['id'];
 
         return $legacyId === $newId;
     }
