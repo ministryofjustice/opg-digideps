@@ -9,10 +9,7 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
-    depends_on:
-      - postgres
-      - redis-api
-      - localstack
+        ENVIRONMENT: local
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
@@ -24,12 +21,4 @@ services:
       - ./api/app/tests/Behat/test.env
     volumes:
       - ./build/coverage-api:/var/www/build/coverage-api
-
-  redis-api:
-    restart: always
-
-  localstack:
-    restart: always
-
-  postgres:
-    restart: always
+    command: sleep infinity

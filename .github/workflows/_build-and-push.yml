@@ -24,7 +24,6 @@ on:
 
 jobs:
   docker_build_scan_push:
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -32,35 +31,67 @@ jobs:
           - svc_name: "client-webserver"
             sub_folder: "."
             docker_file: "client/docker/web/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "client"
             sub_folder: "."
             docker_file: "client/docker/app/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "api-webserver"
             sub_folder: "."
             docker_file: "api/docker/web/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "api"
             sub_folder: "."
             docker_file: "api/docker/app/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "sync"
             sub_folder: "orchestration"
             docker_file: "Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "htmltopdf"
             sub_folder: "."
             docker_file: "htmltopdf/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "file-scanner"
             sub_folder: "."
             docker_file: "file-scanner/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
             docker_file: "Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "custom-sql-lambda"
             sub_folder: "lambdas/functions/custom_sql_query"
             docker_file: "Dockerfile"
+            platform: "amd64"
+            runs_on: "ubuntu-latest"
+
+    runs-on: ${{ matrix.runs_on }}
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@f7ce87c1d6bead3e36075b2ce75da1f6cc28aaca
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+        id: buildx_setup
+        with:
+          version: v0.15.1
+          platforms: linux/${{ matrix.platform }}
 
       - name: export dates
         id: cache-dates
@@ -70,7 +101,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@36f1e144e1c8edb0a652766b484448563d8baf46 # pin@v3.0.8
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -81,10 +112,10 @@ jobs:
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
 
       - name: install aws cli
-        uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
+        uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1
 
       - name: download resources artifact
-        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
           name: web-distribution
           path: client/resources/public
@@ -96,11 +127,17 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
           DOCKERFILE: ${{ matrix.docker_file }}
           BRANCH_NAME: ${{ inputs.branch_name }}
+          PLATFORM: ${{ matrix.platform }}
+          TAG: ${{ inputs.tag }}
         run: |
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            --platform linux/${PLATFORM} \
+            --load \
+            --build-arg PLATFORM=${PLATFORM} \
+            --build-arg TAG=${TAG} \
             --tag ${IMAGE_NAME}:latest \
             --output type=docker \
             .
@@ -109,18 +146,14 @@ jobs:
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            --platform linux/${PLATFORM} \
             --tag ${IMAGE_NAME}:latest \
+            --load \
+            --build-arg PLATFORM=${PLATFORM} \
+            --build-arg TAG=${TAG} \
             --output type=docker \
             .
           fi
-        working-directory: ${{ matrix.sub_folder }}
-
-      - name: build docker image development
-        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
-        env:
-          IMAGE_NAME: ${{ matrix.svc_name }}
-          DOCKERFILE: ${{ matrix.docker_file }}
-        run: docker build --file client/docker/app/Dockerfile-dev --tag ${IMAGE_NAME}-dev:latest .
         working-directory: ${{ matrix.sub_folder }}
 
       - name: Move cache
@@ -129,7 +162,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           role-to-assume: arn:aws:iam::311462405659:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
@@ -138,13 +171,13 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@5987c53246a4cdb9fb822a0b17a98df3cdc62942 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         with:
           registries: 311462405659
 
       - name: trivy image scanning
         id: trivy_scan
-        uses: aquasecurity/trivy-action@a11da62073708815958ea6d84f5650c78a3ef85b # pin@v0.7.1
+        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"
@@ -158,7 +191,7 @@ jobs:
 
       - name: upload trivy scan results to security tab
         id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@70df9def86d22bf0ea4e7f8b956e7b92e7c1ea22 # v2.20.7
         with:
           sarif_file: "trivy-results.sarif"
 
@@ -176,7 +209,7 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
           export IMAGE_TAG_DEV="development-${IMAGE_TAG}"
-          docker tag $IMAGE_NAME-dev:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
+          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
 
       - name: tag and push container
         env:

@@ -11,7 +11,6 @@ use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use Aws\S3\S3Client;
-use Behat\Behat\Hook\Call\BeforeScenario;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
@@ -134,7 +133,7 @@ class BaseFeatureContext extends MinkContext
         protected readonly ParameterStoreService $parameterStoreService,
         protected readonly KernelInterface $kernel,
         protected readonly S3Storage $s3,
-        protected readonly S3Client $s3Client
+        protected readonly S3Client $s3Client,
     ) {
         // Required so we can run tests against commands
         $this->application = new Application($kernel);

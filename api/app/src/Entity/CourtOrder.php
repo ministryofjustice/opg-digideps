@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -41,7 +42,7 @@ class CourtOrder
      *
      * @JMS\Type("integer")
      *
-     * @ORM\Column(name="court_order_uid", type="bigint", nullable=false, unique=true)
+     * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
     private $courtOrderUid;
 
@@ -96,6 +97,7 @@ class CourtOrder
     public function __construct()
     {
         $this->courtOrderDeputyRelationships = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): int
@@ -154,6 +156,13 @@ class CourtOrder
     public function setClient(Client $client): CourtOrder
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function addReport(Report $report): CourtOrder
+    {
+        $this->reports->add($report);
 
         return $this;
     }

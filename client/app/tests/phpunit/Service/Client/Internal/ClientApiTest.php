@@ -14,117 +14,97 @@ use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ClientApiTest extends TestCase
 {
-    use ProphecyTrait;
+    private RestClient $restClient;
+    private RouterInterface $router;
+    private LoggerInterface $logger;
+    private UserApi $userApi;
+    private DateTimeProvider $dateTimeProvider;
+    private TokenStorageInterface $tokenStorage;
+    private ObservableEventDispatcher $eventDispatcher;
 
-    /**
-     * @var ObjectProphecy
-     */
-    private $restClient;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $router;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $logger;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $userApi;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $dateTimeProvider;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $tokenStorage;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ClientApi
-     */
-    private $sut;
+    private ClientApi $sut;
 
     public function setUp(): void
     {
-        $this->restClient = self::prophesize(RestClient::class);
-        $this->router = self::prophesize(RouterInterface::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->userApi = self::prophesize(UserApi::class);
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
-        $this->eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
+        $this->restClient = $this->createMock(RestClient::class);
+        $this->router = $this->createMock(RouterInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->userApi = $this->createMock(UserApi::class);
+        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
+        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $this->eventDispatcher = $this->createMock(ObservableEventDispatcher::class);
 
         $this->sut = new ClientApi(
-            $this->restClient->reveal(),
-            $this->router->reveal(),
-            $this->logger->reveal(),
-            $this->userApi->reveal(),
-            $this->dateTimeProvider->reveal(),
-            $this->tokenStorage->reveal(),
-            $this->eventDispatcher->reveal()
+            $this->restClient,
+            $this->router,
+            $this->logger,
+            $this->userApi,
+            $this->dateTimeProvider,
+            $this->tokenStorage,
+            $this->eventDispatcher
         );
     }
 
-    /** @test */
-    public function delete()
+    public function testDelete()
     {
         $clientWithUsers = ClientHelpers::createClientWithUsers();
         $currentUser = UserHelpers::createUser();
 
-        $this->restClient->get(sprintf('v2/client/%s', $clientWithUsers->getId()), Argument::cetera())
-            ->shouldBeCalled()
+        $this->restClient->expects(static::once())
+            ->method('get')
+            ->with(sprintf('v2/client/%s', $clientWithUsers->getId()), 'Client', self::anything(), self::anything())
             ->willReturn($clientWithUsers);
 
-        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
-        $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
+        $this->tokenStorage->expects(static::once())
+            ->method('getToken')
+            ->willReturn($usernamePasswordToken);
 
-        $this->restClient->delete(sprintf('client/%s/delete', $clientWithUsers->getId()))->shouldBeCalled();
+        $this->restClient->expects(static::once())
+            ->method('delete')
+            ->with(sprintf('client/%s/delete', $clientWithUsers->getId()));
 
         $trigger = 'A_TRIGGER';
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
-        $this->eventDispatcher->dispatch($clientDeletedEvent, 'client.deleted')->shouldBeCalled();
+        $this->eventDispatcher->expects(static::once())
+            ->method('dispatch')
+            ->with($clientDeletedEvent, 'client.deleted');
 
         $this->sut->delete($clientWithUsers->getId(), $trigger);
     }
 
-    /** @test */
-    public function update()
+    public function testUpdate()
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = ClientHelpers::createClient();
         $currentUser = UserHelpers::createUser();
         $trigger = 'SOME_TRIGGER';
 
-        $this->restClient->put('client/upsert', $postUpdateClient, Argument::cetera())->shouldBeCalled();
+        /** @var ResponseInterface $mockResponse */
+        $mockResponse = $this->createMock(ResponseInterface::class);
+        $this->restClient->expects(static::once())
+            ->method('put')
+            ->with('client/upsert', $postUpdateClient, static::anything())
+            ->willReturn($mockResponse);
 
-        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'password', 'key');
-        $this->tokenStorage->getToken()->willReturn($usernamePasswordToken);
+        $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
+        $this->tokenStorage->expects(static::once())
+            ->method('getToken')
+            ->willReturn($usernamePasswordToken);
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
-        $this->eventDispatcher->dispatch($clientUpdatedEvent, 'client.updated')->shouldBeCalled();
+        $this->eventDispatcher->expects(static::once())
+            ->method('dispatch')
+            ->with($clientUpdatedEvent, 'client.updated');
 
         $this->sut->update($preUpdateClient, $postUpdateClient, $trigger);
     }

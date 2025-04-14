@@ -19,6 +19,7 @@ class ClientVoterTest extends KernelTestCase
 
     /**
      * @dataProvider deleteClientProvider
+     *
      * @test
      */
     public function determineDeletePermission(User $user, Client $client, int $expectedPermission)
@@ -28,7 +29,7 @@ class ClientVoterTest extends KernelTestCase
         /** @var ClientVoter() $sut */
         $sut = new ClientVoter($security->reveal());
 
-        $token = new UsernamePasswordToken($user, 'credentials', 'memory');
+        $token = new UsernamePasswordToken($user, 'firewall', $user->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, $client, [ClientVoter::DELETE]));
     }

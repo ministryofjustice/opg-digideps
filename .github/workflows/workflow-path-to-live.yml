@@ -33,7 +33,7 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Generate build output using Markdown
         run: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         with:
           prerelease: false
           default_bump: "minor"
@@ -72,27 +72,35 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
 
-  api_unit_tests_1:
-    name: api unit tests 1
+  api_unit_tests:
+    name: api unit tests
     uses: ./.github/workflows/_unit-tests-api.yml
+    with:
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
+  api_integration_tests_1:
+    name: api integration tests 1
+    uses: ./.github/workflows/_integration-tests-api.yml
     with:
       selection: selection-1
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
 
-  api_unit_tests_2:
-    name: api unit tests 2
-    uses: ./.github/workflows/_unit-tests-api.yml
+  api_integration_tests_2:
+    name: api integration tests 2
+    uses: ./.github/workflows/_integration-tests-api.yml
     with:
       selection: selection-2
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
 
-  api_unit_tests_3:
-    name: api unit tests 3
-    uses: ./.github/workflows/_unit-tests-api.yml
+  api_integration_tests_3:
+    name: api integration tests 3
+    uses: ./.github/workflows/_integration-tests-api.yml
     with:
       selection: selection-3
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -113,9 +121,10 @@ jobs:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     needs:
       - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
+      - api_unit_tests
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
 
   miscellaneous_tests:
     name: miscellaneous tests
@@ -146,9 +155,10 @@ jobs:
       - docker_build_scan_push
       - miscellaneous_tests
       - client_unit_tests
-      - api_unit_tests_1
-      - api_unit_tests_2
-      - api_unit_tests_3
+      - api_unit_tests
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -158,8 +168,8 @@ jobs:
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
 
-  terraform_apply_integration:
-    name: integration environment apply terraform
+  terraform_apply_end_to_end:
+    name: end to end environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_account_preproduction
@@ -174,11 +184,11 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
 
   scale_services_up:
-    name: scale up integration services
+    name: scale up end to end services
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - terraform_apply_integration
+      - terraform_apply_end_to_end
     with:
       replicas: 6
       acu: 16
@@ -186,7 +196,7 @@ jobs:
       workspace: integration
 
   reset_database:
-    name: reset integration database
+    name: reset end to end database
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -195,12 +205,13 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
 
-  integration_tests_1:
-    name: integration tests frontend 1
+  end_to_end_tests_1:
+    name: end to end tests frontend 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -209,13 +220,14 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
 
-  integration_tests_2:
-    name: integration tests frontend 2
+  end_to_end_tests_2:
+    name: end to end tests frontend 2
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -224,13 +236,14 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
 
-  integration_tests_admin:
-    name: integration tests admin
+  end_to_end_tests_admin:
+    name: end to end tests admin
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -239,13 +252,14 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
 
-  integration_tests_sequential_1:
-    name: integration tests sequential 1
+  end_to_end_tests_sequential_1:
+    name: end to end tests sequential 1
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -254,13 +268,14 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
 
-  integration_tests_sequential_2:
-    name: integration tests sequential 2
+  end_to_end_tests_sequential_2:
+    name: end to end tests sequential 2
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -269,13 +284,14 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
 
-  integration_tests_sequential_3:
-    name: integration tests sequential 3
+  end_to_end_tests_sequential_3:
+    name: end to end tests sequential 3
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -284,6 +300,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
+      account_id: 454262938596
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -291,16 +308,16 @@ jobs:
 
   scale_services_down:
     if: always()
-    name: scale down integration services
+    name: scale down end to end services
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - integration_tests_sequential_1
-      - integration_tests_sequential_2
-      - integration_tests_sequential_3
-      - integration_tests_admin
-      - integration_tests_1
-      - integration_tests_2
+      - end_to_end_tests_sequential_1
+      - end_to_end_tests_sequential_2
+      - end_to_end_tests_sequential_3
+      - end_to_end_tests_admin
+      - end_to_end_tests_1
+      - end_to_end_tests_2
     with:
       replicas: 1
       acu: 4
@@ -313,12 +330,12 @@ jobs:
     needs:
       - terraform_apply_account_preproduction
       - workflow_variables
-      - integration_tests_sequential_1
-      - integration_tests_sequential_2
-      - integration_tests_sequential_3
-      - integration_tests_admin
-      - integration_tests_1
-      - integration_tests_2
+      - end_to_end_tests_sequential_1
+      - end_to_end_tests_sequential_2
+      - end_to_end_tests_sequential_3
+      - end_to_end_tests_admin
+      - end_to_end_tests_1
+      - end_to_end_tests_2
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -383,6 +400,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: production02
+      account_id: 515688267891
       account_name: production
       task_name: "smoke_tests"
       timeout: "900"

@@ -4,9 +4,9 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -14,18 +14,19 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 /**
  * Get the user from a token (=username) looking at the AuthToken store info
  * throw exception if not found, or the token expired.
+ * 
+ * @implements UserProviderInterface<User>
  */
 class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private mixed $timeoutSeconds;
+    private readonly mixed $timeoutSeconds;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private Client $redis,
-        private LoggerInterface $logger,
-        private array $options,
-        private UserRepository $userRepository,
-        private string $workspace
+        private readonly Client $redis,
+        private readonly LoggerInterface $logger,
+        readonly array $options,
+        private readonly UserRepository $userRepository,
+        private readonly string $workspace
     ) {
         $this->timeoutSeconds = $options['timeout_seconds'];
     }
@@ -51,6 +52,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
     public function refreshUser(UserInterface $user)
     {
         // TODO: Implement refreshUser() method.
+        throw new \RuntimeException('Not implemented');
     }
 
     public function supportsClass(string $class): bool
@@ -86,8 +88,14 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
         // TODO: Implement @method UserInterface loadUserByIdentifier(string $identifier)
     }
 
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         // TODO: Implement upgradePassword() method.
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        // TODO: Implement loadUserByIdentifier() method.
+        throw new \RuntimeException('Not implemented');
     }
 }

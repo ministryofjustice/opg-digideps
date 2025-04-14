@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Service\Formatter\RestFormatter;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
@@ -17,12 +16,10 @@ class CSVDeputyshipProcessing
     protected const MAX_UPLOAD_BATCH_SIZE = 10000;
 
     public function __construct(
-        private LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
-        private LayDeputyshipUploader $layUploader,
-        private OrgDeputyshipUploader $orgUploader,
-        private SiriusToOrgDeputyshipDtoAssembler $orgAssembler,
-        private RestFormatter $restFormatter,
-        private LoggerInterface $verboseLogger
+        private readonly LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
+        private readonly LayDeputyshipUploader $layUploader,
+        private readonly OrgDeputyshipUploader $orgUploader,
+        private readonly LoggerInterface $verboseLogger,
     ) {
     }
 
@@ -62,10 +59,9 @@ class CSVDeputyshipProcessing
         return $result;
     }
 
-    public function layProcessingHandleNewMultiClients(): array
+    public function layProcessingHandleNewMultiClients(bool $multiclientApplyDbChanges = true): array
     {
-        $result = $this->layUploader->handleNewMultiClients();
-        return $result;
+        return $this->layUploader->handleNewMultiClients($multiclientApplyDbChanges);
     }
 
     public function orgProcessing(array $data)

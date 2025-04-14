@@ -11,13 +11,8 @@ class ResyncResubmittableErrorDocuments extends Command
 {
     protected static $defaultName = 'digideps:resync-resubmittable-error-documents';
 
-    /** @var DocumentRepository */
-    private $documentRepository;
-
-    public function __construct(DocumentRepository $documentRepository)
+    public function __construct(private readonly DocumentRepository $documentRepository)
     {
-        $this->documentRepository = $documentRepository;
-
         parent::__construct();
     }
 

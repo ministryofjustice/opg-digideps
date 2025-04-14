@@ -21,6 +21,7 @@ services:
       - ./client/app/templates:/var/www/templates
       - ./client/app/translations:/var/www/translations
       - ./client/app/phpstan.neon:/var/www/phpstan.neon
+      - ./client/app/phpstan-baseline.neon:/var/www/phpstan-baseline.neon
       - ./client/app/composer.json:/var/www/composer.json
       - ./client/app/composer.lock:/var/www/composer.lock
       - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
@@ -49,18 +50,14 @@ services:
     volumes:
       - ./api/app/app:/var/www/app
       - ./api/app/config:/var/www/config
-      - ./api/app/src/Migrations:/var/www/src/Migrations
       - ./api/app/public:/var/www/public
       - ./api/app/scripts:/var/www/scripts
       - ./api/app/src:/var/www/src
       - ./api/app/tests:/var/www/tests
       - ./api/app/api.env:/var/www/api.env
-      - ./api/app/postgres.env:/var/www/postgres.env
       - ./api/app/phpstan.neon:/var/www/phpstan.neon
-      - ./api/app/bin:/var/www/vendor/bin
-      - ./api/app/composer.json:/var/www/composer.json
-      - ./api/app/composer.lock:/var/www/composer.lock
-      - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
+      - ./api/app/phpstan-baseline.neon:/var/www/phpstan-baseline.neon
+      - ./api/app/postgres.env:/var/www/postgres.env
 
   htmltopdf:
     volumes:

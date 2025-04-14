@@ -13,7 +13,9 @@ trait ReportProfDeputyCostsEstimateTrait
      * @var string
      *
      * @Assert\NotBlank( message="profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank", groups={"prof-deputy-costs-estimate-how-charged"} )
+     *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"deputyCostsEstimateHowCharged"})
      */
     private $profDeputyCostsEstimateHowCharged;
@@ -22,12 +24,14 @@ trait ReportProfDeputyCostsEstimateTrait
      * @var ProfDeputyEstimateCost[]
      *
      * @JMS\Type("array<App\Entity\Report\ProfDeputyEstimateCost>")
+     *
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
     private $profDeputyEstimateCosts = [];
 
     /**
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
     private $profDeputyEstimateCostTypeIds = [];
@@ -36,13 +40,16 @@ trait ReportProfDeputyCostsEstimateTrait
      * @var float
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"prof-deputy-estimate-management-costs"})
+     *
      * @Assert\NotBlank( message="profDeputyEstimateCost.profDeputyManagementCostAmount.amount.notBlank", groups={"prof-deputy-estimate-management-costs"} )
      */
     private $profDeputyManagementCostAmount;
 
     /**
      * @JMS\Type("array")
+     *
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
     private $profDeputyManagementCostTypeIds = [];
@@ -51,14 +58,18 @@ trait ReportProfDeputyCostsEstimateTrait
      * @var string yes/no
      *
      * @Assert\NotBlank(message="common.yesnochoice.notBlank", groups={"prof-deputy-costs-estimate-more-info"})
+     *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"deputyCostsEstimateMoreInfo"})
      */
     private $profDeputyCostsEstimateHasMoreInfo;
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"deputyCostsEstimateMoreInfo"})
+     *
      * @Assert\NotBlank(message="profDeputyCostsEstimateMoreInfo.details.notBlank", groups={"prof-deputy-costs-estimate-more-info-details"})
      */
     private $profDeputyCostsEstimateMoreInfoDetails;
@@ -72,12 +83,12 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @param $profDeputyEstimateCostTypeIds
      * @return $this
      */
     public function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds)
     {
         $this->profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
+
         return $this;
     }
 
@@ -91,6 +102,7 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param string $profDeputyCostsEstimateHowCharged
+     *
      * @return $this
      */
     public function setProfDeputyCostsEstimateHowCharged($profDeputyCostsEstimateHowCharged)
@@ -101,12 +113,15 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * return true if only fixed is true
-     * @return boolean
+     * return true if only fixed is true.
+     *
+     * @return bool
      */
     public function hasProfDeputyCostsEstimateHowChargedFixedOnly()
     {
-        return strtolower($this->getProfDeputyCostsEstimateHowCharged()) == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
+        $getProfDeputyCostsEstimateHowChargedLower = is_null($this->getProfDeputyCostsEstimateHowCharged()) ? '' : strtolower($this->getProfDeputyCostsEstimateHowCharged());
+
+        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $getProfDeputyCostsEstimateHowChargedLower;
     }
 
     /**
@@ -119,11 +134,13 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param ProfDeputyEstimateCost[] $profDeputyEstimateCosts
+     *
      * @return $this
      */
     public function setProfDeputyEstimateCosts($profDeputyEstimateCosts)
     {
         $this->profDeputyEstimateCosts = $profDeputyEstimateCosts;
+
         return $this;
     }
 
@@ -151,6 +168,7 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param string $profDeputyCostsEstimateHasMoreInfo
+     *
      * @return ReportProfDeputyCostsEstimateTrait
      */
     public function setProfDeputyCostsEstimateHasMoreInfo($profDeputyCostsEstimateHasMoreInfo)
@@ -160,16 +178,12 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getProfDeputyCostsEstimateMoreInfoDetails()
     {
         return $this->profDeputyCostsEstimateMoreInfoDetails;
     }
 
     /**
-     * @param mixed $profDeputyCostsEstimateMoreInfoDetails
      * @return ReportProfDeputyCostsEstimateTrait
      */
     public function setProfDeputyCostsEstimateMoreInfoDetails($profDeputyCostsEstimateMoreInfoDetails)
@@ -209,6 +223,7 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param float $profDeputyManagementCostAmount
+     *
      * @return ReportProfDeputyCostsEstimateTrait
      */
     public function setProfDeputyManagementCostAmount($profDeputyManagementCostAmount)
@@ -228,11 +243,13 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param array $profDeputyManagementCostTypeIds
+     *
      * @return ReportProfDeputyCostsEstimateTrait
      */
     public function setProfDeputyManagementCostTypeIds($profDeputyManagementCostTypeIds)
     {
         $this->profDeputyManagementCostTypeIds = $profDeputyManagementCostTypeIds;
+
         return $this;
     }
 }

@@ -11,13 +11,9 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class ClientRepository extends ServiceEntityRepository
 {
-    /** @var ClientSearchFilter */
-    private $filter;
-
-    public function __construct(ManagerRegistry $registry, ClientSearchFilter $filter)
+    public function __construct(ManagerRegistry $registry, private readonly ClientSearchFilter $filter)
     {
         parent::__construct($registry, Client::class);
-        $this->filter = $filter;
     }
 
     /**
@@ -55,23 +51,7 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function findAllClientIdsByUser(User $user)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-        $stmt = $conn->executeQuery(
-            'select deputy_case.client_id FROM deputy_case WHERE deputy_case.user_id = ?',
-            [$user->getId()]
-        );
-
-        return array_map('current', $stmt->fetchAll());
-    }
-
-    /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function saveUserToClient(User $user, int $clientId)
     {
@@ -118,14 +98,6 @@ class ClientRepository extends ServiceEntityRepository
         return 0 === count($result) ? null : $result[0];
     }
 
-    public function countAllEntities()
-    {
-        return $this
-            ->getEntityManager()
-            ->createQuery('SELECT COUNT(c.id) FROM App\Entity\Client c')
-            ->getSingleScalarResult();
-    }
-
     public function findByCaseNumber(string $caseNumber): ?Client
     {
         return $this
@@ -135,20 +107,20 @@ class ClientRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findByCaseNumberIncludingDischarged(string $caseNumber): ?Client
+    public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed
     {
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
-        $client = $this
+        $clients = $this
             ->getEntityManager()
             ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)')
             ->setParameter('caseNumber', $caseNumber)
-            ->getOneOrNullResult();
+            ->getResult();
 
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return $client;
+        return $clients;
     }
 
     public function findByIdIncludingDischarged(int $id): ?Client

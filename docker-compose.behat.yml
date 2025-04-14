@@ -1,8 +1,10 @@
 services:
-  integration-tests:
+  end-to-end-tests:
     build:
       dockerfile: api/docker/app/Dockerfile
       context: .
+      args:
+        ENVIRONMENT: local
     depends_on:
       - localstack
       - mock-sirius-integration

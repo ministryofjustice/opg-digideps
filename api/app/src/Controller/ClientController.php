@@ -20,12 +20,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ClientController extends RestController
 {
     public function __construct(
-        private ClientRepository $repository,
-        private EntityManagerInterface $em,
-        private RestFormatter $formatter,
-        private ObservableEventDispatcher $eventDispatcher,
-        private TokenStorageInterface $tokenStorage,
+        private readonly ClientRepository $repository,
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
+        parent::__construct($em);
     }
 
     /**
@@ -43,7 +44,11 @@ class ClientController extends RestController
         $user = $this->getUser();
 
         // truncate case number if length is 10 digits long before persisting
-        $data['case_number'] = 10 == strlen($data['case_number']) ? substr($data['case_number'], 0, -2) : $data['case_number'];
+        if (isset($data['case_number']) && is_string($data['case_number'])) {
+            $data['case_number'] = (10 == strlen($data['case_number'])) ? substr($data['case_number'], 0, -2) : $data['case_number'];
+        } else {
+            $data['case_number'] = ''; // Set a default value if missing
+        }
 
         if ($user && 'POST' == $request->getMethod()) {
             $client = new EntityDir\Client();

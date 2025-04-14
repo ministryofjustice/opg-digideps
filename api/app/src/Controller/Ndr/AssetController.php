@@ -12,13 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AssetController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
+        parent::__construct($em);
     }
 
     /**
@@ -30,8 +26,8 @@ class AssetController extends RestController
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-
-        $assets = $this->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
+        
+        $assets = $this->em->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
 
         if (0 == count($assets)) {
             return [];

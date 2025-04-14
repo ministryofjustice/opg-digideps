@@ -42,7 +42,7 @@ class FixtureController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         DeputyProvider $deputyProvider,
-        string $symfonyEnvironment
+        string $symfonyEnvironment,
     ) {
         $this->twig = $twig;
         $this->serializer = $serializer;
@@ -118,12 +118,21 @@ class FixtureController extends AbstractController
                 $deputyEmails[] = $deputy->getEmail();
             }
 
+            // More deputy emails than case numbers implies co-deputy user and therefore needs matching to primary case number
             $deputyAndCaseNumber = [];
             if (count($caseNumber) > 1) {
-                for ($i = 0; $i < min(count($deputyEmails), count($caseNumber)); ++$i) {
+                if (count($deputyEmails) > count($caseNumber)) {
                     $deputyAndCaseNumber[] = [
-                        $deputyEmails[$i] => $caseNumber[$i],
+                        $deputyEmails[0] => $caseNumber[0],
+                        $deputyEmails[1] => $caseNumber[0],
+                        $deputyEmails[2] => $caseNumber[1],
                     ];
+                } else {
+                    for ($i = 0; $i < min(count($deputyEmails), count($caseNumber)); ++$i) {
+                        $deputyAndCaseNumber[] = [
+                            $deputyEmails[$i] => $caseNumber[$i],
+                        ];
+                    }
                 }
             }
 
@@ -193,7 +202,7 @@ class FixtureController extends AbstractController
     {
         $submitted = $form->getData();
         $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
-        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', is_null($submitted['deputyType']) ? null : strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
         $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
         $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
@@ -447,6 +456,7 @@ class FixtureController extends AbstractController
 
         $form = $this->createForm(PreRegistrationFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
+            'multiClientEnabled' => $request->get('multiClientEnabled', false),
             'reportType' => $request->get('report-type', 'OPG102'),
             'createCoDeputy' => $request->get('create-co-deputy', false),
         ]);
@@ -457,6 +467,7 @@ class FixtureController extends AbstractController
 
             $response = $this->restClient->post('v2/fixture/create-pre-registration', json_encode([
                 'deputyType' => $submitted['deputyType'],
+                'multiClientEnabled' => $submitted['multiClientEnabled'],
                 'reportType' => $submitted['reportType'],
                 'createCoDeputy' => $submitted['createCoDeputy'],
             ]), [], 'array');

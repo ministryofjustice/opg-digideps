@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class RegistrationTokenAuthenticator extends AbstractAuthenticator
@@ -27,11 +28,11 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
     private string $bruteForceKey = '';
 
     public function __construct(
-        private UserRepository $userRepository,
-        private TokenStorageInterface $tokenStorage,
-        private AuthService $authService,
-        private AttemptsInTimeChecker $attemptsInTimeChecker,
-        private AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
+        private readonly UserRepository $userRepository,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthService $authService,
+        private readonly AttemptsInTimeChecker $attemptsInTimeChecker,
+        private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
     ) {
     }
 
@@ -40,7 +41,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         return $this->isLoginRouteWithRequiredData($request) || $this->isFirstPasswordSetRouteWithRequiredData($request);
     }
 
-    public function authenticate(Request $request)
+    public function authenticate(Request $request): Passport
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');

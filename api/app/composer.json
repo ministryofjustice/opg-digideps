@@ -16,6 +16,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "App\\Tests\\Integration\\": "tests\\Integration",
             "App\\Tests\\Unit\\": "tests\\Unit",
             "App\\Tests\\Behat\\": "tests\\Behat\\bootstrap"
         }
@@ -38,27 +39,27 @@
         "sensio/framework-extra-bundle": "^6.0",
         "snc/redis-bundle": "^3.5.2",
         "stof/doctrine-extensions-bundle": "^1.7.1",
-        "symfony/cache": "^5.4.0",
-        "symfony/config": "^5.4.0",
-        "symfony/console": "^5.4.0",
-        "symfony/dependency-injection": "^5.4.0",
-        "symfony/dotenv": "^5.4.0",
-        "symfony/error-handler": "^5.4.0",
-        "symfony/event-dispatcher": "^5.4.0",
-        "symfony/expression-language": "^5.4.0",
-        "symfony/form": "^5.4.0",
-        "symfony/framework-bundle": "^5.4.0",
+        "symfony/cache": "^6.0",
+        "symfony/config": "^6.0",
+        "symfony/console": "^6.0",
+        "symfony/dependency-injection": "^6.0",
+        "symfony/dotenv": "^6.0",
+        "symfony/error-handler": "^6.0",
+        "symfony/event-dispatcher": "^6.0",
+        "symfony/expression-language": "^6.0",
+        "symfony/form": "^6.0",
+        "symfony/framework-bundle": "^6.0",
         "symfony/http-foundation": "5.4.46",
-        "symfony/http-kernel": "^5.4.0",
+        "symfony/http-kernel": "^6.0",
         "symfony/monolog-bundle": "^3.8",
-        "symfony/password-hasher": "^5.4.0",
-        "symfony/routing": "^5.4.0",
-        "symfony/security-bundle": "^5.4.0",
-        "symfony/security-core": "^5.4.0",
-        "symfony/security-http": "5.4.47",
-        "symfony/serializer": "^5.4.0",
-        "symfony/validator": "^5.4.0",
-        "symfony/yaml": "^5.4.0"
+        "symfony/password-hasher": "^6.0",
+        "symfony/routing": "^6.0",
+        "symfony/security-bundle": "^6.0",
+        "symfony/security-core": "^6.0",
+        "symfony/security-http": "6.2.13",
+        "symfony/serializer": "^6.0",
+        "symfony/validator": "^6.0",
+        "symfony/yaml": "^6.0"
     },
     "require-dev": {
         "ministryofjustice/mink-extension": "^2.7.3",
@@ -78,12 +79,12 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "5.4.47",
-        "symfony/browser-kit": "^5.4.0",
+        "symfony/http-client": "6.2.13",
+        "symfony/browser-kit": "^6.0",
         "symfony/maker-bundle": "^1.29",
-        "symfony/mime": "^5.4.0",
-        "symfony/phpunit-bridge": "^5.4.0",
-        "symfony/var-dumper": "5.4.48"
+        "symfony/mime": "^6.0",
+        "symfony/phpunit-bridge": "^6.0",
+        "symfony/var-dumper": "^6.0"
     },
     "scripts": {
         "post-install-cmd": [

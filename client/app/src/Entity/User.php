@@ -466,6 +466,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
      * @JMS\Groups({"user"})
      *
      * @var \DateTime|null
@@ -476,6 +477,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var string
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"user"})
      */
     private $registrationRoute;
@@ -484,6 +486,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @var bool
      *
      * @JMS\Type("boolean")
+     *
      * @JMS\Groups({"user"})
      */
     private $isPrimary;
@@ -566,7 +569,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function getEmail()
     {
-        return strtolower($this->email);
+        return is_null($this->email) ? '' : strtolower($this->email);
     }
 
     /**
@@ -601,7 +604,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null;
     }
@@ -829,10 +832,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    /**
-     * @return array $roles
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
         return [$this->roleName];
     }
@@ -1449,7 +1449,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getUserIdentifier(): ?string
+    public function getUserIdentifier(): string
     {
         return $this->email;
     }

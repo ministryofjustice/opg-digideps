@@ -3,7 +3,6 @@ set -e
 
 environment=${1:-development}
 
-confd -onetime -backend env
 php app/console doctrine:fixtures:load --no-interaction
 
 # Only run the test fixtures load if the environment is 'local'

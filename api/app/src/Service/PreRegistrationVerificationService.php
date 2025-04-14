@@ -15,8 +15,11 @@ class PreRegistrationVerificationService
      */
     private array $lastMatchedPreRegistrationUsers;
 
-    public function __construct(private SerializerInterface $serializer, private PreRegistrationRepository $preRegistrationRepository, private UserRepository $userRepository)
-    {
+    public function __construct(
+        private readonly SerializerInterface $serializer,
+        private readonly PreRegistrationRepository $preRegistrationRepository,
+        private readonly UserRepository $userRepository
+    ) {
         $this->lastMatchedPreRegistrationUsers = [];
     }
 
@@ -209,7 +212,7 @@ class PreRegistrationVerificationService
     private function formatPreRegistrationMatchesForErrorOutput(array $matches): mixed
     {
         $matches = json_decode(
-            $this->serializer->serialize($matches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]),
+            $this->serializer->serialize($matches, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['otherColumns']]) ?? '',
             true
         );
 

@@ -4,6 +4,7 @@ namespace App\Tests\Unit\v2\Transformer;
 
 use App\v2\DTO\OrganisationDto;
 use App\v2\DTO\UserDto;
+use App\v2\Transformer\ClientTransformer;
 use App\v2\Transformer\OrganisationTransformer;
 use App\v2\Transformer\UserTransformer;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +27,10 @@ class OrganisationTransformerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $transformed = (new OrganisationTransformer($userTransformer))->transform($dto, ['users', 'total_user_count', 'total_client_count']);
+        $clientTransformer = $this->createMock(ClientTransformer::class);
+
+        $transformed = (new OrganisationTransformer($userTransformer, $clientTransformer))
+            ->transform($dto, ['users', 'total_user_count', 'total_client_count']);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('foo', $transformed['name']);
@@ -65,7 +69,10 @@ class OrganisationTransformerTest extends TestCase
                 ['user_two' => 'transformed']
             );
 
-        $transformed = (new OrganisationTransformer($userTransformer))->transform($dto, ['total_client_count', 'clients']);
+        $clientTransformer = $this->createMock(ClientTransformer::class);
+
+        $transformed = (new OrganisationTransformer($userTransformer, $clientTransformer))
+            ->transform($dto, ['total_client_count', 'clients']);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('foo', $transformed['name']);

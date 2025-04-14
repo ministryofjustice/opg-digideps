@@ -18,9 +18,10 @@ class DecisionController extends RestController
     private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private RestFormatter $formatter,
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
     ) {
+        parent::__construct($em);
     }
 
     /**

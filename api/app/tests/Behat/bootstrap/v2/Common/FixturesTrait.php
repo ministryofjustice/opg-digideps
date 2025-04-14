@@ -165,6 +165,22 @@ trait FixturesTrait
         $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
     }
 
+    /**
+     * @Given the Lay deputy user with deputy UID :deputyUid, email :email, first name :firstName, and last name :lastName exists
+     */
+    public function theLayDeputyUserWithEmailNamedExists($deputyUid, $email, $firstName, $lastName)
+    {
+        return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid), $firstName, $lastName);
+    }
+
+    /**
+     * @Given the Lay deputy user with deputy UID :deputyUid and email :email exists
+     */
+    public function theLayDeputyUserWithEmailExists($deputyUid, $email)
+    {
+        return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid));
+    }
+
     private function createAdditionalAdminUser(string $roleName)
     {
         $email = sprintf('%s@t.uk', rand(0, 999999999));
@@ -224,7 +240,7 @@ trait FixturesTrait
 
         $newUserEmail = sprintf('%s-%s@t.uk', substr(User::ROLE_PROF_TEAM_MEMBER, 5), $this->testRunId);
 
-        $newUser = $this->fixtureHelper->createAndPersistUser(User::ROLE_PROF_TEAM_MEMBER, $newUserEmail);
+        $newUser = $this->fixtureHelper->createAndPersistUser(User::ROLE_PROF_TEAM_MEMBER, $newUserEmail, null, $existingUser->getUserFirstName(), 'Bell');
 
         $organisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($emailIdentifier);
 
@@ -241,5 +257,15 @@ trait FixturesTrait
         } else {
             return $this->profTeamDeputyNotStartedHealthWelfareDetails;
         }
+    }
+
+    public function getClientIdByCaseNumber(string $caseNumber): ?int
+    {
+        $result = $this->em->getRepository(Client::class)->getArrayByCaseNumber($caseNumber);
+        if (is_null($result)) {
+            return null;
+        }
+
+        return $result['id'];
     }
 }

@@ -1,11 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Tests\App\Entity\Report;
 
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
-use DigidepsTests\Helpers\ValidatorTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -18,15 +18,17 @@ class ChecklistTest extends KernelTestCase
     public function setUp(): void
     {
         $this->validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
+            ->enableAnnotationMapping(true)
+            ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
     }
 
     /**
      * @test
+     *
      * @dataProvider submit_profDeputyCosts_checklist_valuesProvider
      */
-    public function validations_submit_profDeputyCosts_checklist(
+    public function validationsSubmitProfDeputyCostsChecklist(
         $profCostsReasonableAndProportionate,
         $paymentsMatchCostCertificate,
         $hasDeputyOverchargedFromPreviousEstimates,
@@ -47,7 +49,7 @@ class ChecklistTest extends KernelTestCase
     {
         return [
             'valid values' => [null, 'yes', 'no', 0],
-            'invalid values' => ['definitely', 'negative', 'nope', 3]
+            'invalid values' => ['definitely', 'negative', 'nope', 3],
         ];
     }
 }

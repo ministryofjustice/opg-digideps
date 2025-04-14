@@ -12,15 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MoneyTransferController extends RestController
 {
-    private EntityManagerInterface $em;
-    private RestFormatter $formatter;
-
     private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
 
-    public function __construct(EntityManagerInterface $em, RestFormatter $formatter)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
-        $this->em = $em;
-        $this->formatter = $formatter;
+        parent::__construct($em);
     }
 
     /**

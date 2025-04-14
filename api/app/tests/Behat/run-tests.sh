@@ -5,8 +5,6 @@ export APP_ENV=dev
 
 start=$(date +%s)
 
-confd -onetime -backend env
-
 echo "==== Starting test run ===="
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
 if [ $? -ne 0 ]; then

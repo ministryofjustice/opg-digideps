@@ -6,6 +6,8 @@ services:
     build:
       dockerfile: client/docker/app/Dockerfile
       context: .
+      args:
+        ENVIRONMENT: local
     depends_on:
       - pact-mock
     environment:
@@ -18,6 +20,7 @@ services:
       - ./client/app/frontend.env
     volumes:
       - ./build/coverage-client:/var/www/build/coverage-client
+    command: sleep infinity
 
   pact-mock:
     container_name: client-unit-tests-pact

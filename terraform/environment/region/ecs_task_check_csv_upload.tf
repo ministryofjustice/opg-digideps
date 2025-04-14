@@ -45,7 +45,11 @@ resource "aws_ecs_task_definition" "check_csv_uploaded" {
   container_definitions    = "[${local.check_csv_uploaded_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
-  tags                     = var.default_tags
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+  tags = var.default_tags
 }
 
 resource "aws_cloudwatch_event_rule" "check_csv_uploaded_cron_rule" {
@@ -134,7 +138,7 @@ locals {
         },
         {
           name  = "FILESCANNER_SSLVERIFY",
-          value = "False"
+          value = "false"
         },
         {
           name  = "FILESCANNER_URL",

@@ -207,14 +207,16 @@ class ReportSubmissionController extends AbstractController
      */
     private function processPost(Request $request)
     {
-        if (empty($request->request->get('checkboxes'))) {
+        $checkedBoxes = $request->request->all('checkboxes');
+
+        if (empty($checkedBoxes)) {
             $this->addFlash('error', 'Please select at least one report submission');
 
             return;
         }
 
-        $checkedBoxes = array_keys($request->request->get('checkboxes'));
-        $action = strtolower($request->request->get('multiAction'));
+        $checkedBoxes = array_keys($checkedBoxes);
+        $action = is_null($request->request->get('multiAction')) ? null : strtolower($request->request->get('multiAction'));
 
         if (in_array($action, [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE, self::ACTION_SYNCHRONISE])) {
             $totalChecked = count($checkedBoxes);

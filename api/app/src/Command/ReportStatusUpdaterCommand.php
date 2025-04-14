@@ -19,12 +19,8 @@ class ReportStatusUpdaterCommand extends Command
 {
     use ContainerAwareTrait;
 
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
-
         parent::__construct();
     }
 
@@ -39,13 +35,13 @@ class ReportStatusUpdaterCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $limit = $input->getOption('limit');
-        $em = $this->entityManager; /* @var $em EntityManager */
+        $em = $this->entityManager;
 
         $chunkSize = 10;
 
         $output->write("Updating report status for next $limit reports: ");
         for ($i = 0, $continue = true; $i < $limit && $continue; $i += $chunkSize) {
-            /* @var $reports Report[] */
+            /** @var Report[] $reports */
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')
                 ->select('r')
@@ -61,7 +57,6 @@ class ReportStatusUpdaterCommand extends Command
             }
             foreach ($reports as $report) {
                 $report->setSectionStatusesCached([]);
-                /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
 

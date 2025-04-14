@@ -10,16 +10,15 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     /** @var QueryBuilder */
     private $qb;
 
-    public function __construct(ManagerRegistry $registry, private SerializerInterface $serializer)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
@@ -237,24 +236,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result->fetchAllAssociative();
     }
 
-    /**
-     * Required to avoid lazy loading which is incompatible with Symfony Serializer.
-     */
-    public function findUserByEmail(string $email)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = <<<SQL
-SELECT * FROM dd_user as u
-WHERE lower(u.email) = lower(:email)
-SQL;
-
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery(['email' => $email]);
-
-        return $this->serializer->deserialize(json_encode($result->fetchAssociative()), 'App\Entity\User', 'json');
-    }
-
     public function getAllAdminAccounts()
     {
         $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')";
@@ -329,7 +310,7 @@ SQL;
         return $query->getResult();
     }
 
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newEncodedPassword): void
     {
         // set the new encoded password on the User object
         $user->setPassword($newEncodedPassword);
@@ -368,27 +349,26 @@ SQL;
         $q,
         $offset,
         $limit,
-        $id
-    ) {
+        $id,
+    ): array {
         // BASE QUERY BUILDER with filters (for both count and results)
-        $qb = $this->createQueryBuilder('u');
-        $qb->leftJoin('u.organisations', 'o');
-        $qb->andWhere('o.id = :id');
-        $qb->setParameter('id', $id);
+        $this->qb = $this->createQueryBuilder('u');
+        $this->qb->leftJoin('u.organisations', 'o');
+        $this->qb->andWhere('o.id = :id');
+        $this->qb->setParameter('id', $id);
 
         // search filter
         if ($q) {
-            $qb->andWhere(implode(' OR ', [
-                'lower(u.firstname) LIKE :qLike',
-                'lower(u.lastname) LIKE :qLike',
-            ]));
-
-            $qb->setParameter('qLike', '%'.strtolower($q).'%');
-            $qb->setParameter('q', strtolower($q));
+            $searchTerms = explode(' ', $q);
+            if (1 === count($searchTerms)) {
+                $this->addBroadMatchFilter($searchTerms[0], false);
+            } else {
+                $this->addFullNameBestMatchFilter($searchTerms[0], $searchTerms[1], false);
+            }
         }
 
         // get results (base query + ordered + pagination + status filter)
-        $qbSelect = clone $qb;
+        $qbSelect = clone $this->qb;
         $qbSelect->select('u');
         $qbSelect
             ->addOrderBy('u.lastname', 'ASC')
@@ -400,7 +380,7 @@ SQL;
         $this->_em->getFilters()->enable('softdeleteable');
 
         // run counts on the base query for each status (new/archived)
-        $qbCount = clone $qb;
+        $qbCount = clone $this->qb;
         $queryCount = $qbCount->select('count(DISTINCT u.id)')->getQuery();
         $count = $queryCount->getSingleScalarResult();
 
@@ -436,6 +416,7 @@ SQL;
             ->getEntityManager()
             ->createQuery("SELECT u FROM App\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = True")
             ->setParameter('deputyUid', $deputyUid);
+
         return $query->getSingleResult();
     }
 }

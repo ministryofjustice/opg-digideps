@@ -31,17 +31,18 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
 class UserController extends RestController
 {
     public function __construct(
-        private UserService $userService,
-        private UserPasswordHasherInterface $passwordHasher,
-        private UserRepository $userRepository,
-        private ClientRepository $clientRepository,
-        private UserVoter $userVoter,
-        private SecurityHelper $securityHelper,
-        private EntityManagerInterface $em,
-        private AuthService $authService,
-        private RestFormatter $formatter,
-        private PasswordHasherFactoryInterface $hasherFactory,
+        private readonly UserService $userService,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly UserRepository $userRepository,
+        private readonly ClientRepository $clientRepository,
+        private readonly UserVoter $userVoter,
+        private readonly SecurityHelper $securityHelper,
+        private readonly EntityManagerInterface $em,
+        private readonly AuthService $authService,
+        private readonly RestFormatter $formatter,
+        private readonly PasswordHasherFactoryInterface $hasherFactory,
     ) {
+        parent::__construct($em);
     }
 
     /**
@@ -389,10 +390,10 @@ class UserController extends RestController
      */
     public function delete($id)
     {
-        /** @var User $user */
+        /** @var User $deletee */
         $deletee = $this->userRepository->find($id);
 
-        /** @var TokenInterface $user */
+        /** @var TokenInterface $token */
         $token = $this->securityHelper->getToken();
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);

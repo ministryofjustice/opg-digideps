@@ -16,38 +16,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandler
 {
-    /** @var EntityManager */
-    private $em;
-
-    /** @var ValidatorInterface */
-    private $validator;
-
-    /** @var OrganisationRepository */
-    private $orgRepository;
-
-    /** @var UserRepository */
-    private $userRepository;
-
-    /** @var OrganisationFactory */
-    private $organisationFactory;
-
-    /** @var array */
-    private $sharedEmailDomains;
-
     public function __construct(
-        EntityManager $em,
-        ValidatorInterface $validator,
-        OrganisationRepository $orgRepository,
-        UserRepository $userRepository,
-        OrganisationFactory $organisationFactory,
-        array $sharedEmailDomains
+        private readonly EntityManager $em,
+        private readonly ValidatorInterface $validator,
+        private readonly OrganisationRepository $orgRepository,
+        private readonly UserRepository $userRepository,
+        private readonly OrganisationFactory $organisationFactory,
+        private readonly array $sharedEmailDomains
     ) {
-        $this->em = $em;
-        $this->validator = $validator;
-        $this->orgRepository = $orgRepository;
-        $this->userRepository = $userRepository;
-        $this->organisationFactory = $organisationFactory;
-        $this->sharedEmailDomains = $sharedEmailDomains;
     }
 
     /**

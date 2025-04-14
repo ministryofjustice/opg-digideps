@@ -721,14 +721,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Remove clients.
-     */
-    public function removeClient(Client $clients)
-    {
-        $this->clients->removeElement($clients);
-    }
-
-    /**
      * Get clients.
      *
      * @return Client[]
@@ -736,18 +728,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getClients()
     {
         return $this->clients;
-    }
-
-    /**
-     * Get client by case number, case insensitive.
-     *
-     * @return Client
-     */
-    public function getClientByCaseNumber($caseNumber)
-    {
-        return $this->getClients()->filter(function ($client) use ($caseNumber) {
-            return $client->getCaseNumber() == strtolower($caseNumber);
-        })->first();
     }
 
     /**
@@ -782,16 +762,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $organisationIds;
     }
 
-    /**
-     * @return User
-     */
-    public function removeOrganisation(Organisation $organisation)
-    {
-        $this->organisations->removeElement($organisation);
-
-        return $this;
-    }
-
     public function getRoleName()
     {
         return $this->roleName;
@@ -809,14 +779,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUsername()
+    public function getSalt(): void
     {
-        return $this->email;
-    }
-
-    public function getSalt()
-    {
-        // return $this->salt;
         return;
     }
 
@@ -825,7 +789,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return [$this->roleName];
     }
@@ -1494,7 +1458,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
-    public function getUserIdentifier(): ?string
+    public function getUserIdentifier(): string
     {
         return $this->email;
     }

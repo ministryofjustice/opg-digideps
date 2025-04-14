@@ -57,23 +57,26 @@ class DeputyProvider implements UserProviderInterface
         }
     }
 
-    /**
-     * Finds user by id.
-     *
-     * @param int $id
-     */
-    public function loadUserByUsername($id)
+    public function loadUserByIdentifier(string $identifier): User
     {
         return $this->restClient
             // the userId needs to be told to the RestClient, as the user is not logged in yet
-            ->setLoggedUserId($id)
-            ->get('user/'.$id, 'User', ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']);
+            ->setLoggedUserId(intval($identifier))
+            ->get(
+                'user/'.$identifier, 'User',
+                ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']
+            );
+    }
+
+    public function loadUserByUsername(string $username)
+    {
+        throw new \RuntimeException('Method should not be called, and removed after symfony 6 upgrade');
     }
 
     /**
      * @codeCoverageIgnore
      *
-     * @return \App\Entity\User
+     * @return User
      *
      *@throws UnsupportedUserException
      */
@@ -84,16 +87,11 @@ class DeputyProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
-        return $this->loadUserByUsername($user->getId());
+        return $this->loadUserByIdentifier($user->getId());
     }
 
-    /**
-     * @param string $class
-     *
-     * @return bool
-     */
-    public function supportsClass($class)
+    public function supportsClass(string $class): bool
     {
-        return 'App\Entity\User' === $class;
+        return User::class === $class;
     }
 }
