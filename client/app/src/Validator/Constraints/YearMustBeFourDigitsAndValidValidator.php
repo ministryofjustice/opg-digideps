@@ -7,13 +7,13 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
 {
-    public function validate($data, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         $startAndEndDate = [];
         $courtDate = new \DateTime();
 
-        if ($data instanceof StartEndDateComparableInterface) {
-            $startAndEndDate = [$data->getStartDate(), $data->getEndDate()];
+        if ($value instanceof StartEndDateComparableInterface) {
+            $startAndEndDate = [$value->getStartDate(), $value->getEndDate()];
 
             foreach ($startAndEndDate as $date) {
                 if (!$date instanceof \DateTime) {
@@ -21,7 +21,7 @@ class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
                 }
             }
         } else {
-            $courtDate = $data->getCourtDate();
+            $courtDate = $value->getCourtDate();
 
             if (!$courtDate instanceof \DateTime) {
                 return;

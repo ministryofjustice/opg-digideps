@@ -66,6 +66,18 @@ jobs:
         run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
         working-directory: terraform/account/region/go_redeployer
 
+      - id: terraform_workspace_manager
+        if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
+        name: register workspace
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
+        with:
+          aws_account_id: 248804316466
+          aws_iam_role: digideps-ci
+          register_workspace: ${{ inputs.workspace }}
+          time_to_protect: 3
+          oidc_role: arn:aws:iam::248804316466:role/digideps-gh-actions-workspace-cleanup
+          assume_role: false
+
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:
           ssh-private-key: ${{ secrets.ssh_private_key }}
@@ -98,17 +110,6 @@ jobs:
           terraform workspace show
           terraform plan -input=false -parallelism=30 -lock-timeout=5m
         working-directory: terraform/${{ inputs.terraform_path }}
-
-      - id: terraform_workspace_manager
-        if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
-        name: register workspace
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
-        with:
-          aws_account_id: 248804316466
-          aws_iam_role: digideps-ci
-          register_workspace: ${{ inputs.workspace }}
-          time_to_protect: 3
-          oidc_role: arn:aws:iam::631181914621:role/oidc-digideps-development
 
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply
