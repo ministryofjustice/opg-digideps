@@ -49,7 +49,6 @@ services:
   api-app:
     volumes:
       - ./api/app/app:/var/www/app
-      - ./api/app/config:/var/www/config
       - ./api/app/public:/var/www/public
       - ./api/app/scripts:/var/www/scripts
       - ./api/app/src:/var/www/src
