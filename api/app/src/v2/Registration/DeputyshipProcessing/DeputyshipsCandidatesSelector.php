@@ -22,11 +22,11 @@ class DeputyshipsCandidatesSelector
     {
         $selectionCandidates = [];
 
-        $csvDeputyships[] = $this->em->createQuery(
+        $csvDeputyships = $this->em->createQuery(
             "SELECT sd FROM App\Entity\StagingDeputyship sd ORDER BY sd.orderUid"
         )->getResult();
 
-        $knownCourtOrders[] = $this->em->getRepository(CourtOrder::class)
+        $knownCourtOrders = $this->em->getRepository(CourtOrder::class)
             ->createQueryBuilder('co')
             ->select('co.courtOrderUid', 'co.id', 'co.status')
             ->getQuery()
@@ -36,7 +36,7 @@ class DeputyshipsCandidatesSelector
         $lookupKnownCourtOrdersId = array_column($knownCourtOrders, 'id', 'courtOrderUid');
 
         // Not implemented - check against dd user table for being active
-        $knownDeputies[] = $this->em->createQuery(
+        $knownDeputies = $this->em->createQuery(
             "SELECT d.id,d.deputyUid FROM App\Entity\Deputy d"
         )->getResult();
 
@@ -83,16 +83,17 @@ class DeputyshipsCandidatesSelector
 
             $client = $this->getClient($csvDeputyship->caseNumber);
             $reportTypeIsCompatible = false;
-            $reportId = null;
+            $currentReportId = null;
 
             if (!$courtOrderFound && 'ACTIVE' == $csvDeputyship->orderStatus && !is_null($client)) {
+                // ACTION: Need to handle clients with more than one active report
                 if (!is_null($client->getCurrentReport())) {
                     $reportTypeIsCompatible = $this->checkReportTypeIsCompatible(
                         $client->getCurrentReport()->getId(),
                         $csvDeputyship->reportType,
                         $csvDeputyship->isHybrid
                     );
-                    $reportId = $client->getCurrentReport()->getId();
+                    $currentReportId = $client->getCurrentReport()->getId();
                 }
                 if ($reportTypeIsCompatible) {
                     $changes = new StagingSelectedCandidates();
@@ -111,12 +112,69 @@ class DeputyshipsCandidatesSelector
                     $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
                     $selectionCandidates[] = $changes;
 
-                    // Need all reports for client (compatibility later???)
-                    $changes = new StagingSelectedCandidates();
-                    $changes->action = 'INSERT ORDER REPORT';
-                    $changes->orderUid = $csvDeputyship->orderUid;
-                    // How to bring back previous reports
-                    $changes->reportId = $reportId; // need more than one
+                    // store reportIds for court order report insertion
+                    $reportIds = [];
+                    $reportIds[] = $currentReportId;
+
+                    $clientId = $client->getId();
+
+                    $historicReports =
+                        $this->em->getRepository(Report::class)
+                        ->createQueryBuilder('r')
+                        ->select('r.id', 'r.type', 'c.id AS clientId') // fetches the id value from the client
+                        ->innerJoin('r.client', 'c') // joins the client entity
+                        ->where('c.id = :clientId')
+                        ->andWhere('r.submitDate IS NOT NULL OR r.unSubmitDate IS NOT NULL')
+                        ->setParameter('clientId', $clientId)
+                        ->orderBy('r.id', 'DESC')
+                        ->getQuery()
+                        ->getArrayResult();
+
+                    //                    $query = $this->em->createQuery(
+                    //                        "SELECT r.id, r.clientId, r.type FROM App\Entity\Report r WHERE r.clientId = 2 AND r.submitDate IS NOT NULL AND r.unSubmitDate IS NOT NULL ORDER BY r.id"
+                    //                    );
+                    //                    $query->setParameter('clientId', 2);
+                    //                    $historicReports = $query->getArrayResult();
+
+                    file_put_contents(
+                        'php://stderr',
+                        ' HISTORICAL REPORTS ---> '.print_r(
+                            $historicReports,
+                            true
+                        )
+                    );
+
+                    foreach ($historicReports as $report) {
+                        $historicReportCount = count($historicReports);
+
+                        // if count > 0 and is hybrid then attach all historical pfa and hw reports to same court order
+                        // else if not hybrid then check order type compatibility first to decide match
+                        if ($historicReportCount > 0) {
+                            $orderTypeCompatibility = $this->checkOrderTypeIsCompatible($report['type'], $csvDeputyship->orderType, $csvDeputyship->isHybrid);
+
+                            if ($orderTypeCompatibility) {
+                                $reportIds[] = $report->getId();
+                            } else {
+                                file_put_contents(
+                                    'php://stderr',
+                                    ' OUTPUT ---> '.print_r(
+                                        $report->getId.' **** ORDER TYPE NOT COMPATIBLE **** ',
+                                        true
+                                    )
+                                );
+                            }
+                        }
+                    }
+
+                    // Loop through reportIds to populate row for each report (historical and current)
+                    foreach ($reportIds as $reportId) {
+                        // Need all reports for client (compatibility later???)
+                        $changes = new StagingSelectedCandidates();
+                        $changes->action = 'INSERT ORDER REPORT';
+                        $changes->orderUid = $csvDeputyship->orderUid;
+                        $changes->reportId = $reportId;
+                    }
+
                     $selectionCandidates[] = $changes;
                 } else {
                     // if report not compatible DO WE DO ANYTHING IN THIS SITUATION
@@ -156,7 +214,8 @@ class DeputyshipsCandidatesSelector
         $reportType = !is_null($report) ? $report->getType() : '';
         $adjustedCsvReportType = substr($csvReportType, 3);
 
-        if ($isHybrid && ('102-4' == $reportType || '103-4' == $reportType) && ($reportType == $adjustedCsvReportType || '104' == $adjustedCsvReportType)) {
+        // Do the report types cover pro/pa's?
+        if ('1' == $isHybrid && ('102-4' == $reportType || '103-4' == $reportType) && ($reportType == $adjustedCsvReportType || '104' == $adjustedCsvReportType)) {
             return true;
         }
 
@@ -172,5 +231,35 @@ class DeputyshipsCandidatesSelector
     private function checkDeputyOnCourtOrder(int $courtOrderId, int $deputyId): array
     {
         return $this->em->getRepository(CourtOrderDeputy::class)->findBy(['courtOrder' => $courtOrderId, 'deputy' => $deputyId]);
+    }
+
+    private function checkOrderTypeIsCompatible(string $reportType, string $csvOrderType, string $isCourtOrderHybrid): bool
+    {
+        $nonHybridTypes = [
+            '102' => 'pfa',
+            '102-5' => 'pfa',
+            '102-6' => 'pfa',
+            '103' => 'pfa',
+            '103-5' => 'pfa',
+            '103-6' => 'pfa',
+            '104' => 'hw',
+            '104-5' => 'hw',
+            '104-6' => 'hw',
+        ];
+
+        // Need to check how pro/pa order types are represented in deputyship staging table
+        $hybridTypes = ['102-4', '103-4', '102-4-5', '102-4-6', '103-4-5', '103-4-6'];
+
+        if ('0' == $isCourtOrderHybrid) {
+            $correspondingOrderType = $nonHybridTypes[$reportType];
+
+            return $correspondingOrderType == $csvOrderType;
+        } else {
+            return in_array($reportType, $hybridTypes);
+        }
+
+        // If incoming row OrderType is IsHybrid and historical report type is 102-4 or 103-4 => compatible
+        // Else if incoming row OrderType is pfa and existing report type is 102 or 103 => compatible
+        // Else if incoming row OrderType is hw and existing report type is 104 => compatible
     }
 }
