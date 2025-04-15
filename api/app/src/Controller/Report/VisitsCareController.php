@@ -97,7 +97,7 @@ class VisitsCareController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['visits-care'];
+            ? $request->query->all('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');

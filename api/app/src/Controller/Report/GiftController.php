@@ -33,7 +33,7 @@ class GiftController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['gifts'];
+            ? $request->query->all('groups') : ['gifts'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $gift;

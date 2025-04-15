@@ -55,13 +55,11 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetAssets()
     {
-        $url = '/report/'.self::$report1->getId().'?groups=asset';
-
-        // assert get
-        $data = $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data']['assets'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['asset']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data']['assets'];
 
         $this->assertCount(2, $data);
 

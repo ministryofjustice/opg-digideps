@@ -83,7 +83,7 @@ class DeputyController extends RestController
     public function findByIdAction(Request $request, int $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['deputy'];
+            ? $request->query->all('groups') : ['deputy'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $deputy = $this->findEntityBy(Deputy::class, $id);
