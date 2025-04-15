@@ -88,25 +88,4 @@ class DeputyController extends RestController
 
         return $deputy;
     }
-
-    /**
-     * @Route("/{uid}/reports", name="deputy_find_by_uid", requirements={"uid":"\d+"}, methods={"GET"})
-     * 
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     *
-     * @return array<string>
-     */
-    public function getAllDeputyReports(Request $request, int $uid): array
-    {
-        $inactive = $request->query->has('inactive') ? $request->query->get('inactive') : null;
-
-        try {
-            $this->formatter->setJmsSerialiserGroups(['deputy-court-order-basic']);
-            $results = $this->em->getRepository(Deputy::class)->findReportsInfoByUid($uid, (bool) $inactive);
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-        }
-        
-        return $results;
-    }
 }
