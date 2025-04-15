@@ -26,6 +26,11 @@ on:
         required: false
         default: 120
         type: string
+      oidc_timeout:
+        description: "Timeout for the task"
+        required: false
+        default: 3600
+        type: string
       override:
         description: "Override for the task"
         required: false
@@ -98,7 +103,7 @@ jobs:
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"
           role-session-name: github-actions-terraform-run-task
-          role-duration-seconds: 3600
+          role-duration-seconds: ${{ input.oidc_timeout }}
           aws-region: eu-west-1
 
       - name: run task
