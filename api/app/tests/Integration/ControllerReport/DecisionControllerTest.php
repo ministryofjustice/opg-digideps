@@ -88,13 +88,11 @@ class DecisionControllerTest extends AbstractTestController
 
     public function testgetDecisions()
     {
-        $url = '/report/'.self::$report1->getId().'?groups=decision';
-
-        // assert get
-        $data = $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data']['decisions'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['decision']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data']['decisions'];
 
         $this->assertCount(1, $data);
         $this->assertEquals(self::$decision1->getId(), $data[0]['id']);

@@ -26,7 +26,7 @@ class NdrController extends RestController
      */
     public function getById(Request $request, $id)
     {
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['ndr'];
+        $groups = $request->query->has('groups') ? $request->query->all('groups') : ['ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
 
         /* @var $report EntityDir\Ndr\Ndr */
