@@ -19,7 +19,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
     private string $translationDomain = 'report-client-benefits-check';
     private ?string $clientName = null;
 
-    public function validate($value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof ClientBenefitsCheckConstraint) {
             throw new UnexpectedTypeException($constraint, ClientBenefitsCheckConstraint::class);

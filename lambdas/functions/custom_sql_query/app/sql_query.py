@@ -1,5 +1,7 @@
+import hashlib
 import json
 import os
+import string
 from datetime import datetime
 
 import boto3
@@ -21,10 +23,11 @@ secret_prefix = (
     ]
     else "default"
 )
-secret_name = f"{secret_prefix}/custom-sql-db-password"
+db_secret_name = f"{secret_prefix}/custom-sql-db-password"
+users_sql_users = f"{secret_prefix}/custom-sql-users"
 
 
-def get_db_password(secret_name, region_name="eu-west-1"):
+def get_secret(secret_name, region_name="eu-west-1"):
     if os.getenv("ENVIRONMENT") == "local":
         client = boto3.client(
             service_name="secretsmanager",
@@ -43,6 +46,67 @@ def get_db_password(secret_name, region_name="eu-west-1"):
 
     secret = get_secret_value_response["SecretString"]
     return secret
+
+
+def update_secret(secret_name, secret_data, region_name="eu-west-1"):
+    if os.getenv("ENVIRONMENT") == "local":
+        client = boto3.client(
+            service_name="secretsmanager",
+            region_name=region_name,
+            endpoint_url="http://localstack:4566",
+            aws_access_key_id="fake",
+            aws_secret_access_key="fake",
+        )
+    else:
+        client = boto3.client(service_name="secretsmanager", region_name=region_name)
+
+    client.update_secret(SecretId=secret_name, SecretString=json.dumps(secret_data))
+
+
+def hash_token(token, salt):
+    return hashlib.pbkdf2_hmac("sha256", token.encode(), salt.encode(), 310000).hex()
+
+
+def authenticate_or_store_token(secret_name, username, user_token):
+    response = get_secret(secret_name)
+    secret_data = json.loads(response)
+
+    if username not in secret_data:
+        return False, "User not authorised"
+
+    if username in secret_data and secret_data[username]["token_hash"]:
+        stored_hash = secret_data[username]["token_hash"]
+        salt = secret_data[username]["salt"]
+        computed_hash = hash_token(user_token, salt)
+
+        # Zero out user_token from memory
+        user_token = ""
+
+        if computed_hash == stored_hash:
+            return True, "Token Success"
+
+        return False, "User not authorised"
+
+    # If no user_token exists, enforce secure user_token policy
+    if (
+        len(user_token) < 12
+        or not any(c.isdigit() for c in user_token)
+        or not any(c.isalpha() for c in user_token)
+        or not any(c in string.punctuation for c in user_token)
+    ):
+        return (
+            False,
+            "Token does not meet policy (Min 12 char length, alpha, numeric and special chars needed)",
+        )
+
+    salt = os.urandom(16).hex()
+    token_hash = hash_token(user_token, salt)
+    secret_data[username] = {"token_hash": token_hash, "salt": salt}
+    update_secret(secret_name, secret_data)
+
+    # Zero out user_token from memory
+    user_token = ""
+    return True, "Created New Token"
 
 
 def run_insert_custom_query(event, conn):
@@ -180,17 +244,26 @@ def connect_to_db(db_password):
             password=db_password,
             port=os.getenv("DATABASE_PORT", "5432"),
         )
+        db_password = ""
         return conn
     except Exception as e:
         raise Exception(f"Error connecting to the database: {str(e)}")
 
 
 def lambda_handler(event, context):
-    print(event)
+    calling_user = event["calling_user"]
+    user_token = event["user_token"]
+    authenticated, msg = authenticate_or_store_token(
+        users_sql_users, calling_user, user_token
+    )
+    if not authenticated:
+        return {"statusCode": 401, "body": msg}
+
     procedure_to_call = event["procedure"]
     print(procedure_to_call)
-    db_password = get_db_password(secret_name)
+    db_password = get_secret(db_secret_name)
     conn = connect_to_db(db_password)
+    db_password = ""
 
     if procedure_to_call == "insert_custom_query":
         response = run_insert_custom_query(event, conn)
@@ -204,5 +277,5 @@ def lambda_handler(event, context):
         response = run_get_custom_query(event, conn)
     else:
         response = "Unknown procedure selected"
-
+    conn = ""
     return {"statusCode": 200, "body": response}

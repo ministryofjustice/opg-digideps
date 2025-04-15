@@ -122,7 +122,7 @@ class SettingsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $request->request->get('change_password')['password']['first'];
+            $plainPassword = $request->request->all('change_password')['password']['first'];
             $this->restClient->put('user/'.$user->getId().'/set-password', json_encode([
                 'password' => $plainPassword,
             ]));

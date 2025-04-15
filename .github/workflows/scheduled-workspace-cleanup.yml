@@ -37,9 +37,28 @@ jobs:
 
       - name: install workspace manager
         run: |
-          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.2/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.3/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
           sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
           sudo chmod +x /usr/local/bin/terraform-workspace-manager
+
+      - name: configure AWS credentials for workspace manager
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        with:
+          role-to-assume: arn:aws:iam::248804316466:role/digideps-gh-actions-workspace-cleanup
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: Get ephemeral workspaces to clean up
+        id: get_workspaces
+        run: |
+          WORKSPACES=$(terraform-workspace-manager \
+            -protected-workspaces=true \
+            -aws-account-id=248804316466 \
+            -aws-iam-role=digideps-ci \
+            -assume-role=false)
+          echo "workspaces=$WORKSPACES" >> $GITHUB_OUTPUT
+        working-directory: terraform/environment
 
       - name: install python
         uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # 5.4.0
@@ -63,10 +82,12 @@ jobs:
         run: terraform init -input=false
         working-directory: terraform/environment
 
-      - name: clean up ephemeral environments
+      - name: Clean up ephemeral environments
+        env:
+          WC_WORKSPACES: ${{ steps.get_workspaces.outputs.workspaces }}
         run: |
           unset TF_WORKSPACE
-          ./scripts/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=248804316466 -aws-iam-role=digideps-ci)
+          ./scripts/workspace_cleanup.sh ${WC_WORKSPACES}
         working-directory: terraform/environment
 
       - name: clean up old task definitions
