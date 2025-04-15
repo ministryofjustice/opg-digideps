@@ -122,12 +122,12 @@ class CourtOrder
         return $this;
     }
 
-    public function getCourtOrderUid(): int
+    public function getCourtOrderUid(): string
     {
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(int $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
     {
         $this->courtOrderUid = $courtOrderUid;
 

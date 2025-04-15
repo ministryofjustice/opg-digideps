@@ -17,9 +17,9 @@ class CourtOrder
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      */
     private $courtOrderUid;
 
@@ -49,12 +49,12 @@ class CourtOrder
         return $this;
     }
 
-    public function getCourtOrderUid(): int
+    public function getCourtOrderUid(): string
     {
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(int $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
     {
         $this->courtOrderUid = $courtOrderUid;
 

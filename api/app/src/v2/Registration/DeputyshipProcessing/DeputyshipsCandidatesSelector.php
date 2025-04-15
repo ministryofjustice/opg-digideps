@@ -18,7 +18,7 @@ class DeputyshipsCandidatesSelector
     ) {
     }
 
-    public function select(): void
+    public function select(): array
     {
         $selectionCandidates = [];
 
@@ -49,6 +49,8 @@ class DeputyshipsCandidatesSelector
             if ($courtOrderFound && $csvDeputyship->orderStatus !== $lookupKnownCourtOrdersStatus[$csvDeputyship->orderUid]) {
                 $changes = new StagingSelectedCandidates();
                 $changes->action = 'UPDATE ORDER STATUS';
+                $changes->orderUid = $csvDeputyship->orderUid;
+                $changes->deputyUid = $csvDeputyship->deputyUid;
                 $changes->orderId = $courtOrderId;
                 $changes->status = $csvDeputyship->orderStatus;
                 $selectionCandidates[] = $changes;
@@ -194,7 +196,14 @@ class DeputyshipsCandidatesSelector
                 );
             }
         }
-        file_put_contents('php://stderr', ' OUTPUT ---> '.print_r($selectionCandidates, true));
+
+        foreach ($selectionCandidates as $candidate) {
+            file_put_contents('php://stderr', ' OUTPUT ---> '.print_r($candidate, true));
+            $this->em->persist($candidate);
+        }
+        $this->em->flush();
+
+        return $selectionCandidates;
     }
 
     private function getClient(string $caseNumber): ?Client

@@ -42,7 +42,7 @@ class StagingSelectedCandidates
     public string $deputyUid;
 
     /**
-     * @ORM\Column(name="action", type="string", length=10)
+     * @ORM\Column(name="action", type="string", length=30)
      */
     public string $action;
 
