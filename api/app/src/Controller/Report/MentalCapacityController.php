@@ -58,7 +58,7 @@ class MentalCapacityController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['mental-capacity'];
+            ? $request->query->all('groups') : ['mental-capacity'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $mc;

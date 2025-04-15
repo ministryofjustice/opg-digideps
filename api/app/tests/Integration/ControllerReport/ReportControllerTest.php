@@ -217,64 +217,74 @@ class ReportControllerTest extends AbstractTestController
 
     public function testGetById()
     {
-        $url = '/report/'.self::$report1->getId();
+        $clientReportData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['report', 'report-client', 'client']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
 
-        $q = http_build_query(['groups' => ['report', 'report-client', 'client']]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertArrayHasKey('report_seen', $data);
-        $this->assertArrayNotHasKey('transactions', $data);
-        $this->assertArrayNotHasKey('debts', $data);
-        $this->assertArrayNotHasKey('fees', $data);
-        $this->assertEquals(self::$report1->getId(), $data['id']);
-        $this->assertEquals(self::$client1->getId(), $data['client']['id']);
-        $this->assertEquals(true, $data['submitted']);
-        $this->assertArrayHasKey('start_date', $data);
-        $this->assertArrayHasKey('end_date', $data);
+        $this->assertArrayHasKey('report_seen', $clientReportData);
+        $this->assertArrayNotHasKey('transactions', $clientReportData);
+        $this->assertArrayNotHasKey('debts', $clientReportData);
+        $this->assertArrayNotHasKey('fees', $clientReportData);
+        $this->assertEquals(self::$report1->getId(), $clientReportData['id']);
+        $this->assertEquals(self::$client1->getId(), $clientReportData['client']['id']);
+        $this->assertEquals(true, $clientReportData['submitted']);
+        $this->assertArrayHasKey('start_date', $clientReportData);
+        $this->assertArrayHasKey('end_date', $clientReportData);
 
         // assert decisions
-        $data = $this->assertJsonRequest('GET', $url.'?groups=decision', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertArrayHasKey('decisions', $data);
+        $decisionData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['decision']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
+
+        $this->assertArrayHasKey('decisions', $decisionData);
 
         // assert assets
-        $data = $this->assertJsonRequest('GET', $url.'?groups=asset', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertArrayHasKey('assets', $data);
+        $assetsData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['asset']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
+
+        $this->assertArrayHasKey('assets', $assetsData);
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=debt', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertArrayHasKey('debts', $data);
+        $debtsData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['debt']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
+
+        $this->assertArrayHasKey('debts', $debtsData);
 
         // assert fees
-        $data = $this->assertJsonRequest('GET', $url.'?groups=fee', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertArrayHasKey('fees', $data);
+        $feesData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['fee']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
+
+        $this->assertArrayHasKey('fees', $feesData);
 
         // assert report-submitted-by + user info
-        $data = $this->assertJsonRequest('GET', $url.'?groups=report-submitted-by', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertEquals(self::$deputy1->getId(), $data['submitted_by']['id']);
-        $this->assertEquals('deputy@example.org', $data['submitted_by']['email']);
+        $submittedByData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['report-submitted-by']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
+
+        $this->assertEquals(self::$deputy1->getId(), $submittedByData['submitted_by']['id']);
+        $this->assertEquals('deputy@example.org', $submittedByData['submitted_by']['email']);
 
         // assert status
-        $data = $this->assertJsonRequest('GET', $url.'?groups=status', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data']['status'];
+        $statusData = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['status']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data']['status'];
 
         foreach ([
             // add here the jms_serialised_version of the ReportStatus getters
@@ -296,12 +306,11 @@ class ReportControllerTest extends AbstractTestController
             'expenses_state',
             'gifts_state',
         ] as $key) {
-            $this->assertArrayHasKey('state', $data[$key]);
-            $this->assertArrayHasKey('nOfRecords', $data[$key]);
+            $this->assertArrayHasKey('state', $statusData[$key]);
+            $this->assertArrayHasKey('nOfRecords', $statusData[$key]);
         }
-
-        // $this->assertArrayHasKey('balance_matches', $data); //TODO check why failing
-        $this->assertArrayHasKey('status', $data);
+         
+        $this->assertArrayHasKey('status', $statusData);
     }
 
     public function testSubmit()

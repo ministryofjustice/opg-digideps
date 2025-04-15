@@ -49,7 +49,7 @@ class AccountController extends RestController
     public function getOneById(Request $request, $id)
     {
         if ($request->query->has('groups')) {
-            $this->formatter->setJmsSerialiserGroups((array) $request->query->get('groups'));
+            $this->formatter->setJmsSerialiserGroups($request->query->all('groups'));
         }
 
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');

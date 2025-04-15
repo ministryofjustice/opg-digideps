@@ -114,7 +114,7 @@ class ClientController extends RestController
     public function findByIdAction(Request $request, int $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['client'];
+            ? $request->query->all('groups') : ['client'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
@@ -141,7 +141,7 @@ class ClientController extends RestController
     public function detailsAction(Request $request, int $id)
     {
         if ($request->query->has('groups')) {
-            $serialisedGroups = (array) $request->query->get('groups');
+            $serialisedGroups = $request->query->all('groups');
         } else {
             $serialisedGroups = [
                 'client',
@@ -277,7 +277,7 @@ class ClientController extends RestController
     public function getAllClientsByDeputyUid(Request $request, int $deputyUid)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['client'];
+            ? $request->query->all('groups') : ['client'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $this->repository->getAllClientsAndReportsByDeputyUid($deputyUid);
