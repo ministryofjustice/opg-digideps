@@ -41,14 +41,14 @@ class DeputyRepository extends ServiceEntityRepository
      * @return array<string>|null
      * @throws Exception
      */
-    public function findReportsInfoByUid(int $uid, bool $inlcudeInactive = false): ?array
+    public function findReportsInfoByUid(int $uid, bool $includeInactive = false): ?array
     {
         $sql = <<<SQL
-        SELECT c.firstname,
-               c.lastname,
-               c.case_number,
-               co.court_order_uid,
-               r.type
+        SELECT c.firstname AS "firstName",
+               c.lastname AS "lastName",
+               c.case_number AS "caseNumber",
+               co.court_order_uid AS "courtOrderUid",
+               r.type AS "reportType"
         FROM deputy d
         LEFT JOIN client c ON c.deputy_id = d.id
         LEFT JOIN court_order co ON co.client_id = c.id
@@ -58,7 +58,7 @@ class DeputyRepository extends ServiceEntityRepository
         AND d.deputy_uid = ':deputyUid' 
         SQL;
 
-        if (!$inlcudeInactive) {
+        if (!$includeInactive) {
             $sql .= ' AND co.active = TRUE';
         }
         
@@ -68,8 +68,25 @@ class DeputyRepository extends ServiceEntityRepository
             ->prepare($sql)
             ->executeQuery(['deputyUid' => $uid]);
 
-        $result = $query->getArrayResult();
+        $result = $query->fetchAllAssociative();
 
-        return 0 === count($result) ? null : $result;
+        $data = [];
+        foreach ($result as $line) {
+            $data[] = [
+                'client' => [
+                    'firstName' => $line['firstName'],
+                    'lastName' => $line['lastName'],
+                    'caseNumber' => $line['caseNumber'],
+                ],
+                'report' => [
+                    'type' => $line['type'],
+                ],
+                'courtOrder' => [
+                    'courtOrderUid' => $line['courtOrderUid']
+                ]
+            ];
+        }
+
+        return 0 === count($result) ? null : $data;
     }
 }
