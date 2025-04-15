@@ -217,13 +217,12 @@ class ReportControllerTest extends AbstractTestController
 
     public function testGetById()
     {
-        $url = '/report/'.self::$report1->getId();
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['report', 'report-client', 'client']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
 
-        $q = http_build_query(['groups' => ['report', 'report-client', 'client']]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
         $this->assertArrayHasKey('report_seen', $data);
         $this->assertArrayNotHasKey('transactions', $data);
         $this->assertArrayNotHasKey('debts', $data);
@@ -235,46 +234,52 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('end_date', $data);
 
         // assert decisions
-        $data = $this->assertJsonRequest('GET', $url.'?groups=decision', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['decision']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
         $this->assertArrayHasKey('decisions', $data);
 
         // assert assets
-        $data = $this->assertJsonRequest('GET', $url.'?groups=asset', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['asset']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
         $this->assertArrayHasKey('assets', $data);
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=debt', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['debt']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
         $this->assertArrayHasKey('debts', $data);
 
         // assert fees
-        $data = $this->assertJsonRequest('GET', $url.'?groups=fee', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['fee']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
         $this->assertArrayHasKey('fees', $data);
 
         // assert report-submitted-by + user info
-        $data = $this->assertJsonRequest('GET', $url.'?groups=report-submitted-by', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['report-submitted-by']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
         $this->assertEquals(self::$deputy1->getId(), $data['submitted_by']['id']);
         $this->assertEquals('deputy@example.org', $data['submitted_by']['email']);
 
         // assert status
-        $data = $this->assertJsonRequest('GET', $url.'?groups=status', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data']['status'];
+        $data = $this->assertJsonRequest(
+            'GET',
+            sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['status']])),
+            ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
+        )['data'];
 
         foreach ([
             // add here the jms_serialised_version of the ReportStatus getters

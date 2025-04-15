@@ -1036,11 +1036,6 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
 			count: 2
 			path: src/Controller/Report/ClientBenefitsCheckController.php
@@ -1562,11 +1557,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyReceivedOnClientsBehalfController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyReceivedOnClientsBehalfController.php
-
-		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyReceivedOnClientsBehalfController.php
 
@@ -2936,11 +2926,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, array\\<int, string\\>\\|bool\\|float\\|int\\|string\\|null given\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#1 \\$hashedPassword of method Symfony\\\\Component\\\\PasswordHasher\\\\PasswordHasherInterface\\:\\:verify\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -2977,11 +2962,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$formData of method App\\\\Factory\\\\UserResearchResponseFactory\\:\\:generateFromFormData\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Controller/UserResearchController.php
 

@@ -30,7 +30,7 @@ class ContactController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['contact'];
+            ? $request->query->all('groups') : ['contact'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id);
