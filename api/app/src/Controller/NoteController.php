@@ -58,7 +58,7 @@ class NoteController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['notes', 'user'];
+            ? $request->query->all('groups') : ['notes', 'user'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */

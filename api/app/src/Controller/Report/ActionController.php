@@ -58,7 +58,7 @@ class ActionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['action'];
+            ? $request->query->all('groups') : ['action'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $action;

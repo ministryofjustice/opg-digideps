@@ -95,7 +95,7 @@ class LifestyleController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['lifestyle'];
+            ? $request->query->all('groups') : ['lifestyle'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'Lifestyle with id:'.$id.' not found');

@@ -33,7 +33,7 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['asset'];
+            ? $request->query->all('groups') : ['asset'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $asset;
