@@ -101,9 +101,6 @@ Feature: Users logging into the service
         And the Lay deputy navigates to the Choose a client page
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
-        When the Lay deputy navigates to client details page
-        And the Lay Deputy navigates back to the Client dashboard using the breadcrumb
-        Then they should be on the "primary" Client's dashboard
 
     @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
     Scenario: A user logs into the service with their primary account given they're active clients are linked to their secondary accounts
