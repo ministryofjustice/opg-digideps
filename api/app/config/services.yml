@@ -412,3 +412,21 @@ services:
 
     App\Service\Audit\LocalAuditLogHandler:
         class: App\Service\Audit\LocalAuditLogHandler
+
+    GuzzleHttp\Client:
+        arguments:
+            $config:
+                verify: false
+                headers:
+                    Content-Type: application/json
+                timeout: 20
+                allow_redirects: false
+
+    App\Service\ResponseComparison\ClientsResponseComparer:
+        tags: [{ name: "app.response_comparer" }]
+
+    App\Command\ApiComparison:
+        arguments:
+            $httpClient: '@GuzzleHttp\Client'
+            $redis: "@snc_redis.default"
+            $comparers: !tagged_iterator app.response_comparer
