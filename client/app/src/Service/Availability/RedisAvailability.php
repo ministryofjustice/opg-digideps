@@ -3,20 +3,16 @@
 namespace App\Service\Availability;
 
 use Predis\ClientInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class RedisAvailability extends ServiceAvailabilityAbstract
 {
     public const TEST_KEY = 'RedisAvailabilityTestKey';
-
-    private ContainerInterface $container;
     private ClientInterface $redis;
     private string $workspace;
 
-    public function __construct(ContainerInterface $container, ClientInterface $redis, $workspace)
+    public function __construct(ClientInterface $redis, $workspace)
     {
         $this->isHealthy = false;
-        $this->container = $container;
         $this->redis = $redis;
         $this->workspace = $workspace;
     }
