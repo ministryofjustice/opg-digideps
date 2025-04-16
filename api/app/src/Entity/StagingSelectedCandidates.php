@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Holds staging data taken from the data processed from the deputyship CSV file from Sirius.
@@ -17,11 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Column names in the database still match the column names in the CSV, as we do no
  * transformation/translation when dumping data into this table.
  *
- * @ORM\Table(name="selectedCandidates", schema="staging", indexes={
- *
- *   @ORM\Index(name="deputy_uid_idx", columns={"deputy_uid"}),
- *   @ORM\Index(name="order_uid_idx", columns={"order_uid"})
- * })
+ * @ORM\Table(name="selectedCandidates", schema="staging")
  *
  * @ORM\Entity
  */
@@ -30,13 +27,22 @@ class StagingSelectedCandidates
     /**
      * @ORM\Id
      *
+     * @JMS\Type("integer")
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     *
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @ORM\SequenceGenerator(sequenceName="candidate_id_seq", allocationSize=1, initialValue=1)
+     */
+    private int $id;
+
+    /**
      * @ORM\Column(name="order_uid", type="string", length=30)
      */
     public string $orderUid;
 
     /**
-     * @ORM\Id
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=30)
      */
     public string $deputyUid;

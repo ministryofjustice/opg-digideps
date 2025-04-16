@@ -71,13 +71,17 @@ class DeputyshipsCandidatesSelector
                 $changes = new StagingSelectedCandidates();
                 if ($deputyOnCourtOrder && $deputyOnCourtOrder[0]->isActive() !== $csvDeputyOnCourtOrderStatus) {
                     $changes->action = 'UPDATE DEPUTY STATUS ON ORDER';
+                    $changes->orderUid = $csvDeputyship->orderUid;
                     $changes->orderId = $courtOrderId;
                     $changes->deputyId = $deputyId;
+                    $changes->deputyUid = $csvDeputyship->deputyUid;
                     $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
                 } else {
                     $changes->action = 'INSERT ORDER DEPUTY';
+                    $changes->orderUid = $csvDeputyship->orderUid;
                     $changes->orderId = $courtOrderId;
                     $changes->deputyId = $deputyId;
+                    $changes->deputyUid = $csvDeputyship->deputyUid;
                     $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
                 }
                 $selectionCandidates[] = $changes;
@@ -105,6 +109,7 @@ class DeputyshipsCandidatesSelector
                     $changes->status = $csvDeputyship->orderStatus;
                     $changes->clientId = $client->getId();
                     $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
+                    $changes->deputyUid = $csvDeputyship->deputyUid;
                     $selectionCandidates[] = $changes;
 
                     $changes = new StagingSelectedCandidates();
@@ -112,6 +117,7 @@ class DeputyshipsCandidatesSelector
                     $changes->orderUid = $csvDeputyship->orderUid;
                     $changes->deputyId = $deputyId;
                     $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
+                    $changes->deputyUid = $csvDeputyship->deputyUid;
                     $selectionCandidates[] = $changes;
 
                     // store reportIds for court order report insertion
@@ -175,6 +181,7 @@ class DeputyshipsCandidatesSelector
                         $changes->action = 'INSERT ORDER REPORT';
                         $changes->orderUid = $csvDeputyship->orderUid;
                         $changes->reportId = $reportId;
+                        $changes->deputyUid = $csvDeputyship->deputyUid;
                     }
 
                     $selectionCandidates[] = $changes;
