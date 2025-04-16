@@ -12,7 +12,7 @@ COPY api/app/src src
 RUN composer dump-autoload --optimize
 
 
-FROM php:8.1.28-fpm-alpine3.19 AS base
+FROM php:8.2.28-fpm-alpine3.21 AS base
 
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG ENVIRONMENT=${ENVIRONMENT:-production}
@@ -28,8 +28,8 @@ RUN apk --no-cache add \
     postgresql-client \
     openssl \
     su-exec \
-    php81-pecl-igbinary  \
-    php81-pecl-redis
+    php82-pecl-igbinary  \
+    php82-pecl-redis
 RUN apk update && apk upgrade
 # Install necessary PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql opcache

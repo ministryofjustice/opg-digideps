@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestIdLoggerProcessorTest extends TestCase
 {
+    private Container $container;
+    private RequestStack $reqStack;
     private RequestIdLoggerProcessor $object;
 
     private $record = ['key1' => 'abc', 'key2' => 2];
@@ -34,7 +36,7 @@ class RequestIdLoggerProcessorTest extends TestCase
 
     public function testProcessRecordHasNoRequest()
     {
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(false);
+        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(null);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
