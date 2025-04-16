@@ -173,6 +173,15 @@ data "aws_iam_policy_document" "custom_sql_query" {
   }
 
   statement {
+    sid       = "RDSDescribeAccess"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "rds:DescribeDBInstances"
+    ]
+  }
+
+  statement {
     sid       = "ECRAccess"
     effect    = "Allow"
     resources = [data.aws_ecr_repository.custom_sql_query.arn]
@@ -203,7 +212,8 @@ data "aws_iam_policy_document" "custom_sql_query" {
     sid    = "PutSecretsmanagerAccess"
     effect = "Allow"
     actions = [
-      "secretsmanager:PutSecretValue"
+      "secretsmanager:PutSecretValue",
+      "secretsmanager:UpdateSecret"
     ]
     resources = local.write_secret_arns
   }
@@ -212,7 +222,9 @@ data "aws_iam_policy_document" "custom_sql_query" {
     sid    = "DecryptSecretKMS"
     effect = "Allow"
     actions = [
-      "kms:Decrypt"
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:GenerateDataKey"
     ]
     resources = [
       module.secret_kms.eu_west_1_target_key_arn
