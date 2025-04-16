@@ -65,7 +65,7 @@ down-app: ##@application Tears down the app
 end-to-end-tests: up-app reset-database ##@end-to-end-tests Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app end-to-end-tests
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml up -d load-balancer
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
+	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @lay-pfa-high-not-started-multi-client-deputy
 
 end-to-end-tests-rerun: ##@end-to-end-tests Rerun end to end tests (requires you to have run end-to-end-tests previously), argument in format: tag=your_tag
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
