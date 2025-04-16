@@ -27,7 +27,6 @@ class DeputyController extends RestController
     public function __construct(
         private readonly DeputyService $deputyService,
         private readonly RestFormatter $formatter,
-        private readonly LoggerInterface $logger,
         protected readonly EntityManagerInterface $em
     ) {
         parent::__construct($em);
