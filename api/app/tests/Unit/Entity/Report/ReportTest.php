@@ -20,16 +20,19 @@ use App\Entity\Report\ProfDeputyPreviousCost;
 use App\Entity\Report\Report;
 use App\TestHelpers\ReportTestHelper;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Mockery\MockInterface;
 use MockeryStub as m;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ReportTest extends KernelTestCase
 {
-    /**
-     * @var Report
-     */
-    private $report;
-    private $em;
+    private MockInterface&Client $client;
+    private array $validReportCtorArgs;
+    private MockInterface&Report $report;
+    private MockInterface&Gift $gift1;
+    private MockInterface&Gift $gift2;
+    private EntityManagerInterface $em;
 
     public function setUp(): void
     {
