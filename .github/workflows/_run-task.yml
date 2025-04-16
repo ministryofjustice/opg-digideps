@@ -48,7 +48,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
         with:
           terraform_directory: terraform/environment
 
@@ -103,7 +103,7 @@ jobs:
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"
           role-session-name: github-actions-terraform-run-task
-          role-duration-seconds: ${{ input.oidc_timeout }}
+          role-duration-seconds: ${{ inputs.oidc_timeout }}
           aws-region: eu-west-1
 
       - name: run task
