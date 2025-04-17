@@ -8,38 +8,31 @@ use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
+use App\Factory\OrganisationFactory;
 use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\v2\Assembler\ClientAssembler;
+use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
-use DateTime;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class OrgDeputyshipUploaderTest extends KernelTestCase
 {
-    /** @var OrgDeputyshipUploader */
-    private $sut;
-
-    /** @var EntityManager */
-    private $em;
-
-    /** @var DeputyRepository */
-    private $deputyRepository;
-
-    /** @var OrganisationRepository */
-    private $orgRepository;
-
-    /** @var ClientRepository */
-    private $clientRepository;
-
-    /** @var ReportRepository */
-    private $reportRepository;
+    private OrgDeputyshipUploader $sut;
+    private EntityManager $em;
+    private DeputyRepository $deputyRepository;
+    private OrganisationRepository $orgRepository;
+    private ClientRepository $clientRepository;
+    private ReportRepository $reportRepository;
+    private LoggerInterface&MockObject $logger;
 
     public function setUp(): void
     {
@@ -56,9 +49,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->reportRepository = $this->em->getRepository(Report::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
-        $orgFactory = $container->get('App\Factory\OrganisationFactory');
-        $clientAssembler = $container->get('App\v2\Assembler\ClientAssembler');
-        $deputyAssembler = $container->get('App\v2\Assembler\DeputyAssembler');
+        $orgFactory = $container->get(OrganisationFactory::class);
+        $clientAssembler = $container->get(ClientAssembler::class);
+        $deputyAssembler = $container->get(DeputyAssembler::class);
 
         $this->sut = new OrgDeputyshipUploader($this->em, $orgFactory, $clientAssembler, $deputyAssembler, $this->logger);
 

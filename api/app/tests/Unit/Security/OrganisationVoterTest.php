@@ -8,6 +8,7 @@ use App\Entity\Organisation;
 use App\Entity\User;
 use App\Security\OrganisationVoter;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
@@ -15,6 +16,11 @@ use Symfony\Component\Security\Core\Security;
 class OrganisationVoterTest extends KernelTestCase
 {
     use ProphecyTrait;
+
+    private User $user;
+    private Organisation $subject;
+    private ObjectProphecy|Security $security;
+    private OrganisationVoter $sut;
 
     public function setUp(): void
     {

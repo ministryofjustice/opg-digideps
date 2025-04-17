@@ -14,15 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserRepositoryTest extends WebTestCase
 {
-    /**
-     * @var UserRepository
-     */
-    private $sut;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private UserRepository $sut;
+    private EntityManagerInterface $em;
+    private Fixtures $fixtures;
 
     protected function setUp(): void
     {
@@ -34,6 +28,14 @@ class UserRepositoryTest extends WebTestCase
 
         $purger = new ORMPurger($this->em);
         $purger->purge();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->em->close();
+        unset($this->em);
     }
 
     public function testCountsInactiveUsers()
@@ -365,13 +367,5 @@ class UserRepositoryTest extends WebTestCase
 
         $usersNotDeleted = $this->sut->findBy(['id' => $usersNotDeleted]);
         $this->assertCount(2, $usersNotDeleted);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->em->close();
-        $this->em = null;
     }
 }

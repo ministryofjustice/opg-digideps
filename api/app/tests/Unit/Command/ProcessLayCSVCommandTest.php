@@ -10,8 +10,10 @@ use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Mockery as Mock;
+use Mockery\MockInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -21,6 +23,15 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class ProcessLayCSVCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
+
+    private ObjectProphecy|S3Client $s3;
+    private ObjectProphecy|ParameterBagInterface $params;
+    private string $csvFilename;
+    private LoggerInterface|ObjectProphecy $logger;
+    private ObjectProphecy|CSVDeputyshipProcessing $csvProcessing;
+    private ObjectProphecy|PreRegistrationRepository $preReg;
+    private MockInterface&CsvToArray $csvArray;
+    private CommandTester $commandTester;
 
     public function setUp(): void
     {

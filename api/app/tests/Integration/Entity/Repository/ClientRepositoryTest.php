@@ -6,28 +6,19 @@ use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\Fixtures;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ClientRepositoryTest extends WebTestCase
 {
-    /**
-     * @var ClientRepository
-     */
-    private $sut;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private ClientRepository $sut;
+    private EntityManagerInterface $em;
 
     protected function setUp(): void
     {
         $kernel = self::bootKernel();
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->fixtures = new Fixtures($this->em);
 
         $this->sut = $this->em->getRepository(Client::class);
 
@@ -67,6 +58,6 @@ class ClientRepositoryTest extends WebTestCase
         parent::tearDown();
 
         $this->em->close();
-        $this->em = null;
+        unset($this->em);
     }
 }

@@ -20,6 +20,7 @@ use App\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Mockery\MockInterface;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -29,20 +30,19 @@ class ReportServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ReportService
-     */
-    protected $sut;
-
-    /**
-     * @var EntityDir\User
-     */
-    private $user;
-
-    /**
-     * @var Report
-     */
-    private $report;
+    private User $user;
+    private BankAccount $bank1;
+    private AssetProperty $asset1;
+    private Report $report;
+    private Document $document1;
+    private EntityDir\Ndr\Ndr $ndr;
+    private ReportRepository|MockInterface $reportRepo;
+    private EntityRepository|MockInterface $casrecRepo;
+    private MockInterface $assetRepo;
+    private MockInterface $bankAccount;
+    private MockInterface|EntityManager $em;
+    private Document $mockNdrDocument;
+    private ReportService $sut;
 
     public function setUp(): void
     {

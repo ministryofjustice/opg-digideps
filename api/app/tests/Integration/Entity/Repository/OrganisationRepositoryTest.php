@@ -16,25 +16,44 @@ class OrganisationRepositoryTest extends WebTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var OrganisationRepository
-     */
-    private $sut;
+    private OrganisationRepository $sut;
+    private EntityManagerInterface $em;
+    private Fixtures $fixtures;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    protected function setUp(): void
+    {
+        $kernel = self::bootKernel();
+
+        $this->em = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
+        $this->fixtures = new Fixtures($this->em);
+
+        $metaClass = self::prophesize(ClassMetadata::class);
+        $metaClass->name = Organisation::class;
+
+        $this->sut = $this->em->getRepository(Organisation::class);
+
+        $purger = new ORMPurger($this->em);
+        $purger->purge();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->em->close();
+        unset($this->em);
+    }
 
     /** @test */
     public function testGetAllArray()
     {
-        $orgs = $this->fixtures->createOrganisations(5);
+        $this->fixtures->createOrganisations(5);
         $this->em->flush();
 
-        $allOrgs = $this->sut->getAllArray();
-
-        self::assertCount(5, $allOrgs);
+        self::assertCount(5, $this->sut->getAllArray());
     }
 
     /** @test */
@@ -165,32 +184,5 @@ class OrganisationRepositoryTest extends WebTestCase
 
         $result = $this->sut->findByEmailIdentifier($orgs[0]->getEmailIdentifier());
         self::assertEquals($orgs[0], $result);
-    }
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        $this->fixtures = new Fixtures($this->em);
-
-        $metaClass = self::prophesize(ClassMetadata::class);
-        $metaClass->name = Organisation::class;
-
-        $this->sut = $this->em->getRepository(Organisation::class);
-
-        $purger = new ORMPurger($this->em);
-        $purger->purge();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->em->close();
-        $this->em = null;
     }
 }

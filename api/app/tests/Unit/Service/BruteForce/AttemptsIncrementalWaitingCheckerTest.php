@@ -12,10 +12,9 @@ require_once __DIR__.'/PredisMock.php';
 
 class AttemptsIncrementalWaitingCheckerTest extends TestCase
 {
-    /**
-     * @var AttemptsInTime
-     */
-    private $object;
+    private PredisMock $redis;
+    private AttemptsIncrementalWaitingChecker $object;
+    private string $key;
 
     public function setUp(): void
     {
