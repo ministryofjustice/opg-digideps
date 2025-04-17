@@ -26,7 +26,7 @@ class CourtOrderService
      */
     public function getByUidAsUser(string $uid, ?UserInterface $user): ?CourtOrder
     {
-        /** @var CourtOrder $courtOrder */
+        /** @var ?CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $uid]);
 
         if (is_null($courtOrder)) {
@@ -41,10 +41,10 @@ class CourtOrderService
         }
 
         // fetch the deputy entity by user email
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
 
-        /** @var Deputy $deputy */
+        /** @var ?Deputy $deputy */
         $deputy = $user?->getDeputy();
 
         if (is_null($deputy)) {
