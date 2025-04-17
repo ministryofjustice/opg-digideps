@@ -26,6 +26,16 @@ class CourtOrderService
      */
     public function getByUidAsUser(string $uid, ?UserInterface $user): ?CourtOrder
     {
+        /** @var CourtOrder $courtOrder */
+        $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $uid]);
+
+        if (is_null($courtOrder)) {
+            $this->logger->error("Could not find court order with UID {$uid}");
+
+            return null;
+        }
+
+        // check user access to court order
         if (is_null($user)) {
             return null;
         }
@@ -44,9 +54,6 @@ class CourtOrderService
         }
 
         $deputyUid = $deputy->getDeputyUid();
-
-        /** @var CourtOrder $courtOrder */
-        $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $uid]);
 
         // only return court order if the logged-in user is a deputy on it
         $isDeputyOnCourtOrder = false;
