@@ -67,7 +67,7 @@ class AssetProperty extends Asset
      * @var float 0-100
      *
      * @Assert\NotBlank(message="ndr.asset.property.ownedPercentage.notBlank", groups={"property-owned-partly"})
-     * @Assert\Range(min=0, max=100, minMessage = "ndr.asset.property.ownedPercentage.type", maxMessage = "ndr.asset.property.ownedPercentage.type", groups={"property-owned-partly"})
+     * @Assert\Range(min=0, max=100, notInRangeMessage = "ndr.asset.property.ownedPercentage.type", groups={"property-owned-partly"})
      *
      * @JMS\Type("float")
      */
@@ -90,7 +90,7 @@ class AssetProperty extends Asset
     /**
      * @Assert\NotBlank(message="ndr.asset.property.mortgageOutstandingAmount.notBlank", groups={"property-mortgage-outstanding-amount"})
      * @Assert\Type( type="numeric", message="ndr.asset.property.mortgageOutstandingAmount.type", groups={"property-mortgage-outstanding-amount"})
-     * @Assert\Range(min=0, max=100000000000, maxMessage = "ndr.asset.property.mortgageOutstandingAmount.outOfRange", groups={"property-mortgage-outstanding-amount"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "ndr.asset.property.mortgageOutstandingAmount.outOfRange", groups={"property-mortgage-outstanding-amount"})
      *
      * @var string
      * @JMS\Type("integer")
@@ -126,7 +126,7 @@ class AssetProperty extends Asset
     /**
      * @Assert\NotBlank(message="ndr.asset.property.rentIncomeMonth.notBlank", groups={"property-rent-income-month"})
      * @Assert\Type( type="numeric", message="ndr.asset.property.rentIncomeMonth.type", groups={"property-rent-income-month"})
-     * @Assert\Range(min=0, max=100000000000, maxMessage = "ndr.asset.property.rentIncomeMonth.outOfRange", groups={"property-rent-income-month"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "ndr.asset.property.rentIncomeMonth.outOfRange", groups={"property-rent-income-month"})
      *
      * @var float
      * @JMS\Type("float")

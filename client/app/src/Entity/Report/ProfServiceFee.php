@@ -88,7 +88,7 @@ abstract class ProfServiceFee
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
      * @Assert\NotBlank(message="profServiceFee.amountCharged.notBlank", groups={"prof-service-fee-details-type"})
-     * @Assert\Range(min=0, max=100000000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"prof-service-fee-details-type"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "fee.amount.notInRangeMessage", groups={"prof-service-fee-details-type"})
      */
     private $amountCharged;
 
@@ -107,7 +107,7 @@ abstract class ProfServiceFee
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
      * @Assert\NotBlank(message="profServiceFee.amountReceived.notBlank", groups={"prof-service-fee-details-type-payment-received"})
-     * @Assert\Range(min=0, max=100000000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"prof-service-fee-details-type-payment-received"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "fee.amount.notInRangeMessage", groups={"prof-service-fee-details-type-payment-received"})
      */
     private $amountReceived;
 

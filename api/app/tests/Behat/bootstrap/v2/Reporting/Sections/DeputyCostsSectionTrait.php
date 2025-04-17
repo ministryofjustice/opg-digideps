@@ -19,8 +19,8 @@ trait DeputyCostsSectionTrait
     private string $missingDateError = 'Please enter a date';
     private string $missingSccoAssessedCostError = 'Please enter an amount. Enter 0 if you are not requesting an SCCO assessment';
     private string $negativeSccoAssessedCostError = 'Please enter a positive amount';
-    private string $additionalCostNegativeAmountError = 'The amount must be positive';
-    private string $additionalCostTooLargeAmountError = 'The amount must be less than £100,000,000,000';
+    private string $additionalCostNegativeAmountError = 'The amount must be between £0 and £100,000,000,000';
+    private string $additionalCostTooLargeAmountError = 'The amount must be between £0 and £100,000,000,000';
     private string $additionalCostMissingOtherDescriptionError = 'Please give us some more information';
     private string $missingInterimCostError = 'Add at least one interim cost';
 
