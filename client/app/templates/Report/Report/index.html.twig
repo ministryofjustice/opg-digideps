@@ -10,14 +10,6 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block supportTitleTop %}{{ client.fullname }}{% endblock %}
 
-{% block breadcrumbs %}
-    {% if deputyHasMultiClients %}
-        {{ macros.breadcrumbsArray([
-            { href: url('choose_a_client'), text: 'Choose a client' }
-        ]) }}
-    {% endif %}
-{% endblock %}
-
 {% block pageContent %}
 
     {% if ndrEnabled %}

@@ -25,20 +25,11 @@ trait INavigateToFrontendTrait
     }
 
     /**
-     * @When /^the Lay deputy navigates back to the Choose a Client homepage$/
+     * @When /^the Lay deputy navigates to the Choose a client page$/
      */
-    public function theLayDeputyNavigatesBackToTheChooseAClientHomepage()
+    public function theLayDeputyNavigatesToTheChooseAClientPage()
     {
-        $this->clickLink('Complete the deputy report');
-        $this->iAmOnChooseAClientMainPage();
-    }
-
-    /**
-     * @When /^the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb$/
-     */
-    public function theLayDeputyNavigatesBackToTheChooseAClientHomepageUsingBreadcrumb()
-    {
-        $this->clickLink('Choose a client');
+        $this->visitPath('/choose-a-client');
         $this->iAmOnChooseAClientMainPage();
     }
 

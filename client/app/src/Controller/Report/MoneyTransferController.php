@@ -4,9 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -29,7 +27,6 @@ class MoneyTransferController extends AbstractController
         private RestClient $restClient,
         private ReportApi $reportApi,
         private StepRedirector $stepRedirector,
-        private ClientApi $clientApi
     ) {
     }
 
@@ -42,16 +39,11 @@ class MoneyTransferController extends AbstractController
      */
     public function startAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->enoughBankAccountForTransfers()) {
             return $this->render('@App/Report/MoneyTransfer/error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
                 'report' => $report,
-                'isMultiClientDeputy' => $isMultiClientDeputy,
             ]);
         }
 
@@ -61,7 +53,6 @@ class MoneyTransferController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -234,10 +225,6 @@ class MoneyTransferController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyTransferState()['state']) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
@@ -245,7 +232,6 @@ class MoneyTransferController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

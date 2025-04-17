@@ -12,13 +12,6 @@
 {% block breadcrumbs %}
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
-            {% if isMultiClientDeputy %}
-                <li class="govuk-breadcrumbs__list-item">
-                    <a href="{{ path('choose_a_client') }}" class="govuk-breadcrumbs__link">
-                        {{ 'chooseAClient' | trans({}, 'common' ) }}
-                    </a>
-                </li>
-            {% endif %}
             <li>
                 <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}</a>
             </li>

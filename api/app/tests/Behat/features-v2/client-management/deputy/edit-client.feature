@@ -25,17 +25,8 @@ Feature: View client details
         Then I should not see the link for client details
 
     @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: A user does not see Client details in nav bar on choose a client homepage
-        Given a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the Choose a Client homepage
-        Then I should not see "Client details"
-
-    @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user has access to the client details page of the client they have selected and correct breadcrumbs
         Given a Lay Deputy tries to login with their "primary" email address
         Then they should be on the Choose a Client homepage
         When I select the first client from the Choose a Client page
         Then I should see "Client details"
-        When I select the "Client details" link I should see the details of the chosen client
-        And I click on the button to edit my client's details
-        Then the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb

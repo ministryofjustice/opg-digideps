@@ -39,7 +39,7 @@
                class="govuk-link link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans({}, 'report-submitted') }}</a>
         {% endif %}
     {% else %}
-        {{ macros.breadcrumbs(report, isMultiClientDeputy) }}
+        {{ macros.breadcrumbs(report) }}
     {% endif %}
 {% endblock %}
 

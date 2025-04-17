@@ -10,10 +10,8 @@ use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBeha
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
-use App\Entity\User;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
 use App\Service\Client\Internal\NdrApi;
@@ -40,7 +38,6 @@ class ClientBenefitsCheckController extends AbstractController
         private StepRedirector $stepRedirector,
         private MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
         private NdrApi $ndrApi,
-        private ClientApi $clientApi
     ) {
     }
 
@@ -55,10 +52,6 @@ class ClientBenefitsCheckController extends AbstractController
      */
     public function start(int $reportId, string $reportOrNdr)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -75,7 +68,6 @@ class ClientBenefitsCheckController extends AbstractController
         return [
             'report' => $report,
             'reportOrNdr' => $reportOrNdr,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -194,10 +186,6 @@ class ClientBenefitsCheckController extends AbstractController
      */
     public function summary(int $reportId, string $reportOrNdr)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -205,7 +193,6 @@ class ClientBenefitsCheckController extends AbstractController
             'report' => $report,
             'reportOrNdr' => $reportOrNdr,
             'showActions' => true,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
