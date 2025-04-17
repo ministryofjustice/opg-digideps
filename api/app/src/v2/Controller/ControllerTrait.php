@@ -21,6 +21,7 @@ trait ControllerTrait
         return new JsonResponse([
             'success' => false,
             'message' => $message,
+            'code' => Response::HTTP_NOT_FOUND,
         ], Response::HTTP_NOT_FOUND);
     }
 
@@ -29,6 +30,7 @@ trait ControllerTrait
         return new JsonResponse([
             'success' => false,
             'message' => $message,
+            'code' => $status,
         ], $status);
     }
 }

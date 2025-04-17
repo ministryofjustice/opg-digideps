@@ -59,6 +59,7 @@ class CourtOrderController extends RestController
         $data = $this->serializer->serialize([
             'success' => true,
             'data' => $courtOrder,
+            'code' => 200,
         ], 'json', $ctx);
 
         return new JsonResponse(data: $data, json: true);
