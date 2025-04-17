@@ -219,14 +219,14 @@ class Deputy
     /**
      * @JMS\Type("App\Entity\User")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove", "persist"})
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
     private ?User $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist", "remove"})
      */
     private Collection $courtOrderDeputyRelationships;
 
