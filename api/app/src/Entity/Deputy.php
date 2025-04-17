@@ -610,12 +610,12 @@ class Deputy
             && null !== $dto->getDeputyEmail();
     }
 
-    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $discharged = false): Deputy
+    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $isActive = true): Deputy
     {
         $courtOrderDeputy = new CourtOrderDeputy();
         $courtOrderDeputy->setCourtOrder($courtOrder);
         $courtOrderDeputy->setDeputy($this);
-        $courtOrderDeputy->setDischarged($discharged);
+        $courtOrderDeputy->setIsActive($isActive);
 
         $this->courtOrderDeputyRelationships[] = $courtOrderDeputy;
 
@@ -629,7 +629,7 @@ class Deputy
         foreach ($this->courtOrderDeputyRelationships as $element) {
             $result[] = [
                 'courtOrder' => $element->getCourtOrder(),
-                'discharged' => $element->isDischarged(),
+                'isActive' => $element->isActive(),
             ];
         }
 
