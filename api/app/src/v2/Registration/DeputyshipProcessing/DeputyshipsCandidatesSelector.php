@@ -20,6 +20,12 @@ class DeputyshipsCandidatesSelector
 
     public function select(): array
     {
+        // delete records from candidate table ready for new candidates
+        $this->em->beginTransaction();
+        $this->em->createQuery('DELETE FROM App\Entity\StagingSelectedCandidates sc')->execute();
+        $this->em->flush();
+        $this->em->commit();
+
         $selectionCandidates = [];
 
         $csvDeputyships = $this->em->createQuery(
