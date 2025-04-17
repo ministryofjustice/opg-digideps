@@ -4,6 +4,7 @@ namespace App\Tests\Integration\Controller;
 
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
+use App\Service\JWT\JWTService;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,17 +15,16 @@ use function PHPUnit\Framework\assertNotEmpty;
 
 class JsonHttpTestClient
 {
-    private KernelBrowser $client;
-
-    public function __construct(KernelBrowser $client)
-    {
-        $this->client = $client;
+    public function __construct(
+        private readonly KernelBrowser $client,
+        private readonly ?JWTService $jwtService,
+    ) {
     }
 
     /**
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      */
-    public function assertJsonRequest($method, $uri, array $options = []): array
+    public function assertJsonRequest($method, $uri, array $options = [], bool $withValidJwt = false): array
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         if (isset($options['AuthToken'])) {
@@ -32,6 +32,10 @@ class JsonHttpTestClient
         }
         if (isset($options['ClientSecret'])) {
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
+        }
+
+        if ($withValidJwt && !is_null($this->jwtService)) {
+            $headers['HTTP_JWT'] = $this->jwtService->createNewJWT();
         }
 
         $rawData = null;
@@ -75,7 +79,7 @@ class JsonHttpTestClient
         }
 
         if (!empty($options['assertCode'])) {
-            assertEquals($options['assertResponseCode'], $return['code'], 'Response: '.print_r($return, true));
+            assertEquals($options['assertResponseCode'], $return['code'] ?? null, 'Response: '.print_r($return, true));
         }
 
         if (!empty($options['assertResponseCode'])) {

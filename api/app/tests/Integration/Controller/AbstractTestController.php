@@ -7,7 +7,7 @@ use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
 use App\Tests\Integration\Fixtures;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,21 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class AbstractTestController extends WebTestCase
 {
-    /** @var Fixtures */
-    protected static $fixtures;
-
-    /** @var Client */
-    protected static $frameworkBundleClient;
-
-    /** @var string|false */
-    protected static $deputySecret;
-
-    /** @var string|false */
-    protected static $adminSecret;
-
-    /** @var JWTService */
-    protected $jwtService;
-
+    protected static Fixtures $fixtures;
+    protected static KernelBrowser $frameworkBundleClient;
+    protected static string|false $deputySecret;
+    protected static string|false $adminSecret;
+    protected ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
 
     /**
@@ -48,9 +38,11 @@ abstract class AbstractTestController extends WebTestCase
 
         /** @var EntityManager $em */
         $em = static::getContainer()->get('em');
-        $this->jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
-
         self::$fixtures = new Fixtures($em);
+
+        /** @var JWTService $jwtService */
+        $jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
+        $this->jwtService = $jwtService;
 
         $em->clear();
 
