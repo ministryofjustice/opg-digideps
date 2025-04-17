@@ -65,8 +65,5 @@ class CourtOrderControllerTest extends AbstractTestController
             "/v2/courtorder/{$courtOrder->getCourtOrderUid()}",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
-
-        $fixtures->remove($courtOrder, $deputy);
-        $fixtures->flush()->clear();
     }
 }
