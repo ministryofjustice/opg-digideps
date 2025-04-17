@@ -4,34 +4,26 @@ declare(strict_types=1);
 
 namespace App\v2\Controller;
 
-use App\Controller\RestController;
-use App\Entity\User;
 use App\v2\Service\CourtOrderService;
-use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Show court order data to deputies.
  */
 #[Route('/courtorder')]
-class CourtOrderController extends RestController
+class CourtOrderController extends AbstractController
 {
     use ControllerTrait;
 
     public function __construct(
-        private EntityManagerInterface $em,
         private readonly CourtOrderService $courtOrderService,
         private readonly SerializerInterface $serializer,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($em);
     }
 
     /**
