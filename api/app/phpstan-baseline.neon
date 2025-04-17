@@ -3696,17 +3696,7 @@ parameters:
 			path: src/Entity/CourtOrder.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$courtOrderDeputyRelationships is never read, only written\\.$#"
-			count: 1
-			path: src/Entity/CourtOrder.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$courtOrderDeputyRelationships with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/CourtOrder.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$reports has no type specified\\.$#"
 			count: 1
 			path: src/Entity/CourtOrder.php
 

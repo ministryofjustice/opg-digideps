@@ -75,6 +75,8 @@ class CourtOrder
      *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
      *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
      *     )
+     *
+     * @var Collection<int, Report>
      */
     private Collection $reports;
 
