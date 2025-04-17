@@ -107,29 +107,30 @@ class DeputyshipsCandidatesSelector
                     );
                     $currentReportId = $client->getCurrentReport()->getId();
                 }
-                if ($reportTypeIsCompatible) {
-                    $changes = new StagingSelectedCandidates();
-                    $changes->action = 'INSERT ORDER';
-                    $changes->orderUid = $csvDeputyship->orderUid;
-                    $changes->orderType = $csvDeputyship->orderType;
-                    $changes->status = $csvDeputyship->orderStatus;
-                    $changes->clientId = $client->getId();
-                    $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
-                    $changes->deputyUid = $csvDeputyship->deputyUid;
-                    $selectionCandidates[] = $changes;
 
-                    $changes = new StagingSelectedCandidates();
-                    $changes->action = 'INSERT ORDER DEPUTY';
-                    $changes->orderUid = $csvDeputyship->orderUid;
-                    $changes->deputyId = $deputyId;
-                    $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
-                    $changes->deputyUid = $csvDeputyship->deputyUid;
-                    $selectionCandidates[] = $changes;
+                $changes = new StagingSelectedCandidates();
+                $changes->action = 'INSERT ORDER';
+                $changes->orderUid = $csvDeputyship->orderUid;
+                $changes->orderType = $csvDeputyship->orderType;
+                $changes->status = $csvDeputyship->orderStatus;
+                $changes->clientId = $client->getId();
+                $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
+                $changes->deputyUid = $csvDeputyship->deputyUid;
+                $selectionCandidates[] = $changes;
 
-                    // store reportIds for court order report insertion
-                    $reportIds = [];
-                    $reportIds[] = $currentReportId;
+                $changes = new StagingSelectedCandidates();
+                $changes->action = 'INSERT ORDER DEPUTY';
+                $changes->orderUid = $csvDeputyship->orderUid;
+                $changes->deputyId = $deputyId;
+                $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
+                $changes->deputyUid = $csvDeputyship->deputyUid;
+                $selectionCandidates[] = $changes;
 
+                // store reportIds for court order report insertion
+                $reportIds = [];
+                $reportIds[] = $currentReportId;
+
+                if ($reportTypeIsCompatible || 0 != $csvDeputyship->isHybrid) {
                     $clientId = $client->getId();
 
                     $historicReports =
@@ -144,20 +145,6 @@ class DeputyshipsCandidatesSelector
                         ->getQuery()
                         ->getArrayResult();
 
-                    //                    $query = $this->em->createQuery(
-                    //                        "SELECT r.id, r.clientId, r.type FROM App\Entity\Report r WHERE r.clientId = 2 AND r.submitDate IS NOT NULL AND r.unSubmitDate IS NOT NULL ORDER BY r.id"
-                    //                    );
-                    //                    $query->setParameter('clientId', 2);
-                    //                    $historicReports = $query->getArrayResult();
-
-                    //                    file_put_contents(
-                    //                        'php://stderr',
-                    //                        ' HISTORICAL REPORTS ---> '.print_r(
-                    //                            $historicReports,
-                    //                            true
-                    //                        )
-                    //                    );
-
                     foreach ($historicReports as $report) {
                         $historicReportCount = count($historicReports);
 
@@ -169,13 +156,11 @@ class DeputyshipsCandidatesSelector
                             if ($orderTypeCompatibility) {
                                 $reportIds[] = $report->getId();
                             } else {
-                                //                                file_put_contents(
-                                //                                    'php://stderr',
-                                //                                    ' OUTPUT ---> '.print_r(
-                                //                                        $report->getId.' **** ORDER TYPE NOT COMPATIBLE **** ',
-                                //                                        true
-                                //                                    )
-                                //                                );
+                                file_put_contents('php://stderr', ' OUTPUT ---> '.print_r(
+                                    $report->getId.' **** ORDER TYPE NOT COMPATIBLE **** ',
+                                    true
+                                )
+                                );
                             }
                         }
                     }
@@ -189,29 +174,29 @@ class DeputyshipsCandidatesSelector
                         $changes->reportId = $reportId;
                         $changes->deputyUid = $csvDeputyship->deputyUid;
                     }
-
                     $selectionCandidates[] = $changes;
                 } else {
-                    // if report not compatible DO WE DO ANYTHING IN THIS SITUATION
-                    //                    file_put_contents(
-                    //                        'php://stderr',
-                    //                        ' OUTPUT ---> '.print_r(
-                    //                            $csvDeputyship->orderUid.' **** REPORT NOT COMPATIBLE **** ',
-                    //                            true
-                    //                        )
-                    //                    );
+                    // Split out to handle DUAL court orders where the type on the clients current report doesn't match
+                    // the type on the dual court order row
+                    $changes = new StagingSelectedCandidates();
+                    $changes->action = 'DUAL ORDER FOUND';
+                    $changes->orderUid = $csvDeputyship->orderUid;
+                    $changes->reportId = $reportId;
+                    $changes->deputyUid = $csvDeputyship->deputyUid;
+                    $selectionCandidates[] = $changes;
                 }
             } else {
                 // WHAT TO DO IF ORDER STATUS IS NOT ACTIVE ANYMORE!!!!! ARE THERE ANY CLEANUP ACTIONS TO TAKE e.g. SET DEPUTY TO INACTIVE IN COURT ORDER DEPUTY TABLE?
-                //                file_put_contents(
-                //                    'php://stderr',
-                //                    ' OUTPUT ---> '.print_r($csvDeputyship->orderUid.' **** ORDER NOT ACTIVE **** ', true)
-                //                );
+
+                file_put_contents(
+                    'php://stderr',
+                    ' OUTPUT ---> '.print_r($csvDeputyship->orderUid.' **** ORDER NOT ACTIVE **** ', true)
+                );
             }
         }
 
         foreach ($selectionCandidates as $candidate) {
-            //            file_put_contents('php://stderr', ' OUTPUT ---> '.print_r($candidate, true));
+            file_put_contents('php://stderr', ' OUTPUT FROM SELECTOR ---> '.print_r($candidate, true));
             $this->em->persist($candidate);
         }
         $this->em->flush();
@@ -244,9 +229,7 @@ class DeputyshipsCandidatesSelector
         return $reportType == $adjustedCsvReportType;
 
         //        If incoming row OrderType is IsHybrid and existing report type is 102-4 or 103-4 => compatible
-        //
         //        Else if incoming row OrderType is pfa and existing report type is 102 or 103 => compatible // going to use report type
-        //
         //        Else if incoming row OrderType is hw and existing report type is 104 => compatible // going to use report type
     }
 
@@ -279,9 +262,5 @@ class DeputyshipsCandidatesSelector
         } else {
             return in_array($reportType, $hybridTypes);
         }
-
-        // If incoming row OrderType is IsHybrid and historical report type is 102-4 or 103-4 => compatible
-        // Else if incoming row OrderType is pfa and existing report type is 102 or 103 => compatible
-        // Else if incoming row OrderType is hw and existing report type is 104 => compatible
     }
 }

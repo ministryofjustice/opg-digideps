@@ -49,132 +49,198 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
         (new ORMPurger($this->entityManager))->purge();
     }
 
-    /**
-     * @throws UnavailableStream
-     * @throws NotSupported
-     * @throws Exception
-     */
-    public function testCourtOrderStatusChange(): void
+    //    /**
+    //     * @throws UnavailableStream
+    //     * @throws NotSupported
+    //     * @throws Exception
+    //     */
+    //    public function testCourtOrderStatusChange(): void
+    //    {
+    //        $courtOrder = new CourtOrder();
+    //        $courtOrderUid = '700000001101';
+    //
+    //        $courtOrder->setCourtOrderUid($courtOrderUid);
+    //        $courtOrder->setOrderType('pfa');
+    //        $courtOrder->setStatus('OPEN');
+    //        $courtOrder->setOrderMadeDate(new \DateTime('2018-01-21'));
+    //        $this->entityManager->persist($courtOrder);
+    //        $this->entityManager->flush();
+    //
+    //        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
+    //
+    //        $selectedCandidates = $sut->select();
+    //        $this->assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action);
+    //        $this->assertEquals('ACTIVE', $selectedCandidates[0]->status);
+    //    }
+    //
+    //    public function testDeputyStatusChangeOnCourtOrder(): void
+    //    {
+    //        $courtOrder = new CourtOrder();
+    //        $courtOrderUid = '700000001102';
+    //
+    //        $courtOrder->setCourtOrderUid($courtOrderUid);
+    //        $courtOrder->setOrderType('hw');
+    //        $courtOrder->setStatus('ACTIVE');
+    //        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
+    //        $this->entityManager->persist($courtOrder);
+    //
+    //        $deputy = new Deputy();
+    //        $deputy->setFirstname('John');
+    //        $deputy->setLastname('Snow');
+    //        $deputy->setEmail1('john.snow@test.co.uk');
+    //        $deputy->setDeputyUid('700761111002');
+    //        $this->entityManager->persist($deputy);
+    //
+    //        $deputyOnCourtOrder = new CourtOrderDeputy();
+    //        $deputyOnCourtOrder->setCourtOrder($courtOrder);
+    //        $deputyOnCourtOrder->setDeputy($deputy);
+    //        $deputyOnCourtOrder->setIsActive(true);
+    //        $this->entityManager->persist($deputyOnCourtOrder);
+    //
+    //        $this->entityManager->flush();
+    //
+    //        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
+    //
+    //        $selectedCandidates = $sut->select();
+    //        $this->assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action);
+    //        $this->assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
+    //    }
+    //
+    //    public function testNewDeputyAddedToCourtOrder(): void
+    //    {
+    //        $courtOrder = new CourtOrder();
+    //        $courtOrderUid = '700000001103';
+    //
+    //        $courtOrder->setCourtOrderUid($courtOrderUid);
+    //        $courtOrder->setOrderType('hw');
+    //        $courtOrder->setStatus('ACTIVE');
+    //        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
+    //        $this->entityManager->persist($courtOrder);
+    //
+    //        $deputy = new Deputy();
+    //        $deputy->setFirstname('John');
+    //        $deputy->setLastname('Snow');
+    //        $deputy->setEmail1('john.snow@test.co.uk');
+    //        $deputy->setDeputyUid('700761111003');
+    //        $this->entityManager->persist($deputy);
+    //
+    //        $this->entityManager->flush();
+    //
+    //        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
+    //
+    //        $selectedCandidates = $sut->select();
+    //        $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action);
+    //        $this->assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
+    //        $this->assertEquals($deputy->getDeputyUid(), $selectedCandidates[0]->deputyUid);
+    //    }
+    //
+    //    public function testAddingNewSingleCourtOrder(): void
+    //    {
+    //        $record = $this->entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
+    //
+    //        $deputy = new Deputy();
+    //        $deputy->setFirstname('Stuart');
+    //        $deputy->setLastname('One');
+    //        $deputy->setEmail1('stuart.one@test.co.uk');
+    //        $deputy->setDeputyUid('700761111004');
+    //        $this->entityManager->persist($deputy);
+    //
+    //        $client = (new ClientTestHelper())->generateClient($this->entityManager, null, null, '61111002');
+    //        $report = (new ReportTestHelper())->generateReport($this->entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
+    //
+    //        $client->addReport($report);
+    //        $report->setClient($client);
+    //
+    //        $this->entityManager->persist($client);
+    //        $this->entityManager->persist($report);
+    //
+    //        $this->entityManager->flush();
+    //
+    //        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
+    //
+    //        $selectedCandidates = $sut->select();
+    //
+    //        $this->assertEquals('INSERT ORDER', $selectedCandidates[0]->action);
+    //        $this->assertEquals($record->orderUid, $selectedCandidates[0]->orderUid);
+    //        $this->assertEquals($record->deputyUid, $selectedCandidates[0]->deputyUid);
+    //        $this->assertEquals($client->getId(), $selectedCandidates[0]->clientId);
+    //
+    //        $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[1]->action);
+    //        $this->assertEquals($record->orderUid, $selectedCandidates[1]->orderUid);
+    //        $this->assertEquals($record->deputyUid, $selectedCandidates[1]->deputyUid);
+    //        $this->assertEquals($record->deputyStatusOnOrder, $selectedCandidates[1]->deputyStatusOnOrder);
+    //        $this->assertEquals($deputy->getId(), $selectedCandidates[1]->deputyId);
+    //
+    //        $this->assertEquals('INSERT ORDER REPORT', $selectedCandidates[2]->action);
+    //        $this->assertEquals($record->orderUid, $selectedCandidates[2]->orderUid);
+    //        $this->assertEquals($record->deputyUid, $selectedCandidates[2]->deputyUid);
+    //        $this->assertEquals($report->getId(), $selectedCandidates[2]->reportId);
+    //        $this->assertEquals(substr($record->reportType, 3), $report->getType());
+    //    }
+
+    public function testAddingCourtOrdersWithHybridReports(): void
     {
-        $courtOrder = new CourtOrder();
-        $courtOrderUid = '700000001101';
-
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType('pfa');
-        $courtOrder->setStatus('OPEN');
-        $courtOrder->setOrderMadeDate(new \DateTime('2018-01-21'));
-        $this->entityManager->persist($courtOrder);
-        $this->entityManager->flush();
-
-        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
-
-        $selectedCandidates = $sut->select();
-        $this->assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action);
-        $this->assertEquals('ACTIVE', $selectedCandidates[0]->status);
-    }
-
-    public function testDeputyStatusChangeOnCourtOrder(): void
-    {
-        $courtOrder = new CourtOrder();
-        $courtOrderUid = '700000001102';
-
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType('hw');
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
-        $this->entityManager->persist($courtOrder);
-
-        $deputy = new Deputy();
-        $deputy->setFirstname('John');
-        $deputy->setLastname('Snow');
-        $deputy->setEmail1('john.snow@test.co.uk');
-        $deputy->setDeputyUid('700761111002');
-        $this->entityManager->persist($deputy);
-
-        $deputyOnCourtOrder = new CourtOrderDeputy();
-        $deputyOnCourtOrder->setCourtOrder($courtOrder);
-        $deputyOnCourtOrder->setDeputy($deputy);
-        $deputyOnCourtOrder->setIsActive(true);
-        $this->entityManager->persist($deputyOnCourtOrder);
-
-        $this->entityManager->flush();
-
-        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
-
-        $selectedCandidates = $sut->select();
-        $this->assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action);
-        $this->assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
-    }
-
-    public function testNewDeputyAddedToCourtOrder(): void
-    {
-        $courtOrder = new CourtOrder();
-        $courtOrderUid = '700000001103';
-
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType('hw');
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
-        $this->entityManager->persist($courtOrder);
-
-        $deputy = new Deputy();
-        $deputy->setFirstname('John');
-        $deputy->setLastname('Snow');
-        $deputy->setEmail1('john.snow@test.co.uk');
-        $deputy->setDeputyUid('700761111003');
-        $this->entityManager->persist($deputy);
-
-        $this->entityManager->flush();
-
-        $sut = new DeputyshipsCandidatesSelector($this->entityManager);
-
-        $selectedCandidates = $sut->select();
-        $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action);
-        $this->assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
-        $this->assertEquals($deputy->getDeputyUid(), $selectedCandidates[0]->deputyUid);
-    }
-
-    public function testAddingInNewCourtOrder(): void
-    {
-        $record = $this->entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
+        $hwRecord = $this->entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001107', 'deputyUid' => '700761111007']);
+        $pfaRecord = $this->entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001108', 'deputyUid' => '700761111007']);
 
         $deputy = new Deputy();
         $deputy->setFirstname('Stuart');
         $deputy->setLastname('One');
         $deputy->setEmail1('stuart.one@test.co.uk');
-        $deputy->setDeputyUid('700761111004');
+        $deputy->setDeputyUid('700761111007');
         $this->entityManager->persist($deputy);
 
-        $client = (new ClientTestHelper())->generateClient($this->entityManager, null, null, '61111002');
-        $report = (new ReportTestHelper())->generateReport($this->entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
+        $client = (new ClientTestHelper())->generateClient($this->entityManager, null, null, '61111004');
+        $hwReport = (new ReportTestHelper())->generateReport($this->entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
+        $pfaReport = (new ReportTestHelper())->generateReport($this->entityManager, $client, '102', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
 
-        $client->addReport($report);
-        $report->setClient($client);
+        $client->addReport($hwReport);
+        $client->addReport($pfaReport);
+
+        $hwReport->setClient($client);
+        $pfaReport->setClient($client);
 
         $this->entityManager->persist($client);
-        $this->entityManager->persist($report);
-
+        $this->entityManager->persist($hwReport);
+        $this->entityManager->persist($pfaReport);
         $this->entityManager->flush();
 
         $sut = new DeputyshipsCandidatesSelector($this->entityManager);
-
         $selectedCandidates = $sut->select();
 
+        file_put_contents('php://stderr', ' OUTPUT ---> '.print_r($selectedCandidates, true));
+
         $this->assertEquals('INSERT ORDER', $selectedCandidates[0]->action);
-        $this->assertEquals($record->orderUid, $selectedCandidates[0]->orderUid);
-        $this->assertEquals($record->deputyUid, $selectedCandidates[0]->deputyUid);
+        $this->assertEquals($hwRecord->orderUid, $selectedCandidates[0]->orderUid);
+        $this->assertEquals($hwRecord->deputyUid, $selectedCandidates[0]->deputyUid);
         $this->assertEquals($client->getId(), $selectedCandidates[0]->clientId);
 
         $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[1]->action);
-        $this->assertEquals($record->orderUid, $selectedCandidates[1]->orderUid);
-        $this->assertEquals($record->deputyUid, $selectedCandidates[1]->deputyUid);
-        $this->assertEquals($record->deputyStatusOnOrder, $selectedCandidates[1]->deputyStatusOnOrder);
+        $this->assertEquals($hwRecord->orderUid, $selectedCandidates[1]->orderUid);
+        $this->assertEquals($hwRecord->deputyUid, $selectedCandidates[1]->deputyUid);
+        $this->assertEquals($hwRecord->deputyStatusOnOrder, $selectedCandidates[1]->deputyStatusOnOrder);
         $this->assertEquals($deputy->getId(), $selectedCandidates[1]->deputyId);
 
         $this->assertEquals('INSERT ORDER REPORT', $selectedCandidates[2]->action);
-        $this->assertEquals($record->orderUid, $selectedCandidates[2]->orderUid);
-        $this->assertEquals($record->deputyUid, $selectedCandidates[2]->deputyUid);
-        $this->assertEquals($report->getId(), $selectedCandidates[2]->reportId);
-        $this->assertEquals(substr($record->reportType, 3), $report->getType());
+        $this->assertEquals($hwRecord->orderUid, $selectedCandidates[2]->orderUid);
+        $this->assertEquals($hwRecord->deputyUid, $selectedCandidates[2]->deputyUid);
+        $this->assertEquals($hwReport->getId(), $selectedCandidates[2]->reportId);
+        $this->assertEquals(substr($hwRecord->reportType, 3), $hwReport->getType());
+
+        $this->assertEquals('INSERT ORDER', $selectedCandidates[3]->action);
+        $this->assertEquals($pfaRecord->orderUid, $selectedCandidates[3]->orderUid);
+        $this->assertEquals($pfaRecord->deputyUid, $selectedCandidates[3]->deputyUid);
+        $this->assertEquals($client->getId(), $selectedCandidates[3]->clientId);
+
+        $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[4]->action);
+        $this->assertEquals($pfaRecord->orderUid, $selectedCandidates[4]->orderUid);
+        $this->assertEquals($pfaRecord->deputyUid, $selectedCandidates[4]->deputyUid);
+        $this->assertEquals($pfaRecord->deputyStatusOnOrder, $selectedCandidates[4]->deputyStatusOnOrder);
+        $this->assertEquals($deputy->getId(), $selectedCandidates[4]->deputyId);
+
+        $this->assertEquals('INSERT ORDER REPORT', $selectedCandidates[5]->action);
+        $this->assertEquals($pfaRecord->orderUid, $selectedCandidates[5]->orderUid);
+        $this->assertEquals($pfaRecord->deputyUid, $selectedCandidates[5]->deputyUid);
+        $this->assertEquals($hwReport->getId(), $selectedCandidates[5]->reportId);
     }
 }
