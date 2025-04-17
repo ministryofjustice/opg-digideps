@@ -150,13 +150,13 @@ class DeputyshipsCandidatesSelector
                     //                    $query->setParameter('clientId', 2);
                     //                    $historicReports = $query->getArrayResult();
 
-                    file_put_contents(
-                        'php://stderr',
-                        ' HISTORICAL REPORTS ---> '.print_r(
-                            $historicReports,
-                            true
-                        )
-                    );
+                    //                    file_put_contents(
+                    //                        'php://stderr',
+                    //                        ' HISTORICAL REPORTS ---> '.print_r(
+                    //                            $historicReports,
+                    //                            true
+                    //                        )
+                    //                    );
 
                     foreach ($historicReports as $report) {
                         $historicReportCount = count($historicReports);
@@ -169,13 +169,13 @@ class DeputyshipsCandidatesSelector
                             if ($orderTypeCompatibility) {
                                 $reportIds[] = $report->getId();
                             } else {
-                                file_put_contents(
-                                    'php://stderr',
-                                    ' OUTPUT ---> '.print_r(
-                                        $report->getId.' **** ORDER TYPE NOT COMPATIBLE **** ',
-                                        true
-                                    )
-                                );
+                                //                                file_put_contents(
+                                //                                    'php://stderr',
+                                //                                    ' OUTPUT ---> '.print_r(
+                                //                                        $report->getId.' **** ORDER TYPE NOT COMPATIBLE **** ',
+                                //                                        true
+                                //                                    )
+                                //                                );
                             }
                         }
                     }
@@ -193,25 +193,25 @@ class DeputyshipsCandidatesSelector
                     $selectionCandidates[] = $changes;
                 } else {
                     // if report not compatible DO WE DO ANYTHING IN THIS SITUATION
-                    file_put_contents(
-                        'php://stderr',
-                        ' OUTPUT ---> '.print_r(
-                            $csvDeputyship->orderUid.' **** REPORT NOT COMPATIBLE **** ',
-                            true
-                        )
-                    );
+                    //                    file_put_contents(
+                    //                        'php://stderr',
+                    //                        ' OUTPUT ---> '.print_r(
+                    //                            $csvDeputyship->orderUid.' **** REPORT NOT COMPATIBLE **** ',
+                    //                            true
+                    //                        )
+                    //                    );
                 }
             } else {
                 // WHAT TO DO IF ORDER STATUS IS NOT ACTIVE ANYMORE!!!!! ARE THERE ANY CLEANUP ACTIONS TO TAKE e.g. SET DEPUTY TO INACTIVE IN COURT ORDER DEPUTY TABLE?
-                file_put_contents(
-                    'php://stderr',
-                    ' OUTPUT ---> '.print_r($csvDeputyship->orderUid.' **** ORDER NOT ACTIVE **** ', true)
-                );
+                //                file_put_contents(
+                //                    'php://stderr',
+                //                    ' OUTPUT ---> '.print_r($csvDeputyship->orderUid.' **** ORDER NOT ACTIVE **** ', true)
+                //                );
             }
         }
 
         foreach ($selectionCandidates as $candidate) {
-            file_put_contents('php://stderr', ' OUTPUT ---> '.print_r($candidate, true));
+            //            file_put_contents('php://stderr', ' OUTPUT ---> '.print_r($candidate, true));
             $this->em->persist($candidate);
         }
         $this->em->flush();
