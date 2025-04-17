@@ -6,7 +6,7 @@ use App\Entity\Report\Document;
 use App\Service\File\Scanner\ClamFileScanner;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -16,19 +16,19 @@ class ScannerVerifierTest extends TestCase
     /** @var VerifierInterface */
     private $verifier;
 
-    /** @var ClamFileScanner | MockObject */
+    /** @var ClamFileScanner|MockObject */
     private $scanner;
 
-    /** @var TranslatorInterface | MockObject */
+    /** @var TranslatorInterface|MockObject */
     private $translator;
 
-    /** @var Logger | MockObject */
+    /** @var LoggerInterface|MockObject */
     private $logger;
 
     /** @var Document */
     private $document;
 
-    /** @var Form | MockObject */
+    /** @var Form|MockObject */
     private $form;
 
     /** @var bool */
@@ -38,7 +38,7 @@ class ScannerVerifierTest extends TestCase
     {
         $this->scanner = $this->getMockBuilder(ClamFileScanner::class)->disableOriginalConstructor()->getMock();
         $this->translator = $this->createMock(TranslatorInterface::class);
-        $this->logger = $this->getMockBuilder(Logger::class)->disableOriginalConstructor()->getMock();
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $this->verifier = new ScannerVerifier($this->scanner, $this->translator, $this->logger);
 
         $file = $this->getMockBuilder(UploadedFile::class)->disableOriginalConstructor()->getMock();
@@ -69,9 +69,6 @@ class ScannerVerifierTest extends TestCase
             ->assertStatusIsFailed();
     }
 
-    /**
-     * @return ScannerVerifierTest
-     */
     private function ensureDocumentWillBeValid(): ScannerVerifierTest
     {
         $this
@@ -83,9 +80,6 @@ class ScannerVerifierTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ScannerVerifierTest
-     */
     private function ensureDocumentWillBeInvalid(): ScannerVerifierTest
     {
         $this
@@ -98,9 +92,6 @@ class ScannerVerifierTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ScannerVerifierTest
-     */
     private function ensureErrorWillBeTranslated(): ScannerVerifierTest
     {
         $this->translator->method('trans')->willReturn('error message');
@@ -108,9 +99,6 @@ class ScannerVerifierTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ScannerVerifierTest
-     */
     private function invokeTest(): ScannerVerifierTest
     {
         $this->result = $this->verifier->verify($this->document, new VerificationStatus());

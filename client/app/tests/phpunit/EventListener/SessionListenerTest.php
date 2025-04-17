@@ -15,7 +15,7 @@ class SessionListenerTest extends TestCase
     {
         $this->event = m::mock('Symfony\Component\HttpKernel\Event\RequestEvent');
         $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
-        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
+        $this->logger = m::mock('Psr\Log\LoggerInterface');
     }
 
     /**
@@ -72,16 +72,18 @@ class SessionListenerTest extends TestCase
         return [
             [1500, 0, 0],
             [1500, -10, 0],
-            [1500, -1490, 0], //close to epire
+            [1500, -1490, 0], // close to epire
 
             [1500, -1500 - 10, 1], // expired 10 sec ago
-            [1500, -1500 - 25 * 3600, 1], //expired 25h ago
+            [1500, -1500 - 25 * 3600, 1], // expired 25h ago
         ];
     }
 
     /**
      * @test
+     *
      * @dataProvider provider
+     *
      * @doesNotPerformAssertions
      */
     public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $callsToManualExpire)
