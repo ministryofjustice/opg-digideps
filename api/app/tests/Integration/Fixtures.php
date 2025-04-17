@@ -4,6 +4,7 @@ namespace App\Tests\Integration;
 
 use App\Entity as EntityDir;
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
@@ -94,7 +95,6 @@ class Fixtures
      */
     public function createDeputy(array $settersMap = [])
     {
-        // add clent, cot, report, needed for assets
         $deputy = new Deputy();
         $deputy->setDeputyUid('UID'.rand(1, 999999));
         $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
@@ -646,5 +646,15 @@ class Fixtures
 
         $this->em->flush();
         $this->em->clear();
+    }
+
+    public function createCourtOrder(int $uid, string $type, bool $active): CourtOrder
+    {
+        $courtOrder = new CourtOrder();
+        $courtOrder->setCourtOrderUid($uid);
+        $courtOrder->setType($type);
+        $courtOrder->setActive($active);
+
+        return $courtOrder;
     }
 }

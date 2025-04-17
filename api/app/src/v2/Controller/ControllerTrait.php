@@ -7,13 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait ControllerTrait
 {
-    /**
-     * @param string $message
-     * @param int    $status
-     *
-     * @return JsonResponse
-     */
-    private function buildSuccessResponse(array $data, $message = '', $status = Response::HTTP_OK)
+    private function buildSuccessResponse(array $data, string $message = '', int $status = Response::HTTP_OK): JsonResponse
     {
         return new JsonResponse([
             'success' => true,
@@ -22,12 +16,7 @@ trait ControllerTrait
         ], $status);
     }
 
-    /**
-     * @param string $message
-     *
-     * @return JsonResponse
-     */
-    private function buildNotFoundResponse($message = '')
+    private function buildNotFoundResponse(string $message = ''): JsonResponse
     {
         return new JsonResponse([
             'success' => false,
@@ -35,16 +24,11 @@ trait ControllerTrait
         ], Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @param string $message
-     *
-     * @return JsonResponse
-     */
-    private function buildErrorResponse($message = '')
+    private function buildErrorResponse(string $message = '', int $status = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
         return new JsonResponse([
             'success' => false,
             'message' => $message,
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        ], $status);
     }
 }

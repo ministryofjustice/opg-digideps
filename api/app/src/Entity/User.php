@@ -423,7 +423,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @JMS\Type("App\Entity\Deputy")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user", cascade={"persist"})
      */
     private ?Deputy $deputy;
 
