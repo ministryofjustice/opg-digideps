@@ -31,7 +31,7 @@ class MoneyReceivedOnClientsBehalfController extends RestController
      */
     public function delete(Request $request, string $reportOrNdr, string $moneyTypeId)
     {
-        $groups = $request->get('groups') ? $request->get('groups') : ['client-benefits-check', 'report', 'ndr'];
+        $groups = $request->request->has('groups') ? $request->request->all('groups') : ['client-benefits-check', 'report', 'ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
         'ndr' === $reportOrNdr ? $this->ndrMoneyRepository->delete($moneyTypeId) : $this->reportMoneyRepository->delete($moneyTypeId);
 

@@ -78,7 +78,7 @@ class ProfServiceFeeController extends RestController
     public function getOneById(Request $request, $id)
     {
         $serialiseGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['prof_service_fee'];
+            ? $request->query->all('groups') : ['prof_service_fee'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service Fee with id:'.$id.' not found');

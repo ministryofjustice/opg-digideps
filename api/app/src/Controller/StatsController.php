@@ -75,7 +75,7 @@ class StatsController extends RestController
      */
     public function getAdminUserAccountReportData(Request $request, RestFormatter $formatter): array
     {
-        $serialisedGroups = (array) $request->query->get('groups');
+        $serialisedGroups = $request->query->all('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $adminAccounts = $this->userRepository->getAllAdminAccounts();
@@ -109,7 +109,7 @@ class StatsController extends RestController
      */
     public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
     {
-        $serialisedGroups = (array) $request->query->get('groups');
+        $serialisedGroups = $request->query->all('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $numberOfMonthsInactive = $request->query->get('inactivityPeriod');

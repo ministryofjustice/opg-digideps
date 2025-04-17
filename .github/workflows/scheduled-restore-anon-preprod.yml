@@ -41,7 +41,8 @@ jobs:
       account_id: 454262938596
       account_name: preproduction
       task_name: "restore_from_production"
-      timeout: "3600"
+      oidc_timeout: "7200"
+      timeout: "7200"
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 

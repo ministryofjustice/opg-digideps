@@ -9,19 +9,19 @@ use App\Entity\User;
 use App\Service\Client\RestClient;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 class DeputyProviderTest extends TestCase
 {
     private DeputyProvider $object;
     private RestClient $restClient;
-    private Logger $logger;
+    private LoggerInterface $logger;
 
     public function setUp(): void
     {
         $this->restClient = m::mock(RestClient::class);
-        $this->logger = m::mock(Logger::class);
+        $this->logger = m::mock(LoggerInterface::class);
 
         $this->object = new DeputyProvider($this->restClient, $this->logger);
     }

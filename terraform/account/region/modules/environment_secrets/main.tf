@@ -6,3 +6,11 @@ resource "aws_secretsmanager_secret" "secret" {
   description = "${each.value} secret for ${var.environment}"
   tags        = var.tags
 }
+
+output "secret_arns" {
+  description = "ARNs of the created Secrets Manager secrets"
+  value = {
+    for key, secret in aws_secretsmanager_secret.secret :
+    key => secret.arn
+  }
+}

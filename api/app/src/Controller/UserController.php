@@ -68,7 +68,7 @@ class UserController extends RestController
         $this->userService->addUser($loggedInUser, $newUser, null);
 
         $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['user', 'user-teams', 'team'];
+            $request->query->all('groups') : ['user', 'user-teams', 'team'];
         $this->formatter->setJmsSerialiserGroups($groups);
 
         return $newUser;
@@ -325,7 +325,7 @@ class UserController extends RestController
         $loggedInUser = $this->getUser();
 
         $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['user'];
+            $request->query->all('groups') : ['user'];
 
         $this->formatter->setJmsSerialiserGroups($groups);
 
@@ -551,8 +551,7 @@ class UserController extends RestController
         }
 
         $groups = $request->query->has('groups') ?
-            (array) $request->query->get('groups') :
-            ['team', 'team-users', 'user'];
+            $request->query->all('groups') : ['team', 'team-users', 'user'];
 
         $this->formatter->setJmsSerialiserGroups($groups);
 

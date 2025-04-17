@@ -43,7 +43,7 @@ class UserResearchController extends RestController
             $userResearchResponse = $this->factory->generateFromFormData($formData);
             $this->userResearchResponseRepository->create($userResearchResponse, $this->getUser());
 
-            $groups = $request->get('groups') ? $request->get('groups') : ['satisfaction', 'user-research', 'user'];
+            $groups = $request->request->has('groups') ? $request->request->all('groups') : ['satisfaction', 'user-research', 'user'];
             $this->formatter->setJmsSerialiserGroups($groups);
 
             return 'Created';

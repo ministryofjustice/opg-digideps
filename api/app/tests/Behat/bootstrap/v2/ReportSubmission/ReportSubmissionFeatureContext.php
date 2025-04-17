@@ -10,7 +10,6 @@ use App\Tests\Behat\v2\Reporting\Sections\DocumentsSectionTrait;
 
 class ReportSubmissionFeatureContext extends BaseFeatureContext
 {
-    use ReportTrait;
     use ReportSubmissionTrait;
     use DocumentsSectionTrait;
 }

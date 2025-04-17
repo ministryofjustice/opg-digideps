@@ -876,11 +876,6 @@ parameters:
 			path: src/Controller/Admin/ReportSubmissionController.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_keys expects array, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string\\|true given\\.$#"
-			count: 1
-			path: src/Controller/Admin/ReportSubmissionController.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, bool\\|float\\|int\\|string given\\.$#"
 			count: 1
 			path: src/Controller/Admin/ReportSubmissionController.php
@@ -5182,11 +5177,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'new_email' on bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Cannot access offset 'password' on bool\\|float\\|int\\|string\\|null\\.$#"
 			count: 1
 			path: src/Controller/SettingsController.php
 
@@ -13001,32 +12991,12 @@ parameters:
 			path: src/Security/ClientVoter.php
 
 		-
-			message: "#^Cannot access offset '_token' on bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Security/LoginFormAuthenticator.php
-
-		-
-			message: "#^Cannot access offset 'email' on mixed\\.$#"
-			count: 1
-			path: src/Security/LoginFormAuthenticator.php
-
-		-
-			message: "#^Cannot access offset 'password' on mixed\\.$#"
-			count: 1
-			path: src/Security/LoginFormAuthenticator.php
-
-		-
 			message: "#^Cannot use array destructuring on App\\\\Entity\\\\User\\.$#"
 			count: 1
 			path: src/Security/LoginFormAuthenticator.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function urldecode expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Security/LoginFormAuthenticator.php
-
-		-
-			message: "#^Parameter \\#1 \\$userIdentifier of class Symfony\\\\Component\\\\Security\\\\Http\\\\Authenticator\\\\Passport\\\\Badge\\\\UserBadge constructor expects string, mixed given\\.$#"
 			count: 1
 			path: src/Security/LoginFormAuthenticator.php
 
@@ -13219,21 +13189,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\Availability\\\\NotifyAvailability\\:\\:pingNotify\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Availability/NotifyAvailability.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:__construct\\(\\) has parameter \\$workspace with no type specified\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:\\$container is never read, only written\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Availability\\\\ServiceAvailabilityAbstract\\:\\:getCustomMessage\\(\\) has no return type specified\\.$#"
