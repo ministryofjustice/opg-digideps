@@ -6,6 +6,7 @@ namespace App\Tests\Integration\v2\Controller;
 
 use App\Entity\Deputy;
 use App\Entity\User;
+use App\Service\JWT\JWTService;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use App\Tests\Integration\Controller\JsonHttpTestClient;
 use App\Tests\Integration\Fixtures;
@@ -18,23 +19,6 @@ class CourtOrderControllerTest extends WebTestCase
     private static Fixtures $fixtures;
     private static FixtureHelper $fixtureHelper;
     private static string $deputySecret;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$client = new JsonHttpTestClient(static::createClient(['environment' => 'test', 'debug' => false]));
-
-        $container = static::getContainer();
-
-        /** @var EntityManager $em */
-        $em = $container->get('em');
-        self::$fixtures = new Fixtures($em);
-
-        /** @var FixtureHelper $fixtureHelper */
-        $fixtureHelper = $container->get(FixtureHelper::class);
-        self::$fixtureHelper = $fixtureHelper;
-
-        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
-    }
 
     private function createDeputyForUser(User $user): Deputy
     {
@@ -50,6 +34,26 @@ class CourtOrderControllerTest extends WebTestCase
         self::$fixtures->flush();
 
         return $deputy;
+    }
+
+    public static function setUpBeforeClass(): void
+    {
+        $browser = static::createClient(['environment' => 'test', 'debug' => false]);
+        $container = static::getContainer();
+
+        /** @var JWTService $jwtService */
+        $jwtService = $container->get('App\Service\JWT\JWTService');
+        self::$client = new JsonHttpTestClient($browser, $jwtService);
+
+        /** @var EntityManager $em */
+        $em = $container->get('em');
+        self::$fixtures = new Fixtures($em);
+
+        /** @var FixtureHelper $fixtureHelper */
+        $fixtureHelper = $container->get(FixtureHelper::class);
+        self::$fixtureHelper = $fixtureHelper;
+
+        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
     }
 
     public function testGetByUidActionNoAuthFail()
@@ -72,8 +76,10 @@ class CourtOrderControllerTest extends WebTestCase
         self::$client->assertJsonRequest(
             'GET',
             '/v2/courtorder/9292777777',
-            ['AuthToken' => $token, 'mustFail' => true, 'assertCode' => true, 'assertResponseCode' => 404]
+            ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
+
+        self::$fixtures->remove($user)->flush()->clear();
     }
 
     public function testGetByUidActionUserIsNotADeputyFail(): void
@@ -95,8 +101,10 @@ class CourtOrderControllerTest extends WebTestCase
         self::$client->assertJsonRequest(
             'GET',
             '/v2/courtorder/92954529292',
-            ['AuthToken' => $token, 'mustFail' => true, 'assertCode' => true, 'assertResponseCode' => 404]
+            ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
+
+        self::$fixtures->remove($user)->flush()->clear();
     }
 
     public function testGetByUidActionUserIsNotADeputyOnCourtOrderFail(): void
@@ -112,7 +120,7 @@ class CourtOrderControllerTest extends WebTestCase
             'setRoleName' => User::ROLE_LAY_DEPUTY,
         ]);
         self::$fixtureHelper->setPassword($user);
-        $this->createDeputyForUser($user);
+        $deputy = $this->createDeputyForUser($user);
 
         // log in, and fetch court order which exists but for which the logged-in user is not a deputy
         $token = self::$client->login('fail-not-deputy-on-court-order-test@opg.gov.uk', 'DigidepsPass1234', self::$deputySecret);
@@ -120,8 +128,10 @@ class CourtOrderControllerTest extends WebTestCase
         self::$client->assertJsonRequest(
             'GET',
             '/v2/courtorder/9292929292',
-            ['AuthToken' => $token, 'mustFail' => true, 'assertCode' => true, 'assertResponseCode' => 404]
+            ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
+
+        self::$fixtures->remove($user, $deputy)->flush()->clear();
     }
 
     public function testGetByUidActionSuccess(): void
@@ -153,5 +163,7 @@ class CourtOrderControllerTest extends WebTestCase
             "/v2/courtorder/{$courtOrder->getCourtOrderUid()}",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
+
+        self::$fixtures->remove($user, $deputy)->flush()->clear();
     }
 }
