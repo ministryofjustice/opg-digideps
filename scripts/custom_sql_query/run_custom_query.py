@@ -53,6 +53,21 @@ def assume_custom_sql_role(environment):
     return session
 
 
+def get_account_name(environment):
+    environment_account_names = {
+        "development": "development",
+        "training": "preproduction",
+        "integration": "preproduction",
+        "preproduction": "preproduction",
+        "production": "production",
+    }
+    account_name = environment_account_names.get(
+        environment, environment_account_names["development"]
+    )
+
+    return account_name
+
+
 def get_user_token():
     user_input = getpass.getpass("Enter your token string: ")
     return user_input
@@ -93,6 +108,7 @@ def run_insert(
     verification_sql_file,
     expected_before,
     expected_after,
+    workspace,
 ):
     if sql_file:
         with open(sql_file, "r") as f:
@@ -133,12 +149,13 @@ def run_insert(
         "expected_before": expected_before,
         "expected_after": expected_after,
         "user_token": get_user_token(),
+        "workspace": workspace,
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_get(lambda_client, function_name, query_id):
+def run_get(lambda_client, function_name, query_id, workspace):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -147,12 +164,13 @@ def run_get(lambda_client, function_name, query_id):
         "procedure": "get_custom_query",
         "query_id": query_id,
         "user_token": get_user_token(),
+        "workspace": workspace,
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_sign_off(lambda_client, function_name, query_id, calling_user):
+def run_sign_off(lambda_client, function_name, query_id, calling_user, workspace):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -162,12 +180,13 @@ def run_sign_off(lambda_client, function_name, query_id, calling_user):
         "query_id": query_id,
         "calling_user": calling_user,
         "user_token": get_user_token(),
+        "workspace": workspace,
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_revoke(lambda_client, function_name, query_id):
+def run_revoke(lambda_client, function_name, query_id, workspace):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -176,12 +195,13 @@ def run_revoke(lambda_client, function_name, query_id):
         "procedure": "revoke_custom_query",
         "query_id": query_id,
         "user_token": get_user_token(),
+        "workspace": workspace,
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_execute(lambda_client, function_name, query_id, calling_user):
+def run_execute(lambda_client, function_name, query_id, calling_user, workspace):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -191,6 +211,7 @@ def run_execute(lambda_client, function_name, query_id, calling_user):
         "query_id": query_id,
         "calling_user": calling_user,
         "user_token": get_user_token(),
+        "workspace": workspace,
     }
 
     return lambda_invoke(lambda_client, function_name, payload)
@@ -219,13 +240,10 @@ def main(
     calling_user = get_current_user()
     lambda_client = get_lambda_client(environment)
 
-    lambda_environment_name = (
-        environment if environment != "production" else "production02"
-    )
+    workspace = environment if environment != "production" else "production02"
+    account_name = get_account_name(environment)
     function_name = (
-        "function"
-        if environment == "local"
-        else f"custom-sql-query-{lambda_environment_name}"
+        "function" if environment == "local" else f"custom-sql-query-{account_name}"
     )
     if action == "insert":
         response = run_insert(
@@ -236,15 +254,20 @@ def main(
             verification_sql_file,
             expected_before,
             expected_after,
+            workspace,
         )
     elif action == "get":
-        response = run_get(lambda_client, function_name, query_id)
+        response = run_get(lambda_client, function_name, query_id, workspace)
     elif action == "sign_off":
-        response = run_sign_off(lambda_client, function_name, query_id, calling_user)
+        response = run_sign_off(
+            lambda_client, function_name, query_id, calling_user, workspace
+        )
     elif action == "revoke":
-        response = run_revoke(lambda_client, function_name, query_id)
+        response = run_revoke(lambda_client, function_name, query_id, workspace)
     elif action == "execute":
-        response = run_execute(lambda_client, function_name, query_id, calling_user)
+        response = run_execute(
+            lambda_client, function_name, query_id, calling_user, workspace
+        )
     else:
         print("Not a valid action")
         sys.exit(1)
