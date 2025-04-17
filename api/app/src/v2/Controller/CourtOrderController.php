@@ -43,9 +43,6 @@ class CourtOrderController extends RestController
     #[Security('is_granted("ROLE_DEPUTY")')]
     public function getByUidAction(string $uid): JsonResponse
     {
-        // I'm not keen on this cast, but our auth service returns App\Entity\User objects, which include
-        // the deputy UID we need to use to check whether the user can view the court order
-        /** @var User $user */
         $user = $this->getUser();
 
         $courtOrder = $this->courtOrderService->getByUidAsUser($uid, $user);
@@ -59,8 +56,11 @@ class CourtOrderController extends RestController
 
         $ctx = SerializationContext::create()->setGroups(['court-order-full', 'client', 'deputy', 'report']);
 
-        $body = $this->serializer->serialize($courtOrder, 'json', $ctx);
+        $data = $this->serializer->serialize([
+            'success' => true,
+            'data' => $courtOrder,
+        ], 'json', $ctx);
 
-        return new JsonResponse(data: $body, json: true);
+        return new JsonResponse(data: $data, json: true);
     }
 }
