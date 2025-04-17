@@ -589,7 +589,7 @@ class Report implements ReportInterface
     private $reasonForNoMoneyOut;
 
     /**
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report-with-court-orders"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
      *
