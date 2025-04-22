@@ -31,14 +31,14 @@ use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
-    public function generateReport(EntityManager $em, ?Client $client = null, ?string $type = null, ?\DateTime $startDate = null, ?\DateTime $endDate = null): Report
+    public function generateReport(EntityManager $em, ?Client $client = null, ?string $type = null, ?\DateTime $startDate = null, ?\DateTime $endDate = null, bool $dateChecks = true): Report
     {
         $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
         $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
         $this->completeBankAccounts($report, $em);
 
         return $report;
@@ -89,7 +89,7 @@ class ReportTestHelper
         $this->completeClientBenefitsCheck($report);
     }
 
-    public function submitReport(ReportInterface $report, EntityManager $em, ?User $submittedBy = null): void
+    public function submitReport(ReportInterface $report, EntityManager $em, ?User $submittedBy = null, ?\DateTime $submitDate = null): void
     {
         if (is_null($submittedBy)) {
             if ($report->getClient()->getOrganisation()) {
@@ -99,8 +99,10 @@ class ReportTestHelper
             }
         }
 
-        $submitDate = clone $report->getStartDate();
-        $submitDate->modify('+365 day');
+        if (is_null($submitDate)) {
+            $submitDate = clone $report->getStartDate();
+            $submitDate->modify('+365 day');
+        }
 
         $reportPdf = new Document($report);
         $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
