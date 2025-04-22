@@ -11,7 +11,7 @@ COPY client/app/config config
 COPY client/app/src src
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.28-fpm-alpine3.19 AS base
+FROM php:8.2.28-fpm-alpine3.21 AS base
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG TAG=${TAG:-latest}
 ARG ENVIRONMENT=${ENVIRONMENT:-production}
@@ -24,9 +24,9 @@ RUN apk add --no-cache \
     su-exec \
     libzip-dev \
     unzip \
-    php81-pecl-igbinary \
-    php81-pecl-redis \
-    php81-pecl-imagick  \
+    php82-pecl-igbinary \
+    php82-pecl-redis \
+    php82-pecl-imagick  \
     gmp \
     gmp-dev \
     libheif \
