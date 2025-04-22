@@ -17,12 +17,8 @@ class UserVoter extends Voter
 
     /**
      * Does this voter support the attribute?
-     *
-     * @param string $attribute
-     *
-     * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports(string $attribute, mixed $subject): bool
     {
         switch ($attribute) {
             case self::DELETE_USER:
@@ -37,12 +33,8 @@ class UserVoter extends Voter
 
     /**
      * Vote on whether to grant attribute permission on subject.
-     *
-     * @param string $attribute
-     *
-     * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $loggedInUser = $token->getUser();
 

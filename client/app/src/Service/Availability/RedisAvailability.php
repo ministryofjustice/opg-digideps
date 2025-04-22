@@ -7,14 +7,12 @@ use Predis\ClientInterface;
 class RedisAvailability extends ServiceAvailabilityAbstract
 {
     public const TEST_KEY = 'RedisAvailabilityTestKey';
-    private ClientInterface $redis;
-    private string $workspace;
 
-    public function __construct(ClientInterface $redis, string $workspace)
-    {
+    public function __construct(
+        private readonly ClientInterface $redis,
+        private readonly string $workspace
+    ) {
         $this->isHealthy = false;
-        $this->redis = $redis;
-        $this->workspace = $workspace;
     }
 
     public function ping(): void

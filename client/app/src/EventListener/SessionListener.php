@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -13,36 +14,22 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class SessionListener
 {
-    const SESSION_FLAG_KEY = 'hasIdleTimedOut';
-
-    /**
-     * @var int
-     */
-    private $idleTimeout;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private int $idleTimeout;
 
     /**
      * @param array $options keys: idleTimeout (seconds)
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function __construct(RouterInterface $router, LoggerInterface $logger, array $options)
-    {
-        $this->router = $router;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly RouterInterface $router,
+        private readonly LoggerInterface $logger,
+        array $options
+    ) {
         $this->idleTimeout = (int) $options['idleTimeout'];
 
         if ($this->idleTimeout < 5) {
-            throw new \InvalidArgumentException(__CLASS__.' :session timeout cannot be lower than 5 seconds');
+            throw new InvalidArgumentException(__CLASS__.' :session timeout cannot be lower than 5 seconds');
         }
     }
 
@@ -68,7 +55,13 @@ class SessionListener
     private function hasReachedTimeout(RequestEvent $event)
     {
         $session = $event->getRequest()->getSession();
-        $lastUsed = (int) $session->getMetadataBag()->getLastUsed();
+
+        // MetadataBag->$lastUsed has no default, so will throw an error if accessed before the bag is initilised
+        if ($session->getMetadataBag()->getCreated() === 0) {
+            return false;
+        }
+
+        $lastUsed = $session->getMetadataBag()->getLastUsed();
         if (!$lastUsed) {
             return false;
         }

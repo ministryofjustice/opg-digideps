@@ -10841,11 +10841,6 @@ parameters:
 			path: src/Form/DataTransformer/ArrayToStringTransformer.php
 
 		-
-			message: "#^Property App\\\\Form\\\\DataTransformer\\\\ArrayToStringTransformer\\:\\:\\$keys has no type specified\\.$#"
-			count: 1
-			path: src/Form/DataTransformer/ArrayToStringTransformer.php
-
-		-
 			message: "#^Method App\\\\Form\\\\FeedbackReportType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Form/FeedbackReportType.php
@@ -12986,17 +12981,7 @@ parameters:
 			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
 
 		-
-			message: "#^Property App\\\\Security\\\\ClientContactVoter\\:\\:\\$decisionManager is never read, only written\\.$#"
-			count: 1
-			path: src/Security/ClientContactVoter.php
-
-		-
 			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Security/ClientContactVoter.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Security/ClientContactVoter.php
 
@@ -13014,11 +12999,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function urldecode expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
 			count: 1
 			path: src/Security/LoginFormAuthenticator.php
-
-		-
-			message: "#^Property App\\\\Security\\\\NoteVoter\\:\\:\\$decisionManager is never read, only written\\.$#"
-			count: 1
-			path: src/Security/NoteVoter.php
 
 		-
 			message: "#^Result of && is always false\\.$#"
@@ -14132,11 +14112,6 @@ parameters:
 
 		-
 			message: "#^Cannot use array destructuring on App\\\\Entity\\\\User\\.$#"
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: "#^Property App\\\\Service\\\\DeputyProvider\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
 			count: 1
 			path: src/Service/DeputyProvider.php
 

@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Service\Client\RestClient;
-use App\Service\Client\RestClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -13,20 +12,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class DeputyProvider implements UserProviderInterface
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(RestClientInterface $restClient, LoggerInterface $logger)
-    {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -76,7 +65,7 @@ class DeputyProvider implements UserProviderInterface
     /**
      * @codeCoverageIgnore
      *
-     * @return User
+     * @return \App\Entity\User
      *
      *@throws UnsupportedUserException
      */
