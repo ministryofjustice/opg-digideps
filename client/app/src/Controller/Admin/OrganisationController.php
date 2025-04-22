@@ -39,7 +39,9 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/", name="admin_organisation_homepage")
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Admin/Organisation/index.html.twig")
      */
     public function indexAction()
@@ -53,7 +55,9 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"}, methods={"GET"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Admin/Organisation/view.html.twig")
      *
      * @return array<mixed>|Response
@@ -62,10 +66,22 @@ class OrganisationController extends AbstractController
     {
         /** @var $organisation Organisation */
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        assert($organisation instanceof Organisation);
 
         $tab = $request->get('tab', 'users');
         $currentFilters = self::getFiltersFromRequest($request);
 
+        /** @var array $count */
+        $count = $this->restClient->get('/v2/organisation/'.$id.'/clients', 'array');
+        $clientCount = $count['count'];
+
+        $dischargedClients = null;
+        $activeAndArchivedClients = $organisation->getTotalClientCount();
+        if ($activeAndArchivedClients < $clientCount) {
+            $dischargedClients = $clientCount - $activeAndArchivedClients;
+        }
+
+        /** @var array $result */
         $result = $this->restClient->get('/v2/organisation/'.$id.'/'.$tab.'?'.http_build_query($currentFilters), 'array');
 
         if ('clients' == $tab) {
@@ -81,12 +97,15 @@ class OrganisationController extends AbstractController
             'currentTab' => $tab,
             'tabData' => $tabData,
             'count' => $result['count'],
+            'dischargedClients' => $dischargedClients,
         ];
     }
 
     /**
      * @Route("/add", name="admin_organisation_add")
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
     public function addAction(Request $request)
@@ -124,7 +143,9 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="admin_organisation_edit", requirements={"id":"\d+"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
     public function editAction(Request $request, $id = null)
@@ -161,7 +182,9 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/delete", name="admin_organisation_delete", requirements={"id":"\d+"})
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      */
     public function deleteAction(Request $request, $id)
@@ -201,7 +224,9 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/add-user", name="admin_organisation_member_add", requirements={"id":"\d+"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Admin/Organisation/add-user.html.twig")
      */
     public function addUserAction(Request $request, $id, TranslatorInterface $translator)
@@ -248,7 +273,7 @@ class OrganisationController extends AbstractController
                 return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
             } catch (RestClientException $e) {
                 $this->logger->error($e->getMessage());
-                # The wording 'please try again' has been chosen to allow us to quickly pinpoint in the logs any potential issues
+                // The wording 'please try again' has been chosen to allow us to quickly pinpoint in the logs any potential issues
                 $request->getSession()->getFlashBag()->add('error', 'Failed to add user to the Organisation, please try again');
             }
         }
@@ -263,7 +288,9 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/{id}/delete-user/{userId}", name="admin_organisation_member_delete", requirements={"id":"\d+"})
+     *
      * @Security("is_granted('ROLE_ADMIN')")
+     *
      * @Template("@App/Common/confirmDelete.html.twig")
      */
     public function deleteUserAction(Request $request, $id, $userId)

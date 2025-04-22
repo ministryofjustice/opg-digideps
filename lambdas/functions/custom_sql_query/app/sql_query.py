@@ -217,27 +217,11 @@ def run_get_custom_query(event, conn):
         return {"message": "Stored procedure failed to execute", "result": e}
 
 
-def get_rds_connection_info(instance_id):
-    rds = boto3.client("rds")
+def connect_to_db(db_password, db_endpoint):
     try:
-        response = rds.describe_db_instances(DBInstanceIdentifier=instance_id)
-        db_instance = response["DBInstances"][0]
-        endpoint = db_instance["Endpoint"]["Address"]
-        port = db_instance["Endpoint"]["Port"]
-        return endpoint, port
-    except Exception as e:
-        raise Exception(f"Failed to retrieve RDS instance info: {str(e)}")
-
-
-def connect_to_db(db_password, workspace):
-    instance_id = f"api-{workspace}-0"
-
-    try:
-        host, port = get_rds_connection_info(instance_id)
-
         conn = psycopg2.connect(
-            host=host,
-            port=port,
+            host=db_endpoint,
+            port=5432,
             database="api",
             user="custom_sql_user",
             password=db_password,
@@ -273,6 +257,7 @@ def lambda_handler(event, context):
     calling_user = event["calling_user"]
     user_token = event["user_token"]
     workspace = event["workspace"]
+    db_endpoint = event["db_endpoint"]
     db_secret_name, users_sql_users = get_secret_names(workspace)
     authenticated, msg = authenticate_or_store_token(
         users_sql_users, calling_user, user_token
@@ -283,7 +268,7 @@ def lambda_handler(event, context):
     procedure_to_call = event["procedure"]
     print(procedure_to_call)
     db_password = get_secret(db_secret_name)
-    conn = connect_to_db(db_password, workspace)
+    conn = connect_to_db(db_password, db_endpoint)
     db_password = ""
 
     if procedure_to_call == "insert_custom_query":
