@@ -173,7 +173,7 @@ class ReportSubmissionController extends AbstractController
             $contents = $this->s3Storage->retrieve($document->getStorageReference());
         } catch (\Throwable $e) {
             $filename = $document->getFileName();
-            throw $this->createNotFoundException("Document '${$filename}' could not be retrieved");
+            throw $this->createNotFoundException("Document '$filename' could not be retrieved");
         }
 
         $response = new Response($contents);

@@ -15,6 +15,26 @@ use PHPUnit\Framework\TestCase;
  */
 class JWTServiceTest extends TestCase
 {
+    /**
+     * @var string[]
+     */
+    private array $jwtHeaders;
+
+    /**
+     * @var string[]
+     */
+    private array $jwtClaims;
+
+    /**
+     * @var string[]
+     */
+    private array $jwtSignature;
+
+    private string $jwtHeadersClaim;
+    private string $jwtHeadersClaimSignature;
+
+    private array $jwks;
+
     public function setUp(): void
     {
         // The props below are all valid values based on a JWT (not used in prod)
