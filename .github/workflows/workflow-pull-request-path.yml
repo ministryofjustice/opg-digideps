@@ -176,7 +176,10 @@ jobs:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     needs:
       - client_unit_tests
+      - api_phpstan
+      - client_phpstan
       - miscellaneous_tests
+      - test_js
       - api_unit_tests
       - api_integration_tests_1
       - api_integration_tests_2
@@ -240,6 +243,15 @@ jobs:
     needs:
       - workflow_variables
       - terraform_apply_environment
+      - client_unit_tests
+      - api_phpstan
+      - client_phpstan
+      - miscellaneous_tests
+      - test_js
+      - api_unit_tests
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -385,22 +397,17 @@ jobs:
       account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
 
-  end_of_workflow:
-    name: end of workflow
+  workflow_summary:
+    name: workflow summary
     runs-on: ubuntu-latest
     needs:
       - scale_services_down
       - codecov
       - workflow_variables
+      - smoke_tests
     if: ${{ always() }}
     steps:
-      - name: Check workflow result
-        if: ${{ failure() }}
-        run: |
-          echo "A job failed. Marking end-workflow as failed."
-          exit 1
-      - name: workflow ended successfully
-        if: ${{ success() }}
+      - name: output workflow variables
         run: |
           export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
           export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
@@ -418,13 +425,18 @@ jobs:
           echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Service Admin URL: ${SERVICE_ADMIN_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}" >> $GITHUB_STEP_SUMMARY
+      - name: check for failure
+        if: ${{ failure() }}
+        run: |
+          echo "A job failed. Marking workflow_summary as failed."
+          exit 1
 
   slack_notify_success:
     name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
-      - end_of_workflow
+      - workflow_summary
     with:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -436,8 +448,17 @@ jobs:
     if: ${{ failure() }}
     needs:
       - workflow_variables
-      - end_of_workflow
+      - workflow_summary
     with:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
+
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - slack_notify_success
+    steps:
+      - name: Mark workflow as successful
+        run: echo "workflow ended successfully"
