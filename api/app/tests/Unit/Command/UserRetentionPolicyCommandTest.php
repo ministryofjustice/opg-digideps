@@ -8,6 +8,7 @@ use App\Event\UserRetentionPolicyCommandEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\UserRepository;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -16,6 +17,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 class UserRetentionPolicyCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
+
+    private UserRepository|ObjectProphecy $userRepository;
+    private ObjectProphecy|ObservableEventDispatcher $eventDispatcher;
+    private LoggerInterface|ObjectProphecy $logger;
+    private CommandTester $commandTester;
 
     public function setUp(): void
     {
