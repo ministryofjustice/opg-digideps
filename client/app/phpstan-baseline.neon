@@ -13206,21 +13206,6 @@ parameters:
 			path: src/Service/Availability/NotifyAvailability.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:__construct\\(\\) has parameter \\$workspace with no type specified\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:\\$container is never read, only written\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Availability\\\\ServiceAvailabilityAbstract\\:\\:getCustomMessage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Availability/ServiceAvailabilityAbstract.php
