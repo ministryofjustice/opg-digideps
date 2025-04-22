@@ -29,6 +29,9 @@ class CourtOrderController extends AbstractController
     /**
      * Get a court order by UID, but only if the logged-in deputy is associated with it.
      *
+     * Note that reports are not returned in a guaranteed order, so the "submitted" property, or possibly null
+     * submit_date and un_submit_date, should be used to determine whether the report has been submitted.
+     *
      * path on API = /v2/courtorder/<UID>.
      */
     #[Route('/{uid}', requirements: ['uid' => '\w+'], methods: ['GET'])]
