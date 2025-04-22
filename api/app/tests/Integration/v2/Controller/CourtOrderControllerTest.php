@@ -7,6 +7,7 @@ namespace App\Tests\Integration\v2\Controller;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Service\JWT\JWTService;
+use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use App\Tests\Integration\Controller\JsonHttpTestClient;
 use App\Tests\Integration\Fixtures;
@@ -17,7 +18,9 @@ class CourtOrderControllerTest extends WebTestCase
 {
     private static JsonHttpTestClient $client;
     private static Fixtures $fixtures;
+    private static EntityManager $em;
     private static FixtureHelper $fixtureHelper;
+    private static ReportTestHelper $reportTestHelper;
     private static string $deputySecret;
 
     private function createDeputyForUser(User $user): Deputy
@@ -47,11 +50,15 @@ class CourtOrderControllerTest extends WebTestCase
 
         /** @var EntityManager $em */
         $em = $container->get('em');
-        self::$fixtures = new Fixtures($em);
+
+        self::$em = $em;
+        self::$fixtures = new Fixtures(self::$em);
 
         /** @var FixtureHelper $fixtureHelper */
         $fixtureHelper = $container->get(FixtureHelper::class);
         self::$fixtureHelper = $fixtureHelper;
+
+        self::$reportTestHelper = new ReportTestHelper();
 
         self::$deputySecret = getenv('SECRETS_FRONT_KEY');
     }
@@ -151,19 +158,31 @@ class CourtOrderControllerTest extends WebTestCase
         $deputy = $this->createDeputyForUser($user);
         $deputy->associateWithCourtOrder($courtOrder);
 
-        self::$fixtures->persist($deputy);
+        self::$fixtures->persist($deputy)->flush();
+
+        // client
+        $client = self::$fixtures->createClient($user);
+        self::$fixtures->persist($client)->flush();
+
+        // add two reports to the court order
+        $report1 = self::$reportTestHelper->generateReport(self::$em, $client);
+        self::$reportTestHelper->submitReport($report1, self::$em, $user);
+        $courtOrder->addReport($report1);
+        self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
         // login to get the token for API calls
         $token = self::$client->login('successful-court-order-test@opg.gov.uk', 'DigidepsPass1234', self::$deputySecret);
 
         // make the API call
-        self::$client->assertJsonRequest(
+        $responseJson = self::$client->assertJsonRequest(
             'GET',
             "/v2/courtorder/{$courtOrder->getCourtOrderUid()}",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
 
-        self::$fixtures->remove($user, $deputy)->flush()->clear();
+        error_log(print_r($responseJson, true));
+
+        self::$fixtures->remove($user, $deputy, $courtOrder)->flush()->clear();
     }
 }
