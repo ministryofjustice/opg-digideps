@@ -11,6 +11,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * @extends Voter<string, Client>
+ */
 class ClientVoter extends Voter
 {
     const VIEW = 'view';
@@ -32,9 +35,6 @@ class ClientVoter extends Voter
         return in_array($attribute, [self::VIEW, self::EDIT, self::DELETE]) && $subject instanceof Client;
     }
 
-    /**
-     * @param Client $subject
-     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

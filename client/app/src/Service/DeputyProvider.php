@@ -10,6 +10,9 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class DeputyProvider implements UserProviderInterface
 {
     public function __construct(
@@ -55,11 +58,6 @@ class DeputyProvider implements UserProviderInterface
                 'user/'.$identifier, 'User',
                 ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']
             );
-    }
-
-    public function loadUserByUsername(string $username)
-    {
-        throw new \RuntimeException('Method should not be called, and removed after symfony 6 upgrade');
     }
 
     /**

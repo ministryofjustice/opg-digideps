@@ -7,6 +7,9 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, ClientEntity>
+ */
 class ClientContactVoter extends Voter
 {
     public const ADD_CLIENT_CONTACT = 'add-client-contact';
@@ -23,8 +26,7 @@ class ClientContactVoter extends Voter
             case self::DELETE_CLIENT_CONTACT:
                 return true;
             case self::EDIT_CLIENT_CONTACT:
-                // only vote on User objects inside this voter
-                if (self::EDIT_CLIENT_CONTACT === $attribute && $subject instanceof ClientEntity) {
+                if ($subject instanceof ClientEntity) {
                     return true;
                 }
                 break;

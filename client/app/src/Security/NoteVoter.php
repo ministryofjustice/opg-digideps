@@ -8,6 +8,9 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Client|Note>
+ */
 class NoteVoter extends Voter
 {
     public const ADD_NOTE = 'add-note';

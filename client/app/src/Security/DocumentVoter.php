@@ -8,6 +8,9 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Report|Document>
+ */
 class DocumentVoter extends Voter
 {
     const ADD_DOCUMENT = 'add-note';

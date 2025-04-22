@@ -4,6 +4,9 @@ namespace App\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @implements DataTransformerInterface<string, array>
+ */
 class ArrayToStringTransformer implements DataTransformerInterface
 {
     public function __construct(private array $keys = [])
