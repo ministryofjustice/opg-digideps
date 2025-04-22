@@ -164,12 +164,20 @@ class CourtOrderControllerTest extends WebTestCase
         $client = self::$fixtures->createClient($user);
         self::$fixtures->persist($client)->flush();
 
-        // add two reports to the court order
-        $report1 = self::$reportTestHelper->generateReport(self::$em, $client);
-        self::$reportTestHelper->submitReport($report1, self::$em, $user);
+        // add an unsubmitted (current) report to the court order
+        $startDate = new \DateTime();
+
+        $report1 = self::$reportTestHelper->generateReport(self::$em, client: $client, startDate: $startDate);
         $courtOrder->addReport($report1);
-        self::$fixtures->persist($courtOrder);
-        self::$fixtures->flush();
+        self::$fixtures->persist($courtOrder)->flush();
+
+        // add a submitted report to the court order
+        $previousReportStartDate = $startDate->modify('-365 days');
+        $submitDate = $previousReportStartDate->modify('+30 days');
+        $report2 = self::$reportTestHelper->generateReport(self::$em, client: $client, startDate: $previousReportStartDate, dateChecks: false);
+        $courtOrder->addReport($report2);
+        self::$reportTestHelper->submitReport($report2, self::$em, submittedBy: $user, submitDate: $submitDate);
+        self::$fixtures->persist($courtOrder)->flush();
 
         // login to get the token for API calls
         $token = self::$client->login('successful-court-order-test@opg.gov.uk', 'DigidepsPass1234', self::$deputySecret);
@@ -183,6 +191,18 @@ class CourtOrderControllerTest extends WebTestCase
 
         error_log(print_r($responseJson, true));
 
+        $this->assertCount(2, $responseJson['data']['reports']);
+
+        // check that data we need for determining the unsubmitted (current) report is available
+        $this->assertNull($responseJson['data']['reports'][0]['submit_date']);
+        $this->assertNull($responseJson['data']['reports'][0]['un_submit_date']);
+
+        // check submit date is visible for the submitted report
+        $actualSubmitDate = new \DateTime($responseJson['data']['reports'][1]['submit_date']);
+        $this->assertEquals($submitDate->format(\DateTime::ATOM), $actualSubmitDate->format(\DateTime::ATOM));
+        $this->assertNull($responseJson['data']['reports'][1]['un_submit_date']);
+
+        // clean up
         self::$fixtures->remove($user, $deputy, $courtOrder)->flush()->clear();
     }
 }
