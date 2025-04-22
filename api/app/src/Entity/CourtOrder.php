@@ -69,7 +69,7 @@ class CourtOrder
      *
      * @JMS\Groups({"court-order-full"})
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
      * @ORM\JoinTable(name="court_order_report",
      *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
