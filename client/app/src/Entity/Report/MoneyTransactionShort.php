@@ -30,7 +30,7 @@ class MoneyTransactionShort
      *
      * @Assert\NotBlank(message="moneyTransactionShort.amount.notBlank", groups={"money-transaction-short"})
      * @Assert\Type(type="numeric", message="moneyTransactionShort.amount.type", groups={"money-transaction-short"})
-     * @Assert\Range(min=1000, max=10000000, minMessage = "moneyTransactionShort.amount.minMessage", maxMessage = "moneyTransactionShort.amount.maxMessage", groups={"money-transaction-short"})
+     * @Assert\Range(min=1000, max=10000000, notInRangeMessage = "moneyTransactionShort.amount.notInRangeMessage", groups={"money-transaction-short"})
      */
     private $amount;
 

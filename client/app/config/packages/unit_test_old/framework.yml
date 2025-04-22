@@ -3,6 +3,7 @@ framework:
   session:
     handler_id: ~
     storage_id: session.storage.mock_file
+    storage_factory_id: session.storage.factory.native
   csrf_protection: false
   http_client:
     default_options:
