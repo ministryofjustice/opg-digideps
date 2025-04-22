@@ -166,7 +166,6 @@ class CourtOrderControllerTest extends WebTestCase
 
         // add an unsubmitted (current) report to the court order
         $startDate = new \DateTime();
-
         $report1 = self::$reportTestHelper->generateReport(self::$em, client: $client, startDate: $startDate);
         $courtOrder->addReport($report1);
         self::$fixtures->persist($courtOrder)->flush();
@@ -189,18 +188,22 @@ class CourtOrderControllerTest extends WebTestCase
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
 
-        error_log(print_r($responseJson, true));
-
+        // assertions
         $this->assertCount(2, $responseJson['data']['reports']);
 
         // check that data we need for determining the unsubmitted (current) report is available
-        $this->assertNull($responseJson['data']['reports'][0]['submit_date']);
-        $this->assertNull($responseJson['data']['reports'][0]['un_submit_date']);
-
-        // check submit date is visible for the submitted report
-        $actualSubmitDate = new \DateTime($responseJson['data']['reports'][1]['submit_date']);
-        $this->assertEquals($submitDate->format(\DateTime::ATOM), $actualSubmitDate->format(\DateTime::ATOM));
-        $this->assertNull($responseJson['data']['reports'][1]['un_submit_date']);
+        foreach ($responseJson['data']['reports'] as $report) {
+            if ($report['submitted']) {
+                // previous submitted report
+                $actualSubmitDate = new \DateTime($report['submit_date']);
+                $this->assertEquals($submitDate->format(\DateTime::ATOM), $actualSubmitDate->format(\DateTime::ATOM));
+                $this->assertNull($report['un_submit_date']);
+            } else {
+                // current report => no submit date or unsubmit date
+                $this->assertNull($report['submit_date']);
+                $this->assertNull($report['un_submit_date']);
+            }
+        }
 
         // clean up
         self::$fixtures->remove($user, $deputy, $courtOrder)->flush()->clear();
