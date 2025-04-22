@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Service\RequestIdLoggerProcessor;
 use Mockery as m;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -15,14 +16,12 @@ class RequestIdLoggerProcessorTest extends TestCase
     private Container $container;
     private RequestStack $reqStack;
     private RequestIdLoggerProcessor $object;
-
-    private $record = ['key1' => 'abc', 'key2' => 2];
+    private array $record = ['key1' => 'abc', 'key2' => 2];
 
     public function setUp(): void
     {
         $this->container = m::mock(Container::class);
         $this->reqStack = m::mock(RequestStack::class);
-        $this->request = m::mock(Request::class);
 
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
