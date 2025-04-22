@@ -46,7 +46,11 @@ class CourtOrderController extends AbstractController
             return $this->buildNotFoundResponse('Could not find court order');
         }
 
-        $ctx = SerializationContext::create()->setGroups(['court-order-full', 'client', 'deputy', 'report']);
+        $ctx = SerializationContext::create()
+            ->setGroups([
+                'court-order-full', 'client', 'deputy', 'report', 'report-submission',
+            ])
+            ->setSerializeNull(true);
 
         $data = $this->serializer->serialize([
             'success' => true,
