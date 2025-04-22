@@ -240,9 +240,10 @@ def get_db_endpoint(environment):
     if environment == "local":
         return "http://postgres"
     else:
-        if environment == "production":
-            environment = "production02"
-        instance_id = f"api-{environment}-0"
+        instance_environment = (
+            environment if environment != "production" else "production02"
+        )
+        instance_id = f"api-{instance_environment}-0"
         session = assume_custom_sql_role(environment)
         rds = session.client("rds", region_name="eu-west-1")
         try:
@@ -288,7 +289,7 @@ def main(
         )
     elif action == "get":
         response = run_get(
-            lambda_client, function_name, query_id, workspace, db_endpoint
+            lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
         )
     elif action == "sign_off":
         response = run_sign_off(
@@ -296,7 +297,7 @@ def main(
         )
     elif action == "revoke":
         response = run_revoke(
-            lambda_client, function_name, query_id, workspace, db_endpoint
+            lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
         )
     elif action == "execute":
         response = run_execute(
