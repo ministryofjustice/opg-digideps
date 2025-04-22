@@ -9,6 +9,7 @@ framework:
   secret: "%secret%"
   router:
     strict_requirements: ~
+    utf8: true
   form: ~
   csrf_protection: ~
   validation:
@@ -17,6 +18,7 @@ framework:
     email_validation_mode: strict
   default_locale: "%locale%"
   session:
+    storage_factory_id: session.storage.factory.native
     handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
     name: digideps
     # force session usage, no cookie (we want to logout when the browser closes)

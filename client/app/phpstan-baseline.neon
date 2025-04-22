@@ -691,16 +691,6 @@ parameters:
 			path: src/Controller/Admin/OrganisationController.php
 
 		-
-			message: "#^Cannot access offset 'count' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Cannot access offset 'records' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
 			message: "#^Cannot call method getEmail\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
@@ -717,7 +707,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 7
+			count: 6
 			path: src/Controller/Admin/OrganisationController.php
 
 		-
@@ -828,11 +818,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$currentUser of class App\\\\Event\\\\OrgCreatedEvent constructor expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Service\\\\Client\\\\RestClient\\:\\:arrayToEntities\\(\\) expects array, mixed given\\.$#"
-			count: 2
 			path: src/Controller/Admin/OrganisationController.php
 
 		-
@@ -13204,21 +13189,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\Availability\\\\NotifyAvailability\\:\\:pingNotify\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Availability/NotifyAvailability.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:__construct\\(\\) has parameter \\$workspace with no type specified\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:ping\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Availability\\\\RedisAvailability\\:\\:\\$container is never read, only written\\.$#"
-			count: 1
-			path: src/Service/Availability/RedisAvailability.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Availability\\\\ServiceAvailabilityAbstract\\:\\:getCustomMessage\\(\\) has no return type specified\\.$#"

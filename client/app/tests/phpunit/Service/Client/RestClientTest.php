@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -49,7 +49,7 @@ class RestClientTest extends TestCase
     private $redisStorage;
 
     /**
-     * @var Logger|MockInterface
+     * @var LoggerInterface|MockInterface
      */
     private $logger;
 
@@ -90,7 +90,7 @@ class RestClientTest extends TestCase
         $this->client = m::mock('GuzzleHttp\ClientInterface');
         $this->redisStorage = m::mock(RedisStorage::class);
         $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
-        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
+        $this->logger = m::mock('Psr\Log\LoggerInterface');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
         $this->parameterBag = m::mock(ParameterBagInterface::class);
@@ -173,7 +173,7 @@ class RestClientTest extends TestCase
 
         $this->client
             ->shouldReceive('post')->with('/auth/logout', [
-            'headers' => ['AuthToken' => $this->sessionToken],
+                'headers' => ['AuthToken' => $this->sessionToken],
             ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($responseData, $this->object->logout());
@@ -483,7 +483,7 @@ class RestClientTest extends TestCase
         $this->client = m::mock('GuzzleHttp\ClientInterface');
         $this->redisStorage = m::mock(RedisStorage::class);
         $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
-        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
+        $this->logger = m::mock('Psr\Log\LoggerInterface');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface');
@@ -545,7 +545,7 @@ class RestClientTest extends TestCase
         $client = self::prophesize(Client::class);
         $redisStorage = self::prophesize(RedisStorage::class);
         $serializer = self::prophesize(SerializerInterface::class);
-        $logger = self::prophesize(Logger::class);
+        $logger = self::prophesize(LoggerInterface::class);
         $container = self::prophesize(ContainerInterface::class);
         $jwtService = self::prophesize(JWTService::class);
 
