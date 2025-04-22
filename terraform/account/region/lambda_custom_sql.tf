@@ -173,15 +173,6 @@ data "aws_iam_policy_document" "custom_sql_query" {
   }
 
   statement {
-    sid       = "RDSDescribeAccess"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "rds:DescribeDBInstances"
-    ]
-  }
-
-  statement {
     sid       = "ECRAccess"
     effect    = "Allow"
     resources = [data.aws_ecr_repository.custom_sql_query.arn]

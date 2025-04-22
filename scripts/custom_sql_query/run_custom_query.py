@@ -237,15 +237,21 @@ def get_current_user():
 
 
 def get_db_endpoint(environment):
-    instance_id = f"api-{environment}-0"
-    rds = boto3.client("rds")
-    try:
-        response = rds.describe_db_instances(DBInstanceIdentifier=instance_id)
-        db_instance = response["DBInstances"][0]
-        endpoint = db_instance["Endpoint"]["Address"]
-        return endpoint
-    except Exception as e:
-        raise Exception(f"Failed to retrieve RDS instance info: {str(e)}")
+    if environment == "local":
+        return "http://postgres"
+    else:
+        if environment == "production":
+            environment = "production02"
+        instance_id = f"api-{environment}-0"
+        session = assume_custom_sql_role(environment)
+        rds = session.client("rds", region_name="eu-west-1")
+        try:
+            response = rds.describe_db_instances(DBInstanceIdentifier=instance_id)
+            db_instance = response["DBInstances"][0]
+            endpoint = db_instance["Endpoint"]["Address"]
+            return endpoint
+        except Exception as e:
+            raise Exception(f"Failed to retrieve RDS instance info: {str(e)}")
 
 
 def main(

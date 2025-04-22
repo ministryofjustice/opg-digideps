@@ -247,6 +247,8 @@ def get_secret_names(workspace):
         ]
         else "default"
     )
+    if workspace == "production":
+        secret_prefix = "production02"
     db_secret_name = f"{secret_prefix}/custom-sql-db-password"
     users_sql_users = f"{secret_prefix}/custom-sql-users"
 
