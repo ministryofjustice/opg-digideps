@@ -26,26 +26,25 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\Report\VisitsCare;
 use App\Entity\ReportInterface;
 use App\Entity\User;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
-    public function generateReport(EntityManager $em, Client $client = null, string $type = null, DateTime $startDate = null, DateTime $endDate = null): Report
+    public function generateReport(EntityManager $em, ?Client $client = null, ?string $type = null, ?\DateTime $startDate = null, ?\DateTime $endDate = null, bool $dateChecks = true): Report
     {
         $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
         $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new DateTime('2 years ago');
+        $startDate = $startDate ? $startDate : new \DateTime('2 years ago');
         $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
         $this->completeBankAccounts($report, $em);
 
         return $report;
     }
 
-    public function generateNdr(EntityManager $em, User $deputy, Client $client = null): Ndr
+    public function generateNdr(EntityManager $em, User $deputy, ?Client $client = null): Ndr
     {
         $ndr = new Ndr($client);
         $deputy->setNdrEnabled(true);
@@ -90,22 +89,26 @@ class ReportTestHelper
         $this->completeClientBenefitsCheck($report);
     }
 
-    public function submitReport(ReportInterface $report, EntityManager $em): void
+    public function submitReport(ReportInterface $report, EntityManager $em, ?User $submittedBy = null, ?\DateTime $submitDate = null): void
     {
-        if ($report->getClient()->getOrganisation()) {
-            $submittedBy = $report->getClient()->getOrganisation()->getUsers()[0];
-        } else {
-            $submittedBy = $report->getClient()->getUsers()->first();
+        if (is_null($submittedBy)) {
+            if ($report->getClient()->getOrganisation()) {
+                $submittedBy = $report->getClient()->getOrganisation()->getUsers()[0];
+            } else {
+                $submittedBy = $report->getClient()->getUsers()->first();
+            }
         }
 
-        $submitDate = clone $report->getStartDate();
-        $submitDate->modify('+365 day');
+        if (is_null($submitDate)) {
+            $submitDate = clone $report->getStartDate();
+            $submitDate->modify('+365 day');
+        }
 
         $reportPdf = new Document($report);
         $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
         $reportPdf->setStorageReference('dd_doc_1234_9876543219876');
         $reportPdf->setIsReportPdf(true);
-        $reportPdf->setCreatedOn(new DateTime());
+        $reportPdf->setCreatedOn(new \DateTime());
         $reportPdf->setCreatedBy($submittedBy);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
@@ -119,7 +122,7 @@ class ReportTestHelper
             $supportingDocument->setFileName('fake-file.pdf');
             $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
             $supportingDocument->setIsReportPdf(false);
-            $supportingDocument->setCreatedOn(new DateTime());
+            $supportingDocument->setCreatedOn(new \DateTime());
             $supportingDocument->setCreatedBy($submittedBy);
             $supportingDocument->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
@@ -163,7 +166,7 @@ class ReportTestHelper
     private function completeDecisions(ReportInterface $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
+        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
     private function completeContacts(ReportInterface $report): void
@@ -257,7 +260,7 @@ class ReportTestHelper
             || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyInExists('Yes');
         }
-        
+
         $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
@@ -269,7 +272,7 @@ class ReportTestHelper
             || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyOutExists('Yes');
         }
-        
+
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
         $mt2 = (new MoneyTransaction($report))->setCategory('electricity')->setAmount(100);
@@ -312,8 +315,7 @@ class ReportTestHelper
     {
         if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) 
-        {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyInExists('No');
             $report->setReasonForNoMoneyIn('No money in');
         }
@@ -323,8 +325,7 @@ class ReportTestHelper
     {
         if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType())
-        {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyOutExists('No');
             $report->setReasonForNoMoneyOut('No money out');
         }
@@ -367,15 +368,15 @@ class ReportTestHelper
         $typeOfIncome = $report instanceof Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
         $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
-        $typeOfIncome->setCreated(new DateTime())
+        $typeOfIncome->setCreated(new \DateTime())
             ->setAmount(100.50)
             ->setWhoReceivedMoney('Some other bloke')
             ->setMoneyType('Universal Credit');
 
         $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
-            ->setDateLastCheckedEntitlement(new DateTime())
-            ->setCreated(new DateTime())
+            ->setDateLastCheckedEntitlement(new \DateTime())
+            ->setCreated(new \DateTime())
             ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
             ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
         ;
