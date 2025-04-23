@@ -43,7 +43,6 @@ class DeputyController extends AbstractController
     public function getAllDeputyReports(Request $request, int $uid): JsonResponse
     {
         $user = $this->getUser();
-        $data = [];
 
         if ($uid !== $user->getDeputyUid()) {
             return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user');
@@ -63,6 +62,6 @@ class DeputyController extends AbstractController
             return $this->buildNotFoundResponse();
         }
 
-        return $this->buildSuccessResponse($data);
+        return $this->buildSuccessResponse($results);
     }
 }
