@@ -83,4 +83,9 @@ class DeputyControllerTest extends AbstractTestController
         $this->assertEquals('n.s@example.org', $deputy->getEmail1());
         $this->assertEquals('7999999990', $deputy->getDeputyUid());
     }
+    
+    public function testDeputyReportUrlNeedsAuth()
+    {
+        $this->assertEndpointNeedsAuth('POST', '/deputy/7999999990/report');
+    }
 }
