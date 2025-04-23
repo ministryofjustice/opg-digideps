@@ -19,7 +19,7 @@ class CourtOrderDeputy
     /**
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false)
      */
