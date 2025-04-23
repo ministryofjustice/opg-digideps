@@ -27,9 +27,14 @@ class UserTestHelper extends TestCase
         return $user->reveal();
     }
 
-    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
-    {
-        $user = $this->createUser($client, $roleName, $email);
+    public function createAndPersistUser(
+        EntityManager $em, 
+        ?Client $client = null, 
+        ?string $roleName = User::ROLE_LAY_DEPUTY, 
+        ?string $email = null, 
+        ?int $deputyUid = null
+    ) {
+        $user = $this->createUser(client: $client, roleName:  $roleName, email:  $email, deputyUid: $deputyUid);
 
         if (!is_null($client)) {
             $em->persist($client);
