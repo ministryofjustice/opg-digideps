@@ -14,4 +14,11 @@ class DeputyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Deputy::class);
     }
+
+    public function getKnownDeputies()
+    {
+        return $this->getEntityManager()
+             ->createQuery("SELECT d.id,d.deputyUid FROM App\Entity\Deputy d")
+             ->getResult();
+    }
 }
