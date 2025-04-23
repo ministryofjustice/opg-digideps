@@ -3,7 +3,10 @@
 namespace App\EventListener;
 
 use Mockery as m;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -12,11 +15,15 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class SessionListenerTest extends TestCase
 {
+    private RequestEvent&MockInterface $event;
+    private Router&MockInterface $router;
+    private LoggerInterface&MockInterface $logger;
+
     public function setUp(): void
     {
-        $this->event = m::mock('Symfony\Component\HttpKernel\Event\RequestEvent');
-        $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
-        $this->logger = m::mock('Psr\Log\LoggerInterface');
+        $this->event = m::mock(RequestEvent::class);
+        $this->router = m::mock(Router::class);
+        $this->logger = m::mock(LoggerInterface::class);
     }
 
     /**
