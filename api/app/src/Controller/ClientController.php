@@ -14,9 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @Route("/client")
- */
+#[Route(path: '/client')]
 class ClientController extends RestController
 {
     public function __construct(
@@ -32,11 +30,9 @@ class ClientController extends RestController
     /**
      * Add/Edit a client.
      * When added, the current logged used will be added.
-     *
-     * @Route("/upsert", methods={"POST", "PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
      */
+    #[Route(path: '/upsert', methods: ['POST', 'PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function upsertAction(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -105,12 +101,10 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     *
      * @return object|null
      */
+    #[Route(path: '/{id}', name: 'client_find_by_id', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
     public function findByIdAction(Request $request, int $id)
     {
         $serialisedGroups = $request->query->has('groups')
@@ -132,12 +126,10 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return object|null
      */
+    #[Route(path: '/{id}/details', name: 'client_details', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function detailsAction(Request $request, int $id)
     {
         if ($request->query->has('groups')) {
@@ -165,12 +157,10 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     *
      * @param int $id
      */
+    #[Route(path: '/{id}/archive', name: 'client_archive', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function archiveAction(Request $request, $id)
     {
         /* @var $client EntityDir\Client */
@@ -199,11 +189,8 @@ class ClientController extends RestController
         ];
     }
 
-    /**
-     * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/get-all', defaults: ['order_by' => 'lastname', 'sort_order' => 'ASC'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getAllAction(Request $request)
     {
         $this->formatter->setJmsSerialiserGroups(['client', 'active-period']);
@@ -217,11 +204,8 @@ class ClientController extends RestController
         );
     }
 
-    /**
-     * @Route("/{id}/delete", name="client_delete", requirements={"id":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
-     */
+    #[Route(path: '/{id}/delete', name: 'client_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_ADMIN_MANAGER')")]
     public function deleteAction(Request $request, $id)
     {
         /* @var $client EntityDir\Client */
@@ -233,11 +217,8 @@ class ClientController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/{id}/unarchive", methods={"PUT"}, requirements={"id":"\d+"})
-     *
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
-     */
+    #[Route(path: '/{id}/unarchive', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[Security("is_granted('ROLE_ADMIN_MANAGER')")]
     public function unarchiveClientAction(int $id)
     {
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
@@ -250,11 +231,8 @@ class ClientController extends RestController
         ];
     }
 
-    /**
-     * @Route("/{id}/update-deputy/{deputyId}", methods={"PUT"}, requirements={"id":"\d+", "deputyId":"\d+"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/{id}/update-deputy/{deputyId}', methods: ['PUT'], requirements: ['id' => '\d+', 'deputyId' => '\d+'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
     public function updateDeputyAction(Request $request, int $id, int $deputyId)
     {
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
@@ -270,10 +248,9 @@ class ClientController extends RestController
     /**
      * Endpoint for getting the clients for a deputy uid.
      *
-     * @Route("/get-all-clients-by-deputy-uid/{deputyUid}", methods={"GET"})
-     *
      * @throws \Exception
      */
+    #[Route(path: '/get-all-clients-by-deputy-uid/{deputyUid}', methods: ['GET'])]
     public function getAllClientsByDeputyUid(Request $request, int $deputyUid)
     {
         $serialisedGroups = $request->query->has('groups')

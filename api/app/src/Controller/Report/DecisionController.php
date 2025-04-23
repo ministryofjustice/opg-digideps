@@ -10,9 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/report")
- */
+#[Route(path: '/report')]
 class DecisionController extends RestController
 {
     private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
@@ -24,11 +22,8 @@ class DecisionController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/decision", methods={"POST", "PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/decision', methods: ['POST', 'PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function upsertDecision(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -75,12 +70,10 @@ class DecisionController extends RestController
     }
 
     /**
-     * @Route("/decision/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     *
      * @param int $id
      */
+    #[Route(path: '/decision/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups') ? $request->query->all('groups') : ['decision'];
@@ -92,11 +85,8 @@ class DecisionController extends RestController
         return $decision;
     }
 
-    /**
-     * @Route("/decision/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/decision/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteDecision($id)
     {
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:'.$id.' not found');

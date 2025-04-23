@@ -20,9 +20,7 @@ class JWTController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/v3/jwk-public-key", methods={"GET"})
-     */
+    #[Route(path: '/v3/jwk-public-key', methods: ['GET'])]
     public function getPublicJwkKey(): JsonResponse
     {
         try {
