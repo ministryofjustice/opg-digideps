@@ -38,13 +38,13 @@ class CourtOrder
     private int $id;
 
     /**
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      *
      * @JMS\Groups({"court-order-basic", "court-order-full"})
      *
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
-    private int $courtOrderUid;
+    private string $courtOrderUid;
 
     /**
      * @JMS\Type("string")
