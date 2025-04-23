@@ -39,12 +39,11 @@ class Organisation implements OrganisationInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
      *
      * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      */
+    #[Assert\NotBlank]
     private $name;
 
     /**
@@ -56,10 +55,9 @@ class Organisation implements OrganisationInterface
      *
      * @JMS\SerializedName("email_identifier")
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
      */
+    #[Assert\NotBlank]
     private $emailIdentifier;
 
     /**
