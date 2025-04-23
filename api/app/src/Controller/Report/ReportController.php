@@ -13,7 +13,6 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ParameterStoreService;
 use App\Service\ReportService;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
@@ -22,9 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/report")
- */
+#[Route(path: '/report')]
 class ReportController extends RestController
 {
     /** @var array */
@@ -56,11 +53,9 @@ class ReportController extends RestController
      * Add a report
      * Currently only used by Lay deputy during registration steps
      * Pa report are instead created via OrgService::createReport().
-     *
-     * @Route("", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
      */
+    #[Route(path: '', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addAction(Request $request)
     {
         $reportData = $this->formatter->deserializeBodyContent($request);
@@ -90,14 +85,12 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     *
      * @param int $id
      *
      * @return Report
      */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups')
@@ -121,11 +114,8 @@ class ReportController extends RestController
         return $report;
     }
 
-    /**
-     * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{id}/submit', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function submit(Request $request, $id)
     {
         $currentReport = $this->findEntityBy(Report::class, $id, 'Report not found');
@@ -162,11 +152,8 @@ class ReportController extends RestController
         return $nextYearReport ? $nextYearReport->getId() : null;
     }
 
-    /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
     public function update(Request $request, $id)
     {
         /* @var $report Report */
@@ -542,11 +529,8 @@ class ReportController extends RestController
         return ['id' => $report->getId()];
     }
 
-    /**
-     * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/{id}/unsubmit', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function unsubmit(Request $request, $id)
     {
         /** @var Report $report */
@@ -578,12 +562,10 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/get-all-by-user", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     *
      * @throws NonUniqueResultException
      */
+    #[Route(path: '/get-all-by-user', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getAllByUser(Request $request): array
     {
         /** @var User $user */
@@ -703,14 +685,12 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/get-all-by-orgs", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     *
      * @return array
      *
      * @throws \Exception
      */
+    #[Route(path: '/get-all-by-orgs', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getAllByOrgs(Request $request)
     {
         /** @var User $user */
@@ -726,11 +706,8 @@ class ReportController extends RestController
         return $this->getResponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
     }
 
-    /**
-     * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{id}/submit-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function submitDocuments($id)
     {
         /* @var Report $currentReport */
@@ -747,11 +724,9 @@ class ReportController extends RestController
 
     /**
      * Add a checklist for the report.
-     *
-     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
      */
+    #[Route(path: '/{report_id}/checked', requirements: ['report_id' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function insertChecklist(Request $request, $report_id)
     {
         /** @var User $user */
@@ -822,11 +797,9 @@ class ReportController extends RestController
 
     /**
      * Update a checklist for the report.
-     *
-     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
      */
+    #[Route(path: '/{report_id}/checked', requirements: ['report_id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function updateChecklist(Request $request, $report_id)
     {
         /** @var User $user */
@@ -863,11 +836,9 @@ class ReportController extends RestController
 
     /**
      * Get a checklist for the report.
-     *
-     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
      */
+    #[Route(path: '/{report_id}/checklist', requirements: ['report_id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getChecklist(Request $request, $report_id)
     {
         $this->formatter->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
@@ -881,11 +852,9 @@ class ReportController extends RestController
 
     /**
      * Update a checklist for the report.
-     *
-     * @Route("/{report_id}/checklist", requirements={"report_id":"\d+"}, methods={"POST", "PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
      */
+    #[Route(path: '/{report_id}/checklist', requirements: ['report_id' => '\d+'], methods: ['POST', 'PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function upsertChecklist(Request $request, $report_id)
     {
         /** @var User $user */
@@ -922,11 +891,7 @@ class ReportController extends RestController
         return ['checklist' => $checklist->getId()];
     }
 
-    /**
-     * @Route("/all-with-queued-checklists", methods={"GET"})
-     *
-     * @throws DBALException
-     */
+    #[Route(path: '/all-with-queued-checklists', methods: ['GET'])]
     public function getReportsWithQueuedChecklists(Request $request): array
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -953,9 +918,7 @@ class ReportController extends RestController
         return $reports;
     }
 
-    /**
-     * @Route("/{reportId}/refresh-cache", methods={"POST"}, name="refresh_report_cache")
-     */
+    #[Route(path: '/{reportId}/refresh-cache', methods: ['POST'], name: 'refresh_report_cache')]
     public function refreshReportCache(Request $request, int $reportId)
     {
         $groups = $request->query->has('groups')

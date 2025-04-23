@@ -2121,11 +2121,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException is not subtype of Throwable$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Parameter \\#1 \\$amount of method App\\\\Entity\\\\Report\\\\Debt\\:\\:setAmount\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php

@@ -157,7 +157,9 @@ def run_insert(
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_get(lambda_client, function_name, query_id, workspace, db_endpoint):
+def run_get(
+    lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
+):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -165,6 +167,7 @@ def run_get(lambda_client, function_name, query_id, workspace, db_endpoint):
     payload = {
         "procedure": "get_custom_query",
         "query_id": query_id,
+        "calling_user": calling_user,
         "user_token": get_user_token(),
         "workspace": workspace,
         "db_endpoint": db_endpoint,
@@ -192,7 +195,9 @@ def run_sign_off(
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_revoke(lambda_client, function_name, query_id, workspace, db_endpoint):
+def run_revoke(
+    lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
+):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -200,6 +205,7 @@ def run_revoke(lambda_client, function_name, query_id, workspace, db_endpoint):
     payload = {
         "procedure": "revoke_custom_query",
         "query_id": query_id,
+        "calling_user": calling_user,
         "user_token": get_user_token(),
         "workspace": workspace,
         "db_endpoint": db_endpoint,
@@ -240,9 +246,10 @@ def get_db_endpoint(environment):
     if environment == "local":
         return "http://postgres"
     else:
-        if environment == "production":
-            environment = "production02"
-        instance_id = f"api-{environment}-0"
+        instance_environment = (
+            environment if environment != "production" else "production02"
+        )
+        instance_id = f"api-{instance_environment}-0"
         session = assume_custom_sql_role(environment)
         rds = session.client("rds", region_name="eu-west-1")
         try:
@@ -288,7 +295,7 @@ def main(
         )
     elif action == "get":
         response = run_get(
-            lambda_client, function_name, query_id, workspace, db_endpoint
+            lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
         )
     elif action == "sign_off":
         response = run_sign_off(
@@ -296,7 +303,7 @@ def main(
         )
     elif action == "revoke":
         response = run_revoke(
-            lambda_client, function_name, query_id, workspace, db_endpoint
+            lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
         )
     elif action == "execute":
         response = run_execute(

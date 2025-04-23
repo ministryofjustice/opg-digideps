@@ -425,11 +425,6 @@ jobs:
           echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Service Admin URL: ${SERVICE_ADMIN_URL}" >> $GITHUB_STEP_SUMMARY
           echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}" >> $GITHUB_STEP_SUMMARY
-      - name: check for failure
-        if: ${{ failure() }}
-        run: |
-          echo "A job failed. Marking workflow_summary as failed."
-          exit 1
 
   slack_notify_success:
     name: notify of success
