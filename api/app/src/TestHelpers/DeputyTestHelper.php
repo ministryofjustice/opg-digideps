@@ -9,10 +9,7 @@ use Faker\Factory;
 
 class DeputyTestHelper
 {
-    /**
-     * @return Deputy
-     */
-    public function generateDeputy(?string $email = null, ?string $deputyUid = null)
+    public static function generateDeputy(?string $email = null, ?string $deputyUid = null): Deputy
     {
         $faker = Factory::create('en_GB');
 

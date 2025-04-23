@@ -88,4 +88,9 @@ class DeputyControllerTest extends AbstractTestController
     {
         $this->assertEndpointNeedsAuth('POST', '/deputy/7999999990/report');
     }
+    
+    public function testDeputyReportsFound()
+    {
+        
+    }
 }
