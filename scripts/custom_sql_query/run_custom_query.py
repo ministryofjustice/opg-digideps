@@ -157,7 +157,9 @@ def run_insert(
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_get(lambda_client, function_name, query_id, workspace, db_endpoint):
+def run_get(
+    lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
+):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -165,6 +167,7 @@ def run_get(lambda_client, function_name, query_id, workspace, db_endpoint):
     payload = {
         "procedure": "get_custom_query",
         "query_id": query_id,
+        "calling_user": calling_user,
         "user_token": get_user_token(),
         "workspace": workspace,
         "db_endpoint": db_endpoint,
@@ -192,7 +195,9 @@ def run_sign_off(
     return lambda_invoke(lambda_client, function_name, payload)
 
 
-def run_revoke(lambda_client, function_name, query_id, workspace, db_endpoint):
+def run_revoke(
+    lambda_client, function_name, query_id, calling_user, workspace, db_endpoint
+):
     if not query_id:
         print("Supply the query_id argument")
         sys.exit(1)
@@ -200,6 +205,7 @@ def run_revoke(lambda_client, function_name, query_id, workspace, db_endpoint):
     payload = {
         "procedure": "revoke_custom_query",
         "query_id": query_id,
+        "calling_user": calling_user,
         "user_token": get_user_token(),
         "workspace": workspace,
         "db_endpoint": db_endpoint,
