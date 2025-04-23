@@ -15,11 +15,7 @@ use League\Csv\Serializer;
  * Column names in the database (as defined here) *must* match the column names in the CSV, as we do no
  * transformation/translation when dumping data into this table.
  *
- * @ORM\Table(name="deputyship", schema="staging", indexes={
- *
- *   @ORM\Index(name="deputy_uid_idx", columns={"deputy_uid"}),
- *   @ORM\Index(name="order_uid_idx", columns={"order_uid"})
- * })
+ * @ORM\Table(name="deputyship", schema="staging")
  *
  * @ORM\Entity
  */
