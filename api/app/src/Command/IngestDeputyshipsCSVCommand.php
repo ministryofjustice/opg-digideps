@@ -64,7 +64,6 @@ class IngestDeputyshipsCSVCommand extends Command
             return Command::FAILURE;
         }
 
-        //        try catch this
         $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
 
         if (!$result->success) {

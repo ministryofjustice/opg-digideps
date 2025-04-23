@@ -25,6 +25,7 @@ class MailSenderTest extends WebTestCase
     private ObjectProphecy|NotifyClient $notifyClient;
     private ObjectProphecy|DateTimeProvider $dateTimeProvider;
     private ObjectProphecy|TokenStorageInterface $tokenStorage;
+    private MailSender $sut;
 
     public function setup(): void
     {

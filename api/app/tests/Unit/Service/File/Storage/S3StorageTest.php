@@ -25,23 +25,6 @@ class S3StorageTest extends TestCase
     public function setUp(): void
     {
         $this->fileContent = 'FILE-CONTENT-'.microtime(1);
-
-        // check localstack connection. To test why failing on the infrastructure
-        if (!@fsockopen('localstack', '4572')) {
-//            $options = [
-//                'version' => 'latest',
-//                'region' => 'eu-west-1',
-//                'endpoint' => 'http://localstack:4572',
-//                'validate' => false,
-//                'credentials' => [
-//                    'key' => 'YOUR_ACCESS_KEY_ID',
-//                    'secret' => 'YOUR_SECRET_ACCESS_KEY',
-//                ],
-//            ];
-            
-//            $this->markTestSkipped('localstack not responding');
-//            echo "Can't connect to S3 ({$options['endpoint']})\n";
-        }
     }
 
     public function testUploadDownloadDeleteTextContent()
@@ -49,7 +32,6 @@ class S3StorageTest extends TestCase
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete'.microtime(1);
 
-        /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')

@@ -24,10 +24,7 @@ use Symfony\Component\Security\Core\Security as SecurityHelper;
 
 // TODO
 // http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
-
-/**
- * @Route("/user")
- */
+#[Route(path: '/user')]
 class UserController extends RestController
 {
     public function __construct(
@@ -45,11 +42,8 @@ class UserController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")
-     */
+    #[Route(path: '', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")]
     public function add(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -149,9 +143,7 @@ class UserController extends RestController
         return $user;
     }
 
-    /**
-     * @Route("/{id}", methods={"PUT"})
-     */
+    #[Route(path: '/{id}', methods: ['PUT'])]
     public function update(Request $request, $id)
     {
         /** @var User $loggedInUser */
@@ -188,9 +180,7 @@ class UserController extends RestController
         return ['id' => $requestedUser->getId()];
     }
 
-    /**
-     * @Route("/{id}/is-password-correct", methods={"POST"})
-     */
+    #[Route(path: '/{id}/is-password-correct', methods: ['POST'])]
     public function isPasswordCorrect(Request $request, $id)
     {
         /** @var User $loggedInUser */
@@ -212,9 +202,8 @@ class UserController extends RestController
 
     /**
      * See RegistrationTokenAuthenticator for checks and how User is set in session.
-     *
-     * @Route("/{id}/set-password", methods={"PUT"})
      */
+    #[Route(path: '/{id}/set-password', methods: ['PUT'])]
     public function changePassword(Request $request, $id)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -254,9 +243,8 @@ class UserController extends RestController
 
     /**
      * change email.
-     *
-     * @Route("/{id}/update-email", methods={"PUT"})
      */
+    #[Route(path: '/{id}/update-email', methods: ['PUT'])]
     public function changeEmail(Request $request, $id)
     {
         /** @var User $loggedInUser */
@@ -280,19 +268,13 @@ class UserController extends RestController
         return $requestedUser->getId();
     }
 
-    /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneById(Request $request, $id)
     {
         return $this->getOneByFilter($request, 'user_id', $id);
     }
 
-    /**
-     * @Route("/get-one-by/{what}/{filter}", requirements={
-     *   "what" = "(user_id|email|case_number)"
-     * }, methods={"GET"})
-     */
+    #[Route(path: '/get-one-by/{what}/{filter}', requirements: ['what' => '(user_id|email|case_number)'], methods: ['GET'])]
     public function getOneByFilter(Request $request, $what, $filter)
     {
         if ('email' == $what) {
@@ -360,11 +342,9 @@ class UserController extends RestController
      * Get user by email, and retrieve only id and team names the user belongs to.
      * Only for ROLE_PROF named and admin, when adding users to multiple teams.
      * Returns empty if user doesn't exist.
-     *
-     * @Route("/get-team-names-by-email/{email}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")
      */
+    #[Route(path: '/get-team-names-by-email/{email}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")]
     public function getUserTeamNames(Request $request, $email)
     {
         $user = $this->userRepository->findOneBy(['email' => $email]);
@@ -377,17 +357,14 @@ class UserController extends RestController
     /**
      * Delete user with clients.
      *
-     * @Route("/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
-     *
      * @param int $id
      *
      * @return array
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_ADMIN_MANAGER')")]
     public function delete($id)
     {
         /** @var User $deletee */
@@ -414,11 +391,8 @@ class UserController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/get-all", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/get-all', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
     public function getAll(Request $request)
     {
         $this->formatter->setJmsSerialiserGroups(['user']);
@@ -428,9 +402,8 @@ class UserController extends RestController
 
     /**
      * Requires client secret.
-     *
-     * @Route("/recreate-token/{email}", defaults={"email": "none"}, methods={"PUT"})
      */
+    #[Route(path: '/recreate-token/{email}', defaults: ['email' => 'none'], methods: ['PUT'])]
     public function recreateToken(Request $request, $email)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -454,9 +427,7 @@ class UserController extends RestController
         return $user;
     }
 
-    /**
-     * @Route("/get-by-token/{token}", methods={"GET"})
-     */
+    #[Route(path: '/get-by-token/{token}', methods: ['GET'])]
     public function getByToken(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -476,9 +447,7 @@ class UserController extends RestController
         return $user;
     }
 
-    /**
-     * @Route("/agree-terms-use/{token}", methods={"PUT"})
-     */
+    #[Route(path: '/agree-terms-use/{token}', methods: ['PUT'])]
     public function agreeTermsUse(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -500,9 +469,7 @@ class UserController extends RestController
         return $user->getId();
     }
 
-    /**
-     * @Route("/clear-registration-token/{token}", methods={"PUT"})
-     */
+    #[Route(path: '/clear-registration-token/{token}', methods: ['PUT'])]
     public function clearRegistrationToken(Request $request, $token)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -524,11 +491,8 @@ class UserController extends RestController
         return $user->getId();
     }
 
-    /**
-     * @Route("/{id}/team", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/{id}/team', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getTeamByUserId(Request $request, $id)
     {
         /** @var User $loggedInUser */
@@ -561,10 +525,9 @@ class UserController extends RestController
     /**
      * Endpoint for getting a reg token for user.
      *
-     * @Route("/get-reg-token", methods={"GET"})
-     *
      * @throws \Exception
      */
+    #[Route(path: '/get-reg-token', methods: ['GET'])]
     public function getRegToken(Request $request)
     {
         /** @var User $user */
@@ -580,9 +543,8 @@ class UserController extends RestController
 
     /**
      * Set Registration date on user.
-     *
-     * @Route("/{id}/set-registration-date", methods={"PUT"})
      */
+    #[Route(path: '/{id}/set-registration-date', methods: ['PUT'])]
     public function setRegistrationDate(Request $request, int $id): int
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -606,9 +568,8 @@ class UserController extends RestController
 
     /**
      * Set active flag on user.
-     *
-     * @Route("/{id}/set-active", methods={"PUT"})
      */
+    #[Route(path: '/{id}/set-active', methods: ['PUT'])]
     public function setActive(Request $request, int $id): int
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -633,10 +594,9 @@ class UserController extends RestController
     /**
      * Endpoint for getting the primary user account for user.
      *
-     * @Route("/get-primary-email/{deputyUid}", methods={"GET"})
-     *
      * @throws \Exception
      */
+    #[Route(path: '/get-primary-email/{deputyUid}', methods: ['GET'])]
     public function getPrimaryEmail(int $deputyUid): string
     {
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
@@ -655,10 +615,9 @@ class UserController extends RestController
     /**
      * Endpoint for getting the primary user account associated with a deputy uid.
      *
-     * @Route("/get-primary-user-account/{deputyUid}", methods={"GET"})
-     *
      * @throws \Exception
      */
+    #[Route(path: '/get-primary-user-account/{deputyUid}', methods: ['GET'])]
     public function getPrimaryUserAccount(int $deputyUid): ?User
     {
         $this->formatter->setJmsSerialiserGroups(['user', 'user-list']);

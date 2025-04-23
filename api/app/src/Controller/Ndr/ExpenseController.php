@@ -17,11 +17,8 @@ class ExpenseController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById($ndrId, $expenseId)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
@@ -35,11 +32,8 @@ class ExpenseController extends RestController
         return $expense;
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/expense", requirements={"ndrId":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/expense', requirements: ['ndrId' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, $ndrId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -62,11 +56,8 @@ class ExpenseController extends RestController
         return ['id' => $expense->getId()];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function edit(Request $request, $ndrId, $expenseId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -84,11 +75,8 @@ class ExpenseController extends RestController
         return ['id' => $expense->getId()];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete($ndrId, $expenseId)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */

@@ -14,7 +14,7 @@ class SatisfactionPerformanceStatsCommand extends Command
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly S3SatisfactionDataStorage $s3SatisfactionDataStorage
+        private readonly S3SatisfactionDataStorage $s3SatisfactionDataStorage,
     ) {
         parent::__construct();
     }
@@ -60,7 +60,7 @@ class SatisfactionPerformanceStatsCommand extends Command
                     'service' => 'deputy-reporting',
                     'channel' => 'digital',
                     'count' => intval($satisfactionScoreRow),
-                    'dataType' => str_replace('-', '_', $satisfactionScoreKey),
+                    'dataType' => str_replace('_', '-', $satisfactionScoreKey),
                     'period' => 'month',
                 ];
             }

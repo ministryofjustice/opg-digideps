@@ -24,11 +24,8 @@ class MoneyReceivedOnClientsBehalfController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("{reportOrNdr}/money-type/delete/{moneyTypeId}", methods={"DELETE"}, name="delete_money_type")
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '{reportOrNdr}/money-type/delete/{moneyTypeId}', methods: ['DELETE'], name: 'delete_money_type')]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete(Request $request, string $reportOrNdr, string $moneyTypeId)
     {
         $groups = $request->request->has('groups') ? $request->request->all('groups') : ['client-benefits-check', 'report', 'ndr'];

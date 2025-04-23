@@ -6,7 +6,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.27"
+            "php": "8.2.28"
         },
         "allow-plugins": {
             "php-http/discovery": true
@@ -19,7 +19,7 @@
         }
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "alphagov/notifications-php-client": "^4.0.1",
         "aws/aws-sdk-php": "3.299.1",
         "doctrine/collections": "^2.0.0",

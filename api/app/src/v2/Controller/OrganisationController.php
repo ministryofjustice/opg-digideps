@@ -22,9 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/organisation")
- */
+#[Route(path: '/organisation')]
 class OrganisationController extends AbstractController
 {
     use ControllerTrait;
@@ -49,11 +47,8 @@ class OrganisationController extends AbstractController
         'user-list',
     ];
 
-    /**
-     * @Route("/list", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/list', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getAllAction(): JsonResponse
     {
         // Fetch all data from db
@@ -93,12 +88,10 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
      * @Entity("organisation", expr="repository.find(id)")
-     *
-     * @Security("is_granted('view', organisation)")
      */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('view', organisation)")]
     public function getByIdAction(Organisation $organisation): JsonResponse
     {
         $dto = $this->assembler->assembleFromEntity($organisation);
@@ -108,12 +101,10 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/users", requirements={"id":"\d+"}, methods={"GET"})
-     *
      * @Entity("organisation", expr="repository.find(id)")
-     *
-     * @Security("is_granted('view', organisation)")
      */
+    #[Route(path: '/{id}/users', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('view', organisation)")]
     public function getUsers(Organisation $organisation, Request $request)
     {
         $ret = $this->userRepository->findByFiltersWithCounts(
@@ -129,12 +120,10 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/clients", requirements={"id":"\d+"}, methods={"GET"})
-     *
      * @Entity("organisation", expr="repository.find(id)")
-     *
-     * @Security("is_granted('view', organisation)")
      */
+    #[Route(path: '/{id}/clients', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('view', organisation)")]
     public function getClients(Organisation $organisation, Request $request)
     {
         $ret = $this->clientRepository->findByFiltersWithCounts(
@@ -150,13 +139,11 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function createAction(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -165,11 +152,8 @@ class OrganisationController extends AbstractController
         return $this->buildSuccessResponse(['id' => $entity->getId()], 'Organisation created', Response::HTTP_CREATED);
     }
 
-    /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function updateAction(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -179,13 +163,11 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function deleteAction(int $id): JsonResponse
     {
         $deleted = $this->restHandler->delete($id);
@@ -195,15 +177,13 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"}, methods={"PUT"})
-     *
      * @Entity("organisation", expr="repository.find(orgId)")
-     *
-     * @Security("is_granted('edit', organisation)")
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/{orgId}/user/{userId}', requirements: ['orgId' => '\d+', 'userId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('edit', organisation)")]
     public function addUserAction(Request $request, Organisation $organisation, int $userId): JsonResponse
     {
         $orgId = $organisation->getId();
@@ -213,15 +193,13 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"}, methods={"DELETE"})
-     *
      * @Entity("organisation", expr="repository.find(orgId)")
-     *
-     * @Security("is_granted('edit', organisation)")
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/{orgId}/user/{userId}', requirements: ['orgId' => '\d+', 'userId' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('edit', organisation)")]
     public function removeUserAction(Organisation $organisation, int $userId): JsonResponse
     {
         $orgId = $organisation->getId();
@@ -230,21 +208,15 @@ class OrganisationController extends AbstractController
         return $this->buildSuccessResponse([], 'User removed');
     }
 
-    /**
-     * @Route("/members", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/members', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getMembers(Request $request)
     {
         return $this->getUser()->getOrganisations()[0]->getUsers();
     }
 
-    /**
-     * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/member/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getMemberById(string $id)
     {
         return $this->getUser()->getOrganisations()[0]->getUsers()->get($id);
