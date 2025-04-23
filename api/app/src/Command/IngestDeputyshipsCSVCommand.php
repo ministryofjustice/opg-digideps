@@ -8,7 +8,6 @@ use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Mockery\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -67,7 +66,7 @@ class IngestDeputyshipsCSVCommand extends Command
 
         try {
             $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln(
                 sprintf(
                     '%s - failure - Unexpected exception occurred while processing CSV: %s',
