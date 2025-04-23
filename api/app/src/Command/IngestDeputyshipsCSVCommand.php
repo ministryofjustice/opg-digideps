@@ -72,9 +72,11 @@ class IngestDeputyshipsCSVCommand extends Command
                 sprintf(
                     '%s - failure - Unexpected exception occurred while processing CSV: %s',
                     self::JOB_NAME,
-                    $e->getMessage()
+                    $e->getMessage(),
                 )
             );
+
+            $this->verboseLogger->error($e->getTraceAsString());
 
             return Command::FAILURE;
         }
