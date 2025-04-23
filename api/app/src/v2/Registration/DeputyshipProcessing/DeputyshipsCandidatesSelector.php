@@ -10,6 +10,8 @@ use App\Entity\CourtOrderDeputy;
 use App\Entity\Report\Report;
 use App\Entity\StagingSelectedCandidates;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 class DeputyshipsCandidatesSelector
 {
@@ -18,6 +20,10 @@ class DeputyshipsCandidatesSelector
     ) {
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function select(): array
     {
         // delete records from candidate table ready for new candidates
@@ -129,10 +135,9 @@ class DeputyshipsCandidatesSelector
                 // store reportIds for court order report insertion
                 $reportIds = [];
                 $reportIds[] = $currentReportId;
+                $clientId = $client->getId();
 
                 if ($reportTypeIsCompatible || 0 != $csvDeputyship->isHybrid) {
-                    $clientId = $client->getId();
-
                     $historicReports =
                         $this->em->getRepository(Report::class)
                         ->createQueryBuilder('r')
@@ -148,40 +153,57 @@ class DeputyshipsCandidatesSelector
                     foreach ($historicReports as $report) {
                         $historicReportCount = count($historicReports);
 
-                        // if count > 0 and is hybrid then attach all historical pfa and hw reports to same court order
+                        // If count > 0 and is hybrid then attach all historical pfa and hw reports to same court order
                         // else if not hybrid then check order type compatibility first to decide match
+
+                        // ACTION: Need to check logic for historical hybrid reports
                         if ($historicReportCount > 0) {
                             $orderTypeCompatibility = $this->checkOrderTypeIsCompatible($report['type'], $csvDeputyship->orderType, $csvDeputyship->isHybrid);
 
                             if ($orderTypeCompatibility) {
-                                $reportIds[] = $report->getId();
+                                $reportIds[] = $report['id'];
                             } else {
                                 file_put_contents('php://stderr', ' OUTPUT ---> '.print_r(
-                                    $report->getId.' **** ORDER TYPE NOT COMPATIBLE **** ',
+                                    $report['id'].' **** ORDER TYPE NOT COMPATIBLE **** ',
                                     true
                                 )
                                 );
                             }
                         }
                     }
-
                     // Loop through reportIds to populate row for each report (historical and current)
                     foreach ($reportIds as $reportId) {
-                        // Need all reports for client (compatibility later???)
                         $changes = new StagingSelectedCandidates();
                         $changes->action = 'INSERT ORDER REPORT';
                         $changes->orderUid = $csvDeputyship->orderUid;
                         $changes->reportId = $reportId;
                         $changes->deputyUid = $csvDeputyship->deputyUid;
+
+                        $selectionCandidates[] = $changes;
                     }
-                    $selectionCandidates[] = $changes;
                 } else {
-                    // Split out to handle DUAL court orders where the type on the clients current report doesn't match
-                    // the type on the dual court order row
+                    // Split out to handle DUAL court orders where the type on the clients current report doesn't match the type on the dual court order row
+
+                    $reportType = $client->getCurrentReport()->getType();
+
+                    $getCorrespondingDualReport =
+                        $this->em->getRepository(Report::class)
+                            ->createQueryBuilder('r')
+                            ->select('r.id', 'c.id AS clientId') // fetches the id value from the client
+                            ->innerJoin('r.client', 'c') // joins the client entity
+                            ->where('c.id = :clientId')
+                            ->andWhere('r.type != :reportType')
+                            ->andWhere('r.submitDate IS NULL AND r.unSubmitDate IS NULL')
+                            ->setParameter('clientId', $clientId)
+                            ->setParameter('reportType', $reportType)
+                            ->getQuery()
+                            ->getSingleResult();
+
                     $changes = new StagingSelectedCandidates();
                     $changes->action = 'DUAL ORDER FOUND';
                     $changes->orderUid = $csvDeputyship->orderUid;
-                    $changes->reportId = $reportId;
+                    $changes->reportId = $getCorrespondingDualReport['id'];
+                    $changes->clientId = $getCorrespondingDualReport['clientId'];
                     $changes->deputyUid = $csvDeputyship->deputyUid;
                     $selectionCandidates[] = $changes;
                 }
@@ -196,7 +218,7 @@ class DeputyshipsCandidatesSelector
         }
 
         foreach ($selectionCandidates as $candidate) {
-            file_put_contents('php://stderr', ' OUTPUT FROM SELECTOR ---> '.print_r($candidate, true));
+            //            file_put_contents('php://stderr', ' OUTPUT FROM SELECTOR ---> '.print_r($candidate, true));
             $this->em->persist($candidate);
         }
         $this->em->flush();
