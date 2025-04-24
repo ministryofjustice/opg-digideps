@@ -73,7 +73,6 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
      */
     public function testCourtOrderStatusChange(): void
     {
-        $this->markTestSkipped();
         $courtOrder = new CourtOrder();
         $courtOrderUid = '700000001101';
 
@@ -140,7 +139,6 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
 
     public function testNewDeputyAddedToCourtOrder(): void
     {
-        $this->markTestSkipped();
         $courtOrder = new CourtOrder();
         $courtOrderUid = '700000001103';
 
@@ -177,7 +175,6 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
 
     public function testAddingNewSingleCourtOrder(): void
     {
-        $this->markTestSkipped();
         $stagingDeputyshipObject = $this->entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
 
         $deputy = new Deputy();
