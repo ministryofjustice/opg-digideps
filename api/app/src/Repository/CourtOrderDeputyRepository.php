@@ -8,6 +8,9 @@ use App\Entity\CourtOrderDeputy;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<CourtOrderDeputy>
+ */
 class CourtOrderDeputyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -15,10 +18,9 @@ class CourtOrderDeputyRepository extends ServiceEntityRepository
         parent::__construct($registry, CourtOrderDeputy::class);
     }
 
-    public function isDeputyOnCourtOrder($deputyId, $courtOrderId)
+    public function getDeputyOnCourtOrder(int $courtOrderId, int $deputyId): ?CourtOrderDeputy
     {
-        return $this->findBy(['courtOrder' => $courtOrderId, 'deputy' => $deputyId]);
-
-        //       return !is_null($this->findBy(['courtOrder' => $courtOrderId, 'deputy' => $deputyId]));
+        /* @var ?CourtOrderDeputy */
+        return $this->findOneBy(['courtOrder' => $courtOrderId, 'deputy' => $deputyId]);
     }
 }
