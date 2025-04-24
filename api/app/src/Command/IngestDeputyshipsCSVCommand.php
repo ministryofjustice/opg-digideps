@@ -64,7 +64,21 @@ class IngestDeputyshipsCSVCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
+        try {
+            $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
+        } catch (\Exception $e) {
+            $output->writeln(
+                sprintf(
+                    '%s - failure - Unexpected exception occurred while processing CSV: %s',
+                    self::JOB_NAME,
+                    $e->getMessage(),
+                )
+            );
+
+            $this->verboseLogger->error($e->getTraceAsString());
+
+            return Command::FAILURE;
+        }
 
         if (!$result->success) {
             $output->writeln(
