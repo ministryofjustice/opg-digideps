@@ -22,7 +22,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Entity
  */
-class StagingSelectedCandidates
+class StagingSelectedCandidate
 {
     /**
      * @ORM\Id
@@ -35,7 +35,7 @@ class StagingSelectedCandidates
      *
      * @ORM\SequenceGenerator(sequenceName="candidate_id_seq", allocationSize=1, initialValue=1)
      */
-    private int $id;
+    public int $id;
 
     /**
      * @ORM\Column(name="order_uid", type="string", length=30)

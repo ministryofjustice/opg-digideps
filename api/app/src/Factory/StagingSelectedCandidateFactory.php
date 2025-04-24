@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\StagingDeputyship;
-use App\Entity\StagingSelectedCandidates;
+use App\Entity\StagingSelectedCandidate;
 
 class StagingSelectedCandidateFactory
 {
@@ -12,9 +12,9 @@ class StagingSelectedCandidateFactory
     public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
     public const INSERT_ORDER = 'INSERT ORDER';
 
-    public function createUpdateOrderStatusCandidate(StagingDeputyship $csvDeputyship, int $courtOrderId): StagingSelectedCandidates
+    public function createUpdateOrderStatusCandidate(StagingDeputyship $csvDeputyship, int $courtOrderId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidates();
+        $changes = new StagingSelectedCandidate();
         $changes->action = self::UPDATE_ORDER_STATUS;
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
@@ -28,9 +28,9 @@ class StagingSelectedCandidateFactory
         StagingDeputyship $csvDeputyship,
         int $deputyId,
         int $courtOrderId,
-        bool $csvDeputyOnCourtOrderStatus): StagingSelectedCandidates
+        bool $csvDeputyOnCourtOrderStatus): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidates();
+        $changes = new StagingSelectedCandidate();
         $changes->action = self::UPDATE_DEPUTY_STATUS;
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->orderId = $courtOrderId;
@@ -44,9 +44,9 @@ class StagingSelectedCandidateFactory
     public function createInsertOrderDeputyCandidate(
         StagingDeputyship $csvDeputyship,
         int $deputyId,
-        bool $csvDeputyOnCourtOrderStatus): StagingSelectedCandidates
+        bool $csvDeputyOnCourtOrderStatus): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidates();
+        $changes = new StagingSelectedCandidate();
         $changes->action = self::INSERT_ORDER_DEPUTY;
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyId = $deputyId;
@@ -56,9 +56,9 @@ class StagingSelectedCandidateFactory
         return $changes;
     }
 
-    public function createInsertOrderCandidate(StagingDeputyship $csvDeputyship, int $clientId): StagingSelectedCandidates
+    public function createInsertOrderCandidate(StagingDeputyship $csvDeputyship, int $clientId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidates();
+        $changes = new StagingSelectedCandidate();
         $changes->action = self::INSERT_ORDER;
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->orderType = $csvDeputyship->orderType;
