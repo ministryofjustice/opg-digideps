@@ -25,10 +25,6 @@ class ClientContact
     /**
      * @var int
      *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
@@ -37,89 +33,77 @@ class ClientContact
      *
      * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['clientcontact'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['clientcontact'])]
     private $firstName;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['clientcontact'])]
     private $lastName;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['clientcontact'])]
     private $jobTitle;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['clientcontact'])]
     private $phone;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * The following is changed to unique=false, as the migration was missing,
      * and prod data contains duplicate, making it impossible to add the
      * migration now, unless the data is cleaned
-     *
+     * 
      * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['clientcontact'])]
     private $email;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"clientcontact"})
-     *
      * @ORM\Column(name="org_name", type="string", length=150, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['clientcontact'])]
     private $orgName;
 
     /**
      * @var Client
      *
-     * @JMS\Type("App\Entity\Client")
-     *
-     * @JMS\Groups({"clientcontact-client"})
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="clientContacts")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Type('App\Entity\Client')]
+    #[JMS\Groups(['clientcontact-client'])]
     private $client;
 
     /**

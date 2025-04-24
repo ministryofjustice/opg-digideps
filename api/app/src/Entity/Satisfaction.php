@@ -25,10 +25,6 @@ class Satisfaction
     /**
      * @var int
      *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"satisfaction"})
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
@@ -37,88 +33,74 @@ class Satisfaction
      *
      * @ORM\SequenceGenerator(sequenceName="satisfaction_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['satisfaction'])]
     private $id;
 
     /**
      * @var int
      *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"satisfaction"})
-     *
      * @ORM\Column(type="integer")
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['satisfaction'])]
     private $score;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"satisfaction"})
-     *
      * @ORM\Column(type="string", name="comments", length=1200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['satisfaction'])]
     private $comments;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"satisfaction"})
-     *
      * @ORM\Column(type="string", name="deputy_role", length=50, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['satisfaction'])]
     private $deputyrole;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"satisfaction"})
-     *
      * @ORM\Column(type="string", name="report_type", length=9, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['satisfaction'])]
     private $reporttype;
 
     /**
-     * @JMS\Type("DateTime")
-     *
-     * @JMS\Groups({"satisfaction"})
-     *
      * @ORM\Column(name="created_at", type="datetime")
      *
      * @Gedmo\Timestampable(on="create")
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['satisfaction'])]
     private \DateTime $created;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
-     *
-     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private UserResearchResponse $userResearchResponse;
 
     /**
-     * @JMS\Type("App\Entity\Report\Report")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
      */
+    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?Report $report = null;
 
     /**
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
      * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="satisfaction", cascade={"persist"})
      */
+    #[JMS\Type('App\Entity\Ndr\Ndr')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?Ndr $ndr = null;
 
     public function getId(): int
