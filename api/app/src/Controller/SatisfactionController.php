@@ -13,9 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/satisfaction")
- */
+#[Route(path: '/satisfaction')]
 class SatisfactionController extends RestController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter, private readonly ReportRepository $reportRepository, private readonly NdrRepository $ndrRepository, private readonly SatisfactionRepository $satisfactionRepository)
@@ -52,11 +50,8 @@ class SatisfactionController extends RestController
         return $satisfaction;
     }
 
-    /**
-     * @Route("", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -94,11 +89,8 @@ class SatisfactionController extends RestController
         return $satisfaction->getId();
     }
 
-    /**
-     * @Route("/satisfaction_data", name="satisfaction_data", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: '/satisfaction_data', name: 'satisfaction_data', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getSatisfactionData(Request $request)
     {
         /* @var $repo SatisfactionRepository */
@@ -116,9 +108,7 @@ class SatisfactionController extends RestController
         );
     }
 
-    /**
-     * @Route("/public", methods={"POST"})
-     */
+    #[Route(path: '/public', methods: ['POST'])]
     public function publicAdd(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request, [

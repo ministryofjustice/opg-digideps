@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/deputy")
- */
+#[Route(path: '/deputy')]
 class DeputyController
 {
     use ControllerTrait;
@@ -24,10 +22,9 @@ class DeputyController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getByIdAction($id)
     {
         if (null === ($data = $this->repository->findUserArrayById($id))) {

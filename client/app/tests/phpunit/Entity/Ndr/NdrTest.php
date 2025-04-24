@@ -4,12 +4,15 @@ namespace App\Entity\Ndr;
 
 use App\Entity\Client;
 use Mockery as m;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class NdrTest extends TestCase
 {
-    /** @var Ndr */
-    private $ndr;
+    private Ndr $ndr;
+    private StateBenefit $incomeTicked;
+    private StateBenefit $incomeUnticked;
+    private Client&MockObject $client;
 
     protected function setUp(): void
     {

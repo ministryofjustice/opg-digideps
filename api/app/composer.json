@@ -6,7 +6,10 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.27"
+            "php": "8.2.28"
+        },
+        "allow-plugins": {
+            "symfony/flex": true
         }
     },
     "autoload": {
@@ -22,7 +25,7 @@
         }
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "aws/aws-sdk-php": "3.329.0",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -49,12 +52,13 @@
         "symfony/expression-language": "^6.0",
         "symfony/form": "^6.0",
         "symfony/framework-bundle": "^6.0",
-        "symfony/http-foundation": "5.4.46",
+        "symfony/http-foundation": "^6.0",
         "symfony/http-kernel": "^6.0",
         "symfony/monolog-bundle": "^3.8",
         "symfony/password-hasher": "^6.0",
+        "symfony/property-info": "^6.0",
         "symfony/routing": "^6.0",
-        "symfony/security-bundle": "^6.0",
+        "symfony/security-bundle": "6.2.13",
         "symfony/security-core": "^6.0",
         "symfony/security-http": "6.2.13",
         "symfony/serializer": "^6.0",
@@ -102,7 +106,7 @@
             "file": "config/parameters.yml"
         },
         "symfony": {
-            "require": "5.4.*"
+            "require": "6.*"
         }
     },
     "repositories": [

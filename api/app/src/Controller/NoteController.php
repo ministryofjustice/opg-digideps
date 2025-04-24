@@ -10,9 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/note/")
- */
+#[Route(path: '/note/')]
 class NoteController extends RestController
 {
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
@@ -20,11 +18,8 @@ class NoteController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("{clientId}", requirements={"clientId":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '{clientId}', requirements: ['clientId' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function add(Request $request, $clientId)
     {
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
@@ -50,15 +45,13 @@ class NoteController extends RestController
      *
      * User that created the note is not returned as default, as not currently needed from the CLIENT.
      * Add "user" group if needed
-     *
-     * @Route("{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
      */
+    #[Route(path: '{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['notes', 'user'];
+            ? $request->query->all('groups') : ['notes', 'user'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
@@ -70,11 +63,9 @@ class NoteController extends RestController
     /**
      * Update note
      * Only the creator can update the note.
-     *
-     * @Route("{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
      */
+    #[Route(path: '{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function updateNote(Request $request, $id)
     {
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
@@ -99,14 +90,12 @@ class NoteController extends RestController
     /**
      * Delete note.
      *
-     * @Route("{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     *
      * @param int $id
      *
      * @return array
      */
+    #[Route(path: '{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_ORG')")]
     public function delete($id, LoggerInterface $logger)
     {
         try {

@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * @Route("/selfregister")
- */
+#[Route(path: '/selfregister')]
 class SelfRegisterController extends RestController
 {
     public function __construct(private readonly LoggerInterface $logger, private readonly ValidatorInterface $validator, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly EntityManagerInterface $em)
@@ -23,9 +21,7 @@ class SelfRegisterController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("", methods={"POST"})
-     */
+    #[Route(path: '', methods: ['POST'])]
     public function register(Request $request, UserRegistrationService $userRegistrationService)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -46,8 +42,10 @@ class SelfRegisterController extends RestController
 
         $selfRegisterData->replaceUnicodeChars();
 
+        $caseNumber = $selfRegisterData->getCaseNumber();
+        
         // truncate case number if length is 10
-        if (10 == strlen($selfRegisterData->getCaseNumber())) {
+        if ($caseNumber !== null && 10 == strlen($caseNumber)) {
             $selfRegisterData->setCaseNumber(substr($selfRegisterData->getCaseNumber(), 0, -2));
         }
 
@@ -70,9 +68,7 @@ class SelfRegisterController extends RestController
         return $user;
     }
 
-    /**
-     * @Route("/verifycodeputy", methods={"POST"})
-     */
+    #[Route(path: '/verifycodeputy', methods: ['POST'])]
     public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService)
     {
         if (!$this->authService->isSecretValid($request)) {
@@ -120,9 +116,7 @@ class SelfRegisterController extends RestController
         return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
     }
 
-    /**
-     * @Route("/updatecodeputy/{userId}", requirements={"userId":"\d+"}, methods={"PUT"})
-     */
+    #[Route(path: '/updatecodeputy/{userId}', requirements: ['userId' => '\d+'], methods: ['PUT'])]
     public function updateCoDeputyWithVerificationData(Request $request, $userId): User
     {
         $user = $this->em->getRepository('App\Entity\User')->findOneBy(['id' => $userId]);

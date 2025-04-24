@@ -13,10 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 // TODO
 // http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
-
-/**
- * @Route("/deputy")
- */
+#[Route(path: '/deputy')]
 class DeputyController extends RestController
 {
     public function __construct(
@@ -27,11 +24,8 @@ class DeputyController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/add", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/add', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
     public function add(Request $request)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -74,16 +68,14 @@ class DeputyController extends RestController
     }
 
     /**
-     * @Route("/{id}", name="deputy_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")
-     *
      * @return object|null
      */
+    #[Route(path: '/{id}', name: 'deputy_find_by_id', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
     public function findByIdAction(Request $request, int $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['deputy'];
+            ? $request->query->all('groups') : ['deputy'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $deputy = $this->findEntityBy(Deputy::class, $id);

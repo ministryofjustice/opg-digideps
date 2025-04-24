@@ -2,26 +2,21 @@
 
 namespace App\Service;
 
-use App\Entity\Report\Report;
 use App\Entity\ReportInterface;
+use Mockery\MockInterface;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 
 class ReportSectionLinksServiceTest extends TestCase
 {
-    /**
-     * @var ReportSectionsLinkService
-     */
-    protected $sut;
+    protected ReportSectionsLinkService $sut;
+    private ReportInterface|MockInterface $report;
 
-    /**
-     * Set up the mockservies.
-     */
     public function setUp(): void
     {
-        $this->router = m::mock(RouterInterface::class);
-        $this->router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
+        $router = m::mock(RouterInterface::class);
+        $router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
             return $a.http_build_query($b);
         });
         $this->report = m::mock(ReportInterface::class);
@@ -47,9 +42,7 @@ class ReportSectionLinksServiceTest extends TestCase
             ->shouldReceive('hasSection')->with('debts')->andReturn(true)
             ->shouldReceive('hasSection')->with('documents')->andReturn(true);
 
-        //$this->report->shouldReceive('getType')->andReturn('irrelevant');
-
-        $this->sut = new ReportSectionsLinkService($this->router);
+        $this->sut = new ReportSectionsLinkService($router);
     }
 
     public function testgetSectionParamsLay()

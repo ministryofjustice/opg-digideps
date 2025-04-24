@@ -1349,7 +1349,7 @@ class FixtureHelper
         return $user;
     }
 
-    private function setPassword($user, $legacyPasswordHash = false)
+    public function setPassword($user, $legacyPasswordHash = false)
     {
         if ($legacyPasswordHash) {
             $user->setPassword($this->fixtureParams['legacy_password_hash']);

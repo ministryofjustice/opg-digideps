@@ -1036,16 +1036,6 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
-			count: 2
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Contact\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
@@ -1316,11 +1306,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\Report\\\\Document\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
@@ -1562,11 +1547,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyReceivedOnClientsBehalfController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyReceivedOnClientsBehalfController.php
-
-		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyReceivedOnClientsBehalfController.php
 
@@ -2137,11 +2117,6 @@ parameters:
 
 		-
 			message: "#^Offset 'unsubmitted…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException is not subtype of Throwable$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -2936,11 +2911,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, array\\<int, string\\>\\|bool\\|float\\|int\\|string\\|null given\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#1 \\$hashedPassword of method Symfony\\\\Component\\\\PasswordHasher\\\\PasswordHasherInterface\\:\\:verify\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -2977,16 +2947,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$formData of method App\\\\Factory\\\\UserResearchResponseFactory\\:\\:generateFromFormData\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Parameter \\#1 \\$groups of method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
 			count: 1
 			path: src/Controller/UserResearchController.php
 
@@ -3731,17 +3691,7 @@ parameters:
 			path: src/Entity/CourtOrder.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$courtOrderDeputyRelationships is never read, only written\\.$#"
-			count: 1
-			path: src/Entity/CourtOrder.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$courtOrderDeputyRelationships with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/CourtOrder.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\CourtOrder\\:\\:\\$reports has no type specified\\.$#"
 			count: 1
 			path: src/Entity/CourtOrder.php
 
@@ -8516,11 +8466,6 @@ parameters:
 			path: src/Security/LoginRequestAuthenticator.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
-			count: 2
-			path: src/Security/LoginRequestAuthenticator.php
-
-		-
 			message: "#^Parameter \\#1 \\$password of class Symfony\\\\Component\\\\Security\\\\Http\\\\Authenticator\\\\Passport\\\\Credentials\\\\PasswordCredentials constructor expects string, mixed given\\.$#"
 			count: 1
 			path: src/Security/LoginRequestAuthenticator.php
@@ -8563,11 +8508,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Security\\\\RegistrationTokenAuthenticator\\:\\:setBruteForceKey\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Security/RegistrationTokenAuthenticator.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
-			count: 3
 			path: src/Security/RegistrationTokenAuthenticator.php
 
 		-
@@ -10341,11 +10281,6 @@ parameters:
 			path: src/v2/Controller/OrganisationController.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
-			count: 2
-			path: src/v2/Controller/OrganisationController.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/v2/Controller/OrganisationController.php
@@ -10683,11 +10618,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$fromRequest of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createNdr\\(\\) expects array, mixed given\\.$#"
 			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
-			count: 7
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -11447,11 +11377,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'secondClientId' on mixed\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, resource\\|string given\\.$#"
 			count: 1
 			path: src/v2/Tools/Controller/ToolsController.php
 

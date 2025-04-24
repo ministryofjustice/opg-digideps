@@ -8,24 +8,6 @@ import boto3
 import psycopg2
 from botocore.exceptions import ClientError
 
-environment = os.getenv("ENVIRONMENT")
-secret_prefix = (
-    environment
-    if environment
-    in [
-        "local",
-        "development",
-        "integration",
-        "training",
-        "preproduction",
-        "production",
-        "production02",
-    ]
-    else "default"
-)
-db_secret_name = f"{secret_prefix}/custom-sql-db-password"
-users_sql_users = f"{secret_prefix}/custom-sql-users"
-
 
 def get_secret(secret_name, region_name="eu-west-1"):
     if os.getenv("ENVIRONMENT") == "local":
@@ -235,14 +217,14 @@ def run_get_custom_query(event, conn):
         return {"message": "Stored procedure failed to execute", "result": e}
 
 
-def connect_to_db(db_password):
+def connect_to_db(db_password, db_endpoint):
     try:
         conn = psycopg2.connect(
-            host=os.getenv("DATABASE_HOSTNAME", "postgres"),
-            database=os.getenv("DATABASE_NAME", "api"),
-            user=os.getenv("DATABASE_USERNAME", "custom_sql_user"),
+            host=db_endpoint,
+            port=5432,
+            database="api",
+            user="custom_sql_user",
             password=db_password,
-            port=os.getenv("DATABASE_PORT", "5432"),
         )
         db_password = ""
         return conn
@@ -250,9 +232,35 @@ def connect_to_db(db_password):
         raise Exception(f"Error connecting to the database: {str(e)}")
 
 
+def get_secret_names(workspace):
+    secret_prefix = (
+        workspace
+        if workspace
+        in [
+            "local",
+            "development",
+            "integration",
+            "training",
+            "preproduction",
+            "production",
+            "production02",
+        ]
+        else "default"
+    )
+    if workspace == "production":
+        secret_prefix = "production02"
+    db_secret_name = f"{secret_prefix}/custom-sql-db-password"
+    users_sql_users = f"{secret_prefix}/custom-sql-users"
+
+    return db_secret_name, users_sql_users
+
+
 def lambda_handler(event, context):
     calling_user = event["calling_user"]
     user_token = event["user_token"]
+    workspace = event["workspace"]
+    db_endpoint = event["db_endpoint"]
+    db_secret_name, users_sql_users = get_secret_names(workspace)
     authenticated, msg = authenticate_or_store_token(
         users_sql_users, calling_user, user_token
     )
@@ -262,7 +270,7 @@ def lambda_handler(event, context):
     procedure_to_call = event["procedure"]
     print(procedure_to_call)
     db_password = get_secret(db_secret_name)
-    conn = connect_to_db(db_password)
+    conn = connect_to_db(db_password, db_endpoint)
     db_password = ""
 
     if procedure_to_call == "insert_custom_query":

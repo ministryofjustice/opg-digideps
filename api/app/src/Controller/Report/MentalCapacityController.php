@@ -19,11 +19,8 @@ class MentalCapacityController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/mental-capacity", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/mental-capacity', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateAction(Request $request, $reportId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -46,19 +43,17 @@ class MentalCapacityController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/mental-capacity", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     *
      * @param int $id
      */
+    #[Route(path: '/report/{reportId}/mental-capacity', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $mc = $this->findEntityBy(EntityDir\Report\MentalCapacity::class, $id, 'MentalCapacity with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['mental-capacity'];
+            ? $request->query->all('groups') : ['mental-capacity'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $mc;
