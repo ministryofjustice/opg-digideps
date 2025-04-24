@@ -33,7 +33,7 @@ class DeputyshipsCandidatesSelector
         $this->em->flush();
         $this->em->commit();
 
-        // read the content of the CSV from the db table
+        // read the content of the incoming deputyships CSV from the db table
         $csvDeputyships = $this->stagingDeputyshipRepository->findAll();
 
         /** @var CourtOrder[] $knownCourtOrders */
@@ -48,7 +48,7 @@ class DeputyshipsCandidatesSelector
 
         $deputyUidToId = $this->deputyRepository->getUidToIdMapping();
 
-        $clientCasenumberToId = $this->clientRepository->getCasenumberToIdMapping();
+        $clientCasenumberToId = $this->clientRepository->getActiveCasenumberToIdMapping();
 
         $candidates = [];
 
@@ -65,7 +65,7 @@ class DeputyshipsCandidatesSelector
 
                 // if client exists, add court order (no client => no court order)
                 if (!is_null($existingClientId)) {
-                    // CLIENT EXISTS
+                    // ACTIVE CLIENT EXISTS
                     $candidates[] = $this->candidateFactory->createInsertOrderCandidate(
                         $csvDeputyship,
                         $existingClientId
@@ -98,8 +98,8 @@ class DeputyshipsCandidatesSelector
                 if (!is_null($existingDeputyId)) {
                     // DEPUTY EXISTS
                     $existingRelationship = $this->courtOrderDeputyRepository->getDeputyOnCourtOrder(
-                        courtOrderId: $existingCourtOrderId,
-                        deputyId: $existingDeputyId
+                        $existingCourtOrderId,
+                        $existingDeputyId
                     );
 
                     if (is_null($existingRelationship)) {

@@ -213,13 +213,13 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get mapping from client case numbers to client IDs.
+     * Get mapping from client case numbers to client IDs, but only including active (not archived or deleted) clients.
      *
      * @return array<string, int>
      */
-    public function getCasenumberToIdMapping(): array
+    public function getActiveCasenumberToIdMapping(): array
     {
-        $clients = $this->findAll();
+        $clients = $this->findBy(['archivedAt' => null, 'deletedAt' => null]);
 
         $mapping = [];
 
