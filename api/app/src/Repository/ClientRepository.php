@@ -211,4 +211,23 @@ class ClientRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Get mapping from client case numbers to client IDs.
+     *
+     * @return array<string, int>
+     */
+    public function getCasenumberToIdMapping(): array
+    {
+        $clients = $this->findAll();
+
+        $mapping = [];
+
+        /** @var Client $client */
+        foreach ($clients as $client) {
+            $mapping[$client->getCaseNumber()] = $client->getId();
+        }
+
+        return $mapping;
+    }
 }

@@ -98,6 +98,8 @@ class StagingDeputyship
     public ?string $deputyType;
 
     /**
+     * This is true if the deputy is ACTIVE on the order, false otherwise.
+     *
      * @ORM\Column(name="deputy_status_on_order", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'DeputyStatusOnOrder')]
