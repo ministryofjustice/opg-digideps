@@ -4,9 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,7 +24,6 @@ class GiftController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private ReportApi $reportApi,
-        private ClientApi $clientApi
     ) {
     }
 
@@ -39,10 +36,6 @@ class GiftController extends AbstractController
      */
     public function startAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getGiftsState()['state']) {
@@ -51,7 +44,6 @@ class GiftController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -212,10 +204,6 @@ class GiftController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getGiftsState()['state']) {
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
@@ -223,7 +211,6 @@ class GiftController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

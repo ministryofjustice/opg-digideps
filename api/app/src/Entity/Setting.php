@@ -15,36 +15,30 @@ class Setting
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"setting"})
-     *
      * @ORM\Column(name="id", type="string", length=64, nullable=false)
      *
      * @ORM\Id
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['setting'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"setting"})
-     *
      * @ORM\Column(name="content", type="text", nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['setting'])]
     private $content;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"setting"})
-     *
      * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['setting'])]
     private $enabled;
 
     /**

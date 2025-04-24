@@ -10,11 +10,9 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -24,9 +22,7 @@ class ClientApiTest extends TestCase
 {
     private RestClient $restClient;
     private RouterInterface $router;
-    private LoggerInterface $logger;
     private UserApi $userApi;
-    private DateTimeProvider $dateTimeProvider;
     private TokenStorageInterface $tokenStorage;
     private ObservableEventDispatcher $eventDispatcher;
 
@@ -36,18 +32,14 @@ class ClientApiTest extends TestCase
     {
         $this->restClient = $this->createMock(RestClient::class);
         $this->router = $this->createMock(RouterInterface::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->userApi = $this->createMock(UserApi::class);
-        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
         $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
         $this->eventDispatcher = $this->createMock(ObservableEventDispatcher::class);
 
         $this->sut = new ClientApi(
             $this->restClient,
             $this->router,
-            $this->logger,
             $this->userApi,
-            $this->dateTimeProvider,
             $this->tokenStorage,
             $this->eventDispatcher
         );

@@ -24,10 +24,6 @@ class CourtOrder
     use CreateUpdateTimestamps;
 
     /**
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Id
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -36,62 +32,50 @@ class CourtOrder
      *
      * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private int $id;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private string $courtOrderUid;
 
     /**
      * e.g. "pfa" or "hw".
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="order_type", type="string", length=10, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private string $orderType;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="status", type="string", length=10, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private string $status;
 
     /**
-     * @JMS\Type("datetime")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="order_made_date", type="datetime", nullable=false)
      */
+    #[JMS\Type('datetime')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private \DateTime $orderMadeDate;
 
     /**
-     * @JMS\Type("App\Entity\Client")
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
+    #[JMS\Type(Client::class)]
+    #[JMS\Groups(['court-order-full'])]
     private Client $client;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
      * @ORM\JoinTable(name="court_order_report",
@@ -101,13 +85,14 @@ class CourtOrder
      *
      * @var Collection<int, Report>
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
+    #[JMS\Groups(['court-order-full'])]
     private Collection $reports;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\CourtOrderDeputy>")
-     *
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
 
     public function __construct()
@@ -119,12 +104,10 @@ class CourtOrder
     /**
      * active means "not discharged".
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
      * @return Deputy[]
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['court-order-full'])]
     public function getActiveDeputies(): array
     {
         $activeDeputies = [];
