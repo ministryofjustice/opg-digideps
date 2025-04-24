@@ -14,20 +14,29 @@ final class Version295 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Update court order table active column data type';
     }
 
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE court_order ADD order_made_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
-        $this->addSql('ALTER TABLE court_order RENAME COLUMN type TO order_type');
+        $this->addSql('ALTER TABLE court_order RENAME COLUMN active TO status');
+        $this->addSql('ALTER TABLE court_order ALTER status TYPE VARCHAR(10)');
+        $this->addSql('ALTER TABLE court_order ALTER status DROP DEFAULT');
+        $this->addSql('CREATE INDEX deputy_uid_idx ON staging.deputyship (deputy_uid)');
+        $this->addSql('CREATE INDEX order_uid_idx ON staging.deputyship (order_uid)');
+        $this->addSql('ALTER TABLE court_order_deputy RENAME COLUMN discharged TO is_active');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE court_order DROP order_made_date');
-        $this->addSql('ALTER TABLE court_order RENAME COLUMN order_type TO type');
+        $this->addSql('DROP INDEX deputy_uid_idx');
+        $this->addSql('DROP INDEX order_uid_idx');
+        $this->addSql('ALTER TABLE court_order ALTER status TYPE BOOLEAN');
+        $this->addSql('ALTER TABLE court_order ALTER status SET DEFAULT true');
+        $this->addSql('ALTER TABLE court_order ALTER status TYPE BOOLEAN');
+        $this->addSql('ALTER TABLE court_order_deputy RENAME COLUMN is_active TO discharged');
+        $this->addSql('ALTER TABLE court_order RENAME COLUMN status TO active');
     }
 }
