@@ -74,10 +74,9 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
      */
+    #[Assert\NotBlank]
     private string $caseNumber;
 
     /**
@@ -90,10 +89,9 @@ class PreRegistration
     /**
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
+    #[Assert\NotBlank]
     private string $clientLastname;
 
     /**
@@ -135,36 +133,31 @@ class PreRegistration
      * @JMS\Type("string")
      *
      * @ORM\Column(name="client_postcode", type="string", length=10, nullable=true)
-     *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
      */
+    #[Assert\Length(min: 2, max: 10, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     private ?string $clientPostcode;
 
     /**
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=100, nullable=false)
      */
+    #[Assert\NotBlank]
     private string $deputyUid;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="deputy_firstname", type="string", length=100, nullable=true)
-     *
      * @JMS\Type("string")
      */
+    #[Assert\NotBlank]
     private string $deputyFirstname;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
      *
      * @JMS\Type("string")
      */
+    #[Assert\NotBlank]
     private string $deputySurname;
 
     /**
@@ -206,9 +199,8 @@ class PreRegistration
      * @JMS\Type("string")
      *
      * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
-     *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
      */
+    #[Assert\Length(min: 2, max: 10, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     private ?string $deputyPostCode;
 
     /**
