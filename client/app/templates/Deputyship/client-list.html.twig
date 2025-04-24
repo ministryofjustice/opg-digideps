@@ -1,8 +1,16 @@
 {% extends '@App/Layouts/application.html.twig'%}
 
+{% import '@App/Macros/macros.html.twig' as macros %}
+
 {% trans_default_domain 'deputyship' %}
 {% block htmlTitle %}{{ 'clients.title' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'clients.title' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('homepage'), text: 'Your reports' }
+    ]) }}
+{% endblock %}
 
 {% block pageContent %}
     {% if clients|length == 0 %}
@@ -16,7 +24,7 @@
                     </h2>
                     <ul class="govuk-summary-card__actions">
                         <li class="govuk-summary-card__action">
-                            <a class="govuk-link" href="{{ path('lay_home', {'clientId' : client.id}) }}">
+                            <a class="govuk-link" href="{{ path('client_show', {'clientId': client.id}) }}">
                                 {{ 'clients.manageLinkText' | trans }}
                             </a>
                         </li>
