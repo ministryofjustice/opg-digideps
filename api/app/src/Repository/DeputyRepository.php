@@ -17,4 +17,22 @@ class DeputyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Deputy::class);
     }
+
+    /**
+     * Return a mapping from deputy UID to deputy ID.
+     *
+     * @return array<string, int>
+     */
+    public function getUidToIdMapping(): array
+    {
+        $deputies = $this->findAll();
+
+        $mapping = [];
+
+        foreach ($deputies as $deputy) {
+            $mapping[$deputy->getDeputyUid()] = $deputy->getId();
+        }
+
+        return $mapping;
+    }
 }

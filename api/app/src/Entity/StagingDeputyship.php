@@ -17,7 +17,7 @@ use League\Csv\Serializer;
  *
  * @ORM\Table(name="deputyship", schema="staging")
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\StagingDeputyshipRepository")
  */
 class StagingDeputyship
 {

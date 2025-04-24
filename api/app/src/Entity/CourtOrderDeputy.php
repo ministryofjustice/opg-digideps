@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order_deputy")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderDeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
