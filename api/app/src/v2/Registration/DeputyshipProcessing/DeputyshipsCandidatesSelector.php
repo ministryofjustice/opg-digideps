@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\CourtOrder;
+use App\Entity\Deputy;
 use App\Entity\StagingDeputyship;
 use App\Factory\StagingSelectedCandidateFactory;
 use App\Repository\ClientRepository;
@@ -28,6 +29,8 @@ class DeputyshipsCandidatesSelector
     }
 
     /**
+     * TODO deal with these exceptions instead of throwing them.
+     *
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
@@ -35,11 +38,11 @@ class DeputyshipsCandidatesSelector
     {
         // delete records from candidate table ready for new candidates
         $this->em->beginTransaction();
-        $this->em->createQuery('DELETE FROM App\Entity\StagingSelectedCandidates sc')->execute();
+        $this->em->createQuery('DELETE FROM App\Entity\StagingSelectedCandidate sc')->execute();
         $this->em->flush();
         $this->em->commit();
 
-        $selectionCandidates = [];
+        $selectedCandidates = [];
 
         $csvDeputyships = $this->stagingDeputyshipRepository->findAll();
 
@@ -53,17 +56,17 @@ class DeputyshipsCandidatesSelector
         $lookupKnownCourtOrdersStatus = array_column($knownCourtOrders, 'status', 'courtOrderUid');
         $lookupKnownCourtOrdersId = array_column($knownCourtOrders, 'id', 'courtOrderUid');
 
-        // Not implemented - check against dd user table for being active
-        $knownDeputies = $this->deputyRepository->findAll();
-        $lookupKnownDeputyIds = array_column($knownDeputies, 'id', 'deputyUid');
+        // TODO not implemented - check against dd_user table whether user is active - is this necessary?
+        $lookupKnownDeputyIds = $this->deputyRepository->getUidToIdMapping();
 
+        // TODO what should happen if we match court order but there's no deputy, client, or report?
         /** @var StagingDeputyship $csvDeputyship */
         foreach ($csvDeputyships as $csvDeputyship) {
             $courtOrderFound = array_key_exists($csvDeputyship->orderUid, $lookupKnownCourtOrdersStatus);
             $courtOrderId = $lookupKnownCourtOrdersId[$csvDeputyship->orderUid] ?? 0;
 
             if ($courtOrderFound && $csvDeputyship->orderStatus !== $lookupKnownCourtOrdersStatus[$csvDeputyship->orderUid]) {
-                $selectionCandidates[] = $this->selectedCandidateFactory->createUpdateOrderStatusCandidate(
+                $selectedCandidates[] = $this->selectedCandidateFactory->createUpdateOrderStatusCandidate(
                     $csvDeputyship,
                     $courtOrderId
                 );
@@ -75,23 +78,23 @@ class DeputyshipsCandidatesSelector
             }
 
             $deputyId = $lookupKnownDeputyIds[$csvDeputyship->deputyUid];
-            $csvDeputyOnCourtOrderStatus = 'ACTIVE' == $csvDeputyship->deputyStatusOnOrder;
+            $isDeputyActiveOnCsvOrder = ('ACTIVE' == $csvDeputyship->deputyStatusOnOrder);
 
-            if ($courtOrderFound && 'ACTIVE' == $csvDeputyship->orderStatus) {
+            if ($courtOrderFound && ('ACTIVE' == $csvDeputyship->orderStatus)) {
                 $deputyOnCourtOrder = $this->courtOrderDeputyRepository->getDeputyOnCourtOrder($courtOrderId, $deputyId);
 
                 if (is_null($deputyOnCourtOrder)) {
-                    $selectionCandidates[] = $this->selectedCandidateFactory->createInsertOrderDeputyCandidate(
+                    $selectedCandidates[] = $this->selectedCandidateFactory->createInsertOrderDeputyCandidate(
                         $csvDeputyship,
                         $deputyId,
-                        $csvDeputyOnCourtOrderStatus
+                        $isDeputyActiveOnCsvOrder
                     );
-                } elseif ($deputyOnCourtOrder->isActive() !== $csvDeputyOnCourtOrderStatus) {
-                    $selectionCandidates[] = $this->selectedCandidateFactory->createUpdateDeputyStatusCandidate(
+                } elseif ($deputyOnCourtOrder->isActive() !== $isDeputyActiveOnCsvOrder) {
+                    $selectedCandidates[] = $this->selectedCandidateFactory->createUpdateDeputyStatusCandidate(
                         $csvDeputyship,
                         $deputyId,
                         $courtOrderId,
-                        $csvDeputyOnCourtOrderStatus
+                        $isDeputyActiveOnCsvOrder
                     );
                 }
             }
@@ -103,28 +106,28 @@ class DeputyshipsCandidatesSelector
             $client = $this->clientRepository->findByCaseNumber($csvDeputyship->caseNumber);
 
             if (!$courtOrderFound && ('ACTIVE' == $csvDeputyship->orderStatus) && !is_null($client)) {
-                $selectionCandidates[] = $this->selectedCandidateFactory->createInsertOrderCandidate(
+                $selectedCandidates[] = $this->selectedCandidateFactory->createInsertOrderCandidate(
                     $csvDeputyship,
                     $client->getId()
                 );
 
-                $selectionCandidates[] = $this->selectedCandidateFactory->createInsertOrderDeputyCandidate(
+                $selectedCandidates[] = $this->selectedCandidateFactory->createInsertOrderDeputyCandidate(
                     $csvDeputyship,
                     $deputyId,
-                    $csvDeputyOnCourtOrderStatus
+                    $isDeputyActiveOnCsvOrder
                 );
             } else {
-                // / TODO inactive order
+                // TODO inactive order - do we still update it?
                 error_log('INACTIVE ORDER');
             }
         }
 
-        foreach ($selectionCandidates as $candidate) {
+        foreach ($selectedCandidates as $candidate) {
             $this->em->persist($candidate);
         }
 
         $this->em->flush();
 
-        return $selectionCandidates;
+        return $selectedCandidates;
     }
 }
