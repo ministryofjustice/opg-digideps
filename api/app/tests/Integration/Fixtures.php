@@ -648,12 +648,13 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(int $uid, string $type, bool $active): CourtOrder
+    public function createCourtOrder(int $uid, string $type, string $status, \DateTime $madeDate = new \DateTime()): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
-        $courtOrder->setType($type);
-        $courtOrder->setActive($active);
+        $courtOrder->setOrderType($type);
+        $courtOrder->setStatus($status);
+        $courtOrder->setOrderMadeDate($madeDate);
 
         return $courtOrder;
     }
