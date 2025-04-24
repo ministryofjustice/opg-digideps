@@ -131,7 +131,7 @@ class CourtOrder
 
         /** @var CourtOrderDeputy $rel */
         foreach ($this->courtOrderDeputyRelationships as $rel) {
-            if (!$rel->isActive()) {
+            if ($rel->isActive()) {
                 $activeDeputies[] = $rel->getDeputy();
             }
         }
