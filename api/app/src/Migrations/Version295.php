@@ -24,10 +24,6 @@ final class Version295 extends AbstractMigration
         SQL);
 
         $this->addSql('ALTER TABLE staging.deputyship DROP CONSTRAINT deputyship_pkey');
-
-        $this->addSql('GRANT USAGE ON SCHEMA staging TO readonly_sql_user');
-
-        $this->addSql('GRANT SELECT ON TABLE staging.deputyship TO readonly_sql_user');
     }
 
     public function down(Schema $schema): void
@@ -41,9 +37,5 @@ final class Version295 extends AbstractMigration
         SQL);
 
         $this->addSql('ALTER TABLE staging.deputyship ADD PRIMARY KEY (deputy_uid, order_uid)');
-
-        $this->addSql('REVOKE SELECT ON TABLE staging.deputyship FROM readonly_sql_user');
-
-        $this->addSql('REVOKE USAGE ON SCHEMA staging FROM readonly_sql_user');
     }
 }
