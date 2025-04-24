@@ -5,6 +5,7 @@ namespace App\Entity\Traits;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * CreationAudit Trait, usable with PHP >= 5.4.
@@ -16,14 +17,14 @@ trait CreationAudit
      *
      * @var \App\Entity\User
      *
-     * @JMS\Type("App\Entity\User")
      *
-     * @JMS\Groups({"notes", "documents", "report-submission", "checklist-information"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['notes', 'documents', 'report-submission', 'checklist-information'])]
     protected $createdBy;
 
     /**
@@ -31,14 +32,14 @@ trait CreationAudit
      *
      * @var \DateTime
      *
-     * @JMS\Type("DateTime")
      *
-     * @JMS\Groups({"notes", "documents", "checklist-information"})
      *
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['notes', 'documents', 'checklist-information'])]
     protected $createdOn;
 
     /**

@@ -10,56 +10,56 @@ trait ActionTrait
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-give-gifts"})
      *
      * @ORM\Column(name="action_give_gifts_to_client", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-give-gifts'])]
     private $actionGiveGiftsToClient;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-give-gifts"})
      *
      * @ORM\Column(name="action_give_gifts_to_client_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-give-gifts'])]
     private $actionGiveGiftsToClientDetails;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-property"})
      *
      * @ORM\Column(name="action_property_maintenance", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-property'])]
     private $actionPropertyMaintenance;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-property"})
      *
      * @ORM\Column(name="action_property_selling_rent", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-property'])]
     private $actionPropertySellingRent;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-property"})
      *
      * @ORM\Column(name="action_property_buy", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-property'])]
     private $actionPropertyBuy;
 
     /**

@@ -7,6 +7,7 @@ use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\MoneyTransactionShortIn;
 use App\Entity\Report\MoneyTransactionShortOut;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 trait MoneyShortTrait
 {
@@ -31,23 +32,23 @@ trait MoneyShortTrait
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"moneyShortCategoriesIn"})
      *
      * @ORM\Column(name="money_transactions_short_in_exist", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyShortCategoriesIn'])]
     private $moneyTransactionsShortInExist;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"moneyShortCategoriesOut"})
      *
      * @ORM\Column(name="money_transactions_short_out_exist", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyShortCategoriesOut'])]
     private $moneyTransactionsShortOutExist;
 
     /**
@@ -58,13 +59,10 @@ trait MoneyShortTrait
         return $this->moneyShortCategories;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_short_categories_in")
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn"})
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_short_categories_in')]
+    #[JMS\Groups(['moneyShortCategoriesIn'])]
     public function getMoneyShortCategoriesIn()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
@@ -82,13 +80,10 @@ trait MoneyShortTrait
         });
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_short_categories_out")
-     *
-     * @JMS\Groups({"moneyShortCategoriesOut"})
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_short_categories_out')]
+    #[JMS\Groups(['moneyShortCategoriesOut'])]
     public function getMoneyShortCategoriesOut()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
@@ -143,14 +138,14 @@ trait MoneyShortTrait
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("money_transactions_short_in")
      *
-     * @JMS\Groups({"moneyTransactionsShortIn"})
      *
      * @return MoneyTransactionShort[]
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_short_in')]
+    #[JMS\Groups(['moneyTransactionsShortIn'])]
     public function getMoneyTransactionsShortIn()
     {
         return $this->moneyTransactionsShort->filter(function ($t) {
@@ -159,14 +154,14 @@ trait MoneyShortTrait
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("money_transactions_short_out")
      *
-     * @JMS\Groups({"moneyTransactionsShortOut"})
      *
      * @return MoneyTransactionShort[]
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_short_out')]
+    #[JMS\Groups(['moneyTransactionsShortOut'])]
     public function getMoneyTransactionsShortOut()
     {
         return $this->moneyTransactionsShort->filter(function ($t) {

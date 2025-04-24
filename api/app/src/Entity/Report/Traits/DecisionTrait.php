@@ -12,23 +12,23 @@ trait DecisionTrait
     /**
      * @var Decision[]
      *
-     * @JMS\Groups({"decision"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Decision>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Decision>')]
     private $decisions;
 
     /**
      * @var string deputy reason for not having decision. Required if no decisions are added
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"report","decision"})
      *
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'decision'])]
     private $reasonForNoDecisions;
 
     /**

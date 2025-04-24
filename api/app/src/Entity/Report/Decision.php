@@ -30,43 +30,43 @@ class Decision
      *
      * @ORM\SequenceGenerator(sequenceName="decision_id_seq", allocationSize=1, initialValue=1)
      *
-     * @JMS\Groups({"decision"})
      *
-     * @JMS\Type("integer")
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"decision"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(type="text")
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('string')]
     private $description;
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"decision"})
      *
-     * @JMS\Type("boolean")
      *
      * @ORM\Column(name="client_involved_boolean", type="boolean")
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('boolean')]
     private $clientInvolvedBoolean;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"decision"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="client_involved_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('string')]
     private $clientInvolvedDetails;
 
     /**

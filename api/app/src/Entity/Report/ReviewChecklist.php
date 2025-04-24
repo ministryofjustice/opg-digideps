@@ -22,9 +22,7 @@ class ReviewChecklist
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"checklist"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -34,59 +32,61 @@ class ReviewChecklist
      *
      * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['checklist'])]
     private $id;
 
     /**
-     * @JMS\Type("App\Entity\Report\Report")
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="checklist")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *
-     * @JMS\Groups({"checklist"})
      */
+    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Groups(['checklist'])]
     private $report;
 
     /**
      * @var array
      *
-     * @JMS\Groups({"checklist"})
      *
      * @ORM\Column(name="answers", type="json", nullable=true)
      */
+    #[JMS\Groups(['checklist'])]
     private $answers;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"checklist"})
      *
      * @ORM\Column(name="decision", type="string", length=30, nullable=true)
      */
+    #[JMS\Groups(['checklist'])]
     private $decision;
 
     /**
      * @var \App\Entity\User
      *
-     * @JMS\Type("App\Entity\User")
      *
-     * @JMS\Groups({"checklist"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['checklist'])]
     protected $submittedBy;
 
     /**
      * @var DateTime
      *
-     * @JMS\Type("DateTime")
      *
-     * @JMS\Groups({"checklist"})
      *
      * @ORM\Column(type="datetime", name="submitted_on", nullable=true)
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['checklist'])]
     protected $submittedOn;
 
     public function __construct(ReportInterface $report)

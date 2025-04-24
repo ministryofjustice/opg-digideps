@@ -11,12 +11,12 @@ trait BalanceTrait
     /**
      * @var string reason required if balance calculation mismatches
      *
-     * @JMS\Groups({"balance"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
      */
+    #[JMS\Groups(['balance'])]
+    #[JMS\Type('string')]
     private $balanceMismatchExplanation;
 
     /**
@@ -35,15 +35,11 @@ trait BalanceTrait
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"balance", "account"})
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("accounts_opening_balance_total")
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['balance', 'account'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('accounts_opening_balance_total')]
     public function getAccountsOpeningBalanceTotal()
     {
         $ret = 0;
@@ -60,16 +56,16 @@ trait BalanceTrait
     /**
      * Return sum of closing balances (if all of them have a value, otherwise returns null).
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Groups({"balance", "account"})
      *
-     * @JMS\Type("double")
      *
-     * @JMS\SerializedName("accounts_closing_balance_total")
      *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['balance', 'account'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('accounts_closing_balance_total')]
     public function getAccountsClosingBalanceTotal()
     {
         $ret = 0;
@@ -94,14 +90,14 @@ trait BalanceTrait
      * Return null if any of the opening balance is null
      * (that shouldn't be allowed anymore after a recent change. Refactor when/if convenient)
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Groups({"balance"})
      *
-     * @JMS\Type("double")
      *
-     * @JMS\SerializedName("calculated_balance")
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['balance'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('calculated_balance')]
     public function getCalculatedBalance()
     {
         if (null === $this->getAccountsOpeningBalanceTotal()) {
@@ -124,14 +120,14 @@ trait BalanceTrait
      *
      * Return null if sections are not ready or closing accounts are not added yet
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Groups({"balance"})
      *
-     * @JMS\Type("double")
      *
-     * @JMS\SerializedName("totals_offset")
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['balance'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('totals_offset')]
     public function getTotalsOffset()
     {
         if (null === $this->getCalculatedBalance() || null === $this->getAccountsClosingBalanceTotal()) {
@@ -141,15 +137,11 @@ trait BalanceTrait
         return $this->getCalculatedBalance() - $this->getAccountsClosingBalanceTotal();
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"balance"})
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\SerializedName("totals_match")
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['balance'])]
+    #[JMS\Type('boolean')]
+    #[JMS\SerializedName('totals_match')]
     public function getTotalsMatch()
     {
         return null !== $this->getTotalsOffset() && abs($this->getTotalsOffset()) < 0.2;

@@ -22,9 +22,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static $types = [
         'current' => 'Current account',
         'savings' => 'Savings account',
@@ -37,9 +36,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
@@ -48,9 +46,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private static $typesNotRequiringBankName = [
         'postoffice',
         'cfo',
@@ -59,85 +56,84 @@ class BankAccount implements BankAccountInterface
     /**
      * @var int
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="account_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['account'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
+    #[JMS\Groups(['account'])]
     private $bank;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
+    #[JMS\Groups(['account'])]
     private $accountType;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
+    #[JMS\Groups(['account'])]
     private $sortCode;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
+    #[JMS\Groups(['account'])]
     private $accountNumber;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"account"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\Type('string')]
     private $openingBalance;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
     private $closingBalance;
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"account"})
      *
-     * @JMS\Type("boolean")
      *
      * @ORM\Column(name="is_closed", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\Type('boolean')]
     private $isClosed;
 
     /**
@@ -152,23 +148,23 @@ class BankAccount implements BankAccountInterface
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
     private $isJointAccount;
 
     /**
      * @deprecated hold information about previous data migration
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"account"})
      *
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
     private $meta;
 
     /**
@@ -233,14 +229,14 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("account_type_text")
      *
-     * @JMS\Groups({"account"})
      *
      * @return string
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('account_type_text')]
+    #[JMS\Groups(['account'])]
     public function getAccountTypeText()
     {
         $type = $this->getAccountType();
@@ -454,14 +450,14 @@ class BankAccount implements BankAccountInterface
      * barclays - Current account (****1234)
      * Natwest - ISA (****4444).
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("name_one_line")
      *
-     * @JMS\Groups({"account"})
      *
      * @return string
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('name_one_line')]
+    #[JMS\Groups(['account'])]
     public function getNameOneLine()
     {
         return (!empty($this->getBank()) ? $this->getBank().' - ' : '')

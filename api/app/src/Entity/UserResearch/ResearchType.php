@@ -35,18 +35,16 @@ class ResearchType
     }
 
     /**
-     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist"})
      */
+    #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private UserResearchResponse $userResearchResponse;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\Id
      *
@@ -56,42 +54,44 @@ class ResearchType
      *
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private UuidInterface $id;
 
     /**
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\Column(name="surveys", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?bool $surveys = null;
 
     /**
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\Column(name="video_call", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?bool $videoCall = null;
 
     /**
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\Column(name="phone", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?bool $phone = null;
 
     /**
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\Column(name="in_person", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?bool $inPerson = null;
 
     public function getUserResearchResponse(): UserResearchResponse

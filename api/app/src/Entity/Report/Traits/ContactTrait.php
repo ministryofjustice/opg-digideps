@@ -10,23 +10,23 @@ use JMS\Serializer\Annotation as JMS;
 trait ContactTrait
 {
     /**
-     * @JMS\Groups({"contact"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Contact>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[JMS\Groups(['contact'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Contact>')]
     private $contacts;
 
     /**
      * @var string deputy reason for not having contacts. Required if no contacts are added
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"report"})
      *
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report'])]
     private $reasonForNoContacts;
 
     /**

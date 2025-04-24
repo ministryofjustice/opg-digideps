@@ -4,29 +4,29 @@ namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\MoneyTransactionInterface;
+use JMS\Serializer\Annotation as JMS;
 
 trait MoneyTransactionTrait
 {
     /**
      * @var MoneyTransaction[]
      *
-     * @JMS\Groups({"transaction"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['transaction'])]
     private $moneyTransactions;
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("money_transactions_in")
      *
-     * @JMS\Groups({"transactionsIn"})
      *
      * @return MoneyTransaction[]
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_in')]
+    #[JMS\Groups(['transactionsIn'])]
     public function getMoneyTransactionsIn()
     {
         return $this->moneyTransactions->filter(function ($t) {
@@ -35,14 +35,14 @@ trait MoneyTransactionTrait
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("money_transactions_out")
      *
-     * @JMS\Groups({"transactionsOut"})
      *
      * @return MoneyTransaction[]
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_out')]
+    #[JMS\Groups(['transactionsOut'])]
     public function getMoneyTransactionsOut()
     {
         return $this->moneyTransactions->filter(function ($t) {
@@ -73,29 +73,21 @@ trait MoneyTransactionTrait
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"transactionsIn"})
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("money_in_total")
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['transactionsIn'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('money_in_total')]
     public function getMoneyInTotal()
     {
         return $this->getMoneyTransactionsTotal('in');
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"transactionsOut"})
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("money_out_total")
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['transactionsOut'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('money_out_total')]
     public function getMoneyOutTotal()
     {
         return $this->getMoneyTransactionsTotal('out');

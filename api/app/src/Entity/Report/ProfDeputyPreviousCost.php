@@ -18,9 +18,7 @@ class ProfDeputyPreviousCost
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -30,6 +28,8 @@ class ProfDeputyPreviousCost
      *
      * @ORM\SequenceGenerator(sequenceName="prof_deputy_prev_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
     private $id;
 
     /**
@@ -44,34 +44,34 @@ class ProfDeputyPreviousCost
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
      *
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
     private $startDate;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
      *
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
     private $endDate;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
     private $amount;
 
     /**

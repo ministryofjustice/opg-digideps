@@ -23,10 +23,6 @@ class CourtOrder
     use CreateUpdateTimestamps;
 
     /**
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"court-order-basic"})
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
@@ -35,40 +31,31 @@ class CourtOrder
      *
      * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
     private int $id;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private string $courtOrderUid;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private string $type;
 
     /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"court-order-basic", "court-order-full"})
-     *
      * @ORM\Column(name="active", type="boolean", options = { "default": true })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private bool $active;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
      * @ORM\JoinTable(name="court_order_report",
@@ -78,6 +65,8 @@ class CourtOrder
      *
      * @var Collection<int, Report>
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private Collection $reports;
 
     /**
@@ -89,13 +78,14 @@ class CourtOrder
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
+    #[JMS\Type(Client::class)]
+    #[JMS\Groups(['court-order-full'])]
     private Client $client;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\CourtOrderDeputy>")
-     *
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
 
     public function __construct()

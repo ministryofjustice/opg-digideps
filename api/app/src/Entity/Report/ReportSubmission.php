@@ -29,9 +29,7 @@ class ReportSubmission
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"report-submission", "report-submission-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -41,40 +39,40 @@ class ReportSubmission
      *
      * @ORM\SequenceGenerator(sequenceName="report_submission_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['report-submission', 'report-submission-id'])]
     private $id;
 
     /**
      * @var Report
      *
-     * @JMS\Type("App\Entity\Report\Report")
      *
-     * @JMS\Groups({"report-submission"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="reportSubmissions")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Groups(['report-submission'])]
     private $report;
 
     /**
      * @var Ndr
      *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
      *
-     * @JMS\Groups({"report-submission"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
      *
      * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Type('App\Entity\Ndr\Ndr')]
+    #[JMS\Groups(['report-submission'])]
     private $ndr;
 
     /**
      * @var ArrayCollection<int, Document>
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
-     * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission")
      *
@@ -82,52 +80,54 @@ class ReportSubmission
      *
      * @ORM\OrderBy({"createdBy"="ASC"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Document>')]
+    #[JMS\Groups(['report-submission', 'report-submission-documents'])]
     private $documents;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"report-submission"})
      *
      * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['report-submission'])]
     private $archived = false;
 
     /**
      * @var User|null
      *
-     * @JMS\Type("App\Entity\User")
      *
-     * @JMS\Groups({"report-submission"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['report-submission'])]
     private $archivedBy;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"report-submission"})
      *
      * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['report-submission'])]
     private $downloadable;
 
     /**
      * @var string|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-submission", "report-submission-uuid"})
      *
      * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submission', 'report-submission-uuid'])]
     private $uuid;
 
     /**

@@ -22,9 +22,7 @@ class Contact
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -34,105 +32,107 @@ class Contact
      *
      * @ORM\SequenceGenerator(sequenceName="contact_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['contact'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="contact_name", type="string", length=255, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $contactName;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $address;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $address2;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="county", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $county;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $postcode;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $country;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="explanation", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $explanation;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="relationship", type="string", length=100, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $relationship;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"contact"})
      *
      * @ORM\Column(name="phone1", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $phone1;
 
     /**

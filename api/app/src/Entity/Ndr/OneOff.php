@@ -24,9 +24,7 @@ class OneOff
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"one-off"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -36,6 +34,8 @@ class OneOff
      *
      * @ORM\SequenceGenerator(sequenceName="odr_oneoff_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['one-off'])]
     private $id;
 
     /**
@@ -50,39 +50,39 @@ class OneOff
     /**
      * @var string
      *
-     * @JMS\Groups({"one-off"})
      *
      * @ORM\Column(name="type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['one-off'])]
     private $typeId;
 
     /**
      * @var string
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"one-off"})
      *
      * @ORM\Column(name="present", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['one-off'])]
     private $present;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"one-off"})
      *
      * @ORM\Column(name="has_more_details", type="string", nullable=false)
      */
+    #[JMS\Groups(['one-off'])]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"one-off"})
      *
      * @ORM\Column(name="more_details", type="string", nullable=true)
      */
+    #[JMS\Groups(['one-off'])]
     private $moreDetails;
 
     /**

@@ -13,34 +13,33 @@ trait FeeExpensesTrait
     /**
      * @var Fee[]
      *
-     * @JMS\Groups({"fee"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['fee'])]
     private $fees;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"fee"})
      *
      * @ORM\Column(name="reason_for_no_fees", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
     private $reasonForNoFees;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"expenses"})
      *
      * @ORM\Column(name="paid_for_anything", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['expenses'])]
     private $paidForAnything;
 
     /**
@@ -50,14 +49,14 @@ trait FeeExpensesTrait
      *
      * @var Expense[]
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Expense>")
      *
-     * @JMS\Groups({"expenses"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
      *
      * @var Expense[]
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Expense>')]
+    #[JMS\Groups(['expenses'])]
     private $expenses;
 
     /**
@@ -108,16 +107,16 @@ trait FeeExpensesTrait
     /**
      * Get fee total value.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("double")
      *
-     * @JMS\SerializedName("fees_total")
      *
-     * @JMS\Groups({"fee"})
      *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('fees_total')]
+    #[JMS\Groups(['fee'])]
     public function getFeesTotal()
     {
         $ret = 0;
@@ -144,16 +143,16 @@ trait FeeExpensesTrait
      * Implement the report.hasFees based on the content of fees and reaons for no fees
      * Alternative to have a column.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("string")
      *
-     * @JMS\SerializedName("has_fees")
      *
-     * @JMS\Groups({"fee"})
      *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('has_fees')]
+    #[JMS\Groups(['fee'])]
     public function getHasFees()
     {
         // never set -> return null
@@ -217,16 +216,16 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("double")
      *
-     * @JMS\SerializedName("expenses_total")
      *
-     * @JMS\Groups({"expenses"})
      *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('expenses_total')]
+    #[JMS\Groups(['expenses'])]
     public function getExpensesTotal()
     {
         $ret = 0;

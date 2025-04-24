@@ -15,9 +15,7 @@ class VisitsCare
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -27,6 +25,8 @@ class VisitsCare
      *
      * @ORM\SequenceGenerator(sequenceName="odr_visits_care_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['visits-care'])]
     private $id;
 
     /**
@@ -41,102 +41,102 @@ class VisitsCare
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="plan_move_residence", type="string", length=4, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $planMoveNewResidence;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="plan_move_residence_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $planMoveNewResidenceDetails;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="do_you_live_with_client", type="string", length=4, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $doYouLiveWithClient;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $howOftenDoYouContactClient;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column( name="does_client_receive_paid_care", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $doesClientReceivePaidCare;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="how_is_care_funded", length=255, type="string", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $howIsCareFunded;
 
     /**
      * @var type
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column( name="who_is_doing_the_caring", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
     private $whoIsDoingTheCaring;
 
     /**
      * @var type
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"visits-care"})
      *
-     * @JMS\SerializedName("does_client_have_a_care_plan")
      *
      * @ORM\Column( name="does_client_have_a_care_plan", type="string", length=4, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[JMS\SerializedName('does_client_have_a_care_plan')]
     private $doesClientHaveACarePlan;
 
     /**
      * @var date
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"visits-care"})
      *
      * @ORM\Column(name="when_was_care_plan_last_reviewed", type="date", nullable=true, options={ "default": null })
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['visits-care'])]
     private $whenWasCarePlanLastReviewed;
 
     /**

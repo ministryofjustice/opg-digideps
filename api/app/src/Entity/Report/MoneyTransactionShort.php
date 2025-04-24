@@ -29,8 +29,8 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="money_transaction_short_id_seq", allocationSize=1, initialValue=1)
-     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      */
+    #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     private $id;
 
     /**
@@ -44,36 +44,35 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     /**
      * @var float
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     private $amount;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     private $description;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      * @ORM\Column(name="date", type="date", nullable=true, options={ "default": null })
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     private $date;
 
     /**
      * Discriminator field.
      *
      * @var string
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private $type;
 
     /**

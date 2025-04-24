@@ -18,9 +18,7 @@ class ProfDeputyInterimCost
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"prof-deputy-costs-interim"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -30,6 +28,8 @@ class ProfDeputyInterimCost
      *
      * @ORM\SequenceGenerator(sequenceName="prof_deputy_interim_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['prof-deputy-costs-interim'])]
     private $id;
 
     /**
@@ -44,23 +44,23 @@ class ProfDeputyInterimCost
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"prof-deputy-costs-interim"})
      *
      * @ORM\Column(name="date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-deputy-costs-interim'])]
     private $date;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-deputy-costs-interim"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-costs-interim'])]
     private $amount;
 
     /**

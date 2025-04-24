@@ -30,9 +30,7 @@ abstract class ProfServiceFee
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -42,6 +40,8 @@ abstract class ProfServiceFee
      *
      * @ORM\SequenceGenerator(sequenceName="fee_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $id;
 
     /**
@@ -54,87 +54,86 @@ abstract class ProfServiceFee
     private $report;
 
     /**
-     * @JMS\Type("string")
      *
      * @var string fixed|assessed
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="assessed_or_fixed", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $assessedOrFixed;
 
     /**
      * Discriminator field.
      *
      * @var string
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private $feeTypeId;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="other_fee_details", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $otherFeeDetails;
 
     /**
-     * @JMS\Type("string")
      *
      * @var string a value in self:$serviceTypeIds
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="service_type_id", type="string", nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $serviceTypeId;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="amount_charged", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $amountCharged;
 
     /**
-     * @JMS\Type("string")
      *
      * @var string yes|no
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="payment_received", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $paymentReceived;
 
     /**
      * @var decimal
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="amount_received", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     private $amountReceived;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="payment_received_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-service-fees'])]
     private $paymentReceivedDate;
 
     public function __construct(Report $report)
@@ -191,14 +190,14 @@ abstract class ProfServiceFee
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-service-fees"})
      *
      * @return string
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
     abstract public function getFeeTypeId();
 
     /**

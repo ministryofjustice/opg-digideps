@@ -35,9 +35,7 @@ class Ndr implements ReportInterface
     /**
      * @var int
      *
-     * @JMS\Groups({"ndr", "ndr_id"})
      *
-     * @JMS\Type("integer")
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -47,188 +45,188 @@ class Ndr implements ReportInterface
      *
      * @ORM\SequenceGenerator(sequenceName="odr_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['ndr', 'ndr_id'])]
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var Client
      *
-     * @JMS\Groups({"ndr-client"})
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Client", inversedBy="ndr")
-     *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Groups(['ndr-client'])]
     private $client;
 
     /**
      * @var VisitsCare
      *
-     * @JMS\Groups({"ndr"})
      *
-     * @JMS\Type("App\Entity\Ndr\VisitsCare")
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Ndr\VisitsCare", mappedBy="ndr", cascade={"persist", "remove"})
      **/
+    #[JMS\Groups(['ndr'])]
+    #[JMS\Type('App\Entity\Ndr\VisitsCare')]
     private $visitsCare;
 
     /**
      * @var BankAccount[]
      *
-     * @JMS\Groups({"ndr-account"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Ndr\BankAccount>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
      */
+    #[JMS\Groups(['ndr-account'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Ndr\BankAccount>')]
     private $bankAccounts;
 
     /**
      * @var Debt[]
      *
-     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Debt", mappedBy="ndr", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['ndr-debt'])]
     private $debts;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-debt-management"})
      *
      * @ORM\Column( name="debt_management", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-debt-management'])]
     private $debtManagement;
 
     /**
      * @var bool
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-debt'])]
     private $hasDebts;
 
     /**
      * @var AssetInterface[]
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Ndr\Asset>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Ndr\Asset>')]
     private $assets;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"ndr"})
      *
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['ndr'])]
     private $noAssetToAdd;
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"ndr"})
      *
-     * @JMS\Type("boolean")
      *
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
+    #[JMS\Groups(['ndr'])]
+    #[JMS\Type('boolean')]
     private $submitted;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({"ndr"})
      *
-     * @JMS\Accessor(getter="getStartDate")
      *
-     * @JMS\Type("DateTime")
      *
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
+    #[JMS\Groups(['ndr'])]
+    #[JMS\Accessor(getter: 'getStartDate')]
+    #[JMS\Type('DateTime')]
     private $startDate;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({"ndr"})
      *
-     * @JMS\Accessor(getter="getSubmitDate")
      *
-     * @JMS\Type("DateTime")
      *
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
+    #[JMS\Groups(['ndr'])]
+    #[JMS\Accessor(getter: 'getSubmitDate')]
+    #[JMS\Type('DateTime')]
     private $submitDate;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr"})
      *
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr'])]
     private $agreedBehalfDeputy;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr"})
      *
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr'])]
     private $agreedBehalfDeputyExplanation;
 
     /**
      * @var User
      *
-     * @JMS\Groups({"report-submitted-by"})
      *
-     * @JMS\Type("App\Entity\User")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[JMS\Groups(['report-submitted-by'])]
+    #[JMS\Type('App\Entity\User')]
     private $submittedBy;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="ndr", cascade={"persist", "remove"})
      *
-     * @JMS\Type("App\Entity\Satisfaction")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('App\Entity\Satisfaction')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private Satisfaction $satisfaction;
 
     /**
      * @var ClientBenefitsCheck|null
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Ndr\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
      **/
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('App\Entity\Ndr\ClientBenefitsCheck')]
     private $clientBenefitsCheck;
 
     /**
@@ -450,16 +448,16 @@ class Ndr implements ReportInterface
     /**
      * Get assets total value.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("string")
      *
-     * @JMS\SerializedName("debts_total_amount")
      *
-     * @JMS\Groups({"ndr-debt"})
      *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('debts_total_amount')]
+    #[JMS\Groups(['ndr-debt'])]
     public function getDebtsTotalAmount()
     {
         $ret = 0;
@@ -597,16 +595,16 @@ class Ndr implements ReportInterface
     /**
      * Previous report data. Just return id and type for second api call to allo new JMS groups.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("previous_report_data")
      *
-     * @JMS\Groups({"previous-report-data"})
      *
-     * @JMS\Type("array")
      *
      * @return array
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('previous_report_data')]
+    #[JMS\Groups(['previous-report-data'])]
+    #[JMS\Type('array')]
     public function getPreviousReportData()
     {
         return false;
@@ -661,14 +659,14 @@ class Ndr implements ReportInterface
      * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
      * for the translation keys (translations are in 'report' domain).
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Groups({"ndr"})
      *
-     * @JMS\Type("string")
      *
      * @return string
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['ndr'])]
+    #[JMS\Type('string')]
     public function getReportTitle()
     {
         return 'ndr';

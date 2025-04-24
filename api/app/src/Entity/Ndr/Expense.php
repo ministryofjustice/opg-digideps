@@ -15,40 +15,39 @@ class Expense
     /**
      * @var int
      *
-     * @JMS\Groups({"ndr-expenses"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="odr_expense_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['ndr-expenses'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-expenses"})
      *
      * @ORM\Column(name="explanation", type="text", nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-expenses'])]
     private $explanation;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-expenses"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-expenses'])]
     private $amount;
 
     /**

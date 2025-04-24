@@ -31,9 +31,7 @@ abstract class Asset
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -43,17 +41,19 @@ abstract class Asset
      *
      * @ORM\SequenceGenerator(sequenceName="odr_asset_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['ndr-asset'])]
     private $id;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $value;
 
     /**
@@ -67,9 +67,8 @@ abstract class Asset
 
     /**
      * @var string
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private $type;
 
     /**

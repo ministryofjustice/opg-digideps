@@ -33,16 +33,15 @@ class Fee
     /**
      * @var int
      *
-     * @JMS\Groups({"fee"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="fee_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['fee'])]
     private $id;
 
     /**
@@ -57,30 +56,30 @@ class Fee
     /**
      * @var string a value in self:$feeTypeIds
      *
-     * @JMS\Groups({"fee"})
      *
      * @ORM\Column(name="fee_type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['fee'])]
     private $feeTypeId;
 
     /**
      * @var string|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"fee"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
     private $amount;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"fee"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['fee'])]
     private $moreDetails;
 
     /**
@@ -181,16 +180,16 @@ class Fee
     }
 
     /**
-     * @JMS\Type("boolean")
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("has_more_details")
      *
-     * @JMS\Groups({"fee"})
      *
      * @return bool
      */
+    #[JMS\Type('boolean')]
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('has_more_details')]
+    #[JMS\Groups(['fee'])]
     public function getHasMoreDetails()
     {
         return self::$feeTypeIds[$this->getFeeTypeId()];

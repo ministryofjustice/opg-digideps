@@ -46,9 +46,7 @@ class MoneyShortCategory
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -58,6 +56,8 @@ class MoneyShortCategory
      *
      * @ORM\SequenceGenerator(sequenceName="money_short_category_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private $id;
 
     /**
@@ -72,21 +72,21 @@ class MoneyShortCategory
     /**
      * @var string
      *
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      *
      * @ORM\Column(name="type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private $typeId;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      *
      * @ORM\Column(name="present", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private $present;
 
     /**

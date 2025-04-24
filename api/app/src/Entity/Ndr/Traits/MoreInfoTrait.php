@@ -10,23 +10,23 @@ trait MoreInfoTrait
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-more-info"})
      *
      * @ORM\Column(name="action_more_info", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-more-info'])]
     private $actionMoreInfo;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-action-more-info"})
      *
      * @ORM\Column(name="action_more_info_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-action-more-info'])]
     private $actionMoreInfoDetails;
 
     /**

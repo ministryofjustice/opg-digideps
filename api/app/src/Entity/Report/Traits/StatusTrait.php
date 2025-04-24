@@ -20,10 +20,10 @@ trait StatusTrait
      *
      * @var string
      *
-     * @JMS\Exclude()
      *
      * @ORM\Column(name="status_cached", type="text", nullable=true)
      */
+    #[JMS\Exclude]
     private $sectionStatusesCached;
 
     /**
@@ -34,19 +34,19 @@ trait StatusTrait
      *
      * value: STATUS_* constant
      *
-     * @JMS\Exclude()
      *
      * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
      */
+    #[JMS\Exclude]
     private $reportStatusCached;
 
     /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>].
      *
-     * @JMS\Exclude
      *
      * @return array
      */
+    #[JMS\Exclude]
     public function getSectionStatusesCached()
     {
         return $this->sectionStatusesCached ? json_decode($this->sectionStatusesCached, true) : [];
@@ -104,35 +104,12 @@ trait StatusTrait
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Groups({
-     *     "status",
-     *     "report-status",
-     *     "decision-status",
-     *     "contact-status",
-     *     "visits-care-state",
-     *     "expenses-state",
-     *     "gifts-state",
-     *     "account-state",
-     *     "money-transfer-state",
-     *     "money-in-state",
-     *     "money-out-state",
-     *     "asset-state",
-     *     "debt-state",
-     *     "action-state",
-     *     "more-info-state",
-     *     "balance-state",
-     *     "money-in-short-state",
-     *     "money-out-short-state",
-     *     "fee-state",
-     *     "documents-state",
-     *     "lifestyle-state",
-     *     "client-benefits-check-state",
-     * })
      *
      * @return ReportStatusService
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['status', 'report-status', 'decision-status', 'contact-status', 'visits-care-state', 'expenses-state', 'gifts-state', 'account-state', 'money-transfer-state', 'money-in-state', 'money-out-state', 'asset-state', 'debt-state', 'action-state', 'more-info-state', 'balance-state', 'money-in-short-state', 'money-out-short-state', 'fee-state', 'documents-state', 'lifestyle-state', 'client-benefits-check-state'])]
     public function getStatus()
     {
         return new ReportStatusService($this);

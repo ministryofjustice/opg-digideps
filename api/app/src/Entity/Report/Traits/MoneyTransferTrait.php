@@ -10,23 +10,23 @@ use JMS\Serializer\Annotation as JMS;
 trait MoneyTransferTrait
 {
     /**
-     * @JMS\Groups({"money-transfer"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyTransfer>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
+    #[JMS\Groups(['money-transfer'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Report\MoneyTransfer>')]
     private $moneyTransfers;
 
     /**
      * @var bool deputy declaration saying there are no transfers. Required (true/false) if no transfers are added
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"report", "money-transfer"})
      *
      * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['report', 'money-transfer'])]
     private $noTransfersToAdd;
 
     /**

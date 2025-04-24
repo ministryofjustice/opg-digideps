@@ -31,64 +31,62 @@ class Organisation implements OrganisationInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @ORM\SequenceGenerator(sequenceName="organisation_id_seq", allocationSize=1, initialValue=1)
-     *
-     * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      */
+    #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
     private $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
-     *
-     * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      */
     #[Assert\NotBlank]
+    #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
     private $name;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"user-organisations", "organisation", "org-created-event"})
      *
-     * @JMS\Type("string")
      *
-     * @JMS\SerializedName("email_identifier")
      *
      * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
      */
     #[Assert\NotBlank]
+    #[JMS\Groups(['user-organisations', 'organisation', 'org-created-event'])]
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('email_identifier')]
     private $emailIdentifier;
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"organisation", "user-organisations", "client-organisations", "org-created-event"})
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\SerializedName("is_activated")
      *
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
      */
+    #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
+    #[JMS\Type('boolean')]
+    #[JMS\SerializedName('is_activated')]
     private $isActivated;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\User>")
      *
      * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
      */
+    #[JMS\Type('ArrayCollection<App\Entity\User>')]
     private $users;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Clients>")
      *
      * @ORM\OneToMany(targetEntity="Client", mappedBy="organisation")
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Clients>')]
     private $clients;
 
     public function __construct()
@@ -196,32 +194,32 @@ class Organisation implements OrganisationInterface
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\SerializedName("total-user-count")
      *
-     * @JMS\Groups({"total-user-count"})
      *
      * @return int
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('total-user-count')]
+    #[JMS\Groups(['total-user-count'])]
     public function getTotalUserCount()
     {
         return count($this->getUsers());
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\SerializedName("total-client-count")
      *
-     * @JMS\Groups({"total-client-count"})
      *
      * @return int
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('total-client-count')]
+    #[JMS\Groups(['total-client-count'])]
     public function getTotalClientCount()
     {
         return count($this->getClients());

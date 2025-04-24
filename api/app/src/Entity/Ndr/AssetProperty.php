@@ -20,155 +20,155 @@ class AssetProperty extends Asset implements AssetInterface
     public const OWNED_PARTLY = 'partly';
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-asset'])]
     private $address;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-asset'])]
     private $address2;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
      * @ORM\Column(name="county", type="string", length=75, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-asset'])]
     private $county;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-asset'])]
     private $postcode;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="occupants", type="string", length=550)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $occupants;
 
     /**
      * @var string fully/partly
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="owned", type="string", length=15)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $owned;
 
     /**
      * @var float 0-100
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("float")
      *
      * @ORM\Column(name="owned_percentage", type="decimal", precision=14, scale=2)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('float')]
     private $ownedPercentage;
 
     /**
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="is_subject_equity_rel", type="string", length=4)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $isSubjectToEquityRelease;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="has_mortgage", type="string", length=4)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $hasMortgage;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("integer")
      *
      * @ORM\Column(name="mortgage_outstanding", type="decimal", precision=14, scale=2)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('integer')]
     private $mortgageOutstandingAmount;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="has_charges", type="string", length=4)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $hasCharges;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="is_rented_out", type="string", length=4)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('string')]
     private $isRentedOut;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $rentAgreementEndDate;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"ndr-asset"})
      *
-     * @JMS\Type("float")
      *
      * @ORM\Column(name="rent_income_month", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['ndr-asset'])]
+    #[JMS\Type('float')]
     private $rentIncomeMonth;
 
     /**
@@ -400,13 +400,10 @@ class AssetProperty extends Asset implements AssetInterface
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("type")
-     *
-     * @JMS\Groups({"ndr-asset"})
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['ndr-asset'])]
     public function getAssetType()
     {
         return 'property';

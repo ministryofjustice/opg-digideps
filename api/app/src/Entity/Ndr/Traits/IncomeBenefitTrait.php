@@ -1,94 +1,86 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: elvis
- * Date: 08/08/2016
- * Time: 15:46.
- */
-
 namespace App\Entity\Ndr\Traits;
 
 use App\Entity\Ndr\OneOff;
 use App\Entity\Ndr\StateBenefit;
+use JMS\Serializer\Annotation as JMS;
 
 trait IncomeBenefitTrait
 {
     /**
      * @var StateBenefit[]
      *
-     * @JMS\Groups({"state-benefits"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\StateBenefit", mappedBy="ndr")
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['state-benefits'])]
     private $stateBenefits;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"pension"})
      *
      * @ORM\Column(name="receive_state_pension", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['pension'])]
     private $receiveStatePension;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"pension"})
      *
      * @ORM\Column(name="receive_other_income", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['pension'])]
     private $receiveOtherIncome;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"pension"})
      *
      * @ORM\Column(name="receive_other_income_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['pension'])]
     private $receiveOtherIncomeDetails;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"damages"})
      *
      * @ORM\Column(name="expect_compensation_damages", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['damages'])]
     private $expectCompensationDamages;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"damages"})
      *
      * @ORM\Column(name="expect_compensation_damages_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['damages'])]
     private $expectCompensationDamagesDetails;
 
     /**
      * @var OneOff[]
      *
-     * @JMS\Groups({"one-off"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\OneOff", mappedBy="ndr")
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['one-off'])]
     private $oneOff;
 
     /**

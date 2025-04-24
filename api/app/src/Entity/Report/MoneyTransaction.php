@@ -26,9 +26,8 @@ class MoneyTransaction implements MoneyTransactionInterface
      *
      * 'category' identifies the group and type
      * getGroup() and getType() use this array
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static $categories = [
         // category | hasMoreDetails | order | group | type (in/out)
 
@@ -127,8 +126,8 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="transaction_id_seq", allocationSize=1, initialValue=1)
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      */
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     private $id;
 
     /**
@@ -145,26 +144,26 @@ class MoneyTransaction implements MoneyTransactionInterface
      *
      * @var string
      *
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @ORM\Column(name="category", type="string", length=255, nullable=false)
      */
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     private $category;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     private $amount;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     private $description;
 
     /**
@@ -275,12 +274,12 @@ class MoneyTransaction implements MoneyTransactionInterface
     /**
      * Get the group based on the category.
      *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("group")
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @return string in/out
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('group')]
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     public function getGroup()
     {
         foreach (self::$categories as $cat) {
@@ -296,12 +295,12 @@ class MoneyTransaction implements MoneyTransactionInterface
     /**
      * Get the type (in/out) based on the category.
      *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("type")
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @return string in/out
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     public function getType()
     {
         foreach (self::$categories as $cat) {

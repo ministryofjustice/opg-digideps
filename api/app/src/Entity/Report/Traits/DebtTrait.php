@@ -11,36 +11,35 @@ trait DebtTrait
     /**
      * @var Debt[]
      *
-     * @JMS\Groups({"debt"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Debt", mappedBy="report", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['debt'])]
     private $debts;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
     private $hasDebts;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"debt-management"})
      *
      * @ORM\Column( name="debt_management", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt-management'])]
     private $debtManagement;
 
     /**
@@ -99,16 +98,16 @@ trait DebtTrait
     /**
      * Get debts total value.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("string")
      *
-     * @JMS\SerializedName("debts_total_amount")
      *
-     * @JMS\Groups({"debt"})
      *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('debts_total_amount')]
+    #[JMS\Groups(['debt'])]
     public function getDebtsTotalAmount()
     {
         $ret = 0;

@@ -15,9 +15,7 @@ class Lifestyle
     /**
      * @var int
      *
-     * @JMS\Groups({"lifestyle"})
      *
-     * @JMS\Type("integer")
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -27,6 +25,8 @@ class Lifestyle
      *
      * @ORM\SequenceGenerator(sequenceName="lifestyle_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['lifestyle'])]
+    #[JMS\Type('integer')]
     private $id;
 
     /**
@@ -39,45 +39,45 @@ class Lifestyle
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column(name="care_appointments", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
     private $careAppointments;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column( name="does_client_undertake_social_activities", type="string", length=4, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
     private $doesClientUndertakeSocialActivities;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column( name="activity_details_yes", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
     private $activityDetailsYes;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column( name="activity_details_no", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
     private $activityDetailsNo;
 
     /**

@@ -15,30 +15,30 @@ class AssetOther extends Asset implements AssetInterface
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
+    #[JMS\Groups(['ndr-asset'])]
     private $title;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['ndr-asset'])]
     private $description;
 
     /**
      * @var \Date
      *
-     * @JMS\Type("DateTime")
      *
-     * @JMS\Groups({"ndr-asset"})
      *
      * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['ndr-asset'])]
     private $valuationDate;
 
     /**
@@ -113,13 +113,10 @@ class AssetOther extends Asset implements AssetInterface
         return $this->title;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("type")
-     *
-     * @JMS\Groups({"ndr-asset"})
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['ndr-asset'])]
     public function getAssetType()
     {
         return 'other';

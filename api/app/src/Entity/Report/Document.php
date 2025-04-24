@@ -30,9 +30,7 @@ class Document implements SynchronisableInterface
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"documents", "document-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -42,17 +40,19 @@ class Document implements SynchronisableInterface
      *
      * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['documents', 'document-id'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"documents"})
      *
      * @ORM\Column(name="filename", type="string", length=255, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['documents'])]
     private $fileName;
 
     /**
@@ -60,73 +60,73 @@ class Document implements SynchronisableInterface
      *
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"document-storage-reference", "documents"})
      *
      * @ORM\Column(name="storage_reference", type="string", length=512, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['document-storage-reference', 'documents'])]
     private $storageReference;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"documents"})
      *
      * @ORM\Column(name="is_report_pdf", type="boolean", options={ "default": false}, nullable=false)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['documents'])]
     private $isReportPdf;
 
     /**
      * @var Report
      *
-     * @JMS\Groups({"document-report"})
      *
-     * @JMS\Type("App\Entity\Report\Report")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="documents")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Groups(['document-report'])]
+    #[JMS\Type('App\Entity\Report\Report')]
     private $report;
 
     /**
      * @var Ndr
      *
-     * @JMS\Groups({"document-report"})
      *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
      *
      * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Groups(['document-report'])]
+    #[JMS\Type('App\Entity\Ndr\Ndr')]
     private $ndr;
 
     /**
      * @var ReportSubmission
      *
-     * @JMS\Type("App\Entity\Report\ReportSubmission")
      *
-     * @JMS\Groups({"document-report-submission"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[JMS\Type('App\Entity\Report\ReportSubmission')]
+    #[JMS\Groups(['document-report-submission'])]
     private $reportSubmission;
 
     /**
      * @var int|null
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"synchronisation"})
      *
      * @ORM\Column(name="sync_attempts", type="integer", nullable=false, options={"default": 0})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['synchronisation'])]
     protected $syncAttempts = 0;
 
     /**

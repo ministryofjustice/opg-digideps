@@ -31,9 +31,7 @@ abstract class Asset
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -43,17 +41,19 @@ abstract class Asset
      *
      * @ORM\SequenceGenerator(sequenceName="asset_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['asset'])]
     private $id;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"asset"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['asset'])]
+    #[JMS\Type('string')]
     private $value;
 
     /**
@@ -69,9 +69,8 @@ abstract class Asset
      * Discriminator field.
      *
      * @var string
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private $type;
 
     /**
@@ -129,16 +128,16 @@ abstract class Asset
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("float")
      *
-     * @JMS\SerializedName("value_total")
      *
-     * @JMS\Groups({"asset"})
      *
      * @return float|null
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('float')]
+    #[JMS\SerializedName('value_total')]
+    #[JMS\Groups(['asset'])]
     public function getValueTotal()
     {
         return $this->value;

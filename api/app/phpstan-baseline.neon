@@ -9266,11 +9266,6 @@ parameters:
 			path: src/Service/ReportStatusService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportStatusService\\:\\:getSectionStateNotCached\\(\\) has parameter \\$section with no type specified\\.$#"
-			count: 1
-			path: src/Service/ReportStatusService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ReportStatusService\\:\\:setUseStatusCache\\(\\) has parameter \\$useStatusCache with no type specified\\.$#"
 			count: 1
 			path: src/Service/ReportStatusService.php
@@ -9282,16 +9277,6 @@ parameters:
 
 		-
 			message: "#^Offset 'doOthersReceiveInco…' does not exist on array\\{\\}\\|array\\{whenChecked\\: string\\|null, doOthersReceiveIncome\\: string\\|null, incomeTypes\\: true\\|null\\}\\.$#"
-			count: 1
-			path: src/Service/ReportStatusService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(bool\\)\\: Unexpected token \"\\\\n     \\*\", expected variable at offset 128$#"
-			count: 1
-			path: src/Service/ReportStatusService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(bool\\)\\: Unexpected token \"\\\\n     \\*\", expected variable at offset 49$#"
 			count: 1
 			path: src/Service/ReportStatusService.php
 

@@ -2,83 +2,85 @@
 
 namespace App\Entity\Traits;
 
+use JMS\Serializer\Annotation as JMS;
+
 trait AddressTrait
 {
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $address1;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $address2;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $address3;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $address4;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $address5;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $addressPostcode;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user", "team", "report-submitted-by"})
      *
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by'])]
     private $addressCountry;
 
     /**

@@ -18,40 +18,39 @@ class Gift
     /**
      * @var int
      *
-     * @JMS\Groups({"gifts"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="gift_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['gifts'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"gifts"})
      *
      * @ORM\Column(name="explanation", type="text", nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
     private $explanation;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"gifts"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
     private $amount;
 
     /**

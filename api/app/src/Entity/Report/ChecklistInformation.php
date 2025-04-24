@@ -25,9 +25,7 @@ class ChecklistInformation
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"checklist-information"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -37,28 +35,30 @@ class ChecklistInformation
      *
      * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['checklist-information'])]
     private $id;
 
     /**
      * @var Checklist
      *
-     * @JMS\Type("App\Entity\Report\Checklist")
      *
-     * @JMS\Groups({"checklist-information-checklist"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\Checklist", inversedBy="checklistInformation", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE", nullable=false   )
      */
+    #[JMS\Type('App\Entity\Report\Checklist')]
+    #[JMS\Groups(['checklist-information-checklist'])]
     private $checklist;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"checklist-information"})
      *
      * @ORM\Column(name="information", type="text", nullable=false)
      */
+    #[JMS\Groups(['checklist-information'])]
     private $information;
 
     public function __construct(Checklist $checklist, $information)

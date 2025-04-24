@@ -29,9 +29,8 @@ class Note
      * Keep in sync with API.
      *
      * Possible refactor would be moving some entities data into a shared library
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static $categories = [
         // categoryId | categoryTranslationKey
         'Todo' => 'todo',
@@ -46,9 +45,7 @@ class Note
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -58,52 +55,54 @@ class Note
      *
      * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['notes'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="category", type="string", length=100, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['notes'])]
     private $category;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="title", type="string", length=150, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['notes'])]
     private $title;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="content", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['notes'])]
     private $content;
 
     /**
      * @var Client
      *
-     * @JMS\Groups({"note-client"})
      *
-     * @JMS\Type("App\Entity\Client")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="notes")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Groups(['note-client'])]
+    #[JMS\Type('App\Entity\Client')]
     private $client;
 
     /**

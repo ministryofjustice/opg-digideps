@@ -17,49 +17,48 @@ class MoneyTransfer
     /**
      * @var int
      *
-     * @JMS\Groups({"money-transfer"})
      *
      * @ORM\Column(name="id", type="integer")
      *
      * @ORM\Id
-     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[JMS\Groups(['money-transfer'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"money-transfer"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['money-transfer'])]
     private $amount;
 
     /**
      * @var Account
      *
-     * @JMS\Groups({"account"})
      *
-     * @JMS\SerializedName("accountFrom")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
      *
      * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\SerializedName('accountFrom')]
     private $from;
 
     /**
      * @var Account
      *
-     * @JMS\Groups({"account"})
      *
-     * @JMS\SerializedName("accountTo")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
      *
      * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\SerializedName('accountTo')]
     private $to;
 
     /**
@@ -74,10 +73,10 @@ class MoneyTransfer
     /**
      * @var string
      *
-     * @JMS\Groups({"money-transfer"})
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['money-transfer'])]
     private $description;
 
     /**
@@ -155,15 +154,11 @@ class MoneyTransfer
         return $this->report;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"money-transfer"})
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\SerializedName("reportId")
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['money-transfer'])]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('reportId')]
     public function getReportId()
     {
         return $this->getReport()->getId();

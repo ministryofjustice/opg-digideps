@@ -31,16 +31,15 @@ class Debt
     /**
      * @var int
      *
-     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="debt_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['debt'])]
     private $id;
 
     /**
@@ -55,41 +54,41 @@ class Debt
     /**
      * @var string a value in self:$debtTypeIds
      *
-     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="debt_type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['debt'])]
     private $debtTypeId;
 
     /**
      * @var string|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
     private $amount;
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"debt"})
      *
-     * @JMS\Type("boolean")
      *
      * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
      */
+    #[JMS\Groups(['debt'])]
+    #[JMS\Type('boolean')]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['debt'])]
     private $moreDetails;
 
     /**

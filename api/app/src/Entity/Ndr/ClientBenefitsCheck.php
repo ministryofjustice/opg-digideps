@@ -39,10 +39,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private UuidInterface $id;
 
     /**
@@ -50,10 +50,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @Gedmo\Timestampable(on="create")
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private \DateTime $created;
 
     /**
@@ -68,10 +68,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @ORM\Column(name="when_last_checked_entitlement", type="string", nullable=false)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private $whenLastCheckedEntitlement;
 
     /**
@@ -79,10 +79,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @ORM\Column(name="date_last_checked_entitlement", type="datetime", nullable=true)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $dateLastCheckedEntitlement;
 
     /**
@@ -90,10 +90,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @ORM\Column(name="never_checked_explanation", type="text", nullable=true)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private $neverCheckedExplanation;
 
     /**
@@ -101,10 +101,10 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @ORM\Column(name="do_others_receive_money_on_clients_behalf", type="string", nullable=true)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private $doOthersReceiveMoneyOnClientsBehalf;
 
     /**
@@ -112,21 +112,21 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @ORM\Column(name="dont_know_money_explanation", type="text", nullable=true)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private $dontKnowMoneyExplanation;
 
     /**
      * @ORM\OneToMany(targetEntity="MoneyReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Ndr\MoneyReceivedOnClientsBehalf>")
      *
      * @OrderBy({"created" = "ASC"})
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Ndr\MoneyReceivedOnClientsBehalf>')]
     private $typesOfMoneyReceivedOnClientsBehalf;
 
     public function getId(): UuidInterface

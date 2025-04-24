@@ -35,10 +35,10 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      *
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private UuidInterface $id;
 
     /**
@@ -46,10 +46,10 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      *
      * @Gedmo\Timestampable(on="create")
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private \DateTime $created;
 
     /**
@@ -57,37 +57,37 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      *
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('App\Entity\Report\ClientBenefitsCheck')]
     private ClientBenefitsCheck $clientBenefitsCheck;
 
     /**
      * @ORM\Column(name="money_type", type="string", nullable=false)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private string $moneyType;
 
     /**
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("float")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('float')]
     private ?float $amount;
 
     /**
      * @ORM\Column(name="who_received_money", type="string", nullable=true)
      *
-     * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
     private ?string $whoReceivedMoney;
 
     public function getClientBenefitsCheck(): ClientBenefitsCheck

@@ -15,16 +15,15 @@ class ProfDeputyEstimateCost
     /**
      * @var int
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="prof_estimate_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $id;
 
     /**
@@ -39,41 +38,41 @@ class ProfDeputyEstimateCost
     /**
      * @var string a value in self:$profDeputyEstimateCostTypeIds
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @ORM\Column(name="prof_deputy_estimate_cost_type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $profDeputyEstimateCostTypeId;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $amount;
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
-     * @JMS\Type("boolean")
      *
      * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
      */
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
+    #[JMS\Type('boolean')]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $moreDetails;
 
     /**

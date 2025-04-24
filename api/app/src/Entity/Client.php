@@ -41,9 +41,7 @@ class Client implements ClientInterface
     /**
      * @var int
      *
-     * @JMS\Groups({"related","basic", "client", "client-id"})
      *
-     * @JMS\Type("integer")
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -53,12 +51,12 @@ class Client implements ClientInterface
      *
      * @ORM\SequenceGenerator(sequenceName="client_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['related', 'basic', 'client', 'client-id'])]
+    #[JMS\Type('integer')]
     private $id;
 
     /**
-     * @JMS\Groups({"client-users"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\User>")
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      *
@@ -67,196 +65,198 @@ class Client implements ClientInterface
      *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
      *     )
      */
+    #[JMS\Groups(['client-users'])]
+    #[JMS\Type('ArrayCollection<App\Entity\User>')]
     private $users;
 
     /**
-     * @JMS\Groups({"client-reports"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"submitDate"="DESC"})
      */
+    #[JMS\Groups(['client-reports'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
     private $reports;
 
     /**
-     * @JMS\Groups({"basic", "client-ndr", "ndr_id"})
      *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", mappedBy="client", cascade={"persist", "remove"})
      **/
+    #[JMS\Groups(['basic', 'client-ndr', 'ndr_id'])]
+    #[JMS\Type('App\Entity\Ndr\Ndr')]
     private $ndr;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-case-number"})
      *
      * @var string
      *
      * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client', 'client-case-number'])]
     private $caseNumber;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-email"})
      *
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client', 'client-email'])]
     private $email;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private $phone;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private ?string $address = null;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private ?string $address2 = null;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private ?string $address3 = null;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private ?string $address4 = null;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private ?string $address5 = null;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private $postcode;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client"})
      *
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client'])]
     private $country;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-name"})
      *
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client', 'client-name'])]
     private $firstname;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"client", "client-name"})
      *
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['client', 'client-name'])]
     private $lastname;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"client", "client-court-date", "checklist-information"})
      *
      * @var \DateTime|null
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['client', 'client-court-date', 'checklist-information'])]
     private $courtDate;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"client"})
      *
      * @var \DateTime|null
      *
      * @ORM\Column(name="date_of_birth", type="date", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['client'])]
     private $dateOfBirth;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Note>")
      *
-     * @JMS\Groups({"client-notes"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Note>')]
+    #[JMS\Groups(['client-notes'])]
     private $notes;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\ClientContact>")
      *
-     * @JMS\Groups({"client-clientcontacts"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"lastName"="ASC"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\ClientContact>')]
+    #[JMS\Groups(['client-clientcontacts'])]
     private $clientContacts;
 
     /**
@@ -265,47 +265,46 @@ class Client implements ClientInterface
      *
      * @var Deputy|null
      *
-     * @JMS\Groups({"report-submitted-by", "client-deputy"})
      *
-     * @JMS\Type("App\Entity\Deputy")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[JMS\Groups(['report-submitted-by', 'client-deputy'])]
+    #[JMS\Type('App\Entity\Deputy')]
     private $deputy;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"createdAt"="DESC"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\CourtOrder>')]
     private $courtOrders;
 
     /**
      * @var \DateTime|null
      *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
-     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="archived_at", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['client'])]
     private $archivedAt;
 
     /**
      * @var Organisation|null
      *
-     * @JMS\Type("App\Entity\Organisation")
      *
-     * @JMS\Groups({"client-organisations"})
      *
      * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
      */
+    #[JMS\Type('App\Entity\Organisation')]
+    #[JMS\Groups(['client-organisations'])]
     private $organisation;
 
     /**
@@ -637,16 +636,16 @@ class Client implements ClientInterface
      * get progress the user is currenty work on
      * That means the first one that is unsubmitted AND has an unsubmit date.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("App\Entity\Report\Report")
      *
-     * @JMS\SerializedName("current_report")
      *
-     * @JMS\Groups({"current-report"})
      *
      * @return Report|null
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\SerializedName('current_report')]
+    #[JMS\Groups(['current-report'])]
     public function getCurrentReport()
     {
         foreach ($this->getReports() as $r) {
@@ -853,40 +852,39 @@ class Client implements ClientInterface
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\SerializedName("total_report_count")
      *
-     * @JMS\Groups({"total-report-count"})
      *
      * @return int
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('total_report_count')]
+    #[JMS\Groups(['total-report-count'])]
     public function getTotalReportCount()
     {
         return count($this->getReports());
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"unsubmitted-reports-count"})
      *
      * @return int
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['unsubmitted-reports-count'])]
     public function getUnsubmittedReportsCount()
     {
         return count($this->getUnsubmittedReports());
     }
 
     /**
-     * @JMS\Exclude()
-     *
      * @return Collection<Report>
      */
+    #[JMS\Exclude]
     public function getUnsubmittedReports()
     {
         return $this->getReports()->filter(function (Report $report) {
@@ -897,18 +895,18 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report Start date based on the Court date.
      *
-     * @JMS\VirtualProperty
      *
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\SerializedName("expected_report_start_date")
      *
-     * @JMS\Groups({"checklist-information"})
      *
      * @return \DateTime|null
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\SerializedName('expected_report_start_date')]
+    #[JMS\Groups(['checklist-information'])]
     public function getExpectedReportStartDate($year = null)
     {
         if (is_null($this->getCourtDate())) {
@@ -936,18 +934,18 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report End date based on the Court date.
      *
-     * @JMS\VirtualProperty
      *
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\SerializedName("expected_report_end_date")
      *
-     * @JMS\Groups({"checklist-information"})
      *
      * @return \DateTime|null
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\SerializedName('expected_report_end_date')]
+    #[JMS\Groups(['checklist-information'])]
     public function getExpectedReportEndDate($year = null)
     {
         if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
@@ -1000,16 +998,16 @@ class Client implements ClientInterface
     /**
      * Get Active From date == earliest report start date for this client.
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
-     * @JMS\SerializedName("active_from")
      *
-     * @JMS\Groups({"active-period"})
      *
      * @return \DateTime
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\SerializedName('active_from')]
+    #[JMS\Groups(['active-period'])]
     public function getActiveFrom()
     {
         $reports = $this->getReports();

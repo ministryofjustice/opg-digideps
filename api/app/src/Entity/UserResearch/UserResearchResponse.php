@@ -32,10 +32,10 @@ class UserResearchResponse
      *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
-     * @JMS\Type("App\Entity\UserResearch\ResearchType")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('App\Entity\UserResearch\ResearchType')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private ResearchType $researchType;
 
     /**
@@ -43,10 +43,10 @@ class UserResearchResponse
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @JMS\Type("App\Entity\User")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private User $user;
 
     /**
@@ -58,48 +58,48 @@ class UserResearchResponse
      *
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private UuidInterface $id;
 
     /**
      * @ORM\Column(name="deputyship_length", type="string")
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private string $deputyshipLength;
 
     /**
      * @ORM\Column(name="has_access_to_video_call_device", type="boolean")
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private bool $hasAccessToVideoCallDevice;
 
     /**
-     * @JMS\Type("DateTime")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\Column(name="created_at", type="datetime",nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private \DateTime $created;
 
     /**
-     * @JMS\Type("App\Entity\Satisfaction")
      *
-     * @JMS\Groups({"user-research", "satisfaction"})
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
+    #[JMS\Type('App\Entity\Satisfaction')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
     private Satisfaction $satisfaction;
 
     public function getDeputyshipLength(): string

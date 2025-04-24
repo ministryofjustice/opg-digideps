@@ -10,14 +10,14 @@ use JMS\Serializer\Annotation as JMS;
 trait BankAccountTrait
 {
     /**
-     * @JMS\Groups({"account"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\BankAccount>")
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\BankAccount", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Report\BankAccount>')]
     private $bankAccounts;
 
     /**

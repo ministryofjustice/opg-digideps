@@ -12,23 +12,23 @@ trait GiftsTrait
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"gifts"})
      *
      * @ORM\Column(name="gifts_exist", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
     private $giftsExist;
 
     /**
      * @var Gift[]
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Gift>")
      *
-     * @JMS\Groups({"gifts"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Gift>')]
+    #[JMS\Groups(['gifts'])]
     private $gifts;
 
     /**

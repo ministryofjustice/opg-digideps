@@ -12,23 +12,23 @@ trait ExpensesTrait
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-expenses"})
      *
      * @ORM\Column(name="paid_for_anything", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-expenses'])]
     private $paidForAnything;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Ndr\Expense>")
      *
-     * @JMS\Groups({"ndr-expenses"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Expense", mappedBy="ndr", cascade={"persist"})
      *
      * @var Expense[]
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Ndr\Expense>')]
+    #[JMS\Groups(['ndr-expenses'])]
     private $expenses;
 
     /**

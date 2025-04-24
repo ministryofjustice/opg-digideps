@@ -18,16 +18,15 @@ class MentalCapacity
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="mental_capacity_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
@@ -42,34 +41,34 @@ class MentalCapacity
     /**
      * @var string changed | stayedSame (see constants)
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"mental-capacity"})
      *
      * @ORM\Column(name="has_capacity_changed", type="string", length=25, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
     private $hasCapacityChanged;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"mental-capacity"})
      *
      * @ORM\Column(name="has_capacity_changed_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
     private $hasCapacityChangedDetails;
 
     /**
      * @var \Date
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"mental-capacity"})
      *
      * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['mental-capacity'])]
     private $mentalAssessmentDate;
 
     public function __construct(Report $report)

@@ -13,12 +13,11 @@ trait ProfServiceFeesTrait
     /**
      * @var ProfServiceFee[]
      *
-     * @JMS\Groups({"report-prof-service-fees"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfServiceFee", mappedBy="report", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Groups(['report-prof-service-fees'])]
     private $profServiceFees;
 
     public function addProfServiceFee(ProfServiceFee $profServiceFee)

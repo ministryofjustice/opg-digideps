@@ -17,30 +17,30 @@ class AssetOther extends Asset implements AssetInterface
      *             Vehicles | Jewellery etc...
      *             (needs refactor into an enum, as it originally was a freetext)
      *
-     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
+    #[JMS\Groups(['asset'])]
     private $title;
 
     /**
      * @var string more info about asset
      *
-     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['asset'])]
     private $description;
 
     /**
      * @var \Date
      *
-     * @JMS\Type("DateTime")
      *
-     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['asset'])]
     private $valuationDate;
 
     /**
@@ -115,13 +115,10 @@ class AssetOther extends Asset implements AssetInterface
         return $this->title;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("type")
-     *
-     * @JMS\Groups({"asset"})
-     */
+    
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['asset'])]
     public function getAssetType()
     {
         return 'other';

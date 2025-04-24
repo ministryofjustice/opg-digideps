@@ -30,9 +30,7 @@ class StateBenefit
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"state-benefits"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
@@ -42,6 +40,8 @@ class StateBenefit
      *
      * @ORM\SequenceGenerator(sequenceName="odr_state_benefits_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['state-benefits'])]
     private $id;
 
     /**
@@ -56,39 +56,39 @@ class StateBenefit
     /**
      * @var string key from self::$stateBenefitsKeys
      *
-     * @JMS\Groups({"state-benefits"})
      *
      * @ORM\Column(name="type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['state-benefits'])]
     private $typeId;
 
     /**
      * @var string
      *
-     * @JMS\Type("boolean")
      *
-     * @JMS\Groups({"state-benefits"})
      *
      * @ORM\Column(name="present", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['state-benefits'])]
     private $present;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"state-benefits"})
      *
      * @ORM\Column(name="has_more_details", type="string", nullable=false)
      */
+    #[JMS\Groups(['state-benefits'])]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"state-benefits"})
      *
      * @ORM\Column(name="more_details", type="string", nullable=true)
      */
+    #[JMS\Groups(['state-benefits'])]
     private $moreDetails;
 
     /**

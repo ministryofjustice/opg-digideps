@@ -11,66 +11,66 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-deputy-costs-estimate-how-charged"})
      *
      * @ORM\Column(name="prof_dc_estimate_hc", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-costs-estimate-how-charged'])]
     private $profDeputyCostsEstimateHowCharged;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>")
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>')]
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $profDeputyEstimateCosts;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"prof-deputy-costs-estimate-more-info"})
      *
      * @ORM\Column(name="prof_dc_estimate_more_info", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['prof-deputy-costs-estimate-more-info'])]
     private $profDeputyCostsEstimateHasMoreInfo;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"prof-deputy-costs-estimate-more-info"})
      *
      * @ORM\Column(name="prof_dc_estimate_more_info_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['prof-deputy-costs-estimate-more-info'])]
     private $profDeputyCostsEstimateMoreInfoDetails;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-deputy-estimate-management-costs"})
      *
-     * @JMS\SerializedName("prof_deputy_management_cost_amount")
      *
      * @ORM\Column(name="prof_dc_estimate_management_cost", type="float", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
+    #[JMS\SerializedName('prof_deputy_management_cost_amount')]
     private $profDeputyCostsEstimateManagementCostAmount;
 
     /**
      * Hold prof deputy estimate costs type
      * 1st value = id, 2nd value = hasMoreInformation.
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @var array
      */
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     public static $profDeputyEstimateCostTypeIds = [
         ['typeId' => 'contact-client', 'hasMoreDetails' => false],
         ['typeId' => 'contact-case-manager-carers', 'hasMoreDetails' => false],
@@ -121,16 +121,16 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("prof_deputy_estimate_cost_type_ids")
      *
-     * @JMS\Type("array")
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
      * @return array
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('prof_deputy_estimate_cost_type_ids')]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     public static function getProfDeputyEstimateCostTypeIds()
     {
         return self::$profDeputyEstimateCostTypeIds;
@@ -204,12 +204,12 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @return float
      *
-     * @JMS\Groups({"prof-deputy-estimate-management-costs"})
      *
-     * @JMS\SerializedName("prof_deputy_management_cost_amount")
      *
-     * @JMS\Type("double")
      */
+    #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
+    #[JMS\SerializedName('prof_deputy_management_cost_amount')]
+    #[JMS\Type('double')]
     public function getProfDeputyCostsEstimateManagementCostAmount()
     {
         return $this->profDeputyCostsEstimateManagementCostAmount;

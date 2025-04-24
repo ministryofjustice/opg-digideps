@@ -22,9 +22,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static $types = [
         'current' => 'Current account',
         'savings' => 'Savings account',
@@ -37,9 +36,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
@@ -48,9 +46,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private static $typesNotRequiringBankName = [
         'postoffice',
         'cfo',
@@ -59,85 +56,83 @@ class BankAccount implements BankAccountInterface
     /**
      * @var int
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="odr_account_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['ndr-account'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
+    #[JMS\Groups(['ndr-account'])]
     private $bank;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
+    #[JMS\Groups(['ndr-account'])]
     private $accountType;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
+    #[JMS\Groups(['ndr-account'])]
     private $sortCode;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
+    #[JMS\Groups(['ndr-account'])]
     private $accountNumber;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"ndr-account"})
      *
-     * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_on_cod", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['ndr-account'])]
+    #[JMS\Type('string')]
     private $balanceOnCourtOrderDate;
 
     /**
      * @var Ndr
      *
-     * @JMS\Groups({"bank-acccount-ndr"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="bankAccounts")
-     *
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Groups(['bank-acccount-ndr'])]
     private $ndr;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['ndr-account'])]
     private $isJointAccount;
 
     /**
@@ -149,14 +144,14 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("account_type_text")
      *
-     * @JMS\Groups({"ndr-account"})
      *
      * @return string
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('account_type_text')]
+    #[JMS\Groups(['ndr-account'])]
     public function getAccountTypeText()
     {
         $type = $this->getAccountType();
@@ -380,14 +375,14 @@ class BankAccount implements BankAccountInterface
      * barclays - Current account (****1234)
      * Natwest - ISA (****4444).
      *
-     * @JMS\VirtualProperty
      *
-     * @JMS\SerializedName("name_one_line")
      *
-     * @JMS\Groups({"account"})
      *
      * @return string
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('name_one_line')]
+    #[JMS\Groups(['account'])]
     public function getNameOneLine()
     {
         return (!empty($this->getBank()) ? $this->getBank().' - ' : '')

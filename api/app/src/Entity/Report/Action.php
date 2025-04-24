@@ -15,16 +15,15 @@ class Action
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="action_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
@@ -39,45 +38,45 @@ class Action
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"action"})
      *
      * @ORM\Column(name="do_you_expect_decisions", type="string", length=4, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
     private $doYouExpectFinancialDecisions;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"action"})
      *
      * @ORM\Column(name="do_you_expect_decisions_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
     private $doYouExpectFinancialDecisionsDetails;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"action"})
      *
      * @ORM\Column( name="do_you_have_concerns", type="string", length=4, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
     private $doYouHaveConcerns;
 
     /**
      * @var string yes|no|null
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"action"})
      *
      * @ORM\Column( name="do_you_have_concerns_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
     private $doYouHaveConcernsDetails;
 
     public function __construct(Report $report)

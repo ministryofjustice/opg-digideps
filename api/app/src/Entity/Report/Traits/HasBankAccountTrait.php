@@ -10,16 +10,16 @@ trait HasBankAccountTrait
     /**
      * @var BankAccount
      *
-     * @JMS\Groups({"account"})
      *
-     * @JMS\SerializedName("bankAccount")
      *
-     * @JMS\Type("App\Entity\Report\BankAccount")
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
      *
      * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\SerializedName('bankAccount')]
+    #[JMS\Type('App\Entity\Report\BankAccount')]
     private $bankAccount;
 
     /**
