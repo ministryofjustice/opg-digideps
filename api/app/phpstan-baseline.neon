@@ -11061,11 +11061,6 @@ parameters:
 			path: src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
 
 		-
-			message: "#^Empty array passed to foreach\\.$#"
-			count: 1
-			path: src/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngester.php
-
-		-
 			message: "#^Cannot cast Symfony\\\\Component\\\\Validator\\\\ConstraintViolationListInterface to string\\.$#"
 			count: 1
 			path: src/v2/Registration/SelfRegistration/Factory/PreRegistrationFactory.php
