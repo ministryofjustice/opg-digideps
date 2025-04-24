@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\CourtOrder;
 use App\Entity\StagingDeputyship;
 use App\Factory\StagingSelectedCandidateFactory;
+use App\Model\CourtOrderCache;
 use App\Repository\ClientRepository;
 use App\Repository\CourtOrderDeputyRepository;
 use App\Repository\DeputyRepository;
@@ -21,6 +21,7 @@ class DeputyshipsCandidatesSelector
         private readonly ClientRepository $clientRepository,
         private readonly CourtOrderDeputyRepository $courtOrderDeputyRepository,
         private readonly StagingDeputyshipRepository $stagingDeputyshipRepository,
+        private readonly CourtOrderCache $courtOrderCache,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
     ) {
     }
@@ -36,15 +37,8 @@ class DeputyshipsCandidatesSelector
         // read the content of the incoming deputyships CSV from the db table
         $csvDeputyships = $this->stagingDeputyshipRepository->findAll();
 
-        /** @var CourtOrder[] $knownCourtOrders */
-        $knownCourtOrders = $this->em->getRepository(CourtOrder::class)
-            ->createQueryBuilder('co')
-            ->select('co.courtOrderUid', 'co.id', 'co.status')
-            ->getQuery()
-            ->getResult();
-
-        $courtOrderUidToId = array_column($knownCourtOrders, 'id', 'courtOrderUid');
-        $courtOrderUidToStatus = array_column($knownCourtOrders, 'status', 'courtOrderUid');
+        // cache ids and statuses for court orders already in the db
+        $this->courtOrderCache->init();
 
         $deputyUidToId = $this->deputyRepository->getUidToIdMapping();
 
@@ -54,7 +48,7 @@ class DeputyshipsCandidatesSelector
 
         /** @var StagingDeputyship $csvDeputyship */
         foreach ($csvDeputyships as $csvDeputyship) {
-            $existingCourtOrderId = $courtOrderUidToId[$csvDeputyship->orderUid] ?? null;
+            $existingCourtOrderId = $this->courtOrderCache->getIdForUid($csvDeputyship->orderUid);
             $existingDeputyId = $deputyUidToId[$csvDeputyship->deputyUid] ?? null;
             $deputyIsActiveOnOrder = ('ACTIVE' === $csvDeputyship->deputyStatusOnOrder);
 
@@ -86,7 +80,7 @@ class DeputyshipsCandidatesSelector
                 // COURT ORDER EXISTS
 
                 // if court order status is different, update it
-                $currentOrderStatus = $courtOrderUidToStatus[$csvDeputyship->orderUid] ?? null;
+                $currentOrderStatus = $this->courtOrderCache->getStatusForUid($csvDeputyship->orderUid);
                 if ($csvDeputyship->orderStatus !== $currentOrderStatus) {
                     $candidates[] = $this->candidateFactory->createUpdateOrderStatusCandidate(
                         $csvDeputyship,
