@@ -16,10 +16,12 @@ class StagingSelectedCandidateFactory
     {
         $changes = new StagingSelectedCandidate();
         $changes->action = self::UPDATE_ORDER_STATUS;
+
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
-        $changes->orderId = $courtOrderId;
         $changes->status = $csvDeputyship->orderStatus;
+
+        $changes->orderId = $courtOrderId;
 
         return $changes;
     }
@@ -31,11 +33,13 @@ class StagingSelectedCandidateFactory
     ): StagingSelectedCandidate {
         $changes = new StagingSelectedCandidate();
         $changes->action = self::UPDATE_DEPUTY_STATUS;
+
         $changes->orderUid = $csvDeputyship->orderUid;
-        $changes->orderId = $courtOrderId;
-        $changes->deputyId = $deputyId;
         $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->deputyStatusOnOrder = $csvDeputyship->deputyIsActiveOnOrder();
+
+        $changes->orderId = $courtOrderId;
+        $changes->deputyId = $deputyId;
 
         return $changes;
     }
@@ -46,10 +50,12 @@ class StagingSelectedCandidateFactory
     ): StagingSelectedCandidate {
         $changes = new StagingSelectedCandidate();
         $changes->action = self::INSERT_ORDER_DEPUTY;
+
         $changes->orderUid = $csvDeputyship->orderUid;
-        $changes->deputyId = $deputyId;
         $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->deputyStatusOnOrder = $csvDeputyship->deputyIsActiveOnOrder();
+
+        $changes->deputyId = $deputyId;
 
         return $changes;
     }
@@ -58,12 +64,14 @@ class StagingSelectedCandidateFactory
     {
         $changes = new StagingSelectedCandidate();
         $changes->action = self::INSERT_ORDER;
+
         $changes->orderUid = $csvDeputyship->orderUid;
+        $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->orderType = $csvDeputyship->orderType;
         $changes->status = $csvDeputyship->orderStatus;
-        $changes->clientId = $clientId;
         $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
-        $changes->deputyUid = $csvDeputyship->deputyUid;
+
+        $changes->clientId = $clientId;
 
         return $changes;
     }
