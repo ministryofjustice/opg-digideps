@@ -99,7 +99,7 @@ class DeputyshipProcessingLookupCache
         return $this->deputyUidToId[$uid] ?? null;
     }
 
-    public function getClientIdForCasenumber(string $casenumber): ?int
+    public function getClientIdForCasenumber(?string $casenumber): ?int
     {
         $this->throwIfNotInitialised();
 
