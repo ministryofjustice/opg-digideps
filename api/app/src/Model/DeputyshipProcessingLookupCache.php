@@ -55,7 +55,7 @@ class DeputyshipProcessingLookupCache
         $knownCourtOrders = $this->courtOrderRepository->createQueryBuilder('co')
             ->select('co.courtOrderUid', 'co.id', 'co.status')
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
 
         $this->courtOrderUidToId = array_column($knownCourtOrders, 'id', 'courtOrderUid');
         $this->courtOrderUidToStatus = array_column($knownCourtOrders, 'status', 'courtOrderUid');
