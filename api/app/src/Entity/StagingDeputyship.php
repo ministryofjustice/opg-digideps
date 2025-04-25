@@ -122,4 +122,9 @@ class StagingDeputyship
      */
     #[Serializer\MapCell(column: 'IsHybrid')]
     public ?string $isHybrid;
+
+    public function deputyIsActiveOnOrder(): bool
+    {
+        return 'ACTIVE' === $this->deputyStatusOnOrder;
+    }
 }

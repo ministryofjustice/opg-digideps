@@ -28,15 +28,14 @@ class StagingSelectedCandidateFactory
         StagingDeputyship $csvDeputyship,
         int $deputyId,
         int $courtOrderId,
-        bool $csvDeputyOnCourtOrderStatus): StagingSelectedCandidate
-    {
+    ): StagingSelectedCandidate {
         $changes = new StagingSelectedCandidate();
         $changes->action = self::UPDATE_DEPUTY_STATUS;
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->orderId = $courtOrderId;
         $changes->deputyId = $deputyId;
         $changes->deputyUid = $csvDeputyship->deputyUid;
-        $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
+        $changes->deputyStatusOnOrder = $csvDeputyship->deputyIsActiveOnOrder();
 
         return $changes;
     }
@@ -44,14 +43,13 @@ class StagingSelectedCandidateFactory
     public function createInsertOrderDeputyCandidate(
         StagingDeputyship $csvDeputyship,
         int $deputyId,
-        bool $csvDeputyOnCourtOrderStatus): StagingSelectedCandidate
-    {
+    ): StagingSelectedCandidate {
         $changes = new StagingSelectedCandidate();
         $changes->action = self::INSERT_ORDER_DEPUTY;
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyId = $deputyId;
         $changes->deputyUid = $csvDeputyship->deputyUid;
-        $changes->deputyStatusOnOrder = $csvDeputyOnCourtOrderStatus;
+        $changes->deputyStatusOnOrder = $csvDeputyship->deputyIsActiveOnOrder();
 
         return $changes;
     }
