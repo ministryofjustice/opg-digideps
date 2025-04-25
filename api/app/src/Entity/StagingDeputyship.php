@@ -127,4 +127,31 @@ class StagingDeputyship
     {
         return 'ACTIVE' === $this->deputyStatusOnOrder;
     }
+
+    /**
+     * Check that this StagingDeputyship has the necessary data to create a valid update order status candidate.
+     * Note that $orderUid and $deputyUid cannot be null.
+     */
+    public function validForUpdateOrderStatusCandidate(): bool
+    {
+        return !is_null($this->orderStatus);
+    }
+
+    /**
+     * Check that this StagingDeputyship has the necessary data to create a valid update or insert deputy <-> order status candidate.
+     * Note that $orderUid and $deputyUid cannot be null.
+     */
+    public function validForOrderDeputyStatusCandidate(): bool
+    {
+        return !is_null($this->deputyStatusOnOrder);
+    }
+
+    /**
+     * Check that this StagingDeputyship has the necessary data to create a valid insert order candidate.
+     * Note that $orderUid and $deputyUid cannot be null.
+     */
+    public function validForInsertOrderCandidate(): bool
+    {
+        return !is_null($this->orderType) && !is_null($this->orderStatus) && !is_null($this->orderMadeDate);
+    }
 }

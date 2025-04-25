@@ -28,7 +28,7 @@ class CourtOrderAndDeputyCandidatesFactory
         private readonly DeputyRepository $deputyRepository,
         private readonly ClientRepository $clientRepository,
         private readonly CourtOrderDeputyRepository $courtOrderDeputyRepository,
-        private CourtOrderCache $courtOrderCache,
+        private readonly CourtOrderCache $courtOrderCache,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
     ) {
     }
