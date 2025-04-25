@@ -8,7 +8,6 @@ use App\Entity\CourtOrder;
 use App\Repository\ClientRepository;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
-use http\Exception\RuntimeException;
 
 /**
  * Cached court order, deputy, and client data, for fast lookup of IDs and statuses by UID.
@@ -75,7 +74,7 @@ class DeputyshipProcessingLookupCache
     private function throwIfNotInitialised(): void
     {
         if (!$this->isInitialised) {
-            throw new RuntimeException($this::class.' is not initialised');
+            throw new \RuntimeException($this::class.' is not initialised');
         }
     }
 
