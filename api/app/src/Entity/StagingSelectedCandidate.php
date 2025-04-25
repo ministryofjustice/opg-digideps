@@ -24,6 +24,11 @@ use JMS\Serializer\Annotation as JMS;
  */
 class StagingSelectedCandidate
 {
+    public const UPDATE_ORDER_STATUS = 'UPDATE ORDER STATUS';
+    public const UPDATE_DEPUTY_STATUS = 'UPDATE DEPUTY STATUS ON ORDER';
+    public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
+    public const INSERT_ORDER = 'INSERT ORDER';
+
     /**
      * @ORM\Id
      *

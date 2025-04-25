@@ -10,7 +10,7 @@ use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
 use App\Entity\StagingDeputyship;
 use App\Factory\StagingSelectedCandidateFactory;
-use App\Model\CourtOrderCache;
+use App\Model\DeputyshipProcessingLookupCache;
 use App\Repository\ClientRepository;
 use App\Repository\CourtOrderDeputyRepository;
 use App\Repository\DeputyRepository;
@@ -39,7 +39,7 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
     private ClientRepository|EntityRepository $clientRepository;
     private CourtOrderDeputyRepository|EntityRepository $courtOrderDeputyRepository;
     private StagingDeputyshipRepository|EntityRepository $stagingDeputyshipRepository;
-    private CourtOrderCache $courtOrderCache;
+    private DeputyshipProcessingLookupCache $courtOrderCache;
     private CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory;
     private StagingSelectedCandidateFactory $stagingSelectedCandidateFactory;
 
@@ -54,12 +54,14 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
         $this->clientRepository = $this->entityManager->getRepository(Client::class);
         $this->courtOrderDeputyRepository = $this->entityManager->getRepository(CourtOrderDeputy::class);
         $this->stagingDeputyshipRepository = $this->entityManager->getRepository(StagingDeputyship::class);
-        $this->courtOrderCache = new CourtOrderCache($this->entityManager->getRepository(CourtOrder::class));
+        $this->courtOrderCache = new DeputyshipProcessingLookupCache(
+            $this->entityManager->getRepository(CourtOrder::class),
+            $this->deputyRepository,
+            $this->clientRepository,
+        );
         $this->stagingSelectedCandidateFactory = new StagingSelectedCandidateFactory();
 
         $this->courtOrderAndDeputyCandidatesFactory = new CourtOrderAndDeputyCandidatesFactory(
-            $this->deputyRepository,
-            $this->clientRepository,
             $this->courtOrderDeputyRepository,
             $this->courtOrderCache,
             $this->stagingSelectedCandidateFactory,

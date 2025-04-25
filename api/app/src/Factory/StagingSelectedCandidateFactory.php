@@ -7,15 +7,10 @@ use App\Entity\StagingSelectedCandidate;
 
 class StagingSelectedCandidateFactory
 {
-    public const UPDATE_ORDER_STATUS = 'UPDATE ORDER STATUS';
-    public const UPDATE_DEPUTY_STATUS = 'UPDATE DEPUTY STATUS ON ORDER';
-    public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
-    public const INSERT_ORDER = 'INSERT ORDER';
-
     public function createUpdateOrderStatusCandidate(StagingDeputyship $csvDeputyship, int $courtOrderId): StagingSelectedCandidate
     {
         $changes = new StagingSelectedCandidate();
-        $changes->action = self::UPDATE_ORDER_STATUS;
+        $changes->action = StagingSelectedCandidate::UPDATE_ORDER_STATUS;
 
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
@@ -32,7 +27,7 @@ class StagingSelectedCandidateFactory
         int $courtOrderId,
     ): StagingSelectedCandidate {
         $changes = new StagingSelectedCandidate();
-        $changes->action = self::UPDATE_DEPUTY_STATUS;
+        $changes->action = StagingSelectedCandidate::UPDATE_DEPUTY_STATUS;
 
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
@@ -49,7 +44,7 @@ class StagingSelectedCandidateFactory
         int $deputyId,
     ): StagingSelectedCandidate {
         $changes = new StagingSelectedCandidate();
-        $changes->action = self::INSERT_ORDER_DEPUTY;
+        $changes->action = StagingSelectedCandidate::INSERT_ORDER_DEPUTY;
 
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
@@ -63,7 +58,7 @@ class StagingSelectedCandidateFactory
     public function createInsertOrderCandidate(StagingDeputyship $csvDeputyship, int $clientId): StagingSelectedCandidate
     {
         $changes = new StagingSelectedCandidate();
-        $changes->action = self::INSERT_ORDER;
+        $changes->action = StagingSelectedCandidate::INSERT_ORDER;
 
         $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;

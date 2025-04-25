@@ -7,10 +7,8 @@ namespace App\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Factory\StagingSelectedCandidateFactory;
-use App\Model\CourtOrderCache;
-use App\Repository\ClientRepository;
+use App\Model\DeputyshipProcessingLookupCache;
 use App\Repository\CourtOrderDeputyRepository;
-use App\Repository\DeputyRepository;
 
 /**
  * Create candidate order and court order <-> deputy for a StagingDeputyship (which typically represents a row in the ingested
@@ -18,26 +16,16 @@ use App\Repository\DeputyRepository;
  */
 class CourtOrderAndDeputyCandidatesFactory
 {
-    /** @var array<string, int> */
-    private array $deputyUidToId;
-
-    /** @var array<string, int> */
-    private array $clientCasenumberToId;
-
     public function __construct(
-        private readonly DeputyRepository $deputyRepository,
-        private readonly ClientRepository $clientRepository,
         private readonly CourtOrderDeputyRepository $courtOrderDeputyRepository,
-        private readonly CourtOrderCache $courtOrderCache,
+        private readonly DeputyshipProcessingLookupCache $deputyshipLookupCache,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
     ) {
     }
 
     public function cacheLookupTables(): void
     {
-        $this->deputyUidToId = $this->deputyRepository->getUidToIdMapping();
-        $this->clientCasenumberToId = $this->clientRepository->getActiveCasenumberToIdMapping();
-        $this->courtOrderCache->cacheLookupTables();
+        $this->deputyshipLookupCache->init();
     }
 
     /**
@@ -47,14 +35,14 @@ class CourtOrderAndDeputyCandidatesFactory
      */
     public function create(StagingDeputyship $csvDeputyship): array
     {
-        $existingCourtOrderId = $this->courtOrderCache->getIdForUid($csvDeputyship->orderUid);
-        $existingDeputyId = $this->deputyUidToId[$csvDeputyship->deputyUid] ?? null;
-        $existingClientId = $this->clientCasenumberToId[$csvDeputyship->caseNumber] ?? null;
+        $existingCourtOrderId = $this->deputyshipLookupCache->getCourtOrderIdForUid($csvDeputyship->orderUid);
+        $existingDeputyId = $this->deputyshipLookupCache->getDeputyIdForUid($csvDeputyship->deputyUid);
+        $existingClientId = $this->deputyshipLookupCache->getClientIdForCasenumber($csvDeputyship->caseNumber);
         $needsNewCourtOrder = (is_null($existingCourtOrderId) && !is_null($existingClientId));
 
         $candidates = [];
 
-        // COURT ORDER DOESN'T EXIST BUT ACTIVE CLIENT DOES; CREATE COURT ORDER
+        // COURT ORDER DOESN'T EXIST BUT ACTIVE CLIENT DOES; INSERT NEW COURT ORDER
         if ($needsNewCourtOrder) {
             $candidates[] = $this->candidateFactory->createInsertOrderCandidate(
                 $csvDeputyship,
@@ -73,7 +61,7 @@ class CourtOrderAndDeputyCandidatesFactory
         // COURT ORDER EXISTS; UPDATE COURT ORDER STATUS
         if (!is_null($existingCourtOrderId)) {
             // if court order status is different, update it
-            $currentOrderStatus = $this->courtOrderCache->getStatusForUid($csvDeputyship->orderUid);
+            $currentOrderStatus = $this->deputyshipLookupCache->getCourtOrderStatusForUid($csvDeputyship->orderUid);
 
             if ($csvDeputyship->orderStatus !== $currentOrderStatus) {
                 $candidates[] = $this->candidateFactory->createUpdateOrderStatusCandidate(
