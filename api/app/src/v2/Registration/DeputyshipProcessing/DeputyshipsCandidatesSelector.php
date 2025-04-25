@@ -52,30 +52,26 @@ class DeputyshipsCandidatesSelector
             $existingDeputyId = $deputyUidToId[$csvDeputyship->deputyUid] ?? null;
             $existingClientId = $clientCasenumberToId[$csvDeputyship->caseNumber] ?? null;
 
-            if (is_null($existingCourtOrderId)) {
-                // COURT ORDER DOESN'T EXIST
+            $needsNewCourtOrder = (is_null($existingCourtOrderId) && !is_null($existingClientId));
 
-                // if client exists, add court order (no client => no court order)
-                if (!is_null($existingClientId)) {
-                    // ACTIVE CLIENT EXISTS
-                    $candidates[] = $this->candidateFactory->createInsertOrderCandidate(
-                        $csvDeputyship,
-                        $existingClientId
-                    );
+            // COURT ORDER DOESN'T EXIST BUT ACTIVE CLIENT DOES; CREATE COURT ORDER
+            if ($needsNewCourtOrder) {
+                $candidates[] = $this->candidateFactory->createInsertOrderCandidate(
+                    $csvDeputyship,
+                    $existingClientId
+                );
+            }
 
-                    // if a matching deputy exists, associate them with the court order we're adding;
-                    // (again, no client => no court order, and no court order deputy relationship)
-                    if (!is_null($existingDeputyId)) {
-                        // DEPUTY EXISTS
-                        $candidates[] = $this->candidateFactory->createInsertOrderDeputyCandidate(
-                            $csvDeputyship,
-                            $existingDeputyId
-                        );
-                    }
-                }
-            } else {
-                // COURT ORDER EXISTS
+            // COURT ORDER DOESN'T EXIST, BUT DEPUTY DOES; INSERT NEW COURT ORDER <-> DEPUTY RELATIONSHIP
+            if ($needsNewCourtOrder && !is_null($existingDeputyId)) {
+                $candidates[] = $this->candidateFactory->createInsertOrderDeputyCandidate(
+                    $csvDeputyship,
+                    $existingDeputyId
+                );
+            }
 
+            // COURT ORDER EXISTS; UPDATE COURT ORDER STATUS
+            if (!is_null($existingCourtOrderId)) {
                 // if court order status is different, update it
                 $currentOrderStatus = $this->courtOrderCache->getStatusForUid($csvDeputyship->orderUid);
                 if ($csvDeputyship->orderStatus !== $currentOrderStatus) {
@@ -84,29 +80,28 @@ class DeputyshipsCandidatesSelector
                         $existingCourtOrderId
                     );
                 }
+            }
 
-                // update or add court order deputy relationship
-                if (!is_null($existingDeputyId)) {
-                    // DEPUTY EXISTS
-                    $existingRelationship = $this->courtOrderDeputyRepository->getDeputyOnCourtOrder(
-                        $existingCourtOrderId,
+            // COURT ORDER EXISTS, AS DOES DEPUTY; INSERT OR UPDATE COURT ORDER <-> DEPUTY RELATIONSHIP
+            if (!is_null($existingCourtOrderId) && !is_null($existingDeputyId)) {
+                $existingRelationship = $this->courtOrderDeputyRepository->getDeputyOnCourtOrder(
+                    $existingCourtOrderId,
+                    $existingDeputyId
+                );
+
+                if (is_null($existingRelationship)) {
+                    // no existing court order deputy, so add relationship with correct status
+                    $candidates[] = $this->candidateFactory->createInsertOrderDeputyCandidate(
+                        $csvDeputyship,
                         $existingDeputyId
                     );
-
-                    if (is_null($existingRelationship)) {
-                        // no existing court order deputy, so add relationship with correct status
-                        $candidates[] = $this->candidateFactory->createInsertOrderDeputyCandidate(
-                            $csvDeputyship,
-                            $existingDeputyId
-                        );
-                    } elseif ($csvDeputyship->deputyIsActiveOnOrder() !== $existingRelationship->isActive()) {
-                        // existing court order deputy relationship but status is different, so update
-                        $candidates[] = $this->candidateFactory->createUpdateDeputyStatusCandidate(
-                            $csvDeputyship,
-                            $existingDeputyId,
-                            $existingCourtOrderId
-                        );
-                    }
+                } elseif ($csvDeputyship->deputyIsActiveOnOrder() !== $existingRelationship->isActive()) {
+                    // existing court order deputy relationship but status is different, so update
+                    $candidates[] = $this->candidateFactory->createUpdateDeputyStatusCandidate(
+                        $csvDeputyship,
+                        $existingDeputyId,
+                        $existingCourtOrderId
+                    );
                 }
             }
         }
