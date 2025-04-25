@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\Entity\StagingSelectedCandidate;
+
 class DeputyshipsIngestResultRecorder
 {
     private const SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
@@ -28,7 +30,7 @@ class DeputyshipsIngestResultRecorder
     /**
      * Record the candidate records found which will result in database activity.
      *
-     * @param DeputyshipPipelineState[] $candidates
+     * @param StagingSelectedCandidate[] $candidates
      */
     public function recordDeputyshipCandidates(array $candidates): void
     {

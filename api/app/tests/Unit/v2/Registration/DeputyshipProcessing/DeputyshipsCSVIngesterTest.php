@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingDeputyship;
+use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPipelineState;
@@ -83,10 +83,10 @@ class DeputyshipsCSVIngesterTest extends TestCase
      */
     public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus, string $expectedMethodCall): void
     {
-        $dto = new StagingDeputyship();
-        $state = new DeputyshipPipelineState($dto, $expectedStatus);
+        $state = new DeputyshipPipelineState($expectedStatus);
 
-        $candidates = [$state];
+        $dto = new StagingSelectedCandidate();
+        $candidates = [$dto];
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
@@ -107,7 +107,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects($this->once())
             ->method('build')
-            ->with($state)
+            ->with($dto)
             ->willReturn($state);
 
         $this->mockDeputyshipPersister->expects($this->once())
