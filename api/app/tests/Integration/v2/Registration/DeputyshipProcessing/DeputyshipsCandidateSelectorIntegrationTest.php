@@ -18,6 +18,7 @@ use App\Repository\StagingDeputyshipRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\v2\CSV\CSVChunkerFactory;
+use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -39,6 +40,7 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
     private CourtOrderDeputyRepository|EntityRepository $courtOrderDeputyRepository;
     private StagingDeputyshipRepository|EntityRepository $stagingDeputyshipRepository;
     private CourtOrderCache $courtOrderCache;
+    private CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory;
     private StagingSelectedCandidateFactory $stagingSelectedCandidateFactory;
 
     protected function setUp(): void
@@ -54,6 +56,14 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
         $this->stagingDeputyshipRepository = $this->entityManager->getRepository(StagingDeputyship::class);
         $this->courtOrderCache = new CourtOrderCache($this->entityManager->getRepository(CourtOrder::class));
         $this->stagingSelectedCandidateFactory = new StagingSelectedCandidateFactory();
+
+        $this->courtOrderAndDeputyCandidatesFactory = new CourtOrderAndDeputyCandidatesFactory(
+            $this->deputyRepository,
+            $this->clientRepository,
+            $this->courtOrderDeputyRepository,
+            $this->courtOrderCache,
+            $this->stagingSelectedCandidateFactory,
+        );
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
 
@@ -83,17 +93,14 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setOrderType('pfa');
         $courtOrder->setStatus('OPEN');
         $courtOrder->setOrderMadeDate(new \DateTime('2018-01-21'));
+
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
 
         $sut = new DeputyshipsCandidatesSelector(
             $this->entityManager,
-            $this->deputyRepository,
-            $this->clientRepository,
-            $this->courtOrderDeputyRepository,
             $this->stagingDeputyshipRepository,
-            $this->courtOrderCache,
-            $this->stagingSelectedCandidateFactory
+            $this->courtOrderAndDeputyCandidatesFactory,
         );
 
         $selectedCandidates = $sut->select();
@@ -128,12 +135,8 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
 
         $sut = new DeputyshipsCandidatesSelector(
             $this->entityManager,
-            $this->deputyRepository,
-            $this->clientRepository,
-            $this->courtOrderDeputyRepository,
             $this->stagingDeputyshipRepository,
-            $this->courtOrderCache,
-            $this->stagingSelectedCandidateFactory
+            $this->courtOrderAndDeputyCandidatesFactory,
         );
 
         $selectedCandidates = $sut->select();
@@ -164,12 +167,8 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
 
         $sut = new DeputyshipsCandidatesSelector(
             $this->entityManager,
-            $this->deputyRepository,
-            $this->clientRepository,
-            $this->courtOrderDeputyRepository,
             $this->stagingDeputyshipRepository,
-            $this->courtOrderCache,
-            $this->stagingSelectedCandidateFactory
+            $this->courtOrderAndDeputyCandidatesFactory,
         );
 
         $selectedCandidates = $sut->select();
@@ -202,12 +201,8 @@ class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
 
         $sut = new DeputyshipsCandidatesSelector(
             $this->entityManager,
-            $this->deputyRepository,
-            $this->clientRepository,
-            $this->courtOrderDeputyRepository,
             $this->stagingDeputyshipRepository,
-            $this->courtOrderCache,
-            $this->stagingSelectedCandidateFactory
+            $this->courtOrderAndDeputyCandidatesFactory,
         );
 
         $selectedCandidates = $sut->select();

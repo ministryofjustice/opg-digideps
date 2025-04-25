@@ -16,17 +16,17 @@ class CourtOrderCache
     private bool $isInitialised = false;
 
     /** @var array<string, int> */
-    private array $courtOrderUidToId = [];
+    public array $courtOrderUidToId = [];
 
     /** @var array<string, string> */
-    private array $courtOrderUidToStatus = [];
+    public array $courtOrderUidToStatus = [];
 
     public function __construct(
         private readonly CourtOrderRepository $courtOrderRepository,
     ) {
     }
 
-    public function init(): void
+    public function cacheLookupTables(): void
     {
         /** @var CourtOrder[] $knownCourtOrders */
         $knownCourtOrders = $this->courtOrderRepository->createQueryBuilder('co')
