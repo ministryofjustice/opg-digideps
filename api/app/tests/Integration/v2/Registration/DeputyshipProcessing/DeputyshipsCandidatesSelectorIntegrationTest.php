@@ -30,7 +30,7 @@ use League\Csv\UnavailableStream;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipsCandidateSelectorIntegrationTest extends KernelTestCase
+class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 {
     private EntityManager $entityManager;
     private CSVChunkerFactory $chunkerFactory;
