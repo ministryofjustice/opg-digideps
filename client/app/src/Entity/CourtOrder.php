@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -36,6 +37,13 @@ class CourtOrder
      * @JMS\Type("string")
      */
     private $status;
+
+    /**
+     * @JMS\Type("array<App\Entity\Report\Report>")
+     *
+     * @var Report[]
+     */
+    private array $reports = [];
 
     public function getId(): int
     {
@@ -83,5 +91,24 @@ class CourtOrder
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * @return array $reports
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+
+    public function getActiveReport(): ?Report
+    {
+        foreach ($this->getReports() as $report) {
+            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
+                return $report;
+            }
+        }
+
+        return null;
     }
 }

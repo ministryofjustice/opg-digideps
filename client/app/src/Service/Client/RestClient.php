@@ -315,6 +315,8 @@ class RestClient implements RestClientInterface
             return $responseArray;
         } elseif ('[]' == substr($expectedResponseType, -2)) {
             return $this->arrayToEntities($expectedResponseType, $responseArray);
+        } elseif (class_exists($expectedResponseType)) {
+            return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
