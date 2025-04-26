@@ -255,16 +255,18 @@ class RestClient implements RestClientInterface
         return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
 
-    /**
-     * @param string $endpoint e.g. /user
-     *
-     * @return string response body
-     */
-    public function delete($endpoint)
+    public function delete(string $endpoint): ?array
     {
-        return $this->apiCall('delete', $endpoint, null, 'array', [
+        $response = $this->rawSafeCall('delete', $endpoint, [
+            'addClientSecret' => false,
             'addAuthToken' => true,
         ]);
+
+        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
+            return null;
+        }
+
+        return $this->extractDataArray($response);
     }
 
     /**

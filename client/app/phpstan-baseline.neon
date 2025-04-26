@@ -11986,11 +11986,6 @@ parameters:
 			path: src/Service/Client/Internal/PreRegistrationApi.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\PreRegistrationApi\\:\\:deleteAll\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/PreRegistrationApi.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\PreRegistrationApi\\:\\:verify\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/PreRegistrationApi.php
