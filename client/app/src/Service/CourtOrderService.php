@@ -6,13 +6,13 @@ namespace App\Service;
 
 use App\Entity\CourtOrder;
 use App\Service\Client\RestClient;
+use Psr\Log\LoggerInterface;
 
 class CourtOrderService
 {
     public function __construct(
         private readonly RestClient $restClient
-    )
-    {
+    ) {
     }
 
     public function getByUid(string $uid): CourtOrder

@@ -2,6 +2,7 @@
 
 namespace App\Service\Client;
 
+use App\Entity\CourtOrder;
 use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
@@ -316,6 +317,11 @@ class RestClient implements RestClientInterface
         } elseif ('[]' == substr($expectedResponseType, -2)) {
             return $this->arrayToEntities($expectedResponseType, $responseArray);
         } elseif (class_exists($expectedResponseType)) {
+            // TODO - Don't leave this in
+            if ($expectedResponseType === CourtOrder::class) {
+                $this->logger->warning(print_r($responseArray, true));
+            }
+
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);

@@ -39,11 +39,23 @@ class CourtOrder
     private $status;
 
     /**
+     * @JMS\Type("array<App\Entity\Deputy>")
+     *
+     * @var Deputy[]
+     */
+    private array $activeDeputies = [];
+
+    /**
      * @JMS\Type("array<App\Entity\Report\Report>")
      *
      * @var Report[]
      */
     private array $reports = [];
+
+    /**
+     * @JMS\Type("App\Entity\Client")
+     */
+    private Client $client;
 
     public function getId(): int
     {
@@ -101,6 +113,19 @@ class CourtOrder
         return $this->reports;
     }
 
+    /**
+     * @return Deputy[]
+     */
+    public function getActiveDeputies(): array
+    {
+        return $this->activeDeputies;
+    }
+
+    public function hasCoDeputies()
+    {
+        return count($this->activeDeputies) > 1;
+    }
+
     public function getActiveReport(): ?Report
     {
         foreach ($this->getReports() as $report) {
@@ -110,5 +135,10 @@ class CourtOrder
         }
 
         return null;
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
     }
 }

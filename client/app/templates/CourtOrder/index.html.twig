@@ -15,9 +15,11 @@
 {#    {% if ndrEnabled %} #}
 {#        {% include '@App/Ndr/Ndr/index.html.twig' %}#}
 {#    {% else %}#}
-{#        {% if clientHasCoDeputies %}#}
-{#            {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}#}
-{#        {% endif %}#}
+        {% if courtOrder.hasCoDeputies %}
+            {% set client = courtOrder.getClient %}
+            {% set coDeputies = courtOrder.getActiveDeputies %}
+            {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
+        {% endif %}
 
 {#        {% if client.unsubmittedReport %}#}
 {#            {% set report = client.unsubmittedReport %}#}

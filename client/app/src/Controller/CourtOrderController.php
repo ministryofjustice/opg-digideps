@@ -14,8 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CourtOrderController extends AbstractController
 {
     public function __construct(
-        private readonly CourtOrderService $courtOrderService,
-        private readonly LoggerInterface $logger
+        private readonly CourtOrderService $courtOrderService
     ) {
     }
 
@@ -26,12 +25,8 @@ class CourtOrderController extends AbstractController
      */
     public function getOrdersByUidAction(string $uid): array
     {
-        $data = [
+        return [
             'courtOrder' => $this->courtOrderService->getByUid($uid),
         ];
-
-        $this->logger->warning(print_r($data, true));
-
-        return $data;
     }
 }
