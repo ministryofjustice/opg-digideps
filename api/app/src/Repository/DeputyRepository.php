@@ -28,7 +28,7 @@ class DeputyRepository extends ServiceEntityRepository
                c.lastname AS "lastName",
                c.case_number AS "caseNumber",
                co.court_order_uid AS "courtOrderUid",
-               r.type AS "reportType"
+               r.type AS "type"
         FROM deputy d
         LEFT JOIN client c ON c.deputy_id = d.id
         LEFT JOIN court_order co ON co.client_id = c.id

@@ -49,12 +49,12 @@ class DeputyController extends AbstractController
             return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user');
         }
 
-        $inactive = $request->query->has('inactive') ? $request->query->get('inactive') : null;
+        $inactive = $request->query->has('inactive');
 
         try {
-            $results = $this->deputyRepository->findReportsInfoByUid($uid, (bool) $inactive);
+            $results = $this->deputyRepository->findReportsInfoByUid($uid, $inactive);
         } catch (\Exception $e) {
-            $this->logger->error(sprintf('Error occurred during Deputy report retrieval:%s', $e->getMessage()));
+            $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 
             return $this->buildErrorResponse();
         }
