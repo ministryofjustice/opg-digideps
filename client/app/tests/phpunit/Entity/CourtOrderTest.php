@@ -64,4 +64,52 @@ class CourtOrderTest extends TestCase
 
         $this->assertSame($activeReport1, $result);
     }
+
+    public static function unsubmittedReportProvider(): array
+    {
+        return [
+            'No reports' => [],
+            'Submitted report' => [(new Report())->setSubmitted(true)],
+            'Report submitted and unsubmitted date set' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new DateTime())],
+        ];
+    }
+
+    /**
+     * @dataProvider unsubmittedReportProvider
+     */
+    public function testGetUnsubmittedReportNull(?Report $report = null)
+    {
+        $this->courtOrder->setReports($report ? [$report] : []);
+
+        $result = $this->courtOrder->getUnsubmittedReport();
+
+        $this->assertNull($result);
+    }
+
+    public function testGetUnsubmittedReportOneUnsubmittedReport()
+    {
+        $report = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+        $this->courtOrder->setReports([$report]);
+
+        $result = $this->courtOrder->getUnsubmittedReport();
+
+        $this->assertSame($report, $result);
+    }
+
+    public function testGetFirstUnsubmittedReport()
+    {
+        $activeReport = new Report();
+        $unsubmittedReport1 = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+        $unsubmittedReport2 = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+
+        $this->courtOrder->setReports([
+            $activeReport,
+            $unsubmittedReport1,
+            $unsubmittedReport2
+        ]);
+
+        $result = $this->courtOrder->getUnsubmittedReport();
+
+        $this->assertSame($unsubmittedReport1, $result);
+    }
 }
