@@ -148,6 +148,14 @@ class CourtOrder
         return null;
     }
 
+    /**
+     * @return Report[]
+     */
+    public function getSubmittedReports(): array
+    {
+        return array_filter($this->reports, fn ($report) => $report->isSubmitted());
+    }
+
     public function getClient(): Client
     {
         return $this->client;

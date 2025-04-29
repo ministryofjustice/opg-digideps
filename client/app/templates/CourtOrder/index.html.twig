@@ -54,50 +54,46 @@
         {% endembed %}
     {% endif %}
 
+    {% if courtOrder.submittedReports %}
+        <h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'submittedReports' | trans({}, 'common') }}</h2>
 
-{#        {% if client.submittedReports %}#}
-
-{#            <h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'submittedReports' | trans({}, 'common') }}</h2>#}
-
-{#            <table class="govuk-table">#}
-{#                <thead class="govuk-table__head">#}
-{#                    <tr class="govuk-table__row">#}
-{#                        <th scope="col" class="govuk-table__header">{{ (page ~ '.reportType') | trans }}</th>#}
-{#                        <th scope="col" class="govuk-table__header">{{ (page ~ '.reportingPeriod') | trans }}</th>#}
-{#                        <th scope="col" class="govuk-table__header">{{ (page ~ '.submissionDate') | trans }}</th>#}
-{#                        <th scope="col" class="govuk-table__header">#}
-{#                            <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>#}
-{#                        </th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody class="govuk-table__body behat-region-submitted-reports">#}
-{#                {% for report in client.submittedReports %}#}
-{#                    <tr class="govuk-table__row">#}
-{#                        <td class="govuk-table__cell">#}
-{#                            <a href="{{ path('report_review', {reportId: report.id}) }}">#}
-{#                                {{ 'annualDeputyReport' | trans({}, 'common') }}#}
-{#                            </a>#}
-{#                        </td>#}
-{#                        <td class="govuk-table__cell">{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>#}
-{#                        <td class="govuk-table__cell">{{ report.submitDate | date("j F Y") }}</td>#}
-{#                        <td class="govuk-table__cell text--right">#}
-{#                            <a href="{{ path('report_review', {reportId: report.id}) }}" class="govuk-link behat-link-report-review">#}
-{#                                {{ 'view' | trans({}, 'common') }}#}
-{#                            </a><br>#}
-{#                            <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="govuk-link behat-link-report-download">#}
-{#                                {{ (page ~ '.downloadPdf') | trans }}#}
-{#                            </a><br>#}
-{#                            <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap govuk-link behat-link-add-more-documents">#}
-{#                                {{ (page ~ '.attachDocuments') | trans }}#}
-{#                            </a>#}
-{#                        </td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-
-{#        {% endif %}#}
-{#    {% endif %}#}
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.reportType') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.submissionDate') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body behat-region-submitted-reports">
+            {% for report in courtOrder.submittedReports %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}">
+                            {{ 'annualDeputyReport' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell">{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+                    <td class="govuk-table__cell">{{ report.submitDate | date("j F Y") }}</td>
+                    <td class="govuk-table__cell text--right">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="govuk-link behat-link-report-review">
+                            {{ 'view' | trans({}, 'common') }}
+                        </a><br>
+                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="govuk-link behat-link-report-download">
+                            {{ (page ~ '.downloadPdf') | trans }}
+                        </a><br>
+                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap govuk-link behat-link-add-more-documents">
+                            {{ (page ~ '.attachDocuments') | trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     <noscript>
         {{ hidden_ga_event('Javascript Disabled') }}
