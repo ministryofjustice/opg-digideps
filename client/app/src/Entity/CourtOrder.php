@@ -157,7 +157,7 @@ class CourtOrder
         return $this->client;
     }
 
-    public function hasCoDeputies()
+    public function hasCoDeputies(): bool
     {
         return count($this->activeDeputies) > 1;
     }

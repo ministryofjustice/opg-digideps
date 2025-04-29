@@ -17,6 +17,6 @@ class CourtOrderService
 
     public function getByUid(string $uid): CourtOrder
     {
-        return $this->restClient->get(sprintf('v2/courtorder/%s', $uid), CourtOrder::class);
+        return $this->restClient->getAndDeserialize(sprintf('v2/courtorder/%s', $uid), CourtOrder::class);
     }
 }

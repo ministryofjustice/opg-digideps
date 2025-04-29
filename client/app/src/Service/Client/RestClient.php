@@ -223,6 +223,22 @@ class RestClient implements RestClientInterface
     }
 
     /**
+     * @template T of object
+     * @param class-string<T> $deserializationClass
+     * @return T
+     */
+    public function getAndDeserialize(string $endpoint, string $deserializationClass): object
+    {
+        /** @var array $resultArray */
+        $resultArray = $this->get($endpoint, 'array');
+
+        /** @var T $deserializedObject */
+        $deserializedObject = $this->serializer->deserialize(json_encode($resultArray, JSON_THROW_ON_ERROR), $deserializationClass, 'json');
+
+        return $deserializedObject;
+    }
+
+    /**
      * @param string              $endpoint  e.g. /user
      * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array               $jmsGroups deserialise_groups
