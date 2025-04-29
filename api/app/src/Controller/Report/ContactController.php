@@ -10,9 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/report")
- */
+#[Route(path: '/report')]
 class ContactController extends RestController
 {
     private array $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
@@ -22,15 +20,12 @@ class ContactController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/contact/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/contact/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['contact'];
+            ? $request->query->all('groups') : ['contact'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id);
@@ -39,11 +34,8 @@ class ContactController extends RestController
         return $contact;
     }
 
-    /**
-     * @Route("/contact/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/contact/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteContact($id)
     {
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id, 'Contact not found');
@@ -59,11 +51,8 @@ class ContactController extends RestController
         return [];
     }
 
-    /**
-     * @Route("/contact", methods={"POST", "PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     **/
+    #[Route(path: '/contact', methods: ['POST', 'PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function upsertContact(Request $request)
     {
         $contactData = $this->formatter->deserializeBodyContent($request);
@@ -117,11 +106,8 @@ class ContactController extends RestController
         return ['id' => $contact->getId()];
     }
 
-    /**
-     * @Route("/{id}/contacts", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/{id}/contacts', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getContacts($id)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);

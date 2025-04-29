@@ -7,6 +7,7 @@ Feature: Admin - Client Discharge
     When I visit the admin client details page for an existing client linked to a deputy in an Organisation
     And I attempt to discharge the client
     Then the client should be discharged
+    And I can see a count of active and discharged clients on the organisations page
 
 @admin-manager @prof-admin-health-welfare-submitted
   Scenario: An admin manager user discharges an org client

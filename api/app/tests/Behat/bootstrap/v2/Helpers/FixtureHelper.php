@@ -226,6 +226,11 @@ class FixtureHelper
         return $user;
     }
 
+    public function generateClient(User $user, ?Organisation $org = null, ?string $caseNumber = null): Client
+    {
+        return $this->clientTestHelper->generateClient($this->em, $user, $org, $caseNumber);
+    }
+
     private function addClientsAndReportsToLayDeputy(
         User $deputy,
         bool $completed = false,
@@ -1344,7 +1349,7 @@ class FixtureHelper
         return $user;
     }
 
-    private function setPassword($user, $legacyPasswordHash = false)
+    public function setPassword($user, $legacyPasswordHash = false)
     {
         if ($legacyPasswordHash) {
             $user->setPassword($this->fixtureParams['legacy_password_hash']);

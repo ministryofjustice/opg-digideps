@@ -38,12 +38,23 @@ services:
     bind:
       $symfonyEnvironment: "%kernel.environment%"
       $symfonyDebug: "%kernel.debug%"
-      Predis\ClientInterface: "@snc_redis.default"
+      Predis\ClientInterface: "@predis"
       $environment: "%env(ROLE)%"
       $hostedEnv: "%env(ENVIRONMENT)%"
       $projectDir: "%kernel.project_dir%"
       $sessionPrefix: "%session_prefix%"
       $workspace: "%workspace%"
+
+  predis:
+    class: Predis\Client
+    arguments:
+      - "%redis_dsn%"
+
+  Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+    arguments:
+      $redis: "@predis"
+      $options:
+        prefix: "%workspace%_%session_prefix%"
 
   App\:
     resource: "../src/"
@@ -60,7 +71,7 @@ services:
         "@security.token_storage",
         "@security.authorization_checker",
         "@router",
-        "@session",
+        "@request_stack",
         "%env(ROLE)%",
         '@App\Service\Client\Internal\ClientApi',
         "@logger",
@@ -339,7 +350,7 @@ services:
 
   App\Service\Client\TokenStorage\RedisStorage:
     arguments:
-      $redis: "@snc_redis.default"
+      $redis: "@predis"
 
   # Voter on User, used by PA area
   # http://symfony.com/doc/2.8/security/voters.html

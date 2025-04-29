@@ -364,7 +364,7 @@ class LayUserFixtures extends AbstractDataFixture
     private function populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report)
     {
         $courtOrder = new CourtOrder();
-        $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration, -$offset));
+        $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration, -$offset);
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setType($data['reportType']);
@@ -396,8 +396,8 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderPfa = new CourtOrder();
             $courtOrderHW = new CourtOrder();
 
-            $courtOrderUidPfa = intval(substr_replace($data['courtOrderUid'], $iteration. 103, -$offset));
-            $courtOrderUidHW = intval(substr_replace($data['courtOrderUid'], $iteration. 102, -$offset));
+            $courtOrderUidPfa = substr_replace($data['courtOrderUid'], $iteration. 103, -$offset);
+            $courtOrderUidHW = substr_replace($data['courtOrderUid'], $iteration. 102, -$offset);
 
             $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
             $courtOrderPfa->setType($data['reportType']);
@@ -458,7 +458,7 @@ class LayUserFixtures extends AbstractDataFixture
         } elseif ($data['multi-client']) {
             // add court order for additional client
             $additionalCourtOrder = new CourtOrder();
-            $courtOrderUid = intval(substr_replace($data['courtOrderUid'], $iteration. 2, -2));
+            $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration. 2, -2);
 
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
             $additionalCourtOrder->setType($data['reportType']);

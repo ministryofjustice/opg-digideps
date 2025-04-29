@@ -6,14 +6,10 @@ namespace App\Service\Client\Internal;
 
 use App\Entity\Client;
 use App\Entity\Report\Report;
-use App\Entity\User;
 use App\Event\ClientDeletedEvent;
 use App\Event\ClientUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
-use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
-use App\Service\Time\DateTimeProvider;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -24,64 +20,18 @@ class ClientApi
     private const UPDATE_CLIENT = 'client/upsert';
     private const CREATE_CLIENT = 'client/upsert';
     private const UNARCHIVE_CLIENT = 'client/%s/unarchive';
-
     private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
-
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
-
     private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var UserApi */
-    private $userApi;
-
-    /** @var DateTimeProvider */
-    private $dateTimeProvider;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var ObservableEventDispatcher */
-    private $eventDispatcher;
-
     public function __construct(
-        RestClientInterface $restClient,
-        RouterInterface $router,
-        LoggerInterface $logger,
-        UserApi $userApi,
-        DateTimeProvider $dateTimeProvider,
-        TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher
+        private readonly RestClientInterface $restClient,
+        private readonly RouterInterface $router,
+        private readonly UserApi $userApi,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
-        $this->restClient = $restClient;
-        $this->router = $router;
-        $this->logger = $logger;
-        $this->userApi = $userApi;
-        $this->dateTimeProvider = $dateTimeProvider;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * @param string[] $jmsGroups
-     *
-     * @return Client|null
-     */
-    public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
-    {
-        $user = $this->userApi->getUserWithData($jmsGroups);
-        $clients = $user->getClients();
-
-        return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
     }
 
     /**
@@ -89,11 +39,9 @@ class ClientApi
      * So we need to make another API call with the correct JMS groups
      * thus ensuring the client is retrieved with the current report.
      *
-     * @return string
-     *
      * @throws \Exception
      */
-    public function generateClientProfileLink(Client $client)
+    public function generateClientProfileLink(Client $client): string
     {
         /** @var Client $client */
         $client = $this->restClient->get(
@@ -118,34 +66,19 @@ class ClientApi
     }
 
     /**
-     * @return Client
+     * @param string[] $jmsGroups
+     *
+     * @return Client|null
      */
-    public function getWithUsers(int $clientId, array $includes = [])
+    public function getFirstClient($jmsGroups = ['user', 'user-clients', 'client'])
     {
-        return $this->restClient->get(
-            sprintf(self::GET_CLIENT_BY_ID, $clientId),
-            'Client',
-            [
-                'client',
-                'client-users',
-                'user',
-                'client-reports',
-                'client-ndr',
-                'ndr',
-                'report',
-                'status',
-                'client-deputy',
-                'deputy',
-                'client-organisations',
-                'organisation',
-            ]
-        );
+        $user = $this->userApi->getUserWithData($jmsGroups);
+        $clients = $user->getClients();
+
+        return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
     }
 
-    /**
-     * @return Client
-     */
-    public function getWithUsersV2(int $clientId, array $includes = [])
+    public function getWithUsersV2(int $clientId)
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
@@ -167,10 +100,7 @@ class ClientApi
         );
     }
 
-    /**
-     * @return Client
-     */
-    public function getById(int $clientId, array $includes = [])
+    public function getById(int $clientId)
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID, $clientId),
@@ -190,7 +120,7 @@ class ClientApi
         );
     }
 
-    public function delete(int $id, string $trigger)
+    public function delete(int $id, string $trigger): void
     {
         $clientWithUsers = $this->getWithUsersV2($id);
         $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -214,15 +144,12 @@ class ClientApi
         return $response;
     }
 
-    /**
-     * @return Client
-     */
     public function getByCaseNumber(string $caseNumber)
     {
         return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
     }
 
-    public function unarchiveClient(string $id)
+    public function unarchiveClient(string $id): void
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $this->restClient->put(sprintf(self::UNARCHIVE_CLIENT, $id), $currentUser);
@@ -241,7 +168,9 @@ class ClientApi
     }
 
     /**
-     * @return Client[]
+     * Return value can be null if deputy UID does not exist in the client table.
+     *
+     * @return ?Client[]
      */
     public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
     {
@@ -249,10 +178,5 @@ class ClientApi
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
             'Client[]', $groups
         );
-    }
-
-    public function checkDeputyHasMultiClients(User $user): bool
-    {
-        return 'ROLE_LAY_DEPUTY' == $user->getRoleName() && count($this->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
     }
 }

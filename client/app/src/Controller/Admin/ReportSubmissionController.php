@@ -173,7 +173,7 @@ class ReportSubmissionController extends AbstractController
             $contents = $this->s3Storage->retrieve($document->getStorageReference());
         } catch (\Throwable $e) {
             $filename = $document->getFileName();
-            throw $this->createNotFoundException("Document '${$filename}' could not be retrieved");
+            throw $this->createNotFoundException("Document '$filename' could not be retrieved");
         }
 
         $response = new Response($contents);
@@ -207,13 +207,15 @@ class ReportSubmissionController extends AbstractController
      */
     private function processPost(Request $request)
     {
-        if (empty($request->request->get('checkboxes'))) {
+        $checkedBoxes = $request->request->all('checkboxes');
+
+        if (empty($checkedBoxes)) {
             $this->addFlash('error', 'Please select at least one report submission');
 
             return;
         }
 
-        $checkedBoxes = array_keys($request->request->get('checkboxes'));
+        $checkedBoxes = array_keys($checkedBoxes);
         $action = is_null($request->request->get('multiAction')) ? null : strtolower($request->request->get('multiAction'));
 
         if (in_array($action, [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE, self::ACTION_SYNCHRONISE])) {

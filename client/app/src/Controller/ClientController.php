@@ -65,11 +65,8 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getById($clientId);
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
         return [
             'client' => $client,
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -95,7 +92,6 @@ class ClientController extends AbstractController
     public function editClientDetailsAction(Request $request, int $clientId)
     {
         $user = $this->userApi->getUserWithData();
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getById($clientId);
@@ -134,7 +130,6 @@ class ClientController extends AbstractController
         return [
             'client' => $preUpdateClient,
             'form' => $form->createView(),
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -162,12 +157,10 @@ class ClientController extends AbstractController
             // update existing client
             $existingClientId = $client->getId();
             $client = $this->restClient->get('client/'.$client->getId(), 'Client', ['client', 'report-id', 'current-report']);
-            $method = 'put';
             $client_validated = true;
         } else {
             // new client
             $client = new Client();
-            $method = 'post';
             $client_validated = false;
         }
 
@@ -205,13 +198,15 @@ class ClientController extends AbstractController
                 return $this->redirect($url);
             } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {
-                    $failureData = json_decode($e->getData()['message'], true);
+                    if (method_exists($e, 'getData')) {
+                        $failureData = json_decode($e->getData()['message'], true);
 
-                    // If response from API is not valid json just log the message
-                    $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
+                        // If response from API is not valid json just log the message
+                        $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
 
-                    $event = new RegistrationFailedEvent($failureData, $e->getMessage());
-                    $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
+                        $event = new RegistrationFailedEvent($failureData, $e->getMessage());
+                        $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
+                    }
 
                     throw $e;
                 }
@@ -248,9 +243,9 @@ class ClientController extends AbstractController
                         if ($decodedError['matching_errors']['deputy_postcode']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
-                        if ($decodedError['matching_errors']['deputy_lastname'] ||
-                            $decodedError['matching_errors']['deputy_firstname'] ||
-                            $decodedError['matching_errors']['deputy_postcode']
+                        if ($decodedError['matching_errors']['deputy_lastname']
+                            || $decodedError['matching_errors']['deputy_firstname']
+                            || $decodedError['matching_errors']['deputy_postcode']
                         ) {
                             $form->addError(new FormError('Please click back'));
                         }
@@ -273,7 +268,7 @@ class ClientController extends AbstractController
             'form' => $form->createView(),
             'client_validated' => $client_validated,
             'client' => $client,
-            'backLink' => $this->generateUrl('user_details')
+            'backLink' => $this->generateUrl('user_details'),
         ];
     }
 }

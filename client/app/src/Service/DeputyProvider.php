@@ -4,29 +4,21 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Service\Client\RestClient;
-use App\Service\Client\RestClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class DeputyProvider implements UserProviderInterface
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(RestClientInterface $restClient, LoggerInterface $logger)
-    {
-        $this->restClient = $restClient;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -57,17 +49,15 @@ class DeputyProvider implements UserProviderInterface
         }
     }
 
-    /**
-     * Finds user by id.
-     *
-     * @param int $id
-     */
-    public function loadUserByUsername($id)
+    public function loadUserByIdentifier(string $identifier): User
     {
         return $this->restClient
             // the userId needs to be told to the RestClient, as the user is not logged in yet
-            ->setLoggedUserId($id)
-            ->get('user/'.$id, 'User', ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']);
+            ->setLoggedUserId(intval($identifier))
+            ->get(
+                'user/'.$identifier, 'User',
+                ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']
+            );
     }
 
     /**
@@ -84,16 +74,11 @@ class DeputyProvider implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
-        return $this->loadUserByUsername($user->getId());
+        return $this->loadUserByIdentifier($user->getId());
     }
 
-    /**
-     * @param string $class
-     *
-     * @return bool
-     */
-    public function supportsClass($class)
+    public function supportsClass(string $class): bool
     {
-        return 'App\Entity\User' === $class;
+        return User::class === $class;
     }
 }

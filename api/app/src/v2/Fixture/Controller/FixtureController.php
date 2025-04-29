@@ -29,9 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/fixture")
- */
+#[Route(path: '/fixture')]
 class FixtureController extends AbstractController
 {
     use ControllerTrait;
@@ -49,19 +47,17 @@ class FixtureController extends AbstractController
         private NdrRepository $ndrRepository,
         private PreRegistrationFactory $preRegistrationFactory,
         private DeputyRepository $deputyRepository,
-        private string $symfonyEnvironment
+        private string $symfonyEnvironment,
     ) {
     }
 
     /**
-     * @Route("/court-order", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
      * @return JsonResponse
      *
      * @throws \Exception
      */
+    #[Route(path: '/court-order', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function createCourtOrderAction(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -107,23 +103,7 @@ class FixtureController extends AbstractController
             }
 
             if ($fromRequest['coDeputyEnabled']) {
-                $deputy->setCoDeputyClientConfirmed(true);
-                $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
-
-                $coDeputyPreRegistration = $this->preRegistrationFactory->create(
-                    [
-                        'caseNumber' => $client->getCaseNumber(),
-                        'clientLastName' => $client->getLastname(),
-                        'deputyPostCode' => $coDeputy->getAddressPostcode(),
-                        'deputyLastName' => $coDeputy->getLastname(),
-                        'deputyFirstName' => $coDeputy->getFirstName(),
-                        'reportType' => $fromRequest['reportType'],
-                        'deputyUid' => $coDeputy->getDeputyUid(),
-                    ]
-                );
-
-                $this->em->persist($coDeputyPreRegistration);
-                $this->em->persist($coDeputy);
+                $coDeputy = $this->createCoDeputy($deputy, $fromRequest, $client);
             }
         }
 
@@ -136,7 +116,7 @@ class FixtureController extends AbstractController
 
         $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $deputy->getId()] : $multiClientDeputy['deputyIds'];
 
-        if (isset($coDeputy)) {
+        if (!$fromRequest['multiClientEnabled'] && isset($coDeputy)) {
             $deputyIds['coDeputy'] = $coDeputy->getId();
         }
 
@@ -176,6 +156,11 @@ class FixtureController extends AbstractController
         $this->em->persist($deputyPreRegistration);
         $this->em->persist($deputy);
 
+        // Attach co-deputy to the primary client
+        if ($fromRequest['coDeputyEnabled']) {
+            $coDeputy = $this->createCoDeputy($deputy, $fromRequest, $client);
+        }
+
         // create second deputy account and client
         $fromRequest['deputyEmail'] = str_replace(['lay-multi-client-deputy-primary'], 'lay-multi-client-deputy-secondary', $fromRequest['deputyEmail']);
         $secondDeputyAccount = $this->createDeputy($fromRequest);
@@ -202,8 +187,13 @@ class FixtureController extends AbstractController
         $this->em->persist($secondDeputyAccount);
         $this->em->flush();
 
+        $deputyIds = ['original deputy' => $deputy->getId(), 'second deputy' => $secondDeputyAccount->getId()];
+        if (isset($coDeputy)) {
+            $deputyIds['coDeputy'] = $coDeputy->getId();
+        }
+
         return [
-            'deputyIds' => ['original deputy' => $deputy->getId(), 'second deputy' => $secondDeputyAccount->getId()],
+            'deputyIds' => $deputyIds,
             'multiClientCaseNumbers' => [$deputyPreRegistration->getCaseNumber(), $secondDeputyPreRegistration->getCaseNumber()],
         ];
     }
@@ -340,14 +330,12 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return JsonResponse
      *
      * @throws \Exception
      */
+    #[Route(path: '/complete-sections/{reportType}/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -377,11 +365,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);
     }
 
-    /**
-     * @Route("/createAdmin", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/createAdmin', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
     public function createAdmin(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -405,11 +390,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
-    /**
-     * @Route("/getUserIDByEmail/{email}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/getUserIDByEmail/{email}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
     public function getUserIDByEmail(string $email)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -427,11 +409,9 @@ class FixtureController extends AbstractController
 
     /**
      * Used for creating non-prof/pa users only as Org ID is required for those types.
-     *
-     * @Route("/createUser", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
+    #[Route(path: '/createUser', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createUser(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -459,11 +439,9 @@ class FixtureController extends AbstractController
 
     /**
      * Used for deleting users to clean up after tests.
-     *
-     * @Route("/deleteUser", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
+    #[Route(path: '/deleteUser', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function deleteUser(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -480,11 +458,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User deleted', Response::HTTP_OK);
     }
 
-    /**
-     * @Route("/createClientAttachDeputy", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
+    #[Route(path: '/createClientAttachDeputy', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createClientAndAttachToDeputy(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -519,11 +494,8 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
     }
 
-    /**
-     * @Route("/createClientAttachOrgs", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
+    #[Route(path: '/createClientAttachOrgs', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createClientAndAttachToOrgs(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -594,11 +566,8 @@ class FixtureController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/create-pre-registration", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
+    #[Route(path: '/create-pre-registration', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
     public function createPreRegistration(Request $request)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -609,7 +578,7 @@ class FixtureController extends AbstractController
 
         $preRegistration = $this->preRegistrationFactory->create($fromRequest);
 
-        $data = [
+        $primaryData = [
             'caseNumber' => $preRegistration->getCaseNumber(),
             'clientLastName' => $preRegistration->getClientLastname(),
             'deputyLastName' => $preRegistration->getDeputySurname(),
@@ -620,24 +589,43 @@ class FixtureController extends AbstractController
         if ($fromRequest['createCoDeputy']) {
             $coDeputy = $this->preRegistrationFactory->createCoDeputy($preRegistration->getCaseNumber(), $fromRequest);
             $this->em->persist($coDeputy);
-            $data['coDeputyLastName'] = $coDeputy->getDeputySurname();
-            $data['coDeputyFirstName'] = $coDeputy->getDeputyFirstname();
-            $data['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
+            $primaryData['coDeputyLastName'] = $coDeputy->getDeputySurname();
+            $primaryData['coDeputyFirstName'] = $coDeputy->getDeputyFirstname();
+            $primaryData['coDeputyPostCode'] = $coDeputy->getDeputyPostCode();
         }
 
+        $data[] = $primaryData;
         $this->em->persist($preRegistration);
+
+        if ($fromRequest['multiClientEnabled']) {
+            $preRegistrationSecondaryClient = $this->preRegistrationFactory->create([
+                'deputyUid' => $preRegistration->getDeputyUid(),
+                'clientFirstName' => 'Joe',
+                'clientLastName' => 'Snow',
+                $fromRequest,
+            ]
+            );
+            $this->em->persist($preRegistrationSecondaryClient);
+
+            $data[] = [
+                'caseNumber' => $preRegistrationSecondaryClient->getCaseNumber(),
+                'clientLastName' => $preRegistrationSecondaryClient->getClientLastname(),
+                'deputyLastName' => $preRegistrationSecondaryClient->getDeputySurname(),
+                'deputyFirstName' => $preRegistrationSecondaryClient->getDeputyFirstname(),
+                'deputyPostCode' => $preRegistrationSecondaryClient->getDeputyPostCode(),
+            ];
+        }
+
         $this->em->flush();
 
-        return $this->buildSuccessResponse($data, 'PreRegistration row created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($data, 'PreRegistration rows created', Response::HTTP_OK);
     }
 
     /**
-     * @Route("/move-users-clients-to-users-org/{userEmail}", name="move_users_clients_to_org", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/move-users-clients-to-users-org/{userEmail}', name: 'move_users_clients_to_org', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function moveUsersClientsToUsersOrg(string $userEmail)
     {
         if ('prod' === $this->symfonyEnvironment) {
@@ -668,12 +656,10 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/activateOrg/{orgName}", name="activate_org", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/activateOrg/{orgName}', name: 'activate_org', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function activateOrg(string $orgName)
     {
         try {
@@ -696,5 +682,28 @@ class FixtureController extends AbstractController
         } catch (\Throwable $e) {
             $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
         }
+    }
+
+    private function createCoDeputy(User $deputy, array $fromRequest, Client $client): User
+    {
+        $deputy->setCoDeputyClientConfirmed(true);
+        $coDeputy = $this->userFactory->createCoDeputy($deputy, $client, $fromRequest);
+
+        $coDeputyPreRegistration = $this->preRegistrationFactory->create(
+            [
+                'caseNumber' => $client->getCaseNumber(),
+                'clientLastName' => $client->getLastname(),
+                'deputyPostCode' => $coDeputy->getAddressPostcode(),
+                'deputyLastName' => $coDeputy->getLastname(),
+                'deputyFirstName' => $coDeputy->getFirstName(),
+                'reportType' => $fromRequest['reportType'],
+                'deputyUid' => $coDeputy->getDeputyUid(),
+            ]
+        );
+
+        $this->em->persist($coDeputyPreRegistration);
+        $this->em->persist($coDeputy);
+
+        return $coDeputy;
     }
 }

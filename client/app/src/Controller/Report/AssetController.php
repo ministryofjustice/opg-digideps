@@ -4,9 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Report;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -26,7 +24,6 @@ class AssetController extends AbstractController
         private RestClient $restClient,
         private ReportApi $reportApi,
         private StepRedirector $stepRedirector,
-        private ClientApi $clientApi,
     ) {
     }
 
@@ -39,10 +36,6 @@ class AssetController extends AbstractController
      */
     public function startAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Report\Status::STATE_NOT_STARTED != $report->getStatus()->getAssetsState()['state']) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
@@ -50,7 +43,6 @@ class AssetController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -352,10 +344,6 @@ class AssetController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Report\Status::STATE_NOT_STARTED == $report->getStatus()->getAssetsState()['state']) {
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
@@ -363,7 +351,6 @@ class AssetController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

@@ -8,6 +8,7 @@ monolog:
       formatter: opg_line_formatter
       channels: ["!translation", "!verbose"]
       bubble: false
+      include_stacktraces: true
     csv:
       type: stream
       path: php://stderr

@@ -3,11 +3,20 @@
 namespace App\Twig;
 
 use App\Entity\User;
+use App\Service\ReportSectionsLinkService;
 use Mockery as m;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class ComponentsExtensionTest extends TestCase
 {
+    private TranslatorInterface|MockInterface $translator;
+    private ReportSectionsLinkService|MockInterface $reportSectionsLinkService;
+    private Environment|MockInterface $twigEnvironment;
+    private ComponentsExtension $object;
+
     public function setUp(): void
     {
         $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');

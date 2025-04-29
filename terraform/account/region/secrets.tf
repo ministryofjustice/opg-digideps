@@ -8,7 +8,6 @@ module "environment_secrets" {
     "admin-api-client-secret",
     "admin-frontend-secret",
     "database-password",
-    "custom-sql-database-password",
     "front-api-client-secret",
     "front-frontend-secret",
     "front-notify-api-key",
@@ -16,6 +15,7 @@ module "environment_secrets" {
     "private-jwt-key-base64",
     "smoke-test-variables",
     "custom-sql-db-password",
+    "custom-sql-users",
     "readonly-sql-db-password"
   ]
   kms_key = module.secret_kms.eu_west_1_target_key_arn

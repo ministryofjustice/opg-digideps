@@ -19,11 +19,8 @@ class GiftController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $reportId, $giftId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -33,17 +30,14 @@ class GiftController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['gifts'];
+            ? $request->query->all('groups') : ['gifts'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $gift;
     }
 
-    /**
-     * @Route("/report/{reportId}/gift", requirements={"reportId":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/gift', requirements: ['reportId' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, $reportId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -68,11 +62,8 @@ class GiftController extends RestController
         return ['id' => $gift->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function edit(Request $request, $reportId, $giftId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -101,11 +92,8 @@ class GiftController extends RestController
         return ['id' => $gift->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete($reportId, $giftId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */

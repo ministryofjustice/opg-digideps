@@ -12,9 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-#[Route(path: '/deputy', name: 'v2_deputy_')]
-class DeputyController extends AbstractController
+#[Route(path: '/deputy')]
+class DeputyController
 {
     use ControllerTrait;
 

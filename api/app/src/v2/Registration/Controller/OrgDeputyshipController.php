@@ -24,11 +24,8 @@ class OrgDeputyshipController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/org-deputyships", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/org-deputyships', methods: ['POST'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function create(Request $request)
     {
         $decompressedData = $this->dataCompression->decompress($request->getContent());

@@ -25,8 +25,6 @@ class Deputy
     /**
      * @var int
      *
-     * @JMS\Type("integer")
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
@@ -34,201 +32,167 @@ class Deputy
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @ORM\SequenceGenerator(sequenceName="deputy_id_seq", allocationSize=1, initialValue=1)
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $id;
 
     /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
-     * @JMS\Exclude
-     *
      * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
      *
      * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
      */
+    #[JMS\Exclude]
     private $clients;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $deputyUid;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $firstname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $lastname;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email1", type="string", length=60, nullable=false, unique=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $email1;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email2", type="string", length=60, nullable=true, unique=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $email2;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $email3;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $address1;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $address2;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $address3;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $address4;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $address5;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $addressPostcode;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user", "team", "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by', 'deputy'])]
     private $addressCountry;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $phoneMain;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private $phoneAlternative;
 
     /**
-     * @JMS\Type("App\Entity\User")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove", "persist"})
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
+    #[JMS\Type('App\Entity\User')]
     private ?User $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist", "remove"})
      */
     private Collection $courtOrderDeputyRelationships;
 

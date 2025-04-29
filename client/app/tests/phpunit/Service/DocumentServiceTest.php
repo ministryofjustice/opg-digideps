@@ -27,50 +27,15 @@ class DocumentServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DocumentService
-     */
-    protected $object;
-
-    /**
-     * @var ObjectProphecy|S3Storage
-     */
-    private $s3Storage;
-
-    /**
-     * @var ObjectProphecy|RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var ObjectProphecy|Environment
-     */
-    private $twig;
-
-    /**
-     * @var ObjectProphecy|LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ObjectProphecy|Document
-     */
-    private $doc1;
-
-    /**
-     * @var ObjectProphecy|Document
-     */
-    private $doc2;
-
-    /**
-     * @var ObjectProphecy|Document
-     */
-    private $doc3;
-
-    /**
-     * @var ObjectProphecy|Document
-     */
-    private $doc4;
+    protected DocumentService $object;
+    private ObjectProphecy|S3Storage $s3Storage;
+    private ObjectProphecy|RestClient $restClient;
+    private ObjectProphecy|Environment $twig;
+    private ObjectProphecy|LoggerInterface $logger;
+    private ObjectProphecy|Document $doc1;
+    private ObjectProphecy|Document $doc2;
+    private ObjectProphecy|Document $doc3;
+    private ObjectProphecy|Document $doc4;
 
     public function setUp(): void
     {
@@ -126,7 +91,7 @@ class DocumentServiceTest extends TestCase
         $this->restClient
             ->delete('document/'.$docId)
             ->shouldBeCalled()
-            ->willReturn(true);
+            ->willReturn(['id' => 1]);
 
         $this->object->removeDocumentFromS3($document);
     }
@@ -345,7 +310,7 @@ class DocumentServiceTest extends TestCase
             $caseNumber = $missingDocumentCaseNumbers[$index];
             $fileName = $missingDocument->getFileName();
 
-            $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
+            $expectedListItem = "<li>{$caseNumber} - {$fileName}</li>";
             self::assertStringContainsString($expectedListItem, $renderedTwig);
         }
     }

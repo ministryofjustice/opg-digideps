@@ -1,33 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
+use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Service\Client\RestClient;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 class DeputyProviderTest extends TestCase
 {
-    /**
-     * @var DeputyProvider
-     */
-    private $object;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private DeputyProvider $object;
+    private RestClient $restClient;
+    private LoggerInterface $logger;
 
     public function setUp(): void
     {
-        $this->restClient = m::mock('App\Service\Client\RestClient');
-        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
+        $this->restClient = m::mock(RestClient::class);
+        $this->logger = m::mock(LoggerInterface::class);
 
         $this->object = new DeputyProvider($this->restClient, $this->logger);
     }
@@ -35,11 +29,11 @@ class DeputyProviderTest extends TestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testLogin()
+    public function testLogin(): void
     {
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
-        $user = m::mock('App\Entity\User')
+        $user = m::mock(User::class)
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
         $authToken = 'abc123';
@@ -56,7 +50,7 @@ class DeputyProviderTest extends TestCase
 
     public function testLoginFail()
     {
-        $this->expectException(\Symfony\Component\Security\Core\Exception\UsernameNotFoundException::class);
+        $this->expectException(UserNotFoundException::class);
 
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
@@ -66,18 +60,20 @@ class DeputyProviderTest extends TestCase
         $this->object->login($credentials);
     }
 
-    public function testLoadUserByUsername()
+    public function testLoadUserByIdentifier()
     {
-        $this->restClient->shouldReceive('setLoggedUserId')->with(1)->andReturn($this->restClient);
-        $this->restClient->shouldReceive('get')->with('user/1', 'User', m::any())->andReturn('user');
+        $mockUser = $this->createMock(User::class);
 
-        $this->assertEquals('user', $this->object->LoadUserByUsername(1));
+        $this->restClient->shouldReceive('setLoggedUserId')->with(1)->andReturn($this->restClient);
+        $this->restClient->shouldReceive('get')->with('user/1', 'User', m::any())->andReturn($mockUser);
+
+        $this->assertEquals($mockUser, $this->object->loadUserByIdentifier('1'));
     }
 
     public function testSupportsClass()
     {
-        $this->assertTrue($this->object->supportsClass('App\Entity\User'));
-        $this->assertFalse($this->object->supportsClass('App\Entity\Report'));
+        $this->assertTrue($this->object->supportsClass(User::class));
+        $this->assertFalse($this->object->supportsClass(Report::class));
     }
 
     public function tearDown(): void

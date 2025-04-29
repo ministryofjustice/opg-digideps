@@ -6,7 +6,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.1.27"
+            "php": "8.2.28"
         },
         "allow-plugins": {
             "php-http/discovery": true
@@ -19,7 +19,7 @@
         }
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "alphagov/notifications-php-client": "^4.0.1",
         "aws/aws-sdk-php": "3.299.1",
         "doctrine/collections": "^2.0.0",
@@ -34,39 +34,39 @@
         "monolog/monolog": "^1.25.1",
         "orbitale/imagemagick-php": "^v3.2",
         "php-http/guzzle7-adapter": "^1.0",
-        "predis/predis": "^1.1.1",
+        "predis/predis": "^2.3.0",
         "ramsey/uuid": "^4.2",
         "sensio/framework-extra-bundle": "^6.0",
-        "snc/redis-bundle": "^3.5.2",
-        "symfony/asset": "5.*",
-        "symfony/config": "5.*",
-        "symfony/console": "5.*",
-        "symfony/debug-bundle": "5.*",
-        "symfony/dependency-injection": "5.*",
-        "symfony/dotenv": "5.*",
-        "symfony/error-handler": "5.*",
-        "symfony/event-dispatcher": "5.*",
-        "symfony/expression-language": "5.*",
-        "symfony/form": "5.*",
-        "symfony/framework-bundle": "5.*",
-        "symfony/http-client": "5.*",
-        "symfony/http-foundation": "5.*",
-        "symfony/http-kernel": "5.*",
-        "symfony/intl": "5.*",
-        "symfony/mime": "5.*",
-        "symfony/monolog-bundle": "3.*",
-        "symfony/options-resolver": "5.*",
-        "symfony/rate-limiter": "5.*",
-        "symfony/routing": "5.*",
-        "symfony/security-bundle": "5.*",
-        "symfony/security-core": "5.*",
-        "symfony/security-csrf": "5.*",
-        "symfony/security-http": "5.*",
-        "symfony/serializer": "5.*",
-        "symfony/translation": "5.*",
-        "symfony/twig-bundle": "5.*",
-        "symfony/validator": "5.*",
-        "symfony/web-profiler-bundle": "5.*",
+        "symfony/asset": "^6.0",
+        "symfony/config": "^6.0",
+        "symfony/console": "^6.0",
+        "symfony/debug-bundle": "^6.0",
+        "symfony/dependency-injection": "^6.0",
+        "symfony/dotenv": "^6.0",
+        "symfony/error-handler": "^6.0",
+        "symfony/event-dispatcher": "^6.0",
+        "symfony/expression-language": "^6.0",
+        "symfony/form": "^6.0",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/http-client": "^6.0",
+        "symfony/http-foundation": "^6.0",
+        "symfony/http-kernel": "^6.0",
+        "symfony/intl": "^6.0",
+        "symfony/lock": "6.*",
+        "symfony/mime": "^6.0",
+        "symfony/monolog-bundle": "^3.10.0",
+        "symfony/options-resolver": "^6.0",
+        "symfony/rate-limiter": "^6.0",
+        "symfony/routing": "^6.0",
+        "symfony/security-bundle": "^6.0",
+        "symfony/security-core": "^6.0",
+        "symfony/security-csrf": "^6.0",
+        "symfony/security-http": "^6.0",
+        "symfony/serializer": "^6.0",
+        "symfony/translation": "^6.0",
+        "symfony/twig-bundle": "^6.0",
+        "symfony/validator": "^6.0",
+        "symfony/web-profiler-bundle": "^6.0",
         "twig/extra-bundle": "^3.3",
         "twig/intl-extra": "^3.3",
         "web-token/jwt-core": "^2.2"
@@ -78,7 +78,7 @@
             "dev-master": "2.3-dev"
         },
         "symfony": {
-            "require": "5.4.*"
+            "require": "6.*"
         }
     },
     "repositories": [
@@ -97,8 +97,8 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/maker-bundle": "1.*",
-        "symfony/phpunit-bridge": "5.*",
-        "symfony/var-dumper": "5.*"
+        "symfony/maker-bundle": "^1.50.0",
+        "symfony/phpunit-bridge": "^6.0",
+        "symfony/var-dumper": "^6.0"
     }
 }

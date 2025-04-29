@@ -1,0 +1,48 @@
+{% extends '@App/Layouts/application.html.twig'%}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% trans_default_domain 'deputyship' %}
+{% block htmlTitle %}{{ 'clients.title' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'clients.title' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('homepage'), text: 'Your reports' }
+    ]) }}
+{% endblock %}
+
+{% block pageContent %}
+    {% if clients|length == 0 %}
+        <p class="govuk-body">{{ 'clients.noClientsMessage' | trans }}</p>
+    {% else %}
+        {% for client in clients %}
+            <div class="govuk-summary-card">
+                <div class="govuk-summary-card__title-wrapper">
+                    <h2 class="govuk-summary-card__title">
+                        {{ client.fullName }}
+                    </h2>
+                    <ul class="govuk-summary-card__actions">
+                        <li class="govuk-summary-card__action">
+                            <a class="govuk-link" href="{{ path('client_show', {'clientId': client.id}) }}">
+                                {{ 'clients.manageLinkText' | trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="govuk-summary-card__content">
+                    <dl class="govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{ 'clients.caseNumber' | trans }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ client.caseNumber }}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

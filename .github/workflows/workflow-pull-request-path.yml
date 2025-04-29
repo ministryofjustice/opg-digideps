@@ -55,7 +55,7 @@ jobs:
           echo "- Build Identifier: ${BUILD_IDENTIFIER}" >> $GITHUB_STEP_SUMMARY
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
         with:
           prerelease: true
           default_bump: "minor"
@@ -148,6 +148,14 @@ jobs:
     needs:
       - workflow_variables
 
+  client_phpstan:
+    name: client phpstan
+    uses: ./.github/workflows/_phpstan-client.yml
+    with:
+      branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
+    needs:
+      - workflow_variables
+
   client_unit_tests:
     name: client unit tests
     uses: ./.github/workflows/_unit-tests-client.yml
@@ -168,7 +176,10 @@ jobs:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
     needs:
       - client_unit_tests
+      - api_phpstan
+      - client_phpstan
       - miscellaneous_tests
+      - test_js
       - api_unit_tests
       - api_integration_tests_1
       - api_integration_tests_2
@@ -232,10 +243,20 @@ jobs:
     needs:
       - workflow_variables
       - terraform_apply_environment
+      - client_unit_tests
+      - api_phpstan
+      - client_phpstan
+      - miscellaneous_tests
+      - test_js
+      - api_unit_tests
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "reset_database"
       timeout: "500"
@@ -251,6 +272,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "smoke_tests"
       timeout: "900"
@@ -266,6 +288,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -282,6 +305,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -298,6 +322,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -314,6 +339,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -330,6 +356,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -346,6 +373,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -369,22 +397,17 @@ jobs:
       account_id: 248804316466
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
 
-  end_of_workflow:
-    name: end of workflow
+  workflow_summary:
+    name: workflow summary
     runs-on: ubuntu-latest
     needs:
       - scale_services_down
       - codecov
       - workflow_variables
+      - smoke_tests
     if: ${{ always() }}
     steps:
-      - name: Check workflow result
-        if: ${{ failure() }}
-        run: |
-          echo "A job failed. Marking end-workflow as failed."
-          exit 1
-      - name: workflow ended successfully
-        if: ${{ success() }}
+      - name: output workflow variables
         run: |
           export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
           export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
@@ -408,7 +431,7 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
-      - end_of_workflow
+      - workflow_summary
     with:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -420,8 +443,17 @@ jobs:
     if: ${{ failure() }}
     needs:
       - workflow_variables
-      - end_of_workflow
+      - workflow_summary
     with:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
       account: 248804316466
+
+  end_of_workflow:
+    name: end of workflow
+    runs-on: ubuntu-latest
+    needs:
+      - slack_notify_success
+    steps:
+      - name: Mark workflow as successful
+        run: echo "workflow ended successfully"

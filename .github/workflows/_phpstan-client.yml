@@ -1,0 +1,52 @@
+name: "[Tests] Client PHPStan"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        description: "Name of the branch doing the build"
+        required: true
+        type: string
+jobs:
+  client-phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: set up docker buildx
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+
+      - name: cache docker layers
+        id: cache-docker
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: /tmp/.buildx-cache
+          key: client-phpstan-${{ inputs.branch_name }}-${{ github.sha }}
+          restore-keys: |
+            client-phpstan-${{ inputs.branch_name }}
+            client-phpstan-main
+
+      - name: build docker images
+        run: |
+          docker buildx build \
+          -f client/docker/app/Dockerfile \
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+          --build-arg ENVIRONMENT=local \
+          --tag client-phpstan:latest \
+          --target ci-tests \
+          --output type=docker .
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: run client phpstan
+        id: client-phpstan
+        run: |
+          make phpstan-client

@@ -29,6 +29,7 @@ viewPage:
     emailDomain: Email domain
     users: Users
     clients: Clients
+    dischargedClients: Discharged clients
     status:
       label: Status
       active: Active

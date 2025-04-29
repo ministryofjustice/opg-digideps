@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Link table between court orders and deputies.
@@ -25,9 +26,11 @@ class CourtOrderDeputy
     private CourtOrder $courtOrder;
 
     /**
+     * @JMS\Groups({"deputy"})
+     *
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false)
      */

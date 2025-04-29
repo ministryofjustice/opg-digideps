@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Mockery as m;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -11,32 +12,29 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestIdLoggerProcessorTest extends TestCase
 {
-    /**
-     * @var RequestIdLoggerProcessor
-     */
-    private $object;
-
-    private $record = ['key1' => 'abc', 'key2' => 2];
+    private array $record = ['key1' => 'abc', 'key2' => 2];
+    private Container|MockInterface $container;
+    private RequestStack|MockInterface $reqStack;
+    private RequestIdLoggerProcessor $object;
 
     public function setUp(): void
     {
         $this->container = m::mock(Container::class);
         $this->reqStack = m::mock(RequestStack::class);
-        $this->request = m::mock(Request::class);
 
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
 
     public function testProcessRecordNoReqStack()
     {
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn(false);
+        $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequest()
     {
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(false);
+        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(null);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));

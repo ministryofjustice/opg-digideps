@@ -5,29 +5,22 @@ namespace App\Service\File\Scanner;
 use App\Service\File\Scanner\Exception\VirusFoundException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ClamFileScannerTest extends TestCase
 {
-    /** @var ClamFileScanner */
-    private $scanner;
-
-    /** @var LoggerInterface | MockObject */
-    private $logger;
-
-    /** @var array */
-    private $badPdfKeywords;
-
-    /** @var Client */
-    private $client;
+    private LoggerInterface $logger;
+    private array $badPdfKeywords;
+    private Client $client;
 
     protected function setUp(): void
     {
@@ -37,8 +30,9 @@ class ClamFileScannerTest extends TestCase
 
     /**
      * @test
+     * @doesNotPerformAssertions
      */
-    public function scanFileReturnsGracefullyOnCleanFile()
+    public function scanFileReturnsGracefullyOnCleanFile(): void
     {
         $this
             ->ensureFileWillBeClean()
@@ -48,7 +42,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFileThrowsVirusFoundExceptionOnBadKeywordsFoundInPdf()
+    public function scanFileThrowsVirusFoundExceptionOnBadKeywordsFoundInPdf(): void
     {
         $this->expectException(VirusFoundException::class);
 
@@ -59,7 +53,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFileThrowsVirusFoundExceptionOnVirusFound()
+    public function scanFileThrowsVirusFoundExceptionOnVirusFound(): void
     {
         $this->expectException(VirusFoundException::class);
 
@@ -71,8 +65,9 @@ class ClamFileScannerTest extends TestCase
 
     /**
      * @test
+     * @doesNotPerformAssertions
      */
-    public function scanFileMakesMultipleReattemptsIfScanServiceIsUnavailable()
+    public function scanFileMakesMultipleReattemptsIfScanServiceIsUnavailable(): void
     {
         $this
             ->ensureServiceIsTemporarilyUnavailable()
@@ -82,9 +77,9 @@ class ClamFileScannerTest extends TestCase
     /**
      * @test
      */
-    public function scanFileThrowsRuntimeExceptionIfServiceIsForeverUnavailable()
+    public function scanFileThrowsRuntimeExceptionIfServiceIsForeverUnavailable(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this
             ->ensureServiceIsForeverUnavailable()
@@ -170,11 +165,11 @@ class ClamFileScannerTest extends TestCase
     }
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
-    private function invokeTest($filename)
+    private function invokeTest($filename): void
     {
-        $this->scanner = new ClamFileScanner($this->client, $this->logger, $this->badPdfKeywords);
-        $this->scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
+        $scanner = new ClamFileScanner($this->client, $this->logger, $this->badPdfKeywords);
+        $scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
     }
 }

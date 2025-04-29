@@ -41,11 +41,8 @@ class StatsController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/stats", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     */
+    #[Route(path: '/stats', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function getMetric(Request $request)
     {
         $params = new StatsQueryParameters($request->query->all());
@@ -54,11 +51,8 @@ class StatsController extends RestController
         return $query->execute($params);
     }
 
-    /**
-     * @Route("stats/deputies/lay/active", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: 'stats/deputies/lay/active', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getActiveLays(Request $request)
     {
         if ($this->authService->JWTIsValid($request)) {
@@ -68,14 +62,11 @@ class StatsController extends RestController
         throw new UnauthorisedException('JWT is not valid');
     }
 
-    /**
-     * @Route("stats/admins/report_data", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: 'stats/admins/report_data', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getAdminUserAccountReportData(Request $request, RestFormatter $formatter): array
     {
-        $serialisedGroups = (array) $request->query->get('groups');
+        $serialisedGroups = $request->query->all('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $adminAccounts = $this->userRepository->getAllAdminAccounts();
@@ -102,14 +93,11 @@ class StatsController extends RestController
         ];
     }
 
-    /**
-     * @Route("stats/admins/inactive_admin_users", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: 'stats/admins/inactive_admin_users', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
     {
-        $serialisedGroups = (array) $request->query->get('groups');
+        $serialisedGroups = $request->query->all('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $numberOfMonthsInactive = $request->query->get('inactivityPeriod');
@@ -122,11 +110,8 @@ class StatsController extends RestController
         ];
     }
 
-    /**
-     * @Route("stats/assets/total_values", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: 'stats/assets/total_values', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getAssetsTotalValueData()
     {
         $ret = [
@@ -167,11 +152,8 @@ class StatsController extends RestController
         return new JsonResponse($ret);
     }
 
-    /**
-     * @Route("stats/report/benefits-report-metrics", methods={"GET", "POST"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: 'stats/report/benefits-report-metrics', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getBenefitsReportMetrics(Request $request): array
     {
         $deputyType = $request->query->get('deputyType');
@@ -181,11 +163,8 @@ class StatsController extends RestController
         return $this->reportRepository->getBenefitsResponseMetrics($startDate, $endDate, $deputyType);
     }
 
-    /**
-     * @Route("stats/report/imbalance", name="imbalance_report", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: 'stats/report/imbalance', name: 'imbalance_report', methods: ['GET'])]
+    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
     public function getImbalanceReport(Request $request)
     {
         $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));

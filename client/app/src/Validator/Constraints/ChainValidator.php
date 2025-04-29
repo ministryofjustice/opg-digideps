@@ -7,7 +7,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class ChainValidator extends ConstraintValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         $group = $this->context->getGroup();
         $propertyPath = $this->context->getPropertyPath();

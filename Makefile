@@ -65,7 +65,7 @@ down-app: ##@application Tears down the app
 end-to-end-tests: up-app reset-database ##@end-to-end-tests Brings the app up using test env vars (see test.env)
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app end-to-end-tests
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml up -d load-balancer
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
+	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @lay-pfa-high-not-started-multi-client-deputy
 
 end-to-end-tests-rerun: ##@end-to-end-tests Rerun end to end tests (requires you to have run end-to-end-tests previously), argument in format: tag=your_tag
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
@@ -147,22 +147,18 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 	  echo "$$c: debug disabled." ; \
 	done
 
+PHPSTAN-LEVEL := max
 phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
-ifdef level
-	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
-else
-	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
-endif
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(PHPSTAN-LEVEL)
 
 phpstan-api-baseline:
 	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max --generate-baseline
 
 phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1
-ifdef level
-	docker compose run --no-deps --rm frontend-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(level)
-else
-	docker compose run --no-deps --rm frontend-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max
-endif
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm frontend-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(PHPSTAN-LEVEL)
+
+phpstan-client-baseline:
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm frontend-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max --generate-baseline
 
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
