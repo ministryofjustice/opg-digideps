@@ -29,7 +29,7 @@ class CourtOrderTest extends TestCase
     /**
      * @dataProvider inactiveReportProvider
      */
-    public function testGetActiveReportNull(?Report $report = null)
+    public function testGetActiveReportNull(?Report $report = null): void
     {
         $this->courtOrder->setReports($report ? [$report] : []);
 
@@ -38,7 +38,7 @@ class CourtOrderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testGetActiveReportsOneActiveReport()
+    public function testGetActiveReportsOneActiveReport(): void
     {
         $report = new Report();
         $this->courtOrder->setReports([$report]);
@@ -48,7 +48,7 @@ class CourtOrderTest extends TestCase
         $this->assertSame($report, $result);
     }
 
-    public function testGetFirstActiveReport()
+    public function testGetFirstActiveReport(): void
     {
         $inactiveReport = (new Report())->setSubmitted(true);
         $activeReport1 = new Report();
@@ -77,7 +77,7 @@ class CourtOrderTest extends TestCase
     /**
      * @dataProvider unsubmittedReportProvider
      */
-    public function testGetUnsubmittedReportNull(?Report $report = null)
+    public function testGetUnsubmittedReportNull(?Report $report = null): void
     {
         $this->courtOrder->setReports($report ? [$report] : []);
 
@@ -86,7 +86,7 @@ class CourtOrderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testGetUnsubmittedReportOneUnsubmittedReport()
+    public function testGetUnsubmittedReportOneUnsubmittedReport(): void
     {
         $report = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
         $this->courtOrder->setReports([$report]);
@@ -96,7 +96,7 @@ class CourtOrderTest extends TestCase
         $this->assertSame($report, $result);
     }
 
-    public function testGetFirstUnsubmittedReport()
+    public function testGetFirstUnsubmittedReport(): void
     {
         $activeReport = new Report();
         $unsubmittedReport1 = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
@@ -112,4 +112,39 @@ class CourtOrderTest extends TestCase
 
         $this->assertSame($unsubmittedReport1, $result);
     }
+
+    public function testGetSubmittedReportsNoSubmittedReports(): void
+    {
+        $result = $this->courtOrder->getSubmittedReports();
+
+        $this->assertEquals([], $result);
+    }
+
+    public function testGetSubmittedReportsOnlySubmittedReportsReturned(): void
+    {
+        $activeReport = new Report();
+        $submittedReport1 = (new Report())->setSubmitted(true);
+        $unsubmittedReport = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+        $submittedReport2 = (new Report())->setSubmitted(true);
+
+        $this->courtOrder->setReports([
+            $activeReport,
+            $submittedReport1,
+            $unsubmittedReport,
+            $submittedReport2,
+        ]);
+
+        $result = $this->courtOrder->getSubmittedReports();
+
+        $this->assertEquals(
+            [
+                $submittedReport1,
+                $submittedReport2,
+            ],
+            $result
+        );
+    }
+
+    // TODO - hasCoDeputies
+    // TODO - getCoDeputies
 }
