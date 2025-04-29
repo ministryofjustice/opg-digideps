@@ -128,8 +128,19 @@ class CourtOrder
 
     public function getActiveReport(): ?Report
     {
-        foreach ($this->getReports() as $report) {
+        foreach ($this->reports as $report) {
             if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
+                return $report;
+            }
+        }
+
+        return null;
+    }
+
+    public function getUnsubmittedReport(): ?Report
+    {
+        foreach ($this->reports as $report) {
+            if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
                 return $report;
             }
         }
@@ -147,6 +158,6 @@ class CourtOrder
      */
     public function getCoDeputies(string $loggedInDeputyUid): array
     {
-        return array_filter($this->activeDeputies, fn ($a) => $a->getDeputyUid() !== $loggedInDeputyUid);
+        return array_filter($this->activeDeputies, fn ($deputy) => $deputy->getDeputyUid() !== $loggedInDeputyUid);
     }
 }

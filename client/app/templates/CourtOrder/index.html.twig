@@ -11,52 +11,48 @@
 {% block supportTitleTop %}{{ client.fullname }}{% endblock %}
 
 {% block pageContent %}
+    {% if courtOrder.hasCoDeputies %}
+        {% set client = courtOrder.getClient %}
+        {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
+    {% endif %}
 
-{#    {% if ndrEnabled %} #}
-{#        {% include '@App/Ndr/Ndr/index.html.twig' %}#}
-{#    {% else %}#}
-        {% if courtOrder.hasCoDeputies %}
-            {% set client = courtOrder.getClient %}
-            {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
-        {% endif %}
+    {% if courtOrder.unsubmittedReport %}
+        {% set report = courtOrder.unsubmittedReport %}
+        {% set status = report.status.status %}
+        {% set behatRegion = 'report-unsubmitted' %}
+        {% set buttonText = 'reviewReport' %}
+        {% set transOptions = {
+            '%startDate%': report.startDate | date("j F Y"),
+            '%endDate%': report.endDate | date("j F Y")
+        } %}
+        <h2 class="govuk-heading-l">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
+        {% embed '@App/Report/Report/_report_row.html.twig' %}
+            {% block bottomLeftContent %}
+                {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
 
-{#        {% if client.unsubmittedReport %}#}
-{#            {% set report = client.unsubmittedReport %}#}
-{#            {% set status = report.status.status %}#}
-{#            {% set behatRegion = 'report-unsubmitted' %}#}
-{#            {% set buttonText = 'reviewReport' %}#}
-{#            {% set transOptions = {#}
-{#                '%startDate%': report.startDate | date("j F Y"),#}
-{#                '%endDate%': report.endDate | date("j F Y")#}
-{#            } %}#}
-{#            <h2 class="govuk-heading-l">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>#}
-{#            {% embed '@App/Report/Report/_report_row.html.twig' %}#}
-{#                {% block bottomLeftContent %}#}
-{#                    {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}#}
-{#                {% endblock %}#}
-{#            {% endembed %}#}
-{#        {% endif %}#}
-
-        {# current report #}
-        {% if courtOrder.activeReport %}
-            {% set report = courtOrder.activeReport %}
-            {% set status = report.status.status %}
-            {% set behatRegion = 'report-active' %}
-            {% set buttonText = report.status.status != 'notStarted' ? 'continue' : 'startNow' %}
-            {% set transOptions = {
-                '%startDate%': report.startDate | date("j F Y"),
-                '%endDate%': report.endDate | date("j F Y")
-            } %}
-            <h2 class="govuk-heading-l">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
-            {% embed '@App/Report/Report/_report_row.html.twig' %}
-                {% block bottomLeftContent %}
-                  {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
-                  <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">
-                      {{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}
-                  </a>
-                {% endblock %}
-            {% endembed %}
-        {% endif %}
+    {# current report #}
+    {% if courtOrder.activeReport %}
+        {% set report = courtOrder.activeReport %}
+        {% set status = report.status.status %}
+        {% set behatRegion = 'report-active' %}
+        {% set buttonText = report.status.status != 'notStarted' ? 'continue' : 'startNow' %}
+        {% set transOptions = {
+            '%startDate%': report.startDate | date("j F Y"),
+            '%endDate%': report.endDate | date("j F Y")
+        } %}
+        <h2 class="govuk-heading-l">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
+        {% embed '@App/Report/Report/_report_row.html.twig' %}
+            {% block bottomLeftContent %}
+              {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
+              <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">
+                  {{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}
+              </a>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
 
 
 {#        {% if client.submittedReports %}#}
