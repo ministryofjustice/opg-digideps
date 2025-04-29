@@ -11,21 +11,23 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophet;
 
 class ClientTestHelper extends TestCase
 {
-    public function createClientMock(int $id, bool $hasReports)
+    public static function createClientMock(int $id, bool $hasReports)
     {
-        $report = $hasReports ? (self::prophesize(Report::class))->reveal() : null;
+        $prophet = new Prophet();
+        $report = $hasReports ? ($prophet->prophesize(Report::class))->reveal() : null;
 
-        $client = self::prophesize(Client::class);
+        $client = $prophet->prophesize(Client::class);
         $client->getReports()->willReturn($report);
         $client->getId()->willReturn($id);
 
         return $client->reveal();
     }
 
-    public function generateClient(EntityManager $em, User $user = null, Organisation $organisation = null, string $caseNumber = null)
+    public static function generateClient(EntityManager $em, User $user = null, Organisation $organisation = null, string $caseNumber = null)
     {
         $faker = Factory::create('en_GB');
 
