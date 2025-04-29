@@ -91,7 +91,7 @@ class DocumentServiceTest extends TestCase
         $this->restClient
             ->delete('document/'.$docId)
             ->shouldBeCalled()
-            ->willReturn(true);
+            ->willReturn(['id' => 1]);
 
         $this->object->removeDocumentFromS3($document);
     }

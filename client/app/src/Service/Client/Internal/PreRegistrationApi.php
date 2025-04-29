@@ -20,9 +20,9 @@ class PreRegistrationApi
         return $this->restClient->get(sprintf('/pre-registration/clientHasCoDeputies/%s', $caseNumber), 'array');
     }
 
-    public function deleteAll()
+    public function deleteAll(): void
     {
-        return $this->restClient->delete('/pre-registration/delete');
+        $this->restClient->delete('/pre-registration/delete');
     }
 
     public function count()
