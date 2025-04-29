@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use function Sodium\compare;
 
 /**
  * Court Orders for clients.
@@ -121,11 +122,6 @@ class CourtOrder
         return $this->activeDeputies;
     }
 
-    public function hasCoDeputies()
-    {
-        return count($this->activeDeputies) > 1;
-    }
-
     public function getActiveReport(): ?Report
     {
         foreach ($this->reports as $report) {
@@ -161,11 +157,19 @@ class CourtOrder
         return $this->client;
     }
 
+    public function hasCoDeputies()
+    {
+        return count($this->activeDeputies) > 1;
+    }
+
     /**
      * @return Deputy[]
      */
     public function getCoDeputies(string $loggedInDeputyUid): array
     {
-        return array_filter($this->activeDeputies, fn ($deputy) => $deputy->getDeputyUid() !== $loggedInDeputyUid);
+        $deputies = array_filter($this->activeDeputies, fn ($deputy) => $deputy->getDeputyUid() !== $loggedInDeputyUid);
+        uasort($deputies, fn ($deputyA, $deputyB) => compare($deputyA->getFirstName(), $deputyB->getFirstName()));
+
+        return $deputies;
     }
 }

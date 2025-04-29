@@ -29,7 +29,6 @@ class CourtOrderController extends AbstractController
         $courtOrder = $this->courtOrderService->getByUid($uid);
 
         return [
-            // TODO - sort
             'coDeputies' => $courtOrder->getCoDeputies(strval($user->getDeputyUid())),
             'courtOrder' => $courtOrder,
         ];
