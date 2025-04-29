@@ -17,7 +17,6 @@
 {#    {% else %}#}
         {% if courtOrder.hasCoDeputies %}
             {% set client = courtOrder.getClient %}
-            {% set coDeputies = courtOrder.getActiveDeputies %}
             {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
         {% endif %}
 

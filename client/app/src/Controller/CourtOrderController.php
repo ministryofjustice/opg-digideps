@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\CourtOrder;
-use App\Service\Client\RestClient;
+use App\Service\Client\Internal\UserApi;
 use App\Service\CourtOrderService;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CourtOrderController extends AbstractController
 {
     public function __construct(
+        private readonly UserApi $userApi,
         private readonly CourtOrderService $courtOrderService
     ) {
     }
@@ -25,8 +24,14 @@ class CourtOrderController extends AbstractController
      */
     public function getOrdersByUidAction(string $uid): array
     {
+        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
+
+        $courtOrder = $this->courtOrderService->getByUid($uid);
+
         return [
-            'courtOrder' => $this->courtOrderService->getByUid($uid),
+            // TODO - sort
+            'coDeputies' => $courtOrder->getCoDeputies(strval($user->getDeputyUid())),
+            'courtOrder' => $courtOrder,
         ];
     }
 }

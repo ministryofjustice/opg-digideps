@@ -141,4 +141,12 @@ class CourtOrder
     {
         return $this->client;
     }
+
+    /**
+     * @return Deputy[]
+     */
+    public function getCoDeputies(string $loggedInDeputyUid): array
+    {
+        return array_filter($this->activeDeputies, fn ($a) => $a->getDeputyUid() !== $loggedInDeputyUid);
+    }
 }
