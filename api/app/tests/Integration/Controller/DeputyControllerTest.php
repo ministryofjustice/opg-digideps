@@ -135,7 +135,7 @@ class DeputyControllerTest extends AbstractTestController
     {        
         // setup required user for auth
         $email = 'n.s@example.org';
-        $deputyUid = '7099999990';
+        $deputyUid = '7099999991';
         $user = self::$fixtures->createUser([
             'setEmail' => $email,
             'setRoleName' => User::ROLE_LAY_DEPUTY,
@@ -162,12 +162,7 @@ class DeputyControllerTest extends AbstractTestController
     {
         $email = 'n.s@example.org';
         $deputyUid = '7044444440';
-        
-        // add a court order, and make the user a deputy on it
-        $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', true);
-        self::$fixtures->persist($courtOrder);
-        self::$fixtures->flush();
-        
+                
         // create user
         $user = self::$fixtures->createUser([
             'setEmail' => $email,
@@ -176,23 +171,31 @@ class DeputyControllerTest extends AbstractTestController
         ]);
         self::$fixtureHelper->setPassword($user);
 
-        // associate deputy with court order
+        // generate deputy and set user
         $deputy = DeputyTestHelper::generateDeputy($email, $deputyUid, $user);
-//        $deputy->associateWithCourtOrder($courtOrder);
-        CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
+        $deputy->setUser($user);
         self::$fixtures->persist($deputy);
         self::$fixtures->flush();
 
-        // client
+        // generate client and set deputy
         $client = self::$fixtures->createClient($user);
+        $client->setDeputy($deputy);
         self::$fixtures->persist($client);
         self::$fixtures->flush();
 
-        // add a report to the court order
+        // generate courtOrder and set client and deputy
+        $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', true);
+        $courtOrder->setClient($client);
+        CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
+        self::$fixtures->persist($courtOrder);
+        self::$fixtures->flush();
+
+        // generate and add a report to the court order
         $startDate = new \DateTime();
         $report = ReportTestHelper::generateReport(self::$em, $client, startDate: $startDate);
         $courtOrder->addReport($report);
-        self::$fixtures->persist($courtOrder)->flush();
+        self::$fixtures->persist($courtOrder);
+        self::$fixtures->flush();
 
         //login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
@@ -204,6 +207,8 @@ class DeputyControllerTest extends AbstractTestController
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
         
-        $this->assertCount(1, $responseJson['data']);
+        self::assertCount(1, $responseJson['data']);
+
+        self::$fixtures->remove($user)->flush()->clear();
     }
 }

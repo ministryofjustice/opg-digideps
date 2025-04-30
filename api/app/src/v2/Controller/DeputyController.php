@@ -44,7 +44,6 @@ class DeputyController extends RestController
     #[Route(path:'/{uid}/reports', name:'deputy_find_reports_by_uid', requirements:['uid' => '\d+'], methods:['GET'])]
     public function getAllDeputyReports(Request $request, int $uid): JsonResponse
     {
-        file_put_contents('php://stderr', '-----0-'.$uid.'-0-----');
         $user = $this->getUser();
 
         if ($uid !== $user->getDeputyUid()) {
@@ -52,24 +51,17 @@ class DeputyController extends RestController
         }
 
         $inactive = $request->query->has('inactive');
-        file_put_contents('php://stderr', 'param check');
         try {
             $results = $this->deputyRepository->findReportsInfoByUid($uid, $inactive);
         } catch (\Exception $e) {
-            file_put_contents('php://stderr', $e->getMessage());
             $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 
             return $this->buildErrorResponse();
         }
-        file_put_contents('php://stderr', 'after query\n');
-        file_put_contents('php://stderr', '\n----------\n');
-        file_put_contents('php://stderr', print_r($results, true));
-        file_put_contents('php://stderr', '\n----------\n');
         
         if (is_null($results)) {
             return $this->buildSuccessResponse([]);
         }
-        $this->logger->info('Success');
 
         return $this->buildSuccessResponse($results);
     }
