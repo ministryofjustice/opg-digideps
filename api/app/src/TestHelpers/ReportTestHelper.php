@@ -32,12 +32,18 @@ use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
-    public static function generateReport(EntityManager $em, Client $client = null, string $type = null, DateTime $startDate = null, DateTime $endDate = null, bool $dateChecks = true): Report
-    {
-        $client = $client ? $client : ClientTestHelper::generateClient($em);
-        $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new DateTime('2 years ago');
-        $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
+    public static function generateReport(
+        EntityManager $em, 
+        Client $client = null, 
+        string $type = null,  
+        DateTime $startDate = null,
+        DateTime $endDate = null,
+        bool $dateChecks = true
+    ): Report {
+        $client = $client ?: ClientTestHelper::generateClient($em);
+        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        $startDate = $startDate ?: new \DateTime('2 years ago');
+        $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
         $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
         self::completeBankAccounts($report, $em);

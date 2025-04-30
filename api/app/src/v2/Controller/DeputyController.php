@@ -3,6 +3,7 @@
 namespace App\v2\Controller;
 
 use App\Controller\RestController;
+use App\Entity\User;
 use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
 use App\v2\Assembler\UserAssembler;
@@ -44,8 +45,9 @@ class DeputyController extends AbstractController
     #[Route(path:'/{uid}/reports', name:'deputy_find_reports_by_uid', requirements:['uid' => '\d+'], methods:['GET'])]
     public function getAllDeputyReports(Request $request, int $uid): JsonResponse
     {
+        /** @var User $user */
         $user = $this->getUser();
-
+        
         if ($uid !== $user->getDeputyUid()) {
             return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user');
         }

@@ -55,7 +55,7 @@ class UserTestHelper extends TestCase
         ?int $deputyUid = null,
         ?string $firstName = null,
         ?string $lastName = null,
-    ) {
+    ): User {
         $faker = Factory::create('en_GB');
 
         if (is_null($firstName)) {
