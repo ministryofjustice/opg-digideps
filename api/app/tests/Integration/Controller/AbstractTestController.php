@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class AbstractTestController extends WebTestCase
 {
+    protected static EntityManager $em;
     protected static Fixtures $fixtures;
     protected static KernelBrowser $frameworkBundleClient;
     protected static string|false $deputySecret;
@@ -38,6 +39,7 @@ abstract class AbstractTestController extends WebTestCase
 
         /** @var EntityManager $em */
         $em = static::getContainer()->get('em');
+        self::$em = $em;
         self::$fixtures = new Fixtures($em);
 
         /** @var JWTService $jwtService */
