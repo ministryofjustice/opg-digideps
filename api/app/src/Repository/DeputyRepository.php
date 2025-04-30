@@ -21,7 +21,7 @@ class DeputyRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<string>|null
+     * @return array<int, array<string, array<string, mixed>>>|null
      * @throws Exception
      */
     public function findReportsInfoByUid(int $uid, bool $includeInactive = false): ?array
