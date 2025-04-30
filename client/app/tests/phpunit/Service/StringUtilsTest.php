@@ -14,17 +14,17 @@ class StringUtilsTest extends TestCase
             [3600 * 2, '2 hours'],
             [60 * 2, '2 minutes'],
             [60, '1 minute'],
-            [60 + 59, '1 minute'], //ceil
+            [60 + 59, '1 minute'], // ceil
             [0, 'less than a minute'],
             [1, 'less than a minute'],
             [59, 'less than a minute'],
             [3600 * 2 + 60 * 6, '2 hours and 6 minutes'],
-
         ];
     }
 
     /**
      * @test
+     *
      * @dataProvider secondsToHoursMinutesProvider
      */
     public function secondsToHoursMinutes($input, $expected)
@@ -45,10 +45,19 @@ class StringUtilsTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider implodeWithDifferentLastProvider
      */
     public function implodeWithDifferentLast($strings, $joiner, $lastJoiner, $expected)
     {
         $this->assertEquals($expected, StringUtils::implodeWithDifferentLast($strings, $joiner, $lastJoiner));
+    }
+
+    public function testCleanText()
+    {
+        $input = "  Some text\r\n\r\n\twith \rsome \tirregular   spacing\n\n\nand\n\n\nnewlines ";
+        $expected = "Some text\n with \nsome irregular spacing\nand\nnewlines";
+
+        $this->assertEquals($expected, StringUtils::cleanText($input));
     }
 }
