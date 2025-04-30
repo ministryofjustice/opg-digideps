@@ -49,7 +49,7 @@ class Fixtures
         $pgPass = getenv('PGPASSWORD') ?: 'api';
         $pgUser = getenv('PGUSER') ?: 'api';
 
-        return "export PGHOST={$pgHost}; export PGPASSWORD={$pgPass}; export PGDATABASE=digideps_unit_test; export PGUSER={$pgUser};";
+        return "export PGHOST={$pgHost}; export PGPASSWORD={$pgPass}; export PGDATABASE=api; export PGUSER={$pgUser};";
     }
 
     /**
