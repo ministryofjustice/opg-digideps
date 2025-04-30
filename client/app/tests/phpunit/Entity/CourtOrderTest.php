@@ -145,6 +145,51 @@ class CourtOrderTest extends TestCase
         );
     }
 
-    // TODO - hasCoDeputies
-    // TODO - getCoDeputies
+    public static function hasCoDeputiesProvider(): array
+    {
+        return [
+            'No deputies' => [[], false],
+            'Only one deputy' => [[new Deputy()], false],
+            'Multiple deputies' => [[new Deputy(), new Deputy()], true]
+        ];
+    }
+
+    /**
+     * @dataProvider hasCoDeputiesProvider
+     * @param Deputy[] $activeDeputies
+     */
+    public function testHasCoDeputiesNoDeputies(array $activeDeputies, bool $expectedResult): void
+    {
+        $this->courtOrder->setActiveDeputies($activeDeputies);
+
+        $this->assertEquals($expectedResult, $this->courtOrder->hasCoDeputies());
+    }
+
+    public function testGetCoDeputiesWithNoDeputies(): void
+    {
+        $this->assertEquals([], $this->courtOrder->getCoDeputies('1234'));
+    }
+
+    public function testGetCoDeputiesExcludesLoggedInDeputyAndIsOrderedByFirstname()
+    {
+        $loggedInDeputy = (new Deputy())->setFirstname('Bill')->setDeputyUid('1234');
+        $coDeputy1 = (new Deputy())->setFirstname('Zoé')->setDeputyUid('5678');
+        $coDeputy2 = (new Deputy())->setFirstname('Floyd')->setDeputyUid('4321');
+
+        $this->courtOrder->setActiveDeputies(
+            [
+                $loggedInDeputy,
+                $coDeputy1,
+                $coDeputy2,
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                $coDeputy2,
+                $coDeputy1
+            ],
+            $this->courtOrder->getCoDeputies('1234')
+        );
+    }
 }

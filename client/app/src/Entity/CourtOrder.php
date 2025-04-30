@@ -131,6 +131,16 @@ class CourtOrder
         return $this->activeDeputies;
     }
 
+    /**
+     * @param Deputy[] $activeDeputies
+     */
+    public function setActiveDeputies(array $activeDeputies): CourtOrder
+    {
+        $this->activeDeputies = $activeDeputies;
+
+        return $this;
+    }
+
     public function getActiveReport(): ?Report
     {
         foreach ($this->reports as $report) {
@@ -179,6 +189,6 @@ class CourtOrder
         $deputies = array_filter($this->activeDeputies, fn ($deputy) => $deputy->getDeputyUid() !== $loggedInDeputyUid);
         uasort($deputies, fn ($deputyA, $deputyB) => strcmp($deputyA->getFirstName(), $deputyB->getFirstName()));
 
-        return $deputies;
+        return array_values($deputies);
     }
 }
