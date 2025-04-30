@@ -68,17 +68,7 @@ class DeputyRepository extends ServiceEntityRepository
             ->prepare($sql)
             ->executeQuery(['deputyUid' => (string) $uid]);
 
-        file_put_contents('php://stderr', 'rowcount\n/n');
-        file_put_contents('php://stderr', '\n/n----------\n/n');
-        file_put_contents('php://stderr', $query->rowCount());
-        file_put_contents('php://stderr', '\n/n----------\n/n');
-
         $result = $query->fetchAllAssociative();
-        file_put_contents('php://stderr', 'results of query\n/n');
-        file_put_contents('php://stderr', '\n/n----------\n/n');
-        file_put_contents('php://stderr', print_r($result, true));
-        file_put_contents('php://stderr', '\n/n----------\n/n');
-
 
         $data = [];
         foreach ($result as $line) {
