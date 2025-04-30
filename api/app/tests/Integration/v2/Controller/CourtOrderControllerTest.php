@@ -92,7 +92,7 @@ class CourtOrderControllerTest extends WebTestCase
     public function testGetByUidActionUserIsNotADeputyFail(): void
     {
         // add a court order
-        $courtOrder = self::$fixtures->createCourtOrder(92954529292, 'hw', true);
+        $courtOrder = self::$fixtures->createCourtOrder(92954529292, 'hw', 'ACTIVE');
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
@@ -117,7 +117,7 @@ class CourtOrderControllerTest extends WebTestCase
     public function testGetByUidActionUserIsNotADeputyOnCourtOrderFail(): void
     {
         // add a court order
-        $courtOrder = self::$fixtures->createCourtOrder(9292929292, 'hw', true);
+        $courtOrder = self::$fixtures->createCourtOrder(9292929292, 'hw', 'ACTIVE');
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
@@ -144,7 +144,7 @@ class CourtOrderControllerTest extends WebTestCase
     public function testGetByUidActionSuccess(): void
     {
         // add a court order, and make the user a deputy on it
-        $courtOrder = self::$fixtures->createCourtOrder(7747728317, 'pfa', true);
+        $courtOrder = self::$fixtures->createCourtOrder(7747728317, 'pfa', 'ACTIVE');
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 

@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order_deputy")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderDeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -37,13 +37,13 @@ class CourtOrderDeputy
     private Deputy $deputy;
 
     /**
-     * @ORM\Column(name="discharged", type="boolean", nullable=false)
+     * @ORM\Column(name="is_active", type="boolean", nullable=false)
      */
-    private bool $discharged;
+    private bool $isActive;
 
     public function __construct()
     {
-        $this->discharged = false;
+        $this->isActive = true;
     }
 
     public function getDeputy(): Deputy
@@ -70,14 +70,14 @@ class CourtOrderDeputy
         return $this;
     }
 
-    public function isDischarged(): bool
+    public function isActive(): bool
     {
-        return $this->discharged;
+        return $this->isActive;
     }
 
-    public function setDischarged(bool $discharged): CourtOrderDeputy
+    public function setIsActive(bool $isActive): CourtOrderDeputy
     {
-        $this->discharged = $discharged;
+        $this->isActive = $isActive;
 
         return $this;
     }

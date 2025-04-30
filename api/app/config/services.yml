@@ -252,6 +252,14 @@ services:
         class: App\Repository\ChecklistRepository
         tags: ["doctrine.repository_service"]
 
+    App\Repository\CourtOrderRepository:
+        class: App\Repository\CourtOrderRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\CourtOrderDeputyRepository:
+        class: App\Repository\CourtOrderDeputyRepository
+        tags: ["doctrine.repository_service"]
+
     App\Repository\DeputyRepository:
         class: App\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]
@@ -278,6 +286,10 @@ services:
 
     App\Repository\SatisfactionRepository:
         class: App\Repository\SatisfactionRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\StagingDeputyshipRepository:
+        class: App\Repository\StagingDeputyshipRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\UserRepository:
@@ -429,4 +441,4 @@ services:
         arguments:
             $httpClient: '@GuzzleHttp\Client'
             $redis: "@snc_redis.default"
-            $comparers: !tagged_iterator app.response_comparer
+            $comparers: app.response_comparer

@@ -17,9 +17,9 @@ class CourtOrder
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      */
     private $courtOrderUid;
 
@@ -28,14 +28,14 @@ class CourtOrder
      *
      * @JMS\Type("string")
      */
-    private $type;
+    private $orderType;
 
     /**
-     * @var bool
+     * @var string
      *
-     * @JMS\Type("boolean")
+     * @JMS\Type("string")
      */
-    private $active;
+    private $status;
 
     public function getId(): int
     {
@@ -49,38 +49,38 @@ class CourtOrder
         return $this;
     }
 
-    public function getCourtOrderUid(): int
+    public function getCourtOrderUid(): string
     {
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(int $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
     {
         $this->courtOrderUid = $courtOrderUid;
 
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
-        return $this->type;
+        return $this->orderType;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $orderType): CourtOrder
     {
-        $this->type = $type;
+        $this->orderType = $orderType;
 
         return $this;
     }
 
-    public function isActive(): bool
+    public function getStatus(): string
     {
-        return $this->active;
+        return $this->status;
     }
 
-    public function setActive(bool $active): CourtOrder
+    public function setStatus(string $status): CourtOrder
     {
-        $this->active = $active;
+        $this->status = $status;
 
         return $this;
     }

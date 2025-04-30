@@ -3696,7 +3696,7 @@ parameters:
 			path: src/Entity/Deputy.php
 
 		-
-			message: "#^Cannot call method isDischarged\\(\\) on mixed\\.$#"
+			message: "#^Cannot call method isActive\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Entity/Deputy.php
 
@@ -7931,11 +7931,6 @@ parameters:
 			path: src/Repository/ClientRepository.php
 
 		-
-			message: "#^Class App\\\\Repository\\\\DeputyRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/DeputyRepository.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\DocumentRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/DocumentRepository.php
@@ -8874,11 +8869,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\DataImporter\\\\CsvToArray\\:\\:keepExpectedAndOptionalColumns\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/DataImporter/CsvToArray.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Service/DeputyService.php
 
 		-
 			message: "#^Method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) has no return type specified\\.$#"
