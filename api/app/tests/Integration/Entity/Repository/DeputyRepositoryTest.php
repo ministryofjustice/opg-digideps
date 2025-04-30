@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Deputy;
 use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
@@ -48,11 +49,9 @@ class DeputyRepositoryTest extends WebTestCase
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
             em: $this->em,
             client: $client,
-            active: true,
+            status: 'ACTIVE',
             courtOrderUid: $courtOrderUid,
-            type: 'SINGLE',
             deputy: $deputy,
-            deputyDischarged: false
         );
         $courtOrder->addReport(report: $report);
         $this->em->persist(entity: $courtOrder);
@@ -61,15 +60,20 @@ class DeputyRepositoryTest extends WebTestCase
         
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
+
         self::assertArrayHasKey('firstName', $results[0]['client']);
         self::assertEquals($client->getFirstName(), $results[0]['client']['firstName']);
+
         self::assertArrayHasKey('lastName', $results[0]['client']);
         self::assertEquals($client->getLastName(), $results[0]['client']['lastName']);
+
         self::assertArrayHasKey('caseNumber', $results[0]['client']);
         self::assertEquals($client->getCaseNumber(), $results[0]['client']['caseNumber']);
+
         self::assertArrayHasKey('courtOrder', $results[0]);
         self::assertArrayHasKey('courtOrderUid', $results[0]['courtOrder']);
-        self::assertEquals($courtOrder->getUid(), $results[0]['courtOrder']['courtOrderUid']);
+        self::assertEquals($courtOrder->getCourtOrderUid(), $results[0]['courtOrder']['courtOrderUid']);
+
         self::assertArrayHasKey('report', $results[0]);
         self::assertArrayHasKey('type', $results[0]['report']);
         self::assertEquals($report->getType(), $results[0]['report']['type']);
