@@ -39,10 +39,9 @@ class DeputyshipsCSVIngester
         $candidates = $this->deputyshipsCandidatesSelector->select();
         $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
 
-        foreach ($candidates as $state) {
-            // build the CourtOrder and related entities without saving them; see matching rules at
-            // https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/4179689475/Ingesting+the+Sirius+deputyship+CSV
-            $state = $this->deputyshipBuilder->build($state);
+        foreach ($candidates as $candidate) {
+            // build the CourtOrder and related entities from the candidate
+            $state = $this->deputyshipBuilder->build($candidate);
 
             // persist the entities to the database (NB this could be chunked within the persister)
             $state = $this->deputyshipPersister->persist($state);

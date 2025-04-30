@@ -10,6 +10,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Deputy>
+ */
 class DeputyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -68,5 +71,23 @@ class DeputyRepository extends ServiceEntityRepository
         }
 
         return 0 === count($result) ? null : $data;
+    }
+ 
+    /*
+     * Return a mapping from deputy UID to deputy ID.
+     *
+     * @return array<string, int>
+     */
+    public function getUidToIdMapping(): array
+    {
+        $deputies = $this->findAll();
+
+        $mapping = [];
+
+        foreach ($deputies as $deputy) {
+            $mapping[$deputy->getDeputyUid()] = $deputy->getId();
+        }
+
+        return $mapping;
     }
 }
