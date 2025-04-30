@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ToolsControllerTest extends AbstractTestController
 {
-    private static EntityManager $em;
-
     private static User $previousDeputy;
     private static Client $previousClient;
     private static Report $previousReport1;
