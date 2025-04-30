@@ -31,7 +31,7 @@ use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
-    public static function generateReport(EntityManager $em, Client $client = null, string $type = null, DateTime $startDate = null, DateTime $endDate = null): Report
+    public static function generateReport(EntityManager $em, Client $client = null, string $type = null, \DateTime $startDate = null, DateTime $endDate = null): Report
     {
         $client = $client ? $client : ClientTestHelper::generateClient($em);
         $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
@@ -45,7 +45,6 @@ class ReportTestHelper
     }
 
     public static function generateNdr(EntityManager $em, User $deputy, Client $client = null): Ndr
-    public function generateNdr(EntityManager $em, User $deputy, ?Client $client = null): Ndr
     {
         $ndr = new Ndr($client);
         $deputy->setNdrEnabled(true);
