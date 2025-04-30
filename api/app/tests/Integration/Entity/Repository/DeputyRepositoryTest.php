@@ -48,7 +48,7 @@ class DeputyRepositoryTest extends WebTestCase
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
             em: $this->em,
             client: $client,
-            active: true,
+            status: 'ACTIVE',
             courtOrderUid: $courtOrderUid,
             type: 'SINGLE',
             deputy: $deputy,

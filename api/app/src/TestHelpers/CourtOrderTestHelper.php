@@ -15,17 +15,18 @@ class CourtOrderTestHelper
     public static function generateCourtOrder(
         EntityManager $em, 
         Client $client,
-        bool $active,
+        string $status,
         string $courtOrderUid,
         string $type = 'SINGLE',
         ?Deputy $deputy = null,
         bool $deputyDischarged = false,
     ): CourtOrder {
+        /** @var CourtOrder $courtOrder */
         $courtOrder = (new CourtOrder())
-            ->setCourtOrderUid((int) $courtOrderUid)
+            ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
-            ->setType($type)
-            ->setActive($active);
+            ->setOrderType($type)
+            ->setStatus($status);
 
         if (!is_null($deputy)) {
             self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $deputyDischarged);
@@ -35,7 +36,7 @@ class CourtOrderTestHelper
     }
     
     public static function associateDeputyToCourtOrder(EntityManager $em, CourtOrder $courtOrder, Deputy $deputy, bool $deputyDischarged = false): void
-    {
+    {   /** @var CourtOrderDeputy $courtOrderDeputy */
         $courtOrderDeputy = (new CourtOrderDeputy())
             ->setDeputy($deputy)
             ->setCourtOrder($courtOrder)

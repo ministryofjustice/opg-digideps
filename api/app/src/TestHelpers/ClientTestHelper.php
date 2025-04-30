@@ -19,7 +19,8 @@ class ClientTestHelper extends TestCase
     {
         $prophet = new Prophet();
         $report = $hasReports ? ($prophet->prophesize(Report::class))->reveal() : null;
-
+        
+        /** @var ObjectProphecy<App\Entity\Client> $client */
         $client = $prophet->prophesize(Client::class);
         $client->getReports()->willReturn($report);
         $client->getId()->willReturn($id);
