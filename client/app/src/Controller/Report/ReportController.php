@@ -183,13 +183,7 @@ class ReportController extends AbstractController
         if (!$user->getIsPrimary()) {
             $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-            $this->addFlash('nonPrimaryRedirect',
-                [
-                    'sentenceOne' => 'This account has been closed.',
-                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                    'primaryEmail' => $primaryEmail,
-                ]
-            );
+            $this->createNonPrimaryFlashMessage($primaryEmail);
 
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
@@ -248,17 +242,13 @@ class ReportController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
+        // ACTION: Move logic to service class
         // redirect back to log out page if signing in with non-primary account with primary email
+
         if (!$user->getIsPrimary()) {
             $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-            $this->addFlash('nonPrimaryRedirect',
-                [
-                    'sentenceOne' => 'This account has been closed.',
-                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                    'primaryEmail' => $primaryEmail,
-                ]
-            );
+            $this->createNonPrimaryFlashMessage($primaryEmail);
 
             return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
         }
@@ -283,6 +273,60 @@ class ReportController extends AbstractController
         return [
             'user' => $user,
             'clients' => $clients,
+        ];
+    }
+
+    /**
+     * List of reports.
+     *
+     * @Route("/reports", name="choose_a_report")
+     *
+     * @Security("is_granted('ROLE_LAY_DEPUTY')")     *
+     *
+     * @Template("@App/Index/choose-a-report.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function chooseAReportAction(Redirector $redirector)
+    {
+        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
+
+        $deputyUid = $user->getDeputyUid();
+
+        // redirect back to log out page if signing in with non-primary account with primary email
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($deputyUid);
+
+            $this->createNonPrimaryFlashMessage($primaryEmail);
+
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        }
+
+        // redirect if user has missing details or is on wrong page
+        $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
+        if (is_string($route)) {
+            return $this->redirectToRoute($route);
+        }
+
+        // New logic to add to retrieve reports
+        // $activeReportsByDeputyUid = $this->restClient->apiCall('GET', 'deputy/'.$deputyUid.'/reports', $deputyUid, 'JsonResponse');
+
+        $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
+        $clients = [];
+
+        if (!is_null($deputyUid)) {
+            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, $groups);
+        }
+
+        if (empty($clients)) {
+            throw $this->createNotFoundException('Client not added');
+        }
+
+        return [
+            'user' => $user,
+            'clients' => $clients,
+            //            'activeReports' => $activeReportsByDeputyUid['reports']
+            //        'clients' => $activeReportsByDeputyUid['client']
         ];
     }
 
@@ -804,5 +848,16 @@ class ReportController extends AbstractController
             'email' => $deputy->getEmail(),
             'editUrl' => $editUrl,
         ];
+    }
+
+    private function createNonPrimaryFlashMessage($primaryEmail): void
+    {
+        $this->addFlash('nonPrimaryRedirect',
+            [
+                'sentenceOne' => 'This account has been closed.',
+                'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                'primaryEmail' => $primaryEmail,
+            ]
+        );
     }
 }
