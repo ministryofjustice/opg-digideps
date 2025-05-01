@@ -9,6 +9,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophet;
 
 class UserTestHelper extends TestCase
@@ -18,7 +19,8 @@ class UserTestHelper extends TestCase
         $clientTestHelper = new ClientTestHelper();
 
         $clients = $hasClients ? [$clientTestHelper->createClientMock(1, $hasReports)] : null;
-
+        
+        /** @var ObjectProphecy<App\Entity\User> $user */
         $user = (new Prophet())->prophesize(User::class);
         $user->getRoleName()->willReturn($roleName);
         $user->getClients()->willReturn($clients);

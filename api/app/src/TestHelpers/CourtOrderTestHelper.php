@@ -19,7 +19,7 @@ class CourtOrderTestHelper
         string $courtOrderUid,
         string $type = 'SINGLE',
         ?Deputy $deputy = null,
-        bool $deputyDischarged = false,
+        bool $isActive = false,
     ): CourtOrder {
         /** @var CourtOrder $courtOrder */
         $courtOrder = (new CourtOrder())
@@ -29,19 +29,26 @@ class CourtOrderTestHelper
             ->setStatus($status);
 
         if (!is_null($deputy)) {
-            self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $deputyDischarged);
+            self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $isActive);
         }
         
         return $courtOrder;
     }
     
-    public static function associateDeputyToCourtOrder(EntityManager $em, CourtOrder $courtOrder, Deputy $deputy, bool $deputyDischarged = false): void
-    {   /** @var CourtOrderDeputy $courtOrderDeputy */
+    public static function associateDeputyToCourtOrder(
+        EntityManager $em, 
+        CourtOrder $courtOrder, 
+        Deputy $deputy, 
+        bool $isActive = true
+    ): CourtOrderDeputy {   
+        /** @var CourtOrderDeputy $courtOrderDeputy */
         $courtOrderDeputy = (new CourtOrderDeputy())
             ->setDeputy($deputy)
             ->setCourtOrder($courtOrder)
-            ->setDischarged($deputyDischarged);
+            ->setIsActive($isActive);
 
         $em->persist($courtOrderDeputy);
+        
+        return $courtOrderDeputy;
     }
 }

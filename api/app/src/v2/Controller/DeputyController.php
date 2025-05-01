@@ -9,8 +9,6 @@ use App\Repository\UserRepository;
 use App\v2\Assembler\UserAssembler;
 use App\v2\Transformer\UserTransformer;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,6 +54,7 @@ class DeputyController extends AbstractController
         try {
             $results = $this->deputyRepository->findReportsInfoByUid($uid, $inactive);
         } catch (\Exception $e) {
+            error_log($e->getMessage());
             $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 
             return $this->buildErrorResponse();
