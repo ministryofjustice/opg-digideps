@@ -6,6 +6,7 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPipelineState;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
@@ -86,7 +87,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $state = new DeputyshipPipelineState($expectedStatus);
 
         $dto = new StagingSelectedCandidate();
-        $candidates = [$dto];
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([$dto]);
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
@@ -99,11 +100,11 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipsCandidatesSelector->expects($this->once())
             ->method('select')
-            ->willReturn($candidates);
+            ->willReturn($candidatesSelectorResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
-            ->method('recordDeputyshipCandidates')
-            ->with($candidates);
+            ->method('recordDeputyshipCandidatesResult')
+            ->with($candidatesSelectorResult);
 
         $this->mockDeputyshipBuilder->expects($this->once())
             ->method('build')
