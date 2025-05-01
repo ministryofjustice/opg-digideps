@@ -40,8 +40,12 @@ class DeputyshipsCandidatesSelector
         }
 
         try {
-            $candidates = array_merge($candidates, $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates());
-            $candidates = array_merge($candidates, $this->courtOrderReportsCandidateFactory->createIncompatibleReportCandidates());
+            $candidates = array_merge(
+                $candidates,
+                $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates(),
+                $this->courtOrderReportsCandidateFactory->createIncompatibleReportCandidates(),
+                $this->courtOrderReportsCandidateFactory->createCompatibleNdrCandidates()
+            );
         } catch (Exception $e) {
             return new DeputyshipCandidatesSelectorResult([], $e);
         }

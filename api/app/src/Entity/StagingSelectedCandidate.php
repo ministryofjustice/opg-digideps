@@ -30,6 +30,7 @@ class StagingSelectedCandidate
     public const INSERT_ORDER = 'INSERT ORDER';
     public const INSERT_REPORT = 'INSERT REPORT';
     public const INSERT_ORDER_REPORT = 'INSERT ORDER REPORT';
+    public const INSERT_ORDER_NDR = 'INSERT ORDER NDR';
 
     /**
      * @ORM\Id
@@ -113,4 +114,9 @@ class StagingSelectedCandidate
      * @ORM\Column(name="deputy_id", type="integer",nullable=true)
      */
     public ?int $deputyId;
+
+    /**
+     * @ORM\Column(name="ndr_id", type="integer",nullable=true)
+     */
+    public ?int $ndrId;
 }
