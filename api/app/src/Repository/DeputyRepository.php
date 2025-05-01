@@ -54,12 +54,13 @@ class DeputyRepository extends ServiceEntityRepository
         LEFT JOIN court_order co ON co.client_id = c.id
         LEFT JOIN report r ON r.client_id = c.id
         LEFT JOIN court_order_deputy cod ON cod.deputy_id = d.id
-        WHERE cod.discharged = FALSE
+        WHERE cod.is_active = TRUE
         AND d.deputy_uid = :deputyUid
         SQL;
 
-        if (!$includeInactive) {
-            $sql .= ' AND co.active = TRUE';
+        if ($includeInactive) {
+            // Possibly need to be changed when we have all applicable status
+            $sql .= ' AND co.status = "INACTIVE"';
         }
         
         $query = $this
