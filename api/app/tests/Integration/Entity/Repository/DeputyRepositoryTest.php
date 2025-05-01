@@ -10,53 +10,58 @@ use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\Fixtures;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Faker\Factory;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use function PHPUnit\Framework\assertEquals;
 
 class DeputyRepositoryTest extends WebTestCase
 {
-    private DeputyRepository $sut;
-    private EntityManagerInterface $em;
-    
-    protected function setUp(): void
+    private static DeputyRepository $sut;
+    private static EntityManagerInterface $em;
+    private static Fixtures $fixtures;
+
+    public static function setUpBeforeClass(): void
     {
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->fixtures = new Fixtures(em: $this->em);
+        $container = static::getContainer();
+        
+        /** @var EntityManager $em */
+        $em = $container->get(id: 'em');
+        self::$em = $em;
+        self::$fixtures = new Fixtures(em: self::$em);
 
-        $this->sut = $this->em->getRepository(entityName: Deputy::class);
+        /** @var EntityRepository $sut */
+        self::$sut = self::$em->getRepository(entityName: Deputy::class);
 
-        $purger = new ORMPurger(em: $this->em);
+        $purger = new ORMPurger(em: self::$em);
         $purger->purge();
     }
 
     public function testFindReportsInfoByUid()
     {
-        $deputyUid = '70000021';
-        $courtOrderUid = '71000080';
+        $deputyUid = '7000000021';
+        $courtOrderUid = '7100000080';
 
-        $client = ClientTestHelper::generateClient(em: $this->em);
-        $user = UserTestHelper::createAndPersistUser(em: $this->em, client: $client, deputyUid: $deputyUid);
-        
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: $deputyUid, user: $user);
-        $this->em->persist(entity: $deputy);
-        
-        $report = ReportTestHelper::generateReport(em: $this->em, client: $client);
-        $this->em->persist(entity: $report);
-
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: $deputyUid);
+        $client = ClientTestHelper::generateClient(em: self::$em);
+        $user = UserTestHelper::createAndPersistUser(em: self::$em, client: $client, deputyUid: $deputyUid);
+        $report = ReportTestHelper::generateReport(em: self::$em, client: $client);
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
-            em: $this->em,
+            em: self::$em,
             client: $client,
             status: 'ACTIVE',
             courtOrderUid: $courtOrderUid,
             deputy: $deputy,
         );
+
+        $deputy->setUser(user: $user);
+        $client->setDeputy(deputy: $deputy);
         $courtOrder->addReport(report: $report);
-        $this->em->persist(entity: $courtOrder);
         
-        $results = $this->sut->findReportsInfoByUid(uid: $deputyUid);
+        self::$fixtures->persist($deputy, $client, $report, $courtOrder);
+        self::$fixtures->flush();
+        
+        $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
         
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
@@ -82,7 +87,7 @@ class DeputyRepositoryTest extends WebTestCase
     public function testFindReportsInfoByUidIsNull()
     {
         $deputyUid = '70000022';
-        $results = $this->sut->findReportsInfoByUid(uid: $deputyUid);
+        $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
 
         self::assertNull($results);
     }
