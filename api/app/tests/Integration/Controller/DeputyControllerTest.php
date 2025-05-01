@@ -8,37 +8,38 @@ use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
-use App\Tests\Integration\Controller\AbstractTestController;
 use App\Tests\Integration\Controller\JsonHttpTestClient;
+use App\Tests\Integration\Fixtures;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DeputyControllerTest extends AbstractTestController
+class DeputyControllerTest extends WebTestCase
 {
-    private static ?string $tokenAdmin = null;
-    private static ?string $tokenDeputy = null;
-    private static FixtureHelper $fixtureHelper;
     private static JsonHttpTestClient $client;
-    
+    private static Fixtures $fixtures;
+    private static EntityManager $em;
+    private static FixtureHelper $fixtureHelper;
+    private static string $deputySecret;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-
+        $browser = static::createClient(['environment' => 'test', 'debug' => false]);
         $container = static::getContainer();
 
         /** @var JWTService $jwtService */
         $jwtService = $container->get('App\Service\JWT\JWTService');
-        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
+        self::$client = new JsonHttpTestClient($browser, $jwtService);
+
+        /** @var EntityManager $em */
+        $em = $container->get('em');
+        self::$em = $em;
+        self::$fixtures = new Fixtures(self::$em);
 
         /** @var FixtureHelper $fixtureHelper */
         $fixtureHelper = $container->get(FixtureHelper::class);
         self::$fixtureHelper = $fixtureHelper;
-        
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
 
-        self::fixtures()->flush()->clear();
+        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
     }
 
     /**
@@ -46,8 +47,6 @@ class DeputyControllerTest extends AbstractTestController
      */
     public static function tearDownAfterClass(): void
     {
-        parent::tearDownAfterClass();
-
         self::$fixtures->clear();
     }
 
@@ -60,48 +59,56 @@ class DeputyControllerTest extends AbstractTestController
 
     public function testAdd()
     {
-        self::$tokenDeputy = $this->loginAsDeputy();
+        $firstName = 'Bill';
+        $lastName = 'Baggins';
+        $email = 'deputy@example.org';
+        $deputyUid = '7999999990';
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
-        $return = $this->assertJsonRequest('POST', '/deputy/add', [
+        $return = self::$client->assertJsonRequest('POST', '/deputy/add', [
             'data' => [
-                'firstname' => 'n',
-                'lastname' => 's',
-                'email' => 'n.s@example.org',
-                'deputy_uid' => '7999999990',
+                'firstname' => $firstName,
+                'lastname' => $lastName,
+                'email' => $email,
+                'deputy_uid' => $deputyUid,
             ],
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $token,
         ]);
 
-        $deputy = $this->fixtures()->clear()->getRepo('Deputy')->find($return['data']['id']);
+        $deputy = self::$fixtures->clear()->getRepo('Deputy')->find($return['data']['id']);
 
-        $this->assertEquals('n', $deputy->getFirstname());
-        $this->assertEquals('s', $deputy->getLastname());
-        $this->assertEquals('n.s@example.org', $deputy->getEmail1());
-        $this->assertEquals('7999999990', $deputy->getDeputyUid());
+        $this->assertEquals($firstName, $deputy->getFirstname());
+        $this->assertEquals($lastName, $deputy->getLastname());
+        $this->assertEquals($email, $deputy->getEmail1());
+        $this->assertEquals($deputyUid, $deputy->getDeputyUid());
     }
 
     public function testAddDeputyIdAlreadyExists()
     {
-        self::$tokenDeputy = $this->loginAsDeputy();
+        $firstName = 'Bill';
+        $lastName = 'Baggins';
+        $email = 'deputy@example.org';
+        $deputyUid = '7999999990';
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
-        $return = $this->assertJsonRequest('POST', '/deputy/add', [
+        $return = self::$client->assertJsonRequest('POST', '/deputy/add', [
             'data' => [
-                'firstname' => 'd',
-                'lastname' => 'e',
-                'email' => 'd.e@example.org',
-                'deputy_uid' => '7999999990',
+                'firstname' => $firstName,
+                'lastname' => $lastName,
+                'email' => $email,
+                'deputy_uid' => $deputyUid,
             ],
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $token,
         ]);
 
-        $deputy = $this->fixtures()->clear()->getRepo('Deputy')->find($return['data']['id']);
+        $deputy = self::$fixtures->clear()->getRepo('Deputy')->find($return['data']['id']);
 
-        $this->assertEquals('n', $deputy->getFirstname());
-        $this->assertEquals('s', $deputy->getLastname());
-        $this->assertEquals('n.s@example.org', $deputy->getEmail1());
-        $this->assertEquals('7999999990', $deputy->getDeputyUid());
+        $this->assertEquals($firstName, $deputy->getFirstname());
+        $this->assertEquals($lastName, $deputy->getLastname());
+        $this->assertEquals($email, $deputy->getEmail1());
+        $this->assertEquals($deputyUid, $deputy->getDeputyUid());
     }
     
     public function testDeputyReportUrlNeedsAuth()
@@ -173,7 +180,6 @@ class DeputyControllerTest extends AbstractTestController
 
         // generate deputy and set user
         $deputy = DeputyTestHelper::generateDeputy($email, $deputyUid, $user);
-        $deputy->setUser($user);
         self::$fixtures->persist($deputy);
         self::$fixtures->flush();
 
@@ -186,7 +192,7 @@ class DeputyControllerTest extends AbstractTestController
         // generate courtOrder and set client and deputy
         $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', true);
         $courtOrder->setClient($client);
-        CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
+        $courtOrderDeputy = CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
@@ -209,6 +215,6 @@ class DeputyControllerTest extends AbstractTestController
         
         self::assertCount(1, $responseJson['data']);
 
-        self::$fixtures->remove($user)->flush()->clear();
+        self::$fixtures->remove($courtOrderDeputy, $deputy, $user)->flush()->clear();
     }
 }
