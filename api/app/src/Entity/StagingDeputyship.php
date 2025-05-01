@@ -33,7 +33,7 @@ class StagingDeputyship
      *
      * @ORM\SequenceGenerator(sequenceName="deputyship_id_seq", allocationSize=1, initialValue=1)
      */
-    public int $id;
+    public ?int $id = null;
 
     /**
      * @ORM\Column(name="order_uid", type="string", length=30)
