@@ -77,7 +77,8 @@ class CourtOrderReportCandidatesFactory
             LEFT JOIN report r ON c.id = r.client_id
             WHERE r.id IS NOT NULL AND r.submit_date IS NULL AND r.un_submit_date IS NULL
         ) compat
-        WHERE report_is_compatible = false;
+        WHERE report_is_compatible = false
+        LIMIT 1;
     SQL;
 
     /** @var string */
