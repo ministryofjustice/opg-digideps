@@ -51,14 +51,14 @@ class StagingSelectedCandidate
     public string $orderUid;
 
     /**
-     * @ORM\Column(name="deputy_uid", type="string", length=30)
-     */
-    public string $deputyUid;
-
-    /**
      * @ORM\Column(name="action", type="string", length=30)
      */
     public string $action;
+
+    /**
+     * @ORM\Column(name="deputy_uid", type="string", length=30, nullable=true)
+     */
+    public ?string $deputyUid;
 
     /**
      * @ORM\Column(name="order_status", type="string", length=30, nullable=true)
@@ -89,11 +89,6 @@ class StagingSelectedCandidate
      * @ORM\Column(name="deputy_status_on_order", type="boolean", nullable=true)
      */
     public ?bool $deputyStatusOnOrder;
-
-    /**
-     * @ORM\Column(name="is_hybrid", type="string", length=30, nullable=true)
-     */
-    public ?string $isHybrid;
 
     /**
      * @ORM\Column(name="order_id", type="integer",nullable=true)
