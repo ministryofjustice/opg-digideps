@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
+namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingDeputyship;
 use App\v2\CSV\CSVChunkerFactory;
