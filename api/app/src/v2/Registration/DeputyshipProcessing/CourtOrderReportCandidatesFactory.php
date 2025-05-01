@@ -20,25 +20,51 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class CourtOrderReportCandidatesFactory
 {
+    // for checking the compatibility of a staging deputyship (d) row with a report (r) row
+    /** @var string */
+    private const COMPATIBILITY_CHECK = <<<SQL
+        (
+            d.deputy_type = 'LAY'
+            AND (
+                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102', '103'))
+                OR
+                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104'))
+                OR
+                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4', '103-4'))
+            )
+        )
+        OR
+        (
+            d.deputy_type = 'PA'
+            AND (
+                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-6', '103-6'))
+                OR
+                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-6'))
+                OR
+                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-6', '103-4-6'))
+            )
+        )
+        OR
+        (
+            d.deputy_type = 'PRO'
+            AND (
+                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-5', '103-5'))
+                OR
+                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-5'))
+                OR
+                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
+            )
+        )
+        SQL;
+
     /** @var string */
     private const COMPATIBLE_REPORTS_QUERY = <<<SQL
         SELECT court_order_uid, report_id FROM (
             SELECT
                 d.order_uid AS court_order_uid,
                 r.id AS report_id,
-
                 (
-                    (d.order_type = 'pfa' AND (r.type = '102' OR r.type = '103'))
-                    OR
-                    (d.order_type = 'hw' AND r.type = '104')
-                    OR
-                    (
-                        (d.order_type = 'pfa' OR d.order_type = 'hw')
-                        AND
-                        d.is_hybrid = '1'
-                        AND
-                        (r.type = '102-4' OR r.type = '103-4')
-                    )
+                    %s
                 ) AS report_is_compatible
             FROM staging.deputyship d
             LEFT JOIN client c ON d.case_number = c.case_number
@@ -60,17 +86,7 @@ class CourtOrderReportCandidatesFactory
                 d.order_made_date AS order_made_date,
 
                 (
-                    (d.order_type = 'pfa' AND (r.type = '102' OR r.type = '103'))
-                    OR
-                    (d.order_type = 'hw' AND r.type = '104')
-                    OR
-                    (
-                        (d.order_type = 'pfa' OR d.order_type = 'hw')
-                        AND
-                        d.is_hybrid = '1'
-                        AND
-                        (r.type = '102-4' OR r.type = '103-4')
-                    )
+                    %s
                 ) AS report_is_compatible
             FROM staging.deputyship d
             LEFT JOIN client c ON d.case_number = c.case_number
@@ -136,7 +152,7 @@ class CourtOrderReportCandidatesFactory
     public function createCompatibleReportCandidates(): array
     {
         return $this->runQuery(
-            self::COMPATIBLE_REPORTS_QUERY,
+            sprintf(self::COMPATIBLE_REPORTS_QUERY, self::COMPATIBILITY_CHECK),
             function ($row) {
                 return $this->candidateFactory->createInsertOrderReportCandidate(
                     ''.$row['court_order_uid'],
@@ -161,7 +177,7 @@ class CourtOrderReportCandidatesFactory
     public function createNewReportCandidates(): array
     {
         return $this->runQuery(
-            self::INCOMPATIBLE_CURRENT_REPORT_QUERY,
+            sprintf(self::INCOMPATIBLE_CURRENT_REPORT_QUERY, self::COMPATIBILITY_CHECK),
             function ($row) {
                 return $this->candidateFactory->createInsertReportCandidate(
                     ''.$row['court_order_uid'],
@@ -178,6 +194,8 @@ class CourtOrderReportCandidatesFactory
      * Find NDRs which can be associated with a court order.
      *
      * @return StagingSelectedCandidate[] An array of candidate court_order_ndr inserts
+     *
+     * @throws Exception
      */
     public function createCompatibleNdrCandidates(): array
     {
