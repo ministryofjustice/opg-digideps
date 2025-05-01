@@ -49,7 +49,10 @@ class DeputyIntegrationTest extends KernelTestCase
         $retrievedDeputy = $repo->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
         $actual = $retrievedDeputy->getCourtOrdersWithStatus();
-        $actualDischarged = $actual[0]['discharged'];
+        $this->assertArrayHasKey('courtOrder', $actual[0]);
+        $this->assertArrayHasKey('isActive', $actual[0]);
+
+        $actualDischarged = $actual[0]['isActive'];
         $actualCourtOrder = $actual[0]['courtOrder'];
 
         $this->assertEquals(1, count($actual));

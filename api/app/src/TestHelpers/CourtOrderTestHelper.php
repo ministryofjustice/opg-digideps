@@ -19,14 +19,16 @@ class CourtOrderTestHelper
         string $courtOrderUid,
         string $type = 'SINGLE',
         ?Deputy $deputy = null,
-        bool $isActive = false,
+        bool $isActive = true,
+        \DateTime $orderDate = (new \DateTime()),
     ): CourtOrder {
         /** @var CourtOrder $courtOrder */
         $courtOrder = (new CourtOrder())
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
             ->setOrderType($type)
-            ->setStatus($status);
+            ->setStatus($status)
+            ->setOrderMadeDate($orderDate);
 
         if (!is_null($deputy)) {
             self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $isActive);
@@ -48,6 +50,7 @@ class CourtOrderTestHelper
             ->setIsActive($isActive);
 
         $em->persist($courtOrderDeputy);
+        $em->flush();
         
         return $courtOrderDeputy;
     }
