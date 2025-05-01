@@ -40,8 +40,7 @@ class DeputyshipsCSVIngester
             return $this->deputyshipsIngestResultRecorder->result();
         }
 
-        // TODO de-duplicate and order the candidates before processing them in the loop below
-
+        // TODO order the candidates before processing them in the loop below
         foreach ($candidatesResult->candidates as $candidate) {
             // build the CourtOrder and related entities from the candidate
             $state = $this->deputyshipBuilder->build($candidate);

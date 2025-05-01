@@ -7,6 +7,7 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\StagingDeputyshipRepository;
+use App\Repository\StagingSelectedCandidateRepository;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
@@ -22,6 +23,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
     private StagingDeputyshipRepository&MockObject $mockStagingDeputyshipRepository;
     private CourtOrderAndDeputyCandidatesFactory&MockObject $mockCourtOrderAndDeputyCandidatesFactory;
     private CourtOrderReportCandidatesFactory&MockObject $mockCourtOrderReportCandidatesFactory;
+    private StagingSelectedCandidateRepository&MockObject $mockStagingSelectedCandidateRepository;
     private DeputyshipsCandidatesSelector $sut;
 
     public function setUp(): void
@@ -30,12 +32,14 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockStagingDeputyshipRepository = $this->createMock(StagingDeputyshipRepository::class);
         $this->mockCourtOrderAndDeputyCandidatesFactory = $this->createMock(CourtOrderAndDeputyCandidatesFactory::class);
         $this->mockCourtOrderReportCandidatesFactory = $this->createMock(CourtOrderReportCandidatesFactory::class);
+        $this->mockStagingSelectedCandidateRepository = $this->createMock(StagingSelectedCandidateRepository::class);
 
         $this->sut = new DeputyshipsCandidatesSelector(
             $this->mockEntityManager,
             $this->mockStagingDeputyshipRepository,
             $this->mockCourtOrderAndDeputyCandidatesFactory,
             $this->mockCourtOrderReportCandidatesFactory,
+            $this->mockStagingSelectedCandidateRepository,
         );
     }
 
@@ -76,7 +80,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             ->willReturn($mockQuery);
 
         $this->mockEntityManager
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(6))
             ->method('flush');
 
         $this->mockEntityManager
@@ -137,6 +141,10 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             ->willReturnCallback(function ($entity) use ($mockCandidates) {
                 self::assertContains($entity, $mockCandidates);
             });
+
+        $this->mockStagingSelectedCandidateRepository->expects($this->once())
+            ->method('getDistinctOrderedCandidates')
+            ->willReturn($mockCandidates);
 
         $result = $this->sut->select();
 

@@ -10,8 +10,9 @@ class DeputyshipCandidatesSelectorResult
 {
     public function __construct(
         /** @var StagingSelectedCandidate[] */
-        public readonly array $candidates,
+        public readonly iterable $candidates,
 
+        public readonly int $numCandidates,
         public readonly ?\Exception $exception = null,
     ) {
     }

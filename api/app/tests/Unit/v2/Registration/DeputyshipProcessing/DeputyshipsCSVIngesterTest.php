@@ -84,6 +84,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         // candidate selection fails
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(
             [],
+            0,
             new Exception('unexpected database exception')
         );
 
@@ -112,7 +113,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $state = new DeputyshipPipelineState($expectedStatus);
 
         $dto = new StagingSelectedCandidate();
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([$dto]);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([$dto], 1);
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')

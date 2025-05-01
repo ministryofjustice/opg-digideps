@@ -25,13 +25,13 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
         $result = $this->sut->result();
 
         $this->assertFalse($result->success);
-        $this->assertEquals('failed to load CSV from /tmp/test.csv', $result->message);
+        $this->assertEquals('failed to load deputyships CSV from /tmp/test.csv', $result->message);
     }
 
     public function testRecordDeputyshipCandidatesResultExceptionFail(): void
     {
         $exception = new Exception('Database connection failed');
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], $exception);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], 0, $exception);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $result = $this->sut->result();
@@ -44,12 +44,15 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
     {
         $this->sut->recordCsvLoadResult('/tmp/deputyships.csv', true);
 
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], null);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
+
+        $expectedMessage = 'loaded deputyships CSV from /tmp/deputyships.csv; '.
+            'found 20 candidate database updates; successfully ingested deputyships CSV';
 
         $result = $this->sut->result();
 
         $this->assertTrue($result->success);
-        $this->assertEquals('successfully ingested deputyships CSV', $result->message);
+        $this->assertEquals($expectedMessage, $result->message);
     }
 }
