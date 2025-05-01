@@ -54,6 +54,7 @@ class CourtOrder
 
     /**
      * @JMS\Type("App\Entity\Client")
+     * @phpstan-ignore property.onlyRead Deserialized from API response
      */
     private Client $client;
 
