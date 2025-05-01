@@ -18,7 +18,6 @@ use App\Repository\StagingDeputyshipRepository;
 use App\Service\ReportUtils;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
-use App\v2\CSV\CSVChunkerFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
@@ -29,14 +28,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Exception\NotSupported;
 use League\Csv\Exception;
 use League\Csv\UnavailableStream;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 {
     private EntityManager $entityManager;
-    private CSVChunkerFactory $chunkerFactory;
-    private LoggerInterface $logger;
     private DeputyRepository|EntityRepository $deputyRepository;
     private ClientRepository|EntityRepository $clientRepository;
     private CourtOrderDeputyRepository|EntityRepository $courtOrderDeputyRepository;
@@ -51,8 +47,6 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $container = self::bootKernel()->getContainer();
 
         $this->entityManager = $container->get('doctrine')->getManager();
-        $this->chunkerFactory = new CSVChunkerFactory();
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->deputyRepository = $this->entityManager->getRepository(Deputy::class);
         $this->clientRepository = $this->entityManager->getRepository(Client::class);
         $this->courtOrderDeputyRepository = $this->entityManager->getRepository(CourtOrderDeputy::class);
@@ -77,7 +71,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
 
-        $csvLoader = new DeputyshipsCSVLoader($this->entityManager, $this->chunkerFactory, $this->logger);
+        $csvLoader = $container->get(DeputyshipsCSVLoader::class);
 
         $csvLoader->load($fileLocation);
     }
