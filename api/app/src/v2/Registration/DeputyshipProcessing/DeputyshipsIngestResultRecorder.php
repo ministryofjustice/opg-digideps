@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingSelectedCandidate;
-
 class DeputyshipsIngestResultRecorder
 {
     private const SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
 
     private bool $csvLoadedSuccessfully = false;
+    private bool $candidatesSelectedSuccessfully = false;
 
     /** @var string[] */
     private array $errorMessages = [];
@@ -29,11 +28,18 @@ class DeputyshipsIngestResultRecorder
 
     /**
      * Record the candidate records found which will result in database activity.
-     *
-     * @param StagingSelectedCandidate[] $candidates
      */
-    public function recordDeputyshipCandidates(array $candidates): void
+    public function recordDeputyshipCandidatesResult(DeputyshipCandidatesSelectorResult $result): void
     {
+        $this->candidatesSelectedSuccessfully = $result->success();
+
+        if (!$this->candidatesSelectedSuccessfully) {
+            if (is_null($result->exception)) {
+                $this->errorMessages[] = 'Unexpected error occurred during candidate selection';
+            } else {
+                $this->errorMessages[] = $result->exception->getMessage();
+            }
+        }
     }
 
     public function recordSkippedRow(DeputyshipPipelineState $state): void
@@ -50,7 +56,7 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        $success = $this->csvLoadedSuccessfully;
+        $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
         $message = self::SUCCESS_MESSAGE;
         if (!$success) {

@@ -28,6 +28,8 @@ class StagingSelectedCandidate
     public const UPDATE_DEPUTY_STATUS = 'UPDATE DEPUTY STATUS ON ORDER';
     public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
     public const INSERT_ORDER = 'INSERT ORDER';
+    public const INSERT_REPORT = 'INSERT REPORT';
+    public const INSERT_ORDER_REPORT = 'INSERT ORDER REPORT';
 
     /**
      * @ORM\Id

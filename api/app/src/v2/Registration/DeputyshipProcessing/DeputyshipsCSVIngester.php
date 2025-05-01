@@ -30,16 +30,19 @@ class DeputyshipsCSVIngester
         $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
 
         if (!$loadedOk) {
-            // early return if CSV load failed
             return $this->deputyshipsIngestResultRecorder->result();
         }
 
-        // find the candidate deputyships which have changed or need to be added;
-        // note that we return state objects which are used as the start state for processing each row
-        $candidates = $this->deputyshipsCandidatesSelector->select();
-        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
+        // find the candidate deputyships which have changed or need to be added
+        $candidatesResult = $this->deputyshipsCandidatesSelector->select();
+        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidatesResult($candidatesResult);
+        if (!$candidatesResult->success()) {
+            return $this->deputyshipsIngestResultRecorder->result();
+        }
 
-        foreach ($candidates as $candidate) {
+        // TODO de-duplicate and order the candidates before processing them in the loop below
+
+        foreach ($candidatesResult->candidates as $candidate) {
             // build the CourtOrder and related entities from the candidate
             $state = $this->deputyshipBuilder->build($candidate);
 
