@@ -50,7 +50,7 @@ class CourtOrderReportCandidatesFactory
     SQL;
 
     /** @var string */
-    private const INCOMPATIBLE_CURRENT_REPORTS_QUERY = <<<SQL
+    private const INCOMPATIBLE_CURRENT_REPORT_QUERY = <<<SQL
         SELECT court_order_uid, report_type, order_type, deputy_type, order_made_date FROM (
             SELECT
                 d.order_uid AS court_order_uid,
@@ -151,6 +151,9 @@ class CourtOrderReportCandidatesFactory
      * For example, if a dual client already has a pfa report for one court order, and we encounter a
      * second deputyship for the client's other hw court order, we will create a new hw report for that second court order.
      *
+     * This only happens if the existing report is current: if there are only historical reports, we won't create a
+     * report for the court order of the second deputyship.
+     *
      * @return StagingSelectedCandidate[] An array of candidate court_order/court_order_report inserts
      *
      * @throws Exception
@@ -158,7 +161,7 @@ class CourtOrderReportCandidatesFactory
     public function createIncompatibleReportCandidates(): array
     {
         return $this->runQuery(
-            self::INCOMPATIBLE_CURRENT_REPORTS_QUERY,
+            self::INCOMPATIBLE_CURRENT_REPORT_QUERY,
             function ($row) {
                 return $this->candidateFactory->createInsertReportCandidate(
                     ''.$row['court_order_uid'],
