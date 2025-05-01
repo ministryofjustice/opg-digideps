@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use League\Csv\Serializer;
 
 /**
@@ -24,14 +25,23 @@ class StagingDeputyship
     /**
      * @ORM\Id
      *
+     * @JMS\Type("integer")
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     *
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @ORM\SequenceGenerator(sequenceName="deputyship_id_seq", allocationSize=1, initialValue=1)
+     */
+    public int $id;
+
+    /**
      * @ORM\Column(name="order_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'OrderUid')]
     public string $orderUid;
 
     /**
-     * @ORM\Id
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'DeputyUid')]
