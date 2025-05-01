@@ -10,6 +10,7 @@ use App\Repository\StagingDeputyshipRepository;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,6 +37,26 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             $this->mockCourtOrderAndDeputyCandidatesFactory,
             $this->mockCourtOrderReportCandidatesFactory,
         );
+    }
+
+    public function testSelectDbException(): void
+    {
+        // so that the test will run: we check all of this in the successful test
+        $mockQuery = $this->createMock(AbstractQuery::class);
+        $this->mockEntityManager->method('createQuery')->willReturn($mockQuery);
+        $this->mockStagingDeputyshipRepository->method('findAll')->willReturn([]);
+
+        // thrown an exception when calling a method on the report candidates factory
+        $expectedException = new Exception('unexpected db exception');
+        $this->mockCourtOrderReportCandidatesFactory->expects($this->once())
+            ->method('createCompatibleReportCandidates')
+            ->willThrowException($expectedException);
+
+        $result = $this->sut->select();
+
+        $this->assertFalse($result->success());
+        $this->assertEquals([], $result->candidates);
+        $this->assertEquals($expectedException, $result->exception);
     }
 
     public function testSelect(): void
