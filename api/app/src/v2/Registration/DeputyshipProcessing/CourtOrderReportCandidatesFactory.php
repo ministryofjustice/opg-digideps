@@ -58,7 +58,6 @@ class CourtOrderReportCandidatesFactory
                 d.order_type AS order_type,
                 d.deputy_type AS deputy_type,
                 d.order_made_date AS order_made_date,
-                r.id AS report_id,
 
                 (
                     (d.order_type = 'pfa' AND (r.type = '102' OR r.type = '103'))
