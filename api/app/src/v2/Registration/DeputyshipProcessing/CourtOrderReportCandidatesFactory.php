@@ -157,7 +157,7 @@ class CourtOrderReportCandidatesFactory
      *
      * @throws Exception
      */
-    public function createIncompatibleReportCandidates(): array
+    public function createNewReportCandidates(): array
     {
         return $this->runQuery(
             self::INCOMPATIBLE_CURRENT_REPORT_QUERY,

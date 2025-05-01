@@ -114,7 +114,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
 
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
-            ->method('createIncompatibleReportCandidates')
+            ->method('createNewReportCandidates')
             ->willReturn([$mockCandidate5]);
 
         $this->mockCourtOrderReportCandidatesFactory

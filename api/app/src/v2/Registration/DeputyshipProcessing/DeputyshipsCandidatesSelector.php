@@ -43,7 +43,7 @@ class DeputyshipsCandidatesSelector
             $candidates = array_merge(
                 $candidates,
                 $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates(),
-                $this->courtOrderReportsCandidateFactory->createIncompatibleReportCandidates(),
+                $this->courtOrderReportsCandidateFactory->createNewReportCandidates(),
                 $this->courtOrderReportsCandidateFactory->createCompatibleNdrCandidates()
             );
         } catch (Exception $e) {

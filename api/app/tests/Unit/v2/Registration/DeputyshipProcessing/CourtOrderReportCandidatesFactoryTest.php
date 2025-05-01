@@ -90,7 +90,7 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
             ->method('createInsertReportCandidate')
             ->willReturnOnConsecutiveCalls($expectedCandidates[0], $expectedCandidates[1]);
 
-        $candidates = $this->sut->createIncompatibleReportCandidates();
+        $candidates = $this->sut->createNewReportCandidates();
 
         $this->assertEquals($expectedCandidates, $candidates);
     }
