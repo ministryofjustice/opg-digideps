@@ -31,14 +31,11 @@ class DeputyshipsIngestResultRecorder
      */
     public function recordDeputyshipCandidatesResult(DeputyshipCandidatesSelectorResult $result): void
     {
-        $this->candidatesSelectedSuccessfully = $result->success();
+        $this->candidatesSelectedSuccessfully = true;
 
-        if (!$this->candidatesSelectedSuccessfully) {
-            if (is_null($result->exception)) {
-                $this->errorMessages[] = 'Unexpected error occurred during candidate selection';
-            } else {
-                $this->errorMessages[] = $result->exception->getMessage();
-            }
+        if (!is_null($result->exception)) {
+            $this->candidatesSelectedSuccessfully = false;
+            $this->errorMessages[] = $result->exception->getMessage();
         }
     }
 
