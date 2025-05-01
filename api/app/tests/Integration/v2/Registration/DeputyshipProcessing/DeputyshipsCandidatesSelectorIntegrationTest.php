@@ -4,90 +4,43 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\Client;
 use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
 use App\Entity\StagingDeputyship;
-use App\Factory\StagingSelectedCandidateFactory;
-use App\Model\DeputyshipProcessingLookupCache;
-use App\Repository\ClientRepository;
-use App\Repository\CourtOrderDeputyRepository;
-use App\Repository\DeputyRepository;
-use App\Repository\StagingDeputyshipRepository;
-use App\Service\ReportUtils;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Exception\NotSupported;
-use League\Csv\Exception;
-use League\Csv\UnavailableStream;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 {
     private EntityManager $entityManager;
-    private DeputyRepository|EntityRepository $deputyRepository;
-    private ClientRepository|EntityRepository $clientRepository;
-    private CourtOrderDeputyRepository|EntityRepository $courtOrderDeputyRepository;
-    private StagingDeputyshipRepository|EntityRepository $stagingDeputyshipRepository;
-    private DeputyshipProcessingLookupCache $courtOrderCache;
-    private CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory;
-    private CourtOrderReportCandidatesFactory $courtOrderReportCandidatesFactory;
-    private StagingSelectedCandidateFactory $stagingSelectedCandidateFactory;
+    private DeputyshipsCandidatesSelector $sut;
 
     protected function setUp(): void
     {
         $container = self::bootKernel()->getContainer();
-
         $this->entityManager = $container->get('doctrine')->getManager();
-        $this->deputyRepository = $this->entityManager->getRepository(Deputy::class);
-        $this->clientRepository = $this->entityManager->getRepository(Client::class);
-        $this->courtOrderDeputyRepository = $this->entityManager->getRepository(CourtOrderDeputy::class);
-        $this->stagingDeputyshipRepository = $this->entityManager->getRepository(StagingDeputyship::class);
-        $this->courtOrderCache = new DeputyshipProcessingLookupCache(
-            $this->entityManager->getRepository(CourtOrder::class),
-            $this->deputyRepository,
-            $this->clientRepository,
-        );
-        $this->stagingSelectedCandidateFactory = new StagingSelectedCandidateFactory(new ReportUtils());
-
-        $this->courtOrderAndDeputyCandidatesFactory = new CourtOrderAndDeputyCandidatesFactory(
-            $this->courtOrderDeputyRepository,
-            $this->courtOrderCache,
-            $this->stagingSelectedCandidateFactory,
-        );
-
-        $this->courtOrderReportCandidatesFactory = new CourtOrderReportCandidatesFactory(
-            $this->entityManager,
-            $this->stagingSelectedCandidateFactory
-        );
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
 
         $csvLoader = $container->get(DeputyshipsCSVLoader::class);
-
         $csvLoader->load($fileLocation);
+
+        /** @var ?DeputyshipsCandidatesSelector $sut */
+        $sut = $container->get(DeputyshipsCandidatesSelector::class);
+        $this->sut = $sut;
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
         (new ORMPurger($this->entityManager))->purge();
     }
 
-    /**
-     * @throws UnavailableStream
-     * @throws NotSupported
-     * @throws Exception
-     */
     public function testCourtOrderStatusChange(): void
     {
         $courtOrder = new CourtOrder();
@@ -101,14 +54,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
 
-        $sut = new DeputyshipsCandidatesSelector(
-            $this->entityManager,
-            $this->stagingDeputyshipRepository,
-            $this->courtOrderAndDeputyCandidatesFactory,
-            $this->courtOrderReportCandidatesFactory,
-        );
-
-        $selectedCandidates = $sut->select()->candidates;
+        $selectedCandidates = $this->sut->select()->candidates;
 
         $this->assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action);
         $this->assertEquals('ACTIVE', $selectedCandidates[0]->status);
@@ -138,14 +84,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $this->entityManager->persist($deputy);
         $this->entityManager->flush();
 
-        $sut = new DeputyshipsCandidatesSelector(
-            $this->entityManager,
-            $this->stagingDeputyshipRepository,
-            $this->courtOrderAndDeputyCandidatesFactory,
-            $this->courtOrderReportCandidatesFactory,
-        );
-
-        $selectedCandidates = $sut->select()->candidates;
+        $selectedCandidates = $this->sut->select()->candidates;
 
         $this->assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action);
         $this->assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
@@ -171,14 +110,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $this->entityManager->flush();
 
-        $sut = new DeputyshipsCandidatesSelector(
-            $this->entityManager,
-            $this->stagingDeputyshipRepository,
-            $this->courtOrderAndDeputyCandidatesFactory,
-            $this->courtOrderReportCandidatesFactory,
-        );
-
-        $selectedCandidates = $sut->select()->candidates;
+        $selectedCandidates = $this->sut->select()->candidates;
 
         $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action);
         $this->assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
@@ -206,14 +138,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $this->entityManager->persist($report);
         $this->entityManager->flush();
 
-        $sut = new DeputyshipsCandidatesSelector(
-            $this->entityManager,
-            $this->stagingDeputyshipRepository,
-            $this->courtOrderAndDeputyCandidatesFactory,
-            $this->courtOrderReportCandidatesFactory,
-        );
-
-        $selectedCandidates = $sut->select()->candidates;
+        $selectedCandidates = $this->sut->select()->candidates;
 
         $this->assertEquals('INSERT ORDER', $selectedCandidates[0]->action);
         $this->assertEquals($stagingDeputyshipObject->orderUid, $selectedCandidates[0]->orderUid);

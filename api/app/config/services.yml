@@ -442,3 +442,9 @@ services:
             $httpClient: '@GuzzleHttp\Client'
             $redis: "@snc_redis.default"
             $comparers: app.response_comparer
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
+        public: true
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
+        public: true
