@@ -15,10 +15,12 @@ use App\Repository\ClientRepository;
 use App\Repository\CourtOrderDeputyRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\StagingDeputyshipRepository;
+use App\Service\ReportUtils;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\v2\CSV\CSVChunkerFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
+use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -41,6 +43,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
     private StagingDeputyshipRepository|EntityRepository $stagingDeputyshipRepository;
     private DeputyshipProcessingLookupCache $courtOrderCache;
     private CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory;
+    private CourtOrderReportCandidatesFactory $courtOrderReportCandidatesFactory;
     private StagingSelectedCandidateFactory $stagingSelectedCandidateFactory;
 
     protected function setUp(): void
@@ -59,12 +62,17 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
             $this->deputyRepository,
             $this->clientRepository,
         );
-        $this->stagingSelectedCandidateFactory = new StagingSelectedCandidateFactory();
+        $this->stagingSelectedCandidateFactory = new StagingSelectedCandidateFactory(new ReportUtils());
 
         $this->courtOrderAndDeputyCandidatesFactory = new CourtOrderAndDeputyCandidatesFactory(
             $this->courtOrderDeputyRepository,
             $this->courtOrderCache,
             $this->stagingSelectedCandidateFactory,
+        );
+
+        $this->courtOrderReportCandidatesFactory = new CourtOrderReportCandidatesFactory(
+            $this->entityManager,
+            $this->stagingSelectedCandidateFactory
         );
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
@@ -103,9 +111,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
             $this->entityManager,
             $this->stagingDeputyshipRepository,
             $this->courtOrderAndDeputyCandidatesFactory,
+            $this->courtOrderReportCandidatesFactory,
         );
 
-        $selectedCandidates = $sut->select();
+        $selectedCandidates = $sut->select()->candidates;
 
         $this->assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action);
         $this->assertEquals('ACTIVE', $selectedCandidates[0]->status);
@@ -139,9 +148,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
             $this->entityManager,
             $this->stagingDeputyshipRepository,
             $this->courtOrderAndDeputyCandidatesFactory,
+            $this->courtOrderReportCandidatesFactory,
         );
 
-        $selectedCandidates = $sut->select();
+        $selectedCandidates = $sut->select()->candidates;
 
         $this->assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action);
         $this->assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
@@ -171,9 +181,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
             $this->entityManager,
             $this->stagingDeputyshipRepository,
             $this->courtOrderAndDeputyCandidatesFactory,
+            $this->courtOrderReportCandidatesFactory,
         );
 
-        $selectedCandidates = $sut->select();
+        $selectedCandidates = $sut->select()->candidates;
 
         $this->assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action);
         $this->assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
@@ -205,9 +216,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
             $this->entityManager,
             $this->stagingDeputyshipRepository,
             $this->courtOrderAndDeputyCandidatesFactory,
+            $this->courtOrderReportCandidatesFactory,
         );
 
-        $selectedCandidates = $sut->select();
+        $selectedCandidates = $sut->select()->candidates;
 
         $this->assertEquals('INSERT ORDER', $selectedCandidates[0]->action);
         $this->assertEquals($stagingDeputyshipObject->orderUid, $selectedCandidates[0]->orderUid);
