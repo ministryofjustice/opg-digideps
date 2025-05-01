@@ -5546,11 +5546,6 @@ parameters:
 			path: src/Entity/Deputy.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Deputy\\:\\:\\$deputyUid is unused\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\DeputyInterface\\:\\:getAddressNotEmptyParts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/DeputyInterface.php
