@@ -75,6 +75,9 @@ class CourtOrderReportCandidatesFactory
         ORDER BY court_order_uid, report_id;
     SQL;
 
+    // we are only looking for active reports, hence the first WHERE clause to ensure we've actually found a report
+    // (NOT NUll report.id and NOT NULL report.type); if there are no reports returned by this query, we have not found
+    // an incompatible report, possibly just no report at all
     /** @var string */
     private const INCOMPATIBLE_CURRENT_REPORT_QUERY = <<<SQL
         SELECT court_order_uid, report_type, order_type, deputy_type, order_made_date FROM (
@@ -91,12 +94,13 @@ class CourtOrderReportCandidatesFactory
             FROM staging.deputyship d
             LEFT JOIN client c ON d.case_number = c.case_number
             LEFT JOIN report r ON c.id = r.client_id
-            WHERE r.id IS NOT NULL AND r.submit_date IS NULL AND r.un_submit_date IS NULL
+            WHERE r.id IS NOT NULL AND r.type IS NOT NULL AND r.submit_date IS NULL AND r.un_submit_date IS NULL
         ) compat
         WHERE report_is_compatible = false
         LIMIT 1;
     SQL;
 
+    // NDRs are only assigned for pfa court orders, and only to Lay deputies, hence the WHERE clause
     /** @var string */
     private const COMPATIBLE_NDRS_QUERY = <<<SQL
         SELECT
@@ -105,7 +109,7 @@ class CourtOrderReportCandidatesFactory
         FROM staging.deputyship d
         INNER JOIN client c ON d.case_number = c.case_number
         INNER JOIN odr ON c.id = odr.client_id
-        WHERE d.order_type = 'pfa'
+        WHERE d.order_type = 'pfa' AND d.deputy_type = 'LAY'
         GROUP BY d.order_uid, odr.id
         ORDER BY d.order_uid, odr.id;
     SQL;
