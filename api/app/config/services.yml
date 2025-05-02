@@ -448,3 +448,6 @@ services:
 
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
         public: true
+
+    App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
+        public: true
