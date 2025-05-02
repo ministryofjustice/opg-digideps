@@ -10,6 +10,7 @@ use App\Repository\StagingDeputyshipRepository;
 use App\Repository\StagingSelectedCandidateRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class DeputyshipsCandidatesSelector
 {
@@ -19,6 +20,7 @@ class DeputyshipsCandidatesSelector
         private readonly CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory,
         private readonly CourtOrderReportCandidatesFactory $courtOrderReportsCandidateFactory,
         private readonly StagingSelectedCandidateRepository $stagingSelectedCandidateRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -69,6 +71,8 @@ class DeputyshipsCandidatesSelector
             $numCandidates += count($candidates);
             $this->saveCandidates($candidates);
         } catch (Exception $e) {
+            $this->logger->error("ERROR while selecting candidates from deputyships: {$e->getMessage()}");
+
             return new DeputyshipCandidatesSelectorResult([], 0, $e);
         }
 

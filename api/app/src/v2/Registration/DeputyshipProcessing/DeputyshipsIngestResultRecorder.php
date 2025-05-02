@@ -66,7 +66,7 @@ class DeputyshipsIngestResultRecorder
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
         } else {
-            $message .= implode('; ', $this->errorMessages);
+            $message .= implode('; ERRORS: ', $this->errorMessages);
         }
 
         return new DeputyshipsCSVIngestResult($success, $message);

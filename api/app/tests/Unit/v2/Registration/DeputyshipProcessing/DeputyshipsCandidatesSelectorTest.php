@@ -16,6 +16,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class DeputyshipsCandidatesSelectorTest extends TestCase
 {
@@ -24,6 +25,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
     private CourtOrderAndDeputyCandidatesFactory&MockObject $mockCourtOrderAndDeputyCandidatesFactory;
     private CourtOrderReportCandidatesFactory&MockObject $mockCourtOrderReportCandidatesFactory;
     private StagingSelectedCandidateRepository&MockObject $mockStagingSelectedCandidateRepository;
+    private LoggerInterface&MockObject $mockLogger;
     private DeputyshipsCandidatesSelector $sut;
 
     public function setUp(): void
@@ -33,6 +35,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockCourtOrderAndDeputyCandidatesFactory = $this->createMock(CourtOrderAndDeputyCandidatesFactory::class);
         $this->mockCourtOrderReportCandidatesFactory = $this->createMock(CourtOrderReportCandidatesFactory::class);
         $this->mockStagingSelectedCandidateRepository = $this->createMock(StagingSelectedCandidateRepository::class);
+        $this->mockLogger = $this->createMock(LoggerInterface::class);
 
         $this->sut = new DeputyshipsCandidatesSelector(
             $this->mockEntityManager,
@@ -40,6 +43,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             $this->mockCourtOrderAndDeputyCandidatesFactory,
             $this->mockCourtOrderReportCandidatesFactory,
             $this->mockStagingSelectedCandidateRepository,
+            $this->mockLogger,
         );
     }
 
