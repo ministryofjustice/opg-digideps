@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
@@ -167,7 +168,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $caseNumber = '43344121';
         $orderUid = '11224476';
 
-        // add staging deputyship for a pfa
+        // add staging deputyship
         $deputyship = new StagingDeputyship();
         $deputyship->orderUid = $orderUid;
         $deputyship->deputyUid = '14265375';
@@ -212,5 +213,44 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
 
         $expectedReportType = $this->reportUtils->determineReportType($reportType, $orderType, $deputyType);
         self::assertEquals($expectedReportType, $candidates[0]->reportType);
+    }
+
+    public function testCreateCompatibleNdrCandidates(): void
+    {
+        $caseNumber = '77677775';
+        $orderUid = '88884444';
+
+        // add pfa/LAY staging deputyship
+        $deputyship = new StagingDeputyship();
+        $deputyship->deputyUid = '11112233';
+        $deputyship->orderUid = $orderUid;
+        $deputyship->deputyType = 'LAY';
+        $deputyship->orderType = 'pfa';
+        $deputyship->caseNumber = $caseNumber;
+
+        $this->em->persist($deputyship);
+        $this->em->flush();
+
+        // add client
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+
+        $this->em->persist($client);
+        $this->em->flush();
+
+        // add NDR to client
+        $ndr = new Ndr($client);
+
+        $this->em->persist($ndr);
+        $this->em->flush();
+
+        // create NDR candidates
+        $candidates = $this->sut->createCompatibleNdrCandidates();
+
+        // assertions
+        self::assertCount(1, $candidates);
+        self::assertEquals(StagingSelectedCandidate::INSERT_ORDER_NDR, $candidates[0]->action);
+        self::assertEquals($orderUid, $candidates[0]->orderUid);
+        self::assertEquals($ndr->getId(), $candidates[0]->ndrId);
     }
 }
