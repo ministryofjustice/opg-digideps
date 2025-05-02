@@ -33,23 +33,24 @@ class ReportTestHelper
 {
     public static function generateReport(
         EntityManager $em, 
-        Client $client = null, 
-        string $type = null, 
-        \DateTime $startDate = null, 
-        \DateTime $endDate = null
+        ?Client $client = null, 
+        ?string $type = null, 
+        ?\DateTime $startDate = null, 
+        ?\DateTime $endDate = null,
+        bool $dateChecks = true
     ): Report {
         $client = $client ?: ClientTestHelper::generateClient($em);
         $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $startDate = $startDate ?: new \DateTime('2 years ago');
         $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
         self::completeBankAccounts($report, $em);
 
         return $report;
     }
 
-    public static function generateNdr(EntityManager $em, User $deputy, Client $client = null): Ndr
+    public static function generateNdr(EntityManager $em, User $deputy, ?Client $client = null): Ndr
     {
         $ndr = new Ndr($client);
         $deputy->setNdrEnabled(true);

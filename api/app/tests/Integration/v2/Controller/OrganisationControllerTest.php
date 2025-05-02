@@ -19,9 +19,6 @@ class OrganisationControllerTest extends AbstractTestController
     /** @var array */
     private $headersDeputy = [];
 
-    /** @var EntityManager */
-    private static $em;
-
     /** @var []Organisation */
     private static $orgs;
 
