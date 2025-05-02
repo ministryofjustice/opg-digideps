@@ -3,16 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Deputy;
-use App\Entity\User;
-use App\Repository\DeputyRepository;
-use App\Service\Auth\AuthService;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
