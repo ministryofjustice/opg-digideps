@@ -68,9 +68,9 @@
         <tbody>
         {% for gift in report.gifts %}
             <tr class="govuk-summary-list__row behat-region-gift-{{ gift.explanation | behat_namify }}">
-                <th scope="col" class="govuk-table__header">
+                <td class="govuk-table__cell">
                     {{ gift.explanation }}
-                </th>
+                </td>
                 {% if report.canLinkToBankAccounts %}
                     <td class="govuk-table__cell">
                         {{ (gift.bankAccount) ? gift.bankAccount.nameOneLine : '-' }}
