@@ -20,7 +20,7 @@ class UserTestHelper extends TestCase
 
         $clients = $hasClients ? [$clientTestHelper->createClientMock(1, $hasReports)] : null;
         
-        /** @var ObjectProphecy<App\Entity\User> $user */
+        /** @var ObjectProphecy<User> $user */
         $user = (new Prophet())->prophesize(User::class);
         $user->getRoleName()->willReturn($roleName);
         $user->getClients()->willReturn($clients);

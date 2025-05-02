@@ -33,7 +33,8 @@ class DeputyController extends AbstractController
         if (null === ($data = $this->repository->findUserArrayById($id))) {
             $this->buildNotFoundResponse(sprintf('Deputy id %s not found', $id));
         }
-
+        
+        $data = $data ?: [];
         $dto = $this->assembler->assembleFromArray($data);
         $transformedDto = $this->transformer->transform($dto);
 
