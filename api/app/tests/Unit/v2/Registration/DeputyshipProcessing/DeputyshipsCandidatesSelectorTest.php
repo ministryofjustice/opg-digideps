@@ -143,7 +143,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             });
 
         $this->mockStagingSelectedCandidateRepository->expects($this->once())
-            ->method('getDistinctOrderedCandidates')
+            ->method('getDistinctCandidates')
             ->willReturn($mockCandidates);
 
         $result = $this->sut->select();

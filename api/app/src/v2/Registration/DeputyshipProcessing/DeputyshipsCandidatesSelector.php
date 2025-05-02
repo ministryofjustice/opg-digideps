@@ -72,7 +72,7 @@ class DeputyshipsCandidatesSelector
             return new DeputyshipCandidatesSelectorResult([], 0, $e);
         }
 
-        $candidatesResultset = $this->stagingSelectedCandidateRepository->getDistinctOrderedCandidates();
+        $candidatesResultset = $this->stagingSelectedCandidateRepository->getDistinctCandidates();
 
         return new DeputyshipCandidatesSelectorResult($candidatesResultset, $numCandidates);
     }
