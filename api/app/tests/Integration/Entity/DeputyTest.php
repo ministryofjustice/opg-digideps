@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyIntegrationTest extends KernelTestCase
+class DeputyTest extends KernelTestCase
 {
     /**
      * @var EntityManagerInterface
@@ -52,11 +52,11 @@ class DeputyIntegrationTest extends KernelTestCase
         $this->assertArrayHasKey('courtOrder', $actual[0]);
         $this->assertArrayHasKey('isActive', $actual[0]);
 
-        $actualDischarged = $actual[0]['isActive'];
+        $isActive = $actual[0]['isActive'];
         $actualCourtOrder = $actual[0]['courtOrder'];
 
         $this->assertEquals(1, count($actual));
-        $this->assertEquals(false, $actualDischarged);
+        $this->assertEquals(true, $isActive);
         $this->assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
         $this->assertEquals('hybrid', $actualCourtOrder->getOrderType());
     }
