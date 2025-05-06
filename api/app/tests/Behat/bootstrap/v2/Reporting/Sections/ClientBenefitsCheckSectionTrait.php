@@ -259,7 +259,7 @@ trait ClientBenefitsCheckSectionTrait
         $moneyTypeAnswers = $this->getSectionAnswers('moneyType')[0];
         $moneyTypeDescription = $moneyTypeAnswers[array_key_first($moneyTypeAnswers)];
 
-        $moneyTypeRowXpath = sprintf('//dt[contains(.,"%s")]/..', $moneyTypeDescription);
+        $moneyTypeRowXpath = sprintf('//dd[contains(.,"%s")]/..', $moneyTypeDescription);
         $moneyTypeRow = $this->getSession()->getPage()->find('xpath', $moneyTypeRowXpath);
 
         if ('edit' === strtolower($action)) {

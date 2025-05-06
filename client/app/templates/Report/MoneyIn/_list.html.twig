@@ -107,9 +107,9 @@
             <tbody class="govuk-table__body">
             {% for entry in groupData.entries %}
                 <tr class="govuk-table__row behat-region-transaction-{{ entry.description | behat_namify }}">
-                    <th scope="row" class="govuk-table__header">
+                    <td class="govuk-table__cell">
                         {{ ('form.category.entries.' ~ entry.category ~ '.label') | trans }}
-                    </th>
+                    </td>
                     <td class="govuk-table__cell">
                         {{ entry.description | nl2br }}
                     </td>

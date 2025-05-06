@@ -55,9 +55,9 @@
 
         {% for debt in report.debts %}
         <div class="govuk-summary-list__row behat-region-debt-{{ debt.debtTypeId | behat_namify }}">
-            <dt class="govuk-summary-list__key">
+            <dd class="govuk-summary-list__value">
                 {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}
-            </dt>
+            </dd>
             <dd class="govuk-summary-list__value">
                 £{{ debt.amount | money_format }}
             </dd>
@@ -68,7 +68,7 @@
             <dt class="govuk-summary-list__key">
                 Total amount
             </dt>
-            <dd class="govuk-summary-list__value">
+            <dd class="govuk-summary-list__key">
                 £{{ report.debtsTotalAmount | money_format }}
             </dd>
         </div>

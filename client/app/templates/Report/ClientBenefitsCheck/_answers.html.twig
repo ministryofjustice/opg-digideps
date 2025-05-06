@@ -21,7 +21,7 @@
                 <dt class="govuk-summary-list__key">
                     {{ 'summaryPage.table.benefitsCheck.column1Title'|trans(transOptions, translationDomain) }}
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="govuk-summary-list__key">
                     {{ 'summaryPage.table.benefitsCheck.column2Title'|trans(transOptions, translationDomain) }}
                 </dd>
                 {% if showActions %}
@@ -98,7 +98,7 @@
                 <dt class="govuk-summary-list__key">
                     {{ 'summaryPage.table.doOthersReceiveMoney.column1Title'|trans(transOptions, translationDomain) }}
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="govuk-summary-list__key">
                     {{ 'summaryPage.table.doOthersReceiveMoney.column2Title'|trans(transOptions, translationDomain) }}
                 </dd>
                 {% if showActions %}
@@ -197,22 +197,22 @@
                     <dt class="govuk-summary-list__key">
                         {{ 'summaryPage.table.moneyOtherPeopleReceive.column1Title'|trans(transOptions, translationDomain) }}
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__key">
                         {{ 'summaryPage.table.moneyOtherPeopleReceive.column2Title'|trans(transOptions, translationDomain) }}
                     </dd>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__key">
                         {{ 'summaryPage.table.moneyOtherPeopleReceive.column3Title'|trans(transOptions, translationDomain) }}
                     </dd>
                     {% if showActions %}
-                        <dd class="govuk-summary-list__value">{# No title for actions column #}</dd>
+                        <dd class="govuk-summary-list__key">{# No title for actions column #}</dd>
                     {% endif %}
                 </div>
 
                 {% for money in report.clientBenefitsCheck.typesOfMoneyReceivedOnClientsBehalf %}
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
+                        <dd class="govuk-summary-list__value">
                             {{ money.moneyType }}
-                        </dt>
+                        </dd>
                         <dd class="govuk-summary-list__value">
                             {{ money.whoReceivedMoney }}
                         </dd>

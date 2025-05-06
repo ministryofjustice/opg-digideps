@@ -37,7 +37,7 @@
         <tr class="govuk-table__row behat-region-account-{{ account.accountNumber | behat_namify }}">
             <th scope="row" class="govuk-table__header">
                 {% if account.requiresBankName %}
-                    <p class="govuk-!-font-weight-bold">{{ account.bank }}</p>
+                    <p class="govuk-!-font-size-18">{{ account.bank }}</p>
                 {% endif %}
 
                 <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ account.accountTypeText }}</p>
