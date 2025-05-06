@@ -76,8 +76,7 @@ class CourtOrderReportCandidatesFactory
     SQL;
 
     // we are only looking for active reports, hence the first WHERE clause to ensure we've actually found a report
-    // (NOT NUll report.id and NOT NULL report.type); if there are no reports returned by this query, we have not found
-    // an incompatible report, possibly just no report at all
+    // (NOT NUll report.id and NOT NULL report.type); otherwise we may just be unable to find *any* report
     /** @var string */
     private const INCOMPATIBLE_CURRENT_REPORT_QUERY = <<<SQL
         SELECT court_order_uid, report_type, order_type, deputy_type, order_made_date FROM (
