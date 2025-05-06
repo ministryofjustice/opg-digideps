@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" convertErrorsToExceptions="false" convertNoticesToExceptions="false" convertWarningsToExceptions="false" stopOnError="true" stopOnFailure="true" stopOnRisky="false" stopOnWarning="false" backupGlobals="false" colors="true" bootstrap="./bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">../../src</directory>
-    </include>
-  </coverage>
-  <php>
-    <server name="KERNEL_DIR" value="../../src"/>
-    <server name="APP_ENV" value="test"/>
-    <ini name="memory_limit" value="2048M"/>
-    <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true"/>
-    <env name="SECRETS_ADMIN_KEY" value="adminSecret" force="true"/>
-    <env name="KERNEL_CLASS" value="App\Kernel"/>
-    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
-  </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         convertErrorsToExceptions="false"
+         convertNoticesToExceptions="false"
+         convertWarningsToExceptions="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnRisky="false"
+         stopOnWarning="false"
+         backupGlobals="false"
+         colors="true"
+         bootstrap="./bootstrap.php"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">../../src</directory>
+        </include>
+    </coverage>
+    <php>
+        <server name="KERNEL_DIR" value="../../src"/>
+        <server name="APP_ENV" value="test"/>
+        <ini name="memory_limit" value="2048M"/>
+        <env name="SECRETS_FRONT_KEY" value="layDeputySecret" force="true"/>
+        <env name="SECRETS_ADMIN_KEY" value="adminSecret" force="true"/>
+        <env name="KERNEL_CLASS" value="App\Kernel"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
+    </php>
 </phpunit>
