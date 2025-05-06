@@ -9666,12 +9666,17 @@ parameters:
 			path: src/Service/Validator/RestArrayValidator.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getId\\(\\)\\.$#"
+			message: "#^Call to method getId\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getReports\\(\\)\\.$#"
+			message: "#^Call to method getReports\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
+			count: 1
+			path: src/TestHelpers/ClientTestHelper.php
+
+		-
+			message: "#^Call to method reveal\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
@@ -9687,6 +9692,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/TestHelpers/ClientTestHelper.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$client contains unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
@@ -9991,32 +10001,22 @@ parameters:
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getClients\\(\\)\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getClients\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getId\\(\\)\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getRoleName\\(\\)\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getRoleName\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:hasReports\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\UserTestHelper\\:\\:createAndPersistUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\UserTestHelper\\:\\:createUser\\(\\) has no return type specified\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:hasReports\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
