@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PreRegistration
 {
-    const REALM_PA = 'REALM_PA';
-    const REALM_PROF = 'REALM_PROF';
-    const REALM_LAY = 'REALM_LAY';
+    public const REALM_PA = 'REALM_PA';
+    public const REALM_PROF = 'REALM_PROF';
+    public const REALM_LAY = 'REALM_LAY';
 
     /**
      * @var int
@@ -58,7 +57,7 @@ class PreRegistration
      *
      * @JMS\Type("string")
      *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
+     * @Assert\Length(min=2, max=20, minMessage="postcode too short", maxMessage="postcode too long" )
      */
     private $deputyPostCode;
 
@@ -78,7 +77,7 @@ class PreRegistration
     private $otherColumns;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $orderDate;
 
@@ -121,12 +120,12 @@ class PreRegistration
         return $this->orderType;
     }
 
-    public function getOrderDate(): DateTime
+    public function getOrderDate(): \DateTime
     {
         return $this->orderDate;
     }
 
-    public function setOrderDate(DateTime $orderDate): PreRegistration
+    public function setOrderDate(\DateTime $orderDate): PreRegistration
     {
         $this->orderDate = $orderDate;
 

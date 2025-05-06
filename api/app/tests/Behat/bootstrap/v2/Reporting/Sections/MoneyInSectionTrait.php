@@ -259,7 +259,7 @@ trait MoneyInSectionTrait
      */
     public function iEditTheMoneyInValue()
     {
-        $xpath = sprintf('//tr[th[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn);
+        $xpath = sprintf('//tr[td[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn);
         $moneyTypeRow = $this->getSession()->getPage()->find(
             'xpath',
             $xpath
