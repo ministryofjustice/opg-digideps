@@ -15,6 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
  * This relies on staging tables populated during deputyships CSV ingest, and should only be used in
  * the context of that process.
  *
+ * For attaching existing reports, we include reports associated with archived and deleted clients, as these need
+ * to be attached to the court order (they are still valid reports for that court order).
+ *
  * This uses raw SQL for efficiency, as we'll be processing tens of thousands of rows in the deputyships CSV,
  * but it will be brittle as a consequence.
  */
@@ -75,8 +78,10 @@ class CourtOrderReportCandidatesFactory
         ORDER BY court_order_uid, report_id;
     SQL;
 
-    // we are only looking for active reports, hence the first WHERE clause to ensure we've actually found a report
-    // (NOT NUll report.id and NOT NULL report.type); otherwise we may just be unable to find *any* report
+    // We are only looking for active reports, hence the first WHERE clause to ensure we've actually found a report
+    // (NOT NUll report.id and NOT NULL report.type); otherwise we may just be unable to find *any* report. We also
+    // only want reports on active clients, otherwise an old pfa report which became a hybrid, but which is still
+    // associated with a deleted or archive client, might trigger the creation of a new hw report.
     /** @var string */
     private const INCOMPATIBLE_CURRENT_REPORT_QUERY = <<<SQL
         SELECT court_order_uid, report_type, order_type, deputy_type, order_made_date FROM (
@@ -94,6 +99,7 @@ class CourtOrderReportCandidatesFactory
             LEFT JOIN client c ON d.case_number = c.case_number
             LEFT JOIN report r ON c.id = r.client_id
             WHERE r.id IS NOT NULL AND r.type IS NOT NULL AND r.submit_date IS NULL AND r.un_submit_date IS NULL
+            AND c.archived_at IS NULL AND c.deleted_at IS NULL
         ) compat
         WHERE report_is_compatible = false
         LIMIT 1;
