@@ -294,5 +294,6 @@ services:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
     volumes:
+      - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
     command: sleep infinity

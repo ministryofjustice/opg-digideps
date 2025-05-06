@@ -85,9 +85,7 @@ else
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
 endif
 
-ifndef NOT_LOCAL:
-	ADDITIONAL_CONFIG = -f docker-compose.override.yml
-endif
+ADDITIONAL_CONFIG = -f docker-compose.override.yml
 
 client-unit-tests: ##@unit-tests Run the client unit tests
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml build client-unit-tests

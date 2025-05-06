@@ -48,10 +48,10 @@ jobs:
 
       - name: run api unit tests
         id: unit-tests
-        run: make api-unit-tests NOT_LOCAL=true
+        run: make api-unit-tests ADDITIONAL_CONFIG=""
 
       - name: archive test results
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: api-unit-tests
-          path: api-unit-tests.xml
+          path: api/app/tests/coverage/api-unit-tests.xml
