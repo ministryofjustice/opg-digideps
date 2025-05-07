@@ -75,6 +75,16 @@ services:
     volumes:
       - .:/app
 
+  client-unit-tests:
+    volumes:
+      - ./build/coverage-client:/var/www/build/coverage-client
+      - ./client/app/app:/var/www/app
+      - ./client/app/public:/var/www/public
+      - ./client/app/src:/var/www/src
+      - ./client/app/templates:/var/www/templates
+      - ./client/app/tests:/var/www/tests
+      - ./client/app/translations:/var/www/translations
+
   api-unit-tests:
     volumes:
       - ./api/app/app:/var/www/app
