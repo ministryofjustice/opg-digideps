@@ -2,13 +2,13 @@
 
 namespace App\v2\Controller;
 
-use App\Controller\RestController;
 use App\Entity\User;
 use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
 use App\v2\Assembler\UserAssembler;
 use App\v2\Transformer\UserTransformer;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
