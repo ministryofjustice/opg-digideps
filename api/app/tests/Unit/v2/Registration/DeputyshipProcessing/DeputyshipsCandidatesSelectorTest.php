@@ -84,7 +84,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             ->willReturn($mockQuery);
 
         $this->mockEntityManager
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(5))
             ->method('flush');
 
         $this->mockEntityManager
@@ -108,7 +108,6 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $mockCandidate3 = new StagingSelectedCandidate();
         $mockCandidate4 = new StagingSelectedCandidate();
         $mockCandidate5 = new StagingSelectedCandidate();
-        $mockCandidate6 = new StagingSelectedCandidate();
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->exactly(2))
@@ -122,13 +121,8 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
 
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
-            ->method('createNewReportCandidates')
-            ->willReturn([$mockCandidate5]);
-
-        $this->mockCourtOrderReportCandidatesFactory
-            ->expects($this->once())
             ->method('createCompatibleNdrCandidates')
-            ->willReturn([$mockCandidate6]);
+            ->willReturn([$mockCandidate5]);
 
         $mockCandidates = [
             $mockCandidate1,
@@ -136,11 +130,10 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             $mockCandidate3,
             $mockCandidate4,
             $mockCandidate5,
-            $mockCandidate6,
         ];
 
         $this->mockEntityManager
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(5))
             ->method('persist')
             ->willReturnCallback(function ($entity) use ($mockCandidates) {
                 self::assertContains($entity, $mockCandidates);

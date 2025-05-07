@@ -23,43 +23,6 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class CourtOrderReportCandidatesFactory
 {
-    // for checking the compatibility of a staging deputyship (d) row with a report (r) row
-    /** @var string */
-    private const COMPATIBILITY_CHECK = <<<SQL
-        (
-            d.deputy_type = 'LAY'
-            AND (
-                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102', '103'))
-                OR
-                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104'))
-                OR
-                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4', '103-4'))
-            )
-        )
-        OR
-        (
-            d.deputy_type = 'PA'
-            AND (
-                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-6', '103-6'))
-                OR
-                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-6'))
-                OR
-                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-6', '103-4-6'))
-            )
-        )
-        OR
-        (
-            d.deputy_type = 'PRO'
-            AND (
-                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-5', '103-5'))
-                OR
-                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-5'))
-                OR
-                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
-            )
-        )
-        SQL;
-
     /** @var string */
     private const COMPATIBLE_REPORTS_QUERY = <<<SQL
         SELECT court_order_uid, report_id FROM (
@@ -67,7 +30,38 @@ class CourtOrderReportCandidatesFactory
                 d.order_uid AS court_order_uid,
                 r.id AS report_id,
                 (
-                    %s
+                    (
+                        d.deputy_type = 'LAY'
+                        AND (
+                            (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102', '103'))
+                            OR
+                            (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104'))
+                            OR
+                            (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4', '103-4'))
+                        )
+                    )
+                    OR
+                    (
+                        d.deputy_type = 'PA'
+                        AND (
+                            (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-6', '103-6'))
+                            OR
+                            (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-6'))
+                            OR
+                            (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-6', '103-4-6'))
+                        )
+                    )
+                    OR
+                    (
+                        d.deputy_type = 'PRO'
+                        AND (
+                            (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-5', '103-5'))
+                            OR
+                            (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-5'))
+                            OR
+                            (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
+                        )
+                    )
                 ) AS report_is_compatible
             FROM staging.deputyship d
             LEFT JOIN client c ON d.case_number = c.case_number
@@ -76,33 +70,6 @@ class CourtOrderReportCandidatesFactory
         WHERE report_is_compatible = true
         GROUP BY court_order_uid, report_id
         ORDER BY court_order_uid, report_id;
-    SQL;
-
-    // We are only looking for active reports, hence the first WHERE clause to ensure we've actually found a report
-    // (NOT NUll report.id and NOT NULL report.type); otherwise we may just be unable to find *any* report. We also
-    // only want reports on active clients, otherwise an old pfa report which became a hybrid, but which is still
-    // associated with a deleted or archive client, might trigger the creation of a new hw report.
-    /** @var string */
-    private const INCOMPATIBLE_CURRENT_REPORT_QUERY = <<<SQL
-        SELECT court_order_uid, report_type, order_type, deputy_type, order_made_date FROM (
-            SELECT
-                d.order_uid AS court_order_uid,
-                d.report_type AS report_type,
-                d.order_type AS order_type,
-                d.deputy_type AS deputy_type,
-                d.order_made_date AS order_made_date,
-
-                (
-                    %s
-                ) AS report_is_compatible
-            FROM staging.deputyship d
-            LEFT JOIN client c ON d.case_number = c.case_number
-            LEFT JOIN report r ON c.id = r.client_id
-            WHERE r.id IS NOT NULL AND r.type IS NOT NULL AND r.submit_date IS NULL AND r.un_submit_date IS NULL
-            AND c.archived_at IS NULL AND c.deleted_at IS NULL
-        ) compat
-        WHERE report_is_compatible = false
-        LIMIT 1;
     SQL;
 
     // NDRs are only assigned for pfa court orders, and only to Lay deputies, hence the WHERE clause
@@ -161,39 +128,11 @@ class CourtOrderReportCandidatesFactory
     public function createCompatibleReportCandidates(): array
     {
         return $this->runQuery(
-            sprintf(self::COMPATIBLE_REPORTS_QUERY, self::COMPATIBILITY_CHECK),
+            self::COMPATIBLE_REPORTS_QUERY,
             function ($row) {
                 return $this->candidateFactory->createInsertOrderReportCandidate(
                     ''.$row['court_order_uid'],
                     intval(''.$row['report_id'])
-                );
-            }
-        );
-    }
-
-    /**
-     * Find deputyships which have an existing current report which is incompatible with the deputyship's order type.
-     * For example, if a dual client already has a pfa report for one court order, and we encounter a
-     * second deputyship for the client's other hw court order, we will create a new hw report for that second court order.
-     *
-     * This only happens if the existing report is current: if there are only historical reports, we won't create a
-     * report for the court order of the second deputyship.
-     *
-     * @return StagingSelectedCandidate[] An array of candidate court_order/court_order_report inserts
-     *
-     * @throws Exception
-     */
-    public function createNewReportCandidates(): array
-    {
-        return $this->runQuery(
-            sprintf(self::INCOMPATIBLE_CURRENT_REPORT_QUERY, self::COMPATIBILITY_CHECK),
-            function ($row) {
-                return $this->candidateFactory->createInsertReportCandidate(
-                    ''.$row['court_order_uid'],
-                    ''.$row['report_type'],
-                    ''.$row['order_type'],
-                    ''.$row['deputy_type'],
-                    ''.$row['order_made_date']
                 );
             }
         );

@@ -4,15 +4,9 @@ namespace App\Factory;
 
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
-use App\Service\ReportUtils;
 
 class StagingSelectedCandidateFactory
 {
-    public function __construct(
-        private readonly ReportUtils $reportUtils,
-    ) {
-    }
-
     public function createUpdateOrderStatusCandidate(StagingDeputyship $csvDeputyship, int $courtOrderId): StagingSelectedCandidate
     {
         $changes = new StagingSelectedCandidate();
@@ -73,20 +67,6 @@ class StagingSelectedCandidateFactory
         $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
 
         $changes->clientId = $clientId;
-
-        return $changes;
-    }
-
-    // NB this will be used to both insert a report and associate it with a court order
-    public function createInsertReportCandidate(
-        string $orderUid, string $reportType, string $orderType, string $deputyType, string $orderMadeDate,
-    ): StagingSelectedCandidate {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::INSERT_REPORT;
-
-        $changes->orderUid = $orderUid;
-        $changes->reportType = $this->reportUtils->determineReportType($reportType, $orderType, $deputyType);
-        $changes->orderMadeDate = $orderMadeDate;
 
         return $changes;
     }

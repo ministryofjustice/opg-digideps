@@ -63,10 +63,6 @@ class DeputyshipsCandidatesSelector
             $numCandidates += count($candidates);
             $this->saveCandidates($candidates);
 
-            $candidates = $this->courtOrderReportsCandidateFactory->createNewReportCandidates();
-            $numCandidates += count($candidates);
-            $this->saveCandidates($candidates);
-
             $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleNdrCandidates();
             $numCandidates += count($candidates);
             $this->saveCandidates($candidates);

@@ -9,7 +9,6 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
-use App\Service\ReportUtils;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
@@ -19,7 +18,6 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
 {
     private EntityManager $em;
     private ORMPurger $purger;
-    private ReportUtils $reportUtils;
     private CourtOrderReportCandidatesFactory $sut;
 
     protected function setUp(): void
@@ -29,8 +27,6 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $this->em = $container->get('doctrine')->getManager();
 
         $this->purger = new ORMPurger($this->em);
-
-        $this->reportUtils = new ReportUtils();
 
         /** @var CourtOrderReportCandidatesFactory $sut */
         $sut = $container->get(CourtOrderReportCandidatesFactory::class);
@@ -155,64 +151,6 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         self::assertEquals(StagingSelectedCandidate::INSERT_ORDER_REPORT, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($report1->getId(), $candidates[0]->reportId);
-    }
-
-    /**
-     * @dataProvider compatibleReportDataProvider
-     */
-    public function testCreateNewReportCandidates(
-        string $deputyType,
-        string $orderType,
-        string $isHybrid,
-    ): void {
-        $caseNumber = '43344121';
-        $orderUid = '11224476';
-
-        // add staging deputyship
-        $deputyship = new StagingDeputyship();
-        $deputyship->orderUid = $orderUid;
-        $deputyship->deputyUid = '14265375';
-        $deputyship->deputyType = $deputyType;
-        $deputyship->orderType = $orderType;
-        $deputyship->isHybrid = $isHybrid;
-        $deputyship->caseNumber = $caseNumber;
-
-        if ('pfa' === $deputyship->orderType) {
-            $reportType = 'OPG102';
-        } else {
-            $reportType = 'OPG104';
-        }
-
-        $deputyship->reportType = $reportType;
-
-        $this->em->persist($deputyship);
-        $this->em->flush();
-
-        // add client
-        $client = new Client();
-        $client->setCaseNumber($caseNumber);
-
-        $this->em->persist($client);
-        $this->em->flush();
-
-        // add an incompatible report; this should cause a new report candidate to be created for this client/case number
-        $report = $this->createIncompatibleReport($client, $orderType, $deputyType);
-        $report->setSubmitDate();
-        $report->setUnSubmitDate(null);
-
-        $this->em->persist($report);
-        $this->em->flush();
-
-        // create new report candidates
-        $candidates = $this->sut->createNewReportCandidates();
-
-        // assertions
-        self::assertCount(1, $candidates);
-        self::assertEquals(StagingSelectedCandidate::INSERT_REPORT, $candidates[0]->action);
-        self::assertEquals($orderUid, $candidates[0]->orderUid);
-
-        $expectedReportType = $this->reportUtils->determineReportType($reportType, $orderType, $deputyType);
-        self::assertEquals($expectedReportType, $candidates[0]->reportType);
     }
 
     public function testCreateCompatibleNdrCandidates(): void

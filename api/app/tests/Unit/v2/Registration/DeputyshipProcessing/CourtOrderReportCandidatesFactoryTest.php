@@ -58,43 +58,6 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
         $this->assertEquals($expectedCandidates, $candidates);
     }
 
-    public function testCreateIncompatibleReportCandidates(): void
-    {
-        $rows = [
-            [
-                'court_order_uid' => '123',
-                'report_type' => '102',
-                'order_type' => 'pfa',
-                'deputy_type' => 'lay',
-                'order_made_date' => '2023-01-01',
-            ],
-            [
-                'court_order_uid' => '456',
-                'report_type' => '104',
-                'order_type' => 'hw',
-                'deputy_type' => 'pro',
-                'order_made_date' => '2023-02-15',
-            ],
-        ];
-
-        $expectedCandidates = [
-            new StagingSelectedCandidate(),
-            new StagingSelectedCandidate(),
-        ];
-
-        $result = $this->createMock(Result::class);
-        $result->method('fetchAllAssociative')->willReturn($rows);
-        $this->connection->method('executeQuery')->willReturn($result);
-
-        $this->candidateFactory->expects($this->exactly(2))
-            ->method('createInsertReportCandidate')
-            ->willReturnOnConsecutiveCalls($expectedCandidates[0], $expectedCandidates[1]);
-
-        $candidates = $this->sut->createNewReportCandidates();
-
-        $this->assertEquals($expectedCandidates, $candidates);
-    }
-
     public function testCreateCompatibleNdrCandidates(): void
     {
         $rows = [
