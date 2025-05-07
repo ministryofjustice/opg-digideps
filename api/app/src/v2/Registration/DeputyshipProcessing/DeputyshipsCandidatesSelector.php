@@ -7,7 +7,10 @@ namespace App\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\StagingDeputyshipRepository;
+use App\Repository\StagingSelectedCandidateRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class DeputyshipsCandidatesSelector
 {
@@ -15,13 +18,25 @@ class DeputyshipsCandidatesSelector
         private readonly EntityManagerInterface $em,
         private readonly StagingDeputyshipRepository $stagingDeputyshipRepository,
         private readonly CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory,
+        private readonly CourtOrderReportCandidatesFactory $courtOrderReportsCandidateFactory,
+        private readonly StagingSelectedCandidateRepository $stagingSelectedCandidateRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     /**
-     * @return StagingSelectedCandidate[]
+     * @param StagingSelectedCandidate[] $candidates
      */
-    public function select(): array
+    private function saveCandidates(array $candidates): void
+    {
+        foreach ($candidates as $candidate) {
+            $this->em->persist($candidate);
+        }
+
+        $this->em->flush();
+    }
+
+    public function select(): DeputyshipCandidatesSelectorResult
     {
         // delete records from candidate table ready for new candidates
         $this->em->beginTransaction();
@@ -32,21 +47,33 @@ class DeputyshipsCandidatesSelector
         // read the content of the incoming deputyships CSV from the db table
         $csvDeputyships = $this->stagingDeputyshipRepository->findAll();
 
-        $candidates = [];
-
         $this->courtOrderAndDeputyCandidatesFactory->cacheLookupTables();
+
+        $numCandidates = 0;
 
         /** @var StagingDeputyship $csvDeputyship */
         foreach ($csvDeputyships as $csvDeputyship) {
-            $candidates = array_merge($candidates, $this->courtOrderAndDeputyCandidatesFactory->create($csvDeputyship));
+            $candidates = $this->courtOrderAndDeputyCandidatesFactory->create($csvDeputyship);
+            $numCandidates += count($candidates);
+            $this->saveCandidates($candidates);
         }
 
-        foreach ($candidates as $candidate) {
-            $this->em->persist($candidate);
+        try {
+            $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates();
+            $numCandidates += count($candidates);
+            $this->saveCandidates($candidates);
+
+            $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleNdrCandidates();
+            $numCandidates += count($candidates);
+            $this->saveCandidates($candidates);
+        } catch (Exception $e) {
+            $this->logger->error("ERROR while selecting candidates from deputyships: {$e->getMessage()}");
+
+            return new DeputyshipCandidatesSelectorResult([], 0, $e);
         }
 
-        $this->em->flush();
+        $candidatesResultset = $this->stagingSelectedCandidateRepository->getDistinctCandidates();
 
-        return $candidates;
+        return new DeputyshipCandidatesSelectorResult($candidatesResultset, $numCandidates);
     }
 }

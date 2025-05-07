@@ -28,6 +28,8 @@ class StagingSelectedCandidate
     public const UPDATE_DEPUTY_STATUS = 'UPDATE DEPUTY STATUS ON ORDER';
     public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
     public const INSERT_ORDER = 'INSERT ORDER';
+    public const INSERT_ORDER_REPORT = 'INSERT ORDER REPORT';
+    public const INSERT_ORDER_NDR = 'INSERT ORDER NDR';
 
     /**
      * @ORM\Id
@@ -48,14 +50,14 @@ class StagingSelectedCandidate
     public string $orderUid;
 
     /**
-     * @ORM\Column(name="deputy_uid", type="string", length=30)
-     */
-    public string $deputyUid;
-
-    /**
      * @ORM\Column(name="action", type="string", length=30)
      */
     public string $action;
+
+    /**
+     * @ORM\Column(name="deputy_uid", type="string", length=30, nullable=true)
+     */
+    public ?string $deputyUid;
 
     /**
      * @ORM\Column(name="order_status", type="string", length=30, nullable=true)
@@ -88,11 +90,6 @@ class StagingSelectedCandidate
     public ?bool $deputyStatusOnOrder;
 
     /**
-     * @ORM\Column(name="is_hybrid", type="string", length=30, nullable=true)
-     */
-    public ?string $isHybrid;
-
-    /**
      * @ORM\Column(name="order_id", type="integer",nullable=true)
      */
     public ?int $orderId;
@@ -111,4 +108,9 @@ class StagingSelectedCandidate
      * @ORM\Column(name="deputy_id", type="integer",nullable=true)
      */
     public ?int $deputyId;
+
+    /**
+     * @ORM\Column(name="ndr_id", type="integer",nullable=true)
+     */
+    public ?int $ndrId;
 }
