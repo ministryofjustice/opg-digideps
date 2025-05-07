@@ -47,7 +47,7 @@ class DeputyController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         
-        if ($uid !== $user->getDeputyUid()) {
+        if ($user->isSuperAdmin() || $uid !== $user->getDeputyUid()) {
             return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user');
         }
 
