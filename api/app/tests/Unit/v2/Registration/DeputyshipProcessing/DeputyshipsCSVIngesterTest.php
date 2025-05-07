@@ -111,7 +111,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
      */
     public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus): void
     {
-        $builderResult = new DeputyshipBuilderResult();
+        $builderResult = new DeputyshipBuilderResult([]);
         $persisterResult = new DeputyshipPersisterResult();
 
         $candidates = [new StagingSelectedCandidate()];
