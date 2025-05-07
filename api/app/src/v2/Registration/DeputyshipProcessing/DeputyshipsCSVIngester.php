@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Registration\Enum\DeputyshipProcessingStatus;
-
 /**
  * Ingest the deputyship CSV exported from Sirius.
  */
@@ -39,22 +37,18 @@ class DeputyshipsCSVIngester
             return $this->deputyshipsIngestResultRecorder->result();
         }
 
-        // TODO order the candidates before processing them in the loop below
-        foreach ($candidatesResult->candidates as $candidate) {
-            // build the CourtOrder and related entities from the candidate
-            $state = $this->deputyshipBuilder->build($candidate);
+        // create CourtOrder and related entities in groups, grouped by court order UID
+        $builderResults = $this->deputyshipBuilder->build($candidatesResult->candidates);
 
-            // persist the entities to the database (NB this could be chunked within the persister)
-            $state = $this->deputyshipPersister->persist($state);
+        // each $builderResult contains a group of court order entities and relationships to be persisted
+        foreach ($builderResults as $builderResult) {
+            // TODO properly log $builderResult
+            $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
 
-            // record what happened for later logging
-            $status = $state->status;
-            if (DeputyshipProcessingStatus::SKIPPED === $status) {
-                $this->deputyshipsIngestResultRecorder->recordSkippedRow($state);
-            } elseif (DeputyshipProcessingStatus::FAILED === $status) {
-                $this->deputyshipsIngestResultRecorder->recordFailedRow($state);
-            } elseif (DeputyshipProcessingStatus::SUCCEEDED == $status) {
-                $this->deputyshipsIngestResultRecorder->recordProcessedRow($state);
+            $persisterResults = $this->deputyshipPersister->persist($builderResult);
+            foreach ($persisterResults as $persisterResult) {
+                // TODO properly log $persisterResult
+                $this->deputyshipsIngestResultRecorder->recordPersisterResult($persisterResult);
             }
         }
 

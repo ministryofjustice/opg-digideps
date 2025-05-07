@@ -46,18 +46,6 @@ class DeputyshipsIngestResultRecorder
         }
     }
 
-    public function recordSkippedRow(DeputyshipPipelineState $state): void
-    {
-    }
-
-    public function recordFailedRow(DeputyshipPipelineState $state): void
-    {
-    }
-
-    public function recordProcessedRow(DeputyshipPipelineState $state): void
-    {
-    }
-
     public function result(): DeputyshipsCSVIngestResult
     {
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
@@ -70,5 +58,13 @@ class DeputyshipsIngestResultRecorder
         }
 
         return new DeputyshipsCSVIngestResult($success, $message);
+    }
+
+    public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
+    {
+    }
+
+    public function recordPersisterResult(DeputyshipPersisterResult $persisterResult): void
+    {
     }
 }

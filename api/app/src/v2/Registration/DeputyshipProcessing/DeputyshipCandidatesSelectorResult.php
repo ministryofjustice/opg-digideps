@@ -9,7 +9,7 @@ use App\Entity\StagingSelectedCandidate;
 class DeputyshipCandidatesSelectorResult
 {
     public function __construct(
-        /** @var StagingSelectedCandidate[] */
+        /** @var iterable<StagingSelectedCandidate> */
         public readonly iterable $candidates,
 
         public readonly int $numCandidates,

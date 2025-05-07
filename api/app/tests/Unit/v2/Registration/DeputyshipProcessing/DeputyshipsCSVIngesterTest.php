@@ -6,9 +6,10 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipPipelineState;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipPersisterResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
@@ -108,12 +109,13 @@ class DeputyshipsCSVIngesterTest extends TestCase
     /**
      * @dataProvider rowFixtures
      */
-    public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus, string $expectedMethodCall): void
+    public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus): void
     {
-        $state = new DeputyshipPipelineState($expectedStatus);
+        $builderResult = new DeputyshipBuilderResult();
+        $persisterResult = new DeputyshipPersisterResult();
 
-        $dto = new StagingSelectedCandidate();
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([$dto], 1);
+        $candidates = [new StagingSelectedCandidate()];
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult($candidates, 1);
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
@@ -134,17 +136,21 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects($this->once())
             ->method('build')
-            ->with($dto)
-            ->willReturn($state);
+            ->with($candidates)
+            ->willReturn([$builderResult]);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('recordBuilderResult')
+            ->with($builderResult);
 
         $this->mockDeputyshipPersister->expects($this->once())
             ->method('persist')
-            ->with($state)
-            ->willReturn($state);
+            ->with($builderResult)
+            ->willReturn([$persisterResult]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
-            ->method($expectedMethodCall)
-            ->with($state);
+            ->method('recordPersisterResult')
+            ->with($persisterResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('result')

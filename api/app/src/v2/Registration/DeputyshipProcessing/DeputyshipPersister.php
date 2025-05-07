@@ -6,8 +6,11 @@ namespace App\v2\Registration\DeputyshipProcessing;
 
 class DeputyshipPersister
 {
-    public function persist(DeputyshipPipelineState $state): DeputyshipPipelineState
+    /**
+     * @return iterable<DeputyshipPersisterResult>
+     */
+    public function persist(DeputyshipBuilderResult $builderResult): iterable
     {
-        return $state;
+        yield new DeputyshipPersisterResult();
     }
 }
