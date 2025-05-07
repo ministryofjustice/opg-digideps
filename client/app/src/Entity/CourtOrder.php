@@ -10,6 +10,10 @@ use JMS\Serializer\Annotation as JMS;
  */
 class CourtOrder
 {
+    public const HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
+    public const PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
+    public const PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
+
     /**
      * @var int
      *
@@ -54,6 +58,7 @@ class CourtOrder
 
     /**
      * @JMS\Type("App\Entity\Client")
+     *
      * @phpstan-ignore property.onlyRead (Deserialized from API response)
      */
     private Client $client;
@@ -191,5 +196,14 @@ class CourtOrder
         uasort($deputies, fn ($deputyA, $deputyB) => strcmp($deputyA->getFirstName(), $deputyB->getFirstName()));
 
         return array_values($deputies);
+    }
+
+    public function determineCourtOrderType(): string
+    {
+        return match ($this->getActiveReport()->determineReportType()) {
+            'HW' => self::HEALTH_AND_WELFARE_REPORT,
+            'PF' => self::PROPERTY_AND_AFFAIRS_REPORT,
+            default => self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT,
+        };
     }
 }

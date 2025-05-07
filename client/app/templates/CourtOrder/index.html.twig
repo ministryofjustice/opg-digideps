@@ -8,7 +8,8 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block supportTitleTop %}{{ client.fullname }}{% endblock %}
+{% block supportTitleTop %}{{ clientFullName }}{% endblock %}
+{% block supportTitleBottom %}{{ reportType }}{% endblock %}
 
 {% block pageContent %}
     {% if courtOrder.hasCoDeputies %}
