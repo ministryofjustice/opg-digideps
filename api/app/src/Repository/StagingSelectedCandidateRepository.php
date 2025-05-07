@@ -19,12 +19,21 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return StagingSelectedCandidate[]
+     * Get the candidates from the database table, but ordered by order UID and without duplicates.
+     * Ordering is important as the builder will group the candidates on the fly, using the order UID,
+     * so that all entities for a single order UID are created together.
+     *
+     * @return iterable<StagingSelectedCandidate>
      */
-    public function getDistinctCandidates(): iterable
+    public function getDistinctOrderedCandidates(): iterable
     {
-        /** @var StagingSelectedCandidate[] $result */
-        $result = $this->createQueryBuilder('sc')->select()->distinct()->getQuery()->getResult();
+        /** @var iterable<StagingSelectedCandidate> $result */
+        $result = $this->createQueryBuilder('sc')
+            ->select()
+            ->distinct()
+            ->orderBy('sc.orderUid', 'ASC')
+            ->getQuery()
+            ->getResult();
 
         return $result;
     }
