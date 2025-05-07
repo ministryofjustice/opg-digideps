@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @visits-care
+@v2 @v2_reporting_1 @visits-care
 Feature: Visits and Care
 
 @lay-pfa-high-not-started
