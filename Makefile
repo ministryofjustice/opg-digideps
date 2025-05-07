@@ -85,6 +85,8 @@ else
 	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
 endif
 
+ADDITIONAL_CONFIG = -f docker-compose.override.yml
+
 client-unit-tests: ##@unit-tests Run the client unit tests
 	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml build client-unit-tests
 	docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml up -d pact-mock
@@ -92,8 +94,7 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 	docker compose -f docker-compose.yml -f docker-compose.unit-tests-client.yml run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests vendor/bin/phpunit -c tests/phpunit --coverage-html=build/coverage-client
 
 api-unit-tests: ##@unit-tests Run the api unit tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml build api-unit-tests
-	docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
 
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
 	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml build api-integration-tests

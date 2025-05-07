@@ -200,7 +200,7 @@ trait DeputyExpensesSectionTrait
         if ('ndr' == $this->reportUrlPrefix) {
             $rowSelector = sprintf('//div[dt[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         } else {
-            $rowSelector = sprintf('//tr[th[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
+            $rowSelector = sprintf('//tr[td[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         }
         $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
 
