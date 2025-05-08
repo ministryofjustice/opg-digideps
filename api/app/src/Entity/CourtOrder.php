@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,6 +74,13 @@ class CourtOrder
     #[JMS\Type(Client::class)]
     #[JMS\Groups(['court-order-full'])]
     private Client $client;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"})
+     */
+    #[JMS\Type(Ndr::class)]
+    #[JMS\Groups(['court-order-full'])]
+    private Ndr $ndr;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
@@ -207,5 +214,12 @@ class CourtOrder
     public function getDeputyRelationships(): Collection
     {
         return $this->courtOrderDeputyRelationships;
+    }
+
+    public function setNdr(Ndr $ndr): CourtOrder
+    {
+        $this->ndr = $ndr;
+
+        return $this;
     }
 }
