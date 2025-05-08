@@ -30,7 +30,7 @@ trait CourtOrderTrait
     /**
      * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\)$/
      */
-    public function iAmAssociatedWithCourtOrder($num, $orderType)
+    public function iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType)
     {
         $clientId = $this->loggedInUserDetails->getClientId();
         $userEmail = $this->loggedInUserDetails->getUserEmail();
@@ -43,18 +43,19 @@ trait CourtOrderTrait
             ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
 
-        if ($num > 1) {
+        if ($numOfCourtOrders > 1) {
+            $clientIds = [];
+
+            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+
             $clients = [];
-            $primaryClientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
-            $secondaryClientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
 
-            $clients[] = $this->em
+            foreach ($clientIds as $clientId) {
+                $clients[] = $this->em
                 ->getRepository(Client::class)
-                ->find(['id' => $primaryClientId]);
-
-            $clients[] = $this->em
-                ->getRepository(Client::class)
-                ->find(['id' => $secondaryClientId]);
+                ->find(['id' => $clientId]);
+            }
 
             foreach ($clients as $client) {
                 $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy);
@@ -92,7 +93,7 @@ trait CourtOrderTrait
     }
 
     /**
-     * @When /^I visit the pages of the \'([^\']*)\' court order that \'([^\']*)\' associated with$/
+     * @When /^I visit the court order page of the \'([^\']*)\' court order that \'([^\']*)\' associated with$/
      */
     public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg)
     {

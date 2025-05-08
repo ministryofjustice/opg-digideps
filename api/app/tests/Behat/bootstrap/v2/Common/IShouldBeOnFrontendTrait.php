@@ -866,6 +866,6 @@ trait IShouldBeOnFrontendTrait
      */
     public function iShouldBeOnTheCourtOrderPage()
     {
-        return $this->iAmOnPage('#courtorder/#');
+        return $this->iAmOnPage('/courtorder\/.*/');
     }
 }
