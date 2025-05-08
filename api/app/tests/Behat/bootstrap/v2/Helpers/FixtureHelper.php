@@ -22,6 +22,9 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
 use Aws\S3\S3ClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FixtureHelper
@@ -1382,17 +1385,15 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder($orderType, $client, $reportStartDate, $deputy)
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
+    public function createAndPersistCourtOrder($orderType, $client, $deputy)
     {
-        $courtOrder = $this->courtOrderTestHelper->generateCourtOrder($orderType, $client, $reportStartDate);
+        $faker = Factory::create('en_GB');
+        $courtOrderUid = '70000000'.$faker->randomNumber(4);
 
-        $this->em->persist($courtOrder);
-
-        $courtOrderDeputy = $this->courtOrderTestHelper->linkCourtOrderToDeputy($courtOrder, $deputy);
-
-        $this->em->persist($courtOrderDeputy);
-        $this->em->flush();
-
-        return $courtOrder;
+        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, 'ACTIVE', $courtOrderUid, $orderType, $deputy);
     }
 }

@@ -317,8 +317,9 @@ trait AuthTrait
 
     /**
      * @Then /^I should be redirected and denied access to continue as client not found$/
+     * @Then /^I should be redirected and denied access to view court order$/
      */
-    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFound()
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised()
     {
         $this->assertIntEqualsInt(
             '404',
