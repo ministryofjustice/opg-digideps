@@ -22,8 +22,6 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
 use Aws\S3\S3ClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -1390,10 +1388,6 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    /**
-     * @throws OptimisticLockException
-     * @throws ORMException
-     */
     public function createAndPersistCourtOrder($orderType, $client, $deputy)
     {
         $faker = Factory::create('en_GB');
