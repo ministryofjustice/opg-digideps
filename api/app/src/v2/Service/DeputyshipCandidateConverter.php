@@ -54,6 +54,7 @@ class DeputyshipCandidateConverter
         // group candidates by action into array ['<action>' => [<candidate>, <candidate>, ...], ...]
         /** @var array<string, array<StagingSelectedCandidate>> $candidatesSorted */
         $candidatesSorted = [];
+
         foreach ($candidatesGroup as $candidate) {
             $key = $candidate->action->value;
             if (!array_key_exists($key, $candidatesSorted)) {
@@ -170,7 +171,22 @@ class DeputyshipCandidateConverter
             }
         }
 
-        // TODO insert court order ndr relationships
+        // insert court order ndr relationships
+        $key = DeputyshipCandidateAction::InsertOrderNdr->value;
+        $insertOrderNdrs = $candidatesSorted[$key] ?? [];
+        foreach ($insertOrderNdrs as $insertOrderNdr) {
+            // fetch the NDR
+            $ndr = $this->reportRepository->find($insertOrderNdr->ndrId);
+
+            if (is_null($ndr)) {
+                $this->logger->error(
+                    "$key candidate referred to non-existent NDR with ID $insertOrderNdr->ndrId"
+                );
+            } else {
+                // associate it with the court order
+                $courtOrder->setNdr($ndr);
+            }
+        }
 
         // ensure that the court order is saved first
         $entities = array_merge([$courtOrder], $entities);
