@@ -56,7 +56,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = $this->sut->select()->candidates;
 
-        static::assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action);
+        static::assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action->value);
         static::assertEquals('ACTIVE', $selectedCandidates[0]->status);
     }
 
@@ -86,7 +86,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = $this->sut->select()->candidates;
 
-        static::assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action);
+        static::assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action->value);
         static::assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
     }
 
@@ -112,7 +112,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = $this->sut->select()->candidates;
 
-        static::assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action);
+        static::assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action->value);
         static::assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
         static::assertEquals($deputy->getDeputyUid(), $selectedCandidates[0]->deputyUid);
     }
@@ -141,11 +141,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $selectedCandidates = $this->sut->select()->candidates;
 
         foreach ($selectedCandidates as $candidate) {
-            if ('INSERT ORDER' === $candidate->action) {
+            if ('INSERT ORDER' === $candidate->action->value) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate->orderUid);
-                static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate->deputyUid);
                 static::assertEquals($client->getId(), $candidate->clientId);
-            } elseif ('INSERT ORDER DEPUTY' === $candidate->action) {
+            } elseif ('INSERT ORDER DEPUTY' === $candidate->action->value) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate->orderUid);
                 static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate->deputyUid);
                 static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate->deputyStatusOnOrder);

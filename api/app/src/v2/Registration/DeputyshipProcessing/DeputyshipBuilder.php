@@ -17,6 +17,9 @@ class DeputyshipBuilder
     ) {
     }
 
+    /**
+     * @param array<StagingSelectedCandidate> $candidatesGroup
+     */
     private function createEntitiesForGroup(array $candidatesGroup): DeputyshipBuilderResult
     {
         if (0 === count($candidatesGroup)) {

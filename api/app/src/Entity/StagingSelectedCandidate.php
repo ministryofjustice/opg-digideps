@@ -44,7 +44,7 @@ class StagingSelectedCandidate
     public string $orderUid;
 
     /**
-     * @ORM\Column(name="action", type="string", length=30)
+     * @ORM\Column(name="action", enumType="App\v2\Registration\Enum\DeputyshipCandidateAction", length=30)
      */
     public DeputyshipCandidateAction $action;
 

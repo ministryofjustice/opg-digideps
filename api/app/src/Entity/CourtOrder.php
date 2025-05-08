@@ -200,4 +200,12 @@ class CourtOrder
 
         return $this;
     }
+
+    /**
+     * @return Collection<CourtOrderDeputy>
+     */
+    public function getDeputyRelationships(): Collection
+    {
+        return $this->courtOrderDeputyRelationships;
+    }
 }

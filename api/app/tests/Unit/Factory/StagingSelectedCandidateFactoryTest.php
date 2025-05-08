@@ -41,6 +41,5 @@ class StagingSelectedCandidateFactoryTest extends TestCase
         self::assertEquals($this->csvDeputyShipRow->orderStatus, $candidateRecord->status);
         self::assertEquals($mockClient->getId(), $candidateRecord->clientId);
         self::assertEquals($this->csvDeputyShipRow->orderMadeDate, $candidateRecord->orderMadeDate);
-        self::assertEquals($this->csvDeputyShipRow->deputyUid, $candidateRecord->deputyUid);
     }
 }

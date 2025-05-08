@@ -62,7 +62,6 @@ class StagingSelectedCandidateFactory
         $changes->action = DeputyshipCandidateAction::InsertOrder;
 
         $changes->orderUid = $csvDeputyship->orderUid;
-        $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->orderType = $csvDeputyship->orderType;
         $changes->status = $csvDeputyship->orderStatus;
         $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
