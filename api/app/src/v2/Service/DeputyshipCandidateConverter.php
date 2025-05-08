@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\v2\Service;
 
+use App\Entity\CourtOrder;
 use App\Entity\StagingSelectedCandidate;
-use App\Factory\CourtOrderFactory;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\ReportRepository;
@@ -20,7 +20,6 @@ use Psr\Log\LoggerInterface;
 class DeputyshipCandidateConverter
 {
     public function __construct(
-        private readonly CourtOrderFactory $courtOrderFactory,
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly DeputyRepository $deputyRepository,
         private readonly ReportRepository $reportRepository,
@@ -73,14 +72,15 @@ class DeputyshipCandidateConverter
             // deputyships CSV)
             $insertCourtOrder = end($insertCourtOrders);
 
-            $courtOrder = $this->courtOrderFactory->create(
+            // validation (of sorts)
+            $requiredValues = [
                 $insertCourtOrder->orderUid,
                 $insertCourtOrder->orderType,
                 $insertCourtOrder->status,
-                $insertCourtOrder->orderMadeDate
-            );
+                $insertCourtOrder->orderMadeDate,
+            ];
 
-            if (is_null($courtOrder)) {
+            if (in_array(null, $requiredValues)) {
                 $this->logger->error(
                     "$key candidate with ID $insertCourtOrder->id missing required data - ".
                     'court order could not be created'
@@ -89,9 +89,15 @@ class DeputyshipCandidateConverter
                 // we couldn't create the court order, so no point continuing
                 return [];
             }
+
+            $courtOrder = new CourtOrder();
+            $courtOrder->setCourtOrderUid($insertCourtOrder->orderUid);
+            $courtOrder->setOrderType($insertCourtOrder->orderType);
+            $courtOrder->setStatus($insertCourtOrder->status);
+            $courtOrder->setOrderMadeDate(new \DateTime($insertCourtOrder->orderMadeDate));
         }
 
-        // if not insert court order candidate, assume we need to look it up instead
+        // if not insert court order candidate, assume we need to look up the court order instead
         if (is_null($courtOrder)) {
             $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $courtOrderUid]);
         }
