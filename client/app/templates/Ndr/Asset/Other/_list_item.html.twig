@@ -21,7 +21,7 @@
 
     {% for asset in assetsInGroup.items %}
         <div class="govuk-summary-list__row behat-region-asset-{{ asset.description | behat_namify }}">
-            <dt class="govuk-summary-list__key">
+            <dt class="govuk-summary-list__value">
                 {{ asset.description | nl2br }}
             </dt>
             <dd class="govuk-summary-list__value">

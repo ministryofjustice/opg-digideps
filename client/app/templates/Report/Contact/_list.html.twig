@@ -83,7 +83,7 @@
         {% for contact in report.contacts %}
             <tr class="govuk-table__row behat-region-contact-{{ contact.postcode | behat_namify }}">
                 <td class="govuk-table__cell">
-                    <p class="govuk-!-font-weight-bold">{{ contact.contactName }}</p>
+                    <p class="govuk-!-margin-0 govuk-!-font-size-18">{{ contact.contactName }}</p>
                     {% if contact.address %}
                         <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ contact.address }}</p>
                     {% endif %}

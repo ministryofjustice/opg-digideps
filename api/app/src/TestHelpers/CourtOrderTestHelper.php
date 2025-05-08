@@ -9,15 +9,9 @@ use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
 
 class CourtOrderTestHelper
 {
-    /**
-     * @throws OptimisticLockException
-     * @throws ORMException
-     */
     public static function generateCourtOrder(
         EntityManager $em,
         Client $client,
@@ -36,6 +30,9 @@ class CourtOrderTestHelper
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
 
+        $em->persist($courtOrder);
+        $em->flush();
+
         if (!is_null($deputy)) {
             self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $isActive);
         }
@@ -43,10 +40,6 @@ class CourtOrderTestHelper
         return $courtOrder;
     }
 
-    /**
-     * @throws OptimisticLockException
-     * @throws ORMException
-     */
     public static function associateDeputyToCourtOrder(
         EntityManager $em,
         CourtOrder $courtOrder,

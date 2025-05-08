@@ -32,7 +32,7 @@
     <div class="govuk-summary-list__row behat-region-account-{{ account.accountNumber | behat_namify }}">
         <dt class="govuk-summary-list__key">
             {% if account.requiresBankName %}
-                <p class="govuk-!-font-weight-bold">{{ account.bank }}</p>
+                <p class="govuk-!-margin-bottom-1 govuk-!-font-size-18">{{ account.bank }}</p>
             {% endif %}
             <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ account.accountTypeText }}</p>
                 {% if account.requiresSortCode %}

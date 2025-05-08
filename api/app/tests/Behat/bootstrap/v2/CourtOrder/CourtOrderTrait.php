@@ -6,6 +6,7 @@ namespace App\Tests\Behat\v2\CourtOrder;
 
 use App\Entity\Client;
 use App\Entity\CourtOrder;
+use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
@@ -15,6 +16,7 @@ use App\TestHelpers\DeputyTestHelper;
 trait CourtOrderTrait
 {
     public CourtOrder $courtOrder;
+    public array $courtOrders;
     public ClientApi $clientApi;
 
     /**
@@ -42,10 +44,20 @@ trait CourtOrderTrait
             ->findOneBy(['deputyUid' => $deputyUid]);
 
         if ($num > 1) {
-            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, 'client');
+            $clients = [];
+            $primaryClientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+            $secondaryClientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+
+            $clients[] = $this->em
+                ->getRepository(Client::class)
+                ->find(['id' => $primaryClientId]);
+
+            $clients[] = $this->em
+                ->getRepository(Client::class)
+                ->find(['id' => $secondaryClientId]);
 
             foreach ($clients as $client) {
-                $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy);
+                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy);
             }
         }
 
@@ -77,5 +89,32 @@ trait CourtOrderTrait
 
             $this->visitFrontendPath(sprintf('/courtorder/%s', $courtOrderUid));
         }
+    }
+
+    /**
+     * @When /^I visit the pages of the \'([^\']*)\' court order that \'([^\']*)\' associated with$/
+     */
+    public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg)
+    {
+        if ('first' == $firstOrSecond && 'I am' == $arg) {
+            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[0]->getCourtOrderUid()));
+        } else {
+            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[1]->getCourtOrderUid()));
+        }
+    }
+
+    /**
+     * @When /^I am discharged from the court order$/
+     */
+    public function iAmDischargedFromTheCourtOrder()
+    {
+        $courtOrderDeputy = $this->em
+            ->getRepository(CourtOrderDeputy::class)
+            ->findOneBy(['courtOrder' => $this->courtOrder->getId()]);
+
+        $courtOrderDeputy->setIsActive(false);
+
+        $this->em->persist($courtOrderDeputy);
+        $this->em->flush();
     }
 }

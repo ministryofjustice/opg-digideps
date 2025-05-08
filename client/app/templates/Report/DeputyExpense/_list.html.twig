@@ -68,9 +68,9 @@
         <tbody class="govuk-table__body">
             {% for expense in report.expenses %}
                 <tr class="govuk-table__row behat-region-expense-{{ expense.explanation | behat_namify }}">
-                    <th scope="row" class="govuk-table__header">
+                    <td class="govuk-table__cell">
                         {{ expense.explanation }}
-                    </th>
+                    </td>
                     {% if report.canLinkToBankAccounts %}
                         <td class="govuk-table__cell">
                             {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}

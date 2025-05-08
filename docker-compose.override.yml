@@ -74,3 +74,11 @@ services:
   aws:
     volumes:
       - .:/app
+
+  api-unit-tests:
+    volumes:
+      - ./api/app/app:/var/www/app
+      - ./api/app/public:/var/www/public
+      - ./api/app/src:/var/www/src
+      - ./api/app/tests:/var/www/tests
+      - ./build/coverage-api:/var/www/build/coverage-api

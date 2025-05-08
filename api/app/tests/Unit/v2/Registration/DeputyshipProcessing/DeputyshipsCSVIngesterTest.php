@@ -6,6 +6,7 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipPipelineState;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
@@ -14,6 +15,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use App\v2\Registration\Enum\DeputyshipProcessingStatus;
+use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -53,9 +55,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
     public function testCsvLoadFailed(): void
     {
         $this->mockDeputyshipsCSVLoader->expects($this->once())
@@ -76,9 +75,37 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $this->assertFalse($result->success);
     }
 
+    public function testCandidateSelectionFailed(): void
+    {
+        // CSV load goes OK
+        $this->mockDeputyshipsCSVLoader->method('load')->willReturn(true);
+        $this->mockDeputyshipsIngestResultRecorder->method('recordCsvLoadResult');
+
+        // candidate selection fails
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(
+            [],
+            0,
+            new Exception('unexpected database exception')
+        );
+
+        $this->mockDeputyshipsCandidatesSelector->expects($this->once())
+            ->method('select')
+            ->willReturn($candidatesSelectorResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('recordDeputyshipCandidatesResult')
+            ->with($candidatesSelectorResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+            ->method('result')
+            ->willReturn(new DeputyshipsCSVIngestResult(false, 'unexpected database exception'));
+
+        $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
+
+        $this->assertFalse($result->success);
+    }
+
     /**
-     * @test
-     *
      * @dataProvider rowFixtures
      */
     public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus, string $expectedMethodCall): void
@@ -86,7 +113,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $state = new DeputyshipPipelineState($expectedStatus);
 
         $dto = new StagingSelectedCandidate();
-        $candidates = [$dto];
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([$dto], 1);
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
@@ -99,11 +126,11 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipsCandidatesSelector->expects($this->once())
             ->method('select')
-            ->willReturn($candidates);
+            ->willReturn($candidatesSelectorResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
-            ->method('recordDeputyshipCandidates')
-            ->with($candidates);
+            ->method('recordDeputyshipCandidatesResult')
+            ->with($candidatesSelectorResult);
 
         $this->mockDeputyshipBuilder->expects($this->once())
             ->method('build')

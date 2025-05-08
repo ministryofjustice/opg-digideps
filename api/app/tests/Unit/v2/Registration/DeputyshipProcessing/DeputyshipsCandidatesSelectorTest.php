@@ -7,18 +7,25 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\StagingDeputyshipRepository;
+use App\Repository\StagingSelectedCandidateRepository;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
+use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class DeputyshipsCandidatesSelectorTest extends TestCase
 {
     private EntityManagerInterface&MockObject $mockEntityManager;
     private StagingDeputyshipRepository&MockObject $mockStagingDeputyshipRepository;
     private CourtOrderAndDeputyCandidatesFactory&MockObject $mockCourtOrderAndDeputyCandidatesFactory;
+    private CourtOrderReportCandidatesFactory&MockObject $mockCourtOrderReportCandidatesFactory;
+    private StagingSelectedCandidateRepository&MockObject $mockStagingSelectedCandidateRepository;
+    private LoggerInterface&MockObject $mockLogger;
     private DeputyshipsCandidatesSelector $sut;
 
     public function setUp(): void
@@ -26,12 +33,38 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockEntityManager = $this->createMock(EntityManagerInterface::class);
         $this->mockStagingDeputyshipRepository = $this->createMock(StagingDeputyshipRepository::class);
         $this->mockCourtOrderAndDeputyCandidatesFactory = $this->createMock(CourtOrderAndDeputyCandidatesFactory::class);
+        $this->mockCourtOrderReportCandidatesFactory = $this->createMock(CourtOrderReportCandidatesFactory::class);
+        $this->mockStagingSelectedCandidateRepository = $this->createMock(StagingSelectedCandidateRepository::class);
+        $this->mockLogger = $this->createMock(LoggerInterface::class);
 
         $this->sut = new DeputyshipsCandidatesSelector(
             $this->mockEntityManager,
             $this->mockStagingDeputyshipRepository,
-            $this->mockCourtOrderAndDeputyCandidatesFactory
+            $this->mockCourtOrderAndDeputyCandidatesFactory,
+            $this->mockCourtOrderReportCandidatesFactory,
+            $this->mockStagingSelectedCandidateRepository,
+            $this->mockLogger,
         );
+    }
+
+    public function testSelectDbException(): void
+    {
+        // so that the test will run: we check all of this in the successful test
+        $mockQuery = $this->createMock(AbstractQuery::class);
+        $this->mockEntityManager->method('createQuery')->willReturn($mockQuery);
+        $this->mockStagingDeputyshipRepository->method('findAll')->willReturn([]);
+
+        // thrown an exception when calling a method on the report candidates factory
+        $expectedException = new Exception('unexpected db exception');
+        $this->mockCourtOrderReportCandidatesFactory->expects($this->once())
+            ->method('createCompatibleReportCandidates')
+            ->willThrowException($expectedException);
+
+        $result = $this->sut->select();
+
+        $this->assertFalse($result->success());
+        $this->assertEquals([], $result->candidates);
+        $this->assertEquals($expectedException, $result->exception);
     }
 
     public function testSelect(): void
@@ -51,7 +84,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             ->willReturn($mockQuery);
 
         $this->mockEntityManager
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(5))
             ->method('flush');
 
         $this->mockEntityManager
@@ -73,22 +106,47 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $mockCandidate1 = new StagingSelectedCandidate();
         $mockCandidate2 = new StagingSelectedCandidate();
         $mockCandidate3 = new StagingSelectedCandidate();
+        $mockCandidate4 = new StagingSelectedCandidate();
+        $mockCandidate5 = new StagingSelectedCandidate();
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->exactly(2))
             ->method('create')
             ->willReturnOnConsecutiveCalls([$mockCandidate1], [$mockCandidate2, $mockCandidate3]);
 
-        $mockCandidates = [$mockCandidate1, $mockCandidate2, $mockCandidate3];
+        $this->mockCourtOrderReportCandidatesFactory
+            ->expects($this->once())
+            ->method('createCompatibleReportCandidates')
+            ->willReturn([$mockCandidate4]);
+
+        $this->mockCourtOrderReportCandidatesFactory
+            ->expects($this->once())
+            ->method('createCompatibleNdrCandidates')
+            ->willReturn([$mockCandidate5]);
+
+        $mockCandidates = [
+            $mockCandidate1,
+            $mockCandidate2,
+            $mockCandidate3,
+            $mockCandidate4,
+            $mockCandidate5,
+        ];
+
         $this->mockEntityManager
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(5))
             ->method('persist')
             ->willReturnCallback(function ($entity) use ($mockCandidates) {
                 self::assertContains($entity, $mockCandidates);
             });
 
+        $this->mockStagingSelectedCandidateRepository->expects($this->once())
+            ->method('getDistinctCandidates')
+            ->willReturn($mockCandidates);
+
         $result = $this->sut->select();
 
-        $this->assertEquals([$mockCandidate1, $mockCandidate2, $mockCandidate3], $result);
+        $this->assertNull($result->exception);
+        $this->assertTrue($result->success());
+        $this->assertEquals($mockCandidates, $result->candidates);
     }
 }

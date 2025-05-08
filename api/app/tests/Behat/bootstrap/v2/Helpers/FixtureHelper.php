@@ -248,7 +248,13 @@ class FixtureHelper
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
-        $populateDeputyTable = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+
+        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
+
+        if (is_null($deputyObject)) {
+            $populateDeputyTable = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $this->em->persist($populateDeputyTable);
+        }
 
         $client->addReport($report);
         $report->setClient($client);
@@ -265,7 +271,6 @@ class FixtureHelper
             $this->reportTestHelper->submitReport($report, $this->em);
         }
 
-        $this->em->persist($populateDeputyTable);
         $this->em->persist($client);
         $this->em->persist($report);
 

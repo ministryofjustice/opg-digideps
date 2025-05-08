@@ -157,7 +157,7 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-        $this->getSession()->getPage()->find('xpath', '//th[contains(., "Care fees")]/..')->clickLink('Edit');
+        $this->getSession()->getPage()->find('xpath', '//td[contains(., "Care fees")]/..')->clickLink('Edit');
 
         $this->fillInPaymentDetails('Care fees', $this->faker->sentence(rand(5, 50)), mt_rand(1, 999));
     }
@@ -231,7 +231,7 @@ trait MoneyOutSectionTrait
         $this->moneyOutTransaction[] = [$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'] => $paymentAmount];
     }
 
-    private function fillInPaymentDetails(string $translatedPaymentValue, string $paymentDescription = null, int $paymentAmount = null)
+    private function fillInPaymentDetails(string $translatedPaymentValue, ?string $paymentDescription = null, ?int $paymentAmount = null)
     {
         $this->iAmOnMoneyOutAddPaymentDetailsPage();
 

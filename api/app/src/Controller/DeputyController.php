@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Deputy;
-use App\Entity\User;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +18,7 @@ class DeputyController extends RestController
     public function __construct(
         private readonly DeputyService $deputyService,
         private readonly RestFormatter $formatter,
-        EntityManagerInterface $em
+        protected readonly EntityManagerInterface $em
     ) {
         parent::__construct($em);
     }

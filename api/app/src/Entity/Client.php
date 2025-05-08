@@ -87,7 +87,7 @@ class Client implements ClientInterface
      * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
-    #[JMS\Groups(['client', 'client-case-number'])]
+    #[JMS\Groups(['client', 'client-case-number', 'deputy-court-order-basic'])]
     private $caseNumber;
 
     /**
@@ -167,7 +167,7 @@ class Client implements ClientInterface
      * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
      */
     #[JMS\Type('string')]
-    #[JMS\Groups(['client', 'client-name'])]
+    #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
     private $firstname;
 
     /**
@@ -176,7 +176,7 @@ class Client implements ClientInterface
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     #[JMS\Type('string')]
-    #[JMS\Groups(['client', 'client-name'])]
+    #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
     private $lastname;
 
     /**
