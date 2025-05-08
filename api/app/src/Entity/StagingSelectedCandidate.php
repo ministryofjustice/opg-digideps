@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -24,13 +25,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class StagingSelectedCandidate
 {
-    public const UPDATE_ORDER_STATUS = 'UPDATE ORDER STATUS';
-    public const UPDATE_DEPUTY_STATUS = 'UPDATE DEPUTY STATUS ON ORDER';
-    public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
-    public const INSERT_ORDER = 'INSERT ORDER';
-    public const INSERT_ORDER_REPORT = 'INSERT ORDER REPORT';
-    public const INSERT_ORDER_NDR = 'INSERT ORDER NDR';
-
     /**
      * @ORM\Id
      *
@@ -52,7 +46,7 @@ class StagingSelectedCandidate
     /**
      * @ORM\Column(name="action", type="string", length=30)
      */
-    public string $action;
+    public DeputyshipCandidateAction $action;
 
     /**
      * @ORM\Column(name="deputy_uid", type="string", length=30, nullable=true)
