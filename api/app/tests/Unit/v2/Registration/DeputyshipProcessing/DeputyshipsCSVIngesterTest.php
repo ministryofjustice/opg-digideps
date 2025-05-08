@@ -15,7 +15,6 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
-use App\v2\Registration\Enum\DeputyshipProcessingStatus;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -44,16 +43,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
             $this->mockDeputyshipPersister,
             $this->mockDeputyshipsIngestResultRecorder
         );
-    }
-
-    public function rowFixtures(): array
-    {
-        // <status after processing the row>, <expected method call>
-        return [
-            [DeputyshipProcessingStatus::SKIPPED, 'recordSkippedRow'],
-            [DeputyshipProcessingStatus::FAILED, 'recordFailedRow'],
-            [DeputyshipProcessingStatus::SUCCEEDED, 'recordProcessedRow'],
-        ];
     }
 
     public function testCsvLoadFailed(): void
@@ -106,10 +95,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $this->assertFalse($result->success);
     }
 
-    /**
-     * @dataProvider rowFixtures
-     */
-    public function testProcessCsvRows(DeputyshipProcessingStatus $expectedStatus): void
+    public function testProcessCsvRows(): void
     {
         $builderResult = new DeputyshipBuilderResult([]);
         $persisterResult = new DeputyshipPersisterResult();
