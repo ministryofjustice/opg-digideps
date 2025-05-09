@@ -209,7 +209,7 @@ class CourtOrder
     }
 
     /**
-     * @return Collection<CourtOrderDeputy>
+     * @return Collection<int, CourtOrderDeputy>
      */
     public function getDeputyRelationships(): Collection
     {
@@ -221,5 +221,10 @@ class CourtOrder
         $this->ndr = $ndr;
 
         return $this;
+    }
+
+    public function getNdr(): Ndr
+    {
+        return $this->ndr;
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\v2\Service;
 
 use App\Entity\CourtOrder;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
@@ -66,14 +68,11 @@ class DeputyshipCandidateConverter
             $insertCourtOrder = end($insertCourtOrders);
 
             // validation (of sorts)
-            $requiredValues = [
-                $insertCourtOrder->orderUid,
-                $insertCourtOrder->orderType,
-                $insertCourtOrder->status,
-                $insertCourtOrder->orderMadeDate,
-            ];
+            $missingValue = empty($insertCourtOrder->orderType)
+                || empty($insertCourtOrder->status)
+                || empty($insertCourtOrder->orderMadeDate);
 
-            if (in_array(null, $requiredValues)) {
+            if ($missingValue) {
                 // we couldn't create the court order, so no point continuing
                 return new DeputyshipBuilderResult(
                     ["$key candidate with ID $insertCourtOrder->id missing required data - court order could not be created"]
@@ -82,9 +81,9 @@ class DeputyshipCandidateConverter
 
             $courtOrder = new CourtOrder();
             $courtOrder->setCourtOrderUid($insertCourtOrder->orderUid);
-            $courtOrder->setOrderType($insertCourtOrder->orderType);
-            $courtOrder->setStatus($insertCourtOrder->status);
-            $courtOrder->setOrderMadeDate(new \DateTime($insertCourtOrder->orderMadeDate));
+            $courtOrder->setOrderType($insertCourtOrder->orderType ?? '');
+            $courtOrder->setStatus($insertCourtOrder->status ?? '');
+            $courtOrder->setOrderMadeDate(new \DateTime($insertCourtOrder->orderMadeDate ?? ''));
         }
 
         // if not insert court order candidate, assume we need to look up the court order instead
@@ -107,7 +106,10 @@ class DeputyshipCandidateConverter
         $updateCourtOrders = $candidatesSorted[$key] ?? [];
         if (count($updateCourtOrders) > 0) {
             // use the last status from the candidates
-            $courtOrder->setStatus(end($updateCourtOrders)->status);
+            $status = $updateCourtOrders[0]->status;
+            if (!is_null($status)) {
+                $courtOrder->setStatus($status);
+            }
         }
 
         // insert court order deputy entries
@@ -157,6 +159,7 @@ class DeputyshipCandidateConverter
         $insertOrderReports = $candidatesSorted[$key] ?? [];
         foreach ($insertOrderReports as $insertOrderReport) {
             // fetch the report
+            /** @var ?Report $report */
             $report = $this->reportRepository->find($insertOrderReport->reportId);
 
             if (is_null($report)) {
@@ -172,6 +175,7 @@ class DeputyshipCandidateConverter
         $insertOrderNdrs = $candidatesSorted[$key] ?? [];
         foreach ($insertOrderNdrs as $insertOrderNdr) {
             // fetch the NDR
+            /** @var ?Ndr $ndr */
             $ndr = $this->reportRepository->find($insertOrderNdr->ndrId);
 
             if (is_null($ndr)) {
