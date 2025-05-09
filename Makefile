@@ -93,12 +93,12 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 api-unit-tests: ##@unit-tests Run the api unit tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
 
+INTEGRATION_SELECTION = selection-all
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
-	REQUIRE_XDEBUG_FRONTEND=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml build api-integration-tests
-	docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-all
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
-	docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml run --rm api-integration-tests sh scripts/reset_db_structure.sh local
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
 
 reset-database: ##@database Resets the DB schema and runs migrations
 	docker compose run --rm api-app sh scripts/reset_db_structure.sh local
