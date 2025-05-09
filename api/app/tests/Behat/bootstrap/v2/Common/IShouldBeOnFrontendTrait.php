@@ -860,4 +860,12 @@ trait IShouldBeOnFrontendTrait
     {
         return $this->iAmOnPage('#client/add$#');
     }
+
+    /**
+     * @Then /^I should be on the court order page$/
+     */
+    public function iShouldBeOnTheCourtOrderPage()
+    {
+        return $this->iAmOnPage('/courtorder\/.*/');
+    }
 }
