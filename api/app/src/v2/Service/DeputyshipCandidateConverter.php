@@ -10,6 +10,7 @@ use App\Entity\Report\Report;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
+use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
@@ -24,6 +25,7 @@ class DeputyshipCandidateConverter
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly DeputyRepository $deputyRepository,
         private readonly ReportRepository $reportRepository,
+        private readonly NdrRepository $ndrRepository,
     ) {
     }
 
@@ -176,7 +178,7 @@ class DeputyshipCandidateConverter
         foreach ($insertOrderNdrs as $insertOrderNdr) {
             // fetch the NDR
             /** @var ?Ndr $ndr */
-            $ndr = $this->reportRepository->find($insertOrderNdr->ndrId);
+            $ndr = $this->ndrRepository->find($insertOrderNdr->ndrId);
 
             if (is_null($ndr)) {
                 $errors[] = "$key candidate referred to non-existent NDR with ID $insertOrderNdr->ndrId";

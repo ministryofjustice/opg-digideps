@@ -80,7 +80,7 @@ class CourtOrder
      */
     #[JMS\Type(Ndr::class)]
     #[JMS\Groups(['court-order-full'])]
-    private Ndr $ndr;
+    private ?Ndr $ndr = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
@@ -223,8 +223,16 @@ class CourtOrder
         return $this;
     }
 
-    public function getNdr(): Ndr
+    public function getNdr(): ?Ndr
     {
         return $this->ndr;
+    }
+
+    /**
+     * @return Collection<Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
     }
 }

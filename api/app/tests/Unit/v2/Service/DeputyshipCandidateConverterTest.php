@@ -7,9 +7,12 @@ namespace App\v2\Service;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Report\Report;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
+use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,6 +24,7 @@ class DeputyshipCandidateConverterTest extends TestCase
     private CourtOrderRepository&MockObject $mockCourtOrderRepository;
     private DeputyRepository&MockObject $mockDeputyRepository;
     private ReportRepository&MockObject $mockReportRepository;
+    private NdrRepository&MockObject $mockNdrRepository;
     private DeputyshipCandidateConverter $sut;
 
     public function setUp(): void
@@ -28,12 +32,22 @@ class DeputyshipCandidateConverterTest extends TestCase
         $this->mockCourtOrderRepository = $this->createMock(CourtOrderRepository::class);
         $this->mockDeputyRepository = $this->createMock(DeputyRepository::class);
         $this->mockReportRepository = $this->createMock(ReportRepository::class);
+        $this->mockNdrRepository = $this->createMock(NdrRepository::class);
 
         $this->sut = new DeputyshipCandidateConverter(
             $this->mockCourtOrderRepository,
             $this->mockDeputyRepository,
             $this->mockReportRepository,
+            $this->mockNdrRepository,
         );
+    }
+
+    private function setupMockCourtOrderRepository(?CourtOrder $courtOrderToReturn): void
+    {
+        $this->mockCourtOrderRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with(['courtOrderUid' => '1'])
+            ->willReturn($courtOrderToReturn);
     }
 
     public function testCreateEntitiesFromCandidatesMultipleOrderUidsFail(): void
@@ -68,10 +82,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
         $candidates = [$candidate1];
 
-        $this->mockCourtOrderRepository->expects($this->once())
-            ->method('findOneBy')
-            ->with(['courtOrderUid' => '1'])
-            ->willReturn(null);
+        $this->setupMockCourtOrderRepository(null);
 
         $result = $this->sut->createEntitiesFromCandidates($candidates);
         $errors = $result->getErrors();
@@ -103,25 +114,21 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesUpdateOrderStatusSuccess(): void
     {
-        $candidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '1');
-        $candidate1->orderType = 'pfa';
-        $candidate1->status = 'ACTIVE';
-        $candidate1->orderMadeDate = '2018-01-21';
+        $courtOrder = new CourtOrder();
+        $this->setupMockCourtOrderRepository($courtOrder);
 
-        $candidate2 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
-        $candidate2->status = 'CLOSED';
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $candidate->status = 'CLOSED';
 
-        $result = $this->sut->createEntitiesFromCandidates([$candidate1, $candidate2]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
 
         // expect there to be one court order entity created, and it should be the first item in the list;
         // as there was an update to its status, it should be set to the value from the update candidate
-        /** @var CourtOrder $courtOrder */
-        $courtOrder = $result->getEntities()[0];
+        /** @var CourtOrder $courtOrderToSave */
+        $courtOrderToSave = $result->getEntities()[0];
 
+        self::assertEquals($courtOrder, $courtOrderToSave);
         self::assertEquals('CLOSED', $courtOrder->getStatus());
-        self::assertEquals('1', $courtOrder->getCourtOrderUid());
-        self::assertEquals(new \DateTime('2018-01-21'), $courtOrder->getOrderMadeDate());
-        self::assertEquals('pfa', $courtOrder->getOrderType());
     }
 
     public function testCreateEntitiesFromCandidatesInsertOrderDeputySuccess(): void
@@ -131,11 +138,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidate->deputyStatusOnOrder = true;
 
         $courtOrder = new CourtOrder();
-
-        $this->mockCourtOrderRepository->expects($this->once())
-            ->method('findOneBy')
-            ->with(['courtOrderUid' => '1'])
-            ->willReturn($courtOrder);
+        $this->setupMockCourtOrderRepository($courtOrder);
 
         $deputy = new Deputy();
 
@@ -162,11 +165,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidate->deputyStatusOnOrder = true;
 
         $courtOrder = new CourtOrder();
-
-        $this->mockCourtOrderRepository->expects($this->once())
-            ->method('findOneBy')
-            ->with(['courtOrderUid' => '1'])
-            ->willReturn($courtOrder);
+        $this->setupMockCourtOrderRepository($courtOrder);
 
         $this->mockDeputyRepository->expects($this->once())
             ->method('find')
@@ -198,10 +197,7 @@ class DeputyshipCandidateConverterTest extends TestCase
             ->method('getDeputyRelationships')
             ->willReturn(new ArrayCollection([]));
 
-        $this->mockCourtOrderRepository->expects($this->once())
-            ->method('findOneBy')
-            ->with(['courtOrderUid' => '1'])
-            ->willReturn($mockCourtOrder);
+        $this->setupMockCourtOrderRepository($mockCourtOrder);
 
         // test
         $result = $this->sut->createEntitiesFromCandidates([$candidate]);
@@ -232,6 +228,8 @@ class DeputyshipCandidateConverterTest extends TestCase
         $mockDeputy = $this->createMock(Deputy::class);
         $mockCourtOrder = $this->createMock(CourtOrder::class);
 
+        $this->setupMockCourtOrderRepository($mockCourtOrder);
+
         $courtOrderDeputy = new CourtOrderDeputy();
         $courtOrderDeputy->setCourtOrder($mockCourtOrder);
         $courtOrderDeputy->setDeputy($mockDeputy);
@@ -244,11 +242,6 @@ class DeputyshipCandidateConverterTest extends TestCase
         $mockCourtOrder->expects($this->once())
             ->method('getDeputyRelationships')
             ->willReturn(new ArrayCollection([$courtOrderDeputy]));
-
-        $this->mockCourtOrderRepository->expects($this->once())
-            ->method('findOneBy')
-            ->with(['courtOrderUid' => '1'])
-            ->willReturn($mockCourtOrder);
 
         // test
         $result = $this->sut->createEntitiesFromCandidates([$candidate]);
@@ -265,5 +258,101 @@ class DeputyshipCandidateConverterTest extends TestCase
         $updatedCourtOrderDeputy = $entities[1];
 
         self::assertEquals($newStatus, $updatedCourtOrderDeputy->isActive());
+    }
+
+    public function testCreateEntitiesFromCandidatesInsertOrderReportFail(): void
+    {
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderReport, '1');
+        $candidate->reportId = 2;
+
+        $courtOrder = new CourtOrder();
+        $this->setupMockCourtOrderRepository($courtOrder);
+
+        $this->mockReportRepository->expects($this->once())
+            ->method('find')
+            ->with(2)
+            ->willReturn(null);
+
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
+
+        self::assertCount(1, $entities);
+        self::assertEquals($courtOrder, $entities[0]);
+        self::assertEmpty($courtOrder->getReports());
+
+        self::assertMatchesRegularExpression(
+            '/.*referred to non-existent report with ID 2.*/',
+            $result->getErrors()[0]
+        );
+    }
+
+    public function testCreateEntitiesFromCandidatesInsertOrderReportSuccess(): void
+    {
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderReport, '1');
+        $candidate->reportId = 2;
+
+        $courtOrder = new CourtOrder();
+        $this->setupMockCourtOrderRepository($courtOrder);
+
+        $report = $this->createMock(Report::class);
+        $this->mockReportRepository->expects($this->once())
+            ->method('find')
+            ->with(2)
+            ->willReturn($report);
+
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
+
+        self::assertCount(1, $entities);
+        self::assertEquals($courtOrder, $entities[0]);
+        self::assertContains($report, $courtOrder->getReports());
+    }
+
+    public function testCreateEntitiesFromCandidatesInsertOrderNdrFail(): void
+    {
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderNdr, '1');
+        $candidate->ndrId = 2;
+
+        $courtOrder = new CourtOrder();
+        $this->setupMockCourtOrderRepository($courtOrder);
+
+        $this->mockNdrRepository->expects($this->once())
+            ->method('find')
+            ->with(2)
+            ->willReturn(null);
+
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
+
+        self::assertCount(1, $entities);
+        self::assertEquals($courtOrder, $entities[0]);
+        self::assertNull($courtOrder->getNdr());
+
+        self::assertMatchesRegularExpression(
+            '/.*referred to non-existent NDR with ID 2.*/',
+            $result->getErrors()[0]
+        );
+    }
+
+    public function testCreateEntitiesFromCandidatesInsertOrderNdrSuccess(): void
+    {
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderNdr, '1');
+        $candidate->ndrId = 2;
+
+        $courtOrder = new CourtOrder();
+        $this->setupMockCourtOrderRepository($courtOrder);
+
+        $ndr = $this->createMock(Ndr::class);
+        $this->mockNdrRepository->expects($this->once())
+            ->method('find')
+            ->with(2)
+            ->willReturn($ndr);
+
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
+
+        self::assertCount(1, $entities);
+        self::assertEquals($courtOrder, $entities[0]);
+        self::assertEquals($ndr, $courtOrder->getNdr());
     }
 }
