@@ -65,7 +65,7 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml exec -T api-integration-tests chmod -R 777 var
           docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml exec -T api-integration-tests sh scripts/api_integration_test.sh ${SELECTION}
           docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml exec -T api-integration-tests chmod -R 777 tests/coverage
-          docker cp "api-integration-tests:/var/www/tests/coverage/api-integration-tests.xml" "./api-integration-tests-${SELECTION}.xml"
+          docker cp "api-integration-tests:/var/www/tests/coverage/api-integration-tests-${SELECTION}.xml" "./api-integration-tests-${SELECTION}.xml"
           docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml down
 
       - name: archive test results
