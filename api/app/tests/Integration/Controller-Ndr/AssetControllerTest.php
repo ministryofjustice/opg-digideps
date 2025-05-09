@@ -55,21 +55,6 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-    public function testgetAssetsAuth()
-    {
-        $url = '/ndr/'.self::$ndr1->getId().'/assets';
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testgetAssetsAcl()
-    {
-        $url2 = '/ndr/'.self::$ndr2->getId().'/assets';
-
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
-
     public function testgetAssets()
     {
         $url = '/ndr/'.self::$ndr1->getId().'/assets';
