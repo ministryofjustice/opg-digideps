@@ -17,24 +17,6 @@ class AssetController extends RestController
         parent::__construct($em);
     }
 
-    #[Route(path: '/ndr/{ndrId}/assets', requirements: ['ndrId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getAll($ndrId)
-    {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
-        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-        
-        $assets = $this->em->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
-
-        if (0 == count($assets)) {
-            return [];
-        }
-
-        $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
-
-        return $assets;
-    }
-
     #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
     #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById($ndrId, $assetId)
