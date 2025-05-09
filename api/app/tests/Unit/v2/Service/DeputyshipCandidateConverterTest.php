@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\v2\Service;
 
 use App\Entity\CourtOrder;
+use App\Entity\CourtOrderDeputy;
+use App\Entity\Deputy;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\ReportRepository;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -141,5 +144,92 @@ class DeputyshipCandidateConverterTest extends TestCase
         self::assertEquals('1', $courtOrder->getCourtOrderUid());
         self::assertEquals(new \DateTime('2018-01-21'), $courtOrder->getOrderMadeDate());
         self::assertEquals('pfa', $courtOrder->getOrderType());
+    }
+
+    public function testCreateEntitiesFromCandidatesUpdateOrderDeputyStatusFail(): void
+    {
+        $candidate = new StagingSelectedCandidate();
+        $candidate->action = DeputyshipCandidateAction::UpdateDeputyStatus;
+        $candidate->orderUid = '1';
+        $candidate->deputyUid = '2';
+        $candidate->deputyStatusOnOrder = false;
+
+        $mockCourtOrder = $this->createMock(CourtOrder::class);
+
+        $mockCourtOrder->expects($this->once())
+            ->method('getDeputyRelationships')
+            ->willReturn(new ArrayCollection([]));
+
+        $this->mockCourtOrderRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with(['courtOrderUid' => '1'])
+            ->willReturn($mockCourtOrder);
+
+        // we should get a log message about relationship being absent
+        $this->mockLogger->expects($this->once())
+            ->method('error')
+            ->with(
+                self::matchesRegularExpression(
+                    '/.*court order \(UID = 1\) to deputy \(UID = 2\) relationship does not exist.*/'
+                )
+            );
+
+        // test
+        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+
+        // only expect court order to be saved - no relationship found to update
+        self::assertEquals($mockCourtOrder, $entities[0]);
+        self::assertCount(1, $entities);
+    }
+
+    public function testCreateEntitiesFromCandidatesUpdateOrderDeputyStatusSuccess(): void
+    {
+        // this is what we expect the status to be changed from
+        $originalStatus = true;
+
+        // this is what we're changing the status to
+        $newStatus = false;
+
+        $candidate = new StagingSelectedCandidate();
+        $candidate->action = DeputyshipCandidateAction::UpdateDeputyStatus;
+        $candidate->orderUid = '1';
+        $candidate->deputyUid = '2';
+        $candidate->deputyStatusOnOrder = $newStatus;
+
+        $mockDeputy = $this->createMock(Deputy::class);
+        $mockCourtOrder = $this->createMock(CourtOrder::class);
+
+        $courtOrderDeputy = new CourtOrderDeputy();
+        $courtOrderDeputy->setCourtOrder($mockCourtOrder);
+        $courtOrderDeputy->setDeputy($mockDeputy);
+        $courtOrderDeputy->setIsActive($originalStatus);
+
+        $mockDeputy->expects($this->once())
+            ->method('getDeputyUid')
+            ->willReturn('2');
+
+        $mockCourtOrder->expects($this->once())
+            ->method('getDeputyRelationships')
+            ->willReturn(new ArrayCollection([$courtOrderDeputy]));
+
+        $this->mockCourtOrderRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with(['courtOrderUid' => '1'])
+            ->willReturn($mockCourtOrder);
+
+        // test
+        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+
+        // always expect court order to be saved
+        /** @var CourtOrder $updatedCourtOrder */
+        $updatedCourtOrder = $entities[0];
+
+        self::assertEquals($mockCourtOrder, $updatedCourtOrder);
+
+        // additionally expect the order <-> deputy relationship status to be updated from true to false
+        /** @var CourtOrderDeputy $updatedCourtOrderDeputy */
+        $updatedCourtOrderDeputy = $entities[1];
+
+        self::assertEquals($newStatus, $updatedCourtOrderDeputy->isActive());
     }
 }

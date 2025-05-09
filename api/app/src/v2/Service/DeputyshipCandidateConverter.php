@@ -138,6 +138,7 @@ class DeputyshipCandidateConverter
         $updateOrderDeputyStatuses = $candidatesSorted[$key] ?? [];
 
         $courtOrderDeputyRelationships = $courtOrder->getDeputyRelationships();
+
         foreach ($updateOrderDeputyStatuses as $updateOrderDeputyStatus) {
             // find the relationship
             $found = false;
