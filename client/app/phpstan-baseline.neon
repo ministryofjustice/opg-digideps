@@ -2211,91 +2211,6 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 4
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Cannot call method getClient\\(\\) on mixed\\.$#"
-			count: 4
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Cannot call method getFirstname\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Cannot call method getLastName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Cannot call method getOrgName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:deleteConfirmAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:deleteConfirmAction\\(\\) has parameter \\$confirmed with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:deleteConfirmAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:editAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:getContactById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$client EntityDir\\\\Client\\)\\: Unexpected token \"\\$client\", expected type at offset 9$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
-			message: "#^Static property App\\\\Controller\\\\Org\\\\ClientContactController\\:\\:\\$jmsGroups is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Org/ClientContactController.php
-
-		-
 			message: "#^Cannot access offset 'counts' on mixed\\.$#"
 			count: 4
 			path: src/Controller/Org/IndexController.php
@@ -10634,16 +10549,6 @@ parameters:
 			message: "#^Property App\\\\Form\\\\Ndr\\\\VisitsCareType\\:\\:\\$translator \\(Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\) does not accept mixed\\.$#"
 			count: 1
 			path: src/Form/Ndr/VisitsCareType.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$resolver with type App\\\\Form\\\\Org\\\\OptionsResolverInterface is not subtype of native type Symfony\\\\Component\\\\OptionsResolver\\\\OptionsResolver\\.$#"
-			count: 1
-			path: src/Form/Org/ClientContactType.php
-
-		-
-			message: "#^Parameter \\$resolver of method App\\\\Form\\\\Org\\\\ClientContactType\\:\\:configureOptions\\(\\) has invalid type App\\\\Form\\\\Org\\\\OptionsResolverInterface\\.$#"
-			count: 1
-			path: src/Form/Org/ClientContactType.php
 
 		-
 			message: "#^Cannot call method getActive\\(\\) on mixed\\.$#"
