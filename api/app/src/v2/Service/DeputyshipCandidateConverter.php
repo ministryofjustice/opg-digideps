@@ -35,10 +35,7 @@ class DeputyshipCandidateConverter
     public function createEntitiesFromCandidates(array $candidatesGroup): array
     {
         // check all court order UIDs match
-        $uniqueUids = array_unique(array_map(
-            function ($candidate) { return $candidate->orderUid; },
-            $candidatesGroup
-        ));
+        $uniqueUids = array_unique(array_map(fn ($candidate) => $candidate->orderUid, $candidatesGroup));
 
         if (count($uniqueUids) > 1) {
             $this->logger->error('cannot create entities: invalid candidate group - more than one order UID is referenced');
@@ -125,7 +122,7 @@ class DeputyshipCandidateConverter
             $deputy = $this->deputyRepository->find($insertOrderDeputy->deputyId);
 
             if (is_null($deputy)) {
-                $this->logger->error("$key candidate referred to non-existent deputy with UID $insertOrderDeputy->deputyUid");
+                $this->logger->error("$key candidate referred to non-existent deputy with ID $insertOrderDeputy->deputyId");
             } else {
                 // associate the deputy with the court order
                 $deputy->associateWithCourtOrder($courtOrder, true === $insertOrderDeputy->deputyStatusOnOrder);

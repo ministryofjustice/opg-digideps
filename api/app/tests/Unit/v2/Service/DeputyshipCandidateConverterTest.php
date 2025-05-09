@@ -146,6 +146,74 @@ class DeputyshipCandidateConverterTest extends TestCase
         self::assertEquals('pfa', $courtOrder->getOrderType());
     }
 
+    public function testCreateEntitiesFromCandidatesInsertOrderDeputySuccess(): void
+    {
+        $candidate = new StagingSelectedCandidate();
+        $candidate->action = DeputyshipCandidateAction::InsertOrderDeputy;
+        $candidate->orderUid = '1';
+        $candidate->deputyId = 2;
+        $candidate->deputyStatusOnOrder = true;
+
+        $courtOrder = new CourtOrder();
+
+        $this->mockCourtOrderRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with(['courtOrderUid' => '1'])
+            ->willReturn($courtOrder);
+
+        $deputy = new Deputy();
+
+        $this->mockDeputyRepository->expects($this->once())
+            ->method('find')
+            ->willReturn($deputy);
+
+        // test
+        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+
+        // expect first entity to be court order
+        self::assertEquals($courtOrder, $entities[0]);
+
+        // expect second entity to be deputy, associated with court order
+        self::assertEquals($deputy, $entities[1]);
+        self::assertContains(['courtOrder' => $courtOrder, 'isActive' => true], $deputy->getCourtOrdersWithStatus());
+    }
+
+    public function testCreateEntitiesFromCandidatesInsertOrderDeputyFail(): void
+    {
+        $candidate = new StagingSelectedCandidate();
+        $candidate->action = DeputyshipCandidateAction::InsertOrderDeputy;
+        $candidate->orderUid = '1';
+        $candidate->deputyId = 2;
+        $candidate->deputyStatusOnOrder = true;
+
+        $courtOrder = new CourtOrder();
+
+        $this->mockCourtOrderRepository->expects($this->once())
+            ->method('findOneBy')
+            ->with(['courtOrderUid' => '1'])
+            ->willReturn($courtOrder);
+
+        // log error as deputy does not exist
+        $this->mockDeputyRepository->expects($this->once())
+            ->method('find')
+            ->willReturn(null);
+
+        $this->mockLogger->expects($this->once())
+            ->method('error')
+            ->with(
+                self::matchesRegularExpression(
+                    '/.*referred to non-existent deputy with ID 2.*/'
+                )
+            );
+
+        // test
+        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+
+        // expect first (and only) entity to be court order
+        self::assertEquals($courtOrder, $entities[0]);
+        self::assertCount(1, $entities);
+    }
+
     public function testCreateEntitiesFromCandidatesUpdateOrderDeputyStatusFail(): void
     {
         $candidate = new StagingSelectedCandidate();
