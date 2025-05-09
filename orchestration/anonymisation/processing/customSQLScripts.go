@@ -9,9 +9,12 @@ import (
 )
 
 // IncreaseTableSizeForEmail sets the char limit to 255 for emails
-func IncreaseTableSizeForEmails(db *sql.DB) {
-	db.Exec(`ALTER TABLE anon.dd_user ALTER COLUMN email TYPE VARCHAR(255);`)
-	fmt.Println("Ensured email column type is VARCHAR(255).")
+func IncreaseTableSizeForEmails(db *sql.DB) error {
+	_, err := db.Exec(`ALTER TABLE anon.dd_user ALTER COLUMN email TYPE VARCHAR(255);`)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // CustomSQLScriptUpdates reads SQL files from the 'sql' directory and executes them in order.

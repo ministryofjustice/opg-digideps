@@ -84,8 +84,9 @@ func main() {
 	common.CheckError(err)
 
 	// ===== Processing - Additional Complex Script Updates =====
-	// Ensures email limit is high (255)
+
 	processing.IncreaseTableSizeForEmails(db)
+	common.CheckError(err)
 
 	err = processing.CustomSQLScriptUpdates(db, fmt.Sprintf("%sprocessing/sql", path))
 	common.CheckError(err)
