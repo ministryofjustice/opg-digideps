@@ -15,14 +15,12 @@ use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 class DeputyshipCandidateConverterTest extends TestCase
 {
     private CourtOrderRepository&MockObject $mockCourtOrderRepository;
     private DeputyRepository&MockObject $mockDeputyRepository;
     private ReportRepository&MockObject $mockReportRepository;
-    private LoggerInterface&MockObject $mockLogger;
     private DeputyshipCandidateConverter $sut;
 
     public function setUp(): void
@@ -30,13 +28,11 @@ class DeputyshipCandidateConverterTest extends TestCase
         $this->mockCourtOrderRepository = $this->createMock(CourtOrderRepository::class);
         $this->mockDeputyRepository = $this->createMock(DeputyRepository::class);
         $this->mockReportRepository = $this->createMock(ReportRepository::class);
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
 
         $this->sut = new DeputyshipCandidateConverter(
             $this->mockCourtOrderRepository,
             $this->mockDeputyRepository,
             $this->mockReportRepository,
-            $this->mockLogger,
         );
     }
 
@@ -50,13 +46,12 @@ class DeputyshipCandidateConverterTest extends TestCase
 
         $candidates = [$candidate1, $candidate2];
 
-        $this->mockLogger->expects($this->once())
-            ->method('error')
-            ->with(self::matchesRegularExpression('/.*more than one order UID.*/'));
+        $result = $this->sut->createEntitiesFromCandidates($candidates);
+        $errors = $result->getErrors();
 
-        $entities = $this->sut->createEntitiesFromCandidates($candidates);
-
-        self::assertEquals([], $entities);
+        self::assertEquals([], $result->getEntities());
+        self::assertCount(1, $errors);
+        self::assertMatchesRegularExpression('/.*more than one order UID.*/', $errors[0]);
     }
 
     public function testCreateEntitiesFromCandidatesMissingValuesFail(): void
@@ -67,13 +62,12 @@ class DeputyshipCandidateConverterTest extends TestCase
 
         $candidates = [$candidate1];
 
-        $this->mockLogger->expects($this->once())
-            ->method('error')
-            ->with(self::matchesRegularExpression('/.*court order could not be created.*/'));
+        $result = $this->sut->createEntitiesFromCandidates($candidates);
+        $errors = $result->getErrors();
 
-        $entities = $this->sut->createEntitiesFromCandidates($candidates);
-
-        self::assertEquals([], $entities);
+        self::assertEquals([], $result->getEntities());
+        self::assertCount(1, $errors);
+        self::assertMatchesRegularExpression('/.*court order could not be created.*/', $errors[0]);
     }
 
     public function testCreateEntitiesFromCandidatesNoOrderInsertOrOrderFoundFail(): void
@@ -89,13 +83,13 @@ class DeputyshipCandidateConverterTest extends TestCase
             ->with(['courtOrderUid' => '1'])
             ->willReturn(null);
 
-        $this->mockLogger->expects($this->once())
-            ->method('error')
-            ->with(self::matchesRegularExpression('/.*non-existent court order with UID 1.*/'));
+        $result = $this->sut->createEntitiesFromCandidates($candidates);
+        $errors = $result->getErrors();
 
-        $entities = $this->sut->createEntitiesFromCandidates($candidates);
+        self::assertEquals([], $result->getEntities());
 
-        self::assertEquals([], $entities);
+        self::assertCount(1, $errors);
+        self::assertMatchesRegularExpression('/.*non-existent court order with UID 1.*/', $errors[0]);
     }
 
     public function testCreateEntitiesFromCandidatesInsertOrderSuccess(): void
@@ -107,11 +101,11 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidate->status = 'ACTIVE';
         $candidate->orderMadeDate = '2018-01-21';
 
-        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
 
         // expect there to be one court order entity created
         /** @var CourtOrder $courtOrder */
-        $courtOrder = end($entities);
+        $courtOrder = $result->getEntities()[0];
 
         self::assertEquals('ACTIVE', $courtOrder->getStatus());
         self::assertEquals('1', $courtOrder->getCourtOrderUid());
@@ -133,12 +127,12 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidate2->orderUid = '1';
         $candidate2->status = 'CLOSED';
 
-        $entities = $this->sut->createEntitiesFromCandidates([$candidate1, $candidate2]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate1, $candidate2]);
 
         // expect there to be one court order entity created, and it should be the first item in the list;
         // as there was an update to its status, it should be set to the value from the update candidate
         /** @var CourtOrder $courtOrder */
-        $courtOrder = $entities[0];
+        $courtOrder = $result->getEntities()[0];
 
         self::assertEquals('CLOSED', $courtOrder->getStatus());
         self::assertEquals('1', $courtOrder->getCourtOrderUid());
@@ -168,7 +162,8 @@ class DeputyshipCandidateConverterTest extends TestCase
             ->willReturn($deputy);
 
         // test
-        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
 
         // expect first entity to be court order
         self::assertEquals($courtOrder, $entities[0]);
@@ -193,25 +188,22 @@ class DeputyshipCandidateConverterTest extends TestCase
             ->with(['courtOrderUid' => '1'])
             ->willReturn($courtOrder);
 
-        // log error as deputy does not exist
         $this->mockDeputyRepository->expects($this->once())
             ->method('find')
             ->willReturn(null);
 
-        $this->mockLogger->expects($this->once())
-            ->method('error')
-            ->with(
-                self::matchesRegularExpression(
-                    '/.*referred to non-existent deputy with ID 2.*/'
-                )
-            );
-
         // test
-        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
+        $errors = $result->getErrors();
 
         // expect first (and only) entity to be court order
         self::assertEquals($courtOrder, $entities[0]);
         self::assertCount(1, $entities);
+
+        // expect error as deputy does not exist
+        self::assertCount(1, $errors);
+        self::assertMatchesRegularExpression('/.*referred to non-existent deputy with ID 2.*/', $errors[0]);
     }
 
     public function testCreateEntitiesFromCandidatesUpdateOrderDeputyStatusFail(): void
@@ -233,21 +225,18 @@ class DeputyshipCandidateConverterTest extends TestCase
             ->with(['courtOrderUid' => '1'])
             ->willReturn($mockCourtOrder);
 
-        // we should get a log message about relationship being absent
-        $this->mockLogger->expects($this->once())
-            ->method('error')
-            ->with(
-                self::matchesRegularExpression(
-                    '/.*court order \(UID = 1\) to deputy \(UID = 2\) relationship does not exist.*/'
-                )
-            );
-
         // test
-        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
+        $errors = $result->getErrors();
 
         // only expect court order to be saved - no relationship found to update
         self::assertEquals($mockCourtOrder, $entities[0]);
         self::assertCount(1, $entities);
+
+        // we should get a log message about relationship being absent
+        self::assertCount(1, $errors);
+        self::assertMatchesRegularExpression('/.*court order \(UID = 1\) to deputy \(UID = 2\) relationship does not exist.*/', $errors[0]);
     }
 
     public function testCreateEntitiesFromCandidatesUpdateOrderDeputyStatusSuccess(): void
@@ -286,7 +275,8 @@ class DeputyshipCandidateConverterTest extends TestCase
             ->willReturn($mockCourtOrder);
 
         // test
-        $entities = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $result = $this->sut->createEntitiesFromCandidates([$candidate]);
+        $entities = $result->getEntities();
 
         // always expect court order to be saved
         /** @var CourtOrder $updatedCourtOrder */

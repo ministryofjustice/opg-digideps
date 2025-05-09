@@ -23,12 +23,10 @@ class DeputyshipBuilder
     private function createEntitiesForGroup(array $candidatesGroup): DeputyshipBuilderResult
     {
         if (0 === count($candidatesGroup)) {
-            return new DeputyshipBuilderResult($candidatesGroup);
+            return new DeputyshipBuilderResult();
         }
 
-        $entities = $this->converter->createEntitiesFromCandidates($candidatesGroup);
-
-        return new DeputyshipBuilderResult($candidatesGroup, $entities);
+        return $this->converter->createEntitiesFromCandidates($candidatesGroup);
     }
 
     /**

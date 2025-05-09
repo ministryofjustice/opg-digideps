@@ -9,9 +9,8 @@ use App\Entity\StagingSelectedCandidate;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\ReportRepository;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\ORM\Mapping\Entity;
-use Psr\Log\LoggerInterface;
 
 /**
  * Convert a group of candidates (with the same order UID) to a set of court order entities and relationships
@@ -23,24 +22,21 @@ class DeputyshipCandidateConverter
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly DeputyRepository $deputyRepository,
         private readonly ReportRepository $reportRepository,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
     /**
      * @param array<StagingSelectedCandidate> $candidatesGroup All candidates in the list have a matching court order UID
-     *
-     * @return array<Entity> Ordering is important: entities should be persisted in the order they appear in this array
      */
-    public function createEntitiesFromCandidates(array $candidatesGroup): array
+    public function createEntitiesFromCandidates(array $candidatesGroup): DeputyshipBuilderResult
     {
         // check all court order UIDs match
         $uniqueUids = array_unique(array_map(fn ($candidate) => $candidate->orderUid, $candidatesGroup));
 
         if (count($uniqueUids) > 1) {
-            $this->logger->error('cannot create entities: invalid candidate group - more than one order UID is referenced');
-
-            return [];
+            return new DeputyshipBuilderResult(
+                ['cannot create entities: invalid candidate group - more than one order UID is referenced']
+            );
         }
 
         $courtOrderUid = end($uniqueUids);
@@ -78,13 +74,10 @@ class DeputyshipCandidateConverter
             ];
 
             if (in_array(null, $requiredValues)) {
-                $this->logger->error(
-                    "$key candidate with ID $insertCourtOrder->id missing required data - ".
-                    'court order could not be created'
-                );
-
                 // we couldn't create the court order, so no point continuing
-                return [];
+                return new DeputyshipBuilderResult(
+                    ["$key candidate with ID $insertCourtOrder->id missing required data - court order could not be created"]
+                );
             }
 
             $courtOrder = new CourtOrder();
@@ -101,10 +94,13 @@ class DeputyshipCandidateConverter
 
         // if we still have no court order, there's no point continuing
         if (is_null($courtOrder)) {
-            $this->logger->error("$key candidate referred to non-existent court order with UID $courtOrderUid");
-
-            return [];
+            return new DeputyshipBuilderResult(
+                ["$key candidate referred to non-existent court order with UID $courtOrderUid"]
+            );
         }
+
+        // we now collect errors which occur below, as we at least have a court order to work with
+        $errors = [];
 
         // update court order status
         $key = DeputyshipCandidateAction::UpdateOrderStatus->value;
@@ -122,7 +118,7 @@ class DeputyshipCandidateConverter
             $deputy = $this->deputyRepository->find($insertOrderDeputy->deputyId);
 
             if (is_null($deputy)) {
-                $this->logger->error("$key candidate referred to non-existent deputy with ID $insertOrderDeputy->deputyId");
+                $errors[] = "$key candidate referred to non-existent deputy with ID $insertOrderDeputy->deputyId";
             } else {
                 // associate the deputy with the court order
                 $deputy->associateWithCourtOrder($courtOrder, true === $insertOrderDeputy->deputyStatusOnOrder);
@@ -151,10 +147,8 @@ class DeputyshipCandidateConverter
             }
 
             if (!$found) {
-                $this->logger->error(
-                    "$key candidate could not be applied - court order (UID = $updateOrderDeputyStatus->orderUid) ".
-                    "to deputy (UID = $updateOrderDeputyStatus->deputyUid) relationship does not exist"
-                );
+                $errors[] = "$key candidate could not be applied - court order (UID = $updateOrderDeputyStatus->orderUid) ".
+                    "to deputy (UID = $updateOrderDeputyStatus->deputyUid) relationship does not exist";
             }
         }
 
@@ -166,9 +160,7 @@ class DeputyshipCandidateConverter
             $report = $this->reportRepository->find($insertOrderReport->reportId);
 
             if (is_null($report)) {
-                $this->logger->error(
-                    "$key candidate referred to non-existent report with ID $insertOrderReport->reportId"
-                );
+                $errors[] = "$key candidate referred to non-existent report with ID $insertOrderReport->reportId";
             } else {
                 // add it to the court order
                 $courtOrder->addReport($report);
@@ -183,9 +175,7 @@ class DeputyshipCandidateConverter
             $ndr = $this->reportRepository->find($insertOrderNdr->ndrId);
 
             if (is_null($ndr)) {
-                $this->logger->error(
-                    "$key candidate referred to non-existent NDR with ID $insertOrderNdr->ndrId"
-                );
+                $errors[] = "$key candidate referred to non-existent NDR with ID $insertOrderNdr->ndrId";
             } else {
                 // associate it with the court order
                 $courtOrder->setNdr($ndr);
@@ -195,6 +185,6 @@ class DeputyshipCandidateConverter
         // ensure that the court order is saved first
         $entities = array_merge([$courtOrder], $entities);
 
-        return $entities;
+        return new DeputyshipBuilderResult($errors, $entities);
     }
 }
