@@ -107,4 +107,10 @@ class StagingSelectedCandidate
      * @ORM\Column(name="ndr_id", type="integer",nullable=true)
      */
     public ?int $ndrId = null;
+
+    public function __construct(DeputyshipCandidateAction $action, string $orderUid)
+    {
+        $this->action = $action;
+        $this->orderUid = $orderUid;
+    }
 }

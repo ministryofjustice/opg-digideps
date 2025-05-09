@@ -11,6 +11,7 @@ use App\Repository\StagingSelectedCandidateRepository;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -103,11 +104,11 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             ->expects($this->once())
             ->method('cacheLookupTables');
 
-        $mockCandidate1 = new StagingSelectedCandidate();
-        $mockCandidate2 = new StagingSelectedCandidate();
-        $mockCandidate3 = new StagingSelectedCandidate();
-        $mockCandidate4 = new StagingSelectedCandidate();
-        $mockCandidate5 = new StagingSelectedCandidate();
+        $mockCandidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate2 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate3 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate4 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate5 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->exactly(2))

@@ -50,7 +50,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $stagingDeputyship->caseNumber = '1234567T';
 
         $existingClientId = 1;
-        $expectedCandidate = new StagingSelectedCandidate();
+        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -90,8 +90,8 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $existingClientId = 1;
         $existingDeputyId = 2;
-        $expectedCourtOrderCandidate = new StagingSelectedCandidate();
-        $expectedCourtOrderDeputyCandidate = new StagingSelectedCandidate();
+        $expectedCourtOrderCandidate = $this->createMock(StagingSelectedCandidate::class);
+        $expectedCourtOrderDeputyCandidate = $this->createMock(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -138,7 +138,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $existingCourtOrderId = 1;
         $currentOrderStatus = 'OPEN';
-        $expectedCandidate = new StagingSelectedCandidate();
+        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -206,7 +206,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $existingCourtOrderId = 1;
         $existingDeputyId = 2;
-        $expectedCandidate = new StagingSelectedCandidate();
+        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -249,7 +249,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $existingCourtOrderId = 1;
         $existingDeputyId = 2;
 
-        $expectedCandidate = new StagingSelectedCandidate();
+        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
 
         $existingRelationship = new CourtOrderDeputy();
         $existingRelationship->setIsActive(false);

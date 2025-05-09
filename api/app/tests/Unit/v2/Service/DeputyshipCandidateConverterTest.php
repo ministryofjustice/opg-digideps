@@ -38,12 +38,8 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesMultipleOrderUidsFail(): void
     {
-        $candidate1 = new StagingSelectedCandidate();
-        $candidate1->orderUid = '1';
-
-        $candidate2 = new StagingSelectedCandidate();
-        $candidate2->orderUid = '2';
-
+        $candidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '1');
+        $candidate2 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '2');
         $candidates = [$candidate1, $candidate2];
 
         $result = $this->sut->createEntitiesFromCandidates($candidates);
@@ -56,10 +52,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesMissingValuesFail(): void
     {
-        $candidate1 = new StagingSelectedCandidate();
-        $candidate1->action = DeputyshipCandidateAction::InsertOrder;
-        $candidate1->orderUid = '1';
-
+        $candidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '1');
         $candidates = [$candidate1];
 
         $result = $this->sut->createEntitiesFromCandidates($candidates);
@@ -72,10 +65,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesNoOrderInsertOrOrderFoundFail(): void
     {
-        $candidate1 = new StagingSelectedCandidate();
-        $candidate1->action = DeputyshipCandidateAction::UpdateOrderStatus;
-        $candidate1->orderUid = '1';
-
+        $candidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
         $candidates = [$candidate1];
 
         $this->mockCourtOrderRepository->expects($this->once())
@@ -94,9 +84,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesInsertOrderSuccess(): void
     {
-        $candidate = new StagingSelectedCandidate();
-        $candidate->action = DeputyshipCandidateAction::InsertOrder;
-        $candidate->orderUid = '1';
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '1');
         $candidate->orderType = 'pfa';
         $candidate->status = 'ACTIVE';
         $candidate->orderMadeDate = '2018-01-21';
@@ -115,16 +103,12 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesUpdateOrderStatusSuccess(): void
     {
-        $candidate1 = new StagingSelectedCandidate();
-        $candidate1->action = DeputyshipCandidateAction::InsertOrder;
-        $candidate1->orderUid = '1';
+        $candidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '1');
         $candidate1->orderType = 'pfa';
         $candidate1->status = 'ACTIVE';
         $candidate1->orderMadeDate = '2018-01-21';
 
-        $candidate2 = new StagingSelectedCandidate();
-        $candidate2->action = DeputyshipCandidateAction::UpdateOrderStatus;
-        $candidate2->orderUid = '1';
+        $candidate2 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
         $candidate2->status = 'CLOSED';
 
         $result = $this->sut->createEntitiesFromCandidates([$candidate1, $candidate2]);
@@ -142,9 +126,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesInsertOrderDeputySuccess(): void
     {
-        $candidate = new StagingSelectedCandidate();
-        $candidate->action = DeputyshipCandidateAction::InsertOrderDeputy;
-        $candidate->orderUid = '1';
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderDeputy, '1');
         $candidate->deputyId = 2;
         $candidate->deputyStatusOnOrder = true;
 
@@ -175,9 +157,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesInsertOrderDeputyFail(): void
     {
-        $candidate = new StagingSelectedCandidate();
-        $candidate->action = DeputyshipCandidateAction::InsertOrderDeputy;
-        $candidate->orderUid = '1';
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderDeputy, '1');
         $candidate->deputyId = 2;
         $candidate->deputyStatusOnOrder = true;
 
@@ -208,9 +188,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
     public function testCreateEntitiesFromCandidatesUpdateOrderDeputyStatusFail(): void
     {
-        $candidate = new StagingSelectedCandidate();
-        $candidate->action = DeputyshipCandidateAction::UpdateDeputyStatus;
-        $candidate->orderUid = '1';
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateDeputyStatus, '1');
         $candidate->deputyUid = '2';
         $candidate->deputyStatusOnOrder = false;
 
@@ -247,9 +225,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         // this is what we're changing the status to
         $newStatus = false;
 
-        $candidate = new StagingSelectedCandidate();
-        $candidate->action = DeputyshipCandidateAction::UpdateDeputyStatus;
-        $candidate->orderUid = '1';
+        $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateDeputyStatus, '1');
         $candidate->deputyUid = '2';
         $candidate->deputyStatusOnOrder = $newStatus;
 

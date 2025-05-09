@@ -100,7 +100,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $builderResult = new DeputyshipBuilderResult([]);
         $persisterResult = new DeputyshipPersisterResult();
 
-        $candidates = [new StagingSelectedCandidate()];
+        $candidates = [$this->createMock(StagingSelectedCandidate::class)];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult($candidates, 1);
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
