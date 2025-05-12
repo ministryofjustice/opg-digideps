@@ -7,13 +7,14 @@ namespace App\Tests\Unit\Factory;
 use App\Entity\Client;
 use App\Entity\StagingDeputyship;
 use App\Factory\StagingSelectedCandidateFactory;
+use App\Service\ReportUtils;
 use PHPUnit\Framework\TestCase;
 
 class StagingSelectedCandidateFactoryTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->factory = new StagingSelectedCandidateFactory();
+        $this->factory = new StagingSelectedCandidateFactory(new ReportUtils());
 
         $this->csvDeputyShipRow = new StagingDeputyship();
         $this->csvDeputyShipRow->orderUid = '700000001102';

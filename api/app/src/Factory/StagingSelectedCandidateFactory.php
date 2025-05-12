@@ -70,4 +70,26 @@ class StagingSelectedCandidateFactory
 
         return $changes;
     }
+
+    public function createInsertOrderReportCandidate(string $orderUid, int $reportId): StagingSelectedCandidate
+    {
+        $changes = new StagingSelectedCandidate();
+        $changes->action = StagingSelectedCandidate::INSERT_ORDER_REPORT;
+
+        $changes->orderUid = $orderUid;
+        $changes->reportId = $reportId;
+
+        return $changes;
+    }
+
+    public function createInsertOrderNdrCandidate(string $orderUid, int $ndrId): StagingSelectedCandidate
+    {
+        $changes = new StagingSelectedCandidate();
+        $changes->action = StagingSelectedCandidate::INSERT_ORDER_NDR;
+
+        $changes->orderUid = $orderUid;
+        $changes->ndrId = $ndrId;
+
+        return $changes;
+    }
 }

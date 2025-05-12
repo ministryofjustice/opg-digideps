@@ -91,61 +91,6 @@ parameters:
 			path: src/Controller/AuthController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:add\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:delete\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientContactController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 2
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\ClientContact\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/ClientContactController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/ClientContactController.php
-
-		-
 			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
@@ -7851,11 +7796,6 @@ parameters:
 			path: src/Repository/ClientBenefitsCheckRepository.php
 
 		-
-			message: "#^Class App\\\\Repository\\\\ClientContactRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/ClientContactRepository.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
 			count: 2
 			path: src/Repository/ClientRepository.php
@@ -9666,12 +9606,17 @@ parameters:
 			path: src/Service/Validator/RestArrayValidator.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getId\\(\\)\\.$#"
+			message: "#^Call to method getId\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getReports\\(\\)\\.$#"
+			message: "#^Call to method getReports\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
+			count: 1
+			path: src/TestHelpers/ClientTestHelper.php
+
+		-
+			message: "#^Call to method reveal\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
@@ -9687,6 +9632,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/TestHelpers/ClientTestHelper.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$client contains unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
@@ -9991,32 +9941,22 @@ parameters:
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getClients\\(\\)\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getClients\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getId\\(\\)\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:getRoleName\\(\\)\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getRoleName\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\:\\:hasReports\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\UserTestHelper\\:\\:createAndPersistUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\UserTestHelper\\:\\:createUser\\(\\) has no return type specified\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:hasReports\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/UserTestHelper.php
 

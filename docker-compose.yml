@@ -230,6 +230,12 @@ services:
       - Complete the deputy report
       - --provider
       - OPG Data
+    healthcheck:
+      test: "wget -O /dev/null --header='Content-Type: application/json' --header='X-Pact-Mock-Service: true' -S 'http://0.0.0.0:80/' 2>&1 | grep 'HTTP/1.1 200 OK' || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   mock-sirius-integration:
     image: muonsoft/openapi-mock:0.3.9
@@ -274,6 +280,30 @@ services:
       DATABASE_PORT: 5432
     entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.sql_query.lambda_handler
 
+  client-unit-tests:
+    container_name: client-unit-tests-app
+    image: frontend-unit-tests:latest
+    build:
+      dockerfile: client/docker/app/Dockerfile
+      context: .
+      args:
+        ENVIRONMENT: local
+    depends_on:
+      pact-mock:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-0}
+      AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
+      AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
+      AWS_SESSION_TOKEN: fakeValue
+    env_file:
+      - ./client/app/frontend.env
+    volumes:
+      - ./client/app/tests/phpunit/coverage:/var/www/tests/phpunit/coverage
+      - ./build/coverage-client:/var/www/build/coverage-client
+    command: sleep infinity
+
   api-unit-tests:
     container_name: api-unit-tests
     image: api-unit-tests:latest
@@ -297,3 +327,30 @@ services:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
     command: sleep infinity
+
+  api-integration-tests:
+    container_name: api-integration-tests
+    image: api-integration-tests:latest
+    build:
+      context: .
+      dockerfile: api/docker/app/Dockerfile
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        ENVIRONMENT: local
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
+      AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
+      AWS_SESSION_TOKEN: fakeValue
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./api/app/api.env
+      - ./api/app/tests/Behat/test.env
+    volumes:
+      - ./api/app/tests/coverage:/var/www/tests/coverage
+      - ./build/coverage-api:/var/www/build/coverage-api

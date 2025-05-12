@@ -61,6 +61,8 @@ class ReportUtils
     {
         if ('PA' == $role) {
             $realm = PreRegistration::REALM_PA;
+        } elseif ('LAY' == $role) {
+            $realm = PreRegistration::REALM_LAY;
         } else {
             $realm = PreRegistration::REALM_PROF;
         }
