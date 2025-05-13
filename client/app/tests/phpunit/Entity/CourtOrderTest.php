@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Report\Report;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 
 class CourtOrderTest extends TestCase
@@ -22,7 +21,7 @@ class CourtOrderTest extends TestCase
         return [
             'No reports' => [],
             'Submitted report' => [(new Report())->setSubmitted(true)],
-            'Unsubmitted report' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new DateTime())],
+            'Unsubmitted report' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
         ];
     }
 
@@ -57,7 +56,7 @@ class CourtOrderTest extends TestCase
         $this->courtOrder->setReports([
             $inactiveReport,
             $activeReport1,
-            $activeReport2
+            $activeReport2,
         ]);
 
         $result = $this->courtOrder->getActiveReport();
@@ -70,7 +69,7 @@ class CourtOrderTest extends TestCase
         return [
             'No reports' => [],
             'Submitted report' => [(new Report())->setSubmitted(true)],
-            'Report submitted and unsubmitted date set' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new DateTime())],
+            'Report submitted and unsubmitted date set' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
         ];
     }
 
@@ -88,7 +87,7 @@ class CourtOrderTest extends TestCase
 
     public function testGetUnsubmittedReportOneUnsubmittedReport(): void
     {
-        $report = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+        $report = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
         $this->courtOrder->setReports([$report]);
 
         $result = $this->courtOrder->getUnsubmittedReport();
@@ -99,13 +98,13 @@ class CourtOrderTest extends TestCase
     public function testGetFirstUnsubmittedReport(): void
     {
         $activeReport = new Report();
-        $unsubmittedReport1 = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
-        $unsubmittedReport2 = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+        $unsubmittedReport1 = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
+        $unsubmittedReport2 = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
 
         $this->courtOrder->setReports([
             $activeReport,
             $unsubmittedReport1,
-            $unsubmittedReport2
+            $unsubmittedReport2,
         ]);
 
         $result = $this->courtOrder->getUnsubmittedReport();
@@ -124,7 +123,7 @@ class CourtOrderTest extends TestCase
     {
         $activeReport = new Report();
         $submittedReport1 = (new Report())->setSubmitted(true);
-        $unsubmittedReport = (new Report())->setSubmitted(false)->setUnSubmitDate(new DateTime());
+        $unsubmittedReport = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
         $submittedReport2 = (new Report())->setSubmitted(true);
 
         $this->courtOrder->setReports([
@@ -150,12 +149,13 @@ class CourtOrderTest extends TestCase
         return [
             'No deputies' => [[], false],
             'Only one deputy' => [[new Deputy()], false],
-            'Multiple deputies' => [[new Deputy(), new Deputy()], true]
+            'Multiple deputies' => [[new Deputy(), new Deputy()], true],
         ];
     }
 
     /**
      * @dataProvider hasCoDeputiesProvider
+     *
      * @param Deputy[] $activeDeputies
      */
     public function testHasCoDeputiesNoDeputies(array $activeDeputies, bool $expectedResult): void
@@ -187,9 +187,27 @@ class CourtOrderTest extends TestCase
         $this->assertEquals(
             [
                 $coDeputy2,
-                $coDeputy1
+                $coDeputy1,
             ],
             $this->courtOrder->getCoDeputies('1234')
         );
+    }
+
+    public function testGetHybridCourtOrderType()
+    {
+        $hybridReport = (new Report())->setType('103-4');
+
+        // both hybrid court orders are assigned a hw order type
+        $pfaCourtOrder = (new CourtOrder())->setOrderType('hw');
+        $hwCourtOrder = (new CourtOrder())->setOrderType('hw');
+
+        $pfaCourtOrder->setReports([$hybridReport]);
+        $hwCourtOrder->setReports([$hybridReport]);
+
+        $courtOrderTypePfa = $pfaCourtOrder->determineCourtOrderType();
+        $courtOrderTypeHw = $hwCourtOrder->determineCourtOrderType();
+
+        $this->assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypeHw);
+        $this->assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypePfa);
     }
 }

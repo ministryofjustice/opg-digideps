@@ -200,14 +200,13 @@ class CourtOrder
 
     public function determineCourtOrderType(): string
     {
-        $courtOrderType = '';
-
-        if (!is_null($this->getActiveReport())) {
+        if (!is_null($this->getActiveReport()) && !str_ends_with($this->getActiveReport()->getType(), '-4')) {
             $courtOrderType = match ($this->getOrderType()) {
-                'HW' => self::HEALTH_AND_WELFARE_REPORT,
-                'PF' => self::PROPERTY_AND_AFFAIRS_REPORT,
-                default => self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT,
+                'hw' => self::HEALTH_AND_WELFARE_REPORT,
+                'pf' => self::PROPERTY_AND_AFFAIRS_REPORT,
             };
+        } else {
+            $courtOrderType = self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
         }
 
         return $courtOrderType;
