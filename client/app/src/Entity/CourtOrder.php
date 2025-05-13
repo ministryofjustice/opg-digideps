@@ -203,7 +203,7 @@ class CourtOrder
         $courtOrderType = '';
 
         if (!is_null($this->getActiveReport())) {
-            $courtOrderType = match ($this->getActiveReport()->determineReportType()) {
+            $courtOrderType = match ($this->getOrderType()) {
                 'HW' => self::HEALTH_AND_WELFARE_REPORT,
                 'PF' => self::PROPERTY_AND_AFFAIRS_REPORT,
                 default => self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT,
