@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Entity\StagingDeputyship;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,15 +19,10 @@ class StagingDeputyshipRepository extends ServiceEntityRepository
         parent::__construct($registry, StagingDeputyship::class);
     }
 
-    public function findAllPaged(int $pageSize = 1000): \Generator
+    public function findAllPaged(int $pageSize = 1000): \Traversable
     {
         $query = $this->getEntityManager()->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd");
 
-        return $this->pagedQuery($query, $pageSize);
-    }
-
-    public function pagedQuery(Query $query, int $pageSize): \Generator
-    {
         // there will be at least one page, but we'll set this accurately when we've retrieved the first page
         $numPages = 1;
 

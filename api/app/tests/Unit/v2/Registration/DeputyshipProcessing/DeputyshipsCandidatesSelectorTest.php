@@ -97,10 +97,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockStagingDeputyshipRepository
             ->expects($this->once())
             ->method('findAllPaged')
-            ->will($this->returnCallback(function () use ($mockStagingDeputyship1, $mockStagingDeputyship2) {
-                yield $mockStagingDeputyship1;
-                yield $mockStagingDeputyship2;
-            }));
+            ->willReturn(new \ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->once())
