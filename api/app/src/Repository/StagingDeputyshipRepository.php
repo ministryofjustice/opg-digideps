@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\StagingDeputyship;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,25 +20,29 @@ class StagingDeputyshipRepository extends ServiceEntityRepository
         parent::__construct($registry, StagingDeputyship::class);
     }
 
-    public function findAllPaged(int $pageSize = 1000): iterable
+    public function findAllPaged(int $pageSize = 1000): \Generator
     {
         $query = $this->getEntityManager()->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd");
-        $pagedQuery = $query->setFirstResult(0)->setMaxResults($pageSize);
 
-        // yield the deputyships from the first page
-        $page = new Paginator($pagedQuery, fetchJoinCollection: false);
-        foreach ($page as $deputyship) {
-            yield $deputyship;
-        }
+        return $this->pagedQuery($query, $pageSize);
+    }
 
-        // yield each of the other deputyships (if there is more than 1 page)
-        $numResults = count($page);
-        $numPages = ceil($numResults / $pageSize);
+    public function pagedQuery(Query $query, int $pageSize): \Generator
+    {
+        // there will be at least one page, but we'll set this accurately when we've retrieved the first page
+        $numPages = 1;
 
-        $currentPage = 2;
+        $currentPage = 1;
         while ($numPages >= $currentPage) {
             $pagedQuery = $query->setFirstResult(($currentPage - 1) * $pageSize)->setMaxResults($pageSize);
             $page = new Paginator($pagedQuery, fetchJoinCollection: false);
+
+            // get the total number of results and reset the number of pages after retrieving the first page of results
+            if (1 === $currentPage) {
+                $numResults = count($page);
+                $numPages = ceil($numResults / $pageSize);
+            }
+
             foreach ($page as $deputyship) {
                 yield $deputyship;
             }
