@@ -43,7 +43,7 @@ class ReportService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportRepository $reportRepository
+        private readonly ReportRepository $reportRepository,
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
         $this->assetRepository = $em->getRepository(Asset::class);
@@ -340,9 +340,6 @@ class ReportService
         return null;
     }
 
-    /**
-     * @param mixed $sectionList
-     */
     public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
@@ -444,7 +441,7 @@ class ReportService
     /**
      * @return bool
      */
-    public static function isDue(\DateTime $endDate = null)
+    public static function isDue(?\DateTime $endDate = null)
     {
         if (!$endDate) {
             return false;
@@ -452,6 +449,6 @@ class ReportService
 
         $endOfToday = new \DateTime('today midnight');
 
-        return $endDate <= $endOfToday;
+        return $endDate < $endOfToday;
     }
 }
