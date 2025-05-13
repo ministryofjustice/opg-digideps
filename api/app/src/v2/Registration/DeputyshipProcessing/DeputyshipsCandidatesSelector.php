@@ -34,6 +34,9 @@ class DeputyshipsCandidatesSelector
         }
 
         $this->em->flush();
+        $this->em->clear();
+
+        unset($candidates);
     }
 
     public function select(): DeputyshipCandidatesSelectorResult
@@ -44,19 +47,28 @@ class DeputyshipsCandidatesSelector
         $this->em->flush();
         $this->em->commit();
 
-        // read the content of the incoming deputyships CSV from the db table
-        $csvDeputyships = $this->stagingDeputyshipRepository->findAll();
-
         $this->courtOrderAndDeputyCandidatesFactory->cacheLookupTables();
 
         $numCandidates = 0;
+        $numDeputyships = 0;
+
+        // read the content of the incoming deputyships CSV from the db table
+        $csvDeputyships = $this->stagingDeputyshipRepository->findAllPaged();
 
         /** @var StagingDeputyship $csvDeputyship */
         foreach ($csvDeputyships as $csvDeputyship) {
+            ++$numDeputyships;
+
             $candidates = $this->courtOrderAndDeputyCandidatesFactory->create($csvDeputyship);
             $numCandidates += count($candidates);
             $this->saveCandidates($candidates);
+
+            if (0 === $numDeputyships % 10000) {
+                error_log("Deputyship ingest progress: deputyships = $numDeputyships; candidates = $numCandidates");
+            }
         }
+
+        error_log("Deputyship ingest progress: deputyships = $numDeputyships; candidates  = $numCandidates");
 
         try {
             $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates();

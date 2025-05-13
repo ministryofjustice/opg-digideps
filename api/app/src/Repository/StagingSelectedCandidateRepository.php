@@ -23,9 +23,7 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
      */
     public function getDistinctCandidates(): iterable
     {
-        /** @var StagingSelectedCandidate[] $result */
-        $result = $this->createQueryBuilder('sc')->select()->distinct()->getQuery()->getResult();
-
-        return $result;
+        /* @var StagingSelectedCandidate[] $result */
+        return $this->createQueryBuilder('sc')->select()->distinct()->getQuery()->getResult();
     }
 }
