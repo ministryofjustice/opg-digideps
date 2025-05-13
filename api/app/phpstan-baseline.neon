@@ -9126,11 +9126,6 @@ parameters:
 			path: src/Service/ReportService.php
 
 		-
-			message: "#^Parameter \\#1 \\$unsubmittedSectionsList of method App\\\\Entity\\\\Report\\\\Report\\:\\:setUnsubmittedSectionsList\\(\\) expects array\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Service/ReportService.php

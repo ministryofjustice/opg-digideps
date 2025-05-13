@@ -17,6 +17,7 @@ trait ReportUnsubmittedSections
      * @var string
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"report_unsubmitted_sections_list"})
      */
     private $unsubmittedSectionsList;
@@ -55,11 +56,9 @@ trait ReportUnsubmittedSections
     }
 
     /**
-     * @param string $unsubmittedSectionsList
-     *
      * @return Report
      */
-    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    public function setUnsubmittedSectionsList(string $unsubmittedSectionsList)
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
 
@@ -88,8 +87,6 @@ trait ReportUnsubmittedSections
     }
 
     /**
-     * @param $sectionId
-     *
      * @return bool
      */
     public function isSectionFlaggedForAttention($sectionId)
