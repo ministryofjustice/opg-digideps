@@ -1274,7 +1274,7 @@ class Report implements ReportInterface
         return $this->unsubmittedSectionsList;
     }
 
-    public function setUnsubmittedSectionsList(?array $unsubmittedSectionsList)
+    public function setUnsubmittedSectionsList(string $unsubmittedSectionsList)
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
     }
