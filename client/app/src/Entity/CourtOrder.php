@@ -198,7 +198,7 @@ class CourtOrder
         return array_values($deputies);
     }
 
-    public function determineCourtOrderType(): string
+    public function getActiveReportType(): string
     {
         if (!is_null($this->getActiveReport()) && !str_ends_with($this->getActiveReport()->getType(), '-4')) {
             return match ($this->getOrderType()) {

@@ -204,8 +204,8 @@ class CourtOrderTest extends TestCase
         $pfaCourtOrder->setReports([$hybridReport]);
         $hwCourtOrder->setReports([$hybridReport]);
 
-        $courtOrderTypePfa = $pfaCourtOrder->determineCourtOrderType();
-        $courtOrderTypeHw = $hwCourtOrder->determineCourtOrderType();
+        $courtOrderTypePfa = $pfaCourtOrder->getActiveReportType();
+        $courtOrderTypeHw = $hwCourtOrder->getActiveReportType();
 
         $this->assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypeHw);
         $this->assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypePfa);

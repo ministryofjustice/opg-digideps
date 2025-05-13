@@ -35,7 +35,7 @@ class CourtOrderController extends AbstractController
         return [
             'coDeputies' => $courtOrder->getCoDeputies(strval($user->getDeputyUid())),
             'courtOrder' => $courtOrder,
-            'reportType' => $courtOrder->determineCourtOrderType(),
+            'reportType' => $courtOrder->getActiveReportType(),
             'clientFullName' => $client->getFullName(),
         ];
     }
