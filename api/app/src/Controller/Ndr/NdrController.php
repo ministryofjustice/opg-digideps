@@ -59,7 +59,7 @@ class NdrController extends RestController
         }
 
         /** @var Document $reportPdf */
-        $reportPdf = $this->em->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $reportPdf = $this->em->getRepository(Document::class)->find($documentId);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
         $reportPdf->setSynchronisedBy($this->getUser());
 
@@ -227,5 +227,13 @@ class NdrController extends RestController
         $this->em->flush();
 
         return ['id' => $ndr->getId()];
+    }
+
+    #[Route(path: '/ndr/client/{clientId}', methods: ['GET'])]
+    public function doesNdrExistOnClient($clientId): bool
+    {
+        $result = $this->em->getRepository(EntityDir\Ndr\Ndr::class)->findNdrByClientId($clientId);
+
+        return !(null == $result);
     }
 }

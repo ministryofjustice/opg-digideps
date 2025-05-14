@@ -162,16 +162,16 @@ class ReportController extends AbstractController
      */
     public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
-        $ndrEnabled = false;
+        $ndrEnabledOnDeputy = false;
         $users = $this->clientApi->getWithUsersV2($clientId)->getUsers();
 
         foreach ($users as $user) {
             if ($user->isNdrEnabled()) {
-                $ndrEnabled = true;
+                $ndrEnabledOnDeputy = true;
             }
         }
 
-        if ($ndrEnabled) {
+        if ($ndrEnabledOnDeputy) {
             $user = $this->userApi->getUserWithData();
         } else {
             // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
@@ -208,7 +208,10 @@ class ReportController extends AbstractController
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
         ];
 
-        if ($ndrEnabled) {
+        /** @var $ndrExistsOnClient bool */
+        $ndrExistsOnClient = $this->restClient->get('/ndr/client/'.$clientId, 'array');
+
+        if ($ndrEnabledOnDeputy && $ndrExistsOnClient) {
             $client = $this->clientApi->getById($clientId);
 
             $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
