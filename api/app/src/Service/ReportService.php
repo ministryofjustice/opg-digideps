@@ -348,7 +348,7 @@ class ReportService
         );
     }
 
-    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, string $sectionList)
+    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, ?string $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);
