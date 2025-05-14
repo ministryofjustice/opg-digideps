@@ -16,9 +16,6 @@ class DeputyshipBuilderResult
     public function __construct(
         private readonly DeputyshipBuilderResultOutcome $outcome,
 
-        // UID of the court order the built entities relate to
-        private readonly ?string $uid = null,
-
         /** @var string[] $errors */
         private readonly array $errors = [],
 
@@ -30,11 +27,6 @@ class DeputyshipBuilderResult
     public function hasErrors(): bool
     {
         return count($this->errors) > 0;
-    }
-
-    public function getCourtOrderUid(): ?string
-    {
-        return $this->uid;
     }
 
     public function getOutcome(): DeputyshipBuilderResultOutcome

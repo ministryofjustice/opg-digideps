@@ -45,6 +45,7 @@ class DeputyshipBuilder
 
                 // reset and start new group
                 $candidatesGroup = [];
+                $currentOrderUid = null;
             }
         }
 

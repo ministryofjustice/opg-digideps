@@ -83,7 +83,6 @@ class DeputyshipCandidateConverter
                 // we couldn't create the court order, so no point continuing
                 return new DeputyshipBuilderResult(
                     outcome: DeputyshipBuilderResultOutcome::InsufficientCourtOrderData,
-                    uid: $courtOrderUid,
                     errors: ["$key candidate with ID $insertCourtOrder->id missing required data - court order could not be created"]
                 );
             }
@@ -105,7 +104,6 @@ class DeputyshipCandidateConverter
         if (is_null($courtOrder)) {
             return new DeputyshipBuilderResult(
                 outcome: DeputyshipBuilderResultOutcome::CourtOrderNotAvailable,
-                uid: $courtOrderUid,
                 errors: ["$key candidate referred to non-existent court order with UID $courtOrderUid"]
             );
         }
@@ -204,7 +202,6 @@ class DeputyshipCandidateConverter
 
         return new DeputyshipBuilderResult(
             outcome: DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully,
-            uid: $courtOrderUid,
             errors: $errors,
             entities: $entities
         );
