@@ -13,7 +13,7 @@ class DeputyshipsIngestResultRecorder
 
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
-    private int $numEntitiesBuilt = 0;
+    private int $numEntitiesAdded = 0;
     private int $numEntityBuildErrors = 0;
 
     /** @var string[] */
@@ -74,7 +74,7 @@ class DeputyshipsIngestResultRecorder
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
         $message = implode('; ', $this->messages);
-        $message .= "; builder created $this->numEntitiesBuilt entities";
+        $message .= "; builder created $this->numEntitiesAdded entities";
 
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
@@ -91,7 +91,7 @@ class DeputyshipsIngestResultRecorder
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
         if (DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully === $builderResult->getOutcome()) {
-            $this->numEntitiesBuilt += count($builderResult->getEntities());
+            $this->numEntitiesAdded += count($builderResult->getEntities());
         } else {
             $this->numEntityBuildErrors += count($builderResult->getErrors());
         }

@@ -32,7 +32,6 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
             ->select()
             ->distinct()
             ->orderBy('sc.orderUid', 'ASC')
-            ->setMaxResults(100)
             ->getQuery()
             ->getResult();
 
