@@ -39,7 +39,10 @@ class DeputyshipCandidateConverter
 
         if (count($uniqueUids) > 1) {
             return new DeputyshipBuilderResult(
-                ['cannot create entities: invalid candidate group - more than one order UID is referenced']
+                errors: [
+                    'cannot create entities: invalid candidate group - more than one order UID is referenced ('.
+                    implode(', ', $uniqueUids).')',
+                ]
             );
         }
 
@@ -77,7 +80,8 @@ class DeputyshipCandidateConverter
             if ($missingValue) {
                 // we couldn't create the court order, so no point continuing
                 return new DeputyshipBuilderResult(
-                    ["$key candidate with ID $insertCourtOrder->id missing required data - court order could not be created"]
+                    uid: $courtOrderUid,
+                    errors: ["$key candidate with ID $insertCourtOrder->id missing required data - court order could not be created"]
                 );
             }
 
@@ -97,7 +101,8 @@ class DeputyshipCandidateConverter
         // other records with it
         if (is_null($courtOrder)) {
             return new DeputyshipBuilderResult(
-                ["$key candidate referred to non-existent court order with UID $courtOrderUid"]
+                uid: $courtOrderUid,
+                errors: ["$key candidate referred to non-existent court order with UID $courtOrderUid"]
             );
         }
 
@@ -193,6 +198,6 @@ class DeputyshipCandidateConverter
         // ensure that the court order is the first entity saved
         $entities = array_merge([$courtOrder], $entities);
 
-        return new DeputyshipBuilderResult($errors, $entities);
+        return new DeputyshipBuilderResult(uid: $courtOrderUid, errors: $errors, entities: $entities);
     }
 }

@@ -97,7 +97,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
     public function testProcessCsvRows(): void
     {
-        $builderResult = new DeputyshipBuilderResult([]);
+        $builderResult = new DeputyshipBuilderResult();
         $persisterResult = new DeputyshipPersisterResult();
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
