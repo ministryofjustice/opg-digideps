@@ -60,7 +60,7 @@
         "symfony/routing": "^6.0",
         "symfony/security-bundle": "6.2.13",
         "symfony/security-core": "^6.0",
-        "symfony/security-http": "6.2.13",
+        "symfony/security-http": "^6.4",
         "symfony/serializer": "^6.0",
         "symfony/validator": "^6.0",
         "symfony/yaml": "^6.0"
