@@ -141,6 +141,18 @@ class Deputy implements DeputyInterface
         return $this;
     }
 
+    public function getDeputyUid(): string
+    {
+        return $this->deputyUid;
+    }
+
+    public function setDeputyUid(string $deputyUid): Deputy
+    {
+        $this->deputyUid = $deputyUid;
+
+        return $this;
+    }
+
     /**
      * @return string
      */
