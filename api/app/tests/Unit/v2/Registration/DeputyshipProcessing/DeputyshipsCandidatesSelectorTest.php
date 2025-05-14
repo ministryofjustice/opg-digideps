@@ -64,7 +64,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $result = $this->sut->select();
 
         $this->assertFalse($result->success());
-        $this->assertEquals([], $result->candidates);
+        $this->assertEquals([], iterator_to_array($result->candidates));
         $this->assertEquals($expectedException, $result->exception);
     }
 
@@ -142,12 +142,12 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
 
         $this->mockStagingSelectedCandidateRepository->expects($this->once())
             ->method('getDistinctOrderedCandidates')
-            ->willReturn($mockCandidates);
+            ->willReturn(new \ArrayIterator($mockCandidates));
 
         $result = $this->sut->select();
 
         $this->assertNull($result->exception);
         $this->assertTrue($result->success());
-        $this->assertEquals($mockCandidates, $result->candidates);
+        $this->assertEquals($mockCandidates, iterator_to_array($result->candidates));
     }
 }

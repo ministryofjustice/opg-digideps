@@ -30,15 +30,15 @@ class DeputyshipBuilder
     }
 
     /**
-     * @param iterable<StagingSelectedCandidate> $candidates Assumption is that these are sorted by court order UID,
-     *                                                       so we can group them by UID even though we are processing
-     *                                                       one row at a time.
+     * @param \Traversable<StagingSelectedCandidate> $candidates Assumption is that these are sorted by court order UID,
+     *                                                           so we can group them by UID even though we are processing
+     *                                                           one row at a time.
      *
      * Once we have a group, we create the entities (in the correct order) and yield them to the caller as a group.
      *
-     * @return iterable<DeputyshipBuilderResult>
+     * @return \Traversable<DeputyshipBuilderResult>
      */
-    public function build(iterable $candidates): iterable
+    public function build(\Traversable $candidates): \Traversable
     {
         $currentOrderUid = null;
         $candidatesGroup = [];

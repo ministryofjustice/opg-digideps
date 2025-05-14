@@ -88,19 +88,19 @@ class DeputyshipCandidateConverter
             $courtOrder->setOrderMadeDate(new \DateTime($insertCourtOrder->orderMadeDate ?? ''));
         }
 
-        // if not insert court order candidate, assume we need to look up the court order instead
+        // if no insert court order candidate, assume we need to look up the court order instead
         if (is_null($courtOrder)) {
             $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $courtOrderUid]);
         }
 
-        // if we still have no court order, there's no point continuing
+        // if we still have no court order, there's no point continuing, as we won't be able to associate
+        // other records with it
         if (is_null($courtOrder)) {
             return new DeputyshipBuilderResult(
                 ["$key candidate referred to non-existent court order with UID $courtOrderUid"]
             );
         }
 
-        // we now collect errors which occur below, as we at least have a court order to work with
         $errors = [];
 
         // update court order status
@@ -147,6 +147,8 @@ class DeputyshipCandidateConverter
                     // update its status
                     $courtOrderDeputyRelationship->setIsActive(true === $updateOrderDeputyStatus->deputyStatusOnOrder);
                     $entities[] = $courtOrderDeputyRelationship;
+
+                    break;
                 }
             }
 
@@ -188,7 +190,7 @@ class DeputyshipCandidateConverter
             }
         }
 
-        // ensure that the court order is saved first
+        // ensure that the court order is the first entity saved
         $entities = array_merge([$courtOrder], $entities);
 
         return new DeputyshipBuilderResult($errors, $entities);

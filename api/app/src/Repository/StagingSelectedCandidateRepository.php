@@ -23,11 +23,11 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
      * Ordering is important as the builder will group the candidates on the fly, using the order UID,
      * so that all entities for a single order UID are created together.
      *
-     * @return StagingSelectedCandidate[]
+     * @return \Traversable<StagingSelectedCandidate>
      */
-    public function getDistinctOrderedCandidates(): array
+    public function getDistinctOrderedCandidates(): \Traversable
     {
-        /** @var StagingSelectedCandidate[] $result */
+        /** @var iterable<StagingSelectedCandidate> $result */
         $result = $this->createQueryBuilder('sc')
             ->select()
             ->distinct()
@@ -36,6 +36,9 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
-        return $result;
+        /** @var StagingSelectedCandidate $row */
+        foreach ($result as $row) {
+            yield $row;
+        }
     }
 }

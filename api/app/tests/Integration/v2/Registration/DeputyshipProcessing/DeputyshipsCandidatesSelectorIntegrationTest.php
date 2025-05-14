@@ -54,7 +54,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
 
-        $selectedCandidates = $this->sut->select()->candidates;
+        $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         static::assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action->value);
         static::assertEquals('ACTIVE', $selectedCandidates[0]->status);
@@ -84,7 +84,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $this->entityManager->persist($deputy);
         $this->entityManager->flush();
 
-        $selectedCandidates = $this->sut->select()->candidates;
+        $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         static::assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action->value);
         static::assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
@@ -110,7 +110,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $this->entityManager->flush();
 
-        $selectedCandidates = $this->sut->select()->candidates;
+        $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         static::assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action->value);
         static::assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
@@ -138,7 +138,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $this->entityManager->persist($report);
         $this->entityManager->flush();
 
-        $selectedCandidates = $this->sut->select()->candidates;
+        $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         foreach ($selectedCandidates as $candidate) {
             if ('INSERT ORDER' === $candidate->action->value) {

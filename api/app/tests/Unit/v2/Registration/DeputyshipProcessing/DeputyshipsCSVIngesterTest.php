@@ -73,7 +73,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         // candidate selection fails
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(
-            [],
+            new \ArrayIterator([]),
             0,
             new Exception('unexpected database exception')
         );
@@ -101,7 +101,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $persisterResult = new DeputyshipPersisterResult();
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult($candidates, 1);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
@@ -122,8 +122,8 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects($this->once())
             ->method('build')
-            ->with($candidates)
-            ->willReturn([$builderResult]);
+            ->with(new \ArrayIterator($candidates))
+            ->willReturn(new \ArrayIterator([$builderResult]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('recordBuilderResult')

@@ -31,7 +31,7 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
     public function testRecordDeputyshipCandidatesResultExceptionFail(): void
     {
         $exception = new Exception('Database connection failed');
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], 0, $exception);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 0, $exception);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $result = $this->sut->result();
@@ -44,7 +44,7 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
     {
         $this->sut->recordCsvLoadResult('/tmp/deputyships.csv', true);
 
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], 20, null);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $expectedMessage = 'loaded deputyships CSV from /tmp/deputyships.csv; '.

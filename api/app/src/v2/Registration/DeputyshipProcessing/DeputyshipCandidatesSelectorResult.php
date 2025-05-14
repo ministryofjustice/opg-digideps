@@ -9,8 +9,8 @@ use App\Entity\StagingSelectedCandidate;
 class DeputyshipCandidatesSelectorResult
 {
     public function __construct(
-        /** @var StagingSelectedCandidate[] */
-        public readonly array $candidates,
+        /** @var \Traversable<StagingSelectedCandidate> */
+        public readonly \Traversable $candidates,
 
         public readonly int $numCandidates,
         public readonly ?\Exception $exception = null,
