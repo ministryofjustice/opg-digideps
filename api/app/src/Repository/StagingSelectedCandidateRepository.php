@@ -21,10 +21,11 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
     /**
      * @return StagingSelectedCandidate[]
      */
-    public function getDistinctCandidates(): iterable
+    public function getDistinctCandidates(): array
     {
+        // TODO this only returns up to 100 candidates at the moment, for memory reasons; should return a Generator instead
         /** @var StagingSelectedCandidate[] $result */
-        $result = $this->createQueryBuilder('sc')->select()->distinct()->getQuery()->getResult();
+        $result = $this->createQueryBuilder('sc')->select()->distinct()->setMaxResults(100)->getQuery()->getResult();
 
         return $result;
     }
