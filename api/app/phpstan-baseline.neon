@@ -331,11 +331,6 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Asset\\>\\:\\:findByNdr\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
@@ -372,16 +367,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:edit\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getAll\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getAll\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 

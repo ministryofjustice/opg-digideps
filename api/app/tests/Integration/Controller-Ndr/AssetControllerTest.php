@@ -55,47 +55,6 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-    public function testgetAssetsAuth()
-    {
-        $url = '/ndr/'.self::$ndr1->getId().'/assets';
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testgetAssetsAcl()
-    {
-        $url2 = '/ndr/'.self::$ndr2->getId().'/assets';
-
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
-
-    public function testgetAssets()
-    {
-        $url = '/ndr/'.self::$ndr1->getId().'/assets';
-
-        // assert get
-        $data = $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-
-        // order by id ASC (insert order)
-        usort($data, function ($a, $b) {
-            return $a['id'] > $b['id'] ? 1 : 0;
-        });
-
-        $this->assertCount(2, $data);
-
-        $this->assertEquals(self::$asset1->getId(), $data[0]['id']);
-        $this->assertEquals('asset1', $data[0]['title']);
-        $this->assertEquals('other', $data[0]['type']);
-
-        $this->assertEquals(self::$assetp1->getId(), $data[1]['id']);
-        $this->assertEquals('ha1', $data[1]['address']);
-        $this->assertEquals('property', $data[1]['type']);
-    }
-
     public function testgetOneByIdAuth()
     {
         $url = '/ndr/'.self::$ndr1->getId().'/asset/'.self::$asset1->getId();
