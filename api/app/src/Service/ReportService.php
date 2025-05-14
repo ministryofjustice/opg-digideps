@@ -19,7 +19,6 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -391,46 +390,6 @@ class ReportService
     }
 
     /**
-     * If one report started, return the other nonStarted reports with the same start/end date.
-     *
-     * @return Report[] indexed by ID
-     */
-    public function findDeleteableReports(Collection $reports)
-    {
-        $reportIdToStatus = [];
-        foreach ($reports as $ur) {
-            /* @var $ur Report */
-            $reportIdToStatus[$ur->getId()] = [
-                'status' => $ur->getStatus()->getStatus(),
-                'start' => $ur->getStartDate()->format('Y-m-d'),
-                'end' => $ur->getEndDate()->format('Y-m-d'),
-                'sections' => $ur->getStatus()->getSectionStatus(),
-            ];
-        }
-
-        $ret = [];
-        foreach ($reports as $report1) {
-            /* @var $report1 Report */
-            foreach ($reports as $report2) {
-                /* @var $report2 Report */
-                if ($report1->getId() === $report2->getId()) {
-                    continue;
-                }
-                // find report with same date that have not started
-                if (
-                    $report1->getStatus()->hasStarted()
-                    && $report1->hasSamePeriodAs($report2)
-                    && !$report2->getStatus()->hasStarted()
-                ) {
-                    $ret[$report2->getId()] = $report2;
-                }
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
      * In all the the cases, return original $status.
      *
@@ -458,6 +417,6 @@ class ReportService
 
         $endOfToday = new \DateTime('today midnight');
 
-        return $endDate <= $endOfToday;
+        return $endDate < $endOfToday;
     }
 }
