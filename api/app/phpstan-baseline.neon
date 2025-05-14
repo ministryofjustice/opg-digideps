@@ -6931,11 +6931,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unsubmittedSectionsList \\(array\\) does not accept array\\|null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$visitsCare \\(App\\\\Entity\\\\Report\\\\VisitsCare\\) does not accept App\\\\Entity\\\\Report\\\\VisitsCare\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
