@@ -229,7 +229,7 @@ class CourtOrder
     }
 
     /**
-     * @return Collection<Report>
+     * @return Collection<int, Report>
      */
     public function getReports(): Collection
     {
