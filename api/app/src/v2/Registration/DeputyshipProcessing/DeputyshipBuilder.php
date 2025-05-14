@@ -44,8 +44,8 @@ class DeputyshipBuilder
                 yield $this->converter->createEntitiesFromCandidates($candidatesGroup);
 
                 // reset and start new group
-                $candidatesGroup = [];
-                $currentOrderUid = null;
+                $candidatesGroup = [$candidate];
+                $currentOrderUid = $candidate->orderUid;
             }
         }
 
