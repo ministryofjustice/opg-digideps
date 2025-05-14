@@ -27,13 +27,20 @@ class DeputyshipsCandidatesSelector
     /**
      * @param StagingSelectedCandidate[] $candidates
      */
-    private function saveCandidates(array $candidates): void
+    private function saveCandidates(array $candidates, int $numDeputyships, int $numCandidates): void
     {
         foreach ($candidates as $candidate) {
             $this->em->persist($candidate);
         }
 
         $this->em->flush();
+        $this->em->clear();
+
+        unset($candidates);
+
+        if (0 === $numDeputyships % 10000) {
+            $this->logger->info("Deputyship ingest progress: deputyships = $numDeputyships; candidates = $numCandidates");
+        }
     }
 
     public function select(): DeputyshipCandidatesSelectorResult
@@ -44,33 +51,45 @@ class DeputyshipsCandidatesSelector
         $this->em->flush();
         $this->em->commit();
 
-        // read the content of the incoming deputyships CSV from the db table
-        $csvDeputyships = $this->stagingDeputyshipRepository->findAll();
-
         $this->courtOrderAndDeputyCandidatesFactory->cacheLookupTables();
 
         $numCandidates = 0;
+        $numDeputyships = 0;
+
+        // read the content of the incoming deputyships CSV from the db table
+        $csvDeputyships = $this->stagingDeputyshipRepository->findAllPaged();
 
         /** @var StagingDeputyship $csvDeputyship */
         foreach ($csvDeputyships as $csvDeputyship) {
+            ++$numDeputyships;
+
             $candidates = $this->courtOrderAndDeputyCandidatesFactory->create($csvDeputyship);
             $numCandidates += count($candidates);
-            $this->saveCandidates($candidates);
+            $this->saveCandidates($candidates, $numDeputyships, $numCandidates);
         }
 
         try {
             $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates();
-            $numCandidates += count($candidates);
-            $this->saveCandidates($candidates);
+            foreach ($candidates as $candidate) {
+                ++$numCandidates;
+                $this->saveCandidates([$candidate], $numDeputyships, $numCandidates);
+            }
 
             $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleNdrCandidates();
-            $numCandidates += count($candidates);
-            $this->saveCandidates($candidates);
+            foreach ($candidates as $candidate) {
+                ++$numCandidates;
+                $this->saveCandidates([$candidate], $numDeputyships, $numCandidates);
+            }
         } catch (Exception $e) {
             $this->logger->error("ERROR while selecting candidates from deputyships: {$e->getMessage()}");
 
             return new DeputyshipCandidatesSelectorResult([], 0, $e);
         }
+
+        $this->logger->info(
+            "Deputyship ingest progress - CANDIDATE SELECTION COMPLETE: \n".
+            "deputyships = $numDeputyships; candidates = $numCandidates"
+        );
 
         $candidatesResultset = $this->stagingSelectedCandidateRepository->getDistinctOrderedCandidates();
 

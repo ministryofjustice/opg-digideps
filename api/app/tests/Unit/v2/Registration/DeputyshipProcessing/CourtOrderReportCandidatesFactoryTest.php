@@ -35,10 +35,10 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
 
     public function testCreateCompatibleReportCandidates(): void
     {
-        $rows = [
+        $rows = new \ArrayIterator([
             ['court_order_uid' => '123', 'report_id' => '456'],
             ['court_order_uid' => '789', 'report_id' => '012'],
-        ];
+        ]);
 
         $expectedCandidates = [
             $this->createMock(StagingSelectedCandidate::class),
@@ -46,7 +46,7 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
         ];
 
         $result = $this->createMock(Result::class);
-        $result->method('fetchAllAssociative')->willReturn($rows);
+        $result->method('iterateAssociative')->willReturn($rows);
         $this->connection->method('executeQuery')->willReturn($result);
 
         $this->candidateFactory->expects($this->exactly(2))
@@ -55,15 +55,15 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
 
         $candidates = $this->sut->createCompatibleReportCandidates();
 
-        $this->assertEquals($expectedCandidates, $candidates);
+        $this->assertEquals($expectedCandidates, iterator_to_array($candidates));
     }
 
     public function testCreateCompatibleNdrCandidates(): void
     {
-        $rows = [
+        $rows = new \ArrayIterator([
             ['court_order_uid' => '123', 'ndr_id' => '456'],
             ['court_order_uid' => '789', 'ndr_id' => '012'],
-        ];
+        ]);
 
         $expectedCandidates = [
             $this->createMock(StagingSelectedCandidate::class),
@@ -71,7 +71,7 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
         ];
 
         $result = $this->createMock(Result::class);
-        $result->method('fetchAllAssociative')->willReturn($rows);
+        $result->method('iterateAssociative')->willReturn($rows);
         $this->connection->method('executeQuery')->willReturn($result);
 
         $this->candidateFactory->expects($this->exactly(2))
@@ -80,6 +80,6 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
 
         $candidates = $this->sut->createCompatibleNdrCandidates();
 
-        $this->assertEquals($expectedCandidates, $candidates);
+        $this->assertEquals($expectedCandidates, iterator_to_array($candidates));
     }
 }

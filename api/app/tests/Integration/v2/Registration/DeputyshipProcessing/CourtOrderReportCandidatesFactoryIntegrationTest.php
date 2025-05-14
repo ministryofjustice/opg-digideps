@@ -144,7 +144,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $this->em->flush();
 
         // create compatible report candidates
-        $candidates = $this->sut->createCompatibleReportCandidates();
+        $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());
 
         // assertions
         self::assertCount(1, $candidates);
@@ -183,7 +183,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $this->em->flush();
 
         // create NDR candidates
-        $candidates = $this->sut->createCompatibleNdrCandidates();
+        $candidates = iterator_to_array($this->sut->createCompatibleNdrCandidates());
 
         // assertions
         self::assertCount(1, $candidates);

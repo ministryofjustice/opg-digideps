@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
       args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug.
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
         ENVIRONMENT: local
     depends_on:
@@ -327,3 +327,30 @@ services:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
     command: sleep infinity
+
+  api-integration-tests:
+    container_name: api-integration-tests
+    image: api-integration-tests:latest
+    build:
+      context: .
+      dockerfile: api/docker/app/Dockerfile
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        ENVIRONMENT: local
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
+      AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
+      AWS_SESSION_TOKEN: fakeValue
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-0}
+    env_file:
+      - ./api/app/api.env
+      - ./api/app/tests/Behat/test.env
+    volumes:
+      - ./api/app/tests/coverage:/var/www/tests/coverage
+      - ./build/coverage-api:/var/www/build/coverage-api

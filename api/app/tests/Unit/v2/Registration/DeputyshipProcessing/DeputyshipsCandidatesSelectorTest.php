@@ -97,8 +97,8 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
 
         $this->mockStagingDeputyshipRepository
             ->expects($this->once())
-            ->method('findAll')
-            ->willReturn([$mockStagingDeputyship1, $mockStagingDeputyship2]);
+            ->method('findAllPaged')
+            ->willReturn(new \ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->once())
@@ -118,12 +118,12 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
             ->method('createCompatibleReportCandidates')
-            ->willReturn([$mockCandidate4]);
+            ->willReturn(new \ArrayIterator([$mockCandidate4]));
 
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
             ->method('createCompatibleNdrCandidates')
-            ->willReturn([$mockCandidate5]);
+            ->willReturn(new \ArrayIterator([$mockCandidate5]));
 
         $mockCandidates = [
             $mockCandidate1,
