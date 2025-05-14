@@ -15,6 +15,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
+use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -97,7 +98,7 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
     public function testProcessCsvRows(): void
     {
-        $builderResult = new DeputyshipBuilderResult();
+        $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully);
         $persisterResult = new DeputyshipPersisterResult();
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];

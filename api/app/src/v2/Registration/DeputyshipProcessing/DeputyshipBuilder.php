@@ -18,18 +18,6 @@ class DeputyshipBuilder
     }
 
     /**
-     * @param array<StagingSelectedCandidate> $candidatesGroup
-     */
-    private function createEntitiesForGroup(array $candidatesGroup): DeputyshipBuilderResult
-    {
-        if (0 === count($candidatesGroup)) {
-            return new DeputyshipBuilderResult();
-        }
-
-        return $this->converter->createEntitiesFromCandidates($candidatesGroup);
-    }
-
-    /**
      * @param \Traversable<StagingSelectedCandidate> $candidates Assumption is that these are sorted by court order UID,
      *                                                           so we can group them by UID even though we are processing
      *                                                           one row at a time.
@@ -51,9 +39,9 @@ class DeputyshipBuilder
             if ($currentOrderUid === $candidate->orderUid) {
                 // add candidate to group
                 $candidatesGroup[] = $candidate;
-            } else {
+            } elseif (count($candidatesGroup) > 0) {
                 // create entities from current group
-                yield $this->createEntitiesForGroup($candidatesGroup);
+                yield $this->converter->createEntitiesFromCandidates($candidatesGroup);
 
                 // reset and start new group
                 $candidatesGroup = [];
@@ -61,6 +49,6 @@ class DeputyshipBuilder
         }
 
         // create entities for any stragglers
-        yield $this->createEntitiesForGroup($candidatesGroup);
+        yield $this->converter->createEntitiesFromCandidates($candidatesGroup);
     }
 }

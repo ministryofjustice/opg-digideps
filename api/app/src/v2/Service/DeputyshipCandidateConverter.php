@@ -13,6 +13,7 @@ use App\Repository\DeputyRepository;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
 /**
@@ -39,6 +40,7 @@ class DeputyshipCandidateConverter
 
         if (count($uniqueUids) > 1) {
             return new DeputyshipBuilderResult(
+                outcome: DeputyshipBuilderResultOutcome::InvalidCandidateGroup,
                 errors: [
                     'cannot create entities: invalid candidate group - more than one order UID is referenced ('.
                     implode(', ', $uniqueUids).')',
@@ -80,6 +82,7 @@ class DeputyshipCandidateConverter
             if ($missingValue) {
                 // we couldn't create the court order, so no point continuing
                 return new DeputyshipBuilderResult(
+                    outcome: DeputyshipBuilderResultOutcome::InsufficientCourtOrderData,
                     uid: $courtOrderUid,
                     errors: ["$key candidate with ID $insertCourtOrder->id missing required data - court order could not be created"]
                 );
@@ -101,6 +104,7 @@ class DeputyshipCandidateConverter
         // other records with it
         if (is_null($courtOrder)) {
             return new DeputyshipBuilderResult(
+                outcome: DeputyshipBuilderResultOutcome::CourtOrderNotAvailable,
                 uid: $courtOrderUid,
                 errors: ["$key candidate referred to non-existent court order with UID $courtOrderUid"]
             );
@@ -198,6 +202,11 @@ class DeputyshipCandidateConverter
         // ensure that the court order is the first entity saved
         $entities = array_merge([$courtOrder], $entities);
 
-        return new DeputyshipBuilderResult(uid: $courtOrderUid, errors: $errors, entities: $entities);
+        return new DeputyshipBuilderResult(
+            outcome: DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully,
+            uid: $courtOrderUid,
+            errors: $errors,
+            entities: $entities
+        );
     }
 }
