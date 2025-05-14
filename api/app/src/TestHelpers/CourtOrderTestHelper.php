@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManager;
 class CourtOrderTestHelper
 {
     public static function generateCourtOrder(
-        EntityManager $em, 
+        EntityManager $em,
         Client $client,
         string $status,
         string $courtOrderUid,
@@ -30,19 +30,22 @@ class CourtOrderTestHelper
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
 
+        $em->persist($courtOrder);
+        $em->flush();
+
         if (!is_null($deputy)) {
             self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $isActive);
         }
-        
+
         return $courtOrder;
     }
-    
+
     public static function associateDeputyToCourtOrder(
-        EntityManager $em, 
-        CourtOrder $courtOrder, 
-        Deputy $deputy, 
-        bool $isActive = true
-    ): CourtOrderDeputy {   
+        EntityManager $em,
+        CourtOrder $courtOrder,
+        Deputy $deputy,
+        bool $isActive = true,
+    ): CourtOrderDeputy {
         /** @var CourtOrderDeputy $courtOrderDeputy */
         $courtOrderDeputy = (new CourtOrderDeputy())
             ->setDeputy($deputy)
@@ -51,7 +54,7 @@ class CourtOrderTestHelper
 
         $em->persist($courtOrderDeputy);
         $em->flush();
-        
+
         return $courtOrderDeputy;
     }
 }

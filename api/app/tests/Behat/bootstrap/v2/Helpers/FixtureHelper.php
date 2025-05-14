@@ -14,6 +14,7 @@ use App\Entity\Satisfaction;
 use App\Entity\User;
 use App\FixtureFactory\PreRegistrationFactory;
 use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\OrganisationTestHelper;
 use App\TestHelpers\ReportTestHelper;
@@ -21,6 +22,7 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Behat\BehatException;
 use Aws\S3\S3ClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FixtureHelper
@@ -30,6 +32,7 @@ class FixtureHelper
     private ClientTestHelper $clientTestHelper;
     private OrganisationTestHelper $organisationTestHelper;
     private DeputyTestHelper $deputyTestHelper;
+    private CourtOrderTestHelper $courtOrderTestHelper;
 
     private string $testRunId = '';
     private string $orgName = 'Test Org';
@@ -49,6 +52,7 @@ class FixtureHelper
         $this->clientTestHelper = new ClientTestHelper();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
+        $this->courtOrderTestHelper = new CourtOrderTestHelper();
     }
 
     public static function buildUserDetails(User $user)
@@ -242,6 +246,13 @@ class FixtureHelper
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
+
+        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
+
+        if (is_null($deputyObject)) {
+            $populateDeputyTable = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $this->em->persist($populateDeputyTable);
+        }
 
         $client->addReport($report);
         $report->setClient($client);
@@ -1375,5 +1386,13 @@ class FixtureHelper
     public function getLegacyPasswordHash(): string
     {
         return $this->fixtureParams['legacy_password_hash'];
+    }
+
+    public function createAndPersistCourtOrder($orderType, $client, $deputy)
+    {
+        $faker = Factory::create('en_GB');
+        $courtOrderUid = '70000000'.$faker->randomNumber(4);
+
+        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, 'ACTIVE', $courtOrderUid, $orderType, $deputy);
     }
 }
