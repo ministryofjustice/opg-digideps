@@ -93,20 +93,17 @@ class CourtOrderReportCandidatesFactory
     }
 
     /**
-     * @param string   $query       SQL query to execute on the db connection
-     * @param callable $arrayMapper Function which takes a single query result row and generates a
-     *                              StagingSelectedCandidate from it
+     * @param string $query SQL query to execute on the db connection
      *
-     * @return StagingSelectedCandidate[]
+     * @return \Traversable<int, array<string, mixed>>
      *
      * @throws Exception
      */
-    private function runQuery(string $query, callable $arrayMapper): array
+    private function runQuery(string $query): \Traversable
     {
         $conn = $this->entityManager->getConnection();
-        $result = $conn->executeQuery($query)->fetchAllAssociative();
 
-        return array_map($arrayMapper, $result);
+        return $conn->executeQuery($query)->iterateAssociative();
     }
 
     /**
@@ -121,40 +118,38 @@ class CourtOrderReportCandidatesFactory
      * OR
      * deputyship order type == 'pfa' or 'hw' and deputyship is hybrid and existing report type == '102-4' or '103-4'
      *
-     * @return StagingSelectedCandidate[] An array of candidate court_order_report inserts
+     * @return \Traversable<StagingSelectedCandidate> Iterator over candidate court_order_report inserts
      *
      * @throws Exception
      */
-    public function createCompatibleReportCandidates(): array
+    public function createCompatibleReportCandidates(): \Traversable
     {
-        return $this->runQuery(
-            self::COMPATIBLE_REPORTS_QUERY,
-            function ($row) {
-                return $this->candidateFactory->createInsertOrderReportCandidate(
-                    ''.$row['court_order_uid'],
-                    intval(''.$row['report_id'])
-                );
-            }
-        );
+        $result = $this->runQuery(self::COMPATIBLE_REPORTS_QUERY);
+
+        foreach ($result as $row) {
+            yield $this->candidateFactory->createInsertOrderReportCandidate(
+                ''.$row['court_order_uid'],
+                intval(''.$row['report_id'])
+            );
+        }
     }
 
     /**
      * Find NDRs which can be associated with a court order.
      *
-     * @return StagingSelectedCandidate[] An array of candidate court_order_ndr inserts
+     * @return \Traversable<StagingSelectedCandidate> Iterator over candidate court_order_ndr inserts
      *
      * @throws Exception
      */
-    public function createCompatibleNdrCandidates(): array
+    public function createCompatibleNdrCandidates(): \Traversable
     {
-        return $this->runQuery(
-            self::COMPATIBLE_NDRS_QUERY,
-            function ($row) {
-                return $this->candidateFactory->createInsertOrderNdrCandidate(
-                    ''.$row['court_order_uid'],
-                    intval(''.$row['ndr_id'])
-                );
-            }
-        );
+        $result = $this->runQuery(self::COMPATIBLE_NDRS_QUERY);
+
+        foreach ($result as $row) {
+            yield $this->candidateFactory->createInsertOrderNdrCandidate(
+                ''.$row['court_order_uid'],
+                intval(''.$row['ndr_id'])
+            );
+        }
     }
 }

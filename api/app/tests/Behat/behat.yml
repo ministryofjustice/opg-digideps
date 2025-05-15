@@ -99,6 +99,12 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\ContactDetails\ContactDetailsFeatureContext
 
+        court-order:
+            description: Coverage of pages rendered from the context of a court order
+            paths: ["%paths.base%/features-v2/court-order"]
+            contexts:
+                - App\Tests\Behat\v2\CourtOrder\CourtOrderFeatureContext
+
         deputy-management:
             description: Coverage of deputy management features - adding, deleting, editing
             paths: ["%paths.base%/features-v2/deputy-management"]
