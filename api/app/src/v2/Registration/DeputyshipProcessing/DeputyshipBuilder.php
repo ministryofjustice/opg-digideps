@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Service\DeputyshipCandidateConverter;
 
 /**
@@ -17,33 +17,15 @@ class DeputyshipBuilder
     ) {
     }
 
-    /*
-     * Group candidates by action into array
-     * ['INSERT' => <candidate>, 'OTHER' = [<candidate>, ...], ...]
-     *
-     * where <candidate> = ['<field>' => <value>, ...] (fields from a StagingSelectedCandidate in array format)
-     *
-     * The 'INSERT' key contains the insert order candidate, while 'OTHER' holds a list of the other
-     * candidates relating to this court order
-     */
-    private function processCandidates(array $candidatesList): DeputyshipBuilderResult
+    private function processCandidates(?string $orderUid, array $candidatesList): DeputyshipBuilderResult
     {
-        $candidatesGrouped = [];
-
-        /* @var array<string, mixed> $candidate */
-        foreach ($candidatesList as $candidatesListItem) {
-            if (DeputyshipCandidateAction::InsertOrder === $candidatesListItem['action']) {
-                // we only need to keep one insert order candidate
-                $candidatesGrouped['INSERT'] = $candidatesListItem;
-            } else {
-                if (!array_key_exists('OTHER', $candidatesGrouped)) {
-                    $candidatesGrouped['OTHER'] = [];
-                }
-                $candidatesGrouped['OTHER'][] = $candidatesListItem;
-            }
+        if (is_null($orderUid) || empty($candidatesList)) {
+            return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::Skipped);
         }
 
-        return $this->converter->createEntitiesFromCandidates($candidatesGrouped);
+        $candidatesGroup = DeputyshipCandidatesGroup::create($orderUid, $candidatesList);
+
+        return $this->converter->createEntitiesFromCandidates($candidatesGroup);
     }
 
     /**
@@ -73,7 +55,7 @@ class DeputyshipBuilder
                 $candidatesList[] = $candidate;
             } elseif (count($candidatesList) > 0) {
                 // process group
-                yield $this->processCandidates($candidatesList);
+                yield $this->processCandidates($currentOrderUid, $candidatesList);
 
                 // reset and start new group
                 $candidatesList = [$candidate];
@@ -82,6 +64,6 @@ class DeputyshipBuilder
         }
 
         // create entities for any stragglers
-        yield $this->processCandidates($candidatesList);
+        yield $this->processCandidates($currentOrderUid, $candidatesList);
     }
 }

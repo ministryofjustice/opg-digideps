@@ -9,10 +9,9 @@ namespace App\v2\Registration\Enum;
  */
 enum DeputyshipBuilderResultOutcome: string
 {
-    case InvalidCandidateGroup = 'invalid candidate group - more than one court order UID';
-    case InsufficientCourtOrderData = 'insufficient data to construct court order';
-    case CourtOrderNotAvailable = 'court order could not be found or created';
-
     // note that there may be errors but at least one entity was created successfully
     case EntitiesBuiltSuccessfully = 'entities created successfully from candidates';
+
+    // happens if there are no candidates, or candidates have no valid court order UID
+    case Skipped = 'no candidates or no court order UID';
 }

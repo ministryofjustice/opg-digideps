@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Service;
 
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 
 /**
@@ -13,30 +14,9 @@ use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
  */
 class DeputyshipCandidateConverter
 {
-    /**
-     * The $candidateGroups consists of array representations of rows from the staging.selectedcandidates table,
-     * keyed by candidation action (e.g. "INSERT ORDER", "INSERT ORDER REPORT"). This is mostly so we can perform
-     * the actions in the correct order (insert order first, for example).
-     *
-     * It was necessary to use arrays instead of objects to prevent out of memory errors: hydrating several thousand
-     * court orders with associated deputies and reports is very memory-intensive.
-     *
-     * Structure:
-     *
-     * [
-     *   '<action>' => [                 // DeputyshipCandidateAction
-     *     ['<field>' => <value>, ...],  // array representation of candidates for this action
-     *     ['<field>' => <value>, ...],
-     *   ],
-     *   '<action>' => ...,
-     * ]
-     *
-     * @param array<string, array<array<string, string>>> $candidateGroups All candidates in the list have a matching
-     *                                                                     court order UID
-     */
-    public function createEntitiesFromCandidates(array $candidateGroups): DeputyshipBuilderResult
+    public function createEntitiesFromCandidates(DeputyshipCandidatesGroup $candidatesGroup): DeputyshipBuilderResult
     {
-        // TODO actually build entities and relationships using $candidatesGrouped
+        // TODO actually build entities and relationships using $candidatesGroup
         return new DeputyshipBuilderResult(
             outcome: DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully,
         );

@@ -144,7 +144,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
             if ('INSERT ORDER' === $candidate['action']->value) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($client->getId(), $candidate['clientId']);
-            } elseif ('INSERT ORDER DEPUTY' === $candidate->action->value) {
+            } elseif ('INSERT ORDER DEPUTY' === $candidate['action']->value) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate['deputyUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate['deputyStatusOnOrder']);
