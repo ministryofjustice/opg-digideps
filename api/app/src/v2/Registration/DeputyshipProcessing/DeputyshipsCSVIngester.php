@@ -13,7 +13,6 @@ class DeputyshipsCSVIngester
         private readonly DeputyshipsCSVLoader $deputyshipsCSVLoader,
         private readonly DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
         private readonly DeputyshipBuilder $deputyshipBuilder,
-        private readonly DeputyshipPersister $deputyshipPersister,
         private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
     ) {
     }
@@ -44,12 +43,6 @@ class DeputyshipsCSVIngester
         foreach ($builderResults as $builderResult) {
             // TODO properly log builder result
             $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
-
-            $persisterResults = $this->deputyshipPersister->persist($builderResult);
-            foreach ($persisterResults as $persisterResult) {
-                // TODO properly log $persisterResult
-                $this->deputyshipsIngestResultRecorder->recordPersisterResult($persisterResult);
-            }
         }
 
         // get a summary of what happened during the ingest

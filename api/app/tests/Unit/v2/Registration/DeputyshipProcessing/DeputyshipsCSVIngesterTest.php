@@ -8,8 +8,6 @@ use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipPersister;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipPersisterResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
@@ -25,7 +23,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
     private DeputyshipsCSVLoader|MockObject $mockDeputyshipsCSVLoader;
     private DeputyshipsCandidatesSelector|MockObject $mockDeputyshipsCandidatesSelector;
     private DeputyshipBuilder|MockObject $mockDeputyshipBuilder;
-    private DeputyshipPersister|MockObject $mockDeputyshipPersister;
     private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
     private DeputyshipsCSVIngester $sut;
 
@@ -34,14 +31,12 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $this->mockDeputyshipsCSVLoader = $this->createMock(DeputyshipsCSVLoader::class);
         $this->mockDeputyshipsCandidatesSelector = $this->createMock(DeputyshipsCandidatesSelector::class);
         $this->mockDeputyshipBuilder = $this->createMock(DeputyshipBuilder::class);
-        $this->mockDeputyshipPersister = $this->createMock(DeputyshipPersister::class);
         $this->mockDeputyshipsIngestResultRecorder = $this->createMock(DeputyshipsIngestResultRecorder::class);
 
         $this->sut = new DeputyshipsCSVIngester(
             $this->mockDeputyshipsCSVLoader,
             $this->mockDeputyshipsCandidatesSelector,
             $this->mockDeputyshipBuilder,
-            $this->mockDeputyshipPersister,
             $this->mockDeputyshipsIngestResultRecorder
         );
     }
@@ -99,7 +94,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
     public function testProcessCsvRows(): void
     {
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully);
-        $persisterResult = new DeputyshipPersisterResult();
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
@@ -129,15 +123,6 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('recordBuilderResult')
             ->with($builderResult);
-
-        $this->mockDeputyshipPersister->expects($this->once())
-            ->method('persist')
-            ->with($builderResult)
-            ->willReturn([$persisterResult]);
-
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
-            ->method('recordPersisterResult')
-            ->with($persisterResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('result')
