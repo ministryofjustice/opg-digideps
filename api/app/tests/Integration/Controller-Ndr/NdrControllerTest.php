@@ -112,4 +112,39 @@ class NdrControllerTest extends AbstractTestController
         $reportSubmission = self::fixtures()->clear()->getRepo(ReportSubmission::class)->findOneBy(['ndr' => $ndr], ['id' => 'DESC']);
         $this->assertCount(1, $reportSubmission->getDocuments());
     }
+
+    public function testNdrExistsOnClient()
+    {
+        $clientId = self::$client1->getId();
+        $url = '/ndr/client/'.$clientId;
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertTrue($data);
+    }
+
+    public function testNdrDoesNotExistOnClient()
+    {
+        $clientWithNoNdr = $this->fixtures()->createClient(
+            self::$deputy1,
+            [
+                'setFirstname' => 'c2',
+                'setCourtDate' => new \DateTime('2018-11-01'),
+            ]
+        );
+        $this->fixtures()->persist($clientWithNoNdr);
+        $this->fixtures()->flush();
+
+        $url = '/ndr/client/'.$clientWithNoNdr->getId();
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertFalse($data);
+    }
 }
