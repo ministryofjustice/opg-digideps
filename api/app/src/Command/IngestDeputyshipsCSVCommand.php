@@ -8,7 +8,6 @@ use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,7 +24,6 @@ class IngestDeputyshipsCSVCommand extends Command
         private readonly S3Client $s3,
         private readonly ParameterBagInterface $params,
         private readonly DeputyshipsCSVIngester $deputyshipsCSVIngester,
-        private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $verboseLogger,
     ) {
         parent::__construct();

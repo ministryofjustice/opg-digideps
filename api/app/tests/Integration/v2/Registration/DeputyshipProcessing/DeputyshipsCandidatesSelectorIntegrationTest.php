@@ -56,8 +56,8 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
-        static::assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]->action->value);
-        static::assertEquals('ACTIVE', $selectedCandidates[0]->status);
+        static::assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]['action']->value);
+        static::assertEquals('ACTIVE', $selectedCandidates[0]['status']);
     }
 
     public function testDeputyStatusChangeOnCourtOrder(): void
@@ -86,8 +86,8 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
-        static::assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]->action->value);
-        static::assertFalse($selectedCandidates[0]->deputyStatusOnOrder);
+        static::assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]['action']->value);
+        static::assertFalse($selectedCandidates[0]['deputyStatusOnOrder']);
     }
 
     public function testNewDeputyAddedToCourtOrder(): void
@@ -112,9 +112,9 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
-        static::assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]->action->value);
-        static::assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]->orderUid);
-        static::assertEquals($deputy->getDeputyUid(), $selectedCandidates[0]->deputyUid);
+        static::assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]['action']->value);
+        static::assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]['orderUid']);
+        static::assertEquals($deputy->getDeputyUid(), $selectedCandidates[0]['deputyUid']);
     }
 
     public function testAddingNewSingleCourtOrder(): void
@@ -141,14 +141,14 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         foreach ($selectedCandidates as $candidate) {
-            if ('INSERT ORDER' === $candidate->action->value) {
-                static::assertEquals($stagingDeputyshipObject->orderUid, $candidate->orderUid);
-                static::assertEquals($client->getId(), $candidate->clientId);
+            if ('INSERT ORDER' === $candidate['action']->value) {
+                static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
+                static::assertEquals($client->getId(), $candidate['clientId']);
             } elseif ('INSERT ORDER DEPUTY' === $candidate->action->value) {
-                static::assertEquals($stagingDeputyshipObject->orderUid, $candidate->orderUid);
-                static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate->deputyUid);
-                static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate->deputyStatusOnOrder);
-                static::assertEquals($deputy->getId(), $candidate->deputyId);
+                static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
+                static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate['deputyUid']);
+                static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate['deputyStatusOnOrder']);
+                static::assertEquals($deputy->getId(), $candidate['deputyId']);
             }
         }
     }
