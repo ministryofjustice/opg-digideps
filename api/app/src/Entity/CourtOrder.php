@@ -97,7 +97,7 @@ class CourtOrder
     private Collection $reports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
      */
     #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
