@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Service\DeputyshipCandidateConverter;
@@ -25,17 +24,25 @@ class DeputyshipBuilderTest extends TestCase
     public function testBuild(): void
     {
         // candidates for two separate orders
-        $candidateOrder1_1 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '11112222');
-        $candidateOrder1_2 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderDeputy, '11112222');
-        $candidateOrder1_3 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderReport, '11112222');
-        $candidatesOrder1 = [$candidateOrder1_1, $candidateOrder1_2, $candidateOrder1_3];
+        $candidateOrder1_1 = ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '11112222'];
+        $candidateOrder1_2 = ['action' => DeputyshipCandidateAction::InsertOrderReport, 'orderUid' => '11112222'];
+        $candidateOrder1_3 = ['action' => DeputyshipCandidateAction::InsertOrder, 'orderUid' => '11112222'];
 
-        $candidateOrder2_1 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, '22223333');
-        $candidateOrder2_2 = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderNdr, '22223333');
-        $candidatesOrder2 = [$candidateOrder2_1, $candidateOrder2_2];
+        $candidateOrder2_1 = ['action' => DeputyshipCandidateAction::InsertOrder, 'orderUid' => '22223333'];
+        $candidateOrder2_2 = ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => '22223333'];
+
+        // expected candidate grouping before being sent for conversion
+        $candidatesOrder1 = ['INSERT' => $candidateOrder1_3, 'OTHER' => [$candidateOrder1_1, $candidateOrder1_2]];
+        $candidatesOrder2 = ['INSERT' => $candidateOrder2_1, 'OTHER' => [$candidateOrder2_2]];
 
         // candidates are pre-sorted by court order UID
-        $candidates = new \ArrayIterator(array_merge($candidatesOrder1, $candidatesOrder2));
+        $candidates = new \ArrayIterator([
+            $candidateOrder1_1,
+            $candidateOrder1_2,
+            $candidateOrder1_3,
+            $candidateOrder2_1,
+            $candidateOrder2_2,
+        ]);
 
         // two groups should be passed to the converter, and the outputs from those calls yielded as the return value
         $matcher = $this->exactly(2);
@@ -52,6 +59,6 @@ class DeputyshipBuilderTest extends TestCase
 
         $results = $this->sut->build($candidates);
 
-        self::assertEquals(2, count(iterator_to_array($results)));
+        self::assertCount(2, iterator_to_array($results));
     }
 }

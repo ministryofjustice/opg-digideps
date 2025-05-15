@@ -18,9 +18,6 @@ class DeputyshipBuilderResult
 
         /** @var string[] $errors */
         private readonly array $errors = [],
-
-        /** @var array<object> $entities */
-        private readonly array $entities = [],
     ) {
     }
 
@@ -32,14 +29,6 @@ class DeputyshipBuilderResult
     public function getOutcome(): DeputyshipBuilderResultOutcome
     {
         return $this->outcome;
-    }
-
-    /**
-     * @return array<object>
-     */
-    public function getEntities(): array
-    {
-        return $this->entities;
     }
 
     /**

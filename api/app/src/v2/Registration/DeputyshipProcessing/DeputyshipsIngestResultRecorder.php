@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use Psr\Log\LoggerInterface;
 
 class DeputyshipsIngestResultRecorder
@@ -13,8 +12,6 @@ class DeputyshipsIngestResultRecorder
 
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
-    private int $numEntitiesAdded = 0;
-    private int $numEntityBuildErrors = 0;
 
     /** @var string[] */
     private array $errorMessages = [];
@@ -76,15 +73,11 @@ class DeputyshipsIngestResultRecorder
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
         $message = implode('; ', $this->messages);
-        $message .= "; builder created $this->numEntitiesAdded entities";
 
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
         } else {
             $message .= implode('; ERRORS: ', $this->errorMessages);
-            if ($this->numEntityBuildErrors > 0) {
-                $message .= "; builder encountered $this->numEntityBuildErrors errors";
-            }
         }
 
         return new DeputyshipsCSVIngestResult($success, $message);
@@ -92,15 +85,6 @@ class DeputyshipsIngestResultRecorder
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
-        if (DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully === $builderResult->getOutcome()) {
-            $this->numEntitiesAdded += count($builderResult->getEntities());
-        } else {
-            $this->numEntityBuildErrors += count($builderResult->getErrors());
-        }
-
-        if ($builderResult->hasErrors()) {
-            $this->logger->error('BUILDER ENCOUNTERED ERRORS: '.implode('; ', $builderResult->getErrors()));
-        }
     }
 
     public function recordPersisterResult(DeputyshipPersisterResult $persisterResult): void

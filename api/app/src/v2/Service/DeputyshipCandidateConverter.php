@@ -4,16 +4,8 @@ declare(strict_types=1);
 
 namespace App\v2\Service;
 
-use App\Entity\CourtOrder;
-use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Report;
-use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
-use App\Repository\NdrRepository;
-use App\Repository\ReportRepository;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
 /**
  * Convert a group of candidates (with the same order UID) to a set of court order entities and relationships
@@ -21,53 +13,32 @@ use App\v2\Registration\Enum\DeputyshipCandidateAction;
  */
 class DeputyshipCandidateConverter
 {
-    public function __construct(
-        private readonly CourtOrderRepository $courtOrderRepository,
-        private readonly DeputyRepository $deputyRepository,
-        private readonly ReportRepository $reportRepository,
-        private readonly NdrRepository $ndrRepository,
-    ) {
-    }
-
     /**
-     * The $candidatesGroup consists of array representations of rows from the staging.selectedcandidates table.
-     * It was necessary to use arrays instead of objects to prevent out of memory errors.
+     * The $candidateGroups consists of array representations of rows from the staging.selectedcandidates table,
+     * keyed by candidation action (e.g. "INSERT ORDER", "INSERT ORDER REPORT"). This is mostly so we can perform
+     * the actions in the correct order (insert order first, for example).
      *
-     * @param array<int, array<string, string>> $candidatesGroup All candidates in the list should have a matching court order UID
+     * It was necessary to use arrays instead of objects to prevent out of memory errors: hydrating several thousand
+     * court orders with associated deputies and reports is very memory-intensive.
+     *
+     * Structure:
+     *
+     * [
+     *   '<action>' => [                 // DeputyshipCandidateAction
+     *     ['<field>' => <value>, ...],  // array representation of candidates for this action
+     *     ['<field>' => <value>, ...],
+     *   ],
+     *   '<action>' => ...,
+     * ]
+     *
+     * @param array<string, array<array<string, string>>> $candidateGroups All candidates in the list have a matching
+     *                                                                     court order UID
      */
-    public function createEntitiesFromCandidates(array $candidatesGroup): DeputyshipBuilderResult
+    public function createEntitiesFromCandidates(array $candidateGroups): DeputyshipBuilderResult
     {
-        // check all court order UIDs match
-        $uniqueUids = array_unique(array_map(fn ($candidate) => $candidate['orderUid'], $candidatesGroup));
-
-        if (count($uniqueUids) > 1) {
-            return new DeputyshipBuilderResult(
-                outcome: DeputyshipBuilderResultOutcome::InvalidCandidateGroup,
-                errors: [
-                    'cannot create entities: invalid candidate group - more than one order UID is referenced ('.
-                    implode(', ', $uniqueUids).')',
-                ]
-            );
-        }
-
-        // group candidates by action into array ['<action>' => [<candidate>, <candidate>, ...], ...]
-        // where <candidate> = ['<field>' => <value>, ...]
-        $candidatesSorted = [];
-
-        /** @var array<string, mixed> $candidate */
-        foreach ($candidatesGroup as $candidate) {
-            $key = $candidate['action']->value;
-            if (!array_key_exists($key, $candidatesSorted)) {
-                $candidatesSorted[$key] = [];
-            }
-            $candidatesSorted[$key][] = $candidate;
-        }
-
-        // TODO actually build entities etc.
+        // TODO actually build entities and relationships using $candidatesGrouped
         return new DeputyshipBuilderResult(
             outcome: DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully,
-            errors: [],
-            entities: []
         );
     }
 

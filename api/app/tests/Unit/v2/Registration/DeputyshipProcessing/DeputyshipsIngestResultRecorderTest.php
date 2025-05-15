@@ -8,6 +8,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class DeputyshipsIngestResultRecorderTest extends TestCase
 {
@@ -15,7 +16,8 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->sut = new DeputyshipsIngestResultRecorder();
+        $mockLogger = $this->createMock(LoggerInterface::class);
+        $this->sut = new DeputyshipsIngestResultRecorder($mockLogger);
     }
 
     public function testRecordCsvLoadResultFailure(): void
