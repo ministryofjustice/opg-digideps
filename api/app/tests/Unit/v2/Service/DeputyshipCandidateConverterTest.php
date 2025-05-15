@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class DeputyshipCandidateConverterTest extends TestCase
 {
-    private DeputyshipCandidateConverter $sut;
+    private DeputyshipCandidatesConverter $sut;
 
     public function setUp(): void
     {
-        $this->sut = new DeputyshipCandidateConverter();
+        $this->sut = new DeputyshipCandidatesConverter();
     }
 }

@@ -6,18 +6,18 @@ namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use App\v2\Service\DeputyshipCandidateConverter;
+use App\v2\Service\DeputyshipCandidatesConverter;
 use PHPUnit\Framework\TestCase;
 
 class DeputyshipBuilderTest extends TestCase
 {
-    private DeputyshipCandidateConverter $mockConverter;
+    private DeputyshipCandidatesConverter $mockConverter;
     private int $testBuildCounter = 0;
     private DeputyshipBuilder $sut;
 
     public function setUp(): void
     {
-        $this->mockConverter = $this->createMock(DeputyshipCandidateConverter::class);
+        $this->mockConverter = $this->createMock(DeputyshipCandidatesConverter::class);
 
         $this->sut = new DeputyshipBuilder($this->mockConverter);
     }

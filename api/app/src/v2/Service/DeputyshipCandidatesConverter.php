@@ -12,7 +12,7 @@ use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
  * Convert a group of candidates (with the same order UID) to a set of court order entities and relationships
  * between them.
  */
-class DeputyshipCandidateConverter
+class DeputyshipCandidatesConverter
 {
     public function createEntitiesFromCandidates(DeputyshipCandidatesGroup $candidatesGroup): DeputyshipBuilderResult
     {

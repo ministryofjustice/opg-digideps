@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Service\DeputyshipCandidateConverter;
+use App\v2\Service\DeputyshipCandidatesConverter;
 
 /**
  * Convert entity candidates into entities, but without saving them to the database.
@@ -13,7 +13,7 @@ use App\v2\Service\DeputyshipCandidateConverter;
 class DeputyshipBuilder
 {
     public function __construct(
-        private readonly DeputyshipCandidateConverter $converter,
+        private readonly DeputyshipCandidatesConverter $converter,
     ) {
     }
 
