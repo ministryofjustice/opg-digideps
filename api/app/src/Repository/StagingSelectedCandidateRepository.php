@@ -23,11 +23,12 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
      * Ordering is important as the builder will group the candidates on the fly, using the order UID,
      * so that all entities for a single order UID are created together.
      *
-     * @return \Traversable<mixed>
+     * @return \Traversable<array<string, string>>
      */
     public function getDistinctOrderedCandidates(): \Traversable
     {
         // get number of results
+        /** @var int $numCandidates */
         $numCandidates = $this->getEntityManager()
             ->createQuery('SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc')
             ->getSingleScalarResult();
@@ -42,6 +43,7 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
             $pagedQuery = $query->setFirstResult(($currentPage - 1) * $pageSize)->setMaxResults($pageSize);
             $results = $pagedQuery->getArrayResult();
 
+            /** @var array<string, string> $deputyship */
             foreach ($results as $deputyship) {
                 yield $deputyship;
             }

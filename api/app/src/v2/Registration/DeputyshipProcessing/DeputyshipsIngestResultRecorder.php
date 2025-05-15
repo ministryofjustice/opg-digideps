@@ -24,14 +24,14 @@ class DeputyshipsIngestResultRecorder
     ) {
     }
 
-    private function logMessage(string $message)
+    private function logMessage(string $message): void
     {
         $this->messages[] = $message;
         $this->logger->info($message);
         error_log('+++++++++++++++ RR: '.$message);
     }
 
-    private function logError(string $errorMessage)
+    private function logError(string $errorMessage): void
     {
         $this->errorMessages[] = $errorMessage;
         $this->logger->error($errorMessage);
@@ -84,10 +84,6 @@ class DeputyshipsIngestResultRecorder
     }
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
-    {
-    }
-
-    public function recordPersisterResult(DeputyshipPersisterResult $persisterResult): void
     {
     }
 }

@@ -26,7 +26,7 @@ class DeputyshipBuilder
      * The 'INSERT' key contains the insert order candidate, while 'OTHER' holds a list of the other
      * candidates relating to this court order
      */
-    private function processCandidates(array $candidatesList)
+    private function processCandidates(array $candidatesList): DeputyshipBuilderResult
     {
         $candidatesGrouped = [];
 
@@ -47,9 +47,9 @@ class DeputyshipBuilder
     }
 
     /**
-     * @param \Traversable<mixed> $candidates Assumption is that these are sorted by court order UID,
-     *                                        so we can group them by UID even though we are processing
-     *                                        one row at a time.
+     * @param \Traversable<array<string, string>> $candidates Assumption is that these are sorted by court order UID,
+     *                                                        so we can group them by UID even though we are processing
+     *                                                        one row at a time.
      *
      * Once we have a group, we create the entities (in the correct order) and yield the result to the caller.
      *
@@ -60,6 +60,7 @@ class DeputyshipBuilder
         $currentOrderUid = null;
         $candidatesList = [];
 
+        /** @var array<string, string> $candidate */
         foreach ($candidates as $candidate) {
             $orderUid = $candidate['orderUid'];
 
