@@ -31,12 +31,14 @@ class DeputyshipsIngestResultRecorder
     {
         $this->messages[] = $message;
         $this->logger->info($message);
+        error_log('+++++++++++++++ RR: '.$message);
     }
 
     private function logError(string $errorMessage)
     {
         $this->errorMessages[] = $errorMessage;
         $this->logger->error($errorMessage);
+        error_log('!!!!!!!!!!!!!!!! RR ERROR: '.$errorMessage);
     }
 
     /**
