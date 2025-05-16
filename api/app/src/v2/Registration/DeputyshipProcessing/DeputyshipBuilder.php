@@ -23,7 +23,14 @@ class DeputyshipBuilder
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::Skipped);
         }
 
-        $candidatesGroup = DeputyshipCandidatesGroup::create($orderUid, $candidatesList);
+        try {
+            $candidatesGroup = DeputyshipCandidatesGroup::create($orderUid, $candidatesList);
+        } catch (\ValueError $e) {
+            return new DeputyshipBuilderResult(
+                outcome: DeputyshipBuilderResultOutcome::CandidateListError,
+                errors: [$e->getMessage()]
+            );
+        }
 
         return $this->converter->createEntitiesFromCandidates($candidatesGroup);
     }

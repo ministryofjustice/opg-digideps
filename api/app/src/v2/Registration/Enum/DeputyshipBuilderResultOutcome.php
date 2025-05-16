@@ -14,4 +14,7 @@ enum DeputyshipBuilderResultOutcome: string
 
     // happens if there are no candidates, or candidates have no valid court order UID
     case Skipped = 'no candidates or no court order UID';
+
+    // happens if a list of candidates have mismatched court order UIDs
+    case CandidateListError = 'invalid candidate list - more than one court order UID';
 }

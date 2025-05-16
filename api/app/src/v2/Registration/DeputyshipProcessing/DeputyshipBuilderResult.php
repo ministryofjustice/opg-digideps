@@ -16,6 +16,8 @@ class DeputyshipBuilderResult
     public function __construct(
         private readonly DeputyshipBuilderResultOutcome $outcome,
 
+        private readonly string $message = '',
+
         /** @var string[] $errors */
         private readonly array $errors = [],
     ) {
@@ -29,6 +31,11 @@ class DeputyshipBuilderResult
     public function getOutcome(): DeputyshipBuilderResultOutcome
     {
         return $this->outcome;
+    }
+
+    public function getMessage(): string
+    {
+        return $this->message;
     }
 
     /**

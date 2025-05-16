@@ -30,6 +30,8 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
 
     /**
      * @param array<array<string, mixed>> $candidatesList List of candidates represented as arrays
+     *
+     * @throws \ValueError
      */
     public static function create(string $orderUid, array $candidatesList): self
     {
@@ -39,6 +41,10 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
 
         /** @var array<string, mixed> $candidate */
         foreach ($candidatesList as $candidate) {
+            if ($candidate['orderUid'] !== $orderUid) {
+                throw new \ValueError('invalid candidates list: contains multiple court order UIDs');
+            }
+
             switch ($candidate['action']) {
                 case DeputyshipCandidateAction::InsertOrder:
                     $group->insertOrder = $candidate;
@@ -72,5 +78,10 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
         foreach ($this->updates as $update) {
             yield $update;
         }
+    }
+
+    public function totalCandidates(): int
+    {
+        return (is_null($this->insertOrder) ? 0 : 1) + count($this->updates) + count($this->insertOthers);
     }
 }

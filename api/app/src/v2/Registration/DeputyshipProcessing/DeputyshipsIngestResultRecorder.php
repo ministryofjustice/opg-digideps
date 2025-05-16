@@ -19,23 +19,45 @@ class DeputyshipsIngestResultRecorder
     /** @var string[] */
     private array $messages = [];
 
+    private \DateTimeImmutable $startDateTime;
+
+    private \DateTimeImmutable $endDateTime;
+
     public function __construct(
         private readonly LoggerInterface $logger,
     ) {
+    }
+
+    private function formatDate(\DateTimeImmutable $dateTime): string
+    {
+        return $dateTime->format('Y-m-d H:i:s');
+    }
+
+    private function debugLog(string $message): void
+    {
+        $this->logger->debug($this->formatDate(new \DateTimeImmutable()).' '.$message);
+
+        $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
+        $this->logger->debug($memMessage);
     }
 
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
         $this->logger->info($message);
-        error_log('+++++++++++++++ RR: '.$message);
+        $this->debugLog('++++++++ INFO: '.$message);
     }
 
     private function logError(string $errorMessage): void
     {
         $this->errorMessages[] = $errorMessage;
         $this->logger->error($errorMessage);
-        error_log('!!!!!!!!!!!!!!!! RR ERROR: '.$errorMessage);
+        $this->debugLog('!!!!!!!!!!!!!!!! ERROR: '.$errorMessage);
+    }
+
+    public function recordStart(\DateTimeImmutable $startDateTime = new \DateTimeImmutable()): void
+    {
+        $this->startDateTime = $startDateTime;
     }
 
     /**
@@ -67,12 +89,26 @@ class DeputyshipsIngestResultRecorder
         }
     }
 
+    public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
+    {
+        $this->debugLog('++++++++ '.$builderResult->getMessage());
+    }
+
+    public function recordEnd(\DateTimeImmutable $endDateTime = new \DateTimeImmutable()): void
+    {
+        $this->endDateTime = $endDateTime;
+    }
+
     public function result(): DeputyshipsCSVIngestResult
     {
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
-        $message = implode('; ', $this->messages);
+        $message = 'Ingest started at: '.$this->formatDate($this->startDateTime).
+            '; ended at: '.$this->formatDate($this->endDateTime).
+            '; execution time: '.$this->endDateTime->diff($this->startDateTime)->format('%hh %im %ss');
+
+        $message .= ' --- '.implode('; ', $this->messages);
 
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
@@ -80,10 +116,8 @@ class DeputyshipsIngestResultRecorder
             $message .= implode('; ERRORS: ', $this->errorMessages);
         }
 
-        return new DeputyshipsCSVIngestResult($success, $message);
-    }
+        $this->logMessage($message);
 
-    public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
-    {
+        return new DeputyshipsCSVIngestResult($success, $message);
     }
 }

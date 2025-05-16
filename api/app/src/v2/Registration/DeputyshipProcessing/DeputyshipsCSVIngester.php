@@ -22,6 +22,8 @@ class DeputyshipsCSVIngester
      */
     public function processCsv(string $fileLocation): DeputyshipsCSVIngestResult
     {
+        $this->deputyshipsIngestResultRecorder->recordStart();
+
         // load the CSV into the staging table in the database
         $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
         $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
@@ -44,6 +46,8 @@ class DeputyshipsCSVIngester
             // TODO properly log builder result
             $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
         }
+
+        $this->deputyshipsIngestResultRecorder->recordEnd();
 
         // get a summary of what happened during the ingest
         return $this->deputyshipsIngestResultRecorder->result();
