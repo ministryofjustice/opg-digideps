@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -65,6 +66,9 @@ class IngestDeputyshipsCSVCommand extends Command
         }
 
         try {
+            $logger = new ConsoleLogger($output);
+            $this->deputyshipsCSVIngester->setLogger($logger);
+
             $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
         } catch (\Exception $e) {
             $output->writeln(

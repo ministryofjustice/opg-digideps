@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class DeputyshipsIngestResultRecorder
 {
@@ -24,7 +25,7 @@ class DeputyshipsIngestResultRecorder
     private \DateTimeImmutable $endDateTime;
 
     public function __construct(
-        private readonly LoggerInterface $logger,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -119,5 +120,10 @@ class DeputyshipsIngestResultRecorder
         $this->logMessage($message);
 
         return new DeputyshipsCSVIngestResult($success, $message);
+    }
+
+    public function setLogger(ConsoleLogger $logger): void
+    {
+        $this->logger = $logger;
     }
 }

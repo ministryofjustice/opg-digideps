@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use Symfony\Component\Console\Logger\ConsoleLogger;
+
 /**
  * Ingest the deputyship CSV exported from Sirius.
  */
@@ -15,6 +17,11 @@ class DeputyshipsCSVIngester
         private readonly DeputyshipBuilder $deputyshipBuilder,
         private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
     ) {
+    }
+
+    public function setLogger(ConsoleLogger $logger): void
+    {
+        $this->deputyshipsIngestResultRecorder->setLogger($logger);
     }
 
     /**
