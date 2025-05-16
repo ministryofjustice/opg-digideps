@@ -34,26 +34,29 @@ class DeputyshipsIngestResultRecorder
         return $dateTime->format('Y-m-d H:i:s');
     }
 
-    private function debugLog(string $message): void
+    private function formatMessage(string $message): string
     {
-        $this->logger->debug($this->formatDate(new \DateTimeImmutable()).' '.$message);
+        return $this->formatDate(new \DateTimeImmutable()).' '.$message;
+    }
 
+    private function logMemory(): void
+    {
         $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
-        $this->logger->debug($memMessage);
+        $this->logger->debug($this->formatMessage($memMessage));
     }
 
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
-        $this->logger->info($message);
-        $this->debugLog('++++++++ INFO: '.$message);
+        $this->logger->info($this->formatMessage($message));
+        $this->logMemory();
     }
 
     private function logError(string $errorMessage): void
     {
         $this->errorMessages[] = $errorMessage;
-        $this->logger->error($errorMessage);
-        $this->debugLog('!!!!!!!!!!!!!!!! ERROR: '.$errorMessage);
+        $this->logger->error($this->formatMessage($errorMessage));
+        $this->logMemory();
     }
 
     public function recordStart(\DateTimeImmutable $startDateTime = new \DateTimeImmutable()): void
@@ -92,7 +95,8 @@ class DeputyshipsIngestResultRecorder
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
-        $this->debugLog('++++++++ '.$builderResult->getMessage());
+        $this->logger->debug($this->formatMessage('++++++++ '.$builderResult->getMessage()));
+        $this->logMemory();
     }
 
     public function recordEnd(\DateTimeImmutable $endDateTime = new \DateTimeImmutable()): void
