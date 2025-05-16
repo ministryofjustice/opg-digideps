@@ -32,9 +32,9 @@ class DeputyshipsCSVIngester
         $this->deputyshipsIngestResultRecorder->recordStart();
 
         // load the CSV into the staging table in the database
-        $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
-        $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
-        if (!$loadedOk) {
+        $loadResult = $this->deputyshipsCSVLoader->load($fileLocation);
+        $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($loadResult);
+        if (!$loadResult->loadedOk) {
             return $this->deputyshipsIngestResultRecorder->result();
         }
 

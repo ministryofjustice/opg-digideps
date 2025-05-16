@@ -64,14 +64,14 @@ class DeputyshipsIngestResultRecorder
     /**
      * Record the result of loading the CSV file into the staging table.
      */
-    public function recordCsvLoadResult(string $fileLocation, bool $loadedOk): void
+    public function recordCsvLoadResult(DeputyshipsCSVLoaderResult $result): void
     {
-        $this->csvLoadedSuccessfully = $loadedOk;
+        $this->csvLoadedSuccessfully = $result->loadedOk;
 
-        if ($loadedOk) {
-            $this->logMessage("loaded deputyships CSV from $fileLocation");
+        if ($result->loadedOk) {
+            $this->logMessage("loaded $result->numRecords deputyships from CSV file $result->fileLocation");
         } else {
-            $this->logError("failed to load deputyships CSV from $fileLocation");
+            $this->logError("failed to load deputyships CSV from $result->fileLocation");
         }
     }
 
