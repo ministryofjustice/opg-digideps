@@ -22,7 +22,24 @@ class DeputyshipBuilderTest extends TestCase
         $this->sut = new DeputyshipBuilder($this->mockConverter);
     }
 
-    public function testBuild(): void
+    public function testBuildNoCandidatesFail(): void
+    {
+        $candidates = new \ArrayIterator([]);
+
+        $results = iterator_to_array($this->sut->build($candidates));
+
+        /** @var DeputyshipBuilderResult $result */
+        $result = $results[0];
+
+        self::assertEquals(DeputyshipBuilderResultOutcome::Skipped, $result->getOutcome());
+    }
+
+    public function testBuildCandidatesGroupCreateFail(): void
+    {
+        // NB it is practically impossible for this to happen, but tested here in case bugs are introduced elsewhere
+    }
+
+    public function testBuildSuccess(): void
     {
         // candidates for two separate orders
         $orderUid1 = '11112222';
