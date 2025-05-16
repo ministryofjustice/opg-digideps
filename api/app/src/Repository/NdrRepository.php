@@ -69,15 +69,4 @@ class NdrRepository extends ServiceEntityRepository
 
         return $ret;
     }
-
-    public function findNdrByClientId(int $clientId): ?array
-    {
-        $result = $this
-            ->getEntityManager()
-            ->createQuery('SELECT n.id FROM App\Entity\Ndr\Ndr n JOIN n.client c WHERE c.id = :clientId')
-            ->setParameter('clientId', $clientId)
-            ->getResult();
-
-        return empty($result) ? null : (array) $result;
-    }
 }

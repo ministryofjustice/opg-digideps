@@ -5,7 +5,6 @@ namespace App\Controller\Ndr;
 use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Document;
-use App\Repository\NdrRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NdrController extends RestController
 {
-    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter, private readonly NdrRepository $ndrRepository)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
         parent::__construct($em);
     }
@@ -228,13 +227,5 @@ class NdrController extends RestController
         $this->em->flush();
 
         return ['id' => $ndr->getId()];
-    }
-
-    #[Route(path: '/ndr/client/{clientId}', methods: ['GET'])]
-    public function doesNdrExistOnClient(int $clientId): bool
-    {
-        $result = $this->ndrRepository->findNdrByClientId($clientId);
-
-        return !(null == $result);
     }
 }

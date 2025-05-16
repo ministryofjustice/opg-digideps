@@ -208,11 +208,9 @@ class ReportController extends AbstractController
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
         ];
 
-        $ndrExistsOnClient = $this->restClient->get('/ndr/client/'.$clientId, 'array');
+        $client = $this->clientApi->getById($clientId);
 
-        if ($ndrEnabledOnDeputy && $ndrExistsOnClient) {
-            $client = $this->clientApi->getById($clientId);
-
+        if ($ndrEnabledOnDeputy && $client->getNdr()) {
             $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
 
             return array_merge([
