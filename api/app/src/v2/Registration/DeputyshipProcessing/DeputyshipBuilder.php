@@ -19,17 +19,14 @@ class DeputyshipBuilder
 
     private function processCandidates(?string $orderUid, array $candidatesList): DeputyshipBuilderResult
     {
-        if (is_null($orderUid) || empty($candidatesList)) {
+        if (is_null($orderUid)) {
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::Skipped);
         }
 
-        try {
-            $candidatesGroup = DeputyshipCandidatesGroup::create($orderUid, $candidatesList);
-        } catch (\ValueError $e) {
-            return new DeputyshipBuilderResult(
-                outcome: DeputyshipBuilderResultOutcome::CandidateListError,
-                errors: [$e->getMessage()]
-            );
+        $candidatesGroup = DeputyshipCandidatesGroup::create($orderUid, $candidatesList);
+
+        if (is_null($candidatesGroup)) {
+            return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidateListError);
         }
 
         return $this->converter->createEntitiesFromCandidates($candidatesGroup);

@@ -29,11 +29,12 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
     public array $updates = [];
 
     /**
-     * @param array<array<string, mixed>> $candidatesList List of candidates represented as arrays
+     * If group is invalid (i.e. has multiple order UIDs) this returns null, as a candidate group
+     * cannot be created.
      *
-     * @throws \ValueError
+     * @param array<array<string, mixed>> $candidatesList List of candidates represented as arrays
      */
-    public static function create(string $orderUid, array $candidatesList): self
+    public static function create(string $orderUid, array $candidatesList): ?self
     {
         $group = new self();
 
@@ -42,7 +43,7 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
         /** @var array<string, mixed> $candidate */
         foreach ($candidatesList as $candidate) {
             if ($candidate['orderUid'] !== $orderUid) {
-                throw new \ValueError('invalid candidates list: contains multiple court order UIDs');
+                return null;
             }
 
             switch ($candidate['action']) {
