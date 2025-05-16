@@ -553,18 +553,14 @@ trait AuthTrait
     }
 
     /**
-     * @Then I should see the NDR report on the reports page
+     * @Then /^I \'([^\']*)\' see the NDR report on the reports page$/
      */
-    public function theyShouldBeOnNDRReportPage(): void
+    public function theyShouldBeOnNDRReportPage($arg1): void
     {
-        $this->assertPageContainsText('New deputy report');
-    }
-
-    /**
-     * @Then I should not see the NDR report on the reports page
-     */
-    public function theyShouldNotBeOnNDRReportPage(): void
-    {
-        $this->assertPageNotContainsText('New deputy report');
+        if ('should' == $arg1) {
+            $this->assertPageContainsText('New deputy report');
+        } else {
+            $this->assertPageNotContainsText('New deputy report');
+        }
     }
 }

@@ -59,7 +59,7 @@ class NdrController extends RestController
         }
 
         /** @var Document $reportPdf */
-        $reportPdf = $this->em->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $reportPdf = $this->em->getRepository(Document::class)->find($documentId);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
         $reportPdf->setSynchronisedBy($this->getUser());
 
