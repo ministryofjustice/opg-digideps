@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 class DeputyshipBuilderTest extends TestCase
 {
     private DeputyshipCandidatesConverter $mockConverter;
-    private int $testBuildCounter = 0;
     private DeputyshipBuilder $sut;
 
     public function setUp(): void
@@ -32,11 +31,6 @@ class DeputyshipBuilderTest extends TestCase
         $result = $results[0];
 
         self::assertEquals(DeputyshipBuilderResultOutcome::Skipped, $result->getOutcome());
-    }
-
-    public function testBuildCandidatesGroupCreateFail(): void
-    {
-        // NB it is practically impossible for this to happen, but tested here in case bugs are introduced elsewhere
     }
 
     public function testBuildSuccess(): void
@@ -60,13 +54,16 @@ class DeputyshipBuilderTest extends TestCase
             $candidateOrder2_2,
         ]);
 
+        $caller = new \stdClass();
+        $caller->counter = 0;
+
         // two groups should be passed to the converter
         $uidsExpected = [$orderUid1, $orderUid2];
         $this->mockConverter->expects($this->exactly(2))
             ->method('createEntitiesFromCandidates')
-            ->willReturnCallback(function ($calledWith) use ($uidsExpected) {
-                $this->assertEquals($uidsExpected[$this->testBuildCounter], $calledWith->orderUid);
-                ++$this->testBuildCounter;
+            ->willReturnCallback(function ($calledWith) use ($uidsExpected, $caller) {
+                $this->assertEquals($uidsExpected[$caller->counter], $calledWith->orderUid);
+                ++$caller->counter;
 
                 return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully);
             });
