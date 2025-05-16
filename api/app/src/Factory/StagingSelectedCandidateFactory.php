@@ -4,15 +4,14 @@ namespace App\Factory;
 
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
 class StagingSelectedCandidateFactory
 {
     public function createUpdateOrderStatusCandidate(StagingDeputyship $csvDeputyship, int $courtOrderId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::UPDATE_ORDER_STATUS;
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, $csvDeputyship->orderUid);
 
-        $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->status = $csvDeputyship->orderStatus;
 
@@ -26,10 +25,8 @@ class StagingSelectedCandidateFactory
         int $deputyId,
         int $courtOrderId,
     ): StagingSelectedCandidate {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::UPDATE_DEPUTY_STATUS;
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateDeputyStatus, $csvDeputyship->orderUid);
 
-        $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->deputyStatusOnOrder = $csvDeputyship->deputyIsActiveOnOrder();
 
@@ -43,10 +40,8 @@ class StagingSelectedCandidateFactory
         StagingDeputyship $csvDeputyship,
         int $deputyId,
     ): StagingSelectedCandidate {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::INSERT_ORDER_DEPUTY;
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderDeputy, $csvDeputyship->orderUid);
 
-        $changes->orderUid = $csvDeputyship->orderUid;
         $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->deputyStatusOnOrder = $csvDeputyship->deputyIsActiveOnOrder();
 
@@ -57,11 +52,8 @@ class StagingSelectedCandidateFactory
 
     public function createInsertOrderCandidate(StagingDeputyship $csvDeputyship, int $clientId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::INSERT_ORDER;
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, $csvDeputyship->orderUid);
 
-        $changes->orderUid = $csvDeputyship->orderUid;
-        $changes->deputyUid = $csvDeputyship->deputyUid;
         $changes->orderType = $csvDeputyship->orderType;
         $changes->status = $csvDeputyship->orderStatus;
         $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
@@ -73,10 +65,8 @@ class StagingSelectedCandidateFactory
 
     public function createInsertOrderReportCandidate(string $orderUid, int $reportId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::INSERT_ORDER_REPORT;
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderReport, $orderUid);
 
-        $changes->orderUid = $orderUid;
         $changes->reportId = $reportId;
 
         return $changes;
@@ -84,10 +74,8 @@ class StagingSelectedCandidateFactory
 
     public function createInsertOrderNdrCandidate(string $orderUid, int $ndrId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidate();
-        $changes->action = StagingSelectedCandidate::INSERT_ORDER_NDR;
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderNdr, $orderUid);
 
-        $changes->orderUid = $orderUid;
         $changes->ndrId = $ndrId;
 
         return $changes;

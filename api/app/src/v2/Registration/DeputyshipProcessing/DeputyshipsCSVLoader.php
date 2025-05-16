@@ -20,7 +20,7 @@ class DeputyshipsCSVLoader
     ) {
     }
 
-    public function load(string $fileLocation): bool
+    public function load(string $fileLocation): DeputyshipsCSVLoaderResult
     {
         try {
             $chunker = $this->chunkerFactory->create($fileLocation, StagingDeputyship::class);
@@ -34,7 +34,9 @@ class DeputyshipsCSVLoader
             // dump CSV into staging table
             $this->em->beginTransaction();
 
+            $numRecords = 0;
             while (!is_null($chunk = $chunker->getChunk())) {
+                $numRecords += count($chunk);
                 foreach ($chunk as $record) {
                     $this->em->persist($record);
                 }
@@ -44,14 +46,14 @@ class DeputyshipsCSVLoader
 
             $this->em->commit();
 
-            return true;
+            return new DeputyshipsCSVLoaderResult(fileLocation: $fileLocation, loadedOk: true, numRecords: $numRecords);
         } catch (UnavailableStream|CSVException $e) {
             $this->logger->error(
                 'Error loading CSV into staging table: exception type = '.get_class($e).'; message = '.$e->getMessage()
             );
             $this->em->rollback();
 
-            return false;
+            return new DeputyshipsCSVLoaderResult(fileLocation: $fileLocation, loadedOk: false);
         }
     }
 }

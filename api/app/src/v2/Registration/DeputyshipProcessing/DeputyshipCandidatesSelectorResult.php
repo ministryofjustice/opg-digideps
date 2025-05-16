@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingSelectedCandidate;
-
 class DeputyshipCandidatesSelectorResult
 {
     public function __construct(
-        /** @var StagingSelectedCandidate[] */
-        public readonly array $candidates,
+        /** @var \Traversable<array<string, string>> */
+        public readonly \Traversable $candidates,
 
         public readonly int $numCandidates,
         public readonly ?\Exception $exception = null,

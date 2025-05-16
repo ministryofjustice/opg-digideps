@@ -8,8 +8,8 @@ use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
-use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -148,7 +148,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
 
         // assertions
         self::assertCount(1, $candidates);
-        self::assertEquals(StagingSelectedCandidate::INSERT_ORDER_REPORT, $candidates[0]->action);
+        self::assertEquals(DeputyshipCandidateAction::InsertOrderReport, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($report1->getId(), $candidates[0]->reportId);
     }
@@ -187,7 +187,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
 
         // assertions
         self::assertCount(1, $candidates);
-        self::assertEquals(StagingSelectedCandidate::INSERT_ORDER_NDR, $candidates[0]->action);
+        self::assertEquals(DeputyshipCandidateAction::InsertOrderNdr, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($ndr->getId(), $candidates[0]->ndrId);
     }

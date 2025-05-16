@@ -11,6 +11,7 @@ use App\Repository\StagingSelectedCandidateRepository;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,7 +64,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $result = $this->sut->select();
 
         $this->assertFalse($result->success());
-        $this->assertEquals([], $result->candidates);
+        $this->assertEquals([], iterator_to_array($result->candidates));
         $this->assertEquals($expectedException, $result->exception);
     }
 
@@ -103,11 +104,11 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             ->expects($this->once())
             ->method('cacheLookupTables');
 
-        $mockCandidate1 = new StagingSelectedCandidate();
-        $mockCandidate2 = new StagingSelectedCandidate();
-        $mockCandidate3 = new StagingSelectedCandidate();
-        $mockCandidate4 = new StagingSelectedCandidate();
-        $mockCandidate5 = new StagingSelectedCandidate();
+        $mockCandidate1 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate2 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate3 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate4 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
+        $mockCandidate5 = new StagingSelectedCandidate(DeputyshipCandidateAction::UpdateOrderStatus, '1');
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->exactly(2))
@@ -140,13 +141,13 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
             });
 
         $this->mockStagingSelectedCandidateRepository->expects($this->once())
-            ->method('getDistinctCandidates')
-            ->willReturn($mockCandidates);
+            ->method('getDistinctOrderedCandidates')
+            ->willReturn(new \ArrayIterator($mockCandidates));
 
         $result = $this->sut->select();
 
         $this->assertNull($result->exception);
         $this->assertTrue($result->success());
-        $this->assertEquals($mockCandidates, $result->candidates);
+        $this->assertEquals($mockCandidates, iterator_to_array($result->candidates));
     }
 }

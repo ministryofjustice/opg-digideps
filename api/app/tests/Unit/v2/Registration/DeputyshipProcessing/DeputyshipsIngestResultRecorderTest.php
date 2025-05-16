@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class DeputyshipsIngestResultRecorderTest extends TestCase
 {
@@ -15,44 +17,45 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->sut = new DeputyshipsIngestResultRecorder();
+        $mockLogger = $this->createMock(LoggerInterface::class);
+        $this->sut = new DeputyshipsIngestResultRecorder($mockLogger);
     }
 
     public function testRecordCsvLoadResultFailure(): void
     {
-        $this->sut->recordCsvLoadResult('/tmp/test.csv', false);
+        $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/test.csv', false));
 
         $result = $this->sut->result();
 
         $this->assertFalse($result->success);
-        $this->assertEquals('failed to load deputyships CSV from /tmp/test.csv', $result->message);
+        $this->assertStringContainsString('failed to load deputyships CSV from /tmp/test.csv', $result->message);
     }
 
     public function testRecordDeputyshipCandidatesResultExceptionFail(): void
     {
         $exception = new Exception('Database connection failed');
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], 0, $exception);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 0, $exception);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $result = $this->sut->result();
 
         $this->assertFalse($result->success);
-        $this->assertEquals($exception->getMessage(), $result->message);
+        $this->assertStringContainsString($exception->getMessage(), $result->message);
     }
 
     public function testRecordDeputyshipCandidatesResultSuccess(): void
     {
-        $this->sut->recordCsvLoadResult('/tmp/deputyships.csv', true);
+        $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/deputyships.csv', true, 10));
 
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult([], 20, null);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $expectedMessage = 'loaded deputyships CSV from /tmp/deputyships.csv; '.
+        $expectedMessage = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; '.
             'found 20 candidate database updates; successfully ingested deputyships CSV';
 
         $result = $this->sut->result();
 
         $this->assertTrue($result->success);
-        $this->assertEquals($expectedMessage, $result->message);
+        $this->assertStringContainsString($expectedMessage, $result->message);
     }
 }

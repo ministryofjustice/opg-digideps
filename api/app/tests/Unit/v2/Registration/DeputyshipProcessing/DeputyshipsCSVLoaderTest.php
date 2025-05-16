@@ -44,7 +44,7 @@ class DeputyshipsCSVLoaderTest extends TestCase
 
         $result = $this->sut->load($fileLocation);
 
-        $this->assertFalse($result);
+        $this->assertFalse($result->loadedOk);
     }
 
     public function testLoadSuccess(): void
@@ -103,6 +103,6 @@ class DeputyshipsCSVLoaderTest extends TestCase
 
         $result = $this->sut->load($fileLocation);
 
-        $this->assertTrue($result);
+        $this->assertTrue($result->loadedOk);
     }
 }
