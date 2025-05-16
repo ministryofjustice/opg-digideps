@@ -6931,11 +6931,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unsubmittedSectionsList \\(array\\) does not accept array\\|null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$visitsCare \\(App\\\\Entity\\\\Report\\\\VisitsCare\\) does not accept App\\\\Entity\\\\Report\\\\VisitsCare\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -9122,11 +9117,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$reportType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Parameter \\#1 \\$unsubmittedSectionsList of method App\\\\Entity\\\\Report\\\\Report\\:\\:setUnsubmittedSectionsList\\(\\) expects array\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
 

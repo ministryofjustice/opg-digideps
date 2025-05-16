@@ -212,7 +212,7 @@ class ReportServiceTest extends TestCase
             return $ndr instanceof EntityDir\Report\ReportSubmission;
         }));
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\Report;
+            return $report instanceof Report;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
@@ -245,7 +245,7 @@ class ReportServiceTest extends TestCase
 
     private function getFilledInNdr()
     {
-        $client = new EntityDir\Client();
+        $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
@@ -258,7 +258,7 @@ class ReportServiceTest extends TestCase
 
         $ndrAsset = new EntityDir\Ndr\AssetProperty();
         $ndrAsset->setAddress('SW1')
-            ->setOwned(EntityDir\Report\AssetProperty::OWNED_FULLY)
+            ->setOwned(AssetProperty::OWNED_FULLY)
             ->setNdr($ndr);
 
         $ndr->setNoAssetToAdd(false);
@@ -284,7 +284,7 @@ class ReportServiceTest extends TestCase
             return $ndr instanceof EntityDir\Report\ReportSubmission;
         }));
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\Report;
+            return $report instanceof Report;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
@@ -354,13 +354,13 @@ class ReportServiceTest extends TestCase
         // Assert asset is cloned
         $this->em->shouldReceive('detach')->once();
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset) {
-            return $asset instanceof EntityDir\Report\AssetProperty
+            return $asset instanceof AssetProperty
                 && 'SW1' === $asset->getAddress();
         }))->once();
 
         // Assert bank account is cloned, with opening/closing balance modified
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($bankAccount) {
-            return $bankAccount instanceof EntityDir\Report\BankAccount
+            return $bankAccount instanceof BankAccount
                 && '1234' === $bankAccount->getAccountNumber()
                 && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]->getClosingBalance()
                 && is_null($bankAccount->getClosingBalance());
@@ -428,6 +428,7 @@ class ReportServiceTest extends TestCase
         // otherwise not due
         $this->assertEquals(false, ReportService::isDue($oneMinuteAfterLastMidnight));
         $this->assertEquals(false, ReportService::isDue(new \DateTime('next week')));
+        $this->assertEquals(false, ReportService::isDue($todayMidnight));
     }
 
     /**
