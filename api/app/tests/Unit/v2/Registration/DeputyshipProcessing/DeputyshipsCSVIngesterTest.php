@@ -12,6 +12,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use Doctrine\DBAL\Exception;
@@ -43,14 +44,17 @@ class DeputyshipsCSVIngesterTest extends TestCase
 
     public function testCsvLoadFailed(): void
     {
+        $mockCsvLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
+        $mockCsvLoaderResult->loadedOk = false;
+
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
             ->with('/tmp/deputyshipsReport.csv')
-            ->willReturn(false);
+            ->willReturn($mockCsvLoaderResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('recordCsvLoadResult')
-            ->with('/tmp/deputyshipsReport.csv', false);
+            ->with($mockCsvLoaderResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('result')
@@ -64,7 +68,9 @@ class DeputyshipsCSVIngesterTest extends TestCase
     public function testCandidateSelectionFailed(): void
     {
         // CSV load goes OK
-        $this->mockDeputyshipsCSVLoader->method('load')->willReturn(true);
+        $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
+        $mockCSVLoaderResult->loadedOk = true;
+        $this->mockDeputyshipsCSVLoader->method('load')->willReturn($mockCSVLoaderResult);
         $this->mockDeputyshipsIngestResultRecorder->method('recordCsvLoadResult');
 
         // candidate selection fails
@@ -98,14 +104,17 @@ class DeputyshipsCSVIngesterTest extends TestCase
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
+        $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
+        $mockCSVLoaderResult->loadedOk = true;
+
         $this->mockDeputyshipsCSVLoader->expects($this->once())
             ->method('load')
             ->with('/tmp/deputyshipsReport.csv')
-            ->willReturn(true);
+            ->willReturn($mockCSVLoaderResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
             ->method('recordCsvLoadResult')
-            ->with('/tmp/deputyshipsReport.csv', true);
+            ->with($mockCSVLoaderResult);
 
         $this->mockDeputyshipsCandidatesSelector->expects($this->once())
             ->method('select')

@@ -8,7 +8,7 @@ class DeputyshipsCSVLoaderResult
 {
     public function __construct(
         public string $fileLocation,
-        public bool $loadedOk,
+        public bool $loadedOk = false,
         public int $numRecords = 0,
     ) {
     }

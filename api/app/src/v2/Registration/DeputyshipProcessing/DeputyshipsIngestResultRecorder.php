@@ -20,9 +20,9 @@ class DeputyshipsIngestResultRecorder
     /** @var string[] */
     private array $messages = [];
 
-    private \DateTimeImmutable $startDateTime;
+    private ?\DateTimeImmutable $startDateTime = null;
 
-    private \DateTimeImmutable $endDateTime;
+    private ?\DateTimeImmutable $endDateTime = null;
 
     public function __construct(
         private LoggerInterface $logger,
@@ -109,9 +109,13 @@ class DeputyshipsIngestResultRecorder
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
-        $message = 'Ingest started at: '.$this->formatDate($this->startDateTime).
-            '; ended at: '.$this->formatDate($this->endDateTime).
-            '; execution time: '.$this->endDateTime->diff($this->startDateTime)->format('%hh %im %ss');
+        if (is_null($this->startDateTime) || is_null($this->endDateTime)) {
+            $message = 'Ingest timings not available - incomplete start/end datetimes';
+        } else {
+            $message = 'Ingest started at: '.$this->formatDate($this->startDateTime).
+                '; ended at: '.$this->formatDate($this->endDateTime).
+                '; execution time: '.$this->endDateTime->diff($this->startDateTime)->format('%hh %im %ss');
+        }
 
         $message .= ' --- '.implode('; ', $this->messages);
 
