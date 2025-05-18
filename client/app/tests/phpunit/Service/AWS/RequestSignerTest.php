@@ -10,38 +10,51 @@ use App\Service\AWS\SignatureV4Signer;
 use Aws\Credentials\Credentials;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class RequestSignerTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function signRequest()
+    public function testSignRequest(): void
     {
-        $headers['X-Amz-Content-Sha256'] = 'A payload';
-        $headers['Authorization'] = [
-            'AWS4-HMAC-SHA256 '
-            .'Credential=abc123/some/scope, '
-            ."SignedHeaders={['header' => 'signed']}, Signature={aSignature}",
+        $headers = [
+            'X-Amz-Content-Sha256' => 'A payload',
+            'Authorization' => [
+                'AWS4-HMAC-SHA256 '
+                .'Credential=abc123/some/scope, '
+                ."SignedHeaders={['header' => 'signed']}, Signature={aSignature}",
+            ],
         ];
 
         $originalRequest = new Request('GET', 'some.url');
         $signedRequest = new Request('GET', 'some.url', $headers);
-//
-//      These values are set in frontend.env to enable local testing
-        $credentials = new Credentials('aFakeSecretAccessKeyId', 'aFakeSecretAccessKey', 'fakeValue');
+
+        $expectedCredentials = new Credentials('aFakeSecretAccessKeyId', 'aFakeSecretAccessKey', 'fakeValue');
         $service = 'some-service';
+        $provider = $this->getMockBuilder(DefaultCredentialProvider::class)
+            ->onlyMethods(['getCredentials'])
+            ->getMock();
 
-        /** @var DefaultCredentialProvider&ObjectProphecy $provider */
-        $provider = new DefaultCredentialProvider();
+        $provider->expects($this->once())
+            ->method('getCredentials')
+            ->willReturn($expectedCredentials);
 
-        /** @var SignatureV4Signer&ObjectProphecy $signer */
-        $signer = self::prophesize(SignatureV4Signer::class);
-        $signer->signRequest($originalRequest, $credentials, $service)->shouldBeCalled()->willReturn($signedRequest);
+        $signer = $this->createMock(SignatureV4Signer::class);
+        $signer->expects($this->once())
+            ->method('signRequest')
+            ->with(
+                $this->equalTo($originalRequest),
+                $this->callback(function ($actualCredentials) use ($expectedCredentials) {
+                    return $actualCredentials instanceof Credentials
+                        && $actualCredentials->getAccessKeyId() === $expectedCredentials->getAccessKeyId()
+                        && $actualCredentials->getSecretKey() === $expectedCredentials->getSecretKey()
+                        && $actualCredentials->getSecurityToken() === $expectedCredentials->getSecurityToken();
+                }),
+                $this->equalTo($service)
+            )
+            ->willReturn($signedRequest);
 
-        $sut = new RequestSigner($provider, $signer->reveal());
-        $sut->signRequest($originalRequest, $service);
+        $sut = new RequestSigner($provider, $signer);
+        $result = $sut->signRequest($originalRequest, $service);
+
+        $this->assertEquals($signedRequest, $result);
     }
 }
