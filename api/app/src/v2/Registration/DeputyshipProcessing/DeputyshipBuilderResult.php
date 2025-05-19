@@ -13,13 +13,15 @@ use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
  */
 class DeputyshipBuilderResult
 {
+    private int $numCandidatesApplied = 0;
+
+    private int $numCandidatesFailed = 0;
+
     public function __construct(
         private readonly DeputyshipBuilderResultOutcome $outcome,
 
-        private readonly string $message = '',
-
         /** @var string[] $errors */
-        private readonly array $errors = [],
+        private array $errors = [],
     ) {
     }
 
@@ -35,7 +37,23 @@ class DeputyshipBuilderResult
 
     public function getMessage(): string
     {
-        return $this->message;
+        $message = 'Builder result: failed candidates = '.$this->numCandidatesFailed.
+            '; applied candidates = '.$this->numCandidatesApplied;
+        if (count($this->errors) > 0) {
+            $message .= '; ERRORS: '.implode(' / ', $this->errors);
+        }
+
+        return $message;
+    }
+
+    public function getNumCandidatesFailed(): int
+    {
+        return $this->numCandidatesFailed;
+    }
+
+    public function getNumCandidatesApplied(): int
+    {
+        return $this->numCandidatesApplied;
     }
 
     /**
@@ -44,5 +62,22 @@ class DeputyshipBuilderResult
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * Record the result of applying a candidate to the database.
+     * If $success is true, the insert or update was a success; otherwise, it failed, and $errorMessage is stored.
+     */
+    public function addCandidateResult(bool $success, ?string $errorMessage = null): void
+    {
+        if ($success) {
+            ++$this->numCandidatesApplied;
+        } else {
+            ++$this->numCandidatesFailed;
+
+            if (!is_null($errorMessage)) {
+                $this->errors[] = $errorMessage;
+            }
+        }
     }
 }
