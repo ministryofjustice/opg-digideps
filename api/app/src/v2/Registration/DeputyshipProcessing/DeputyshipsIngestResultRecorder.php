@@ -14,6 +14,10 @@ class DeputyshipsIngestResultRecorder
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
 
+    // for storing builder counts
+    private int $numCandidatesApplied = 0;
+    private int $numCandidatesFailed = 0;
+
     /** @var string[] */
     private array $errorMessages = [];
 
@@ -95,6 +99,8 @@ class DeputyshipsIngestResultRecorder
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
+        $this->numCandidatesApplied += $builderResult->getNumCandidatesApplied();
+        $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
         $this->logger->debug($this->formatMessage('++++++++ '.$builderResult->getMessage()));
         $this->logMemory();
     }
@@ -119,10 +125,13 @@ class DeputyshipsIngestResultRecorder
 
         $message .= ' --- '.implode('; ', $this->messages);
 
+        $message .= '; number of candidates applied = '.$this->numCandidatesApplied.
+            '; number of candidates failed = '.$this->numCandidatesFailed;
+
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
         } else {
-            $message .= implode('; ERRORS: ', $this->errorMessages);
+            $message .= '; ERRORS: '.implode(' / ', $this->errorMessages);
         }
 
         $this->logMessage($message);
