@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\StagingDeputyship;
+use App\Model\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,29 +21,18 @@ class StagingDeputyshipRepository extends ServiceEntityRepository
         parent::__construct($registry, StagingDeputyship::class);
     }
 
-    public function findAllPaged(int $pageSize = 1000): \Traversable
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function findAllPaged(): \Traversable
     {
-        $query = $this->getEntityManager()->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd");
+        $em = $this->getEntityManager();
+        $countQuery = $em->createQuery("SELECT COUNT(1) FROM App\Entity\StagingDeputyship sd");
+        $pageQuery = $em->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd");
 
-        // there will be at least one page, but we'll set this accurately when we've retrieved the first page
-        $numPages = 1;
+        $queryPager = new QueryPager($countQuery, $pageQuery);
 
-        $currentPage = 1;
-        while ($numPages >= $currentPage) {
-            $pagedQuery = $query->setFirstResult(($currentPage - 1) * $pageSize)->setMaxResults($pageSize);
-            $page = new Paginator($pagedQuery, fetchJoinCollection: false);
-
-            // get the total number of results and reset the number of pages after retrieving the first page of results
-            if (1 === $currentPage) {
-                $numResults = count($page);
-                $numPages = ceil($numResults / $pageSize);
-            }
-
-            foreach ($page as $deputyship) {
-                yield $deputyship;
-            }
-
-            ++$currentPage;
-        }
+        return $queryPager->getRows(asArray: false);
     }
 }
