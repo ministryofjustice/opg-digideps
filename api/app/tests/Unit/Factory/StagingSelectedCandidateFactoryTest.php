@@ -7,14 +7,16 @@ namespace App\Tests\Unit\Factory;
 use App\Entity\Client;
 use App\Entity\StagingDeputyship;
 use App\Factory\StagingSelectedCandidateFactory;
-use App\Service\ReportUtils;
 use PHPUnit\Framework\TestCase;
 
 class StagingSelectedCandidateFactoryTest extends TestCase
 {
+    private StagingSelectedCandidateFactory $factory;
+    private StagingDeputyship $csvDeputyShipRow;
+
     protected function setUp(): void
     {
-        $this->factory = new StagingSelectedCandidateFactory(new ReportUtils());
+        $this->factory = new StagingSelectedCandidateFactory();
 
         $this->csvDeputyShipRow = new StagingDeputyship();
         $this->csvDeputyShipRow->orderUid = '700000001102';
@@ -39,6 +41,5 @@ class StagingSelectedCandidateFactoryTest extends TestCase
         self::assertEquals($this->csvDeputyShipRow->orderStatus, $candidateRecord->status);
         self::assertEquals($mockClient->getId(), $candidateRecord->clientId);
         self::assertEquals($this->csvDeputyShipRow->orderMadeDate, $candidateRecord->orderMadeDate);
-        self::assertEquals($this->csvDeputyShipRow->deputyUid, $candidateRecord->deputyUid);
     }
 }

@@ -41,8 +41,8 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
         ]);
 
         $expectedCandidates = [
-            new StagingSelectedCandidate(),
-            new StagingSelectedCandidate(),
+            $this->createMock(StagingSelectedCandidate::class),
+            $this->createMock(StagingSelectedCandidate::class),
         ];
 
         $result = $this->createMock(Result::class);
@@ -66,8 +66,8 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
         ]);
 
         $expectedCandidates = [
-            new StagingSelectedCandidate(),
-            new StagingSelectedCandidate(),
+            $this->createMock(StagingSelectedCandidate::class),
+            $this->createMock(StagingSelectedCandidate::class),
         ];
 
         $result = $this->createMock(Result::class);
