@@ -66,12 +66,13 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
     }
 
     /**
-     * @return \Traversable<?array<string, mixed>>
+     * Returns the non-order insert candidates, followed by the update candidates.
+     * NOTE: does not return the insert order if it exists.
+     *
+     * @return \Traversable<array<string, mixed>>
      */
     public function getIterator(): \Traversable
     {
-        yield $this->insertOrder;
-
         foreach ($this->insertOthers as $insertOther) {
             yield $insertOther;
         }

@@ -30,7 +30,6 @@ class DeputyshipCandidatesGroupTest extends TestCase
         ];
 
         $expectedIteratorOrder = array_merge(
-            [$expectedInsertOrder],
             $expectedInsertOthers,
             $expectedUpdates
         );
