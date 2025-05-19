@@ -33,9 +33,9 @@ class DeputyshipBuilder
     }
 
     /**
-     * @param \Traversable<array<string, string>> $candidates Assumption is that these are sorted by court order UID,
-     *                                                        so we can group them by UID even though we are processing
-     *                                                        one row at a time.
+     * @param \Traversable<array<string, mixed>> $candidates Assumption is that these are sorted by court order UID,
+     *                                                       so we can group them by UID even though we are processing
+     *                                                       one row at a time.
      *
      * Once we have a group, we create the entities (in the correct order) and yield the result to the caller.
      *
