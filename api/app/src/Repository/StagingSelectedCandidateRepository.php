@@ -19,7 +19,7 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get the candidates from the database table, but ordered by order UID and without duplicates.
+     * Get the candidates from the database table, but ordered by order UID and without duplicatec.
      * Ordering is important as the builder will group the candidates on the fly, using the order UID,
      * so that all entities for a single order UID are created together.
      *
@@ -36,7 +36,11 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
         $pageSize = 1000;
         $numPages = ceil($numCandidates / $pageSize);
 
-        $query = $this->getEntityManager()->createQuery('SELECT DISTINCT ssc FROM App\Entity\StagingSelectedCandidate ssc ORDER BY ssc.orderUid ASC');
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT DISTINCT c.action, c.orderUid, c.deputyUid, c.status, c.orderType, c.reportType, c.orderMadeDate, '.
+            'c.deputyType, c.deputyStatusOnOrder, c.orderId, c.clientId, c.reportId, c.deputyId, c.ndrId '.
+            'FROM App\Entity\StagingSelectedCandidate c ORDER BY c.orderUid ASC'
+        );
 
         $currentPage = 1;
         while ($numPages >= $currentPage) {
