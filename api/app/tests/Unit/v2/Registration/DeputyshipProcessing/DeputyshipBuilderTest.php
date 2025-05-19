@@ -65,7 +65,7 @@ class DeputyshipBuilderTest extends TestCase
                 $this->assertEquals($uidsExpected[$caller->counter], $calledWith->orderUid);
                 ++$caller->counter;
 
-                return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully);
+                return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
             });
 
         $results = $this->sut->build($candidates);
