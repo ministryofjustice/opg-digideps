@@ -204,6 +204,11 @@ services:
       - DEFAULT_REGION=eu-west-1
       - USE_SINGLE_REGION=1
       - DEBUG=1
+    healthcheck:
+      test: bash /scripts/wait/healthcheck.sh
+      interval: 20s
+      timeout: 30s
+      retries: 50
 
   wait-for-it:
     build: ./wait-for-it
@@ -339,9 +344,12 @@ services:
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
         ENVIRONMENT: local
     depends_on:
-      - postgres
-      - redis-api
-      - localstack
+      postgres:
+        condition: service_started
+      redis-api:
+        condition: service_started
+      localstack:
+        condition: service_healthy
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
