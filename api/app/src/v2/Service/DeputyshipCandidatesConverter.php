@@ -31,7 +31,7 @@ class DeputyshipCandidatesConverter
         if (!is_null($insertOrder)) {
             $insertedOrderOk = $this->dbAccess->insertOrder($insertOrder);
             if ($insertedOrderOk) {
-                $buildResult->addCandidateResult(success: true);
+                $buildResult->addCandidateResult(true);
             } else {
                 $this->dbAccess->rollback();
 
