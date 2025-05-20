@@ -26,8 +26,12 @@ class DeputyshipsCSVIngester
 
     /**
      * Process the CSV file at $fileLocation.
+     *
+     * If $dryRun is true, the full CSV process is applied, including creating court orders and relationships,
+     * but none of the court order data are saved to the database (all transactions are rolled back). The
+     * deputyship and selectedcandidates tables will still be populated.
      */
-    public function processCsv(string $fileLocation): DeputyshipsCSVIngestResult
+    public function processCsv(string $fileLocation, bool $dryRun = false): DeputyshipsCSVIngestResult
     {
         $this->deputyshipsIngestResultRecorder->recordStart();
 
@@ -46,7 +50,7 @@ class DeputyshipsCSVIngester
         }
 
         // create CourtOrder and related entities in groups, grouped by court order UID
-        $builderResults = $this->deputyshipBuilder->build($candidatesResult->candidates);
+        $builderResults = $this->deputyshipBuilder->build($candidatesResult->candidates, dryRun: $dryRun);
 
         // each $builderResult contains a group of court order entities and relationships to be persisted
         foreach ($builderResults as $builderResult) {

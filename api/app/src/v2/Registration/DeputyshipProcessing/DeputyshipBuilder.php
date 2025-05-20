@@ -17,7 +17,7 @@ class DeputyshipBuilder
     ) {
     }
 
-    private function processCandidates(?string $orderUid, array $candidatesList): DeputyshipBuilderResult
+    private function processCandidates(?string $orderUid, array $candidatesList, bool $dryRun): DeputyshipBuilderResult
     {
         if (is_null($orderUid)) {
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::Skipped);
@@ -29,7 +29,7 @@ class DeputyshipBuilder
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidateListError);
         }
 
-        return $this->converter->createEntitiesFromCandidates($candidatesGroup);
+        return $this->converter->createEntitiesFromCandidates($candidatesGroup, $dryRun);
     }
 
     /**
@@ -41,7 +41,7 @@ class DeputyshipBuilder
      *
      * @return \Traversable<DeputyshipBuilderResult>
      */
-    public function build(\Traversable $candidates): \Traversable
+    public function build(\Traversable $candidates, bool $dryRun = false): \Traversable
     {
         $currentOrderUid = null;
         $candidatesList = [];
@@ -59,7 +59,7 @@ class DeputyshipBuilder
                 $candidatesList[] = $candidate;
             } elseif (count($candidatesList) > 0) {
                 // process group
-                yield $this->processCandidates($currentOrderUid, $candidatesList);
+                yield $this->processCandidates($currentOrderUid, $candidatesList, $dryRun);
 
                 // reset and start new group
                 $candidatesList = [$candidate];
@@ -68,6 +68,6 @@ class DeputyshipBuilder
         }
 
         // create entities for any stragglers
-        yield $this->processCandidates($currentOrderUid, $candidatesList);
+        yield $this->processCandidates($currentOrderUid, $candidatesList, $dryRun);
     }
 }
