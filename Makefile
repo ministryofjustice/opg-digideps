@@ -98,8 +98,8 @@ api-integration-tests: reset-database-integration-tests ##@integration-tests Run
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 INTEGRATION_SELECTION = selection-solo
-api-integration-test-solo: reset-database-integration-tests ##@integration-tests Run individual api integration tests
-#Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php
+api-integration-test-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
+#Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testLoginFailWrongPassword (test case argument is optional)
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION} $(suite) $(test_case)
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
