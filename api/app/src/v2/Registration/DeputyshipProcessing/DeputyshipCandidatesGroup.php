@@ -17,7 +17,7 @@ use App\v2\Registration\Enum\DeputyshipCandidateAction;
  */
 class DeputyshipCandidatesGroup implements \IteratorAggregate
 {
-    public string $orderUid;
+    public ?string $orderUid = null;
 
     /** @var ?array<string, mixed> */
     public ?array $insertOrder = null;
@@ -34,8 +34,12 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
      *
      * @param array<array<string, mixed>> $candidatesList List of candidates represented as arrays
      */
-    public static function create(string $orderUid, array $candidatesList): ?self
+    public static function create(?string $orderUid, array $candidatesList): ?self
     {
+        if (is_null($orderUid)) {
+            return null;
+        }
+
         $group = new self();
 
         $group->orderUid = $orderUid;
