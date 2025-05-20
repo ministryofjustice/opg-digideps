@@ -40,7 +40,7 @@ class DeputyshipsIngestResultRecorder
 
     private function formatMessage(string $message): string
     {
-        return $this->formatDate(new \DateTimeImmutable()).' '.$message;
+        return $this->formatDate(new \DateTimeImmutable()).' deputyships-ingest '.$message;
     }
 
     private function logMemory(): void
@@ -52,7 +52,7 @@ class DeputyshipsIngestResultRecorder
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
-        $this->logger->info($this->formatMessage($message));
+        $this->logger->notice($this->formatMessage($message));
         $this->logMemory();
     }
 
