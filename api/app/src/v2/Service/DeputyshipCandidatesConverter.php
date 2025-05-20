@@ -36,8 +36,8 @@ class DeputyshipCandidatesConverter
                 $this->dbAccess->rollback();
 
                 return new DeputyshipBuilderResult(
-                    outcome: DeputyshipBuilderResultOutcome::InsertOrderFailed,
-                    errors: [sprintf('could not insert court order with UID %s', $candidatesGroup->orderUid)]
+                    DeputyshipBuilderResultOutcome::InsertOrderFailed,
+                    [sprintf('could not insert court order with UID %s', $candidatesGroup->orderUid)]
                 );
             }
         }
@@ -47,8 +47,8 @@ class DeputyshipCandidatesConverter
         // court order could not be found
         if (is_null($courtOrderId)) {
             return new DeputyshipBuilderResult(
-                outcome: DeputyshipBuilderResultOutcome::NoExistingOrder,
-                errors: [sprintf('could not find court order with UID %s', $candidatesGroup->orderUid)]
+                DeputyshipBuilderResultOutcome::NoExistingOrder,
+                [sprintf('could not find court order with UID %s', $candidatesGroup->orderUid)]
             );
         }
 
@@ -83,7 +83,8 @@ class DeputyshipCandidatesConverter
             }
         }
 
-        $this->dbAccess->endTransaction();
+        // $this->dbAccess->endTransaction();
+        $this->dbAccess->rollback();
 
         return $buildResult;
     }
