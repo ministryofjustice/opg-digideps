@@ -21,7 +21,7 @@ class DeputyshipCandidatesConverter
     ) {
     }
 
-    public function createEntitiesFromCandidates(DeputyshipCandidatesGroup $candidatesGroup, bool $dryRun): DeputyshipBuilderResult
+    public function convert(DeputyshipCandidatesGroup $candidatesGroup, bool $dryRun): DeputyshipBuilderResult
     {
         $this->dbAccess->beginTransaction();
 
