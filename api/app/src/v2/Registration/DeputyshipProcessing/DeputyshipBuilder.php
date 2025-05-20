@@ -29,7 +29,7 @@ class DeputyshipBuilder
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidateListError);
         }
 
-        return $this->converter->createEntitiesFromCandidates($candidatesGroup, $dryRun);
+        return $this->converter->convert($candidatesGroup, $dryRun);
     }
 
     /**
