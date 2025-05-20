@@ -26,8 +26,11 @@ export PGDATABASE=digideps_unit_test
 export PGUSER=${DATABASE_USERNAME:=api}
 export SSL=${DATABASE_SSL:=allow}
 
+INTEGRATION_SELECTION=$1
+SUITE=$2
+
 # Check the argument provided and run the corresponding test suites
-case "$1" in
+case "$INTEGRATION_SELECTION" in
   selection-1)
     # API Run 1
     printf '\n Running Controller Suite \n\n'
@@ -84,8 +87,13 @@ case "$1" in
     # generate HTML coverage report
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
+  selection-solo)
+    # Run specific test
+    printf "\n Running Solo Test Suite: %s \n\n" $SUITE
+    php vendor/bin/phpunit -c tests/Integration "tests/Integration/$SUITE"
+    ;;
   *)
-    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all"
+    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all, selection-solo"
     exit 1
     ;;
 esac
