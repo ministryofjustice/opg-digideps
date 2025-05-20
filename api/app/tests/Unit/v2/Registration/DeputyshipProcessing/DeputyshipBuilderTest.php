@@ -60,7 +60,7 @@ class DeputyshipBuilderTest extends TestCase
         // two groups should be passed to the converter
         $uidsExpected = [$orderUid1, $orderUid2];
         $this->mockConverter->expects($this->exactly(2))
-            ->method('createEntitiesFromCandidates')
+            ->method('convert')
             ->willReturnCallback(function ($calledWith) use ($uidsExpected, $caller) {
                 $this->assertEquals($uidsExpected[$caller->counter], $calledWith->orderUid);
                 ++$caller->counter;
