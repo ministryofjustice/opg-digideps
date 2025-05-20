@@ -43,8 +43,12 @@ class DeputyshipProcessingRawDbAccess
     /**
      * @return ?int This is null if there are multiple or no matching orders
      */
-    public function findOrderId(string $orderUid): ?int
+    public function findOrderId(?string $orderUid): ?int
     {
+        if (is_null($orderUid)) {
+            return null;
+        }
+
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id', 'id');
 
