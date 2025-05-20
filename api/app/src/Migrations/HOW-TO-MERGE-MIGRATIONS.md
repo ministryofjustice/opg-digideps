@@ -1,5 +1,7 @@
 #How to merge migrations
 
+Test
+
 To do after successful production release.
 
 Replace `Version181` in those instruction with the last migration on production.
