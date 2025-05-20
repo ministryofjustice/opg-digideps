@@ -66,17 +66,17 @@ class DeputyshipBuilderResult
 
     /**
      * Record the result of applying a candidate to the database.
-     * If $success is true, the insert or update was a success; otherwise, it failed, and $errorMessage is stored.
+     * If $success is true, the insert or update was a success; otherwise, it failed, and $messageOnFailure is stored.
      */
-    public function addCandidateResult(bool $success, ?string $errorMessage = null): void
+    public function addCandidateResult(bool $success, ?string $messageOnFailure = null): void
     {
         if ($success) {
             ++$this->numCandidatesApplied;
         } else {
             ++$this->numCandidatesFailed;
 
-            if (!is_null($errorMessage)) {
-                $this->errors[] = $errorMessage;
+            if (!is_null($messageOnFailure)) {
+                $this->errors[] = $messageOnFailure;
             }
         }
     }
