@@ -1,6 +1,6 @@
 #How to merge migrations
 
-Test
+Test2
 
 To do after successful production release.
 
