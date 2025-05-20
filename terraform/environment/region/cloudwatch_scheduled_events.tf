@@ -3,7 +3,7 @@
 resource "aws_cloudwatch_event_rule" "csv_automation_court_order_processing" {
   name                = "csv-automation-court-order-processing-${local.environment}"
   description         = "Process Sirus Court Orders CSV for all Users ${terraform.workspace}"
-  schedule_expression = "cron(59 1 * * ? *)"
+  schedule_expression = "cron(59 4 * * ? *)"
   tags                = var.default_tags
 }
 
