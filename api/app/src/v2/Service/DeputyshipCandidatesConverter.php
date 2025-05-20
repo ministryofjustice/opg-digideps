@@ -83,8 +83,7 @@ class DeputyshipCandidatesConverter
             }
         }
 
-        // $this->dbAccess->endTransaction();
-        $this->dbAccess->rollback();
+        $this->dbAccess->endTransaction();
 
         return $buildResult;
     }
