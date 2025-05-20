@@ -74,9 +74,9 @@
         <tbody class="govuk-table__body">
             {% for transfer in report.moneyTransfers|sort((a, b) => a.accountFrom.bank <=> b.accountFrom.bank) %}
                 <tr class="govuk-table__row behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
-                    <th scope="row" class="govuk-table__header">
+                    <td class="govuk-table__cell">
                         {{ _self.accountDetails(transfer.accountFrom) }}
-                    </th>
+                    </td>
                     <td class="govuk-table__cell">
                         {{ _self.accountDetails(transfer.accountTo) }}
                     </td>

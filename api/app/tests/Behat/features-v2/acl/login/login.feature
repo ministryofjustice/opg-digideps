@@ -132,7 +132,7 @@ Feature: Users logging into the service
         Then a Lay Deputy tries to login with their "primary" email address
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
-        And I should see the NDR report on the reports page
+        And I 'should' see the NDR report on the reports page
 
     @super-admin @lay-pfa-high-not-started-multi-client-deputy-with-ndr
     Scenario: A user logs into the service with their primary account and unticks the NDR checkbox attached to primary account
@@ -142,7 +142,7 @@ Feature: Users logging into the service
         Then a Lay Deputy tries to login with their "primary" email address
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
-        And I should not see the NDR report on the reports page
+        And I 'should not' see the NDR report on the reports page
 
     @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client
     Scenario: A user tries to login to the service with their secondary account that has no active clients attached to it

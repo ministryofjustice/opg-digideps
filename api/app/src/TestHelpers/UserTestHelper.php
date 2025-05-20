@@ -9,16 +9,19 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophet;
 
 class UserTestHelper extends TestCase
 {
-    public function createUserMock(string $roleName, bool $hasReports, bool $hasClients, int $id)
+    public static function createUserMock(string $roleName, bool $hasReports, bool $hasClients, int $id)
     {
         $clientTestHelper = new ClientTestHelper();
 
         $clients = $hasClients ? [$clientTestHelper->createClientMock(1, $hasReports)] : null;
-
-        $user = self::prophesize(User::class);
+        
+        /** @var ObjectProphecy<User> $user */
+        $user = (new Prophet())->prophesize(User::class);
         $user->getRoleName()->willReturn($roleName);
         $user->getClients()->willReturn($clients);
         $user->hasReports()->willReturn($hasReports);
@@ -27,9 +30,14 @@ class UserTestHelper extends TestCase
         return $user->reveal();
     }
 
-    public function createAndPersistUser(EntityManager $em, ?Client $client = null, ?string $roleName = User::ROLE_LAY_DEPUTY, ?string $email = null)
-    {
-        $user = $this->createUser($client, $roleName, $email);
+    public static function createAndPersistUser(
+        EntityManager $em, 
+        ?Client $client = null, 
+        ?string $roleName = User::ROLE_LAY_DEPUTY, 
+        ?string $email = null, 
+        ?int $deputyUid = null
+    ): User {
+        $user = self::createUser(client: $client, roleName:  $roleName, email:  $email, deputyUid: $deputyUid);
 
         if (!is_null($client)) {
             $em->persist($client);
@@ -41,7 +49,7 @@ class UserTestHelper extends TestCase
         return $user;
     }
 
-    public function createUser(
+    public static function createUser(
         ?Client $client = null,
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
@@ -49,7 +57,7 @@ class UserTestHelper extends TestCase
         ?int $deputyUid = null,
         ?string $firstName = null,
         ?string $lastName = null,
-    ) {
+    ): User {
         $faker = Factory::create('en_GB');
 
         if (is_null($firstName)) {

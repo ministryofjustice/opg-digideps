@@ -48,16 +48,10 @@ jobs:
 
       - name: run api unit tests
         id: unit-tests
-        run: |
-          APP_ENV=test APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml up -d api-unit-tests
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 var
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests sh scripts/api_unit_test.sh
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml exec -T api-unit-tests chmod -R 777 tests/coverage
-          docker cp "api-unit-tests:/var/www/tests/coverage/api-unit-tests.xml" "./api-unit-tests.xml"
-          docker compose -f docker-compose.yml -f docker-compose.unit-tests-api.yml down
+        run: make api-unit-tests ADDITIONAL_CONFIG=""
 
       - name: archive test results
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: api-unit-tests
-          path: api-unit-tests.xml
+          path: api/app/tests/coverage/api-unit-tests.xml

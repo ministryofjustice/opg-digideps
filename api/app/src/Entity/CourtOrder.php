@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,38 +24,63 @@ class CourtOrder
     use CreateUpdateTimestamps;
 
     /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
      * @ORM\Id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Type('integer')]
-    #[JMS\Groups(['court-order-basic'])]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private int $id;
 
     /**
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
     #[JMS\Type('string')]
-    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
     private string $courtOrderUid;
 
     /**
-     * @ORM\Column(name="type", type="string", length=10, nullable=false)
+     * e.g. "pfa" or "hw".
+     *
+     * @ORM\Column(name="order_type", type="string", length=10, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
-    private string $type;
+    private string $orderType;
 
     /**
-     * @ORM\Column(name="active", type="boolean", options = { "default": true })
+     * @ORM\Column(name="status", type="string", length=10, nullable=false)
      */
-    #[JMS\Type('boolean')]
+    #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
-    private bool $active;
+    private string $status;
+
+    /**
+     * @ORM\Column(name="order_made_date", type="datetime", nullable=false)
+     */
+    #[JMS\Type('datetime')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    private \DateTime $orderMadeDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
+     *
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     */
+    #[JMS\Type(Client::class)]
+    #[JMS\Groups(['court-order-full'])]
+    private Client $client;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"})
+     */
+    #[JMS\Type(Ndr::class)]
+    #[JMS\Groups(['court-order-full'])]
+    private ?Ndr $ndr = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
@@ -71,20 +97,7 @@ class CourtOrder
     private Collection $reports;
 
     /**
-     * @JMS\Type("App\Entity\Client")
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-     */
-    #[JMS\Type(Client::class)]
-    #[JMS\Groups(['court-order-full'])]
-    private Client $client;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
      */
     #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
@@ -98,19 +111,17 @@ class CourtOrder
     /**
      * active means "not discharged".
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"court-order-full"})
-     *
      * @return Deputy[]
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['court-order-full'])]
     public function getActiveDeputies(): array
     {
         $activeDeputies = [];
 
         /** @var CourtOrderDeputy $rel */
         foreach ($this->courtOrderDeputyRelationships as $rel) {
-            if (!$rel->isDischarged()) {
+            if ($rel->isActive()) {
                 $activeDeputies[] = $rel->getDeputy();
             }
         }
@@ -142,26 +153,26 @@ class CourtOrder
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
-        return $this->type;
+        return $this->orderType;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $orderType): CourtOrder
     {
-        $this->type = $type;
+        $this->orderType = $orderType;
 
         return $this;
     }
 
-    public function isActive(): bool
+    public function getStatus(): string
     {
-        return $this->active;
+        return $this->status;
     }
 
-    public function setActive(bool $active): CourtOrder
+    public function setStatus(string $status): CourtOrder
     {
-        $this->active = $active;
+        $this->status = $status;
 
         return $this;
     }
@@ -178,10 +189,50 @@ class CourtOrder
         return $this;
     }
 
+    public function getOrderMadeDate(): \DateTime
+    {
+        return $this->orderMadeDate;
+    }
+
+    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    {
+        $this->orderMadeDate = $orderMadeDate;
+
+        return $this;
+    }
+
     public function addReport(Report $report): CourtOrder
     {
         $this->reports->add($report);
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, CourtOrderDeputy>
+     */
+    public function getDeputyRelationships(): Collection
+    {
+        return $this->courtOrderDeputyRelationships;
+    }
+
+    public function setNdr(Ndr $ndr): CourtOrder
+    {
+        $this->ndr = $ndr;
+
+        return $this;
+    }
+
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
     }
 }

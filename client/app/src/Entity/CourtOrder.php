@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -9,6 +10,10 @@ use JMS\Serializer\Annotation as JMS;
  */
 class CourtOrder
 {
+    public const HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
+    public const PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
+    public const PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
+
     /**
      * @var int
      *
@@ -17,9 +22,9 @@ class CourtOrder
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      */
     private $courtOrderUid;
 
@@ -28,14 +33,35 @@ class CourtOrder
      *
      * @JMS\Type("string")
      */
-    private $type;
+    private $orderType;
 
     /**
-     * @var bool
+     * @var string
      *
-     * @JMS\Type("boolean")
+     * @JMS\Type("string")
      */
-    private $active;
+    private $status;
+
+    /**
+     * @JMS\Type("array<App\Entity\Deputy>")
+     *
+     * @var Deputy[]
+     */
+    private array $activeDeputies = [];
+
+    /**
+     * @JMS\Type("array<App\Entity\Report\Report>")
+     *
+     * @var Report[]
+     */
+    private array $reports = [];
+
+    /**
+     * @JMS\Type("App\Entity\Client")
+     *
+     * @phpstan-ignore property.onlyRead (Deserialized from API response)
+     */
+    private Client $client;
 
     public function getId(): int
     {
@@ -49,39 +75,139 @@ class CourtOrder
         return $this;
     }
 
-    public function getCourtOrderUid(): int
+    public function getCourtOrderUid(): string
     {
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(int $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
     {
         $this->courtOrderUid = $courtOrderUid;
 
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
-        return $this->type;
+        return $this->orderType;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $orderType): CourtOrder
     {
-        $this->type = $type;
+        $this->orderType = $orderType;
 
         return $this;
     }
 
-    public function isActive(): bool
+    public function getStatus(): string
     {
-        return $this->active;
+        return $this->status;
     }
 
-    public function setActive(bool $active): CourtOrder
+    public function setStatus(string $status): CourtOrder
     {
-        $this->active = $active;
+        $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * @return array $reports
+     */
+    public function getReports(): array
+    {
+        return $this->reports;
+    }
+
+    /**
+     * @param Report[] $reports
+     */
+    public function setReports(array $reports): CourtOrder
+    {
+        $this->reports = $reports;
+
+        return $this;
+    }
+
+    /**
+     * @return Deputy[]
+     */
+    public function getActiveDeputies(): array
+    {
+        return $this->activeDeputies;
+    }
+
+    /**
+     * @param Deputy[] $activeDeputies
+     */
+    public function setActiveDeputies(array $activeDeputies): CourtOrder
+    {
+        $this->activeDeputies = $activeDeputies;
+
+        return $this;
+    }
+
+    public function getActiveReport(): ?Report
+    {
+        foreach ($this->reports as $report) {
+            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
+                return $report;
+            }
+        }
+
+        return null;
+    }
+
+    public function getUnsubmittedReport(): ?Report
+    {
+        foreach ($this->reports as $report) {
+            if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
+                return $report;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return Report[]
+     */
+    public function getSubmittedReports(): array
+    {
+        return array_values(array_filter($this->reports, fn ($report) => $report->isSubmitted()));
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    public function hasCoDeputies(): bool
+    {
+        return count($this->activeDeputies) > 1;
+    }
+
+    /**
+     * @return Deputy[]
+     */
+    public function getCoDeputies(string $loggedInDeputyUid): array
+    {
+        $deputies = array_filter($this->activeDeputies, fn ($deputy) => $deputy->getDeputyUid() !== $loggedInDeputyUid);
+        uasort($deputies, fn ($deputyA, $deputyB) => strcmp($deputyA->getFirstName(), $deputyB->getFirstName()));
+
+        return array_values($deputies);
+    }
+
+    public function getActiveReportType(): string
+    {
+        if (!is_null($this->getActiveReport()) && !str_ends_with($this->getActiveReport()->getType(), '-4')) {
+            return match ($this->getOrderType()) {
+                'hw' => self::HEALTH_AND_WELFARE_REPORT,
+                'pfa' => self::PROPERTY_AND_AFFAIRS_REPORT,
+                default => throw new \UnhandledMatchError('Unknown order type'.$this->getOrderType()),
+            };
+        }
+
+        return self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
     }
 }

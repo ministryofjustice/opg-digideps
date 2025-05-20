@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use League\Csv\Serializer;
 
 /**
@@ -17,21 +18,30 @@ use League\Csv\Serializer;
  *
  * @ORM\Table(name="deputyship", schema="staging")
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\StagingDeputyshipRepository")
  */
 class StagingDeputyship
 {
     /**
      * @ORM\Id
      *
+     * @JMS\Type("integer")
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     *
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @ORM\SequenceGenerator(sequenceName="deputyship_id_seq", allocationSize=1, initialValue=1)
+     */
+    public ?int $id = null;
+
+    /**
      * @ORM\Column(name="order_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'OrderUid')]
     public string $orderUid;
 
     /**
-     * @ORM\Id
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'DeputyUid')]
@@ -98,6 +108,8 @@ class StagingDeputyship
     public ?string $deputyType;
 
     /**
+     * This is true if the deputy is ACTIVE on the order, false otherwise.
+     *
      * @ORM\Column(name="deputy_status_on_order", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'DeputyStatusOnOrder')]
@@ -120,4 +132,36 @@ class StagingDeputyship
      */
     #[Serializer\MapCell(column: 'IsHybrid')]
     public ?string $isHybrid;
+
+    public function deputyIsActiveOnOrder(): bool
+    {
+        return 'ACTIVE' === $this->deputyStatusOnOrder;
+    }
+
+    /**
+     * Check that this StagingDeputyship has the necessary data to create a valid update order status candidate.
+     * Note that $orderUid and $deputyUid cannot be null.
+     */
+    public function validForUpdateOrderStatusCandidate(): bool
+    {
+        return !is_null($this->orderStatus);
+    }
+
+    /**
+     * Check that this StagingDeputyship has the necessary data to create a valid update or insert deputy <-> order status candidate.
+     * Note that $orderUid and $deputyUid cannot be null.
+     */
+    public function validForOrderDeputyStatusCandidate(): bool
+    {
+        return !is_null($this->deputyStatusOnOrder);
+    }
+
+    /**
+     * Check that this StagingDeputyship has the necessary data to create a valid insert order candidate.
+     * Note that $orderUid and $deputyUid cannot be null.
+     */
+    public function validForInsertOrderCandidate(): bool
+    {
+        return !is_null($this->orderType) && !is_null($this->orderStatus) && !is_null($this->orderMadeDate);
+    }
 }

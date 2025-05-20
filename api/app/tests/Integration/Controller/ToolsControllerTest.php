@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ToolsControllerTest extends AbstractTestController
 {
-    private static EntityManager $em;
-
     private static User $previousDeputy;
     private static Client $previousClient;
     private static Report $previousReport1;
@@ -52,7 +50,6 @@ class ToolsControllerTest extends AbstractTestController
         self::$newClient = self::fixtures()->createClient(self::$newDeputy, ['setCaseNumber' => '12345678']);
         self::$newReport1 = self::fixtures()->createReport(self::$newClient);
 
-        self::$em = self::fixtures()->getEntityManager();
         self::fixtures()->flush()->clear();
 
         $this->headersAdmin = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];

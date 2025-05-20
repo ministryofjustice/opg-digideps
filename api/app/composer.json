@@ -27,11 +27,10 @@
     "require": {
         "php": "^8.2",
         "aws/aws-sdk-php": "3.329.0",
-        "doctrine/doctrine-bundle": "^2.13",
+        "doctrine/doctrine-bundle": "2.13.3",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.20.2",
         "gbprod/uuid-normalizer": "^1.2",
-        "incenteev/composer-parameter-handler": "^2.1.3",
         "jms/serializer-bundle": "^5.0.0",
         "lcobucci/jwt": "^4.1",
         "league/csv": "^9.5",
@@ -47,6 +46,9 @@
         "symfony/console": "^6.0",
         "symfony/dependency-injection": "^6.0",
         "symfony/dotenv": "^6.0",
+        "symfony/doctrine-bridge": "6.4.21",
+        "symfony/filesystem": "6.4.13",
+        "symfony/finder": "6.4.17",
         "symfony/error-handler": "^6.0",
         "symfony/event-dispatcher": "^6.0",
         "symfony/expression-language": "^6.0",
@@ -58,16 +60,19 @@
         "symfony/password-hasher": "^6.0",
         "symfony/property-info": "^6.0",
         "symfony/routing": "^6.0",
-        "symfony/security-bundle": "6.2.13",
-        "symfony/security-core": "^6.0",
-        "symfony/security-http": "6.2.13",
+        "symfony/security-bundle": "^6.4",
+        "symfony/security-core": "^6.4",
+        "symfony/security-http": "6.4.15",
+        "symfony/security-csrf": "6.4.13",
         "symfony/serializer": "^6.0",
         "symfony/validator": "^6.0",
-        "symfony/yaml": "^6.0"
+        "symfony/yaml": "^6.0",
+        "symfony/process": "6.4.20"
     },
     "require-dev": {
         "ministryofjustice/mink-extension": "^2.7.3",
         "behat/behat": "^3.8",
+        "behat/gherkin": "4.12.0",
         "behat/mink": "^1.8",
         "behat/mink-browserkit-driver": "^2.1.0",
         "behat/mink-selenium2-driver": "^1.6",
@@ -83,28 +88,17 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/http-client": "6.2.13",
+        "symfony/http-client": "^6.4",
         "symfony/browser-kit": "^6.0",
         "symfony/maker-bundle": "^1.29",
         "symfony/mime": "^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/var-dumper": "^6.0"
     },
-    "scripts": {
-        "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
-        ],
-        "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
-        ]
-    },
     "minimum-stability": "stable",
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
-        "incenteev-parameters": {
-            "file": "config/parameters.yml"
-        },
         "symfony": {
             "require": "6.*"
         }

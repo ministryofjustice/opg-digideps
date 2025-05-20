@@ -367,8 +367,9 @@ class LayUserFixtures extends AbstractDataFixture
         $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration, -$offset);
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setType($data['reportType']);
-        $courtOrder->setActive(true);
+        $courtOrder->setOrderType($data['orderType']);
+        $courtOrder->setStatus('ACTIVE');
+        $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
         $courtOrder->setCreatedAt(new \DateTime());
         $courtOrder->setUpdatedAt(new \DateTime());
@@ -400,15 +401,17 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderUidHW = substr_replace($data['courtOrderUid'], $iteration. 102, -$offset);
 
             $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
-            $courtOrderPfa->setType($data['reportType']);
-            $courtOrderPfa->setActive(true);
+            $courtOrderPfa->setOrderType($data['orderType']);
+            $courtOrderPfa->setStatus('ACTIVE');
+            $courtOrderPfa->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderPfa->setClient($client);
             $courtOrderPfa->setCreatedAt(new \DateTime());
             $courtOrderPfa->setUpdatedAt(new \DateTime());
 
             $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
-            $courtOrderHW->setType($data['reportType']);
-            $courtOrderHW->setActive(true);
+            $courtOrderHW->setOrderType($data['orderType']);
+            $courtOrderHW->setStatus('ACTIVE');
+            $courtOrderHW->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderHW->setClient($client);
             $courtOrderHW->setCreatedAt(new \DateTime());
             $courtOrderHW->setUpdatedAt(new \DateTime());
@@ -461,8 +464,9 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration. 2, -2);
 
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
-            $additionalCourtOrder->setType($data['reportType']);
-            $additionalCourtOrder->setActive(true);
+            $additionalCourtOrder->setOrderType($data['orderType']);
+            $additionalCourtOrder->setStatus('ACTIVE');
+            $additionalCourtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
             $additionalCourtOrder->setClient($client2);
             $additionalCourtOrder->setCreatedAt(new \DateTime());
             $additionalCourtOrder->setUpdatedAt(new \DateTime());

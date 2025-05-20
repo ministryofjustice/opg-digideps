@@ -98,7 +98,7 @@ jobs:
           terraform output -json > terraform.output.json
         working-directory: terraform/environment
 
-      - name: configure OIDC AWS credentials for terraform
+      - name: configure OIDC AWS credentials for gh run task
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"

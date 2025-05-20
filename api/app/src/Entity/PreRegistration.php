@@ -122,9 +122,9 @@ class PreRegistration
     private ?string $clientAddress5;
 
     /**
-     * @ORM\Column(name="client_postcode", type="string", length=10, nullable=true)
+     * @ORM\Column(name="client_postcode", type="string", length=20, nullable=true)
      */
-    #[Assert\Length(min: 2, max: 10, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     #[JMS\Type('string')]
     private ?string $clientPostcode;
 
@@ -180,9 +180,9 @@ class PreRegistration
     private ?string $deputyAddress5;
 
     /**
-     * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
+     * @ORM\Column(name="deputy_postcode", type="string", length=20, nullable=true)
      */
-    #[Assert\Length(min: 2, max: 10, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     #[JMS\Type('string')]
     private ?string $deputyPostCode;
 

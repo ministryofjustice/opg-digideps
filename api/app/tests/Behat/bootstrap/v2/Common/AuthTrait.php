@@ -317,8 +317,9 @@ trait AuthTrait
 
     /**
      * @Then /^I should be redirected and denied access to continue as client not found$/
+     * @Then /^I should be redirected and denied access to view the court order$/
      */
-    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFound()
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised()
     {
         $this->assertIntEqualsInt(
             '404',
@@ -552,18 +553,14 @@ trait AuthTrait
     }
 
     /**
-     * @Then I should see the NDR report on the reports page
+     * @Then /^I \'([^\']*)\' see the NDR report on the reports page$/
      */
-    public function theyShouldBeOnNDRReportPage(): void
+    public function theyShouldBeOnNDRReportPage($arg1): void
     {
-        $this->assertPageContainsText('New deputy report');
-    }
-
-    /**
-     * @Then I should not see the NDR report on the reports page
-     */
-    public function theyShouldNotBeOnNDRReportPage(): void
-    {
-        $this->assertPageNotContainsText('New deputy report');
+        if ('should' == $arg1) {
+            $this->assertPageContainsText('New deputy report');
+        } else {
+            $this->assertPageNotContainsText('New deputy report');
+        }
     }
 }
