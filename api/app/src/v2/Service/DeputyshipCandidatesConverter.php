@@ -21,7 +21,7 @@ class DeputyshipCandidatesConverter
     ) {
     }
 
-    public function createEntitiesFromCandidates(DeputyshipCandidatesGroup $candidatesGroup): DeputyshipBuilderResult
+    public function createEntitiesFromCandidates(DeputyshipCandidatesGroup $candidatesGroup, bool $dryRun): DeputyshipBuilderResult
     {
         $this->dbAccess->beginTransaction();
 
@@ -83,7 +83,11 @@ class DeputyshipCandidatesConverter
             }
         }
 
-        $this->dbAccess->endTransaction();
+        if ($dryRun) {
+            $this->dbAccess->rollback();
+        } else {
+            $this->dbAccess->endTransaction();
+        }
 
         return $buildResult;
     }
