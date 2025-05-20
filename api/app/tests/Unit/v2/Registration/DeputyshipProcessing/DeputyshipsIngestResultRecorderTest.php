@@ -50,8 +50,9 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $expectedMessage = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; '.
-            'found 20 candidate database updates; successfully ingested deputyships CSV';
+        $expectedMessage = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database '.
+            'updates; number of candidates applied = 0; number of candidates failed = 0; successfully ingested '.
+            'deputyships CSV';
 
         $result = $this->sut->result();
 
