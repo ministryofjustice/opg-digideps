@@ -18,20 +18,23 @@ use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
+use App\Repository\PreRegistrationRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Psr\Log\LoggerInterface;
 
 class ReportService
 {
-    private ObjectRepository $preRegistrationRepository;
+    private PreRegistrationRepository $preRegistrationRepository;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
     ) {
-        $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
+        /** @var PreRegistrationRepository $preRegistrationRepository */
+        $preRegistrationRepository = $em->getRepository(PreRegistration::class);
+
+        $this->preRegistrationRepository = $preRegistrationRepository;
     }
 
     /**
@@ -325,30 +328,28 @@ class ReportService
     /**
      * Set report type based on CasRec record (if existing).
      *
-     * @return string|null type
-     *
      * @throws \Exception
      */
-    public function getReportTypeBasedOnSirius(Client $client)
+    public function getReportTypeBasedOnSirius(Client $client): ?string
     {
         $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
-        if ($preRegistration instanceof PreRegistration) {
-            if (count($client->getUsers())) {
-                if ($client->getUsers()->first()->isLayDeputy()) {
-                    return PreRegistration::getReportTypeByOrderType(
-                        $preRegistration->getTypeOfReport(),
-                        $preRegistration->getOrderType(),
-                        PreRegistration::REALM_LAY
-                    );
-                }
-            }
+        if (
+            !($preRegistration instanceof PreRegistration)
+            || count($client->getUsers()) < 1
+            || !$client->getUsers()->first()->isLayDeputy()
+        ) {
+            return null;
         }
 
-        return null;
+        return PreRegistration::getReportTypeByOrderType(
+            $preRegistration->getTypeOfReport(),
+            $preRegistration->getOrderType(),
+            PreRegistration::REALM_LAY
+        );
     }
 
-    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, $sectionList)
+    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, string $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);

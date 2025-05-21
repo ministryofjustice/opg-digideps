@@ -11,11 +11,8 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Repository\AssetRepository;
-use App\Repository\BankAccountRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\PreRegistrationRepository;
-use App\Repository\ReportRepository;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -80,16 +77,10 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
             switch ($arg) {
                 case PreRegistration::class:
-                    return m::mock(EntityRepository::class)->shouldReceive('findOneBy')
+                    return m::mock(PreRegistrationRepository::class)->shouldReceive('findOneBy')
                         ->with(['caseNumber' => $client->getCaseNumber()])
                         ->andReturn(null)
                         ->getMock();
-                case Report::class:
-                    return m::mock(ReportRepository::class);
-                case Asset::class:
-                    return m::mock(EntityRepository::class);
-                case BankAccount::class:
-                    return m::mock(BankAccount::class);
                 case Document::class:
                     return m::mock(DocumentRepository::class)
                         ->shouldReceive('find')
@@ -225,7 +216,6 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
 
-        /** @var Report $newYearReport */
         $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, 999);
 
         // assert current report
@@ -444,14 +434,8 @@ class ReportServiceTest extends TestCase
         $preRegistrationRepo = self::prophesize(PreRegistrationRepository::class);
         $preRegistrationRepo->findOneBy(['caseNumber' => '12345678'])->willReturn($preRegistration);
 
-        $reportRepository = self::prophesize(ReportRepository::class);
-        $assetRepository = self::prophesize(AssetRepository::class);
-        $bankAccountRepository = self::prophesize(BankAccountRepository::class);
-
         $em = self::prophesize(EntityManagerInterface::class);
         $em->getRepository(PreRegistration::class)->willReturn($preRegistrationRepo->reveal());
-        $em->getRepository(Asset::class)->willReturn($assetRepository->reveal());
-        $em->getRepository(BankAccount::class)->willReturn($bankAccountRepository->reveal());
 
         $sut = new ReportService($em->reveal(), $this->mockLogger);
 
