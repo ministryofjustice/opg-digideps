@@ -11,7 +11,6 @@ use App\Exception\UnauthorisedException;
 use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
-use App\Service\ParameterStoreService;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -44,8 +43,14 @@ class ReportController extends RestController
         'report-submission-id',
     ];
 
-    public function __construct(private readonly array $updateHandlers, private readonly ReportRepository $repository, private readonly ReportService $reportService, private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly ParameterStoreService $parameterStoreService)
-    {
+    public function __construct(
+        private readonly array $updateHandlers,
+        private readonly ReportRepository $repository,
+        private readonly ReportService $reportService,
+        private readonly EntityManagerInterface $em,
+        private readonly AuthService $authService,
+        private readonly RestFormatter $formatter,
+    ) {
         parent::__construct($em);
     }
 

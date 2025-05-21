@@ -12,42 +12,24 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetOther as ReportAssetOther;
 use App\Entity\Report\AssetProperty as ReportAssetProperty;
-use App\Entity\Report\BankAccount as BankAccountEntity;
 use App\Entity\Report\BankAccount as ReportBankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
-use App\Repository\ReportRepository;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 
 class ReportService
 {
-    /**
-     * @var ObjectRepository
-     */
-    private $preRegistrationRepository;
-
-    /**
-     * @var ObjectRepository
-     */
-    private $assetRepository;
-
-    /**
-     * @var ObjectRepository
-     */
-    private $bankAccountRepository;
+    private ObjectRepository $preRegistrationRepository;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportRepository $reportRepository
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
-        $this->assetRepository = $em->getRepository(Asset::class);
-        $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
     }
 
     /**
@@ -340,9 +322,6 @@ class ReportService
         return null;
     }
 
-    /**
-     * @param mixed $sectionList
-     */
     public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
@@ -444,7 +423,7 @@ class ReportService
     /**
      * @return bool
      */
-    public static function isDue(\DateTime $endDate = null)
+    public static function isDue(?\DateTime $endDate = null)
     {
         if (!$endDate) {
             return false;

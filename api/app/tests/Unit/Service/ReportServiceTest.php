@@ -36,7 +36,6 @@ class ReportServiceTest extends TestCase
     private Report $report;
     private Document $document1;
     private EntityDir\Ndr\Ndr $ndr;
-    private ReportRepository|MockInterface $reportRepo;
     private EntityRepository|MockInterface $casrecRepo;
     private MockInterface $assetRepo;
     private MockInterface $bankAccount;
@@ -68,7 +67,6 @@ class ReportServiceTest extends TestCase
         $this->ndr = new EntityDir\Ndr\Ndr($client);
 
         // mock em
-        $this->reportRepo = m::mock(ReportRepository::class);
         $this->casrecRepo = m::mock(EntityRepository::class);
         $this->assetRepo = m::mock();
         $this->bankAccount = m::mock();
@@ -99,7 +97,7 @@ class ReportServiceTest extends TestCase
             }
         });
 
-        $this->sut = new ReportService($this->em, $this->reportRepo);
+        $this->sut = new ReportService($this->em);
     }
 
     public function testSubmitInvalid()
@@ -114,7 +112,7 @@ class ReportServiceTest extends TestCase
         $report = $this->report;
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -159,7 +157,7 @@ class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -212,12 +210,12 @@ class ReportServiceTest extends TestCase
             return $ndr instanceof EntityDir\Report\ReportSubmission;
         }));
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\Report;
+            return $report instanceof Report;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -245,7 +243,7 @@ class ReportServiceTest extends TestCase
 
     private function getFilledInNdr()
     {
-        $client = new EntityDir\Client();
+        $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
@@ -258,7 +256,7 @@ class ReportServiceTest extends TestCase
 
         $ndrAsset = new EntityDir\Ndr\AssetProperty();
         $ndrAsset->setAddress('SW1')
-            ->setOwned(EntityDir\Report\AssetProperty::OWNED_FULLY)
+            ->setOwned(AssetProperty::OWNED_FULLY)
             ->setNdr($ndr);
 
         $ndr->setNoAssetToAdd(false);
@@ -284,12 +282,12 @@ class ReportServiceTest extends TestCase
             return $ndr instanceof EntityDir\Report\ReportSubmission;
         }));
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\Report;
+            return $report instanceof Report;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -321,7 +319,7 @@ class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy(true);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -354,13 +352,13 @@ class ReportServiceTest extends TestCase
         // Assert asset is cloned
         $this->em->shouldReceive('detach')->once();
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset) {
-            return $asset instanceof EntityDir\Report\AssetProperty
+            return $asset instanceof AssetProperty
                 && 'SW1' === $asset->getAddress();
         }))->once();
 
         // Assert bank account is cloned, with opening/closing balance modified
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($bankAccount) {
-            return $bankAccount instanceof EntityDir\Report\BankAccount
+            return $bankAccount instanceof BankAccount
                 && '1234' === $bankAccount->getAccountNumber()
                 && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]->getClosingBalance()
                 && is_null($bankAccount->getClosingBalance());
@@ -450,7 +448,7 @@ class ReportServiceTest extends TestCase
         $em->getRepository(Asset::class)->willReturn($assetRepository->reveal());
         $em->getRepository(BankAccount::class)->willReturn($bankAccountRepository->reveal());
 
-        $sut = new ReportService($em->reveal(), $reportRepository->reveal());
+        $sut = new ReportService($em->reveal());
 
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
@@ -492,7 +490,7 @@ class ReportServiceTest extends TestCase
     {
         $user = $this->user->setActive(null);
 
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->reportRepo])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
