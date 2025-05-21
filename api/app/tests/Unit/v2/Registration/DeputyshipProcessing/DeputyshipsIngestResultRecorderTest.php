@@ -27,8 +27,8 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
         $result = $this->sut->result();
 
-        $this->assertFalse($result->success);
-        $this->assertStringContainsString('failed to load deputyships CSV from /tmp/test.csv', $result->message);
+        self::assertFalse($result->success);
+        self::assertStringContainsString('failed to load deputyships CSV from /tmp/test.csv', $result->message);
     }
 
     public function testRecordDeputyshipCandidatesResultExceptionFail(): void
@@ -39,8 +39,8 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
         $result = $this->sut->result();
 
-        $this->assertFalse($result->success);
-        $this->assertStringContainsString($exception->getMessage(), $result->message);
+        self::assertFalse($result->success);
+        self::assertStringContainsString($exception->getMessage(), $result->message);
     }
 
     public function testRecordDeputyshipCandidatesResultSuccess(): void
@@ -56,7 +56,7 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
         $result = $this->sut->result();
 
-        $this->assertTrue($result->success);
-        $this->assertStringContainsString($expectedMessage, $result->message);
+        self::assertTrue($result->success);
+        self::assertStringContainsString($expectedMessage, $result->message);
     }
 }
