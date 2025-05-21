@@ -44,16 +44,27 @@ class DeputyRepository extends ServiceEntityRepository
     public function findReportsInfoByUid(int $uid, bool $includeInactive = false): ?array
     {
         $sql = <<<SQL
-        SELECT c.firstname AS "firstName",
-               c.lastname AS "lastName",
-               c.case_number AS "caseNumber",
-               co.court_order_uid AS "courtOrderUid",
-               r.type AS "type"
-        FROM deputy d
-        LEFT JOIN client c ON c.deputy_id = d.id
-        LEFT JOIN court_order co ON co.client_id = c.id
-        LEFT JOIN report r ON r.client_id = c.id
-        LEFT JOIN court_order_deputy cod ON cod.deputy_id = d.id
+        SELECT DISTINCT
+        c.firstname AS "firstName",
+        c.lastname AS "lastName",
+        c.case_number AS "caseNumber",
+        (
+            SELECT DISTINCT string_agg(co.court_order_uid, ', ')
+            FROM court_order co
+            LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
+            LEFT JOIN deputy d ON cod.deputy_id = d.id
+            LEFT JOIN client c ON d.id = c.deputy_id
+            LEFT JOIN report re ON c.id = re.client_id
+            WHERE d.deputy_uid = :deputyUid
+            AND r.id = re.id
+        ) AS "courtOrderUid",
+        r.type AS "type",
+        r.id
+        FROM report r
+        LEFT JOIN client c ON r.client_id = c.id
+        LEFT JOIN deputy d ON c.deputy_id = d.id
+        LEFT JOIN court_order co ON c.id = co.client_id
+        LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
         WHERE cod.is_active = TRUE
         AND d.deputy_uid = :deputyUid
         SQL;
@@ -62,7 +73,7 @@ class DeputyRepository extends ServiceEntityRepository
             // Possibly need to be changed when we have all applicable status
             $sql .= ' AND co.status = "INACTIVE"';
         }
-        
+
         $query = $this
             ->getEntityManager()
             ->getConnection()
