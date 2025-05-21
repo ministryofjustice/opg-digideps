@@ -5,6 +5,7 @@ namespace App\Controller\Ndr;
 use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Document;
+use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,8 +32,8 @@ class NdrController extends RestController
         /* @var $report EntityDir\Ndr\Ndr */
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
 
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
+            $this->denyAccessUnlessGranted(User::ROLE_LAY_DEPUTY);
             $this->denyAccessIfNdrDoesNotBelongToUser($report);
         }
 
@@ -77,10 +78,12 @@ class NdrController extends RestController
         $ndr->setSubmitDate(new \DateTime($data['submit_date']));
 
         // submit and create new year's report
-        $nextYearReport = $reportService
-            ->submit($ndr, $this->getUser(), new \DateTime($data['submit_date']), $documentId);
+        /** @var User $user */
+        $user = $this->getUser();
 
-        return ['id' => $nextYearReport->getId()];
+        $nextYearReport = $reportService->submit($ndr, $user, new \DateTime($data['submit_date']), $documentId);
+
+        return ['id' => $nextYearReport?->getId()];
     }
 
     #[Route(path: '/ndr/{id}', methods: ['PUT'])]
@@ -89,8 +92,8 @@ class NdrController extends RestController
         /* @var $ndr EntityDir\Ndr\Ndr */
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
 
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
+            $this->denyAccessUnlessGranted(User::ROLE_LAY_DEPUTY);
             $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         }
 

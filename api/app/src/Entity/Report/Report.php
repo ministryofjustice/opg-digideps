@@ -503,15 +503,13 @@ class Report implements ReportInterface
     private $significantDecisionsMade;
 
     /**
-     * @var array
-     *
      * @JMS\Groups({"report"})
      *
      * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
      *
      * @JMS\Type("string")
      */
-    private $unsubmittedSectionsList;
+    private ?string $unsubmittedSectionsList;
 
     /**
      * @var Checklist
@@ -1266,18 +1264,12 @@ class Report implements ReportInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getUnsubmittedSectionsList()
+    public function getUnsubmittedSectionsList(): ?string
     {
         return $this->unsubmittedSectionsList;
     }
 
-    /**
-     * @param array|null $unsubmittedSectionsList
-     */
-    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    public function setUnsubmittedSectionsList(?string $unsubmittedSectionsList): void
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
     }
