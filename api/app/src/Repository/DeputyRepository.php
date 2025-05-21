@@ -59,14 +59,15 @@ class DeputyRepository extends ServiceEntityRepository
             AND r.id = re.id
         ) AS "courtOrderUid",
         r.type AS "type",
-        r.id
+        r.id AS "reportId"
         FROM report r
         LEFT JOIN client c ON r.client_id = c.id
         LEFT JOIN deputy d ON c.deputy_id = d.id
         LEFT JOIN court_order co ON c.id = co.client_id
         LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
-        WHERE cod.is_active = TRUE
-        AND d.deputy_uid = :deputyUid
+        WHERE d.deputy_uid = :deputyUid
+        AND cod.is_active = TRUE
+        AND cod.deputy_id = d.id
         SQL;
 
         if ($includeInactive) {
@@ -91,6 +92,7 @@ class DeputyRepository extends ServiceEntityRepository
                     'caseNumber' => $line['caseNumber'],
                 ],
                 'report' => [
+                    'id' => $line['reportId'],
                     'type' => $line['type'],
                 ],
                 'courtOrder' => [
