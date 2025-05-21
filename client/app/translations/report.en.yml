@@ -22,6 +22,13 @@ chooseAClient:
   courtOrderNumber: Court Order number
   reportType: Report Type
 
+chooseAReport:
+  htmlTitle: Choose a report - Complete the deputy report | GOV.UK
+  pageTitle: Choose a report
+  title: Select the client and report you want to manage.
+  caseNumber: Case number
+  reportType: Report Type
+
 codeputy:
   inviteAnotherDeputy: Invite another deputy
 
