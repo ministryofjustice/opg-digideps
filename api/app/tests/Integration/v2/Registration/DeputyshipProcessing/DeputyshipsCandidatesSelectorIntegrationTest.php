@@ -11,6 +11,7 @@ use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -56,7 +57,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
-        static::assertEquals('UPDATE ORDER STATUS', $selectedCandidates[0]['action']->value);
+        static::assertEquals(DeputyshipCandidateAction::UpdateOrderStatus, $selectedCandidates[0]['action']);
         static::assertEquals('ACTIVE', $selectedCandidates[0]['status']);
     }
 
@@ -86,7 +87,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
-        static::assertEquals('UPDATE DEPUTY STATUS ON ORDER', $selectedCandidates[0]['action']->value);
+        static::assertEquals(DeputyshipCandidateAction::UpdateDeputyStatus, $selectedCandidates[0]['action']);
         static::assertFalse($selectedCandidates[0]['deputyStatusOnOrder']);
     }
 
@@ -112,7 +113,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
-        static::assertEquals('INSERT ORDER DEPUTY', $selectedCandidates[0]['action']->value);
+        static::assertEquals(DeputyshipCandidateAction::InsertOrderDeputy, $selectedCandidates[0]['action']);
         static::assertEquals($courtOrder->getCourtOrderUid(), $selectedCandidates[0]['orderUid']);
         static::assertEquals($deputy->getDeputyUid(), $selectedCandidates[0]['deputyUid']);
     }
@@ -141,10 +142,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         foreach ($selectedCandidates as $candidate) {
-            if ('INSERT ORDER' === $candidate['action']->value) {
+            if (DeputyshipCandidateAction::InsertOrder === $candidate['action']) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($client->getId(), $candidate['clientId']);
-            } elseif ('INSERT ORDER DEPUTY' === $candidate['action']->value) {
+            } elseif (DeputyshipCandidateAction::InsertOrderDeputy === $candidate['action']) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate['deputyUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate['deputyStatusOnOrder']);
