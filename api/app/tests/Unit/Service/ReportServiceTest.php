@@ -22,9 +22,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Mockery\MockInterface;
 use MockeryStub as m;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class ReportServiceTest extends TestCase
 {
@@ -41,6 +43,7 @@ class ReportServiceTest extends TestCase
     private MockInterface $bankAccount;
     private MockInterface|EntityManager $em;
     private Document $mockNdrDocument;
+    private LoggerInterface&MockObject $mockLogger;
     private ReportService $sut;
 
     public function setUp(): void
@@ -97,7 +100,9 @@ class ReportServiceTest extends TestCase
             }
         });
 
-        $this->sut = new ReportService($this->em);
+        $this->mockLogger = $this->createMock(LoggerInterface::class);
+
+        $this->sut = new ReportService($this->em, $this->mockLogger);
     }
 
     public function testSubmitInvalid()
@@ -112,7 +117,7 @@ class ReportServiceTest extends TestCase
         $report = $this->report;
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -157,7 +162,7 @@ class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -215,7 +220,7 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -287,7 +292,7 @@ class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -319,7 +324,7 @@ class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy(true);
 
         // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -448,7 +453,7 @@ class ReportServiceTest extends TestCase
         $em->getRepository(Asset::class)->willReturn($assetRepository->reveal());
         $em->getRepository(BankAccount::class)->willReturn($bankAccountRepository->reveal());
 
-        $sut = new ReportService($em->reveal());
+        $sut = new ReportService($em->reveal(), $this->mockLogger);
 
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
@@ -490,7 +495,7 @@ class ReportServiceTest extends TestCase
     {
         $user = $this->user->setActive(null);
 
-        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');

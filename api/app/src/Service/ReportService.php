@@ -21,6 +21,7 @@ use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Psr\Log\LoggerInterface;
 
 class ReportService
 {
@@ -28,6 +29,7 @@ class ReportService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger,
     ) {
         $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
     }
@@ -35,11 +37,9 @@ class ReportService
     /**
      * Set report submitted and create a new year report.
      *
-     * @param string|null $ndrDocumentId
-     *
-     * @return Report
+     * @throws \Exception
      */
-    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, $ndrDocumentId = null)
+    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, ?string $ndrDocumentId = null): ?Report
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
@@ -72,23 +72,34 @@ class ReportService
 
         $this->em->persist($submission);
 
-        //      Set user to active once they have submitted a report
+        $client = $currentReport->getClient();
+        $clientId = $client->getId();
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $this->logger->notice("Report submitted for client ID $clientId at $now");
+
+        // Set user to active once they have submitted a report
         $user->setActive(true);
 
-        $newYearReport = [];
+        $newYearReport = null;
 
         if ($currentReport instanceof Ndr) {
             // Find the first report and clone assets/accounts across
-            $reports = $currentReport->getClient()->getReports();
+            $reports = $client->getReports();
 
             if (1 === count($reports)) {
+                $this->logger->notice("Populating existing report for client $clientId (NDR submitted, existing report) at $now");
+
                 $newYearReport = $reports[0];
 
                 $this->clonePersistentResources($newYearReport, $currentReport);
             } elseif (0 === count($reports)) {
+                $this->logger->notice("Creating next year report for client $clientId (NDR submitted, NO existing report) at $now");
+
                 $newYearReport = $this->createNextYearReport($currentReport);
             }
         } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+            $this->logger->notice("Creating next year report for client $clientId (NO NDR, existing unsubmitted report) at $now");
+
             // unsubmitted report
             $currentReport->setUnSubmitDate(null);
             $currentReport->setUnsubmittedSectionsList(null);
@@ -96,13 +107,15 @@ class ReportService
             // Find the next report and clone assets/accounts across
             $calculatedEndDate = clone $currentReport->getEndDate();
             $calculatedEndDate->modify('+12 months');
-            $newYearReport = $currentReport->getClient()->getReportByEndDate($calculatedEndDate);
 
-            if ($newYearReport) {
+            $newYearReport = $client->getReportByEndDate($calculatedEndDate);
+            if (!is_null($newYearReport)) {
                 $this->clonePersistentResources($newYearReport, $currentReport);
             }
         } else {
             // first-time submission
+            $this->logger->notice("Creating next year report for client $clientId (NO NDR, NO existing report) at $now");
+
             $newYearReport = $this->createNextYearReport($currentReport);
         }
 
@@ -292,6 +305,19 @@ class ReportService
 
         $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
         $this->em->persist($newReport);
+
+        $createdAtStr = 'unknown';
+        $createdAt = $newReport->getCreatedAt();
+        if (!is_null($createdAt)) {
+            $createdAtStr = $createdAt->format('Y-m-d H:i:s');
+        }
+
+        $this->logger->notice(
+            "Created next year report for client ID {$client->getId()} ".
+            "; created at = {$createdAtStr} ".
+            "; start date = {$startDate->format('Y-m-d')} ".
+            "; end date = {$endDate->format('Y-m-d')}"
+        );
 
         return $newReport;
     }
