@@ -194,14 +194,14 @@ jobs:
         uses: github/codeql-action/upload-sarif@70df9def86d22bf0ea4e7f8b956e7b92e7c1ea22 # v2.20.7
         with:
           sarif_file: "trivy-results.sarif"
-          
+
       - name: generate SBOM
         run: |
           mkdir -p sboms
           trivy image --format cyclonedx --output sboms/sbom-${{ matrix.svc_name }}.cdx.json ${{ matrix.svc_name }}:latest
 
       - name: upload SBOM
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: sbom-${{ matrix.svc_name }}
           path: sboms/sbom-${{ matrix.svc_name }}.cdx.json
