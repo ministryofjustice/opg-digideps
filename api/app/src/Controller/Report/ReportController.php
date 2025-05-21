@@ -154,7 +154,7 @@ class ReportController extends RestController
         /** @var Report|null $nextYearReport */
         $nextYearReport = $this->reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
 
-        return $nextYearReport ? $nextYearReport->getId() : null;
+        return $nextYearReport?->getId();
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['PUT'])]
