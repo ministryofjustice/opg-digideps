@@ -11,7 +11,7 @@ COPY client/app/config config
 COPY client/app/src src
 RUN composer dump-autoload --optimize
 
-FROM php:8.3.21-fpm-alpine3.20 AS base
+FROM php:8.3.21-fpm-alpine3.21 AS base
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG TAG=${TAG:-latest}
 ARG ENVIRONMENT=${ENVIRONMENT:-production}
