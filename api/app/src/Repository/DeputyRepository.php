@@ -72,8 +72,8 @@ class DeputyRepository extends ServiceEntityRepository
 
         // Possibly need to be changed when we have all applicable status
         $sql .= $includeInactive ?
-            ' AND co.status IN ("INACTIVE", "ACTIVE")' :
-            'AND co.status = "ACTIVE"';
+            " AND co.status IN ('INACTIVE', 'ACTIVE')" :
+            " AND co.status = 'ACTIVE'";
 
         $query = $this
             ->getEntityManager()
