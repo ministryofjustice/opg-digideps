@@ -65,7 +65,7 @@ class DeputyshipsIngestResultRecorder
         $this->logMemory();
     }
 
-    public function recordStart(\DateTimeImmutable $startDateTime = new \DateTimeImmutable()): void
+    public function recordStart(\DateTimeInterface $startDateTime = new \DateTimeImmutable()): void
     {
         $this->startDateTime = $startDateTime;
     }
@@ -107,7 +107,7 @@ class DeputyshipsIngestResultRecorder
         $this->logMemory();
     }
 
-    public function recordEnd(\DateTimeImmutable $endDateTime = new \DateTimeImmutable()): void
+    public function recordEnd(\DateTimeInterface $endDateTime = new \DateTimeImmutable()): void
     {
         $this->endDateTime = $endDateTime;
     }
