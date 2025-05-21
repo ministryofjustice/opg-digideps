@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class DeputyshipsIngestResultRecorder
@@ -43,10 +44,11 @@ class DeputyshipsIngestResultRecorder
         return $this->formatDate(new \DateTimeImmutable()).' deputyships-ingest '.$message;
     }
 
-    private function logMemory(): void
+    private function logMemory(string $logLevel = LogLevel::DEBUG): void
     {
         $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
         $this->logger->debug($this->formatMessage($memMessage));
+        $this->logger->log($logLevel, $memMessage);
     }
 
     private function logMessage(string $message): void
@@ -112,6 +114,8 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
+        $this->logMemory(LogLevel::NOTICE);
+
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
