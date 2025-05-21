@@ -5,30 +5,37 @@ declare(strict_types=1);
 namespace App\Service\Client\Internal;
 
 use App\Entity\User;
-use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DeputyApi
 {
     private const CREATE_DEPUTY_FROM_USER_ENDPOINT = 'deputy/add';
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    private const FIND_ALL_DEPUTY_REPORTS = 'v2/deputy/%s/reports';
 
     public function __construct(
-        RestClientInterface $restClient,
-        TokenStorageInterface $tokenStorage
+        private readonly RestClientInterface $restClient,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->restClient = $restClient;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function createDeputyFromUser(User $currentUser)
     {
         return $this->restClient->post(self::CREATE_DEPUTY_FROM_USER_ENDPOINT, $currentUser);
+    }
+
+    public function findAllDeputyReportsForCurrentUser(): ?array
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if (($currentUser instanceof User) !== true) {
+            $this->logger->error('Unable to get correct instance of User via TokenStorage');
+            return null;
+        }
+
+        $uri = sprintf(self::FIND_ALL_DEPUTY_REPORTS, $currentUser->getDeputyUid());
+
+        return $this->restClient->get($uri, 'array');
     }
 }

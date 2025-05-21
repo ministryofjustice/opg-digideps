@@ -33,7 +33,7 @@ class DeputyController extends AbstractController
         if (null === ($data = $this->repository->findUserArrayById($id))) {
             $this->buildNotFoundResponse(sprintf('Deputy id %s not found', $id));
         }
-        
+
         $data = $data ?: [];
         $dto = $this->assembler->assembleFromArray($data);
         $transformedDto = $this->transformer->transform($dto);
@@ -46,21 +46,20 @@ class DeputyController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
-        if ($user->isSuperAdmin() || $uid !== $user->getDeputyUid()) {
-            return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user');
+
+        if (!$user->isSuperAdmin() && $uid !== $user->getDeputyUid()) {
+            return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user: ' . $user->getDeputyUid() . ' provided: ' . $uid);
         }
 
         $inactive = $request->query->has('inactive');
         try {
             $results = $this->deputyRepository->findReportsInfoByUid($uid, $inactive);
         } catch (\Exception $e) {
-            error_log($e->getMessage());
             $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 
             return $this->buildErrorResponse();
         }
-        
+
         if (is_null($results)) {
             return $this->buildSuccessResponse([]);
         }

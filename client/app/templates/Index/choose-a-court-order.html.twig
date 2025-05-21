@@ -1,0 +1,65 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "report" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'chooseACourtOrder' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+
+{% set reportType = ('-4' == report.type.get104TransSuffix) ?
+    'Property and financial, and health and welfare'
+    : ('104' in report.type) ? 'Health and welfare'
+    : 'Property and financial'  %}
+
+{% block pageContent %}
+
+    <h3 class="govuk-heading-m">
+        {{ 'chooseAReport.title'| trans }}
+    </h3>
+    {% for reports in courtOrders %}
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    {{ reports.client.firstname }} {{ reports.client.lastname }}
+                </h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a class="govuk-link" href="{{ path( "lay_home", {'coutOrder' : reports.courtOrder.courtOrderUid}) }}">Manage</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-summary-card__content">
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'chooseAReport.caseNumber'| trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ reports.client.firstname }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'chooseAReport.reportType'| trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set reportType = ('-4' == reports.report.type) ?
+                                'Property and financial, and health and welfare'
+                                : ('104' in reports.report.type) ? 'Health and welfare'
+                                : 'Property and financial'  %}
+                            {{ reports.report.type }}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    {% endfor %}
+
+    <noscript>
+        {{ hidden_ga_event('Javascript Disabled') }}
+    </noscript>
+
+{% endblock %}
