@@ -53,7 +53,7 @@ class DeputyRepository extends ServiceEntityRepository
             FROM court_order co
             LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
             LEFT JOIN deputy d ON cod.deputy_id = d.id
-            LEFT JOIN client c ON d.id = c.deputy_id
+            LEFT JOIN client c ON co.client_id = c.id
             LEFT JOIN report re ON c.id = re.client_id
             WHERE d.deputy_uid = :deputyUid
             AND r.id = re.id
@@ -62,18 +62,18 @@ class DeputyRepository extends ServiceEntityRepository
         r.id AS "reportId"
         FROM report r
         LEFT JOIN client c ON r.client_id = c.id
-        LEFT JOIN deputy d ON c.deputy_id = d.id
         LEFT JOIN court_order co ON c.id = co.client_id
         LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
+        LEFT JOIN deputy d ON cod.deputy_id = d.id
         WHERE d.deputy_uid = :deputyUid
         AND cod.is_active = TRUE
         AND cod.deputy_id = d.id
         SQL;
 
-        if ($includeInactive) {
-            // Possibly need to be changed when we have all applicable status
-            $sql .= ' AND co.status = "INACTIVE"';
-        }
+        // Possibly need to be changed when we have all applicable status
+        $sql .= $includeInactive ?
+            ' AND co.status IN ("INACTIVE", "ACTIVE")' :
+            'AND co.status = "ACTIVE"';
 
         $query = $this
             ->getEntityManager()
