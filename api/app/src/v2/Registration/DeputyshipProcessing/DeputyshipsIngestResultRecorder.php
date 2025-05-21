@@ -25,16 +25,16 @@ class DeputyshipsIngestResultRecorder
     /** @var string[] */
     private array $messages = [];
 
-    private ?\DateTimeImmutable $startDateTime = null;
+    private ?\DateTimeInterface $startDateTime = null;
 
-    private ?\DateTimeImmutable $endDateTime = null;
+    private ?\DateTimeInterface $endDateTime = null;
 
     public function __construct(
         private LoggerInterface $logger,
     ) {
     }
 
-    private function formatDate(\DateTimeImmutable $dateTime): string
+    private function formatDate(\DateTimeInterface $dateTime): string
     {
         return $dateTime->format('Y-m-d H:i:s');
     }

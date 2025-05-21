@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
 /**
  * Records the entities created and any errors when building from candidates for a single order.
@@ -22,7 +23,14 @@ class DeputyshipBuilderResult
 
         /** @var string[] $errors */
         private array $errors = [],
+
+        /** @var array<string, int> $candidatesApplied */
+        private array $candidatesApplied = [],
     ) {
+        // initialise counts of candidates applied
+        foreach (DeputyshipCandidateAction::cases() as $case) {
+            $this->candidatesApplied[$case->value] = 0;
+        }
     }
 
     public function hasErrors(): bool
@@ -39,6 +47,16 @@ class DeputyshipBuilderResult
     {
         $message = 'Builder result: failed candidates = '.$this->numCandidatesFailed.
             '; applied candidates = '.$this->numCandidatesApplied;
+
+        $candidateDetails = [];
+        foreach ($this->candidatesApplied as $action => $num) {
+            $candidateDetails[] = $action.':'.$num;
+        }
+
+        if (count($candidateDetails) > 0) {
+            $message .= '; candidate details = '.implode('|', $candidateDetails);
+        }
+
         if (count($this->errors) > 0) {
             $message .= '; ERRORS: '.implode(' / ', $this->errors);
         }
@@ -68,10 +86,11 @@ class DeputyshipBuilderResult
      * Record the result of applying a candidate to the database.
      * If $success is true, the insert or update was a success; otherwise, it failed, and $messageOnFailure is stored.
      */
-    public function addCandidateResult(bool $success, ?string $messageOnFailure = null): void
+    public function addCandidateResult(DeputyshipCandidateAction $action, bool $success, ?string $messageOnFailure = null): void
     {
         if ($success) {
             ++$this->numCandidatesApplied;
+            ++$this->candidatesApplied[$action->value];
         } else {
             ++$this->numCandidatesFailed;
 
