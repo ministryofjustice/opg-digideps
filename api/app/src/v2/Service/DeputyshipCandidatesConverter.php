@@ -31,7 +31,7 @@ class DeputyshipCandidatesConverter
         if (!is_null($insertOrder)) {
             $insertedOrderOk = $this->dbAccess->insertOrder($insertOrder);
             if ($insertedOrderOk) {
-                $buildResult->addCandidateResult(true);
+                $buildResult->addCandidateResult(DeputyshipCandidateAction::InsertOrder, true);
             } else {
                 $this->dbAccess->rollback();
 
@@ -57,26 +57,31 @@ class DeputyshipCandidatesConverter
 
             if (DeputyshipCandidateAction::InsertOrderDeputy === $action) {
                 $buildResult->addCandidateResult(
+                    DeputyshipCandidateAction::InsertOrderDeputy,
                     $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate),
                     sprintf('insert order deputy not applied for court order UID %s', $candidatesGroup->orderUid)
                 );
             } elseif (DeputyshipCandidateAction::InsertOrderReport === $action) {
                 $buildResult->addCandidateResult(
+                    DeputyshipCandidateAction::InsertOrderReport,
                     $this->dbAccess->insertOrderReport($courtOrderId, $candidate),
                     sprintf('insert order report not applied for court order UID %s', $candidatesGroup->orderUid)
                 );
             } elseif (DeputyshipCandidateAction::InsertOrderNdr === $action) {
                 $buildResult->addCandidateResult(
+                    DeputyshipCandidateAction::InsertOrderNdr,
                     $this->dbAccess->insertOrderNdr($courtOrderId, $candidate),
                     sprintf('insert order ndr not applied for court order UID %s', $candidatesGroup->orderUid)
                 );
             } elseif (DeputyshipCandidateAction::UpdateOrderStatus === $action) {
                 $buildResult->addCandidateResult(
+                    DeputyshipCandidateAction::UpdateOrderStatus,
                     $this->dbAccess->updateOrderStatus($courtOrderId, $candidate),
                     sprintf('update order status not applied for court order UID %s', $candidatesGroup->orderUid)
                 );
             } elseif (DeputyshipCandidateAction::UpdateDeputyStatus === $action) {
                 $buildResult->addCandidateResult(
+                    DeputyshipCandidateAction::UpdateDeputyStatus,
                     $this->dbAccess->updateDeputyStatus($courtOrderId, $candidate),
                     sprintf('update deputy status on order not applied for court order UID %s', $candidatesGroup->orderUid)
                 );

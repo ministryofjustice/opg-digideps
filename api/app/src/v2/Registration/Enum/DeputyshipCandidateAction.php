@@ -4,10 +4,10 @@ namespace App\v2\Registration\Enum;
 
 enum DeputyshipCandidateAction: string
 {
-    case UpdateOrderStatus = 'UPDATE ORDER STATUS';
-    case UpdateDeputyStatus = 'UPDATE DEPUTY STATUS ON ORDER';
-    case InsertOrderDeputy = 'INSERT ORDER DEPUTY';
-    case InsertOrder = 'INSERT ORDER';
-    case InsertOrderReport = 'INSERT ORDER REPORT';
-    case InsertOrderNdr = 'INSERT ORDER NDR';
+    case UpdateOrderStatus = 'U_OS';
+    case UpdateDeputyStatus = 'U_DS';
+    case InsertOrderDeputy = 'I_OD';
+    case InsertOrder = 'I_O';
+    case InsertOrderReport = 'I_OR';
+    case InsertOrderNdr = 'I_ON';
 }
