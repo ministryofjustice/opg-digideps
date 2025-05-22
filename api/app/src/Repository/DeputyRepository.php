@@ -51,20 +51,21 @@ class DeputyRepository extends ServiceEntityRepository
         (
             SELECT DISTINCT string_agg(co.court_order_uid, ', ')
             FROM court_order co
-            LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
-            LEFT JOIN deputy d ON cod.deputy_id = d.id
-            LEFT JOIN client c ON co.client_id = c.id
-            LEFT JOIN report re ON c.id = re.client_id
+            INNER JOIN court_order_deputy cd ON co.id = cd.court_order_id
+            INNER JOIN court_order_report cr ON co.id = cr.court_order_id
+            INNER JOIN deputy d ON cd.deputy_id = d.id
+            INNER JOIN report re ON cr.report_id = re.client_id
             WHERE d.deputy_uid = :deputyUid
             AND r.id = re.id
         ) AS "courtOrderUid",
         r.type AS "type",
         r.id AS "reportId"
         FROM report r
-        LEFT JOIN client c ON r.client_id = c.id
-        LEFT JOIN court_order co ON c.id = co.client_id
-        LEFT JOIN court_order_deputy cod ON co.id = cod.court_order_id
-        LEFT JOIN deputy d ON cod.deputy_id = d.id
+        INNER JOIN court_order_report cor ON r.id = cor.report_id
+        INNER JOIN court_order co ON cor.court_order_id = co.id
+        INNER JOIN court_order_deputy cod ON co.id = cod.court_order_id
+        INNER JOIN client c ON co.client_id = c.id
+        INNER JOIN deputy d ON cod.deputy_id = d.id
         WHERE d.deputy_uid = :deputyUid
         AND cod.is_active = TRUE
         AND cod.deputy_id = d.id
