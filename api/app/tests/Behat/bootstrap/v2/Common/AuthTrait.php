@@ -391,6 +391,27 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^a flash message should be displayed to the user which tells them to use their primary account as no email can be retrieved$/
+     */
+    public function aFlashMessageShouldBeDisplayedUserShouldUsePrimaryAccount(): void
+    {
+        $alertMessage = 'This account has been closed. You can now access all of your reports in the same place from your primary account';
+
+        $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "govuk-notification-banner__content"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
+        }
+    }
+
+    /**
      * @Then /^the user tries to access their clients report overview page$/
      */
     public function theUserTriesToAccessTheirClientsReportOverviewPage()
