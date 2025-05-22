@@ -165,10 +165,10 @@ balance:
     addExplanation: "Add explanation"
     editExplanation: "Edit explanation"
   label:
-    not-started: "more information needed"
-    not-matching: "not balanced"
+    not-started: "More information needed"
+    not-matching: "Not balanced"
     done: "balanced"
-    explained: "not balanced"
+    explained: "Not balanced"
 assets:
   subSectionTitle: "Assets"
   subSectionDescription: "Tell us about %client%'s property, investments and other valuables"
