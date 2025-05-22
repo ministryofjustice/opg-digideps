@@ -594,7 +594,7 @@ class UserController extends RestController
 
     /**
      * Endpoint for getting the primary user account for user.
-     * Returns null if the user has multiple primary accounts.
+     * Returns null if the user has no or multiple primary account(s).
      *
      * @throws \Exception
      */
@@ -603,8 +603,8 @@ class UserController extends RestController
     {
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
 
-        // multiple primary accounts
-        if (count($users) > 1) {
+        // multiple primary accounts or no primary account
+        if (1 !== count($users)) {
             return null;
         }
 
