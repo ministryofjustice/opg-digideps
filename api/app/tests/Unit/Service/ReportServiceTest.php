@@ -421,6 +421,7 @@ class ReportServiceTest extends TestCase
         // otherwise not due
         $this->assertEquals(false, ReportService::isDue($oneMinuteAfterLastMidnight));
         $this->assertEquals(false, ReportService::isDue(new \DateTime('next week')));
+        $this->assertEquals(false, ReportService::isDue($todayMidnight));
     }
 
     /**
