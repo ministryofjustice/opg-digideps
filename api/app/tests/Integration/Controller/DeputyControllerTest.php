@@ -47,8 +47,6 @@ class DeputyControllerTest extends WebTestCase
      */
     public static function tearDownAfterClass(): void
     {
-        $purger = new ORMPurger(em: self::$em);
-        $purger->purge();
         self::$fixtures->clear();
     }
 
