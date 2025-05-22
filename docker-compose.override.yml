@@ -99,3 +99,9 @@ services:
       - ./api/app/public:/var/www/public
       - ./api/app/src:/var/www/src
       - ./api/app/tests:/var/www/tests
+
+  node-js:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./client/resources/assets:/app/assets

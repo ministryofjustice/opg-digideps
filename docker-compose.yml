@@ -362,3 +362,13 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+
+  node-js:
+    image: opg-digideps-resources
+    build:
+      context: .
+      dockerfile: ./client/docker/resources/Dockerfile
+      target: testing
+    working_dir: /app
+    environment:
+      NODE_ENV: production
