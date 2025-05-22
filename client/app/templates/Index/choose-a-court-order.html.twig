@@ -3,16 +3,10 @@
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
 
-{% set page = 'chooseACourtOrder' %}
+{% set page = 'chooseAReport' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-
-
-{% set reportType = ('-4' == report.type.get104TransSuffix) ?
-    'Property and financial, and health and welfare'
-    : ('104' in report.type) ? 'Health and welfare'
-    : 'Property and financial'  %}
 
 {% block pageContent %}
 
@@ -23,11 +17,11 @@
         <div class="govuk-summary-card">
             <div class="govuk-summary-card__title-wrapper">
                 <h2 class="govuk-summary-card__title">
-                    {{ reports.client.firstname }} {{ reports.client.lastname }}
+                    {{ reports.client.firstName }} {{ reports.client.lastName }}
                 </h2>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action">
-                        <a class="govuk-link" href="{{ path( "lay_home", {'coutOrder' : reports.courtOrder.courtOrderUid}) }}">Manage</a>
+                        <a href="{{ path('report_overview', {'reportId': reports.report.id}) }}">Report</a>
                     </li>
                 </ul>
             </div>
@@ -35,10 +29,18 @@
                 <dl class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
+                            {{ 'chooseAReport.courtOrderNumber'| trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ reports.courtOrder.courtOrderUid }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
                             {{ 'chooseAReport.caseNumber'| trans }}
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ reports.client.firstname }}
+                            {{ reports.client.caseNumber }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -50,7 +52,7 @@
                                 'Property and financial, and health and welfare'
                                 : ('104' in reports.report.type) ? 'Health and welfare'
                                 : 'Property and financial'  %}
-                            {{ reports.report.type }}
+                            {{ reportType }}
                         </dd>
                     </div>
                 </dl>
