@@ -564,4 +564,70 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('multi-client-primary-deputy@example.org', $data['email']);
         $this->assertTrue($data['is_primary']);
     }
+
+    public function testGetPrimaryEmailNoUser(): void
+    {
+        $url = '/user/get-primary-email/523456234';
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'assertResponseCode' => 200,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        self::assertNull($data);
+    }
+
+    public function testGetPrimaryEmailMultiplePrimaryUsers(): void
+    {
+        $deputyUid = 8364689421;
+
+        self::fixtures()->createUser([
+            'setDeputyUid' => $deputyUid,
+            'setEmail' => 'mrfake1@fakeland.fake',
+            'setIsPrimary' => true,
+        ]);
+
+        self::fixtures()->createUser([
+            'setDeputyUid' => $deputyUid,
+            'setEmail' => 'mrfake2@fakeland.fake',
+            'setIsPrimary' => true,
+        ]);
+
+        self::fixtures()->flush()->clear();
+
+        $url = "/user/get-primary-email/$deputyUid";
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'assertResponseCode' => 200,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        self::assertNull($data);
+    }
+
+    public function testGetPrimaryEmail(): void
+    {
+        $deputyUid = 9975467801;
+        $expectedEmail = 'fakenotrealperson@fake.fake';
+
+        self::fixtures()->createUser([
+            'setDeputyUid' => $deputyUid,
+            'setEmail' => $expectedEmail,
+            'setIsPrimary' => true,
+        ]);
+
+        self::fixtures()->flush()->clear();
+
+        $url = "/user/get-primary-email/$deputyUid";
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'assertResponseCode' => 200,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        self::assertEquals($expectedEmail, $data);
+    }
 }
