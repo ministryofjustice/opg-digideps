@@ -136,6 +136,34 @@ class ReportController extends AbstractController
     ) {
     }
 
+    private function redirectNonPrimaryAccount(User $user): ?RedirectResponse
+    {
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+
+            if (is_null($primaryEmail)) {
+                $this->addFlash('nonPrimaryRedirectUnknownEmail',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
+                    ]
+                );
+            } else {
+                $this->addFlash('nonPrimaryRedirect',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                        'primaryEmail' => $primaryEmail,
+                    ]
+                );
+            }
+
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        }
+
+        return null;
+    }
+
     /**
      * List of reports.
      *
@@ -180,18 +208,9 @@ class ReportController extends AbstractController
         }
 
         // redirect back to log out page if signing in with non-primary account with primary email
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-            $this->addFlash('nonPrimaryRedirect',
-                [
-                    'sentenceOne' => 'This account has been closed.',
-                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                    'primaryEmail' => $primaryEmail,
-                ]
-            );
-
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        $redirect = $this->redirectNonPrimaryAccount($user);
+        if (!is_null($redirect)) {
+            return $redirect;
         }
 
         // redirect if user has missing details or is on wrong page
@@ -249,18 +268,9 @@ class ReportController extends AbstractController
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
         // redirect back to log out page if signing in with non-primary account with primary email
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-            $this->addFlash('nonPrimaryRedirect',
-                [
-                    'sentenceOne' => 'This account has been closed.',
-                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                    'primaryEmail' => $primaryEmail,
-                ]
-            );
-
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        $redirect = $this->redirectNonPrimaryAccount($user);
+        if (!is_null($redirect)) {
+            return $redirect;
         }
 
         // redirect if user has missing details or is on wrong page

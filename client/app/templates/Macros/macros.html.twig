@@ -320,7 +320,21 @@
                 </div>
                 <div class="govuk-notification-banner__content">
                     <p class="govuk-body"> {{ message.sentenceOne }}</p>
-                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong></p>
+                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong>.</p>
+                </div>
+            </div>
+        {% elseif alertType == 'nonPrimaryRedirectUnknownEmail' %}
+            <div class="govuk-notification-banner width-two-thirds" role="region"
+                 aria-labelledby="govuk-notification-banner-title"
+                 data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-body"> {{ message.sentenceOne }}</p>
+                    <p class="govuk-body"> {{ message.sentenceTwo }}</p>
                 </div>
             </div>
         {% else %}
