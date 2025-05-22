@@ -279,7 +279,10 @@ class UserApi
             'raw'
         );
 
-        return json_decode($jsonString, true)['data'];
+        /** @var ?string $value */
+        $value = json_decode($jsonString, true)['data'];
+
+        return $value;
     }
 
     public function getPrimaryUserAccount(int $deputyUid): User
