@@ -362,3 +362,32 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+
+  end-to-end-tests:
+    build:
+      dockerfile: api/docker/app/Dockerfile
+      context: .
+      args:
+        ENVIRONMENT: local
+    depends_on:
+      localstack:
+        condition: service_healthy
+      mock-sirius-integration:
+        condition: service_started
+    volumes:
+      - ./api/app/tests/Behat/snapshots:/tmp/html
+    env_file:
+      - ./api/app/api.env
+      - ./api/app/tests/Behat/test.env
+    environment:
+      APP_ENV: local
+
+  node-js:
+    image: opg-digideps-resources
+    build:
+      context: .
+      dockerfile: ./client/docker/resources/Dockerfile
+      target: testing
+    working_dir: /app
+    environment:
+      NODE_ENV: production
