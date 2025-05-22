@@ -8,6 +8,15 @@ import secrets
 
 db_password_suffix = "database-password"
 
+base_secrets_list = [
+    "database-password",
+    "api-secret",
+    "admin-api-client-secret",
+    "admin-frontend-secret",
+    "front-frontend-secret",
+    "front-api-client-secret",
+]
+
 
 def get_session(account_id):
     # Check if the CI environment variable is set
@@ -43,8 +52,9 @@ def cycle_secrets(session, workspaces, aws_config):
 
     # Rewrite using list of secret names when we are rotating more than one type
     secrets_list = []
-    for workspace in workspaces:
-        secrets_list.append(f"{workspace}/{db_password_suffix}")
+    for base_secret in base_secrets_list:
+        for workspace in workspaces:
+            secrets_list.append(f"{workspace}/{base_secret}")
 
     print(f"Attempting to find the following secrets: {secrets_list}")
 
@@ -55,7 +65,7 @@ def cycle_secrets(session, workspaces, aws_config):
         print("No matching secrets found.. Exiting")
         exit(1)
 
-    # Loop through the filtered secrets and update each one to a random 43 character string
+    # Loop through the filtered secrets and update each one to a random 32 character string
     for secret in filtered_secrets:
         print(f"rotating secret: {secret['Name']}")
         secret_manager.update_secret(
