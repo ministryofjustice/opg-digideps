@@ -345,6 +345,21 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^a Lay Deputy with no deputy UID tries to login with their non-primary email address$/
+     */
+    public function aLayDeputyWithNoDeputyUidTriesToLoginWithTheirEmailAddress()
+    {
+        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $userEmail);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
      * @Then /^they get redirected back to the log in page$/
      */
     public function theyGetRedirectedBackToTheLogInPage()
