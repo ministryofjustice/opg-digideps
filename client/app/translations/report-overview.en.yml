@@ -167,7 +167,7 @@ balance:
   label:
     not-started: "More information needed"
     not-matching: "Not balanced"
-    done: "balanced"
+    done: " Balanced"
     explained: "Not balanced"
 assets:
   subSectionTitle: "Assets"
