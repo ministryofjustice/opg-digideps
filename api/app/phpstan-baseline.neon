@@ -9026,31 +9026,6 @@ parameters:
 			path: src/Service/PreRegistrationVerificationService.php
 
 		-
-			message: "#^Cannot call method getEndDate\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 4
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getStartDate\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getStatus\\(\\) on mixed\\.$#"
-			count: 4
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method hasSamePeriodAs\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: "#^Cannot call method isLayDeputy\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
@@ -9062,11 +9037,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\ReportService\\:\\:clonePersistentResources\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ReportService\\:\\:findDeleteableReports\\(\\) has parameter \\$reports with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection but does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Service/ReportService.php
 
