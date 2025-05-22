@@ -31,7 +31,7 @@ class ComponentsExtension extends AbstractExtension
     public function __construct(
         TranslatorInterface $translator,
         ReportSectionsLinkService $reportSectionsLinkService,
-        Environment $environment
+        Environment $environment,
     ) {
         $this->translator = $translator;
         $this->reportSectionsLinkService = $reportSectionsLinkService;
@@ -113,8 +113,11 @@ class ComponentsExtension extends AbstractExtension
 
                     case 'needs-attention':
                     case 'unsubmitted':
-                    case 'not-matching':
                         return 'govuk-tag--red';
+
+                    case 'not-matching':
+                    case 'explained':
+                        return 'govuk-tag--blue';
 
                     case 'done':
                     case 'low-assets-done':
