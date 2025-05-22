@@ -24,7 +24,7 @@ class DeputyRepositoryTest extends WebTestCase
     public static function setUpBeforeClass(): void
     {
         $container = static::getContainer();
-        
+
         /** @var EntityManager $em */
         $em = $container->get(id: 'em');
         self::$em = $em;
@@ -57,12 +57,13 @@ class DeputyRepositoryTest extends WebTestCase
         $deputy->setUser(user: $user);
         $client->setDeputy(deputy: $deputy);
         $courtOrder->addReport(report: $report);
-        
+        $courtOrder->setStatus(status: 'ACTIVE');
+
         self::$fixtures->persist($deputy, $client, $report, $courtOrder);
         self::$fixtures->flush();
-        
+
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
-        
+
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
 
