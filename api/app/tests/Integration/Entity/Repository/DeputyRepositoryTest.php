@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Tests\Integration\Entity\Repository;
 
 use App\Entity\Deputy;
+use App\Repository\DeputyRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
@@ -42,24 +43,22 @@ class DeputyRepositoryTest extends WebTestCase
         $deputyUid = '7000000021';
         $courtOrderUid = '7100000080';
 
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: $deputyUid);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: $deputyUid, em: self::$em);
         $client = ClientTestHelper::generateClient(em: self::$em);
         $user = UserTestHelper::createAndPersistUser(em: self::$em, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$em, client: $client);
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
             em: self::$em,
             client: $client,
-            status: 'ACTIVE',
             courtOrderUid: $courtOrderUid,
+            report: $report,
             deputy: $deputy,
         );
 
         $deputy->setUser(user: $user);
         $client->setDeputy(deputy: $deputy);
-        $courtOrder->addReport(report: $report);
-        $courtOrder->setStatus(status: 'ACTIVE');
 
-        self::$fixtures->persist($deputy, $client, $report, $courtOrder);
+        self::$fixtures->persist($deputy, $client);
         self::$fixtures->flush();
 
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
@@ -91,5 +90,11 @@ class DeputyRepositoryTest extends WebTestCase
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
 
         self::assertNull($results);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        $purger = new ORMPurger(em: self::$em);
+        $purger->purge();
     }
 }

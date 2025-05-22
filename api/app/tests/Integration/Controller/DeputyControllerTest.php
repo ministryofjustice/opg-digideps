@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\User;
 use App\Service\JWT\JWTService;
@@ -8,8 +8,8 @@ use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
-use App\Tests\Integration\Controller\JsonHttpTestClient;
 use App\Tests\Integration\Fixtures;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -47,6 +47,8 @@ class DeputyControllerTest extends WebTestCase
      */
     public static function tearDownAfterClass(): void
     {
+        $purger = new ORMPurger(em: self::$em);
+        $purger->purge();
         self::$fixtures->clear();
     }
 
@@ -190,7 +192,7 @@ class DeputyControllerTest extends WebTestCase
         self::$fixtures->flush();
 
         // generate courtOrder and set client and deputy
-        $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', true);
+        $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', 'ACTIVE');
         $courtOrder->setClient($client);
         $courtOrder->setStatus('ACTIVE');
         $courtOrderDeputy = CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
@@ -215,7 +217,5 @@ class DeputyControllerTest extends WebTestCase
         );
 
         self::assertCount(1, $responseJson['data']);
-
-        self::$fixtures->remove($courtOrderDeputy, $deputy, $user)->flush()->clear();
     }
 }

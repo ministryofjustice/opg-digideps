@@ -6,11 +6,12 @@ namespace App\TestHelpers;
 
 use App\Entity\Deputy;
 use App\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 
 class DeputyTestHelper
 {
-    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
+    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null, ?EntityManager $em = null): Deputy
     {
         $faker = Factory::create('en_GB');
 
@@ -24,11 +25,17 @@ class DeputyTestHelper
             ->setAddress3($faker->county)
             ->setAddressPostcode($faker->postcode())
             ->setPhoneMain($faker->phoneNumber());
-        
+
         if (!is_null($user)) {
             $deputy->setUser($user);
         }
-        
+
+        // Refactor other tests that use DeputyTestHelper so check is not required
+        if (!is_null($em)) {
+            $em->persist($deputy);
+            $em->flush($deputy);
+        }
+
         return $deputy;
     }
 }
