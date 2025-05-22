@@ -196,11 +196,13 @@ jobs:
           sarif_file: "trivy-results.sarif"
 
       - name: generate SBOM
+        if: inputs.branch_name == 'main'
         run: |
           mkdir -p sboms
           trivy image --format cyclonedx --output sboms/sbom-${{ matrix.svc_name }}.cdx.json ${{ matrix.svc_name }}:latest
 
       - name: upload SBOM
+        if: inputs.branch_name == 'main'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: sbom-${{ matrix.svc_name }}
