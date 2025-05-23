@@ -37,12 +37,19 @@ Feature: Users logging into the service
         And I press "change_password_save"
         Then the form should be valid
 
-
     @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user tries to login to the service with their non primary account
         Given a Lay Deputy tries to login with their "non-primary" email address
         Then they get redirected back to the log in page
         And a flash message should be displayed to the user with their primary email address
+        When the user tries to access their clients report overview page
+        Then they get redirected back to the log in page
+
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user tries to login to the service with their non primary account but primary account has no deputy UID (DDLS-671)
+        Given a Lay Deputy with no deputy UID tries to login with their non-primary email address
+        Then they get redirected back to the log in page
+        And a flash message should be displayed to the user which tells them to use their primary account as no email can be retrieved
         When the user tries to access their clients report overview page
         Then they get redirected back to the log in page
 

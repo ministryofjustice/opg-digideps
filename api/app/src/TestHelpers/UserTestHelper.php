@@ -36,9 +36,9 @@ class UserTestHelper extends TestCase
         ?Client $client = null,
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
-        ?int $deputyUid = null
+        ?int $deputyUid = null,
     ): User {
-        $user = self::createUser(client: $client, roleName:  $roleName, email:  $email, deputyUid: $deputyUid);
+        $user = self::createUser(client: $client, roleName: $roleName, email: $email, deputyUid: $deputyUid);
 
         if (!is_null($client)) {
             $em->persist($client);
@@ -54,6 +54,7 @@ class UserTestHelper extends TestCase
         return $user;
     }
 
+    // set $deputyUid to -1 to get a null deputy UID (passing null for a lay means they end up with a generated UID)
     public static function createUser(
         ?Client $client = null,
         ?string $roleName = User::ROLE_LAY_DEPUTY,
@@ -87,7 +88,9 @@ class UserTestHelper extends TestCase
             ->setAgreeTermsUse(true)
             ->setIsPrimary($isPrimary);
 
-        if (str_contains($roleName, 'LAY')) {
+        if (-1 === $deputyUid) {
+            $user->setDeputyUid(null);
+        } elseif (str_contains($roleName, 'LAY')) {
             $user->setDeputyUid($deputyUid ?: intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT)));
         }
 

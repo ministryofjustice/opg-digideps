@@ -95,6 +95,9 @@
         {% for flashMessage in app.session.flashbag.get('nonPrimaryRedirect') %}
             {{ macros.notification('nonPrimaryRedirect', flashMessage) }}
         {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('nonPrimaryRedirectUnknownEmail') %}
+            {{ macros.notification('nonPrimaryRedirectUnknownEmail', flashMessage) }}
+        {% endfor %}
     {% endblock %}
 
     {% block errors %}

@@ -360,6 +360,7 @@ class UserController extends RestController
      * @param int $id
      *
      * @return array
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -593,23 +594,21 @@ class UserController extends RestController
 
     /**
      * Endpoint for getting the primary user account for user.
+     * Returns null if the user has no or multiple primary account(s).
      *
      * @throws \Exception
      */
     #[Route(path: '/get-primary-email/{deputyUid}', methods: ['GET'])]
-    public function getPrimaryEmail(int $deputyUid): string
+    public function getPrimaryEmail(int $deputyUid): ?string
     {
-        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
+        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
 
-        $userEmail = '';
-
-        foreach ($users as $user) {
-            if ($user->getIsPrimary()) {
-                $userEmail = $user->getEmail();
-            }
+        // multiple primary accounts or no primary account
+        if (1 !== count($users)) {
+            return null;
         }
 
-        return $userEmail;
+        return $users[0]->getEmail();
     }
 
     /**
