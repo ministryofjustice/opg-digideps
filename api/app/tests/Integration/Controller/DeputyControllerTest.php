@@ -191,8 +191,7 @@ class DeputyControllerTest extends WebTestCase
         // generate courtOrder and set client and deputy
         $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', 'ACTIVE');
         $courtOrder->setClient($client);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrderDeputy = CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
+        CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 

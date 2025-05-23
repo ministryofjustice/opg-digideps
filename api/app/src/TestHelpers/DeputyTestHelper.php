@@ -6,15 +6,11 @@ namespace App\TestHelpers;
 
 use App\Entity\Deputy;
 use App\Entity\User;
-use Doctrine\DBAL\Driver\PDO\PDOException;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\EntityManager;
 use Faker\Factory;
-use Mockery\Exception;
 
 class DeputyTestHelper
 {
-    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null, ?EntityManager $em = null): Deputy
+    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
     {
         $faker = Factory::create('en_GB');
 
@@ -31,16 +27,6 @@ class DeputyTestHelper
 
         if (!is_null($user)) {
             $deputy->setUser($user);
-        }
-
-        // Refactor other tests that use DeputyTestHelper so check is not required
-        if (!is_null($em)) {
-            try {
-                $em->persist($deputy);
-                $em->flush();
-            } catch (\Exception $e) {
-                error_log($e->getMessage());
-            }
         }
 
         return $deputy;

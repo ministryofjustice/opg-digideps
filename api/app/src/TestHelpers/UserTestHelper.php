@@ -6,7 +6,6 @@ namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\User;
-use Doctrine\DBAL\Driver\PDO\PDOException;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
@@ -42,13 +41,6 @@ class UserTestHelper extends TestCase
 
         if (!is_null($client)) {
             $em->persist($client);
-        }
-
-        try {
-            $em->persist($user);
-            $em->flush($user);
-        } catch (\Exception $e) {
-            error_log($e->getMessage());
         }
 
         return $user;

@@ -38,12 +38,18 @@ class DeputyRepositoryTest extends WebTestCase
         $purger->purge();
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        $purger = new ORMPurger(em: self::$em);
+        $purger->purge();
+    }
+
     public function testFindReportsInfoByUid()
     {
         $deputyUid = '7000000021';
         $courtOrderUid = '7100000080';
 
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: $deputyUid, em: self::$em);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: $deputyUid);
         $client = ClientTestHelper::generateClient(em: self::$em);
         $user = UserTestHelper::createAndPersistUser(em: self::$em, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$em, client: $client);
@@ -90,11 +96,5 @@ class DeputyRepositoryTest extends WebTestCase
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
 
         self::assertNull($results);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        $purger = new ORMPurger(em: self::$em);
-        $purger->purge();
     }
 }
