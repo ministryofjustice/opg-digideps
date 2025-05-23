@@ -453,3 +453,4 @@ services:
     App\Model\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
+        public: true
