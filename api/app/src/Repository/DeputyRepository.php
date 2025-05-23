@@ -54,7 +54,7 @@ class DeputyRepository extends ServiceEntityRepository
             INNER JOIN court_order_deputy cd ON co.id = cd.court_order_id
             INNER JOIN court_order_report cr ON co.id = cr.court_order_id
             INNER JOIN deputy d ON cd.deputy_id = d.id
-            INNER JOIN report re ON cr.report_id = re.client_id
+            INNER JOIN report re ON cr.report_id = re.id
             WHERE d.deputy_uid = :deputyUid
             AND r.id = re.id
         ) AS "courtOrderUid",

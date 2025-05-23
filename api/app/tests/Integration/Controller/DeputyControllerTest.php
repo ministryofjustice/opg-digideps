@@ -9,7 +9,6 @@ use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use App\Tests\Integration\Fixtures;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -118,7 +117,7 @@ class DeputyControllerTest extends WebTestCase
 
     public function testGetDeputyReportsNotFound()
     {
-        $email = 'n.s@example.org';
+        $email = 'n.s1@example.org';
         $user = self::$fixtures->createUser([
             'setEmail' => $email,
             'setRoleName' => User::ROLE_LAY_DEPUTY,
@@ -141,7 +140,7 @@ class DeputyControllerTest extends WebTestCase
     public function testGetDeputyReportsEmptyResponse()
     {
         // setup required user for auth
-        $email = 'n.s@example.org';
+        $email = 'n.s2@example.org';
         $deputyUid = '7099999991';
         $user = self::$fixtures->createUser([
             'setEmail' => $email,
@@ -167,7 +166,7 @@ class DeputyControllerTest extends WebTestCase
 
     public function testGetDeputyReportsReturnsResults()
     {
-        $email = 'n.s@example.org';
+        $email = 'n.s3@example.org';
         $deputyUid = '7044444440';
 
         // create user

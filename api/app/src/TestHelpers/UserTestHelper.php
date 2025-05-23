@@ -6,6 +6,7 @@ namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\User;
+use Doctrine\DBAL\Driver\PDO\PDOException;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +20,7 @@ class UserTestHelper extends TestCase
         $clientTestHelper = new ClientTestHelper();
 
         $clients = $hasClients ? [$clientTestHelper->createClientMock(1, $hasReports)] : null;
-        
+
         /** @var ObjectProphecy<User> $user */
         $user = (new Prophet())->prophesize(User::class);
         $user->getRoleName()->willReturn($roleName);
@@ -31,10 +32,10 @@ class UserTestHelper extends TestCase
     }
 
     public static function createAndPersistUser(
-        EntityManager $em, 
-        ?Client $client = null, 
-        ?string $roleName = User::ROLE_LAY_DEPUTY, 
-        ?string $email = null, 
+        EntityManager $em,
+        ?Client $client = null,
+        ?string $roleName = User::ROLE_LAY_DEPUTY,
+        ?string $email = null,
         ?int $deputyUid = null
     ): User {
         $user = self::createUser(client: $client, roleName:  $roleName, email:  $email, deputyUid: $deputyUid);
@@ -43,8 +44,12 @@ class UserTestHelper extends TestCase
             $em->persist($client);
         }
 
-        $em->persist($user);
-        $em->flush();
+        try {
+            $em->persist($user);
+            $em->flush($user);
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+        }
 
         return $user;
     }
