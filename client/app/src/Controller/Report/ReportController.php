@@ -146,6 +146,7 @@ class ReportController extends AbstractController
                     [
                         'sentenceOne' => 'This account has been closed.',
                         'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
+                        'sentenceThree' => 'If you need assistance, contact your case manager on 0115 934 2700.',
                     ]
                 );
             } else {
