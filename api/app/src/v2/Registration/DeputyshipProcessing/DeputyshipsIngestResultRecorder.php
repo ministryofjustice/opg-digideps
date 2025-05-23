@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class DeputyshipsIngestResultRecorder
@@ -14,41 +15,46 @@ class DeputyshipsIngestResultRecorder
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
 
+    // for storing builder counts
+    private int $numCandidatesApplied = 0;
+    private int $numCandidatesFailed = 0;
+
     /** @var string[] */
     private array $errorMessages = [];
 
     /** @var string[] */
     private array $messages = [];
 
-    private ?\DateTimeImmutable $startDateTime = null;
+    private ?\DateTimeInterface $startDateTime = null;
 
-    private ?\DateTimeImmutable $endDateTime = null;
+    private ?\DateTimeInterface $endDateTime = null;
 
     public function __construct(
         private LoggerInterface $logger,
     ) {
     }
 
-    private function formatDate(\DateTimeImmutable $dateTime): string
+    private function formatDate(\DateTimeInterface $dateTime): string
     {
         return $dateTime->format('Y-m-d H:i:s');
     }
 
     private function formatMessage(string $message): string
     {
-        return $this->formatDate(new \DateTimeImmutable()).' '.$message;
+        return $this->formatDate(new \DateTimeImmutable()).' deputyships-ingest '.$message;
     }
 
-    private function logMemory(): void
+    private function logMemory(string $logLevel = LogLevel::DEBUG): void
     {
         $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
         $this->logger->debug($this->formatMessage($memMessage));
+        $this->logger->log($logLevel, $memMessage);
     }
 
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
-        $this->logger->info($this->formatMessage($message));
+        $this->logger->notice($this->formatMessage($message));
         $this->logMemory();
     }
 
@@ -59,7 +65,7 @@ class DeputyshipsIngestResultRecorder
         $this->logMemory();
     }
 
-    public function recordStart(\DateTimeImmutable $startDateTime = new \DateTimeImmutable()): void
+    public function recordStart(\DateTimeInterface $startDateTime = new \DateTimeImmutable()): void
     {
         $this->startDateTime = $startDateTime;
     }
@@ -95,17 +101,21 @@ class DeputyshipsIngestResultRecorder
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
+        $this->numCandidatesApplied += $builderResult->getNumCandidatesApplied();
+        $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
         $this->logger->debug($this->formatMessage('++++++++ '.$builderResult->getMessage()));
         $this->logMemory();
     }
 
-    public function recordEnd(\DateTimeImmutable $endDateTime = new \DateTimeImmutable()): void
+    public function recordEnd(\DateTimeInterface $endDateTime = new \DateTimeImmutable()): void
     {
         $this->endDateTime = $endDateTime;
     }
 
     public function result(): DeputyshipsCSVIngestResult
     {
+        $this->logMemory(LogLevel::NOTICE);
+
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
@@ -119,10 +129,13 @@ class DeputyshipsIngestResultRecorder
 
         $message .= ' --- '.implode('; ', $this->messages);
 
+        $message .= '; number of candidates applied = '.$this->numCandidatesApplied.
+            '; number of candidates failed = '.$this->numCandidatesFailed;
+
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
         } else {
-            $message .= implode('; ERRORS: ', $this->errorMessages);
+            $message .= '; ERRORS: '.implode(' / ', $this->errorMessages);
         }
 
         $this->logMessage($message);

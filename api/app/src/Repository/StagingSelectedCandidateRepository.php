@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\StagingSelectedCandidate;
+use App\Model\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,36 +26,28 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
      * Ordering is important as the builder will group the candidates on the fly, using the order UID,
      * so that all entities for a single order UID are created together.
      *
-     * @return \Traversable<array<string, string>>
+     * @return \Traversable<array<string, mixed>>
+     *
+     * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getDistinctOrderedCandidates(): \Traversable
     {
-        // get number of results
-        /** @var int $numCandidates */
-        $numCandidates = $this->getEntityManager()
-            ->createQuery('SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc')
-            ->getSingleScalarResult();
+        $em = $this->getEntityManager();
 
-        $pageSize = 1000;
-        $numPages = ceil($numCandidates / $pageSize);
+        $countQuery = $em->createQuery('SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc');
 
-        $query = $this->getEntityManager()->createQuery(
+        $pageQuery = $em->createQuery(
             'SELECT DISTINCT c.action, c.orderUid, c.deputyUid, c.status, c.orderType, c.reportType, c.orderMadeDate, '.
             'c.deputyType, c.deputyStatusOnOrder, c.orderId, c.clientId, c.reportId, c.deputyId, c.ndrId '.
             'FROM App\Entity\StagingSelectedCandidate c ORDER BY c.orderUid ASC'
         );
 
-        $currentPage = 1;
-        while ($numPages >= $currentPage) {
-            $pagedQuery = $query->setFirstResult(($currentPage - 1) * $pageSize)->setMaxResults($pageSize);
-            $results = $pagedQuery->getArrayResult();
+        $queryPager = new QueryPager($countQuery, $pageQuery);
 
-            /** @var array<string, string> $deputyship */
-            foreach ($results as $deputyship) {
-                yield $deputyship;
-            }
+        /** @var \Traversable<array<string, mixed>> $rows */
+        $rows = $queryPager->getRows();
 
-            ++$currentPage;
-        }
+        return $rows;
     }
 }

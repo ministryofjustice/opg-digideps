@@ -110,12 +110,12 @@ class DeputyControllerTest extends WebTestCase
         $this->assertEquals($email, $deputy->getEmail1());
         $this->assertEquals($deputyUid, $deputy->getDeputyUid());
     }
-    
+
     public function testDeputyReportUrlNeedsAuth()
     {
         self::$client->assertEndpointNeedsAuth('GET', '/v2/deputy/7999999990/reports');
     }
-    
+
     public function testGetDeputyReportsNotFound()
     {
         $email = 'n.s@example.org';
@@ -125,7 +125,7 @@ class DeputyControllerTest extends WebTestCase
             'setDeputyUid' => '7099999990',
         ]);
         self::$fixtureHelper->setPassword($user);
-        //login to get token
+        // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
         // make the API call
@@ -137,9 +137,9 @@ class DeputyControllerTest extends WebTestCase
 
         self::$fixtures->remove($user)->flush()->clear();
     }
-    
+
     public function testGetDeputyReportsEmptyResponse()
-    {        
+    {
         // setup required user for auth
         $email = 'n.s@example.org';
         $deputyUid = '7099999991';
@@ -149,27 +149,27 @@ class DeputyControllerTest extends WebTestCase
             'setDeputyUid' => $deputyUid,
         ]);
         self::$fixtureHelper->setPassword($user);
-        
-        //login to get token
+
+        // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
-        
+
         // Make API call
         $responseJson = self::$client->assertJsonRequest(
             'GET',
             "/v2/deputy/{$deputyUid}/reports",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
-        
+
         $this->assertCount(0, $responseJson['data']);
 
         self::$fixtures->remove($user)->flush()->clear();
     }
-    
+
     public function testGetDeputyReportsReturnsResults()
     {
         $email = 'n.s@example.org';
         $deputyUid = '7044444440';
-                
+
         // create user
         $user = self::$fixtures->createUser([
             'setEmail' => $email,
@@ -190,7 +190,7 @@ class DeputyControllerTest extends WebTestCase
         self::$fixtures->flush();
 
         // generate courtOrder and set client and deputy
-        $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', true);
+        $courtOrder = self::$fixtures->createCourtOrder('7055555550', 'pfa', true);
         $courtOrder->setClient($client);
         $courtOrderDeputy = CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
         self::$fixtures->persist($courtOrder);
@@ -203,7 +203,7 @@ class DeputyControllerTest extends WebTestCase
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
-        //login to get token
+        // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
         // Make API call
@@ -212,7 +212,7 @@ class DeputyControllerTest extends WebTestCase
             "/v2/deputy/{$deputyUid}/reports",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
-        
+
         self::assertCount(1, $responseJson['data']);
 
         self::$fixtures->remove($courtOrderDeputy, $deputy, $user)->flush()->clear();

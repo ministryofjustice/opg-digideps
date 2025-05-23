@@ -101,6 +101,9 @@ case "$INTEGRATION_SELECTION" in
 
     printf "\nRunning Solo Test: %s %s \n\n" $SUITE $TEST_CASE
     php vendor/bin/phpunit -c tests/Integration $TEST_FILTER "tests/Integration/$SUITE"
+
+    # generate HTML coverage report
+    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
   *)
     echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all, selection-solo"
