@@ -36,13 +36,15 @@ build-app: down-app build-js ##@application Brings up app with a full no-cache b
 	docker container prune --force
 	docker compose build --no-cache
 
+ADDITIONAL_CONFIG = -f docker-compose.override.yml
+
 up-app: ##@application Brings the app up and mounts local folders
-	COMPOSE_HTTP_TIMEOUT=90 docker compose up -d --remove-orphans load-balancer
+	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up -d --remove-orphans load-balancer
 
 up-app-rebuild: ##@application Brings up app with a basic rebuild
 	docker compose down
 	docker container prune --force
-	COMPOSE_HTTP_TIMEOUT=90 docker compose up -d --remove-orphans --build load-balancer
+	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up -d --remove-orphans --build load-balancer
 
 up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled xdebug in api and client (see DEBUGGING.md for config and setup)
 	REQUIRE_XDEBUG_CLIENT=1 REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM-API XDEBUG_IDEKEY_CLIENT=PHPSTORM-CLIENT docker compose up -d --build --remove-orphans load-balancer
@@ -63,29 +65,25 @@ down-app: ##@application Tears down the app
 	docker compose down -v --remove-orphans
 
 end-to-end-tests: up-app reset-database ##@end-to-end-tests Brings the app up using test env vars (see test.env)
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml build frontend-app frontend-webserver admin-app admin-webserver api-app end-to-end-tests
-	REQUIRE_XDEBUG_CLIENT=0 REQUIRE_XDEBUG_API=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml up -d load-balancer
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @lay-pfa-high-not-started-multi-client-deputy
+	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @lay-pfa-high-not-started-multi-client-deputy
 
 end-to-end-tests-rerun: ##@end-to-end-tests Rerun end to end tests (requires you to have run end-to-end-tests previously), argument in format: tag=your_tag
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
+	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2
 
 end-to-end-tests-tag: ##@end-to-end-tests Rerun end to end tests with a tag (requires you to have run end-to-end-tests previously)
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @$(tag)
+	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @$(tag)
 
 end-to-end-tests-parallel: ##@end-to-end-tests Rerun the end to end tests in parallel (requires you to have run end-to-end-tests previously)
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2_sequential
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
+	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2_sequential
+	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
 
 end-to-end-tests-browserkit: ##@end-to-end-tests Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
 
 ifdef suite
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
+	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.override.yml run -rm end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
 else
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.behat.yml -f docker-compose.override.yml run --remove-orphans end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
+	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.override.yml run -rm end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
 endif
-
-ADDITIONAL_CONFIG = -f docker-compose.override.yml
 
 client-unit-tests: ##@unit-tests Run the client unit tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests sh scripts/client-unit-tests.sh cov-html
@@ -130,11 +128,8 @@ redis-clear: ##@database Clears out all the data from redis (session related tok
 
 cache-clear: ##@application Clear the cache of the application
 	docker compose exec api-app sh -c "rm -rf var/cache/*" && \
-	docker compose -f docker-compose.yml -f docker-compose.behat.yml exec api-app sh -c "rm -rf var/cache/*" && \
 	docker compose exec frontend-app sh -c "rm -rf var/cache/*" && \
-	docker compose -f docker-compose.yml -f docker-compose.behat.yml exec frontend-app sh -c "rm -rf var/cache/*" && \
 	docker compose exec admin-app sh -c "rm -rf var/cache/*" && \
-	docker compose -f docker-compose.yml -f docker-compose.behat.yml exec admin-app sh -c "rm -rf var/cache/*" && \
 	echo "Cache reset"
 
 enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)
