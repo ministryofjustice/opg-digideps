@@ -39,7 +39,7 @@
             {{ 'labels.needs-attention' |  trans }}
         </span>
     {% else %}
-        <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
+        <span class="opg-overview-section__status govuk-!-padding-right-2 govuk-!-padding-left-2 govuk-!-padding-bottom-1 {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
             {% if state.state == 'done' or customiseAllLabels | default(false) %}
                 {{ (subSection ~ '.label.' ~ state.state) | trans({'%count%': state.nOfRecords}) }}
             {% elseif state.state == 'low-assets-done' %}
