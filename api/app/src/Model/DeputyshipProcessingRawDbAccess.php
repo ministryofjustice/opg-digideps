@@ -12,6 +12,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * Encapsulates raw SQL access to the database for the purpose of ingesting deputyship data from Sirius.
+ *
  * DO NOT use this class for mundane database/entity access: it is a deliberate hack for optimising as our
  * entities are too bloated to use directly when doing large-scale database manipulation (as is required for the
  * deputyships CSV ingest).
@@ -19,25 +20,25 @@ use Doctrine\ORM\Query\ResultSetMapping;
 class DeputyshipProcessingRawDbAccess
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly EntityManagerInterface $ingestWriterEm,
     ) {
     }
 
     public function beginTransaction(): void
     {
-        $this->em->beginTransaction();
+        $this->ingestWriterEm->beginTransaction();
     }
 
     public function rollback(): void
     {
-        $this->em->rollback();
+        $this->ingestWriterEm->rollback();
     }
 
     public function endTransaction(): void
     {
-        $this->em->flush();
-        $this->em->commit();
-        $this->em->clear();
+        $this->ingestWriterEm->flush();
+        $this->ingestWriterEm->commit();
+        $this->ingestWriterEm->clear();
     }
 
     /**
@@ -52,7 +53,7 @@ class DeputyshipProcessingRawDbAccess
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id', 'id');
 
-        $query = $this->em->createNativeQuery('SELECT id FROM court_order WHERE court_order_uid = :orderUid', $rsm);
+        $query = $this->ingestWriterEm->createNativeQuery('SELECT id FROM court_order WHERE court_order_uid = :orderUid', $rsm);
         $query->setParameter('orderUid', $orderUid);
 
         try {
@@ -74,7 +75,7 @@ class DeputyshipProcessingRawDbAccess
         }
 
         try {
-            $qb = $this->em->getConnection()->createQueryBuilder();
+            $qb = $this->ingestWriterEm->getConnection()->createQueryBuilder();
 
             $qb->insert('court_order')
                 ->values(
@@ -95,8 +96,6 @@ class DeputyshipProcessingRawDbAccess
 
             return true;
         } catch (Exception $e) {
-            error_log($e->getMessage());
-
             return false;
         }
     }
@@ -107,7 +106,7 @@ class DeputyshipProcessingRawDbAccess
         $deputyActive = true === $candidate['deputyStatusOnOrder'];
 
         try {
-            $this->em->getConnection()->createQueryBuilder()
+            $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->insert('court_order_deputy')
                 ->values(
                     [
@@ -130,7 +129,7 @@ class DeputyshipProcessingRawDbAccess
         $reportId = $candidate['reportId'];
 
         try {
-            $this->em->getConnection()->createQueryBuilder()
+            $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->insert('court_order_report')
                 ->values(
                     [
@@ -151,7 +150,7 @@ class DeputyshipProcessingRawDbAccess
         $ndrId = $candidate['ndrId'];
 
         try {
-            $this->em->getConnection()->createQueryBuilder()
+            $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order')
                 ->set('ndr_id', $ndrId)
                 ->where('id = :id')
@@ -169,7 +168,7 @@ class DeputyshipProcessingRawDbAccess
         $courtOrderStatus = $candidate['status'];
 
         try {
-            $this->em->getConnection()->createQueryBuilder()
+            $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order')
                 ->set('status', $courtOrderStatus)
                 ->where('id = :id')
@@ -188,7 +187,7 @@ class DeputyshipProcessingRawDbAccess
         $deputyId = $candidate['deputyId'];
 
         try {
-            $this->em->getConnection()->createQueryBuilder()
+            $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order_deputy')
                 ->set('is_active', $isActive ? 'true' : 'false')
                 ->where('court_order_id = :courtOrderId')
