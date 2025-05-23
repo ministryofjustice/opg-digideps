@@ -95,7 +95,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
