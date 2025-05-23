@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
+use App\Entity\Report\Report;
 use Doctrine\ORM\EntityManager;
 
 class CourtOrderTestHelper
@@ -15,9 +16,10 @@ class CourtOrderTestHelper
     public static function generateCourtOrder(
         EntityManager $em,
         Client $client,
-        string $status,
         string $courtOrderUid,
+        string $status = 'ACTIVE',
         string $type = 'SINGLE',
+        ?Report $report = null,
         ?Deputy $deputy = null,
         bool $isActive = true,
         \DateTime $orderDate = (new \DateTime()),
@@ -29,6 +31,10 @@ class CourtOrderTestHelper
             ->setOrderType($type)
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
+
+        if (!is_null($report)) {
+            $courtOrder->addReport($report);
+        }
 
         $em->persist($courtOrder);
         $em->flush();

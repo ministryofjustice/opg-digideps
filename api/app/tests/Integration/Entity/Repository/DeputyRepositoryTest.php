@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Tests\Integration\Entity\Repository;
 
 use App\Entity\Deputy;
+use App\Repository\DeputyRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
@@ -24,7 +25,7 @@ class DeputyRepositoryTest extends WebTestCase
     public static function setUpBeforeClass(): void
     {
         $container = static::getContainer();
-        
+
         /** @var EntityManager $em */
         $em = $container->get(id: 'em');
         self::$em = $em;
@@ -33,6 +34,12 @@ class DeputyRepositoryTest extends WebTestCase
         /** @var EntityRepository $sut */
         self::$sut = self::$em->getRepository(entityName: Deputy::class);
 
+        $purger = new ORMPurger(em: self::$em);
+        $purger->purge();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
         $purger = new ORMPurger(em: self::$em);
         $purger->purge();
     }
@@ -49,20 +56,19 @@ class DeputyRepositoryTest extends WebTestCase
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
             em: self::$em,
             client: $client,
-            status: 'ACTIVE',
             courtOrderUid: $courtOrderUid,
+            report: $report,
             deputy: $deputy,
         );
 
         $deputy->setUser(user: $user);
         $client->setDeputy(deputy: $deputy);
-        $courtOrder->addReport(report: $report);
-        
-        self::$fixtures->persist($deputy, $client, $report, $courtOrder);
+
+        self::$fixtures->persist($deputy, $client);
         self::$fixtures->flush();
-        
+
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
-        
+
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
 
