@@ -39,7 +39,7 @@ parameters:
 
 services:
     em:
-        alias: doctrine.orm.entity_manager
+        alias: doctrine.orm.default_entity_manager
 
     # default configuration for services in *this* file
     _defaults:
@@ -447,3 +447,7 @@ services:
 
     App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
         public: true
+
+    App\Model\DeputyshipProcessingRawDbAccess:
+        arguments:
+            $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
