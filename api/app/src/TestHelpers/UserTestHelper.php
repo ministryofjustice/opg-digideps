@@ -43,6 +43,10 @@ class UserTestHelper extends TestCase
             $em->persist($client);
         }
 
+        $em->persist($user);
+        $em->flush($user);
+
+
         return $user;
     }
 
