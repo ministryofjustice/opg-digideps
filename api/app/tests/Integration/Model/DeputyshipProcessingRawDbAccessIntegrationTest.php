@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;
+    private Fixtures $fixtures;
     private DeputyshipProcessingRawDbAccess $sut;
 
     protected function setUp(): void
@@ -23,6 +24,8 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
 
         $container = self::bootKernel()->getContainer();
         $this->entityManager = $container->get('doctrine')->getManager('ingestwriter');
+
+        $this->fixtures = new Fixtures($this->entityManager);
 
         /** @var DeputyshipProcessingRawDbAccess $sut */
         $sut = $container->get(DeputyshipProcessingRawDbAccess::class);
@@ -70,6 +73,7 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
             ->setParameter(0, $orderId)
             ->fetchAssociative();
 
+        self::assertNotFalse($order, 'order was not found');
         self::assertEquals($uid, $order['court_order_uid']);
         self::assertEquals('pfa', $order['order_type']);
         self::assertEquals('ACTIVE', $order['status']);
@@ -80,15 +84,13 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
      */
     public function testInsertOrderDeputy(): void
     {
-        $fixtures = new Fixtures($this->entityManager);
-
         // insert deputy and court order
-        $deputy = $fixtures->createDeputy();
+        $deputy = $this->fixtures->createDeputy();
 
         $courtOrderUid = uniqid();
-        $courtOrder = $fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = $this->fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
 
-        $fixtures->persist($deputy, $courtOrder)->flush();
+        $this->fixtures->persist($deputy, $courtOrder)->flush();
 
         // use SUT to add association
         $courtOrderId = $this->sut->findOrderId($courtOrderUid);
@@ -109,7 +111,40 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
             ->setParameter(1, $courtOrderId)
             ->fetchAssociative();
 
-        self::assertNotFalse($result);
+        self::assertNotFalse($result, 'court order deputy association was not found');
         self::assertTrue($result['is_active']);
+    }
+
+    public function testInsertOrderReport(): void
+    {
+        // insert report and court order (client is needed by the report)
+        $client = $this->fixtures->createClient();
+        $report = $this->fixtures->createReport($client);
+
+        $courtOrderUid = uniqid();
+        $courtOrder = $this->fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+
+        $this->fixtures->persist($client, $report, $courtOrder)->flush();
+
+        // use SUT to add association
+        $courtOrderId = $this->sut->findOrderId($courtOrderUid);
+
+        $this->sut->beginTransaction();
+        $success = $this->sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
+        $this->sut->endTransaction();
+
+        self::assertTrue($success);
+
+        // check association exists
+        $result = $this->getQueryBuilder()
+            ->select('*')
+            ->from('court_order_report')
+            ->where('report_id = ?')
+            ->andWhere('court_order_id = ?')
+            ->setParameter(0, $report->getId())
+            ->setParameter(1, $courtOrderId)
+            ->fetchAssociative();
+
+        self::assertNotFalse($result, 'court order report association was not found');
     }
 }
