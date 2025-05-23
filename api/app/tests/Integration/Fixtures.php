@@ -648,7 +648,7 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(int $uid, string $type, string $status, \DateTime $madeDate = new \DateTime()): CourtOrder
+    public function createCourtOrder(string $uid, string $type, string $status, \DateTime $madeDate = new \DateTime()): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
