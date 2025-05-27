@@ -9,7 +9,6 @@ import secrets
 db_password_suffix = "database-password"
 
 base_secrets_list = [
-    "database-password",
     "api-secret",
     "admin-api-client-secret",
     "admin-frontend-secret",
@@ -65,7 +64,7 @@ def cycle_secrets(session, workspaces, aws_config):
         print("No matching secrets found.. Exiting")
         exit(1)
 
-    # Loop through the filtered secrets and update each one to a random 32 character string
+    # Loop through the filtered secrets and update each one to a random 43 character string (yes it is 43 not 32)
     for secret in filtered_secrets:
         print(f"rotating secret: {secret['Name']}")
         secret_manager.update_secret(
