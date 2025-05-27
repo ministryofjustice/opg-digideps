@@ -31,3 +31,6 @@ signInForm:
   signin:
     label: Sign in
     invalidMessage: You've entered an invalid email or password. Please try again.
+
+maintenance:
+  sentence: Website currently undergoing weekly maintenance until Mon 5am, you may experience some performance issues.

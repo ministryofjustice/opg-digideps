@@ -24,6 +24,10 @@
 {% endblock %}
 
 {% block pageContent %}
+{#    {% if status.actionsState.state != 'done' and comingFromLastStep%}#}
+    {{ macros.notification('infoLink', 'maintenance.sentence') }}
+{#    {% endif %}#}
+
 
     {% if app.session.get('login-context') != 'email-update' %}
         {{ macros.notification('infoLink', {
