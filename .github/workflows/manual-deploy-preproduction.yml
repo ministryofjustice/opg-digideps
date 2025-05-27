@@ -14,7 +14,7 @@ name: "[Manual] Deploy Specific Image to Preproduction"
 on:
   pull_request:
     branches:
-      - main
+      - main_no
 
 permissions:
   id-token: write
@@ -39,7 +39,7 @@ jobs:
       apply: true
       account_name: development
       # ${{ github.event.inputs.image_tag }}
-      container_version: v1.46.333-ddls503.2
+      container_version: v1.46.333-ddls503.3
       pull_request_path: true
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}

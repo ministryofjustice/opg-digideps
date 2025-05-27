@@ -148,7 +148,7 @@ module "api_high_memory" {
   name   = "api-high-memory"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.integration_tests_container}]"
+  container_definitions = "[${local.api_container}]"
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role_db.arn
@@ -160,7 +160,7 @@ module "api_high_memory" {
   architecture          = "ARM64"
   os                    = "LINUX"
   override              = []
-  service_name          = "api-high-memory"
+  service_name          = "api_app"
 }
 
 # Additional definition for task overrides based on api container
@@ -169,7 +169,7 @@ module "api_task_override" {
   name   = "api-task-override"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.integration_tests_container}]"
+  container_definitions = "[${local.api_container}]"
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role_db.arn
@@ -182,5 +182,5 @@ module "api_task_override" {
   architecture      = "ARM64"
   os                = "LINUX"
   override          = []
-  service_name      = "api-task-override"
+  service_name      = "api_app"
 }

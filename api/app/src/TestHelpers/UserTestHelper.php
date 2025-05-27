@@ -44,7 +44,8 @@ class UserTestHelper extends TestCase
         }
 
         $em->persist($user);
-        $em->flush();
+        $em->flush($user);
+
 
         return $user;
     }
