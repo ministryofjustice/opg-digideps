@@ -6,43 +6,61 @@
 {% block htmlTitle %}{{ 'clients.title' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'clients.title' | trans }}{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbsArray([
-        { href: url('homepage'), text: 'Your reports' }
-    ]) }}
-{% endblock %}
-
 {% block pageContent %}
+
+    <p class="govuk-body">{{ 'clients.action' | trans }}</p>
+
+    <table class="govuk-table govuk-!-margin-bottom-8">
     {% if clients|length == 0 %}
         <p class="govuk-body">{{ 'clients.noClientsMessage' | trans }}</p>
     {% else %}
+
+        <thead class="govuk-table__head">
+            <tr>
+                <th scope="col" class="govuk-!-font-weight-bold">{{ (page ~ 'clients.header.client') | trans }}</th>
+                <th scope="col" class="govuk-!-font-weight-bold">{{ (page ~ 'clients.header.caseNumber') | trans }}</th>
+                <th scope="col" class="govuk-!-font-weight-bold">{{ (page ~ 'clients.header.address') | trans }}</th>
+                <th scope="col" class="govuk-!-font-weight-bold"></th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
         {% for client in clients %}
-            <div class="govuk-summary-card">
-                <div class="govuk-summary-card__title-wrapper">
-                    <h2 class="govuk-summary-card__title">
-                        {{ client.fullName }}
-                    </h2>
-                    <ul class="govuk-summary-card__actions">
-                        <li class="govuk-summary-card__action">
-                            <a class="govuk-link" href="{{ path('client_show', {'clientId': client.id}) }}">
-                                {{ 'clients.manageLinkText' | trans }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="govuk-summary-card__content">
-                    <dl class="govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{ 'clients.caseNumber' | trans }}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{ client.caseNumber }}
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
-            </div>
+            <tr>
+                <th scope="row" class="govuk-table__header">{{ client.fullName }}</th>
+                <td class="govuk-table__cell">{{ client.caseNumber }}</td>
+                <td class="govuk-table__cell">
+                    {% if client.address is not empty %}
+                        <div itemprop="streetAddress">{{ client.address }}</div>
+                    {% endif %}
+                    {% if client.address2 is not empty %}
+                        <div itemprop="addressLocality">{{ client.address2 }}</div>
+                    {% endif %}
+                    {% if client.address3 is not empty %}
+                        <div itemprop="addressRegion">{{ client.address3 }}</div>
+                    {% endif %}
+                    {% if client.address4 is not empty %}
+                        <div itemprop="addressRegion">{{ client.address4 }}</div>
+                    {% endif %}
+                    {% if client.address5 is not empty %}
+                        <div itemprop="addressRegion">{{ client.address5 }}</div>
+                    {% endif %}
+                    {% if client.postcode is not empty %}
+                        <div itemprop="postalCode" class="behat-region-client-address-postcode">{{ client.postcode }}</div>
+                    {% endif %}
+                    {% if client.country is not empty %}
+                        <div itemprop="addressCountry">{{ client.country | country_name }}</div>
+                    {% endif %}
+                </td>
+
+                <td class="govuk-table__cell">
+                    <a class="govuk-link" href="{{ path('client_edit', {'clientId' : client.id}) }}#edit-client" >
+                        {{ 'clients.editLinkText' | trans }}
+                    </a>
+                </td>
+            </tr>
         {% endfor %}
+        </tbody>
     {% endif %}
+    </table>
 {% endblock %}
