@@ -67,7 +67,7 @@
         "symfony/serializer": "^6.0",
         "symfony/validator": "^6.0",
         "symfony/yaml": "^6.0",
-        "symfony/process": "6.4.20"
+        "symfony/process": "^6.4.20"
     },
     "require-dev": {
         "ministryofjustice/mink-extension": "^2.7.3",
