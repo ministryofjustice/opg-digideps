@@ -72,7 +72,7 @@
     "require-dev": {
         "ministryofjustice/mink-extension": "^2.7.3",
         "behat/behat": "^3.8",
-        "behat/gherkin": "4.12.0",
+        "behat/gherkin": "^4.14.0",
         "behat/mink": "^1.8",
         "behat/mink-browserkit-driver": "^2.1.0",
         "behat/mink-selenium2-driver": "^1.6",
