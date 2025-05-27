@@ -8,10 +8,10 @@ import secrets
 
 db_password_suffix = "database-password"
 
-base_secrets_list = [
-    "database-password",
-    "api-secret",
-    "admin-api-client-secret",
+db_secrets_list = ["database-password"]
+
+app_secrets_list = [
+    "api-secret" "admin-api-client-secret",
     "admin-frontend-secret",
     "front-frontend-secret",
     "front-api-client-secret",
@@ -40,7 +40,7 @@ def get_session(account_id):
     return session
 
 
-def cycle_secrets(session, workspaces, aws_config):
+def cycle_secrets(session, workspaces, aws_config, base_secrets_list):
     secret_manager = session.client("secretsmanager", config=aws_config)
 
     # Retrieve all secrets in the Secrets Manager service
@@ -65,7 +65,7 @@ def cycle_secrets(session, workspaces, aws_config):
         print("No matching secrets found.. Exiting")
         exit(1)
 
-    # Loop through the filtered secrets and update each one to a random 32 character string
+    # Loop through the filtered secrets and update each one to a random 43 character string (yes it is 43 not 32)
     for secret in filtered_secrets:
         print(f"rotating secret: {secret['Name']}")
         secret_manager.update_secret(
@@ -127,7 +127,35 @@ def modify_db_instances_password(session, workspaces, aws_config):
             exit(1)
 
 
-def main(environment):
+def restart_ecs_services(session, workspaces, aws_config):
+    """
+    Force new deployments for ECS services across given workspaces.
+    """
+    ecs = session.client("ecs", config=aws_config)
+
+    for workspace in workspaces:
+        config = aws_config.get(workspace)
+        if not config:
+            print(f"[WARN] No ECS config found for workspace: {workspace}")
+            continue
+
+        cluster = config["cluster"]
+        services = config["services"]
+
+        for service_name in services:
+            try:
+                print(
+                    f"[INFO] Restarting ECS service '{service_name}' in cluster '{cluster}'..."
+                )
+                response = ecs.update_service(
+                    cluster=cluster, service=service_name, forceNewDeployment=True
+                )
+                print(f"[SUCCESS] Triggered deployment for {service_name}")
+            except Exception as e:
+                print(f"[ERROR] Failed to restart {service_name}: {e}")
+
+
+def main(environment, secret_type):
     accounts = {
         "development": {"id": "248804316466", "workspaces": ["development"]},
         "preproduction": {
@@ -145,18 +173,27 @@ def main(environment):
         print(f"Key error: {e}")
         exit(1)
     session = get_session(account_id)
-    cycle_secrets(session, workspaces, aws_config)
-    modify_db_instances_password(session, workspaces, aws_config)
+
+    if secret_type == "app":
+        cycle_secrets(session, workspaces, aws_config, app_secrets_list)
+        restart_ecs_services(session, workspaces, aws_config)
+    elif secret_type == "database":
+        cycle_secrets(session, workspaces, aws_config, db_secrets_list)
+        modify_db_instances_password(session, workspaces, aws_config)
+    else:
+        print(f"Incorrect secret type of {secret_type}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
     # Check if the correct number of arguments are provided
-    if len(sys.argv) > 2:
-        print("Usage: python script.py <environment>")
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <environment> <secret_type>")
         sys.exit(1)
 
     # Retrieve the command-line arguments
     environment = sys.argv[1]
-    print(f"Running in environment: {environment}")
+    secret_type = sys.argv[2]
+    print(f"Running in environment {environment} with secret type of {secret_type}")
     # Call the main function with the arguments
-    main(environment)
+    main(environment, secret_type)
