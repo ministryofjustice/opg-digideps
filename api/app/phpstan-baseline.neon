@@ -2626,11 +2626,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getIsPrimary\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Call to function is_null\\(\\) with App\\\\Entity\\\\User will always evaluate to false\\.$#"
 			count: 1
 			path: src/Controller/UserController.php

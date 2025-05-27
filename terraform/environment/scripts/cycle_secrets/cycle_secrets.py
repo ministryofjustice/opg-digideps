@@ -11,10 +11,11 @@ db_password_suffix = "database-password"
 db_secrets_list = ["database-password"]
 
 app_secrets_list = [
-    "api-secret" "admin-api-client-secret",
+    "api-secret",
+    "admin-api-client-secret",
+    "front-api-client-secret",
     "admin-frontend-secret",
     "front-frontend-secret",
-    "front-api-client-secret",
 ]
 
 
@@ -129,19 +130,15 @@ def modify_db_instances_password(session, workspaces, aws_config):
 
 def restart_ecs_services(session, workspaces, aws_config):
     """
-    Force new deployments for ECS services across given workspaces.
+    Force new deployments for ECS services across given workspaces to get the new secrets.
     """
     ecs = session.client("ecs", config=aws_config)
 
     for workspace in workspaces:
-        config = aws_config.get(workspace)
-        if not config:
-            print(f"[WARN] No ECS config found for workspace: {workspace}")
-            continue
+        cluster = workspace
+        services = [f"api-{workspace}", f"admin-{workspace}", f"front-{workspace}"]
 
-        cluster = config["cluster"]
-        services = config["services"]
-
+        passed = True
         for service_name in services:
             try:
                 print(
@@ -150,9 +147,14 @@ def restart_ecs_services(session, workspaces, aws_config):
                 response = ecs.update_service(
                     cluster=cluster, service=service_name, forceNewDeployment=True
                 )
+                service = response.get("service", {})
+                print(f"Status: {service.get('status')}")
                 print(f"[SUCCESS] Triggered deployment for {service_name}")
             except Exception as e:
                 print(f"[ERROR] Failed to restart {service_name}: {e}")
+                passed = False
+        if not passed:
+            sys.exit(1)
 
 
 def main(environment, secret_type):
