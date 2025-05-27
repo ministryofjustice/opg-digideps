@@ -28,5 +28,6 @@ output "Tasks" {
     integration_test_v2     = module.integration_tests.render_with_override
     smoke_tests             = module.smoke_tests.render
     resilience_tests        = module.resilience_tests.render
+    api_high_memory         = module.api_high_memory.render_with_override
   }
 }
