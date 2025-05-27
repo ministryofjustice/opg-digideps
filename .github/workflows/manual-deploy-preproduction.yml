@@ -1,20 +1,15 @@
 name: "[Manual] Deploy Specific Image to Preproduction"
 
-#on:
-#  workflow_dispatch:
-#    inputs:
-#      image_tag:
-#        description: "Image tag to deploy"
-#        required: true
-#      task_name:
-#        description: "Task to deploy"
-#        required: false
-#        default: "none"
-
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy"
+        required: true
+      task_name:
+        description: "Task to deploy"
+        required: false
+        default: "none"
 
 permissions:
   id-token: write
@@ -34,18 +29,17 @@ jobs:
     name: preproduction environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     with:
-      workspace: ddls5031997
+      workspace: preproduction
       terraform_path: environment
       apply: true
-      account_name: development
-      # ${{ github.event.inputs.image_tag }}
-      container_version: v1.46.333-ddls503.2
-      pull_request_path: true
+      account_name: preproduction
+      container_version: ${{ github.event.inputs.image_tag }}
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
-  # Example Override: "sh,scripts/task_run_console_command.sh,digideps:api:process-lay-csv,--env=prod,--no-debug,layDeputyReport.csv"
+  # Example Override: "sh,scripts/task_run_console_command.sh,digideps:api:process-lay-csv,--env=dev,--no-debug,layDeputyReport.csv"
   run_task:
+    if: github.event.inputs.task_name != 'none'
     name: run specified task
     uses: ./.github/workflows/_run-task.yml
     needs:
@@ -53,9 +47,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: ddls5031997
-      account_id: 248804316466
+      workspace: preproduction
+      account_id: 454262938596
       account_name: development
       task_name: "api_task_override"
-      timeout: "1200"
-      override: "sh,scripts/task_run_console_command.sh,digideps:api:process-lay-csv,--env=prod,--no-debug,layDeputyReport.csv"
+      timeout: "1800"
+      override: ${{ github.event.inputs.task_name }}
