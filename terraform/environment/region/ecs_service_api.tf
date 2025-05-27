@@ -143,19 +143,44 @@ locals {
 }
 
 # Additional definition for memory intensive commands (only app needed)
+module "api_high_memory" {
+  source = "./modules/task"
+  name   = "api-high-memory"
 
-resource "aws_ecs_task_definition" "api_high_memory" {
-  family                   = "api-high-memory-${local.environment}"
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  cpu                      = 1024
-  memory                   = 2048
-  container_definitions    = "[${local.api_container}]"
-  task_role_arn            = aws_iam_role.api.arn
-  execution_role_arn       = aws_iam_role.execution_role_db.arn
-  runtime_platform {
-    cpu_architecture        = "ARM64"
-    operating_system_family = "LINUX"
-  }
-  tags = var.default_tags
+  cluster_name          = aws_ecs_cluster.main.name
+  container_definitions = "[${local.integration_tests_container}]"
+  tags                  = var.default_tags
+  environment           = local.environment
+  execution_role_arn    = aws_iam_role.execution_role_db.arn
+  subnet_ids            = data.aws_subnet.private[*].id
+  task_role_arn         = aws_iam_role.api.arn
+  security_group_id     = module.api_service_security_group.id
+  cpu                   = 1024
+  memory                = 2048
+  architecture          = "ARM64"
+  os                    = "LINUX"
+  override              = []
+  service_name          = "api-high-memory"
+}
+
+# Additional definition for task overrides based on api container
+module "api_task_override" {
+  source = "./modules/task"
+  name   = "api-task-override"
+
+  cluster_name          = aws_ecs_cluster.main.name
+  container_definitions = "[${local.integration_tests_container}]"
+  tags                  = var.default_tags
+  environment           = local.environment
+  execution_role_arn    = aws_iam_role.execution_role_db.arn
+  subnet_ids            = data.aws_subnet.private[*].id
+  # Use integration tests user for now
+  task_role_arn     = aws_iam_role.integration_tests.arn
+  security_group_id = module.api_service_security_group.id
+  cpu               = 1024
+  memory            = 2048
+  architecture      = "ARM64"
+  os                = "LINUX"
+  override          = []
+  service_name      = "api-task-override"
 }
