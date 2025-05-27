@@ -91,8 +91,6 @@ class ClientController extends AbstractController
      */
     public function editClientDetailsAction(Request $request, int $clientId)
     {
-        $user = $this->userApi->getUserWithData();
-
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getById($clientId);
 
@@ -106,6 +104,7 @@ class ClientController extends AbstractController
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
             'action' => $this->generateUrl('client_edit', ['clientId' => $clientId, 'action' => 'edit', 'from' => $from]),
             'validation_groups' => ['lay-deputy-client-edit'],
+            'include_court_date_field' => false,
         ]);
 
         $form->handleRequest($request);
