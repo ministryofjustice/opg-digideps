@@ -26,8 +26,8 @@
     },
     "require": {
         "php": "^8.2",
-        "aws/aws-sdk-php": "3.329.0",
-        "doctrine/doctrine-bundle": "^2.13.3",
+        "aws/aws-sdk-php": "^3.343.18",
+        "doctrine/doctrine-bundle": "^2.14.0",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.20.2",
         "gbprod/uuid-normalizer": "^1.2",
