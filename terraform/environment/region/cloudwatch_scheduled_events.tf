@@ -14,7 +14,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = module.api_high_memory.task_definition_arn
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
@@ -52,7 +52,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = module.api_high_memory.task_definition_arn
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
@@ -90,7 +90,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 
   ecs_target {
     task_count          = 1
-    task_definition_arn = module.api_high_memory.task_definition_arn
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
 
