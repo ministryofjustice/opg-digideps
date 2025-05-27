@@ -1116,7 +1116,7 @@ class FixtureHelper
         $user = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
-            'lay-pfa-high-assets-not-started-non-primary',
+            'lay-pfa-high-not-started-non-primary',
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,

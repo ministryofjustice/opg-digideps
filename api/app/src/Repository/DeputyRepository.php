@@ -44,25 +44,38 @@ class DeputyRepository extends ServiceEntityRepository
     public function findReportsInfoByUid(int $uid, bool $includeInactive = false): ?array
     {
         $sql = <<<SQL
-        SELECT c.firstname AS "firstName",
-               c.lastname AS "lastName",
-               c.case_number AS "caseNumber",
-               co.court_order_uid AS "courtOrderUid",
-               r.type AS "type"
-        FROM deputy d
-        LEFT JOIN client c ON c.deputy_id = d.id
-        LEFT JOIN court_order co ON co.client_id = c.id
-        LEFT JOIN report r ON r.client_id = c.id
-        LEFT JOIN court_order_deputy cod ON cod.deputy_id = d.id
-        WHERE cod.is_active = TRUE
-        AND d.deputy_uid = :deputyUid
+        SELECT DISTINCT
+        c.firstname AS "firstName",
+        c.lastname AS "lastName",
+        c.case_number AS "caseNumber",
+        (
+            SELECT DISTINCT string_agg(co.court_order_uid, ', ')
+            FROM court_order co
+            INNER JOIN court_order_deputy cd ON co.id = cd.court_order_id
+            INNER JOIN court_order_report cr ON co.id = cr.court_order_id
+            INNER JOIN deputy d ON cd.deputy_id = d.id
+            INNER JOIN report re ON cr.report_id = re.id
+            WHERE d.deputy_uid = :deputyUid
+            AND r.id = re.id
+        ) AS "courtOrderUid",
+        r.type AS "type",
+        r.id AS "reportId"
+        FROM report r
+        INNER JOIN court_order_report cor ON r.id = cor.report_id
+        INNER JOIN court_order co ON cor.court_order_id = co.id
+        INNER JOIN court_order_deputy cod ON co.id = cod.court_order_id
+        INNER JOIN client c ON co.client_id = c.id
+        INNER JOIN deputy d ON cod.deputy_id = d.id
+        WHERE d.deputy_uid = :deputyUid
+        AND cod.is_active = TRUE
+        AND cod.deputy_id = d.id
         SQL;
 
-        if ($includeInactive) {
-            // Possibly need to be changed when we have all applicable status
-            $sql .= ' AND co.status = "INACTIVE"';
-        }
-        
+        // Possibly need to be changed when we have all applicable status
+        $sql .= $includeInactive ?
+            " AND co.status IN ('INACTIVE', 'ACTIVE')" :
+            " AND co.status = 'ACTIVE'";
+
         $query = $this
             ->getEntityManager()
             ->getConnection()
@@ -80,6 +93,7 @@ class DeputyRepository extends ServiceEntityRepository
                     'caseNumber' => $line['caseNumber'],
                 ],
                 'report' => [
+                    'id' => $line['reportId'],
                     'type' => $line['type'],
                 ],
                 'courtOrder' => [
