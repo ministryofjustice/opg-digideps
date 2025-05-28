@@ -253,4 +253,40 @@ class UserApiTest extends TestCase
 
         $this->sut->createOrgUser($userToCreate);
     }
+
+    public function testReturnPrimaryEmailNullDeputyUid(): void
+    {
+        // null deputy UID returns null
+        self::assertNull($this->sut->returnPrimaryEmail(null));
+    }
+
+    public function testReturnPrimaryEmailDeputyNotFound(): void
+    {
+        // non-null deputy UID, but deputy not found
+        $deputyUid = 77777777;
+        $this->restClient
+            ->get(sprintf('user/get-primary-email/%d', $deputyUid), 'raw')
+            ->shouldBeCalled()
+            ->willReturn('{"data": null}');
+
+        $result = $this->sut->returnPrimaryEmail($deputyUid);
+
+        self::assertNull($result);
+    }
+
+    public function testReturnPrimaryEmail(): void
+    {
+        $expectedEmail = 'fakeemail@nowhere.biz.uk';
+
+        // non-null deputy UID, deputy found
+        $deputyUid = 77777777;
+        $this->restClient
+            ->get(sprintf('user/get-primary-email/%d', $deputyUid), 'raw')
+            ->shouldBeCalled()
+            ->willReturn("{\"data\": \"$expectedEmail\"}");
+
+        $result = $this->sut->returnPrimaryEmail($deputyUid);
+
+        self::assertEquals($expectedEmail, $result);
+    }
 }

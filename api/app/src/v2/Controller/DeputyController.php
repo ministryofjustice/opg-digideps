@@ -48,7 +48,7 @@ class DeputyController extends AbstractController
         $user = $this->getUser();
 
         if (!$user->isSuperAdmin() && $uid !== $user->getDeputyUid()) {
-            return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user: ' . $user->getDeputyUid() . ' provided: ' . $uid);
+            return $this->buildNotFoundResponse('Deputy uid provided does not match current logged in user');
         }
 
         $inactive = $request->query->has('inactive');

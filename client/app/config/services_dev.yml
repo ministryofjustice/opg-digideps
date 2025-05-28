@@ -5,7 +5,7 @@ services:
     tags:
       - {
           name: data_collector,
-          template: "@App/Manage/api-collector",
+          template: "@App/Health/api-collector",
           id: "api-collector",
         }
   data_collector.CssClassCollector:
@@ -13,7 +13,7 @@ services:
     tags:
       - {
           name: data_collector,
-          template: "@App/Manage/css-class-collector",
+          template: "@App/Health/css-class-collector",
           id: "css-class-collector",
         }
     public: false

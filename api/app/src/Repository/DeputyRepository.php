@@ -102,6 +102,7 @@ class DeputyRepository extends ServiceEntityRepository
                     'caseNumber' => $line['caseNumber'],
                 ],
                 'report' => [
+                    'id' => $line['reportId'],
                     'type' => $line['type'],
                 ],
                 'courtOrder' => [

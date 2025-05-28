@@ -4,6 +4,7 @@ namespace App\Tests\Integration\Controller;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
+use Ramsey\Uuid\Uuid;
 
 class ClientControllerTest extends AbstractTestController
 {
@@ -118,7 +119,7 @@ class ClientControllerTest extends AbstractTestController
         // prof
         self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
-        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999).'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', ''.Uuid::uuid4().'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());

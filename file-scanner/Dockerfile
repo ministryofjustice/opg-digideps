@@ -6,7 +6,7 @@ COPY file-scanner/. .
 RUN go mod vendor && go build -v -o file-scanner
 
 # Final Runtime Stage
-FROM alpine:3.20
+FROM alpine:3.21
 
 WORKDIR /app
 
