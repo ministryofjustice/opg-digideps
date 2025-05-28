@@ -78,6 +78,10 @@ locals {
   pa_pro_report_csv_filename  = "paProDeputyReport.csv"
   lay_report_csv_file         = "layDeputyReport.csv"
   deputyships_report_csv_file = "deputyshipsReport.csv"
+
+  # DNS switch variables
+  certificate_arn                  = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
+  alternative_certificates_enabled = var.certificate_arn == "" ? 0 : 1
 }
 
 data "terraform_remote_state" "shared" {
