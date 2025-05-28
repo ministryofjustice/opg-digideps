@@ -9,6 +9,13 @@
 .phpunit.result.cache
 .php_cs.cache
 .php-cs-fixer.cache
+**.pem
+**.cert
+**.cer
+**.csr
+**.crt
+**.ca
+**.key
 ecs-helper
 opg-ecs-helper_*.tar.gz
 
@@ -21,6 +28,8 @@ vendor/
 !ecs-helper/vendor/
 
 # Terraform
+**.tfstate
+**.tfstate.*
 **/.terraform/
 **/terraform.tfstate.d/
 **/terraform.output.json

@@ -11,12 +11,17 @@ resource "aws_lb" "front" {
   tags = merge(var.default_tags, { "Name" = "front-${local.environment}" }, )
 }
 
+locals {
+  certificate_arn                  = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
+  alternative_certificates_enabled = var.certificate_arn == "" ? 0 : 1
+}
+
 resource "aws_lb_listener" "front_https" {
   load_balancer_arn = aws_lb.front.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-Res-2020-10"
-  certificate_arn   = var.certificate_arn
+  certificate_arn   = local.certificate_arn
 
   default_action {
     target_group_arn = aws_lb_target_group.front.arn
@@ -29,11 +34,13 @@ data "aws_acm_certificate" "service_justice" {
 }
 
 resource "aws_lb_listener_certificate" "front_loadbalancer_service_certificate" {
+  count           = local.alternative_certificates_enabled == 1 ? 1 : 0
   listener_arn    = aws_lb_listener.front_https.arn
   certificate_arn = data.aws_acm_certificate.service_justice.arn
 }
 
 resource "aws_lb_listener_certificate" "front_loadbalancer_cdr_certificate" {
+  count           = local.alternative_certificates_enabled == 1 ? 1 : 0
   listener_arn    = aws_lb_listener.front_https.arn
   certificate_arn = var.complete_deputy_report_cert_arn
 }

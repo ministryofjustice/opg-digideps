@@ -13,7 +13,7 @@ module "eu_west_1" {
   health_check_front                = aws_route53_health_check.availability_front
   health_check_admin                = aws_route53_health_check.availability_admin
   certificate_arn                   = local.main_cert
-  complete_deputy_report_cert_arn   = aws_acm_certificate_validation.complete_deputy_report_wildcard.certificate_arn
+  complete_deputy_report_cert_arn   = local.new_cert
   front_fully_qualified_domain_name = aws_route53_record.complete_deputy_report_front.fqdn
   admin_fully_qualified_domain_name = aws_route53_record.complete_deputy_report_admin.fqdn
   state_role                        = var.STATE_ROLE
@@ -37,7 +37,7 @@ module "eu_west_2" {
   health_check_front                = aws_route53_health_check.availability_front
   health_check_admin                = aws_route53_health_check.availability_admin
   certificate_arn                   = local.main_cert
-  complete_deputy_report_cert_arn   = aws_acm_certificate_validation.complete_deputy_report_wildcard.certificate_arn
+  complete_deputy_report_cert_arn   = local.new_cert
   front_fully_qualified_domain_name = aws_route53_record.complete_deputy_report_front.fqdn
   admin_fully_qualified_domain_name = aws_route53_record.complete_deputy_report_admin.fqdn
   state_role                        = var.STATE_ROLE

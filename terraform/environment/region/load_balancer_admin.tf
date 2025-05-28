@@ -16,7 +16,7 @@ resource "aws_lb_listener" "admin" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-Res-2020-10"
-  certificate_arn   = var.certificate_arn
+  certificate_arn   = local.certificate_arn
 
   default_action {
     target_group_arn = aws_lb_target_group.admin.arn
@@ -29,11 +29,13 @@ data "aws_acm_certificate" "service_justice_admin" {
 }
 
 resource "aws_lb_listener_certificate" "admin_loadbalancer_service_certificate" {
+  count           = local.alternative_certificates_enabled == 1 ? 1 : 0
   listener_arn    = aws_lb_listener.admin.arn
   certificate_arn = data.aws_acm_certificate.service_justice.arn
 }
 
 resource "aws_lb_listener_certificate" "admin_loadbalancer_service_admin_certificate" {
+  count           = local.alternative_certificates_enabled == 1 ? 1 : 0
   listener_arn    = aws_lb_listener.admin.arn
   certificate_arn = data.aws_acm_certificate.service_justice_admin.arn
 }
