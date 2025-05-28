@@ -105,7 +105,8 @@ locals {
   }
 
   # DNS Switchover variables
-  old_prod_dns = local.account.name == "development" ? 0 : 1
-  main_cert    = local.old_prod_dns == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : aws_acm_certificate_validation.complete_deputy_report_wildcard.certificate_arn
-  dns_account  = local.old_prod_dns == 1 ? "515688269999" : local.account["account_id"]
+  complete_deputy_dns_enabled = local.account.name == "development" ? 0 : 1
+  main_cert                   = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : ""
+  new_cert                    = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.complete_deputy_report_wildcard[0].certificate_arn : ""
+  dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account["account_id"]
 }
