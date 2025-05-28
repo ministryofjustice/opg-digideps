@@ -34,6 +34,7 @@ resource "aws_lb_listener_certificate" "front_loadbalancer_service_certificate" 
 }
 
 resource "aws_lb_listener_certificate" "front_loadbalancer_cdr_certificate" {
+  count           = var.account.name == "development" ? 0 : 1
   listener_arn    = aws_lb_listener.front_https.arn
   certificate_arn = var.complete_deputy_report_cert_arn
 }
