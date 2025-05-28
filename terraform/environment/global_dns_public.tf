@@ -7,14 +7,16 @@ locals {
 
 # Main complete-deputy-report DNS in Digideps Production Account
 data "aws_route53_zone" "public" {
+  count    = local.old_prod_dns
   name     = local.complete_deputy_report
   provider = aws.dns
 }
 
 resource "aws_route53_record" "front" {
+  count   = local.old_prod_dns
   name    = local.subdomain
   type    = "A"
-  zone_id = data.aws_route53_zone.public.id
+  zone_id = data.aws_route53_zone.public[0].id
 
   alias {
     evaluate_target_health = false
@@ -25,9 +27,10 @@ resource "aws_route53_record" "front" {
 }
 
 resource "aws_route53_record" "admin" {
+  count   = local.old_prod_dns
   name    = join(".", compact(["admin", local.subdomain]))
   type    = "A"
-  zone_id = data.aws_route53_zone.public.id
+  zone_id = data.aws_route53_zone.public[0].id
 
   alias {
     evaluate_target_health = false
@@ -38,9 +41,10 @@ resource "aws_route53_record" "admin" {
 }
 
 resource "aws_route53_record" "www" {
+  count   = local.old_prod_dns
   name    = join(".", compact(["www", local.subdomain]))
   type    = "A"
-  zone_id = data.aws_route53_zone.public.id
+  zone_id = data.aws_route53_zone.public[0].id
 
   alias {
     evaluate_target_health = false

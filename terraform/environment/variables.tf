@@ -103,4 +103,9 @@ locals {
     canonical_id_production    = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_production.value))["canonical_user_id"]
     replication_bucket         = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_development.value))["replication_bucket"]
   }
+
+  # DNS Switchover variables
+  old_prod_dns = local.account.name == "development" ? 0 : 1
+  main_cert    = local.old_prod_dns == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : aws_acm_certificate_validation.complete_deputy_report_wildcard.certificate_arn
+  dns_account  = local.old_prod_dns == 1 ? "515688269999" : local.account["account_id"]
 }
