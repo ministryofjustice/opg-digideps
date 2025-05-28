@@ -21,7 +21,7 @@ class CourtOrderController extends AbstractController
         private readonly DeputyApi $deputyApi,
     ) {}
 
-    #[Route(path: '/{uid}', methods: ['GET'], name: "courtorder_by_uid")]
+    #[Route(path: '/deputy/{uid}', name: "courtorder_by_uid", requirements:['id' => '\d+'], methods: ['GET'])]
     #[Template("@App/CourtOrder/index.html.twig")]
     public function getOrdersByUidAction(string $uid): array
     {
@@ -39,14 +39,14 @@ class CourtOrderController extends AbstractController
         ];
     }
 
-    #[Route(path: '/deputy/test', name: "courtorder_reports_by_user")]
+    #[Route(path: '/multi-report', name: "courtorders_reports_by_user", methods: ['GET'])]
     #[Template("@App/Index/choose-a-court-order.html.twig")]
     public function getAllDeputyCourtOrders()
-    {
+    {   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
         $results = $this->deputyApi->findAllDeputyReportsForCurrentUser();
 
         if (count($results) === 0 || is_null($results)) {
-            return [ 'courtOrders' => [] ];
+            $this->redirectToRoute('homepage');
         }
 
         return [ 'courtOrders' => $results];
