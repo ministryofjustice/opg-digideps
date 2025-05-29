@@ -21,7 +21,7 @@ class PreRegistrationController extends RestController
     public function __construct(
         private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
         private readonly RestFormatter $formatter,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
     ) {
         parent::__construct($em);
     }
@@ -73,6 +73,8 @@ class PreRegistrationController extends RestController
             }
         }
 
+        // this will throw a runtime exception if validation failed, which is how we control the response from
+        // this controller
         $verified = $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
