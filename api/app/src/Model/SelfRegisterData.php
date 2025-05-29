@@ -36,7 +36,7 @@ class SelfRegisterData
     #[Assert\NotBlank(message: 'user.email.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Email(message: 'user.email.invalid', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(max: 60, maxMessage: 'user.email.maxLength', groups: ['self_registration', 'verify_codeputy'])]
-    private ?string $email = null;
+    private string $email;
 
     /**
      * Deputy's postcode.
@@ -44,14 +44,14 @@ class SelfRegisterData
      * @JMS\Type("string")
      */
     #[Assert\Length(max: 10, maxMessage: 'user.addressPostcode.maxLength', groups: ['self_registration', 'verify_codeputy'])]
-    private ?string $postcode = null;
+    private string $postcode;
 
     /**
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'client.firstname.notBlank', groups: ['self_registration'])]
     #[Assert\Length(min: 2, minMessage: 'client.firstname.minMessage', max: 50, maxMessage: 'client.firstname.maxMessage', groups: ['self_registration'])]
-    private ?string $clientFirstname = null;
+    private string $clientFirstname;
 
     /**
      * @JMS\Type("string")
@@ -97,7 +97,7 @@ class SelfRegisterData
         $this->email = strtolower($email);
     }
 
-    public function getPostcode(): ?string
+    public function getPostcode(): string
     {
         return $this->postcode;
     }
@@ -107,7 +107,7 @@ class SelfRegisterData
         $this->postcode = $postcode;
     }
 
-    public function getClientFirstname(): ?string
+    public function getClientFirstname(): string
     {
         return $this->clientFirstname;
     }

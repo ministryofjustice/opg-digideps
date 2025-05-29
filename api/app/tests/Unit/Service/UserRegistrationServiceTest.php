@@ -51,6 +51,7 @@ class UserRegistrationServiceTest extends TestCase
         $data->setEmail('zac@thetolleys.com');
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('12341234');
+        $data->setPostcode('AB12CD');
 
         $user = new User();
         $user->recreateRegistrationToken();
@@ -81,6 +82,7 @@ class UserRegistrationServiceTest extends TestCase
         $data->setFirstname('Zac');
         $data->setLastname('Tolley');
         $data->setEmail('zac@thetolleys.com');
+        $data->setClientFirstname('Zac');
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('12341234');
 
@@ -223,8 +225,10 @@ class UserRegistrationServiceTest extends TestCase
         $data->setFirstname('Zac');
         $data->setLastname('Tolley');
         $data->setEmail('zac@thetolleys.com');
+        $data->setClientFirstname('Zac');
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('12341234');
+        $data->setPostcode('AB12CD');
 
         $mockUser = m::mock('\App\Entity\User')
             ->shouldReceive('getId')->andReturn(1)
