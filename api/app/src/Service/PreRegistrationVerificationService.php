@@ -18,7 +18,7 @@ class PreRegistrationVerificationService
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly PreRegistrationRepository $preRegistrationRepository,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
     ) {
         $this->lastMatchedPreRegistrationUsers = [];
     }
@@ -27,18 +27,15 @@ class PreRegistrationVerificationService
      * Throw error 400 if preregistration has no record matching case number,
      * client surname, deputy firstname and surname, and postcode (if set).
      */
-    public function validate(string $caseNumber, string $clientLastname, string $deputyFirstname, string $deputyLastname, ?string $deputyPostcode): bool
+    public function validate(string $caseNumber, string $clientLastname, string $deputyFirstname, string $deputyLastname, string $deputyPostcode): bool
     {
         $detailsToMatchOn = [
             'caseNumber' => $caseNumber,
             'clientLastname' => $clientLastname,
             'deputyFirstname' => $deputyFirstname,
             'deputyLastname' => $deputyLastname,
+            'deputyPostcode' => $deputyPostcode,
         ];
-
-        if ($deputyPostcode) {
-            $detailsToMatchOn['deputyPostcode'] = $deputyPostcode;
-        }
 
         $caseNumberMatches = $this->getCaseNumberMatches($detailsToMatchOn);
 
