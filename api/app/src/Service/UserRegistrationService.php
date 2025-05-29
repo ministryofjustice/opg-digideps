@@ -4,14 +4,13 @@ namespace App\Service;
 
 use App\Entity\Client;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
 {
-    private string $selfRegisterCaseNumber = '';
-
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
@@ -64,7 +63,6 @@ class UserRegistrationService
         $this->populateUser($user, $selfRegisterData);
 
         $client = new Client();
-
         $this->populateClient($client, $selfRegisterData);
 
         // if validation fails, this throws a runtime exception which propagates to callers of this method
@@ -86,11 +84,11 @@ class UserRegistrationService
         $user->setPreRegisterValidatedDate(new \DateTime('now'));
         $user->setRegistrationRoute(User::SELF_REGISTER);
 
-        if ($this->preRegistrationVerificationService->isSingleDeputyAccount()) {
+        if (!$this->preRegistrationVerificationService->deputyUidHasOtherUserAccounts($preregMatches[0]->getDeputyUid())) {
             $user->setIsPrimary(true);
         }
 
-        $user->setNdrEnabled($this->preRegistrationVerificationService->isLastMachedDeputyNdrEnabled());
+        $user->setNdrEnabled(true === $preregMatches[0]->getNdr());
 
         $this->saveUserAndClient($user, $client);
 
@@ -98,9 +96,11 @@ class UserRegistrationService
     }
 
     /**
+     * @return PreRegistration[]
+     *
      * @throws \RuntimeException
      */
-    public function validateCoDeputy(SelfRegisterData $selfRegisterData): bool
+    public function validateCoDeputy(SelfRegisterData $selfRegisterData): array
     {
         $user = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
         if (!$user) {
@@ -111,7 +111,8 @@ class UserRegistrationService
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        $this->preRegistrationVerificationService->validate(
+        // throws a variety of runtime exceptions if self registration data is invalid
+        $preregMatches = $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
             $selfRegisterData->getFirstname(),
@@ -119,23 +120,8 @@ class UserRegistrationService
             $selfRegisterData->getPostcode()
         );
 
-        // store case number in class property to access in retrieveCoDeputyUid exception
-        $this->selfRegisterCaseNumber = $selfRegisterData->getCaseNumber() ?? '';
-
-        return true;
-    }
-
-    /**
-     * @throws \RuntimeException
-     */
-    public function retrieveCoDeputyUid(): string
-    {
-        if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
-            return $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
-        } else {
-            // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
-            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $this->selfRegisterCaseNumber)), 462);
-        }
+        // no exceptions thrown, so return the matched deputies
+        return $preregMatches;
     }
 
     /**

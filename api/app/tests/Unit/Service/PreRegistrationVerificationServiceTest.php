@@ -272,15 +272,4 @@ class PreRegistrationVerificationServiceTest extends WebTestCase
         // but if one MLD in preRegistration, the postcode check is skipped
         $this->assertCount(2, $this->preRegistrationVerificationService->validate('44444444', 'CSurn', 'DFirs', 'Sibling', 'DOEsnT MatteR'));
     }
-
-    /**
-     * @test
-     */
-    public function getLastMatchedDeputyNumbers()
-    {
-        $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'DSurn', 'DPC123');
-        $this->assertEquals(['Dep1'], $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers());
-        $this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs', 'Sibling', 'MLD1BB');
-        $this->assertEquals(['MLDB', 'MLDC'], $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers());
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
 use App\Service\Auth\AuthService;
@@ -94,13 +95,18 @@ class SelfRegisterController extends RestController
         }
 
         try {
-            $coDeputyVerified = $userRegistrationService->validateCoDeputy($selfRegisterData);
-            $coDeputyUid = $userRegistrationService->retrieveCoDeputyUid();
+            $matchedCodeputies = $userRegistrationService->validateCoDeputy($selfRegisterData);
+
+            if (1 !== count($matchedCodeputies)) {
+                // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
+                throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
+            }
 
             // check if it's the primary account for the co-deputy
-            $existingDeputyAccounts = $this->em->getRepository('App\Entity\User')->findBy(['deputyUid' => $coDeputyUid]);
+            $coDeputyUid = $matchedCodeputies[0]->getDeputyUid();
+            $existingDeputyAccounts = $this->em->getRepository(User::class)->findBy(['deputyUid' => $coDeputyUid]);
 
-            $existingDeputyCase = $this->em->getRepository('App\Entity\Client')->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
+            $existingDeputyCase = $this->em->getRepository(Client::class)->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
             if (!empty($existingDeputyCase)) {
                 throw new \RuntimeException(json_encode(sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber())), 463);
             }
@@ -113,7 +119,7 @@ class SelfRegisterController extends RestController
 
         $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
 
-        return ['verified' => $coDeputyVerified, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
+        return ['verified' => true, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
     }
 
     #[Route(path: '/updatecodeputy/{userId}', requirements: ['userId' => '\d+'], methods: ['PUT'])]

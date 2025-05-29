@@ -10,17 +10,11 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class PreRegistrationVerificationService
 {
-    /**
-     * @var PreRegistration[]
-     */
-    private array $lastMatchedPreRegistrationUsers;
-
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly PreRegistrationRepository $preRegistrationRepository,
         private readonly UserRepository $userRepository,
     ) {
-        $this->lastMatchedPreRegistrationUsers = [];
     }
 
     /**
@@ -41,36 +35,9 @@ class PreRegistrationVerificationService
 
         $caseNumberMatches = $this->getCaseNumberMatches($detailsToMatchOn);
 
-        $this->lastMatchedPreRegistrationUsers = $this->checkOtherDetailsMatch($caseNumberMatches, $detailsToMatchOn);
+        $preregMatches = $this->checkOtherDetailsMatch($caseNumberMatches, $detailsToMatchOn);
 
-        return $this->lastMatchedPreRegistrationUsers;
-    }
-
-    /**
-     * Since co-deputies, multiple deputies may be matched (eg siblings at same postcode).
-     */
-    public function getLastMatchedDeputyNumbers(): array
-    {
-        $deputyNumbers = [];
-        foreach ($this->lastMatchedPreRegistrationUsers as $match) {
-            $deputyNumbers[] = $match->getDeputyUid();
-        }
-
-        return $deputyNumbers;
-    }
-
-    /**
-     * @return bool true if at least one matched PreRegistration contains NDR flag set to true
-     */
-    public function isLastMachedDeputyNdrEnabled(): bool
-    {
-        foreach ($this->lastMatchedPreRegistrationUsers as $match) {
-            if ($match->getNdr()) {
-                return true;
-            }
-        }
-
-        return false;
+        return $preregMatches;
     }
 
     public function isMultiDeputyCase(string $caseNumber): bool
@@ -80,12 +47,11 @@ class PreRegistrationVerificationService
         return count($crMatches) > 1;
     }
 
-    public function isSingleDeputyAccount(): bool
+    public function deputyUidHasOtherUserAccounts(string $deputyUid): bool
     {
-        $deputyUid = $this->getLastMatchedDeputyNumbers()[0];
         $existingDeputyAccounts = $this->userRepository->findBy(['deputyUid' => intval($deputyUid)]);
 
-        return !$existingDeputyAccounts;
+        return count($existingDeputyAccounts) > 0;
     }
 
     /**
