@@ -6,6 +6,12 @@
 {% block htmlTitle %}{{ 'clients.title' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'clients.title' | trans }}{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('homepage'), text: 'Your reports' },
+    ]) }}
+{% endblock %}
+
 {% block pageContent %}
 
     <p class="govuk-body">{{ 'clients.action' | trans }}</p>

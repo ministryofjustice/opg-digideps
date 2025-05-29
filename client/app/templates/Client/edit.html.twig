@@ -13,7 +13,7 @@
 {% block breadcrumbs %}
     {{ macros.breadcrumbsArray([
         { href: url('homepage'), text: 'Your reports' },
-        { href: url('client_show', {clientId: client.id}), text: client.firstname ~ '\'s details' }
+        { href: url('deputyship_details_clients'), text: 'Your clients' },
     ]) }}
 {% endblock %}
 
@@ -33,7 +33,7 @@
     {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'form.editClientForm.controls.cancel.label',
-        linkHref: path('client_show', {'clientId' : client.id})
+        linkHref: path('deputyship_details_clients')
     } %}
 
     {{ form_end(form) }}
