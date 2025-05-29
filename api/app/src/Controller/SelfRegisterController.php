@@ -46,7 +46,7 @@ class SelfRegisterController extends RestController
 
         // truncate case number if length is 10
         if (!is_null($caseNumber) && 10 == strlen($caseNumber)) {
-            $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
+            $selfRegisterData->setCaseNumber(substr($selfRegisterData->getCaseNumber(), 0, -2));
         }
 
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');

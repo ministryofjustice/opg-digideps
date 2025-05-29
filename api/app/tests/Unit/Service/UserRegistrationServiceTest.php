@@ -11,7 +11,6 @@ use App\Repository\UserRepository;
 use App\Service\PreRegistrationVerificationService;
 use App\Service\UserRegistrationService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +28,6 @@ class UserRegistrationServiceTest extends TestCase
             ->getMock();
 
         $em = m::mock(EntityManager::class)
-//            ->shouldIgnoreMissing(true)
             ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
@@ -37,128 +35,6 @@ class UserRegistrationServiceTest extends TestCase
         $mockPreRegVerificationService->shouldIgnoreMissing();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
-    }
-
-    /**
-     * @test
-     *
-     * @doesNotPerformAssertions
-     */
-    public function saveUserAndClientAndJoinThem()
-    {
-        $mockUser = m::mock('\App\Entity\User')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getId')->andReturn(1)
-            ->getMock();
-
-        $mockUser->shouldReceive('setCreatedBy')->andReturn($mockUser);
-
-        $mockClient = m::mock('\App\Entity\Client')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('addUser')->once()->with($mockUser)
-            ->getMock();
-
-        $mockConnection = m::mock('\Doctrine\Common\Persistence\Connection')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('beginTransaction')->once()
-            ->shouldReceive('commit')->once()
-            ->getMock();
-
-        $em = m::mock(EntityManager::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getConnection')->andReturn($mockConnection)
-            ->shouldReceive('flush')->twice()
-            ->shouldReceive('persist')->with($mockUser)->once()
-            ->shouldReceive('persist')->with($mockClient)->once()
-            ->getMock();
-
-        $mockPreRegVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
-        $mockPreRegVerificationService->shouldIgnoreMissing(true);
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
-
-        $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
-    }
-
-    /**
-     * @test
-     */
-    public function rollbackWhenSavingUserWithError()
-    {
-        $mockUser = m::mock('\App\Entity\User')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getId')->andReturn(1)
-            ->getMock();
-
-        $mockClient = m::mock('\App\Entity\Client')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('addUser')->with($mockUser)
-            ->getMock();
-
-        $mockConnection = m::mock('\Doctrine\Common\Persistence\Connection')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('beginTransaction')->once()
-            ->shouldReceive('rollback')->once()
-            ->getMock();
-
-        $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()', $mockUser);
-
-        $em = m::mock(EntityManager::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getConnection')->andReturn($mockConnection)
-            ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
-            ->getMock();
-
-        $mockPreRegVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
-        $mockPreRegVerificationService->shouldIgnoreMissing(true);
-
-        $this->expectException(ORMInvalidArgumentException::class);
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
-
-        $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
-    }
-
-    /**
-     * @test
-     */
-    public function rollbackWhenSavingClientWithError()
-    {
-        $mockUser = m::mock('\App\Entity\User')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getId')->andReturn(1)
-            ->getMock();
-
-        $mockUser->shouldReceive('setCreatedBy')->andReturn($mockUser);
-
-        $mockClient = m::mock('\App\Entity\Client')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('addUser')->with($mockUser)
-            ->getMock();
-
-        $mockConnection = m::mock('\Doctrine\Common\Persistence\Connection')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('beginTransaction')->once()
-            ->shouldReceive('rollback')->once()
-            ->getMock();
-
-        $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()', $mockUser);
-
-        $em = m::mock(EntityManager::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getConnection')->andReturn($mockConnection)
-            ->shouldReceive('persist')->with($mockUser)->once()
-            ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
-            ->getMock();
-
-        $mockPreRegVerificationService = m::mock('\App\Service\PreRegistrationVerificationService');
-        $mockPreRegVerificationService->shouldIgnoreMissing(true);
-
-        $this->expectException(ORMInvalidArgumentException::class);
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
-
-        $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
 
     /**
@@ -201,7 +77,6 @@ class UserRegistrationServiceTest extends TestCase
 
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-//            ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn(null)
             ->shouldReceive('findOneByEmail')->with('zac@thetolleys.com')->andReturn(null)
             ->getMock();
 

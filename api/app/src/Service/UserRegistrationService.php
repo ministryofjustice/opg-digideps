@@ -19,19 +19,16 @@ class UserRegistrationService
     }
 
     /**
-     * CASREC checks
      * - throw error 403 if user is a co-deputy attempting to self-register
      * - throw error 421 if user and client not found
      * - throw error 422 if user email is already found
      * - throw error 424 if user and client are found but the postcode doesn't match
      * - throw error 425 if client is already used
-     * (see <root>/README.md for more info. Keep the readme file updated with this logic).
+     * - throw error 462 if deputy could not be uniquely identified.
      *
-     * @return User
-     *
-     * @throws \RuntimeException
+     * @throws \RuntimeException with one of the error codes above if self-registration failed
      */
-    public function selfRegisterUser(SelfRegisterData $selfRegisterData)
+    public function selfRegisterUser(SelfRegisterData $selfRegisterData): User
     {
         $caseNumber = $selfRegisterData->getCaseNumber() ?? '';
 
@@ -70,6 +67,7 @@ class UserRegistrationService
 
         $this->populateClient($client, $selfRegisterData);
 
+        // if validation fails, this throws a runtime exception which propagates to callers of this method
         $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
@@ -100,11 +98,9 @@ class UserRegistrationService
     }
 
     /**
-     * @return bool
-     *
      * @throws \RuntimeException
      */
-    public function validateCoDeputy(SelfRegisterData $selfRegisterData)
+    public function validateCoDeputy(SelfRegisterData $selfRegisterData): bool
     {
         $user = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
         if (!$user) {
@@ -130,11 +126,9 @@ class UserRegistrationService
     }
 
     /**
-     * @return string
-     *
      * @throws \RuntimeException
      */
-    public function retrieveCoDeputyUid()
+    public function retrieveCoDeputyUid(): string
     {
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             return $this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0];
@@ -147,7 +141,7 @@ class UserRegistrationService
     /**
      * @throws \Exception
      */
-    public function saveUserAndClient(User $user, Client $client)
+    private function saveUserAndClient(User $user, Client $client)
     {
         $connection = $this->em->getConnection();
         $connection->beginTransaction();
