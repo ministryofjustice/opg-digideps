@@ -33,4 +33,4 @@ signInForm:
     invalidMessage: You've entered an invalid email or password. Please try again.
 
 maintenance:
-  sentence: Website currently undergoing weekly maintenance until Mon 5am, you may experience some performance issues.
+  sentence: "Scheduled maintenance planned Monday 4am-5am. You may not be able to login or save changes."
