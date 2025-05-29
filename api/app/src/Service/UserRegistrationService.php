@@ -37,19 +37,21 @@ class UserRegistrationService
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
             // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
+            throw new \RuntimeException(json_encode('Co-deputy cannot self register.') ?: '', 403);
         }
 
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
-            throw new \RuntimeException(json_encode(sprintf('User with email %s already exists.', $existingUser->getEmail())), 422);
+            $message = sprintf('User with email %s already exists.', $existingUser->getEmail());
+            throw new \RuntimeException(json_encode($message) ?: '', 422);
         }
 
         // Check the client is unique and has no deputies attached
         if ($existingClient instanceof Client) {
             if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-                throw new \RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
+                $message = sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber());
+                throw new \RuntimeException(json_encode($message) ?: '', 425);
             } else {
                 // soft delete client
                 $this->em->remove($existingClient);
@@ -76,7 +78,8 @@ class UserRegistrationService
 
         if (1 !== count($preregMatches)) {
             // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
-            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
+            $message = sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber());
+            throw new \RuntimeException(json_encode($message) ?: '', 462);
         }
 
         $user->setDeputyNo($preregMatches[0]->getDeputyUid());

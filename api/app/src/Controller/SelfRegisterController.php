@@ -99,7 +99,8 @@ class SelfRegisterController extends RestController
 
             if (1 !== count($matchedCodeputies)) {
                 // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
-                throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
+                $message = sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber());
+                throw new \RuntimeException(json_encode($message) ?: '', 462);
             }
 
             // check if it's the primary account for the co-deputy
@@ -108,7 +109,8 @@ class SelfRegisterController extends RestController
 
             $existingDeputyCase = $this->em->getRepository(Client::class)->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
             if (!empty($existingDeputyCase)) {
-                throw new \RuntimeException(json_encode(sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber())), 463);
+                $message = sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber());
+                throw new \RuntimeException(json_encode($message) ?: '', 463);
             }
 
             $this->logger->warning('PreRegistration codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);

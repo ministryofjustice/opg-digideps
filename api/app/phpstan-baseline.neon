@@ -2526,11 +2526,6 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Parameter \\#1 \\$message of class RuntimeException constructor expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Controller/SelfRegisterController.php
@@ -9233,11 +9228,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Service\\\\UserRegistrationService\\:\\:saveUserAndClient\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Service/UserRegistrationService.php
-
-		-
-			message: "#^Parameter \\#1 \\$message of class RuntimeException constructor expects string, string\\|false given\\.$#"
-			count: 5
 			path: src/Service/UserRegistrationService.php
 
 		-
