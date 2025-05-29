@@ -9336,11 +9336,6 @@ parameters:
 			path: src/TestHelpers/DeputyTestHelper.php
 
 		-
-			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\Deputy\\:\\:setDeputyUid\\(\\) expects string, int\\|string given\\.$#"
-			count: 1
-			path: src/TestHelpers/DeputyTestHelper.php
-
-		-
 			message: "#^Method App\\\\TestHelpers\\\\OrganisationTestHelper\\:\\:createOrganisation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/TestHelpers/OrganisationTestHelper.php
