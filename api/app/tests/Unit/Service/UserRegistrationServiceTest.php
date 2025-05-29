@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity\Client;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
 use App\Repository\ClientRepository;
@@ -97,12 +98,14 @@ class UserRegistrationServiceTest extends TestCase
 
         $mockPreRegistrationVerificationService = m::mock('\App\Service\PreRegistrationVerificationService')
             ->shouldIgnoreMissing(true)
+            ->shouldReceive('validate')->andReturn([new PreRegistration([])])
             ->shouldReceive('isMultiDeputyCase')->with('12341234')->andReturn(false)
             ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn(['123'])
             ->getMock();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegistrationVerificationService);
         $selfRegisteredUser = $this->userRegistrationService->selfRegisterUser($data);
+
         self::assertEquals(User::SELF_REGISTER, $selfRegisteredUser->getRegistrationRoute());
         self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof \DateTime);
     }

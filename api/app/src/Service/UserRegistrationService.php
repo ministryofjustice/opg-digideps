@@ -68,7 +68,7 @@ class UserRegistrationService
         $this->populateClient($client, $selfRegisterData);
 
         // if validation fails, this throws a runtime exception which propagates to callers of this method
-        $this->preRegistrationVerificationService->validate(
+        $preregMatches = $this->preRegistrationVerificationService->validate(
             $selfRegisterData->getCaseNumber(),
             $selfRegisterData->getClientLastname(),
             $selfRegisterData->getFirstname(),
@@ -76,13 +76,13 @@ class UserRegistrationService
             $user->getAddressPostcode()
         );
 
-        if (1 !== count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
+        if (1 !== count($preregMatches)) {
             // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber())), 462);
         }
 
-        $user->setDeputyNo($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
-        $user->setDeputyUid($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
+        $user->setDeputyNo($preregMatches[0]->getDeputyUid());
+        $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
         $user->setPreRegisterValidatedDate(new \DateTime('now'));
         $user->setRegistrationRoute(User::SELF_REGISTER);
 

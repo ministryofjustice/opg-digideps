@@ -26,8 +26,10 @@ class PreRegistrationVerificationService
     /**
      * Throw error 400 if preregistration has no record matching case number,
      * client surname, deputy firstname and surname, and postcode (if set).
+     *
+     * @return PreRegistration[]
      */
-    public function validate(?string $caseNumber, ?string $clientLastname, ?string $deputyFirstname, ?string $deputyLastname, ?string $deputyPostcode): bool
+    public function validate(?string $caseNumber, ?string $clientLastname, ?string $deputyFirstname, ?string $deputyLastname, ?string $deputyPostcode): array
     {
         $detailsToMatchOn = [
             'caseNumber' => $caseNumber,
@@ -41,7 +43,7 @@ class PreRegistrationVerificationService
 
         $this->lastMatchedPreRegistrationUsers = $this->checkOtherDetailsMatch($caseNumberMatches, $detailsToMatchOn);
 
-        return true;
+        return $this->lastMatchedPreRegistrationUsers;
     }
 
     /**
