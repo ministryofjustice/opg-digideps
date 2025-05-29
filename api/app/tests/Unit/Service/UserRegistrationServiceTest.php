@@ -41,60 +41,6 @@ class UserRegistrationServiceTest extends TestCase
 
     /**
      * @test
-     */
-    public function populateUser()
-    {
-        $data = new SelfRegisterData();
-
-        $data->setFirstname('Zac');
-        $data->setLastname('Tolley');
-        $data->setEmail('zac@thetolleys.com');
-        $data->setClientLastname('Cross-Tolley');
-        $data->setCaseNumber('12341234');
-        $data->setPostcode('AB12CD');
-
-        $user = new User();
-        $user->recreateRegistrationToken();
-        $this->userRegistrationService->populateUser($user, $data);
-
-        $this->assertEquals(User::ROLE_LAY_DEPUTY, $user->getRoleName());
-        $this->assertEquals('Zac', $user->getFirstname());
-        $this->assertEquals('Tolley', $user->getLastname());
-        $this->assertEquals('zac@thetolleys.com', $user->getEmail());
-        $this->assertFalse($user->getActive());
-        $this->assertNotEmpty($user->getRegistrationToken());
-        $this->assertNotNull($user->getTokenDate());
-
-        $token_time = $user->getTokenDate();
-        $now = new \DateTime();
-        $diffInSeconds = $now->getTimestamp() - $token_time->getTimestamp();
-
-        $this->assertLessThan(60, $diffInSeconds);  // time was set to just now
-    }
-
-    /**
-     * @test
-     */
-    public function populateClient()
-    {
-        $data = new SelfRegisterData();
-
-        $data->setFirstname('Zac');
-        $data->setLastname('Tolley');
-        $data->setEmail('zac@thetolleys.com');
-        $data->setClientFirstname('Zac');
-        $data->setClientLastname('Cross-Tolley');
-        $data->setCaseNumber('12341234');
-
-        $client = new Client();
-        $this->userRegistrationService->populateClient($client, $data);
-
-        $this->assertEquals('Cross-Tolley', $client->getLastname());
-        $this->assertEquals('12341234', $client->getCaseNumber());
-    }
-
-    /**
-     * @test
      *
      * @doesNotPerformAssertions
      */

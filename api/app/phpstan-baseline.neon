@@ -8821,11 +8821,6 @@ parameters:
 			path: src/Service/PreRegistrationVerificationService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\PreRegistrationVerificationService\\:\\:checkOtherDetailsMatch\\(\\) has parameter \\$detailsToMatchOn with no type specified\\.$#"
-			count: 1
-			path: src/Service/PreRegistrationVerificationService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\PreRegistrationVerificationService\\:\\:formatPreRegistrationMatchesForErrorOutput\\(\\) should return array\\<App\\\\Entity\\\\PreRegistration\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Service/PreRegistrationVerificationService.php

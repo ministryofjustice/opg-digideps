@@ -112,7 +112,7 @@ class SelfRegisterData
         return $this->clientFirstname;
     }
 
-    public function setClientFirstname(string $clientFirstname): void
+    public function setClientFirstname(?string $clientFirstname): void
     {
         $this->clientFirstname = $clientFirstname;
     }

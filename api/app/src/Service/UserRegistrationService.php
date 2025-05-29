@@ -10,11 +10,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
 {
-    private string $selfRegisterCaseNumber;
+    private ?string $selfRegisterCaseNumber;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly PreRegistrationVerificationService $preRegistrationVerificationService
+        private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
     ) {
         $this->selfRegisterCaseNumber = '';
     }
@@ -34,8 +34,10 @@ class UserRegistrationService
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($selfRegisterData->getCaseNumber());
+        $caseNumber = $selfRegisterData->getCaseNumber() ?? '';
+
+        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
+        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($caseNumber);
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
@@ -169,20 +171,20 @@ class UserRegistrationService
         }
     }
 
-    public function populateUser(User $user, SelfRegisterData $selfRegisterData)
+    private function populateUser(User $user, SelfRegisterData $selfRegisterData)
     {
-        $user->setFirstname($selfRegisterData->getFirstname());
-        $user->setLastname($selfRegisterData->getLastname());
-        $user->setEmail($selfRegisterData->getEmail());
-        $user->setAddressPostcode($selfRegisterData->getPostcode());
+        $user->setFirstname($selfRegisterData->getFirstname() ?? '');
+        $user->setLastname($selfRegisterData->getLastname() ?? '');
+        $user->setEmail($selfRegisterData->getEmail() ?? '');
+        $user->setAddressPostcode($selfRegisterData->getPostcode() ?? '');
         $user->setActive(false);
         $user->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 
-    public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
+    private function populateClient(Client $client, SelfRegisterData $selfRegisterData)
     {
-        $client->setFirstname($selfRegisterData->getClientFirstname());
-        $client->setLastname($selfRegisterData->getClientLastname());
-        $client->setCaseNumber($selfRegisterData->getCaseNumber());
+        $client->setFirstname($selfRegisterData->getClientFirstname() ?? '');
+        $client->setLastname($selfRegisterData->getClientLastname() ?? '');
+        $client->setCaseNumber($selfRegisterData->getCaseNumber() ?? '');
     }
 }
