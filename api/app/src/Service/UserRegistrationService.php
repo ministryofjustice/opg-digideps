@@ -10,13 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
 {
-    private ?string $selfRegisterCaseNumber;
+    private string $selfRegisterCaseNumber = '';
 
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
     ) {
-        $this->selfRegisterCaseNumber = '';
     }
 
     /**
