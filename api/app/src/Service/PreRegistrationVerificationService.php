@@ -92,7 +92,7 @@ class PreRegistrationVerificationService
     private function getCaseNumberMatches(array $detailsToMatchOn): array
     {
         /** @var PreRegistration[] $caseNumberMatches */
-        $caseNumberMatches = $this->preRegistrationRepository->findByCaseNumber($detailsToMatchOn['caseNumber']);
+        $caseNumberMatches = $this->preRegistrationRepository->findByCaseNumber($detailsToMatchOn['caseNumber'] ?? '');
 
         if (0 === count($caseNumberMatches)) {
             $errorJson = json_encode([
@@ -106,19 +106,28 @@ class PreRegistrationVerificationService
     }
 
     /**
-     * @param PreRegistration[] $caseNumberMatches
+     * @param PreRegistration[]      $caseNumberMatches
+     * @param array<string, ?string> $detailsToMatchOn  Map of field => value derived from user-submitted reg data
      *
      * @return PreRegistration[]
+     *
+     * This will throw a runtime exception if no matches were found, with details of where the match failed
+     * (with structure as per $matchingErrors array); an entry in this array means that none of the potential
+     * matches matched against that field
      */
-    private function checkOtherDetailsMatch(array $caseNumberMatches, $detailsToMatchOn)
+    private function checkOtherDetailsMatch(array $caseNumberMatches, array $detailsToMatchOn): array
     {
         $matchingErrors = ['client_lastname' => false, 'deputy_firstname' => false, 'deputy_lastname' => false, 'deputy_postcode' => false];
 
         /** @var PreRegistration[] $clientLastnameMatches */
         $clientLastnameMatches = [];
 
+        $userSubmittedClientLastName = $this->normaliseName($detailsToMatchOn['clientLastname']);
         foreach ($caseNumberMatches as $match) {
-            if ($this->normaliseName($match->getClientLastname()) === $this->normaliseName($detailsToMatchOn['clientLastname'])) {
+            if (
+                !is_null($userSubmittedClientLastName)
+                && $this->normaliseName($match->getClientLastname()) === $userSubmittedClientLastName
+            ) {
                 $clientLastnameMatches[] = $match;
             }
         }
@@ -131,8 +140,12 @@ class PreRegistrationVerificationService
         /** @var PreRegistration[] $deputyLastnameMatches */
         $deputyLastnameMatches = [];
 
+        $userSubmittedDeputyLastName = $this->normaliseName($detailsToMatchOn['deputyLastname']);
         foreach ($clientLastnameMatches as $match) {
-            if ($this->normaliseName($match->getDeputySurname()) === $this->normaliseName($detailsToMatchOn['deputyLastname'])) {
+            if (
+                !is_null($userSubmittedDeputyLastName)
+                && $this->normaliseName($match->getDeputySurname()) === $userSubmittedDeputyLastName
+            ) {
                 $deputyLastnameMatches[] = $match;
             }
         }
@@ -145,8 +158,12 @@ class PreRegistrationVerificationService
         /** @var PreRegistration[] $deputyFirstnameMatches */
         $deputyFirstnameMatches = [];
 
+        $userSubmittedDeputyFirstName = $this->normaliseName($detailsToMatchOn['deputyFirstname']);
         foreach ($deputyLastnameMatches as $match) {
-            if ($this->normaliseName($match->getDeputyFirstname()) === $this->normaliseName($detailsToMatchOn['deputyFirstname'])) {
+            if (
+                !is_null($userSubmittedDeputyFirstName)
+                && $this->normaliseName($match->getDeputyFirstname()) === $userSubmittedDeputyFirstName
+            ) {
                 $deputyFirstnameMatches[] = $match;
             }
         }
@@ -216,8 +233,12 @@ class PreRegistrationVerificationService
         return $matches;
     }
 
-    private function normaliseName(string $name): string
+    private function normaliseName(?string $name): ?string
     {
+        if (is_null($name)) {
+            return null;
+        }
+
         $normalisedName = str_replace('’', '\'', $name);
 
         return trim(mb_strtolower($normalisedName));
