@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
@@ -61,7 +58,7 @@ class DeputyshipProcessingRawDbAccess
             $result = $query->getSingleScalarResult();
 
             return $result;
-        } catch (NoResultException|NonUniqueResultException) {
+        } catch (\Exception) {
             return null;
         }
     }
@@ -95,7 +92,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
     }
@@ -119,7 +116,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
     }
@@ -140,7 +137,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
     }
@@ -158,7 +155,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
     }
@@ -176,7 +173,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
     }
@@ -197,7 +194,7 @@ class DeputyshipProcessingRawDbAccess
                 ->executeQuery();
 
             return true;
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
     }
