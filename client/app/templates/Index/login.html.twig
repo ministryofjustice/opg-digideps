@@ -24,10 +24,13 @@
 {% endblock %}
 
 {% block pageContent %}
-{#    {% if status.actionsState.state != 'done' and comingFromLastStep%}#}
-    {{ macros.notification('infoLink', 'maintenance.sentence') }}
-{#    {% endif %}#}
+    {% set now = "now"|date("U") %}
+    {% set hour = now|date("H", "UTC") %}
+    {% set weekday = now|date("N", "UTC") %} {# Monday = 1 #}
 
+    {% if hour == 4 or hour == 3 and weekday == 1 %}
+        {{ macros.notification('info', 'maintenance.sentence' | trans) }}
+    {% endif %}
 
     {% if app.session.get('login-context') != 'email-update' %}
         {{ macros.notification('infoLink', {
