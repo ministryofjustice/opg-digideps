@@ -36,7 +36,7 @@ class UserRegistrationService
         $caseNumber = $selfRegisterData->getCaseNumber() ?? '';
 
         $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($caseNumber);
+        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
@@ -45,7 +45,7 @@ class UserRegistrationService
         }
 
         // Check the user doesn't already exist
-        $existingUser = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
+        $existingUser = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
             throw new \RuntimeException(json_encode(sprintf('User with email %s already exists.', $existingUser->getEmail())), 422);
         }
@@ -77,6 +77,7 @@ class UserRegistrationService
             $selfRegisterData->getLastname(),
             $user->getAddressPostcode()
         );
+
         if (1 == count($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers())) {
             $user->setDeputyNo($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
             $user->setDeputyUid($this->preRegistrationVerificationService->getLastMatchedDeputyNumbers()[0]);
@@ -105,7 +106,7 @@ class UserRegistrationService
      */
     public function validateCoDeputy(SelfRegisterData $selfRegisterData)
     {
-        $user = $this->em->getRepository('App\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
+        $user = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
         if (!$user) {
             throw new \RuntimeException('User registration: not found', 421);
         }
