@@ -120,7 +120,7 @@ class UserRegistrationService
         );
 
         // store case number in class property to access in retrieveCoDeputyUid exception
-        $this->selfRegisterCaseNumber = $selfRegisterData->getCaseNumber();
+        $this->selfRegisterCaseNumber = $selfRegisterData->getCaseNumber() ?? '';
 
         return true;
     }
