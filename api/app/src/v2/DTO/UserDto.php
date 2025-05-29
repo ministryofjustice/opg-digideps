@@ -28,7 +28,7 @@ class UserDto
     /** @var string|null */
     private $address3;
 
-    /** @var string */
+    /** @var string|null */
     private $addressPostcode;
 
     /** @var string|null */
@@ -179,7 +179,7 @@ class UserDto
     }
 
     /**
-     * @param string $addressPostcode
+     * @param ?string $addressPostcode
      */
     public function setAddressPostcode($addressPostcode): UserDto
     {

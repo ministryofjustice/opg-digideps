@@ -134,6 +134,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_firstname' => 'James',
                 'client_lastname' => 'Morrison',
                 'case_number' => '1234567790',
+                'postcode' => 'SW1',
             ],
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
@@ -570,7 +571,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'MadeDate' => '2010-03-30',
             'OrderType' => 'pfa',
             'NDR' => 'yes',
-        ], $createdAt);
+        ]);
     }
 
     /**
