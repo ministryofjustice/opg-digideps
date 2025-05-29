@@ -75,7 +75,7 @@ class PreRegistrationController extends RestController
 
         // this will throw a runtime exception if validation failed, which is how we control the response from
         // this controller
-        $verified = $verificationService->validate(
+        $verificationService->validate(
             $clientData['case_number'],
             $clientData['lastname'],
             $user->getFirstname(),
@@ -83,19 +83,19 @@ class PreRegistrationController extends RestController
             $user->getAddressPostcode()
         );
 
-        if (1 == count($verificationService->getLastMatchedDeputyNumbers())) {
-            $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
-            $user->setDeputyUid($verificationService->getLastMatchedDeputyNumbers()[0]);
-            $user->setPreRegisterValidatedDate(new \DateTime());
-            $user->setIsPrimary(true);
-            $this->em->persist($user);
-            $this->em->flush();
-        } else {
-            // A deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
+        if (1 !== count($verificationService->getLastMatchedDeputyNumbers())) {
+            // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
         }
 
-        return ['verified' => $verified];
+        $user->setDeputyNo($verificationService->getLastMatchedDeputyNumbers()[0]);
+        $user->setDeputyUid($verificationService->getLastMatchedDeputyNumbers()[0]);
+        $user->setPreRegisterValidatedDate(new \DateTime());
+        $user->setIsPrimary(true);
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return ['verified' => true];
     }
 
     #[Route(path: '/count', methods: ['GET'])]
