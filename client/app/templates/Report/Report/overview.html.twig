@@ -293,7 +293,8 @@
     {% if not report.isDue %}
         <div class="push--top">
             {% set endDate = report.getEndDate() | date("j F Y")  %}
-            {% set transOptions = {'%date%': endDate} %}
+            {% set endDatePlusOneDay = endDate|date_modify("+1 day")| date("j F Y") %}
+            {% set transOptions = {'%date%': endDatePlusOneDay} %}
 
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>

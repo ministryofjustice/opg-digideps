@@ -180,7 +180,7 @@ class Client implements ClientInterface
     private $lastname;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
      */
@@ -189,7 +189,7 @@ class Client implements ClientInterface
     private $courtDate;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @ORM\Column(name="date_of_birth", type="date", nullable=true)
      */
@@ -244,7 +244,7 @@ class Client implements ClientInterface
     private $courtOrders;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @ORM\Column(name="archived_at", type="datetime", nullable=true)
      */
@@ -428,7 +428,7 @@ class Client implements ClientInterface
      *
      * @return Client
      */
-    public function setCourtDate(?DateTime $courtDate = null)
+    public function setCourtDate(?\DateTime $courtDate = null)
     {
         $this->courtDate = $courtDate;
 
@@ -438,7 +438,7 @@ class Client implements ClientInterface
     /**
      * Get courtDate.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getCourtDate()
     {
@@ -552,14 +552,18 @@ class Client implements ClientInterface
 
     /**
      * Get report by end date.
-     *
-     * @return Report|null
      */
-    public function getReportByEndDate(DateTime $endDate)
+    public function getReportByEndDate(\DateTime $endDate): ?Report
     {
-        return $this->reports->filter(function ($report) use ($endDate) {
+        $report = $this->reports->filter(function ($report) use ($endDate) {
             return $endDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
         })->first();
+
+        if (!$report) {
+            return null;
+        }
+
+        return $report;
     }
 
     /**
@@ -720,7 +724,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return DateTime|null $dateOfBirth
+     * @return \DateTime|null $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -730,7 +734,7 @@ class Client implements ClientInterface
     /**
      * @return $this
      */
-    public function setDateOfBirth(?DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
 
@@ -835,7 +839,7 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report Start date based on the Court date.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -868,7 +872,7 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report End date based on the Court date.
      *
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -876,7 +880,7 @@ class Client implements ClientInterface
     #[JMS\Groups(['checklist-information'])]
     public function getExpectedReportEndDate($year = null)
     {
-        if (!($this->getExpectedReportStartDate($year) instanceof DateTime)) {
+        if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
         }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate($year);
@@ -884,13 +888,13 @@ class Client implements ClientInterface
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    public function setArchivedAt(?DateTime $archivedAt = null)
+    public function setArchivedAt(?\DateTime $archivedAt = null)
     {
         $this->archivedAt = $archivedAt;
     }
 
     /**
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public function getArchivedAt()
     {
@@ -926,7 +930,7 @@ class Client implements ClientInterface
     /**
      * Get Active From date == earliest report start date for this client.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
@@ -935,7 +939,7 @@ class Client implements ClientInterface
     public function getActiveFrom()
     {
         $reports = $this->getReports();
-        $earliest = new DateTime('now');
+        $earliest = new \DateTime('now');
         foreach ($reports as $report) {
             if ($report->getStartDate() < $earliest) {
                 $earliest = $report->getStartDate();

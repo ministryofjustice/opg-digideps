@@ -331,11 +331,6 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Asset\\>\\:\\:findByNdr\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
@@ -372,16 +367,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:edit\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getAll\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getAll\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
@@ -563,11 +548,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 17
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
 		-
@@ -2131,11 +2111,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ReportController\\:\\:\\$parameterStoreService is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\ReportSubmission\\>\\:\\:findAllReportSubmissionsRawSql\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
@@ -2647,11 +2622,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getEmail\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getIsPrimary\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
@@ -6671,11 +6641,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setUnsubmittedSectionsList\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setUpdatedAtAutomatically\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -6927,11 +6892,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unSubmitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unsubmittedSectionsList \\(array\\) does not accept array\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -8071,11 +8031,6 @@ parameters:
 			path: src/Repository/OrganisationRepository.php
 
 		-
-			message: "#^Class App\\\\Repository\\\\PreRegistrationRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/PreRegistrationRepository.php
-
-		-
 			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:deleteAll\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/PreRegistrationRepository.php
@@ -9066,36 +9021,6 @@ parameters:
 			path: src/Service/PreRegistrationVerificationService.php
 
 		-
-			message: "#^Call to method findOneBy\\(\\) on an unknown class Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getEndDate\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 4
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getStartDate\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method getStatus\\(\\) on mixed\\.$#"
-			count: 4
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Cannot call method hasSamePeriodAs\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: "#^Cannot call method isLayDeputy\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
@@ -9111,11 +9036,6 @@ parameters:
 			path: src/Service/ReportService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportService\\:\\:findDeleteableReports\\(\\) has parameter \\$reports with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection but does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ReportService\\:\\:unSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
@@ -9126,57 +9046,7 @@ parameters:
 			path: src/Service/ReportService.php
 
 		-
-			message: "#^Parameter \\#1 \\$unsubmittedSectionsList of method App\\\\Entity\\\\Report\\\\Report\\:\\:setUnsubmittedSectionsList\\(\\) expects array\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$assetRepository \\(Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Asset\\>\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$assetRepository has unknown class Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository as its type\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$assetRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$bankAccountRepository \\(Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\BankAccount\\>\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$bankAccountRepository has unknown class Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository as its type\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$bankAccountRepository is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$preRegistrationRepository \\(Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\PreRegistration\\>\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$preRegistrationRepository has unknown class Doctrine\\\\Common\\\\Persistence\\\\ObjectRepository as its type\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportService\\:\\:\\$reportRepository is never read, only written\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
 

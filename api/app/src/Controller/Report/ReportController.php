@@ -11,7 +11,6 @@ use App\Exception\UnauthorisedException;
 use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
-use App\Service\ParameterStoreService;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -44,8 +43,14 @@ class ReportController extends RestController
         'report-submission-id',
     ];
 
-    public function __construct(private readonly array $updateHandlers, private readonly ReportRepository $repository, private readonly ReportService $reportService, private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly ParameterStoreService $parameterStoreService)
-    {
+    public function __construct(
+        private readonly array $updateHandlers,
+        private readonly ReportRepository $repository,
+        private readonly ReportService $reportService,
+        private readonly EntityManagerInterface $em,
+        private readonly AuthService $authService,
+        private readonly RestFormatter $formatter,
+    ) {
         parent::__construct($em);
     }
 
@@ -149,7 +154,7 @@ class ReportController extends RestController
         /** @var Report|null $nextYearReport */
         $nextYearReport = $this->reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
 
-        return $nextYearReport ? $nextYearReport->getId() : null;
+        return $nextYearReport?->getId();
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['PUT'])]

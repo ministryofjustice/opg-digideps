@@ -136,6 +136,35 @@ class ReportController extends AbstractController
     ) {
     }
 
+    private function redirectNonPrimaryAccount(User $user): ?RedirectResponse
+    {
+        if (!$user->getIsPrimary()) {
+            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
+
+            if (is_null($primaryEmail)) {
+                $this->addFlash('nonPrimaryRedirectUnknownEmail',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
+                        'sentenceThree' => 'If you need assistance, contact your case manager on 0115 934 2700.',
+                    ]
+                );
+            } else {
+                $this->addFlash('nonPrimaryRedirect',
+                    [
+                        'sentenceOne' => 'This account has been closed.',
+                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
+                        'primaryEmail' => $primaryEmail,
+                    ]
+                );
+            }
+
+            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        }
+
+        return null;
+    }
+
     /**
      * List of reports.
      *
@@ -162,16 +191,16 @@ class ReportController extends AbstractController
      */
     public function clientHomepageAction(Redirector $redirector, string $clientId)
     {
-        $ndrEnabled = false;
+        $ndrEnabledOnDeputy = false;
         $users = $this->clientApi->getWithUsersV2($clientId)->getUsers();
 
         foreach ($users as $user) {
             if ($user->isNdrEnabled()) {
-                $ndrEnabled = true;
+                $ndrEnabledOnDeputy = true;
             }
         }
 
-        if ($ndrEnabled) {
+        if ($ndrEnabledOnDeputy) {
             $user = $this->userApi->getUserWithData();
         } else {
             // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
@@ -180,18 +209,9 @@ class ReportController extends AbstractController
         }
 
         // redirect back to log out page if signing in with non-primary account with primary email
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-            $this->addFlash('nonPrimaryRedirect',
-                [
-                    'sentenceOne' => 'This account has been closed.',
-                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                    'primaryEmail' => $primaryEmail,
-                ]
-            );
-
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        $redirect = $this->redirectNonPrimaryAccount($user);
+        if (!is_null($redirect)) {
+            return $redirect;
         }
 
         // redirect if user has missing details or is on wrong page
@@ -208,9 +228,9 @@ class ReportController extends AbstractController
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
         ];
 
-        if ($ndrEnabled) {
-            $client = $this->clientApi->getById($clientId);
+        $client = $this->clientApi->getById($clientId);
 
+        if ($ndrEnabledOnDeputy && $client->getNdr()) {
             $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
 
             return array_merge([
@@ -249,18 +269,9 @@ class ReportController extends AbstractController
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
         // redirect back to log out page if signing in with non-primary account with primary email
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-            $this->addFlash('nonPrimaryRedirect',
-                [
-                    'sentenceOne' => 'This account has been closed.',
-                    'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                    'primaryEmail' => $primaryEmail,
-                ]
-            );
-
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
+        $redirect = $this->redirectNonPrimaryAccount($user);
+        if (!is_null($redirect)) {
+            return $redirect;
         }
 
         // redirect if user has missing details or is on wrong page

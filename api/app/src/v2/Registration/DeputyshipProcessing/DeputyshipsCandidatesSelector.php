@@ -83,7 +83,7 @@ class DeputyshipsCandidatesSelector
         } catch (Exception $e) {
             $this->logger->error("ERROR while selecting candidates from deputyships: {$e->getMessage()}");
 
-            return new DeputyshipCandidatesSelectorResult([], 0, $e);
+            return new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 0, $e);
         }
 
         $this->logger->info(
@@ -91,7 +91,7 @@ class DeputyshipsCandidatesSelector
             "deputyships = $numDeputyships; candidates = $numCandidates"
         );
 
-        $candidatesResultset = $this->stagingSelectedCandidateRepository->getDistinctCandidates();
+        $candidatesResultset = $this->stagingSelectedCandidateRepository->getDistinctOrderedCandidates();
 
         return new DeputyshipCandidatesSelectorResult($candidatesResultset, $numCandidates);
     }

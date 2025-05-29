@@ -55,9 +55,11 @@ class DeputyshipsCSVLoaderIntegrationTest extends KernelTestCase
 
         $sut = new DeputyshipsCSVLoader($this->entityManager, $this->chunkerFactory, $this->logger);
 
-        $loadOk = $sut->load($fileLocation);
+        $loadResult = $sut->load($fileLocation);
 
-        self::assertTrue($loadOk);
+        self::assertTrue($loadResult->loadedOk);
+        self::assertEquals($fileLocation, $loadResult->fileLocation);
+        self::assertEquals($numRecords, $loadResult->numRecords);
 
         $records = $this->entityManager->getRepository(StagingDeputyship::class)->findAll();
         self::assertCount($numRecords, $records);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -24,13 +25,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class StagingSelectedCandidate
 {
-    public const UPDATE_ORDER_STATUS = 'UPDATE ORDER STATUS';
-    public const UPDATE_DEPUTY_STATUS = 'UPDATE DEPUTY STATUS ON ORDER';
-    public const INSERT_ORDER_DEPUTY = 'INSERT ORDER DEPUTY';
-    public const INSERT_ORDER = 'INSERT ORDER';
-    public const INSERT_ORDER_REPORT = 'INSERT ORDER REPORT';
-    public const INSERT_ORDER_NDR = 'INSERT ORDER NDR';
-
     /**
      * @ORM\Id
      *
@@ -50,67 +44,73 @@ class StagingSelectedCandidate
     public string $orderUid;
 
     /**
-     * @ORM\Column(name="action", type="string", length=30)
+     * @ORM\Column(name="action", enumType="App\v2\Registration\Enum\DeputyshipCandidateAction", length=30)
      */
-    public string $action;
+    public DeputyshipCandidateAction $action;
 
     /**
      * @ORM\Column(name="deputy_uid", type="string", length=30, nullable=true)
      */
-    public ?string $deputyUid;
+    public ?string $deputyUid = null;
 
     /**
      * @ORM\Column(name="order_status", type="string", length=30, nullable=true)
      */
-    public ?string $status;
+    public ?string $status = null;
 
     /**
      * @ORM\Column(name="order_type", type="string", length=5, nullable=true)
      */
-    public ?string $orderType;
+    public ?string $orderType = null;
 
     /**
      * @ORM\Column(name="report_type", type="string", length=30, nullable=true)
      */
-    public ?string $reportType;
+    public ?string $reportType = null;
 
     /**
      * @ORM\Column(name="order_made_date", type="string", length=30, nullable=true)
      */
-    public ?string $orderMadeDate;
+    public ?string $orderMadeDate = null;
 
     /**
      * @ORM\Column(name="deputy_type", type="string", length=30, nullable=true)
      */
-    public ?string $deputyType;
+    public ?string $deputyType = null;
 
     /**
      * @ORM\Column(name="deputy_status_on_order", type="boolean", nullable=true)
      */
-    public ?bool $deputyStatusOnOrder;
+    public ?bool $deputyStatusOnOrder = null;
 
     /**
      * @ORM\Column(name="order_id", type="integer",nullable=true)
      */
-    public ?int $orderId;
+    public ?int $orderId = null;
 
     /**
      * @ORM\Column(name="client_id", type="integer",nullable=true)
      */
-    public ?int $clientId;
+    public ?int $clientId = null;
 
     /**
      * @ORM\Column(name="report_id", type="integer",nullable=true)
      */
-    public ?int $reportId;
+    public ?int $reportId = null;
 
     /**
      * @ORM\Column(name="deputy_id", type="integer",nullable=true)
      */
-    public ?int $deputyId;
+    public ?int $deputyId = null;
 
     /**
      * @ORM\Column(name="ndr_id", type="integer",nullable=true)
      */
-    public ?int $ndrId;
+    public ?int $ndrId = null;
+
+    public function __construct(DeputyshipCandidateAction $action, string $orderUid)
+    {
+        $this->action = $action;
+        $this->orderUid = $orderUid;
+    }
 }

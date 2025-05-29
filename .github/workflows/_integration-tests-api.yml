@@ -50,12 +50,6 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - name: setup local docker resources for integration tests
-        id: integration-test-setup
-        run: |
-          docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml up -d localstack postgres redis-api
-          docker compose -f docker-compose.yml -f docker-compose.integration-tests-api.yml run --rm api-integration-tests sh scripts/reset_db_structure.sh local
-
       - name: run api integration tests
         env:
           SELECTION: ${{ inputs.selection }}

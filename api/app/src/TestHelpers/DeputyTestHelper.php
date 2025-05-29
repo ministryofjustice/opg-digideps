@@ -24,11 +24,11 @@ class DeputyTestHelper
             ->setAddress3($faker->county)
             ->setAddressPostcode($faker->postcode())
             ->setPhoneMain($faker->phoneNumber());
-        
+
         if (!is_null($user)) {
             $deputy->setUser($user);
         }
-        
+
         return $deputy;
     }
 }
