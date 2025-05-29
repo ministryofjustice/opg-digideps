@@ -43,10 +43,10 @@ class SelfRegisterController extends RestController
         $selfRegisterData->replaceUnicodeChars();
 
         $caseNumber = $selfRegisterData->getCaseNumber();
-        
+
         // truncate case number if length is 10
-        if ($caseNumber !== null && 10 == strlen($caseNumber)) {
-            $selfRegisterData->setCaseNumber(substr($selfRegisterData->getCaseNumber(), 0, -2));
+        if (!is_null($caseNumber) && 10 == strlen($caseNumber)) {
+            $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
         }
 
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
