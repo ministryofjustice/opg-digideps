@@ -12,6 +12,9 @@ use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
+use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Mink\Element\NodeElement;
 
 trait CourtOrderTrait
 {
@@ -24,7 +27,7 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderPage()
     {
-        $this->visitFrontendPath('/courtorder/700000000001');
+        $this->visitFrontendPath('/courtorder/deputy/700000000001');
     }
 
     /**
@@ -58,7 +61,7 @@ trait CourtOrderTrait
             }
 
             foreach ($clients as $client) {
-                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy);
+                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy, $client->getCurrentReport());
             }
         }
 
@@ -66,7 +69,7 @@ trait CourtOrderTrait
             ->getRepository(Client::class)
             ->find(['id' => $clientId]);
 
-        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy);
+        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy, $client->getCurrentReport());
     }
 
     /**
@@ -75,7 +78,7 @@ trait CourtOrderTrait
     public function iVisitTheCourtOrderPageThatIAmAssociatedWith($arg1)
     {
         if ('I am' === $arg1) {
-            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrder->getCourtOrderUid()));
+            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $this->courtOrder->getCourtOrderUid()));
         } else {
             $clientTestHelper = new ClientTestHelper();
             $deputyTestHelper = new DeputyTestHelper();
@@ -86,9 +89,10 @@ trait CourtOrderTrait
             $this->em->persist($deputy);
             $this->em->flush();
 
-            $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy)->getCourtOrderUid();
+            $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy, $client->getCurrentReport())
+                ->getCourtOrderUid();
 
-            $this->visitFrontendPath(sprintf('/courtorder/%s', $courtOrderUid));
+            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $courtOrderUid));
         }
     }
 
@@ -98,9 +102,9 @@ trait CourtOrderTrait
     public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg)
     {
         if ('first' == $firstOrSecond && 'I am' == $arg) {
-            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[0]->getCourtOrderUid()));
+            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $this->courtOrders[0]->getCourtOrderUid()));
         } else {
-            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[1]->getCourtOrderUid()));
+            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $this->courtOrders[1]->getCourtOrderUid()));
         }
     }
 
@@ -117,5 +121,27 @@ trait CourtOrderTrait
 
         $this->em->persist($courtOrderDeputy);
         $this->em->flush();
+    }
+
+    /**
+     * @When /^I visit the multiple court order page$/
+     */
+    public function iVisitTheMultipleCourtOrderPage()
+    {
+        $this->visitFrontendPath('/courtorder/multi-report');
+    }
+
+    /**
+     * @Then /^I should see \'([^\']*)\' court orders on the page$/
+     */
+    public function iShouldSeeCourtOrdersOnThePage(int $arg1)
+    {
+        $this->iAmOnPage('{\/courtorder\/multi-report$}');
+
+        $orders = $this->findAllXpathElements("//div[contains(concat(' ', normalize-space(@class), ' '), ' opg-overview-courtorder ')]");
+
+        if (count($orders) !== $arg1) {
+            throw new BehatException(sprintf('Expected %d orders, got %d', $arg1, count($orders)));
+        }
     }
 }
