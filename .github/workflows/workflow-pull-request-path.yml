@@ -293,6 +293,7 @@ jobs:
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
+      hide_logs: "true"
 
   end_to_end_tests_2:
     name: end to end tests frontend 2
