@@ -36,8 +36,13 @@ on:
         required: false
         default: ""
         type: string
+      hide_logs:
+        description: "Hide log output"
+        required: false
+        default: "false"
+        type: string
 env:
-  HELPER_VERSION: "0.10.1"
+  HELPER_VERSION: "0.10.5"
 jobs:
   run-task:
     runs-on: ubuntu-latest
@@ -111,15 +116,16 @@ jobs:
           OVERRIDE: ${{ inputs.override }}
           TASK_NAME: ${{ inputs.task_name }}
           TIMEOUT: ${{ inputs.timeout }}
+          HIDE_LOGS: ${{ inputs.hide_logs }}
         run: |
           echo ${TASK_NAME}
           echo ${TIMEOUT}
           echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -assumeRoleFromTFOut false
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -assumeRoleFromTFOut false -hideLogs ${HIDE_LOGS}
           else
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE} -assumeRoleFromTFOut false
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE} -assumeRoleFromTFOut false -hideLogs ${HIDE_LOGS}
           fi
         working-directory: terraform/environment
 
