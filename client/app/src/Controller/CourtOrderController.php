@@ -41,11 +41,11 @@ class CourtOrderController extends AbstractController
 
     #[Route(path: '/multi-report', name: "courtorders_reports_by_user", methods: ['GET'])]
     #[Template("@App/Index/choose-a-court-order.html.twig")]
-    public function getAllDeputyCourtOrders()
+    public function getAllDeputyCourtOrders(): array
     {   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
-        $results = $this->deputyApi->findAllDeputyReportsForCurrentUser();
+        $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentUser();
 
-        if (count($results) === 0 || is_null($results)) {
+        if (empty($results)) {
             $this->redirectToRoute('homepage');
         }
 

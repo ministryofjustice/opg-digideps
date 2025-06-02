@@ -80,7 +80,7 @@ class DeputyRepository extends ServiceEntityRepository
             ->getConnection()
             ->prepare($sql)
             ->executeQuery(['deputyUid' => (string) $uid]);
-
+        /** @var Array<int, Array<array-key, string>> $result */
         $result = $query->fetchAllAssociative();
 
         $data = [];
