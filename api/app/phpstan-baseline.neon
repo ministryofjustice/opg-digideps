@@ -2526,11 +2526,6 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Parameter \\#1 \\$message of class RuntimeException constructor expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Controller/SelfRegisterController.php
@@ -3546,41 +3541,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddress1\\(\\) has parameter \\$address1 with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddress2\\(\\) has parameter \\$address2 with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddress3\\(\\) has parameter \\$address3 with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddressCountry\\(\\) has parameter \\$addressCountry with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddressPostcode\\(\\) has parameter \\$addressPostcode with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\ClientContact\\:\\:\\$address4 \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\ClientContact\\:\\:\\$address5 \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\ClientContact\\:\\:\\$id is never written, only read\\.$#"
 			count: 1
 			path: src/Entity/ClientContact.php
@@ -3601,41 +3561,6 @@ parameters:
 			path: src/Entity/CourtOrder.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
-			count: 4
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Cannot call method getCourtOrder\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Cannot call method isActive\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Deputy\\:\\:addressHasChanged\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Deputy\\:\\:getClients\\(\\) return type with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Deputy\\:\\:getEmail1\\(\\) should return \\$this\\(App\\\\Entity\\\\Deputy\\) but returns string\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Deputy\\:\\:setAddressCountry\\(\\) has parameter \\$addressCountry with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Deputy\\:\\:setCreatedAtAutomatically\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Deputy.php
@@ -3646,17 +3571,7 @@ parameters:
 			path: src/Entity/Deputy.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Deputy\\:\\:\\$clients has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Deputy\\:\\:\\$clients is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Deputy\\:\\:\\$courtOrderDeputyRelationships with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Entity/Deputy.php
 
@@ -7161,31 +7076,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setAddress1\\(\\) has parameter \\$address1 with no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setAddress2\\(\\) has parameter \\$address2 with no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setAddress3\\(\\) has parameter \\$address3 with no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setAddressCountry\\(\\) has parameter \\$addressCountry with no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setAddressPostcode\\(\\) has parameter \\$addressPostcode with no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setCreatedAtAutomatically\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -7232,16 +7122,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$adManaged \\(bool\\) does not accept bool\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$address4 \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$address5 \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -7659,71 +7539,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$entity of method Doctrine\\\\ORM\\\\EntityManager\\:\\:persist\\(\\) expects object, object\\|null given\\.$#"
 			count: 1
 			path: src/Migrations/Version225.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:replaceUnicodeChars\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setCaseNumber\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setClientFirstname\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setClientLastname\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setFirstname\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setLastname\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:setPostcode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\SelfRegisterData\\:\\:toArray\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\SelfRegisterData\\:\\:\\$clientFirstname \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\SelfRegisterData\\:\\:\\$clientLastname \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\SelfRegisterData\\:\\:\\$firstname \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\SelfRegisterData\\:\\:\\$lastname \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Model/SelfRegisterData.php
 
 		-
 			message: "#^Class App\\\\Repository\\\\AssetRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
@@ -9001,11 +8816,6 @@ parameters:
 			path: src/Service/PreRegistrationVerificationService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\PreRegistrationVerificationService\\:\\:checkOtherDetailsMatch\\(\\) has parameter \\$detailsToMatchOn with no type specified\\.$#"
-			count: 1
-			path: src/Service/PreRegistrationVerificationService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\PreRegistrationVerificationService\\:\\:formatPreRegistrationMatchesForErrorOutput\\(\\) should return array\\<App\\\\Entity\\\\PreRegistration\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Service/PreRegistrationVerificationService.php
@@ -9421,11 +9231,6 @@ parameters:
 			path: src/Service/UserRegistrationService.php
 
 		-
-			message: "#^Parameter \\#1 \\$message of class RuntimeException constructor expects string, string\\|false given\\.$#"
-			count: 5
-			path: src/Service/UserRegistrationService.php
-
-		-
 			message: "#^Match expression does not handle remaining value\\: true$#"
 			count: 1
 			path: src/Service/UserService.php
@@ -9517,11 +9322,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Faker\\\\Generator\\:\\:\\$county\\.$#"
-			count: 1
-			path: src/TestHelpers/DeputyTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\Deputy\\:\\:setDeputyUid\\(\\) expects string, int\\|string given\\.$#"
 			count: 1
 			path: src/TestHelpers/DeputyTestHelper.php
 
@@ -9942,21 +9742,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\v2\\\\Assembler\\\\DeputyAssembler\\:\\:setPropertiesFromData\\(\\) has parameter \\$dto with no type specified\\.$#"
-			count: 1
-			path: src/v2/Assembler/DeputyAssembler.php
-
-		-
-			message: "#^Parameter \\#1 \\$address3 of method App\\\\Entity\\\\Deputy\\:\\:setAddress3\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Assembler/DeputyAssembler.php
-
-		-
-			message: "#^Parameter \\#1 \\$address4 of method App\\\\Entity\\\\Deputy\\:\\:setAddress4\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Assembler/DeputyAssembler.php
-
-		-
-			message: "#^Parameter \\#1 \\$address5 of method App\\\\Entity\\\\Deputy\\:\\:setAddress5\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/v2/Assembler/DeputyAssembler.php
 
@@ -11052,21 +10837,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:skipArchivedClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Parameter \\#1 \\$address3 of method App\\\\Entity\\\\Deputy\\:\\:setAddress3\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Parameter \\#1 \\$address4 of method App\\\\Entity\\\\Deputy\\:\\:setAddress4\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Parameter \\#1 \\$address5 of method App\\\\Entity\\\\Deputy\\:\\:setAddress5\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 

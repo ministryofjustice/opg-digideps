@@ -27,7 +27,7 @@ class CourtOrderControllerTest extends WebTestCase
     {
         $deputy = new Deputy();
         $deputy->setEmail1($user->getEmail());
-        $deputy->setDeputyUid(748723 + rand(1, 99999));
+        $deputy->setDeputyUid('748723'.rand(1, 99999));
         $deputy->setFirstname('name'.time());
         $deputy->setLastname('surname'.time());
 
