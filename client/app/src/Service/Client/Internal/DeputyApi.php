@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class DeputyApi
 {
     private const CREATE_DEPUTY_FROM_USER_ENDPOINT = 'deputy/add';
-    private const FIND_ALL_DEPUTY_REPORTS = 'v2/deputy/%s/reports';
+    private const FIND_ALL_DEPUTY_COURT_ORDERS = 'v2/deputy/%s/courtorders';
 
     public function __construct(
         private readonly RestClientInterface $restClient,
@@ -26,7 +26,7 @@ class DeputyApi
         return $this->restClient->post(self::CREATE_DEPUTY_FROM_USER_ENDPOINT, $currentUser);
     }
 
-    public function findAllDeputyReportsForCurrentUser(): ?array
+    public function findAllDeputyCourtOrdersForCurrentUser(): ?array
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         if (($currentUser instanceof User) !== true) {
@@ -34,7 +34,7 @@ class DeputyApi
             return null;
         }
 
-        $uri = sprintf(self::FIND_ALL_DEPUTY_REPORTS, $currentUser->getDeputyUid());
+        $uri = sprintf(self::FIND_ALL_DEPUTY_COURT_ORDERS, $currentUser->getDeputyUid());
 
         return $this->restClient->get($uri, 'array');
     }
