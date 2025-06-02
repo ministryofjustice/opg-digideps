@@ -11826,17 +11826,17 @@ parameters:
 			path: src/Service/Client/Internal/ClientBenefitsCheckApi.php
 
 		-
+			message: "#^Call to an undefined method App\\\\Service\\\\Client\\\\RestClientInterface\\:\\:get\\(\\)\\.$#"
+			count: 1
+			path: src/Service/Client/Internal/DeputyApi.php
+
+		-
+			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
+			count: 1
+			path: src/Service/Client/Internal/DeputyApi.php
+
+		-
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\DeputyApi\\:\\:createDeputyFromUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/DeputyApi.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Client\\\\Internal\\\\DeputyApi\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/DeputyApi.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Client\\\\Internal\\\\DeputyApi\\:\\:\\$tokenStorage is never read, only written\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/DeputyApi.php
 

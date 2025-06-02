@@ -1,4 +1,4 @@
-@v2 @court-order @chris
+@v2 @court-order
 Feature: Court order page
 
     @lay-combined-high-submitted
