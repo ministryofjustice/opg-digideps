@@ -127,21 +127,24 @@ services:
       context: .
       dockerfile: ./api/docker/app/Dockerfile
       args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        APP_DEBUG: ${API_APP_DEBUG} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         ENVIRONMENT: local
     depends_on:
       - postgres
       - redis-api
       - localstack
     environment:
+      APP_DEBUG: ${API_APP_DEBUG:-0}
       APP_ENV: ${APP_ENV:-local}
-      APP_DEBUG: ${APP_DEBUG:-0}
       WORKSPACE: local
+      XDEBUG_MODE: debug
     env_file:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
     restart: always
+    ports:
+      - 9050:9000
+      - 9053:9003
 
   htmltopdf:
     build:
@@ -316,8 +319,7 @@ services:
       context: .
       dockerfile: api/docker/app/Dockerfile
       args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        APP_DEBUG: ${API_APP_DEBUG:-0} # set API_APP_DEBUG=1 in .env to install Xdebug
         ENVIRONMENT: local
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
@@ -340,8 +342,7 @@ services:
       context: .
       dockerfile: api/docker/app/Dockerfile
       args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        APP_DEBUG: ${API_APP_DEBUG:-0} # set API_APP_DEBUG=1 in .env to install Xdebug
         ENVIRONMENT: local
     depends_on:
       postgres:

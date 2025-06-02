@@ -26,6 +26,7 @@ help: ##@other Show this help.
 
 APP_CONTAINERS := frontend-app api-app admin-app
 REDIS_CONTAINERS := redis-frontend redis-api
+#APP_DEBUG := 1
 
 .ONESHELL:
 .SHELL := /usr/bin/bash
@@ -39,7 +40,7 @@ build-app: down-app build-js ##@application Brings up app with a full no-cache b
 ADDITIONAL_CONFIG = -f docker-compose.override.yml
 
 up-app: ##@application Brings the app up and mounts local folders
-	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up -d --remove-orphans load-balancer
+	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up --force-recreate -d --remove-orphans load-balancer
 
 up-app-rebuild: ##@application Brings up app with a basic rebuild
 	docker compose down
@@ -88,11 +89,11 @@ api-unit-tests: ##@unit-tests Run the api unit tests
 
 INTEGRATION_SELECTION := selection-all
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 api-integration-tests-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
 #Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testLoginFailWrongPassword (test case argument is optional)
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
@@ -127,11 +128,12 @@ cache-clear: ##@application Clear the cache of the application
 	docker compose exec admin-app sh -c "rm -rf var/cache/*" && \
 	echo "Cache reset"
 
-enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)
-	for c in ${APP_CONTAINERS} ; do \
-	  APP_ENV=dev APP_DEBUG=1 docker compose up -d --no-deps $$c; \
-	  echo "$$c: debug enabled." ; \
-	done
+#enable-debug: ##@application Puts app in dev mode and enables debug (so the app has toolbar/profiling)
+#	export APP_DEBUG=1
+#	for c in ${APP_CONTAINERS} ; do \
+#	  APP_ENV=dev APP_DEBUG=1 docker compose up -d --no-deps $$c; \
+#	  echo "$$c: debug enabled." ; \
+#	done
 
 disable-debug: ##@application Puts app in dev mode and disables debug (so the app runs faster, but no toolbar/profiling)
 	for c in ${APP_CONTAINERS} ; do \
