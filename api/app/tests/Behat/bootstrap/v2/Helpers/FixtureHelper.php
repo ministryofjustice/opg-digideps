@@ -1388,11 +1388,11 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder($orderType, $client, $deputy)
+    public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null)
     {
         $faker = Factory::create('en_GB');
-        $courtOrderUid = '70000000'.$faker->randomNumber(4);
+        $courtOrderUid = '700000'.$faker->randomNumber(4);
 
-        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, 'ACTIVE', $courtOrderUid, $orderType, $deputy);
+        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $deputy);
     }
 }
