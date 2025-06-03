@@ -54,7 +54,7 @@ class DeputyshipsIngestResultRecorder
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
-        $this->logger->notice($this->formatMessage($message));
+        $this->logger->warning($this->formatMessage($message));
         $this->logMemory();
     }
 
@@ -114,7 +114,7 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        $this->logMemory(LogLevel::NOTICE);
+        $this->logMemory(LogLevel::WARNING);
 
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
