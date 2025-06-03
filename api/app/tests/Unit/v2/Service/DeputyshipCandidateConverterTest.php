@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Service;
 
 use App\Model\DeputyshipProcessingRawDbAccess;
+use App\Model\DeputyshipProcessingRawDbAccessResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
@@ -30,12 +31,17 @@ class DeputyshipCandidateConverterTest extends TestCase
     {
         $orderUid = '1122334455';
         $insertOrder = [];
+        $expectedError = 'error inserting court order';
 
         $candidateGroup = new DeputyshipCandidatesGroup();
         $candidateGroup->orderUid = $orderUid;
         $candidateGroup->insertOrder = $insertOrder;
 
-        $this->mockDbAccess->expects($this->once())->method('insertOrder')->with($insertOrder)->willReturn(false);
+        $mockResult = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $mockResult->success = false;
+        $mockResult->error = $expectedError;
+
+        $this->mockDbAccess->expects($this->once())->method('insertOrder')->with($insertOrder)->willReturn($mockResult);
         $this->mockDbAccess->expects($this->once())->method('rollback');
 
         // call
@@ -45,17 +51,22 @@ class DeputyshipCandidateConverterTest extends TestCase
         self::assertEquals(DeputyshipBuilderResultOutcome::InsertOrderFailed, $builderResult->getOutcome());
 
         $error = $builderResult->getErrors()[0];
-        self::assertStringContainsString('could not insert court order with UID '.$orderUid, $error);
+        self::assertStringContainsString($expectedError, $error);
     }
 
     public function testConvertOrderCouldNotBeFoundFail(): void
     {
         $orderUid = '1122334466';
+        $expectedError = 'could not find court order';
 
         $candidateGroup = new DeputyshipCandidatesGroup();
         $candidateGroup->orderUid = $orderUid;
 
-        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn(null);
+        $mockResult = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $mockResult->success = false;
+        $mockResult->error = $expectedError;
+
+        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult);
 
         // call
         $builderResult = $this->sut->convert($candidateGroup, false);
@@ -64,7 +75,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         self::assertEquals(DeputyshipBuilderResultOutcome::NoExistingOrder, $builderResult->getOutcome());
 
         $error = $builderResult->getErrors()[0];
-        self::assertStringContainsString('could not find court order with UID '.$orderUid, $error);
+        self::assertStringContainsString($expectedError, $error);
     }
 
     // so long as the court order was inserted/found, the conversion is considered a success, even if
@@ -73,6 +84,7 @@ class DeputyshipCandidateConverterTest extends TestCase
     {
         $orderUid = '1122334477';
         $orderId = 1;
+        $expectedError = 'insert order deputy not applied';
 
         $insertOrderDeputyCandidate = ['action' => DeputyshipCandidateAction::InsertOrderDeputy];
 
@@ -80,14 +92,22 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidateGroup->orderUid = $orderUid;
         $candidateGroup->insertOthers[] = $insertOrderDeputyCandidate;
 
-        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($orderId);
+        $mockResult1 = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $mockResult1->success = true;
+        $mockResult1->data = $orderId;
+
+        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult1);
         $this->mockDbAccess->expects($this->once())->method('endTransaction');
 
         // inserting the court_order_deputy entry fails
+        $mockResult2 = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $mockResult2->success = false;
+        $mockResult2->error = $expectedError;
+
         $this->mockDbAccess->expects($this->once())
             ->method('insertOrderDeputy')
             ->with($orderId, $insertOrderDeputyCandidate)
-            ->willReturn(false);
+            ->willReturn($mockResult2);
 
         // call
         $builderResult = $this->sut->convert($candidateGroup, false);
@@ -96,7 +116,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         self::assertEquals(DeputyshipBuilderResultOutcome::CandidatesApplied, $builderResult->getOutcome());
 
         $error = $builderResult->getErrors()[0];
-        self::assertStringContainsString('insert order deputy not applied for court order UID '.$orderUid, $error);
+        self::assertStringContainsString($expectedError, $error);
     }
 
     // a dry run looks just like a normal run, except none of the converted candidates are saved to the database
@@ -110,8 +130,16 @@ class DeputyshipCandidateConverterTest extends TestCase
         $candidateGroup->orderUid = $orderUid;
         $candidateGroup->insertOrder = $insertOrder;
 
-        $this->mockDbAccess->expects($this->once())->method('insertOrder')->with($insertOrder)->willReturn(true);
-        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn(1);
+        $mockResult1 = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $mockResult1->action = DeputyshipCandidateAction::InsertOrder;
+        $mockResult1->success = true;
+
+        $mockResult2 = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $mockResult2->success = true;
+        $mockResult2->data = 1;
+
+        $this->mockDbAccess->expects($this->once())->method('insertOrder')->with($insertOrder)->willReturn($mockResult1);
+        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult2);
 
         // expect rollback as this is a dry run
         $this->mockDbAccess->expects($this->once())->method('rollback');
@@ -138,17 +166,24 @@ class DeputyshipCandidateConverterTest extends TestCase
         $updateOrderStatus = ['action' => DeputyshipCandidateAction::UpdateOrderStatus];
         $updateDeputyStatus = ['action' => DeputyshipCandidateAction::UpdateDeputyStatus];
 
+        $findOrderResult = $this->createMockResult(DeputyshipCandidateAction::FindOrder, data: $orderId);
+        $insertOrderDeputyResult = $this->createMockResult(DeputyshipCandidateAction::InsertOrderDeputy);
+        $insertOrderReportResult = $this->createMockResult(DeputyshipCandidateAction::InsertOrderReport);
+        $insertOrderNdrResult = $this->createMockResult(DeputyshipCandidateAction::InsertOrderNdr);
+        $updateOrderStatusResult = $this->createMockResult(DeputyshipCandidateAction::UpdateOrderStatus);
+        $updateDeputyStatusResult = $this->createMockResult(DeputyshipCandidateAction::UpdateDeputyStatus);
+
         $candidateGroup = new DeputyshipCandidatesGroup();
         $candidateGroup->orderUid = $orderUid;
         $candidateGroup->insertOthers = [$insertOrderDeputy, $insertOrderReport, $insertOrderNdr];
         $candidateGroup->updates = [$updateOrderStatus, $updateDeputyStatus];
 
-        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($orderId);
-        $this->mockDbAccess->expects($this->once())->method('insertOrderDeputy')->with($orderId, $insertOrderDeputy)->willReturn(true);
-        $this->mockDbAccess->expects($this->once())->method('insertOrderReport')->with($orderId, $insertOrderReport)->willReturn(true);
-        $this->mockDbAccess->expects($this->once())->method('insertOrderNdr')->with($orderId, $insertOrderNdr)->willReturn(true);
-        $this->mockDbAccess->expects($this->once())->method('updateOrderStatus')->with($orderId, $updateOrderStatus)->willReturn(true);
-        $this->mockDbAccess->expects($this->once())->method('updateDeputyStatus')->with($orderId, $updateDeputyStatus)->willReturn(true);
+        $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($findOrderResult);
+        $this->mockDbAccess->expects($this->once())->method('insertOrderDeputy')->with($orderId, $insertOrderDeputy)->willReturn($insertOrderDeputyResult);
+        $this->mockDbAccess->expects($this->once())->method('insertOrderReport')->with($orderId, $insertOrderReport)->willReturn($insertOrderReportResult);
+        $this->mockDbAccess->expects($this->once())->method('insertOrderNdr')->with($orderId, $insertOrderNdr)->willReturn($insertOrderNdrResult);
+        $this->mockDbAccess->expects($this->once())->method('updateOrderStatus')->with($orderId, $updateOrderStatus)->willReturn($updateOrderStatusResult);
+        $this->mockDbAccess->expects($this->once())->method('updateDeputyStatus')->with($orderId, $updateDeputyStatus)->willReturn($updateDeputyStatusResult);
         $this->mockDbAccess->expects($this->once())->method('endTransaction');
 
         // call
@@ -158,5 +193,18 @@ class DeputyshipCandidateConverterTest extends TestCase
         self::assertEquals(DeputyshipBuilderResultOutcome::CandidatesApplied, $builderResult->getOutcome());
 
         self::assertEquals(5, $builderResult->getNumCandidatesApplied());
+    }
+
+    private function createMockResult(
+        DeputyshipCandidateAction $action,
+        bool $success = true,
+        mixed $data = null,
+    ): DeputyshipProcessingRawDbAccessResult&MockObject {
+        $result = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
+        $result->action = $action;
+        $result->success = $success;
+        $result->data = $data;
+
+        return $result;
     }
 }
