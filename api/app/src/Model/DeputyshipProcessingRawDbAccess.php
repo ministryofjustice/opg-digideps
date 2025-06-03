@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -39,12 +40,12 @@ class DeputyshipProcessingRawDbAccess
     }
 
     /**
-     * @return ?int This is null if there are multiple or no matching orders
+     * @return DeputyshipProcessingRawDbAccessResult $result is the ID int value, or null if not found
      */
-    public function findOrderId(?string $orderUid): ?int
+    public function findOrderId(?string $orderUid): DeputyshipProcessingRawDbAccessResult
     {
         if (is_null($orderUid)) {
-            return null;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::FindOrder, false);
         }
 
         $rsm = new ResultSetMapping();
@@ -57,24 +58,26 @@ class DeputyshipProcessingRawDbAccess
             /** @var int $result */
             $result = $query->getSingleScalarResult();
 
-            return $result;
-        } catch (\Exception) {
-            return null;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::FindOrder, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf('could not find court order with UID %s; exception was: %s', $orderUid, $e->getMessage());
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::FindOrder, false, null, $message);
         }
     }
 
-    public function insertOrder(array $insertOrder): bool
+    public function insertOrder(array $insertOrder): DeputyshipProcessingRawDbAccessResult
     {
         try {
             $orderMadeDate = new \DateTime($insertOrder['orderMadeDate'] ?? '');
-        } catch (\Exception) {
-            return false;
+        } catch (\Exception $e) {
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrder, false, null, $e->getMessage());
         }
 
         try {
             $qb = $this->ingestWriterEm->getConnection()->createQueryBuilder();
 
-            $qb->insert('court_order')
+            $result = $qb->insert('court_order')
                 ->values(
                     [
                         'court_order_uid' => ':courtOrderUid',
@@ -91,19 +94,25 @@ class DeputyshipProcessingRawDbAccess
                 ->setParameter('orderMadeDate', $orderMadeDate->format('Y-m-d'))
                 ->executeQuery();
 
-            return true;
-        } catch (\Exception) {
-            return false;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrder, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'insert order not applied for court order UID %s; exception was: %s',
+                $insertOrder['orderUid'],
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrder, false, null, $message);
         }
     }
 
-    public function insertOrderDeputy(int $courtOrderId, array $candidate): bool
+    public function insertOrderDeputy(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $deputyId = $candidate['deputyId'];
         $deputyActive = true === $candidate['deputyStatusOnOrder'];
 
         try {
-            $this->ingestWriterEm->getConnection()->createQueryBuilder()
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->insert('court_order_deputy')
                 ->values(
                     [
@@ -115,18 +124,26 @@ class DeputyshipProcessingRawDbAccess
                 ->setParameter('deputyActive', $deputyActive ? 'true' : 'false')
                 ->executeQuery();
 
-            return true;
-        } catch (\Exception) {
-            return false;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderDeputy, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'insert order deputy not applied for court order with UID %s (order ID %d, deputy ID %d); exception was: %s',
+                $candidate['orderUid'],
+                $courtOrderId,
+                $deputyId,
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderDeputy, false, null, $message);
         }
     }
 
-    public function insertOrderReport(int $courtOrderId, array $candidate): bool
+    public function insertOrderReport(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $reportId = $candidate['reportId'];
 
         try {
-            $this->ingestWriterEm->getConnection()->createQueryBuilder()
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->insert('court_order_report')
                 ->values(
                     [
@@ -136,55 +153,78 @@ class DeputyshipProcessingRawDbAccess
                 )
                 ->executeQuery();
 
-            return true;
-        } catch (\Exception) {
-            return false;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderReport, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'insert order report not applied for court order UID %s (order ID %d, report ID %d); exception was %s',
+                $candidate['orderUid'],
+                $courtOrderId,
+                $reportId,
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderReport, false, null, $message);
         }
     }
 
-    public function insertOrderNdr(int $courtOrderId, array $candidate): bool
+    public function insertOrderNdr(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $ndrId = $candidate['ndrId'];
 
         try {
-            $this->ingestWriterEm->getConnection()->createQueryBuilder()
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order')
                 ->set('ndr_id', $ndrId)
                 ->where('id = :id')
                 ->setParameter('id', $courtOrderId)
                 ->executeQuery();
 
-            return true;
-        } catch (\Exception) {
-            return false;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderNdr, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'insert order ndr not applied for court order UID %s (order ID %d, NDR ID %d); exception was %s',
+                $candidate['orderUid'],
+                $courtOrderId,
+                $ndrId,
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderNdr, false, null, $message);
         }
     }
 
-    public function updateOrderStatus(int $courtOrderId, array $candidate): bool
+    public function updateOrderStatus(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $courtOrderStatus = $candidate['status'];
 
         try {
-            $this->ingestWriterEm->getConnection()->createQueryBuilder()
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order')
                 ->set('status', $courtOrderStatus)
                 ->where('id = :id')
                 ->setParameter('id', $courtOrderId)
                 ->executeQuery();
 
-            return true;
-        } catch (\Exception) {
-            return false;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::UpdateOrderStatus, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'update order status not applied for court order UID %s (order ID %d); exception was %s',
+                $candidate['orderUid'],
+                $courtOrderId,
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::UpdateOrderStatus, false, null, $message);
         }
     }
 
-    public function updateDeputyStatus(int $courtOrderId, array $candidate): bool
+    public function updateDeputyStatus(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $isActive = true === $candidate['deputyStatusOnOrder'];
         $deputyId = $candidate['deputyId'];
 
         try {
-            $this->ingestWriterEm->getConnection()->createQueryBuilder()
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order_deputy')
                 ->set('is_active', $isActive ? 'true' : 'false')
                 ->where('court_order_id = :courtOrderId')
@@ -193,9 +233,17 @@ class DeputyshipProcessingRawDbAccess
                 ->setParameter('deputyId', $deputyId)
                 ->executeQuery();
 
-            return true;
-        } catch (\Exception) {
-            return false;
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::UpdateDeputyStatus, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'update deputy status on order not applied for court order UID %s (order ID %d, deputy ID %d); exception was %s',
+                $candidate['orderUid'],
+                $courtOrderId,
+                $deputyId,
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::UpdateDeputyStatus, false, null, $message);
         }
     }
 }
