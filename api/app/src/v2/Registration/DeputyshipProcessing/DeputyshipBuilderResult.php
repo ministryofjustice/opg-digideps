@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\Model\DeputyshipProcessingRawDbAccessResult;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
@@ -84,18 +85,18 @@ class DeputyshipBuilderResult
 
     /**
      * Record the result of applying a candidate to the database.
-     * If $success is true, the insert or update was a success; otherwise, it failed, and $messageOnFailure is stored.
+     * If $result->success is true, the insert or update was a success; otherwise, it failed, and exception message is stored.
      */
-    public function addCandidateResult(DeputyshipCandidateAction $action, bool $success, ?string $messageOnFailure = null): void
+    public function addCandidateResult(DeputyshipProcessingRawDbAccessResult $result): void
     {
-        if ($success) {
+        if ($result->success) {
             ++$this->numCandidatesApplied;
-            ++$this->candidatesApplied[$action->value];
+            ++$this->candidatesApplied[$result->action->value];
         } else {
             ++$this->numCandidatesFailed;
 
-            if (!is_null($messageOnFailure)) {
-                $this->errors[] = $messageOnFailure;
+            if (!is_null($result->error)) {
+                $this->errors[] = $result->error;
             }
         }
     }
