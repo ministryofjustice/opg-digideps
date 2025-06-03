@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
 use App\Service\Auth\AuthService;
@@ -88,6 +87,8 @@ class SelfRegisterController extends RestController
             'case_number' => 'setCaseNumber',
         ]);
 
+        $selfRegisterData->replaceUnicodeChars();
+
         $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
@@ -95,39 +96,28 @@ class SelfRegisterController extends RestController
         }
 
         try {
-            $matchedCodeputies = $userRegistrationService->validateCoDeputy($selfRegisterData);
+            $coDeputyUid = $userRegistrationService->validateCoDeputy($selfRegisterData);
 
-            if (1 !== count($matchedCodeputies)) {
-                // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
-                $message = sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber());
-                throw new \RuntimeException(json_encode($message) ?: '', 462);
-            }
-
-            // check if it's the primary account for the co-deputy
-            $coDeputyUid = $matchedCodeputies[0]->getDeputyUid();
             $existingDeputyAccounts = $this->em->getRepository(User::class)->findBy(['deputyUid' => $coDeputyUid]);
 
-            $existingDeputyCase = $this->em->getRepository(Client::class)->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
-            if (!empty($existingDeputyCase)) {
-                $message = sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber());
-                throw new \RuntimeException(json_encode($message) ?: '', 463);
-            }
+            $this->logger->warning(
+                'PreRegistration codeputy validation success: ',
+                ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]
+            );
 
-            $this->logger->warning('PreRegistration codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
+            $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
+
+            return ['verified' => true, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
         } catch (\Throwable $e) {
             $this->logger->warning('PreRegistration codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
-
-        $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
-
-        return ['verified' => true, 'coDeputyUid' => $coDeputyUid, 'existingDeputyAccounts' => $existingDeputyAccounts];
     }
 
     #[Route(path: '/updatecodeputy/{userId}', requirements: ['userId' => '\d+'], methods: ['PUT'])]
     public function updateCoDeputyWithVerificationData(Request $request, $userId): User
     {
-        $user = $this->em->getRepository('App\Entity\User')->findOneBy(['id' => $userId]);
+        $user = $this->em->getRepository(User::class)->findOneBy(['id' => $userId]);
 
         $coDeputyVerificationData = $this->formatter->deserializeBodyContent($request);
 
@@ -150,18 +140,5 @@ class SelfRegisterController extends RestController
         $this->formatter->setJmsSerialiserGroups(['user', 'verify-codeputy']);
 
         return $user;
-    }
-
-    public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)
-    {
-        $this->hydrateEntityWithArrayData($selfRegisterData, $data, [
-            'firstname' => 'setFirstname',
-            'lastname' => 'setLastname',
-            'email' => 'setEmail',
-            'postcode' => 'setPostcode',
-            'client_firstname' => 'setClientFirstname',
-            'client_lastname' => 'setClientLastname',
-            'case_number' => 'setCaseNumber',
-        ]);
     }
 }
