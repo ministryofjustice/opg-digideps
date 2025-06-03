@@ -8,11 +8,6 @@ variable "subnet_id" {
   type        = string
 }
 
-variable "security_group_ids" {
-  description = "List of security group IDs"
-  type        = list(string)
-}
-
 variable "name" {
   description = "Name tag for the EC2 instance"
   type        = string
@@ -26,11 +21,6 @@ variable "tags" {
 variable "vpc_id" {
   description = "The VPC ID where the EC2 and endpoints are created"
   type        = string
-}
-
-variable "private_subnet_ids" {
-  description = "List of private subnet IDs for VPC endpoints"
-  type        = list(string)
 }
 
 variable "endpoint_sg_id" {

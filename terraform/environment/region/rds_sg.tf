@@ -35,20 +35,6 @@ locals {
       target_type = "security_group_id"
       target      = data.aws_security_group.lambda_custom_sql.id
     }
-    ssm_instance_access = {
-      port        = 443
-      protocol    = "tcp"
-      type        = "ingress"
-      target_type = "security_group_id"
-      target      = module.api_rds_security_group.id
-    }
-    ssm_instance_access_egress = {
-      port        = 443
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "cidr_block"
-      target      = "0.0.0.0/0"
-    }
   }
 }
 
