@@ -22,3 +22,18 @@ variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
 }
+
+variable "vpc_id" {
+  description = "The VPC ID where the EC2 and endpoints are created"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for VPC endpoints"
+  type        = list(string)
+}
+
+variable "endpoint_sg_id" {
+  description = "Security group ID that allows access to VPC endpoints"
+  type        = string
+}

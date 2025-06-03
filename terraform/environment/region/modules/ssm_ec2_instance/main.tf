@@ -3,19 +3,14 @@ resource "aws_instance" "ssm_ec2" {
   ami                         = data.aws_ami.amazon_linux_2023.id
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
-  vpc_security_group_ids      = var.security_group_ids #i think we are missing some vpc endpoints so it can connect idk though.
+  vpc_security_group_ids      = var.security_group_ids
   iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
-  user_data                   = data.template_file.bootscript.rendered
+  user_data                   = templatefile("${path.module}/boot.sh.tpl", {})
   associate_public_ip_address = false
 
   tags = merge(var.tags, {
     Name = var.name
   })
-}
-
-#Defines the Bootscript Script (Found in this Module)
-data "template_file" "bootscript" {
-  template = file("${path.module}/boot.sh.tpl")
 }
 
 #Creates a new assumable role
@@ -46,4 +41,30 @@ data "aws_iam_policy_document" "ssm_assume_role" {
       identifiers = ["ec2.amazonaws.com"]
     }
   }
+}
+
+#VPC Endpoints to allow Connectivity
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id             = var.vpc_id
+  service_name       = "com.amazonaws.eu-west-1.ssm"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = var.private_subnet_ids
+  security_group_ids = [var.endpoint_sg_id]
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id             = var.vpc_id
+  service_name       = "com.amazonaws.eu-west-1.ssmmessages"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = var.private_subnet_ids
+  security_group_ids = [var.endpoint_sg_id]
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id             = var.vpc_id
+  service_name       = "com.amazonaws.eu-west-1.ec2messages"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = var.private_subnet_ids
+  security_group_ids = [var.endpoint_sg_id]
 }
