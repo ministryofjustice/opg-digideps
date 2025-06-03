@@ -18,7 +18,7 @@ class PreRegistrationVerificationService
     }
 
     /**
-     * Throw error 400 if preregistration has no record matching case number,
+     * Throw error 4** if preregistration has no record matching case number,
      * client surname, deputy firstname and surname, and postcode (if set).
      *
      * @return PreRegistration[]
