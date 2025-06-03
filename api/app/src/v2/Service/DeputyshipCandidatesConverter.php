@@ -35,7 +35,12 @@ class DeputyshipCandidatesConverter
             } else {
                 $this->dbAccess->rollback();
 
-                return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::InsertOrderFailed, [$result->error]);
+                $errors = [];
+                if (!is_null($result->error)) {
+                    $errors[] = $result->error;
+                }
+
+                return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::InsertOrderFailed, $errors);
             }
         }
 
@@ -43,7 +48,12 @@ class DeputyshipCandidatesConverter
 
         // court order could not be found
         if (!$result->success) {
-            return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::NoExistingOrder, [$result->error]);
+            $errors = [];
+            if (!is_null($result->error)) {
+                $errors[] = $result->error;
+            }
+
+            return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::NoExistingOrder, $errors);
         }
 
         /** @var int $courtOrderId */
