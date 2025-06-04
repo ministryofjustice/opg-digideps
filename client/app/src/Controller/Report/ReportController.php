@@ -344,13 +344,10 @@ class ReportController extends AbstractController
      * @Route("/report/create/{clientId}/{deputyUid}", name="report_create")
      *
      * @Template("@App/Report/Report/create.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId, $deputyUid)
+    public function createAction(Request $request, int $clientId, string $deputyUid): array|RedirectResponse
     {
-        // TODO we can't just use the client to determine the report type; we also need the deputy UID
-        // so we can determine whether they are co-deputy, dual etc.
+        /** @var Client $client */
         $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
 
         $report = new Report();
@@ -366,10 +363,8 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // the report type is looked up on the API side based on the client (see <api>/ReportController::addAction),
-            // but we also need to know the deputy
-            // TODO pass the deputy UID as part of this POST request
-            $this->restClient->post('report', $form->getData());
+            // the report type is looked up on the API side based on the client and deputy (see <api>/ReportController::addAction)
+            $this->restClient->post(sprintf('report/%s', $deputyUid), $form->getData());
 
             $user = $this->userApi->getUserWithData();
             $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);

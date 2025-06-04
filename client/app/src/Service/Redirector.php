@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use Psr\Log\LoggerInterface;
@@ -28,6 +29,7 @@ class Redirector
         protected RequestStack $requestStack,
         protected string $env,
         private ClientApi $clientApi,
+        private ReportService $reportService,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -162,10 +164,17 @@ class Redirector
         /** @var Client $activeClient */
         $activeClient = $this->clientApi->getById($activeClientId);
 
+        // check whether the active client has a compatible report
+        $reportType = $this->reportService->getReportTypeBasedOnSirius($activeClient, $deputyUid);
+
         $hasCompatibleReport = false;
+
+        /** @var Report $report */
         foreach ($activeClient->getReports() as $report) {
-            // TODO check report type compatibility rather than just checking whether there's any report at all
-            $hasCompatibleReport = true;
+            if ($report->getType() === $reportType) {
+                $hasCompatibleReport = true;
+                break;
+            }
         }
 
         // redirect to create report if no compatible report exists
