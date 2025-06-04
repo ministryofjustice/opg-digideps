@@ -21,9 +21,6 @@ class DeputyshipCandidateConverterTest extends TestCase
     {
         $this->mockDbAccess = $this->createMock(DeputyshipProcessingRawDbAccess::class);
 
-        // this always happens, regardless
-        $this->mockDbAccess->expects($this->once())->method('beginTransaction');
-
         $this->sut = new DeputyshipCandidatesConverter($this->mockDbAccess);
     }
 
@@ -41,6 +38,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $mockResult->success = false;
         $mockResult->error = $expectedError;
 
+        $this->mockDbAccess->expects($this->once())->method('beginTransaction');
         $this->mockDbAccess->expects($this->once())->method('insertOrder')->with($insertOrder)->willReturn($mockResult);
         $this->mockDbAccess->expects($this->once())->method('rollback');
 
@@ -66,6 +64,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $mockResult->success = false;
         $mockResult->error = $expectedError;
 
+        $this->mockDbAccess->expects($this->once())->method('beginTransaction');
         $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult);
 
         // call
@@ -96,8 +95,9 @@ class DeputyshipCandidateConverterTest extends TestCase
         $mockResult1->success = true;
         $mockResult1->data = $orderId;
 
+        $this->mockDbAccess->expects($this->exactly(2))->method('beginTransaction');
         $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult1);
-        $this->mockDbAccess->expects($this->once())->method('endTransaction');
+        $this->mockDbAccess->expects($this->once())->method('rollback');
 
         // inserting the court_order_deputy entry fails
         $mockResult2 = $this->createMock(DeputyshipProcessingRawDbAccessResult::class);
@@ -184,7 +184,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $this->mockDbAccess->expects($this->once())->method('insertOrderNdr')->with($orderId, $insertOrderNdr)->willReturn($insertOrderNdrResult);
         $this->mockDbAccess->expects($this->once())->method('updateOrderStatus')->with($orderId, $updateOrderStatus)->willReturn($updateOrderStatusResult);
         $this->mockDbAccess->expects($this->once())->method('updateDeputyStatus')->with($orderId, $updateDeputyStatus)->willReturn($updateDeputyStatusResult);
-        $this->mockDbAccess->expects($this->once())->method('endTransaction');
+        $this->mockDbAccess->expects($this->exactly(5))->method('endTransaction');
 
         // call
         $builderResult = $this->sut->convert($candidateGroup, false);
