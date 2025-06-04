@@ -325,12 +325,14 @@ class ReportService
     }
 
     /**
-     * Set report type based on CasRec record (if existing).
+     * Set report type based on Sirius record (if existing).
      *
      * @throws \Exception
      */
     public function getReportTypeBasedOnSirius(Client $client): ?string
     {
+        // TODO fix dodgy logic - this needs to get the report type based on the specific pre-reg row for the deputy,
+        // not just on the first row in the pre-reg table with matching case number
         $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
         if (
