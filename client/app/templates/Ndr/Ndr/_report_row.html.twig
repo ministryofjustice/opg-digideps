@@ -34,7 +34,7 @@
         </div>
         {% set link = reportActive ?
         path('report_overview', {'reportId': reportActive.id})
-        : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
+        : path('report_create', {'clientId': client.id, 'deputyUid': deputyUid}) %}
         <div class="opg-card__actions">
             <a href="{{ link }}" class="button behat-link-report-start" >{{ ('status.' ~ status) | trans({}, 'common') }}</a>
         </div>

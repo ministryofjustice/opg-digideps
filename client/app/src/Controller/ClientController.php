@@ -186,7 +186,7 @@ class ClientController extends AbstractController
 
                 $url = $currentUser->isNdrEnabled()
                     ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
-                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+                    : $this->generateUrl('report_create', ['clientId' => $response['id'], 'deputyUid' => $user->getDeputyUid()]);
 
                 if ($currentUser->isNdrEnabled()) {
                     $event = new RegistrationSucceededEvent($currentUser);
