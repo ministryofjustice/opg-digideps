@@ -15,21 +15,43 @@ resource "aws_instance" "ssm_ec2" {
 
 resource "aws_security_group" "ssm_instance_sg" {
   name        = "${var.environment}-ssm-instance"
-  description = "Security group for EC2 instance managed via SSM"
   vpc_id      = var.vpc_id
-
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  description = "SSM EC2 instance SG"
 
   tags = merge(var.tags, {
     Name = "ssm-instance"
   })
 }
 
+resource "aws_security_group" "ssm_endpoint_sg" {
+  name        = "${var.environment}-ssm-endpoints"
+  vpc_id      = var.vpc_id
+  description = "VPC endpoint SG"
+
+  tags = merge(var.tags, {
+    Name = "ssm-endpoint"
+  })
+}
+
+resource "aws_security_group_rule" "egress_to_endpoints" {
+  type                     = "egress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ssm_instance_sg.id
+  source_security_group_id = aws_security_group.ssm_endpoint_sg.id
+  description              = "Allow EC2 to reach endpoints"
+}
+
+resource "aws_security_group_rule" "ingress_from_ec2" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ssm_endpoint_sg.id
+  source_security_group_id = aws_security_group.ssm_instance_sg.id
+  description              = "Allow endpoint to receive from EC2"
+}
 
 #Creates a new assumable role
 resource "aws_iam_role" "ssm_role" {
@@ -66,22 +88,22 @@ resource "aws_vpc_endpoint" "ssm" {
   vpc_id             = var.vpc_id
   service_name       = "com.amazonaws.eu-west-1.ssm"
   vpc_endpoint_type  = "Interface"
-  subnet_ids = [var.subnet_id]
-  security_group_ids = [var.endpoint_sg_id]
+  subnet_ids         = [var.subnet_id]
+  security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
 }
 
 resource "aws_vpc_endpoint" "ssmmessages" {
   vpc_id             = var.vpc_id
   service_name       = "com.amazonaws.eu-west-1.ssmmessages"
   vpc_endpoint_type  = "Interface"
-  subnet_ids = [var.subnet_id]
-  security_group_ids = [var.endpoint_sg_id]
+  subnet_ids         = [var.subnet_id]
+  security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
 }
 
 resource "aws_vpc_endpoint" "ec2messages" {
   vpc_id             = var.vpc_id
   service_name       = "com.amazonaws.eu-west-1.ec2messages"
   vpc_endpoint_type  = "Interface"
-  subnet_ids = [var.subnet_id]
-  security_group_ids = [var.endpoint_sg_id]
+  subnet_ids         = [var.subnet_id]
+  security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
 }

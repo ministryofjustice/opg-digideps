@@ -7,5 +7,5 @@ module "ssm_ec2_instance" {
   tags               = var.default_tags
 
   vpc_id             = data.aws_vpc.vpc.id
-  endpoint_sg_id     = module.api_rds_security_group.id
+  environment        = local.environment
 }

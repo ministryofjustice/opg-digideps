@@ -23,7 +23,7 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "endpoint_sg_id" {
-  description = "Security group ID that allows access to VPC endpoints"
+variable "environment" {
+  description = "The environment the SSM will be deployed in."
   type        = string
 }
