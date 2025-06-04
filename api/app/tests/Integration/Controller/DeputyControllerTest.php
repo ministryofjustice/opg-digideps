@@ -112,7 +112,7 @@ class DeputyControllerTest extends WebTestCase
 
     public function testDeputyReportUrlNeedsAuth()
     {
-        self::$client->assertEndpointNeedsAuth('GET', '/v2/deputy/7999999990/reports');
+        self::$client->assertEndpointNeedsAuth('GET', '/v2/deputy/7999999990/courtorders');
     }
 
     public function testGetDeputyReportsNotFound()
@@ -130,7 +130,7 @@ class DeputyControllerTest extends WebTestCase
         // make the API call
         self::$client->assertJsonRequest(
             'GET',
-            '/v2/deputy/7000000000/reports',
+            '/v2/deputy/7000000000/courtorders',
             ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
 
@@ -155,7 +155,7 @@ class DeputyControllerTest extends WebTestCase
         // Make API call
         $responseJson = self::$client->assertJsonRequest(
             'GET',
-            "/v2/deputy/{$deputyUid}/reports",
+            "/v2/deputy/{$deputyUid}/courtorders",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
 
@@ -208,7 +208,7 @@ class DeputyControllerTest extends WebTestCase
         // Make API call
         $responseJson = self::$client->assertJsonRequest(
             'GET',
-            "/v2/deputy/{$deputyUid}/reports",
+            "/v2/deputy/{$deputyUid}/courtorders",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
 

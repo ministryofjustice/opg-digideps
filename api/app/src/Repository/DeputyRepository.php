@@ -58,8 +58,7 @@ class DeputyRepository extends ServiceEntityRepository
             WHERE d.deputy_uid = :deputyUid
             AND r.id = re.id
         ) AS "courtOrderUid",
-        r.type AS "type",
-        r.id AS "reportId"
+        r.type AS "type"
         FROM report r
         INNER JOIN court_order_report cor ON r.id = cor.report_id
         INNER JOIN court_order co ON cor.court_order_id = co.id
@@ -81,11 +80,21 @@ class DeputyRepository extends ServiceEntityRepository
             ->getConnection()
             ->prepare($sql)
             ->executeQuery(['deputyUid' => (string) $uid]);
-
+        /** @var Array<int, Array<array-key, string>> $result */
         $result = $query->fetchAllAssociative();
 
         $data = [];
         foreach ($result as $line) {
+            // This is required due to Hybrids, as we want to return single line results, from the above query
+            // so we need to split this so we can populate the link to the correct page.
+            if (preg_match('{,}', $line['courtOrderUid'])) {
+                $courtOrderUids = explode(', ', $line['courtOrderUid']);
+                $courtOrderLink = $courtOrderUids[0];
+
+            } else {
+                $courtOrderLink = $line['courtOrderUid'];
+            }
+
             $data[] = [
                 'client' => [
                     'firstName' => $line['firstName'],
@@ -97,7 +106,8 @@ class DeputyRepository extends ServiceEntityRepository
                     'type' => $line['type'],
                 ],
                 'courtOrder' => [
-                    'courtOrderUid' => $line['courtOrderUid']
+                    'courtOrderUid' => $line['courtOrderUid'],
+                    'courtOrderLink' => $courtOrderLink
                 ]
             ];
         }

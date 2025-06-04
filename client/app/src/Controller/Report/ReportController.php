@@ -268,6 +268,7 @@ class ReportController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
+        // ACTION: Move logic to service class
         // redirect back to log out page if signing in with non-primary account with primary email
         $redirect = $this->redirectNonPrimaryAccount($user);
         if (!is_null($redirect)) {
