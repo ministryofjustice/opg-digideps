@@ -236,6 +236,7 @@ class ReportController extends AbstractController
             return array_merge([
                 'ndrEnabled' => true,
                 'client' => $client,
+                'deputyUid' => $user->getDeputyUid(),
                 'ndr' => $client->getNdr(),
                 'reportsSubmitted' => $client->getSubmittedReports(),
                 'reportActive' => $client->getActiveReport(),
@@ -340,13 +341,13 @@ class ReportController extends AbstractController
     /**
      * Create report.
      *
-     * @Route("/report/create/{clientId}", name="report_create")
+     * @Route("/report/create/{clientId}/{deputyUid}", name="report_create")
      *
      * @Template("@App/Report/Report/create.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId)
+    public function createAction(Request $request, $clientId, $deputyUid)
     {
         // TODO we can't just use the client to determine the report type; we also need the deputy UID
         // so we can determine whether they are co-deputy, dual etc.
@@ -365,7 +366,9 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // the report type is looked up on the API side based on the client (see <api>/ReportController::addAction)
+            // the report type is looked up on the API side based on the client (see <api>/ReportController::addAction),
+            // but we also need to know the deputy
+            // TODO pass the deputy UID as part of this POST request
             $this->restClient->post('report', $form->getData());
 
             $user = $this->userApi->getUserWithData();

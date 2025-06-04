@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use Psr\Log\LoggerInterface;
@@ -127,56 +128,11 @@ class Redirector
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    /**
-     * @return string
-     */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null)
+    private function getLayDeputyHomepage(User $user, ?int $activeClientId = null): string
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
-        }
-
-        // redirect to create report if report is not created
-        $allActiveClients = [];
-
-        $deputyUid = $user->getDeputyUid();
-        if (is_null($deputyUid)) {
-            $this->logger->error(
-                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
-                '(via Redirector::getLayDeputyHomepage)'
-            );
-        } else {
-            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
-        }
-
-        if (is_null($allActiveClients)) {
-            $this->logger->error(
-                "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
-                '(via Redirector::getLayDeputyHomepage)'
-            );
-            $allActiveClients = [];
-        }
-
-        foreach ($allActiveClients as $activeClient) {
-            if (count($activeClient->getReportIds()) >= 1) {
-                break;
-            }
-
-            if (!$user->isNdrEnabled()) {
-                $clientId = $user->getIdOfClientWithDetails();
-                if (is_null($clientId)) {
-                    $this->logger->error(
-                        "Unable to get client ID for user with ID {$user->getId()}; ".
-                        'getIdOfClientWithDetails() returned a null value'
-                    );
-
-                    // attempt to rectify failed client ID fetch by using the active client's ID instead
-                    $clientId = $activeClient->getId();
-                }
-
-                return $this->router->generate('report_create', ['clientId' => $clientId]);
-            }
         }
 
         if (is_null($activeClientId)) {
@@ -190,6 +146,31 @@ class Redirector
 
                 return $this->router->generate('invalid_data');
             }
+        }
+
+        $deputyUid = $user->getDeputyUid();
+        if (is_null($deputyUid)) {
+            $this->logger->error(
+                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                '(via Redirector::getLayDeputyHomepage)'
+            );
+
+            return $this->router->generate('invalid_data');
+        }
+
+        // get the active client
+        /** @var Client $activeClient */
+        $activeClient = $this->clientApi->getById($activeClientId);
+
+        $hasCompatibleReport = false;
+        foreach ($activeClient->getReports() as $report) {
+            // TODO check report type compatibility rather than just checking whether there's any report at all
+            $hasCompatibleReport = true;
+        }
+
+        // redirect to create report if no compatible report exists
+        if (!$hasCompatibleReport && !$user->isNdrEnabled()) {
+            return $this->router->generate('report_create', ['clientId' => $activeClientId, 'deputyUid' => $deputyUid]);
         }
 
         return $this->router->generate('lay_home', ['clientId' => $activeClientId]);
