@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -29,7 +30,7 @@ class Redirector
         protected RequestStack $requestStack,
         protected string $env,
         private ClientApi $clientApi,
-        private ReportService $reportService,
+        private PreRegistrationApi $preRegistrationApi,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -165,7 +166,8 @@ class Redirector
         $activeClient = $this->clientApi->getById($activeClientId);
 
         // check whether the active client has a compatible report
-        $reportType = $this->reportService->getReportTypeBasedOnSirius($activeClient, $deputyUid);
+        $response = $this->preRegistrationApi->getReportTypeBasedOnSirius($activeClient->getCaseNumber(), $deputyUid);
+        $reportType = json_decode($response, associative: true)['data'];
 
         $hasCompatibleReport = false;
 

@@ -614,10 +614,6 @@ class Report implements ReportInterface
         $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
-        if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
-        }
-
         // check date interval overlapping other reports
         if ($dateChecks && count($client->getSubmittedReports())) {
             $unsubmittedEndDates = array_map(function ($report) {
