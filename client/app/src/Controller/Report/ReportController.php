@@ -338,28 +338,19 @@ class ReportController extends AbstractController
     }
 
     /**
-     * Create report
-     * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
-     * action "add" will instead add another report.
+     * Create report.
      *
-     * @Route("/report/{action}/{clientId}", name="report_create",
-     *   defaults={ "action" = "create"},
-     *   requirements={ "action" = "(create|add)"}
-     * )
+     * @Route("/report/create/{clientId}", name="report_create")
      *
      * @Template("@App/Report/Report/create.html.twig")
      *
      * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId, $action = false)
+    public function createAction(Request $request, $clientId)
     {
+        // TODO we can't just use the client to determine the report type; we also need the deputy UID
+        // so we can determine whether they are co-deputy, dual etc.
         $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
-
-        $existingReports = $this->reportApi->getReportsIndexedById($client);
-
-        if (count($existingReports)) {
-            throw $this->createAccessDeniedException('Client already has a report');
-        }
 
         $report = new Report();
         $report->setClient($client);
@@ -368,15 +359,13 @@ class ReportController extends AbstractController
             'report',
             ReportType::class,
             $report,
-            [
-                'translation_domain' => 'registration',
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]), // TODO useless ?
-            ]
+            ['translation_domain' => 'registration']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // the report type is looked up on the API side based on the client (see <api>/ReportController::addAction)
             $this->restClient->post('report', $form->getData());
 
             $user = $this->userApi->getUserWithData();
