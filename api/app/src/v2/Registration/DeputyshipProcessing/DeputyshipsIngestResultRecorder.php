@@ -47,7 +47,7 @@ class DeputyshipsIngestResultRecorder
     private function logMemory(string $logLevel = LogLevel::DEBUG): void
     {
         $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
-        $this->logger->debug($this->formatMessage($memMessage));
+        $this->logger->warning($this->formatMessage($memMessage));
         $this->logger->log($logLevel, $memMessage);
     }
 
@@ -103,7 +103,7 @@ class DeputyshipsIngestResultRecorder
     {
         $this->numCandidatesApplied += $builderResult->getNumCandidatesApplied();
         $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
-        $this->logger->debug($this->formatMessage('++++++++ '.$builderResult->getMessage()));
+        $this->logger->warning($this->formatMessage('++++++++ '.$builderResult->getMessage()));
         $this->logMemory();
     }
 
