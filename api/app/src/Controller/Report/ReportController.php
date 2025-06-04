@@ -77,7 +77,7 @@ class ReportController extends RestController
         ]);
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
-        $reportType = $this->reportService->getReportTypeBasedOnSirius($client, $deputyUid) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        $reportType = $this->reportService->getReportTypeBasedOnSirius($client->getCaseNumber(), $deputyUid) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 

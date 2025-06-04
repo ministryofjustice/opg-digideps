@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\AssetInterface;
 use App\Entity\BankAccountInterface;
-use App\Entity\Client;
 use App\Entity\Ndr\AssetOther as NdrAssetOther;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Ndr\Ndr;
@@ -329,10 +328,10 @@ class ReportService
      *
      * @throws \Exception
      */
-    public function getReportTypeBasedOnSirius(Client $client, string $deputyUid): ?string
+    public function getReportTypeBasedOnSirius(string $caseNumber, string $deputyUid): ?string
     {
         $preRegistration = $this->preRegistrationRepository
-            ->findOneBy(['caseNumber' => $client->getCaseNumber(), 'deputyUid' => $deputyUid]);
+            ->findOneBy(['caseNumber' => $caseNumber, 'deputyUid' => $deputyUid]);
 
         if (is_null($preRegistration)) {
             return null;

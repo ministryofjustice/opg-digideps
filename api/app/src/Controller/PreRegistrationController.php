@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
+use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -22,6 +23,7 @@ class PreRegistrationController extends RestController
         private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
         private readonly RestFormatter $formatter,
         private readonly EntityManagerInterface $em,
+        private readonly ReportService $reportService,
     ) {
         parent::__construct($em);
     }
@@ -116,5 +118,11 @@ class PreRegistrationController extends RestController
     public function clientHasCoDeputies(string $caseNumber)
     {
         return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
+    }
+
+    #[Route(path: '/report-type/{caseNumber}/{deputyUid}')]
+    public function getReportTypeByCaseNumberAndDeputyUid(string $caseNumber, string $deputyUid)
+    {
+        return $this->reportService->getReportTypeBasedOnSirius($caseNumber, $deputyUid);
     }
 }

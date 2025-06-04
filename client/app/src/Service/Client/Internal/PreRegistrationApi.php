@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Client\Internal;
 
 use App\Service\Client\RestClient;
+use Psr\Http\Message\StreamInterface;
 
 class PreRegistrationApi
 {
@@ -33,5 +34,16 @@ class PreRegistrationApi
     public function verify(mixed $clientData)
     {
         return $this->restClient->apiCall('post', 'pre-registration/verify', $clientData, 'array', []);
+    }
+
+    /**
+     * Returns a JSON-encoded string.
+     */
+    public function getReportTypeBasedOnSirius(string $caseNumber, string $deputyUid): string
+    {
+        /** @var StreamInterface $body */
+        $body = $this->restClient->get(sprintf('/pre-registration/report-type/%s/%s', $caseNumber, $deputyUid), 'raw');
+
+        return $body->getContents();
     }
 }

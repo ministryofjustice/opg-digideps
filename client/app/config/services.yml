@@ -74,6 +74,7 @@ services:
         "@request_stack",
         "%env(ROLE)%",
         '@App\Service\Client\Internal\ClientApi',
+        '@App\Service\Client\Internal\PreRegistrationApi',
         "@logger",
       ]
 
