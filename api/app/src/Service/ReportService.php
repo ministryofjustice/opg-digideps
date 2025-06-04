@@ -329,17 +329,12 @@ class ReportService
      *
      * @throws \Exception
      */
-    public function getReportTypeBasedOnSirius(Client $client): ?string
+    public function getReportTypeBasedOnSirius(Client $client, string $deputyUid): ?string
     {
-        // TODO fix dodgy logic - this needs to get the report type based on the specific pre-reg row for the deputy,
-        // not just on the first row in the pre-reg table with matching case number
-        $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
+        $preRegistration = $this->preRegistrationRepository
+            ->findOneBy(['caseNumber' => $client->getCaseNumber(), 'deputyUid' => $deputyUid]);
 
-        if (
-            !($preRegistration instanceof PreRegistration)
-            || count($client->getUsers()) < 1
-            || !$client->getUsers()->first()->isLayDeputy()
-        ) {
+        if (is_null($preRegistration)) {
             return null;
         }
 
