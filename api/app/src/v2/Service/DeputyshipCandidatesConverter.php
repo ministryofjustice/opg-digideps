@@ -30,7 +30,14 @@ class DeputyshipCandidatesConverter
         $insertOrder = $candidatesGroup->insertOrder;
         if (!is_null($insertOrder)) {
             $result = $this->dbAccess->insertOrder($insertOrder);
+
             if ($result->success) {
+                if ($dryRun) {
+                    $this->dbAccess->rollback();
+                } else {
+                    $this->dbAccess->endTransaction();
+                }
+
                 $buildResult->addCandidateResult($result);
             } else {
                 $this->dbAccess->rollback();
@@ -62,6 +69,8 @@ class DeputyshipCandidatesConverter
         foreach ($candidatesGroup->getIterator() as $candidate) {
             $action = $candidate['action'];
 
+            $this->dbAccess->beginTransaction();
+
             if (DeputyshipCandidateAction::InsertOrderDeputy === $action) {
                 $result = $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::InsertOrderReport === $action) {
@@ -73,13 +82,14 @@ class DeputyshipCandidatesConverter
             } elseif (DeputyshipCandidateAction::UpdateDeputyStatus === $action) {
                 $result = $this->dbAccess->updateDeputyStatus($courtOrderId, $candidate);
             }
-            $buildResult->addCandidateResult($result);
-        }
 
-        if ($dryRun) {
-            $this->dbAccess->rollback();
-        } else {
-            $this->dbAccess->endTransaction();
+            $buildResult->addCandidateResult($result);
+
+            if ($result->success && !$dryRun) {
+                $this->dbAccess->endTransaction();
+            } else {
+                $this->dbAccess->rollback();
+            }
         }
 
         return $buildResult;
