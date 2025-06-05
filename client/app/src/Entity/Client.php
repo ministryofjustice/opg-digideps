@@ -253,15 +253,6 @@ class Client
     private $notes;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Type("ArrayCollection<App\Entity\ClientContact>")
-     *
-     * @JMS\Groups({"clientcontacts"})
-     */
-    private $clientContacts;
-
-    /**
      * @var int
      *
      * @JMS\Type("integer")
@@ -812,22 +803,6 @@ class Client
     public function setNotes($notes)
     {
         $this->notes = $notes;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getClientContacts()
-    {
-        return $this->clientContacts;
-    }
-
-    /**
-     * @param ArrayCollection $clientContacts
-     */
-    public function setClientContacts($clientContacts)
-    {
-        $this->clientContacts = $clientContacts;
     }
 
     /**

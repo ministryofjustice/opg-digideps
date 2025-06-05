@@ -5221,11 +5221,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Client\\:\\:getClientContacts\\(\\) return type with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Client\\:\\:getFullname\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Client.php
@@ -5252,16 +5247,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Client\\:\\:removeReport\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Client\\:\\:setClientContacts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Client\\:\\:setClientContacts\\(\\) has parameter \\$clientContacts with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Entity/Client.php
 
@@ -5346,11 +5331,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$clientContacts with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$deletedAt has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Client.php
@@ -5364,76 +5344,6 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Entity/Client.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddress1\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddress2\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddress3\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddressCountry\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setAddressPostcode\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setClient\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setEmail\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setFirstName\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setJobTitle\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setLastName\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setOrgName\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setPhone\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Entity\\\\ClientContact\\:\\:setClient\\(\\) expects string, App\\\\Entity\\\\Client given\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\ClientContact\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Deputy\\:\\:getEmail\\(\\) should return \\$this\\(App\\\\Entity\\\\Deputy\\) but returns string\\.$#"
@@ -11414,16 +11324,6 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Security/ClientContactVoter.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Security/ClientContactVoter.php
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\Client\\:\\:getUserIds\\(\\)\\.$#"
