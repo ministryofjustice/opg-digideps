@@ -490,8 +490,6 @@ class ReportController extends AbstractController
             'user',
             'client-reports',
             'report', // needed ?
-            'client-clientcontacts',
-            'clientcontact',
             'client-notes',
             'notes',
         ];

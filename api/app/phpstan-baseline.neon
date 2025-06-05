@@ -3371,11 +3371,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Client\\:\\:getClientContacts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Client\\:\\:getCourtOrders\\(\\) return type with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Entity/Client.php
@@ -3466,11 +3461,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Client\\:\\:setClientContacts\\(\\) has parameter \\$clientContacts with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Client\\:\\:setCourtOrders\\(\\) has parameter \\$courtOrders with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Entity/Client.php
@@ -3497,11 +3487,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$caseNumber \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$clientContacts with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Entity/Client.php
 
@@ -3539,11 +3524,6 @@ parameters:
 			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$users has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Client.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\ClientContact\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\CourtOrder\\:\\:setCreatedAtAutomatically\\(\\) has no return type specified\\.$#"

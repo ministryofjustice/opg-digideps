@@ -95,11 +95,6 @@
             'client': client
         } %}
 
-        {% include '@App/Org/ClientProfile/_contacts.html.twig' with {
-            'contacts': client.clientContacts,
-                ' client': client
-        } %}
-
         {% include '@App/Org/ClientProfile/_reports.html.twig' with {
             'reports': client.submittedReports,
                 'client': client
