@@ -181,10 +181,7 @@ class ClientRepository extends ServiceEntityRepository
         ];
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function findExistingDeputyCases(string $caseNumber, string $deputyNumber)
+    public function hasExistingDeputyCase(string $caseNumber, string $deputyNumber): bool
     {
         $deputyCaseQuery = '
                 SELECT dc.client_id, dc.user_id
@@ -199,7 +196,7 @@ class ClientRepository extends ServiceEntityRepository
         $result = $statsStmt->executeQuery(['case_number' => $caseNumber, 'deputy_no' => $deputyNumber]);
         $deputyCaseResults = $result->fetchAllAssociative();
 
-        return 0 === count($deputyCaseResults) ? null : $deputyCaseResults[0];
+        return count($deputyCaseResults) > 0;
     }
 
     public function getAllClientsAndReportsByDeputyUid(int $deputyUid)
