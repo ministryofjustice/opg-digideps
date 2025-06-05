@@ -77,7 +77,7 @@ class ReportService
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
-        $this->logger->notice("Report submitted for client ID $clientId at $now");
+        $this->logger->warning("Report submitted for client ID $clientId at $now");
 
         // Set user to active once they have submitted a report
         $user->setActive(true);
@@ -89,18 +89,18 @@ class ReportService
             $reports = $client->getReports();
 
             if (1 === count($reports)) {
-                $this->logger->notice("Populating existing report for client $clientId (NDR submitted, existing report) at $now");
+                $this->logger->warning("Populating existing report for client $clientId (NDR submitted, existing report) at $now");
 
                 $newYearReport = $reports[0];
 
                 $this->clonePersistentResources($newYearReport, $currentReport);
             } elseif (0 === count($reports)) {
-                $this->logger->notice("Creating next year report for client $clientId (NDR submitted, NO existing report) at $now");
+                $this->logger->warning("Creating next year report for client $clientId (NDR submitted, NO existing report) at $now");
 
                 $newYearReport = $this->createNextYearReport($currentReport);
             }
         } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
-            $this->logger->notice("Creating next year report for client $clientId (NO NDR, existing unsubmitted report) at $now");
+            $this->logger->warning("Creating next year report for client $clientId (NO NDR, existing unsubmitted report) at $now");
 
             // unsubmitted report
             $currentReport->setUnSubmitDate(null);
@@ -116,7 +116,7 @@ class ReportService
             }
         } else {
             // first-time submission
-            $this->logger->notice("Creating next year report for client $clientId (NO NDR, NO existing report) at $now");
+            $this->logger->warning("Creating next year report for client $clientId (NO NDR, NO existing report) at $now");
 
             $newYearReport = $this->createNextYearReport($currentReport);
         }
@@ -314,7 +314,7 @@ class ReportService
             $createdAtStr = $createdAt->format('Y-m-d H:i:s');
         }
 
-        $this->logger->notice(
+        $this->logger->warning(
             "Created next year report for client ID {$client->getId()} ".
             "; created at = {$createdAtStr} ".
             "; start date = {$startDate->format('Y-m-d')} ".
