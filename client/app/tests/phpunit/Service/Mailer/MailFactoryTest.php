@@ -8,9 +8,7 @@ use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Model\FeedbackReport;
 use App\Service\IntlService;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -58,12 +56,12 @@ class MailFactoryTest extends TestCase
 
         $this->submittedReport = (new Report())
             ->setClient($this->client)
-            ->setStartDate(new DateTime('2017-03-24'))
-            ->setEndDate(new DateTime('2018-03-23'));
+            ->setStartDate(new \DateTime('2017-03-24'))
+            ->setEndDate(new \DateTime('2018-03-23'));
 
         $this->newReport = (new Report())
-            ->setStartDate(new DateTime('2018-03-24'))
-            ->setEndDate(new DateTime('2019-03-23'));
+            ->setStartDate(new \DateTime('2018-03-24'))
+            ->setEndDate(new \DateTime('2019-03-23'));
 
         $this->appBaseURLs = [
             'front' => 'https://front.base.url',
@@ -113,29 +111,10 @@ class MailFactoryTest extends TestCase
             ->setRoleName($role);
     }
 
-    /**
-     * @test
-     */
-    public function createActivationEmail()
+    private function assertStaticEmailProperties($email)
     {
-        $this->router->generate('user_activate', [
-            'action' => 'activate',
-            'token' => 'regToken',
-        ])->shouldBeCalled()->willReturn('/activate/regToken');
-
-        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-
-        $expectedTemplateParams = array_merge($this->getContactParameters(), [
-            'activationLink' => 'https://front.base.url/activate/regToken',
-        ]);
-
-        $email = ($this->generateSUT())->createActivationEmail($this->layDeputy);
-
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
-        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
-        self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
     private function getContactParameters(): array
@@ -160,10 +139,29 @@ class MailFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function profActivationEmailHasProfContacts()
+    public function testCreateActivationEmail()
+    {
+        $this->router->generate('user_activate', [
+            'action' => 'activate',
+            'token' => 'regToken',
+        ])->shouldBeCalled()->willReturn('/activate/regToken');
+
+        $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
+
+        $expectedTemplateParams = array_merge($this->getContactParameters(), [
+            'activationLink' => 'https://front.base.url/activate/regToken',
+        ]);
+
+        $email = $this->generateSUT()->createActivationEmail($this->layDeputy);
+
+        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertEquals('OPG', $email->getFromName());
+        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertEquals(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertEquals($expectedTemplateParams, $email->getParameters());
+    }
+
+    public function testProfActivationEmailHasProfContacts()
     {
         $this->router->generate('user_activate', [
             'action' => 'activate',
@@ -176,16 +174,13 @@ class MailFactoryTest extends TestCase
 
         $profDeputy = $this->generateUser()->setRoleName(User::ROLE_PROF_ADMIN);
 
-        $email = ($this->generateSUT())->createActivationEmail($profDeputy);
+        $email = $this->generateSUT()->createActivationEmail($profDeputy);
 
         self::assertEquals('prof-email@publicguardian.gov.uk', $email->getParameters()['email']);
         self::assertEquals('07987654321', $email->getParameters()['phone']);
     }
 
-    /**
-     * @test
-     */
-    public function paActivationEmailHasPaContacts()
+    public function testPaActivationEmailHasPaContacts()
     {
         $this->router->generate('user_activate', [
             'action' => 'activate',
@@ -198,16 +193,13 @@ class MailFactoryTest extends TestCase
 
         $paDeputy = $this->generateUser()->setRoleName(User::ROLE_PA_ADMIN);
 
-        $email = ($this->generateSUT())->createActivationEmail($paDeputy);
+        $email = $this->generateSUT()->createActivationEmail($paDeputy);
 
         self::assertEquals('pa-email@publicguardian.gov.uk', $email->getParameters()['email']);
         self::assertEquals('07777777777', $email->getParameters()['phone']);
     }
 
-    /**
-     * @test
-     */
-    public function createInvitationEmailLayUser()
+    public function testCreateInvitationEmailLayUser()
     {
         $this->router->generate('user_activate', [
             'action' => 'activate',
@@ -221,7 +213,7 @@ class MailFactoryTest extends TestCase
             'deputyName' => 'Buford Mcfarling',
         ]);
 
-        $email = ($this->generateSUT())->createInvitationEmail($this->layDeputy, 'Buford Mcfarling');
+        $email = $this->generateSUT()->createInvitationEmail($this->layDeputy, 'Buford Mcfarling');
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
@@ -230,10 +222,7 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    /**
-     * @test
-     */
-    public function createInvitationEmailOrgUser()
+    public function testCreateInvitationEmailOrgUser()
     {
         $profDeputy = $this->generateUser()
             ->setEmail('l.wolny@somesolicitors.org')
@@ -254,7 +243,7 @@ class MailFactoryTest extends TestCase
             'phone' => '07987654321',
         ];
 
-        $email = ($this->generateSUT())->createInvitationEmail($profDeputy);
+        $email = $this->generateSUT()->createInvitationEmail($profDeputy);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
@@ -263,11 +252,21 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
+    public function getLayReportTypes(): array
+    {
+        return [
+            ['reportType' => '102'],
+            ['reportType' => '103'],
+            ['reportType' => '102-4'],
+            ['reportType' => '103-4'],
+            ['reportType' => '104'],
+        ];
+    }
+
     /**
-     * @test
      * @dataProvider getLayReportTypes
      */
-    public function createReportSubmissionConfirmationEmailForLayDeputy($reportType)
+    public function testCreateReportSubmissionConfirmationEmailForLayDeputy($reportType)
     {
         $this->router->generate('homepage', [])->willReturn('');
 
@@ -275,7 +274,7 @@ class MailFactoryTest extends TestCase
         $this->translator->trans(Argument::any())->shouldNotBeCalled();
 
         $this->submittedReport->setType($reportType);
-        $email = ($this->generateSUT())->createReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
+        $email = $this->generateSUT()->createReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
@@ -299,22 +298,26 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    public function getLayReportTypes(): array
+    public function getOrgReportTypes(): array
     {
         return [
-            ['reportType' => '102'],
-            ['reportType' => '103'],
-            ['reportType' => '102-4'],
-            ['reportType' => '103-4'],
-            ['reportType' => '104'],
+            ['reportType' => '102-5', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '103-5', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '102-5-4', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '103-5-4', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '104-5', 'role' => User::ROLE_PROF_NAMED],
+            ['reportType' => '102-6', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '103-6', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '102-6-4', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '103-6-4', 'role' => User::ROLE_PA_NAMED],
+            ['reportType' => '104-6', 'role' => User::ROLE_PA_NAMED],
         ];
     }
 
     /**
-     * @test
      * @dataProvider getOrgReportTypes
      */
-    public function createReportSubmissionConfirmationEmailForOrgDeputy($reportType, $role)
+    public function testCreateReportSubmissionConfirmationEmailForOrgDeputy($reportType, $role)
     {
         $this->router->generate('homepage', [])->willReturn('');
 
@@ -329,7 +332,7 @@ class MailFactoryTest extends TestCase
 
         $this->submittedReport->setType($reportType);
         $deputy = $this->generateUser($role);
-        $email = ($this->generateSUT())->createReportSubmissionConfirmationEmail($deputy, $this->submittedReport, $this->newReport);
+        $email = $this->generateSUT()->createReportSubmissionConfirmationEmail($deputy, $this->submittedReport, $this->newReport);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
@@ -353,33 +356,14 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    public function getOrgReportTypes(): array
-    {
-        return [
-            ['reportType' => '102-5', 'role' => User::ROLE_PROF_NAMED],
-            ['reportType' => '103-5', 'role' => User::ROLE_PROF_NAMED],
-            ['reportType' => '102-5-4', 'role' => User::ROLE_PROF_NAMED],
-            ['reportType' => '103-5-4', 'role' => User::ROLE_PROF_NAMED],
-            ['reportType' => '104-5', 'role' => User::ROLE_PROF_NAMED],
-            ['reportType' => '102-6', 'role' => User::ROLE_PA_NAMED],
-            ['reportType' => '103-6', 'role' => User::ROLE_PA_NAMED],
-            ['reportType' => '102-6-4', 'role' => User::ROLE_PA_NAMED],
-            ['reportType' => '103-6-4', 'role' => User::ROLE_PA_NAMED],
-            ['reportType' => '104-6', 'role' => User::ROLE_PA_NAMED],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function createNdrSubmissionConfirmationEmailTest()
+    public function testCreateNdrSubmissionConfirmationEmailTest()
     {
         $this->router->generate('homepage', [])->willReturn('');
 
         $this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
 
         $ndr = (new Ndr())->setClient($this->client);
-        $email = ($this->generateSUT())->createNdrSubmissionConfirmationEmail($this->layDeputy, $ndr, $this->newReport);
+        $email = $this->generateSUT()->createNdrSubmissionConfirmationEmail($this->layDeputy, $ndr, $this->newReport);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals(MailFactory::NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
@@ -399,10 +383,7 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    /**
-     * @test
-     */
-    public function createResetPasswordEmail()
+    public function testCreateResetPasswordEmail()
     {
         $this->router->generate('user_activate', [
             'action' => 'password-reset',
@@ -420,7 +401,7 @@ class MailFactoryTest extends TestCase
             'recreateLink' => 'https://front.base.url/password-managing/forgotten',
         ]);
 
-        $email = ($this->generateSUT())->createResetPasswordEmail($this->layDeputy);
+        $email = $this->generateSUT()->createResetPasswordEmail($this->layDeputy);
 
         self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
         self::assertEquals('OPG', $email->getFromName());
@@ -429,93 +410,14 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    /**
-     * @test
-     */
-    public function createGeneralFeedbackEmail()
-    {
-        $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
-
-        $response = [
-            'specificPage' => 'A specific page',
-            'page' => 'A page',
-            'comments' => 'It was great!',
-            'name' => 'Joe Bloggs',
-            'email' => 'joe.bloggs@xyz.com',
-            'phone' => '07535999222',
-            'satisfactionLevel' => '4',
-        ];
-
-        $email = ($this->generateSUT())->createGeneralFeedbackEmail($response);
-
-        $this->assertStaticEmailProperties($email);
-
-        self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals(MailFactory::GENERAL_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
-
-        $expectedTemplateParams = [
-            'comments' => 'It was great!',
-            'satisfactionLevel' => '4',
-            'name' => 'Joe Bloggs',
-            'phone' => '07535999222',
-            'page' => 'A page',
-            'email' => 'joe.bloggs@xyz.com',
-            'subject' => 'A subject',
-        ];
-
-        self::assertEquals($expectedTemplateParams, $email->getParameters());
-    }
-
-    private function assertStaticEmailProperties($email)
-    {
-        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        self::assertEquals('OPG', $email->getFromName());
-    }
-
-    /**
-     * @test
-     */
-    public function createPostSubmissionFeedbackEmail()
-    {
-        $this->translator->trans('feedbackForm.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-        $this->translator->trans('feedbackForm.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
-
-        $response = (new FeedbackReport())
-            ->setComments('Amazing service!')
-            ->setSatisfactionLevel('4');
-
-        $email = ($this->generateSUT())->createPostSubmissionFeedbackEmail($response, $this->generateUser());
-
-        $this->assertStaticEmailProperties($email);
-
-        self::assertEquals('digideps+noop@digital.justice.gov.uk', $email->getToEmail());
-        self::assertEquals(MailFactory::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID, $email->getTemplate());
-
-        $expectedTemplateParams = [
-            'comments' => 'Amazing service!',
-            'satisfactionLevel' => '4',
-            'name' => 'Joe Bloggs',
-            'phone' => '01211234567',
-            'email' => 'user@digital.justice.gov.uk',
-            'subject' => 'A subject',
-            'userRole' => 'Lay Deputy',
-        ];
-
-        self::assertEquals($expectedTemplateParams, $email->getParameters());
-    }
-
-    /**
-     * @test
-     */
-    public function createUpdateClientDetailsEmail()
+    public function testCreateUpdateClientDetailsEmail()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $client = $this->generateClient();
 
-        $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client);
+        $email = $this->generateSUT()->createUpdateClientDetailsEmail($client);
 
         $this->assertStaticEmailProperties($email);
 
@@ -536,17 +438,14 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    /**
-     * @test
-     */
-    public function createUpdateClientDetailsEmailCountryNotSet()
+    public function testCreateUpdateClientDetailsEmailCountryNotSet()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
         $client = $this->generateClient()->setCountry(null);
 
-        $email = ($this->generateSUT())->createUpdateClientDetailsEmail($client);
+        $email = $this->generateSUT()->createUpdateClientDetailsEmail($client);
 
         $this->assertStaticEmailProperties($email);
 
@@ -567,15 +466,12 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    /**
-     * @test
-     */
-    public function createUpdateDeputyDetailsEmail()
+    public function testCreateUpdateDeputyDetailsEmail()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
-        $email = ($this->generateSUT())->createUpdateDeputyDetailsEmail($this->layDeputy);
+        $email = $this->generateSUT()->createUpdateDeputyDetailsEmail($this->layDeputy);
 
         $this->assertStaticEmailProperties($email);
 
@@ -598,15 +494,12 @@ class MailFactoryTest extends TestCase
         self::assertEquals($expectedTemplateParams, $email->getParameters());
     }
 
-    /**
-     * @test
-     */
-    public function createUpdateDeputyDetailsEmailCountryNotSet()
+    public function testCreateUpdateDeputyDetailsEmailCountryNotSet()
     {
         $this->translator->trans('client.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('client.subject', [], 'email')->shouldBeCalled()->willReturn('A subject');
 
-        $email = ($this->generateSUT())->createUpdateDeputyDetailsEmail($this->layDeputy->setAddressCountry(null));
+        $email = $this->generateSUT()->createUpdateDeputyDetailsEmail($this->layDeputy->setAddressCountry(null));
 
         $this->assertStaticEmailProperties($email);
 

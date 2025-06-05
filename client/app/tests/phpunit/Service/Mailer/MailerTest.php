@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\App\Service\Mailer;
 
-use App\Model\FeedbackReport;
 use App\Service\Mailer\Mailer;
 use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
@@ -51,6 +50,7 @@ class MailerTest extends TestCase
 
     /**
      * @dataProvider deputyNameProvider
+     *
      * @test
      */
     public function sendInvitationEmail(?string $deputyName)
@@ -82,46 +82,6 @@ class MailerTest extends TestCase
         $this->mailSender->send($passwordResetEmail)->shouldBeCalled();
 
         $this->sut->sendResetPasswordEmail($passwordResetUser);
-    }
-
-    /** @test */
-    public function sendGeneralFeedbackEmail()
-    {
-        $formResponse = [
-            'specificPage' => true,
-            'page' => null,
-            'comments' => 'Some comment here',
-            'name' => 'Shygirl',
-            'email' => 'shygirl@nuxxe.com',
-            'phone' => '01211234567',
-            'satisfactionLevel' => 5,
-        ];
-        $generalFeedbackEmail = EmailHelpers::createEmail();
-
-        $this->mailFactory->createGeneralFeedbackEmail($formResponse)->shouldBeCalled()->willReturn($generalFeedbackEmail);
-        $this->mailSender->send($generalFeedbackEmail)->shouldBeCalled();
-
-        $this->sut->sendGeneralFeedbackEmail($formResponse);
-    }
-
-    /** @test */
-    public function sendPostSubmissionFeedbackEmail()
-    {
-        $submittedFeedbackReport = (new FeedbackReport())
-            ->setSatisfactionLevel(5)
-            ->setComments('Some comments');
-
-        $submittedByDeputy = UserHelpers::createUser();
-        $postSubmissionFeedbackEmail = EmailHelpers::createEmail();
-
-        $this->mailFactory
-            ->createPostSubmissionFeedbackEmail($submittedFeedbackReport, $submittedByDeputy)
-            ->shouldBeCalled()
-            ->willReturn($postSubmissionFeedbackEmail);
-
-        $this->mailSender->send($postSubmissionFeedbackEmail)->shouldBeCalled();
-
-        $this->sut->sendPostSubmissionFeedbackEmail($submittedFeedbackReport, $submittedByDeputy);
     }
 
     /** @test */
