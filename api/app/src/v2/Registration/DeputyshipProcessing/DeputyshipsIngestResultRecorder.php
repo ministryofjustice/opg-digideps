@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class DeputyshipsIngestResultRecorder
@@ -44,25 +43,16 @@ class DeputyshipsIngestResultRecorder
         return $this->formatDate(new \DateTimeImmutable()).' deputyships-ingest '.$message;
     }
 
-    private function logMemory(string $logLevel = LogLevel::DEBUG): void
-    {
-        $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
-        $this->logger->warning($this->formatMessage($memMessage));
-        $this->logger->log($logLevel, $memMessage);
-    }
-
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
         $this->logger->warning($this->formatMessage($message));
-        $this->logMemory();
     }
 
     private function logError(string $errorMessage): void
     {
         $this->errorMessages[] = $errorMessage;
         $this->logger->error($this->formatMessage($errorMessage));
-        $this->logMemory();
     }
 
     public function recordStart(\DateTimeInterface $startDateTime = new \DateTimeImmutable()): void
@@ -103,8 +93,14 @@ class DeputyshipsIngestResultRecorder
     {
         $this->numCandidatesApplied += $builderResult->getNumCandidatesApplied();
         $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
+
+        // these messages are not output with logMessage() or logError() because there will be a lot of them
         $this->logger->warning($this->formatMessage('++++++++ '.$builderResult->getMessage()));
-        $this->logMemory();
+
+        $errorMessage = $builderResult->getErrorMessage();
+        if (!is_null($errorMessage)) {
+            $this->logger->error($this->formatMessage('!!!!!!! '.$errorMessage));
+        }
     }
 
     public function recordEnd(\DateTimeInterface $endDateTime = new \DateTimeImmutable()): void
@@ -114,7 +110,8 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        $this->logMemory(LogLevel::WARNING);
+        $memMessage = '******* PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
+        $this->logger->warning($this->formatMessage($memMessage));
 
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;

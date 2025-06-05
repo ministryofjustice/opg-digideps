@@ -58,11 +58,16 @@ class DeputyshipBuilderResult
             $message .= '; candidate details = '.implode('|', $candidateDetails);
         }
 
-        if (count($this->errors) > 0) {
-            $message .= '; ERRORS: '.implode(' / ', $this->errors);
+        return $message;
+    }
+
+    public function getErrorMessage(): ?string
+    {
+        if (0 == count($this->errors)) {
+            return null;
         }
 
-        return $message;
+        return 'ERRORS while applying candidates: '.implode(' / ', $this->errors);
     }
 
     public function getNumCandidatesFailed(): int
