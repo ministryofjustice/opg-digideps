@@ -9,7 +9,6 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Model\Email;
-use App\Model\FeedbackReport;
 use App\Service\IntlService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -21,14 +20,12 @@ class MailFactory
 
     // Maintained in GOVUK Notify
     public const ACTIVATION_TEMPLATE_ID = '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa';
-    public const GENERAL_FEEDBACK_TEMPLATE_ID = '63a25dfa-116f-4991-b7c4-35a79ac5061e';
     public const REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
     public const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
     public const CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
     public const DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
     public const INVITATION_LAY_TEMPLATE_ID = 'b8afb0d0-c8e5-4191-bce7-74ba91c74cad';
     public const INVITATION_ORG_TEMPLATE_ID = 'd410fce7-ce00-46eb-824d-82f998a437a4';
-    public const POST_SUBMISSION_FEEDBACK_TEMPLATE_ID = '862f1ce7-bde5-4397-be68-bd9e4537cff0';
     public const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
     public const PROCESS_ORG_CSV_TEMPLATE_ID = 'ce20ca97-a954-4d34-8a21-8b4f156188a8';
     public const PROCESS_LAY_CSV_TEMPLATE_ID = '1e6fddc4-999d-4c44-8038-1853ea0e8511';
@@ -72,7 +69,7 @@ class MailFactory
         RouterInterface $router,
         IntlService $intlService,
         array $emailParams,
-        array $baseURLs
+        array $baseURLs,
     ) {
         $this->translator = $translator;
         $this->router = $router;
@@ -225,51 +222,6 @@ class MailFactory
     private function getUserArea(User $user)
     {
         return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
-    }
-
-    /**
-     * @param array $response
-     *
-     * @return Email
-     */
-    public function createGeneralFeedbackEmail($response)
-    {
-        $notifyParams = [
-            'comments' => !empty($response['comments']) ? $response['comments'] : 'Not provided',
-            'name' => !empty($response['name']) ? $response['name'] : 'Not provided',
-            'phone' => !empty($response['phone']) ? $response['phone'] : 'Not provided',
-            'page' => !empty($response['page']) ? $response['page'] : 'Not provided',
-            'email' => !empty($response['email']) ? $response['email'] : 'Not provided',
-            'satisfactionLevel' => !empty($response['satisfactionLevel']) ? $response['satisfactionLevel'] : 'Not provided',
-            'subject' => $this->translate('feedbackForm.subject'),
-        ];
-
-        return (new Email())
-            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
-            ->setFromName($this->translate('feedbackForm.fromName'))
-            ->setToEmail($this->emailParams['feedback_send_to_address'])
-            ->setTemplate(self::GENERAL_FEEDBACK_TEMPLATE_ID)
-            ->setParameters($notifyParams);
-    }
-
-    public function createPostSubmissionFeedbackEmail(FeedbackReport $response, User $user)
-    {
-        $notifyParams = [
-            'comments' => $response->getComments() ? $response->getComments() : 'Not provided',
-            'name' => $user->getFullName(),
-            'phone' => $user->getPhoneMain(),
-            'email' => $user->getEmail(),
-            'satisfactionLevel' => $response->getSatisfactionLevel() ? $response->getSatisfactionLevel() : 'Not provided',
-            'userRole' => $user->getRoleFullName(),
-            'subject' => $this->translate('feedbackForm.subject'),
-        ];
-
-        return (new Email())
-            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
-            ->setFromName($this->translate('feedbackForm.fromName'))
-            ->setToEmail($this->emailParams['feedback_send_to_address'])
-            ->setTemplate(self::POST_SUBMISSION_FEEDBACK_TEMPLATE_ID)
-            ->setParameters($notifyParams);
     }
 
     public function createUpdateClientDetailsEmail(Client $client): Email

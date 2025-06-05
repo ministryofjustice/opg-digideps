@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace DigidepsTests\Service\Client\Internal;
 
 use App\Entity\Report\Report;
-use App\Event\GeneralFeedbackSubmittedEvent;
-use App\Event\PostSubmissionFeedbackSubmittedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\UserHelpers;
 use Faker\Factory;
 use Faker\Generator;
 use PHPUnit\Framework\TestCase;
@@ -28,9 +24,6 @@ class SatisfactionApiTest extends TestCase
     /** @var RestClient&ObjectProphecy */
     private $restClient;
 
-    /** @var ObservableEventDispatcher&ObjectProphecy */
-    private $eventDisaptcher;
-
     /** @var SatisfactionApi */
     private $sut;
 
@@ -38,8 +31,7 @@ class SatisfactionApiTest extends TestCase
     {
         $this->faker = Factory::create('en_UK');
         $this->restClient = self::prophesize(RestClient::class);
-        $this->eventDisaptcher = self::prophesize(ObservableEventDispatcher::class);
-        $this->sut = new SatisfactionApi($this->restClient->reveal(), $this->eventDisaptcher->reveal());
+        $this->sut = new SatisfactionApi($this->restClient->reveal());
     }
 
     /**
@@ -64,20 +56,17 @@ class SatisfactionApiTest extends TestCase
             'satisfactionLevel' => $score,
         ];
 
-        $event = (new GeneralFeedbackSubmittedEvent())->setFeedbackFormResponse($formData);
-        $this->eventDisaptcher->dispatch($event, 'general.feedback.submitted')->shouldBeCalled();
-
         $this->sut->createGeneralFeedback($formData);
     }
 
     /**
      * @test
+     *
      * @dataProvider commentsProvider
      */
     public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest, ?int $reportId, ?int $ndrId)
     {
         $score = $this->faker->randomElement([1, 2, 3, 4, 5]);
-        $submittedByUser = UserHelpers::createUser();
         $reportType = $this->faker->randomElement([
             Report::TYPE_COMBINED_HIGH_ASSETS,
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
@@ -104,10 +93,7 @@ class SatisfactionApiTest extends TestCase
             ->setComments($comments)
             ->setSatisfactionLevel($score);
 
-        $event = new PostSubmissionFeedbackSubmittedEvent($feedbackReportObject, $submittedByUser);
-        $this->eventDisaptcher->dispatch($event, 'post.submission.feedback.submitted')->shouldBeCalled();
-
-        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $submittedByUser, $reportId, $ndrId);
+        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $reportId, $ndrId);
     }
 
     public function commentsProvider()
