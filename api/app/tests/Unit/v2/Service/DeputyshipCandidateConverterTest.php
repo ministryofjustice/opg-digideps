@@ -141,8 +141,9 @@ class DeputyshipCandidateConverterTest extends TestCase
         $this->mockDbAccess->expects($this->once())->method('insertOrder')->with($insertOrder)->willReturn($mockResult1);
         $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult2);
 
-        // expect rollback as this is a dry run
-        $this->mockDbAccess->expects($this->once())->method('rollback');
+        // expect rollbacks as this is a dry run: once for the insert order, once for the transaction around the
+        // candidates
+        $this->mockDbAccess->expects($this->exactly(2))->method('rollback');
 
         // call
         $builderResult = $this->sut->convert($candidateGroup, true);
@@ -184,7 +185,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $this->mockDbAccess->expects($this->once())->method('insertOrderNdr')->with($orderId, $insertOrderNdr)->willReturn($insertOrderNdrResult);
         $this->mockDbAccess->expects($this->once())->method('updateOrderStatus')->with($orderId, $updateOrderStatus)->willReturn($updateOrderStatusResult);
         $this->mockDbAccess->expects($this->once())->method('updateDeputyStatus')->with($orderId, $updateDeputyStatus)->willReturn($updateDeputyStatusResult);
-        $this->mockDbAccess->expects($this->exactly(5))->method('endTransaction');
+        $this->mockDbAccess->expects($this->once())->method('endTransaction');
 
         // call
         $builderResult = $this->sut->convert($candidateGroup, false);
