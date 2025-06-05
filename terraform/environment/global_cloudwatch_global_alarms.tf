@@ -6,7 +6,7 @@ data "aws_sns_topic" "availability_alert" {
 }
 
 resource "aws_route53_health_check" "availability_front" {
-  fqdn              = aws_route53_record.front.fqdn
+  fqdn              = local.front_fqdn
   resource_path     = "/health-check"
   port              = 443
   type              = "HTTPS"
@@ -37,7 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "availability_front" {
 }
 
 resource "aws_route53_health_check" "availability_admin" {
-  fqdn              = aws_route53_record.admin.fqdn
+  fqdn              = local.admin_fqdn
   resource_path     = "/health-check"
   port              = 443
   type              = "HTTPS"
