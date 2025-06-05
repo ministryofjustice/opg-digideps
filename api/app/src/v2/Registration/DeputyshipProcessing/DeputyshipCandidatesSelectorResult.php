@@ -7,7 +7,7 @@ namespace App\v2\Registration\DeputyshipProcessing;
 class DeputyshipCandidatesSelectorResult
 {
     public function __construct(
-        /** @var \Traversable<array<string, string>> */
+        /** @var \Traversable<array<string, mixed>> */
         public readonly \Traversable $candidates,
 
         public readonly int $numCandidates,

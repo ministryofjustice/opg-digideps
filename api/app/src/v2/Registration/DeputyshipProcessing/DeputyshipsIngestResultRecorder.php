@@ -14,52 +14,48 @@ class DeputyshipsIngestResultRecorder
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
 
+    // for storing builder counts
+    private int $numCandidatesApplied = 0;
+    private int $numCandidatesFailed = 0;
+
     /** @var string[] */
     private array $errorMessages = [];
 
     /** @var string[] */
     private array $messages = [];
 
-    private ?\DateTimeImmutable $startDateTime = null;
+    private ?\DateTimeInterface $startDateTime = null;
 
-    private ?\DateTimeImmutable $endDateTime = null;
+    private ?\DateTimeInterface $endDateTime = null;
 
     public function __construct(
         private LoggerInterface $logger,
     ) {
     }
 
-    private function formatDate(\DateTimeImmutable $dateTime): string
+    private function formatDate(\DateTimeInterface $dateTime): string
     {
         return $dateTime->format('Y-m-d H:i:s');
     }
 
     private function formatMessage(string $message): string
     {
-        return $this->formatDate(new \DateTimeImmutable()).' '.$message;
-    }
-
-    private function logMemory(): void
-    {
-        $memMessage = '******** PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
-        $this->logger->debug($this->formatMessage($memMessage));
+        return $this->formatDate(new \DateTimeImmutable()).' deputyships-ingest '.$message;
     }
 
     private function logMessage(string $message): void
     {
         $this->messages[] = $message;
-        $this->logger->info($this->formatMessage($message));
-        $this->logMemory();
+        $this->logger->warning($this->formatMessage($message));
     }
 
     private function logError(string $errorMessage): void
     {
         $this->errorMessages[] = $errorMessage;
         $this->logger->error($this->formatMessage($errorMessage));
-        $this->logMemory();
     }
 
-    public function recordStart(\DateTimeImmutable $startDateTime = new \DateTimeImmutable()): void
+    public function recordStart(\DateTimeInterface $startDateTime = new \DateTimeImmutable()): void
     {
         $this->startDateTime = $startDateTime;
     }
@@ -95,17 +91,28 @@ class DeputyshipsIngestResultRecorder
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
-        $this->logger->debug($this->formatMessage('++++++++ '.$builderResult->getMessage()));
-        $this->logMemory();
+        $this->numCandidatesApplied += $builderResult->getNumCandidatesApplied();
+        $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
+
+        // these messages are not output with logMessage() or logError() because there will be a lot of them
+        $this->logger->warning($this->formatMessage('++++++++ '.$builderResult->getMessage()));
+
+        $errorMessage = $builderResult->getErrorMessage();
+        if (!is_null($errorMessage)) {
+            $this->logger->error($this->formatMessage('!!!!!!! '.$errorMessage));
+        }
     }
 
-    public function recordEnd(\DateTimeImmutable $endDateTime = new \DateTimeImmutable()): void
+    public function recordEnd(\DateTimeInterface $endDateTime = new \DateTimeImmutable()): void
     {
         $this->endDateTime = $endDateTime;
     }
 
     public function result(): DeputyshipsCSVIngestResult
     {
+        $memMessage = '******* PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
+        $this->logger->warning($this->formatMessage($memMessage));
+
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
 
@@ -119,10 +126,13 @@ class DeputyshipsIngestResultRecorder
 
         $message .= ' --- '.implode('; ', $this->messages);
 
+        $message .= '; number of candidates applied = '.$this->numCandidatesApplied.
+            '; number of candidates failed = '.$this->numCandidatesFailed;
+
         if ($success) {
             $message .= '; '.self::SUCCESS_MESSAGE;
         } else {
-            $message .= implode('; ERRORS: ', $this->errorMessages);
+            $message .= '; ERRORS: '.implode(' / ', $this->errorMessages);
         }
 
         $this->logMessage($message);

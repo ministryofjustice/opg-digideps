@@ -1,3 +1,7 @@
 doctrine:
     dbal:
-        dbname: digideps_unit_test
+        connections:
+            default:
+                dbname: digideps_unit_test
+            ingestwriter:
+                dbname: digideps_unit_test
