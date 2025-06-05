@@ -66,10 +66,16 @@ class DeputyshipCandidatesConverter
         /** @var int $courtOrderId */
         $courtOrderId = $result->data;
 
+        // because we're using an iterator, it's not simple to count how many candidates we're going to
+        // be dealing with; so we always start a transaction in case there is 1 or more; if we knew how many
+        // candidates there were, we could avoid the transaction altogether, but this would mean counting them
+        // (which defeats the purpose of using an iterator)
+        $this->dbAccess->beginTransaction();
+
+        $failed = false;
+
         foreach ($candidatesGroup->getIterator() as $candidate) {
             $action = $candidate['action'];
-
-            $this->dbAccess->beginTransaction();
 
             if (DeputyshipCandidateAction::InsertOrderDeputy === $action) {
                 $result = $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate);
@@ -85,11 +91,17 @@ class DeputyshipCandidatesConverter
 
             $buildResult->addCandidateResult($result);
 
-            if ($result->success && !$dryRun) {
-                $this->dbAccess->endTransaction();
-            } else {
-                $this->dbAccess->rollback();
+            $failed = !$result->success;
+
+            if ($failed) {
+                break;
             }
+        }
+
+        if ($failed || $dryRun) {
+            $this->dbAccess->rollback();
+        } else {
+            $this->dbAccess->endTransaction();
         }
 
         return $buildResult;
