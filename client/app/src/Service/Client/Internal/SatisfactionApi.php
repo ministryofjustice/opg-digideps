@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Client\Internal;
 
-use App\Entity\User;
 use App\Model\FeedbackReport;
 use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
@@ -30,7 +29,7 @@ class SatisfactionApi
         );
     }
 
-    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, User $submittedByUser, ?int $reportId = null, ?int $ndrId = null): int
+    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, ?int $reportId = null, ?int $ndrId = null): int
     {
         $feedbackData = [
             'score' => $formResponse->getSatisfactionLevel(),

@@ -8,7 +8,6 @@ use App\Entity\Report\Report;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\RestClient;
-use App\TestHelpers\UserHelpers;
 use Faker\Factory;
 use Faker\Generator;
 use PHPUnit\Framework\TestCase;
@@ -68,7 +67,6 @@ class SatisfactionApiTest extends TestCase
     public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest, ?int $reportId, ?int $ndrId)
     {
         $score = $this->faker->randomElement([1, 2, 3, 4, 5]);
-        $submittedByUser = UserHelpers::createUser();
         $reportType = $this->faker->randomElement([
             Report::TYPE_COMBINED_HIGH_ASSETS,
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
@@ -95,7 +93,7 @@ class SatisfactionApiTest extends TestCase
             ->setComments($comments)
             ->setSatisfactionLevel($score);
 
-        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $submittedByUser, $reportId, $ndrId);
+        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $reportId, $ndrId);
     }
 
     public function commentsProvider()
