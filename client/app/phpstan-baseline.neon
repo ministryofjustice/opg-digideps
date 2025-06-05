@@ -2076,11 +2076,6 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Parameter \\#3 \\$submittedByUser of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:\\$ndrGroupsForValidation has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
@@ -4947,11 +4942,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Parameter \\#3 \\$submittedByUser of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -9836,16 +9826,6 @@ parameters:
 			path: src/EventSubscriber/DeputySelfRegisteredSubscriber.php
 
 		-
-			message: "#^Method App\\\\EventSubscriber\\\\FeedbackSubmittedSubscriber\\:\\:sendGeneralFeedbackEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/EventSubscriber/FeedbackSubmittedSubscriber.php
-
-		-
-			message: "#^Method App\\\\EventSubscriber\\\\FeedbackSubmittedSubscriber\\:\\:sendPostSubmissionFeedbackEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/EventSubscriber/FeedbackSubmittedSubscriber.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Service\\\\Client\\\\RestClientInterface\\:\\:logout\\(\\)\\.$#"
 			count: 1
 			path: src/EventSubscriber/LogoutSubscriber.php
@@ -11911,11 +11891,6 @@ parameters:
 			path: src/Service/Client/Internal/ReportApi.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) should return int but returns string\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/SatisfactionApi.php
-
-		-
 			message: "#^Property App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/SatisfactionApi.php
@@ -13058,11 +13033,6 @@ parameters:
 		-
 			message: "#^Cannot clone DateTime\\|null\\.$#"
 			count: 2
-			path: src/Service/Mailer/MailFactory.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Mailer\\\\MailFactory\\:\\:createPostSubmissionFeedbackEmail\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Service/Mailer/MailFactory.php
 
 		-
