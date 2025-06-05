@@ -9,7 +9,6 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\ReportInterface;
 use App\Entity\User;
-use App\Model\FeedbackReport;
 
 class Mailer
 {
@@ -30,7 +29,7 @@ class Mailer
         return $this->mailSender->send($this->mailFactory->createActivationEmail($activatedUser));
     }
 
-    public function sendInvitationEmail(User $invitedUser, string $deputyName = null): bool
+    public function sendInvitationEmail(User $invitedUser, ?string $deputyName = null): bool
     {
         return $this->mailSender->send($this->mailFactory->createInvitationEmail($invitedUser, $deputyName));
     }
@@ -38,20 +37,6 @@ class Mailer
     public function sendResetPasswordEmail(User $passwordResetUser): bool
     {
         return $this->mailSender->send($this->mailFactory->createResetPasswordEmail($passwordResetUser));
-    }
-
-    public function sendGeneralFeedbackEmail(array $feedbackFormResponse): bool
-    {
-        return $this->mailSender->send($this->mailFactory->createGeneralFeedbackEmail($feedbackFormResponse));
-    }
-
-    public function sendPostSubmissionFeedbackEmail(
-        FeedbackReport $submittedFeedbackReport,
-        User $submittedByDeputy
-    ): bool {
-        return $this->mailSender->send(
-            $this->mailFactory->createPostSubmissionFeedbackEmail($submittedFeedbackReport, $submittedByDeputy)
-        );
     }
 
     public function sendUpdateClientDetailsEmail(Client $updatedClient): bool
@@ -67,7 +52,7 @@ class Mailer
     public function sendReportSubmissionConfirmationEmail(
         User $submittedByDeputy,
         ReportInterface $submittedReport,
-        Report $newReport
+        Report $newReport,
     ): bool {
         return $this->mailSender->send(
             $this->mailFactory->createReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport)
@@ -77,7 +62,7 @@ class Mailer
     public function sendNdrSubmissionConfirmationEmail(
         User $submittedByDeputy,
         Ndr $submittedNdr,
-        Report $newReport
+        Report $newReport,
     ): bool {
         return $this->mailSender->send(
             $this->mailFactory->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)
