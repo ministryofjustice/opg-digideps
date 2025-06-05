@@ -191,6 +191,6 @@ locals {
     { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
     { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
     { name = "WORKSPACE", value = local.environment },
-    { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
+    { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" }
   ]
 }
