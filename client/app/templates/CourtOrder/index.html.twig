@@ -17,6 +17,23 @@
         {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
+    {% if courtOrder.ndr %}
+        {% set ndr = courtOrder.ndr %}
+        {% set status = report.status.status %}
+        {% set behatRegion = 'ndr-unsubmitted' %}
+        {% set buttonText = 'reviewNdr' %}
+        {% set transOptions = {
+            '%startDate%': ndr.startDate | date("j F Y"),
+            '%endDate%': ndr.endDate | date("j F Y")
+        } %}
+        <h2 class="govuk-heading-l">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
+        {% embed '@App/Report/Report/_report_row.html.twig' %}
+            {% block bottomLeftContent %}
+                {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
     {% if courtOrder.unsubmittedReport %}
         {% set report = courtOrder.unsubmittedReport %}
         {% set status = report.status.status %}

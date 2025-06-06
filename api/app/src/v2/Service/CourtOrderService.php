@@ -28,6 +28,8 @@ class CourtOrderService
     {
         /** @var ?CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $uid]);
+        var_dump($courtOrder);
+        $this->logger->error((string) $courtOrder->getNdr()->getId());
 
         if (is_null($courtOrder)) {
             $this->logger->error("Could not find court order with UID {$uid}");
@@ -57,6 +59,7 @@ class CourtOrderService
 
         // only return court order if the logged-in user is a deputy on it
         $isDeputyOnCourtOrder = false;
+        /** @var Deputy $activeDeputy */
         foreach ($courtOrder->getActiveDeputies() as $activeDeputy) {
             if ($activeDeputy->getDeputyUid() === $deputyUid) {
                 $isDeputyOnCourtOrder = true;

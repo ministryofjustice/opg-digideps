@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
@@ -62,6 +63,13 @@ class CourtOrder
      * @phpstan-ignore property.onlyRead (Deserialized from API response)
      */
     private Client $client;
+
+    /**
+     * @JMS\Type("App\Entity\Ndr")
+     *
+     * @phpstan-ignore property.onlyRead (Deserialized from API response)
+     */
+    private ?Ndr $ndr = null;
 
     public function getId(): int
     {
@@ -209,5 +217,15 @@ class CourtOrder
         }
 
         return self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
+    }
+
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    public function setNdr(?Ndr $ndr): void
+    {
+        $this->ndr = $ndr;
     }
 }
