@@ -209,17 +209,6 @@ class Client implements ClientInterface
     private $notes;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"lastName"="ASC"})
-     */
-    #[JMS\Type('ArrayCollection<App\Entity\ClientContact>')]
-    #[JMS\Groups(['client-clientcontacts'])]
-    private $clientContacts;
-
-    /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
@@ -266,7 +255,6 @@ class Client implements ClientInterface
         $this->users = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->clientContacts = new ArrayCollection();
     }
 
     /**
@@ -754,23 +742,6 @@ class Client implements ClientInterface
     public function setNotes($notes)
     {
         $this->notes = $notes;
-
-        return $this;
-    }
-
-    public function getClientContacts()
-    {
-        return $this->clientContacts;
-    }
-
-    /**
-     * @param ArrayCollection $clientContacts
-     *
-     * @return $this
-     */
-    public function setClientContacts($clientContacts)
-    {
-        $this->clientContacts = $clientContacts;
 
         return $this;
     }

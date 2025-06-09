@@ -14,13 +14,6 @@ services:
       - { name: security.voter }
     # small performance boost
     public: false
-  app.client_contact_voter:
-    class: App\Security\ClientContactVoter
-    arguments: ["@security.access.decision_manager"]
-    tags:
-      - { name: security.voter }
-    # small performance boost
-    public: false
   app.document_voter:
     class: App\Security\DocumentVoter
     arguments: ["@security.access.decision_manager"]
