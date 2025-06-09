@@ -107,7 +107,7 @@ resource "aws_vpc_endpoint" "ec2messages" {
 
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = var.vpc_id
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = "0.0.0.0/0"
   availability_zone       = "eu-west-1a"
   map_public_ip_on_launch = true
 
@@ -157,3 +157,4 @@ resource "aws_route_table_association" "private_subnet_association" {
   route_table_id = aws_route_table.private_rt.id
 }
 
+ 
