@@ -102,3 +102,58 @@ resource "aws_vpc_endpoint" "ec2messages" {
   subnet_ids         = [var.subnet_id]
   security_group_ids = [aws_security_group.ssm_endpoint_sg.id]
 }
+
+# Allowing Internet Access
+
+resource "aws_subnet" "public_subnet" {
+  vpc_id                  = var.vpc_id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "eu-west-1a"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.environment}-public-subnet"
+  }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = var.vpc_id
+
+  tags = {
+    Name = "${var.environment}-igw"
+  }
+}
+
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnet.id
+
+  tags = {
+    Name = "${var.environment}-nat"
+  }
+
+  depends_on = [aws_internet_gateway.igw]
+}
+
+resource "aws_route_table" "private_rt" {
+  vpc_id = var.vpc_id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat.id
+  }
+
+  tags = {
+    Name = "${var.environment}-private-rt"
+  }
+}
+
+resource "aws_route_table_association" "private_subnet_association" {
+  subnet_id      = var.subnet_id
+  route_table_id = aws_route_table.private_rt.id
+}
+
