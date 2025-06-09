@@ -103,4 +103,10 @@ locals {
     canonical_id_production    = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_production.value))["canonical_user_id"]
     replication_bucket         = jsondecode(nonsensitive(data.aws_ssm_parameter.env_vars_development.value))["replication_bucket"]
   }
+
+  # DNS Switchover variables
+  complete_deputy_dns_enabled = local.account.name == "development" ? 0 : 1
+  main_cert                   = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : ""
+  new_cert                    = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.complete_deputy_report_wildcard[0].certificate_arn : ""
+  dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account["account_id"]
 }

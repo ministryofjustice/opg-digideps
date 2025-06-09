@@ -289,7 +289,7 @@ class NdrController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $ndr->getType(), $this->getUser(), null, $ndr->getId());
+            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $ndr->getType(), null, $ndr->getId());
 
             return $this->redirect($this->generateUrl('ndr_post_submission_user_research', ['ndrId' => $ndrId, 'satisfactionId' => $satisfactionId]));
         }

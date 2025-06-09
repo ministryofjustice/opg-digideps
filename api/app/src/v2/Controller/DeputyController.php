@@ -41,8 +41,8 @@ class DeputyController extends AbstractController
         return $this->buildSuccessResponse($transformedDto);
     }
 
-    #[Route(path:'/{uid}/reports', name:'deputy_find_reports_by_uid', requirements:['uid' => '\d+'], methods:['GET'])]
-    public function getAllDeputyReports(Request $request, int $uid): JsonResponse
+    #[Route(path:'/{uid}/courtorders', name:'deputy_find_courtorders_by_uid', requirements:['uid' => '\d+'], methods:['GET'])]
+    public function getAllDeputyCourtOrders(Request $request, int $uid): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -55,7 +55,6 @@ class DeputyController extends AbstractController
         try {
             $results = $this->deputyRepository->findReportsInfoByUid($uid, $inactive);
         } catch (\Exception $e) {
-            error_log($e->getMessage());
             $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 
             return $this->buildErrorResponse();

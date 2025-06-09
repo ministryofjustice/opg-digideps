@@ -31,3 +31,6 @@ signInForm:
   signin:
     label: Sign in
     invalidMessage: You've entered an invalid email or password. Please try again.
+
+maintenance:
+  sentence: "Scheduled maintenance planned Monday 4am-5am. You may not be able to login or save changes."

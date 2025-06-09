@@ -158,7 +158,7 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users" {
   description         = "Delete zero activity users in ${terraform.workspace}"
   schedule_expression = "cron(20 6 * * ? *)"
   tags                = var.default_tags
-  is_enabled          = false
+  state               = "DISABLED"
 }
 
 resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
@@ -408,7 +408,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
 resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
   name                = "sleep-mode-off-${local.environment}"
   description         = "Sleep mode - turn off environment ${terraform.workspace}"
-  schedule_expression = "cron(15 03,20 * * ? *)"
+  schedule_expression = "cron(15 03,20 ? * 1,3,4,5,6,7 *)"
   tags                = var.default_tags
   is_enabled          = var.account.sleep_mode_enabled ? true : false
 }

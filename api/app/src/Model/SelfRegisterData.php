@@ -11,186 +11,141 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SelfRegisterData
 {
     /**
-     * @var string
+     * Deputy's first name.
      *
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'user.firstname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 2, max: 50, minMessage: 'user.firstname.minLength', maxMessage: 'user.firstname.maxLength', groups: ['self_registration', 'verify_codeputy'])]
-    private $firstname;
+    private ?string $firstname = null;
 
     /**
-     * @var string lastname
+     * Deputy's last name.
      *
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'user.lastname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 2, max: 50, minMessage: 'user.lastname.minLength', maxMessage: 'user.lastname.maxLength', groups: ['self_registration', 'verify_codeputy'])]
-    private $lastname;
+    private ?string $lastname = null;
 
     /**
-     * @var string email
+     * Deputy's email.
      *
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'user.email.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Email(message: 'user.email.invalid', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(max: 60, maxMessage: 'user.email.maxLength', groups: ['self_registration', 'verify_codeputy'])]
-    private $email;
+    private ?string $email = null;
 
     /**
-     * @var string email
+     * Deputy's postcode.
      *
      * @JMS\Type("string")
      */
     #[Assert\Length(max: 10, maxMessage: 'user.addressPostcode.maxLength', groups: ['self_registration', 'verify_codeputy'])]
-    private $postcode;
+    private ?string $postcode = null;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'client.firstname.notBlank', groups: ['self_registration'])]
     #[Assert\Length(min: 2, minMessage: 'client.firstname.minMessage', max: 50, maxMessage: 'client.firstname.maxMessage', groups: ['self_registration'])]
-    private $clientFirstname;
+    private ?string $clientFirstname = null;
 
     /**
-     * @var string clientLastName
-     *
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'client.lastname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 2, minMessage: 'client.lastname.minMessage', max: 50, maxMessage: 'client.lastname.maxMessage', groups: ['self_registration', 'verify_codeputy'])]
-    private $clientLastname;
+    private ?string $clientLastname = null;
 
     /**
-     * @var string caseNumber
-     *
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'client.caseNumber.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 8, max: 8, groups: ['self_registration', 'verify_codeputy'])]
-    private $caseNumber;
+    private ?string $caseNumber = null;
 
-    /**
-     * @return string
-     */
-    public function getFirstname()
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    /**
-     * @param string $firstname
-     */
-    public function setFirstname($firstname)
+    public function setFirstname(string $firstname): void
     {
         $this->firstname = $firstname;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastname()
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    /**
-     * @param string $lastname
-     */
-    public function setLastname($lastname)
+    public function setLastname(string $lastname): void
     {
         $this->lastname = $lastname;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = strtolower($email);
     }
 
-    /**
-     * @return string
-     */
-    public function getPostcode()
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
 
-    /**
-     * @param string $postcode
-     */
-    public function setPostcode($postcode)
+    public function setPostcode(string $postcode): void
     {
         $this->postcode = $postcode;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientFirstname()
+    public function getClientFirstname(): ?string
     {
         return $this->clientFirstname;
     }
 
-    /**
-     * @param string $clientFirstname
-     */
-    public function setClientFirstname($clientFirstname)
+    public function setClientFirstname(?string $clientFirstname): void
     {
         $this->clientFirstname = $clientFirstname;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientLastname()
+    public function getClientLastname(): ?string
     {
         return $this->clientLastname;
     }
 
-    /**
-     * @param string $clientLastname
-     */
-    public function setClientLastname($clientLastname)
+    public function setClientLastname(string $clientLastname): void
     {
         $this->clientLastname = $clientLastname;
     }
 
-    /**
-     * @return string
-     */
-    public function getCaseNumber()
+    public function getCaseNumber(): ?string
     {
         return $this->caseNumber;
     }
 
-    /**
-     * @param string $caseNumber
-     */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber(string $caseNumber): void
     {
         $this->caseNumber = $caseNumber;
     }
 
-    public function toArray()
+    /**
+     * @return array<string, ?string>
+     */
+    public function toArray(): array
     {
         return [
             'deputy_firstname' => $this->firstname,
             'deputy_lastname' => $this->lastname,
-            // 'deputy_email' => $this->email,
+            'deputy_email' => $this->email,
             'deputy_postcode' => $this->postcode,
             'client_lastname' => $this->clientLastname,
             'client_case_number' => $this->caseNumber,
@@ -201,7 +156,7 @@ class SelfRegisterData
      * Function to replace known Unicode chars with equivalent ASCII
      * Used to better support matching user inputted data with data present in Pre-registration table.
      */
-    public function replaceUnicodeChars()
+    public function replaceUnicodeChars(): void
     {
         $this->firstname = str_replace('’', '\'', $this->firstname ?? '');
         $this->lastname = str_replace('’', '\'', $this->lastname ?? '');

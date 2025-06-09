@@ -268,6 +268,7 @@ class ReportController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
+        // ACTION: Move logic to service class
         // redirect back to log out page if signing in with non-primary account with primary email
         $redirect = $this->redirectNonPrimaryAccount($user);
         if (!is_null($redirect)) {
@@ -575,7 +576,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $this->getUser(), $reportId);
+            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $reportId);
             $postSubmissionUrl = $this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId, 'satisfactionId' => $satisfactionId]);
 
             return $this->redirect($postSubmissionUrl);

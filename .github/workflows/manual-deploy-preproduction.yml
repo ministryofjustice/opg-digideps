@@ -1,0 +1,56 @@
+name: "[Manual] Deploy Specific Image to Preproduction"
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy"
+        required: true
+      task_name:
+        description: "Task to deploy"
+        required: false
+        default: "none"
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  terraform_apply_preproduction:
+    name: preproduction environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    with:
+      workspace: preproduction
+      terraform_path: environment
+      apply: true
+      account_name: preproduction
+      container_version: ${{ github.event.inputs.image_tag }}
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+  # Example Override: "sh,scripts/task_run_console_command.sh,digideps:api:process-lay-csv,--env=dev,--no-debug,layDeputyReport.csv"
+  run_task:
+    if: github.event.inputs.task_name != 'none'
+    name: run specified task
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - terraform_apply_preproduction
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: preproduction
+      account_id: 454262938596
+      account_name: development
+      task_name: "api_task_override"
+      timeout: "1800"
+      override: ${{ github.event.inputs.task_name }}
+      hide_logs: "true"

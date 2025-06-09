@@ -190,7 +190,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $salt;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
@@ -208,7 +208,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $registrationToken;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
@@ -255,7 +255,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $phoneAlternative;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
@@ -318,7 +318,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $agreeTermsUse;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @ORM\Column(name="agree_terms_use_date", type="datetime", nullable=true)
      */
@@ -372,7 +372,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Deputy $deputy;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @ORM\Column(name="pre_register_validated", type="datetime", nullable=true)
      */
@@ -529,7 +529,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set registrationDate.
      *
-     * @param DateTime $registrationDate
+     * @param \DateTime $registrationDate
      *
      * @return User
      */
@@ -543,7 +543,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get registrationDate.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getRegistrationDate()
     {
@@ -563,7 +563,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $token = bin2hex(random_bytes(16)).$userIdWithLeadingZeros;
 
         $this->setRegistrationToken($token);
-        $this->setTokenDate(new DateTime());
+        $this->setTokenDate(new \DateTime());
 
         return $this;
     }
@@ -619,7 +619,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set tokenDate.
      *
-     * @param DateTime $tokenDate
+     * @param \DateTime $tokenDate
      *
      * @return User
      */
@@ -633,7 +633,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get tokenDate.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getTokenDate()
     {
@@ -759,46 +759,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return string
      */
-    public function getAddress1()
-    {
-        return $this->address1;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress2()
-    {
-        return $this->address2;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress3()
-    {
-        return $this->address3;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddressPostcode()
-    {
-        return $this->addressPostcode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddressCountry()
-    {
-        return $this->addressCountry;
-    }
-
-    /**
-     * @return string
-     */
     public function getPhoneMain()
     {
         return $this->phoneMain;
@@ -833,14 +793,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getLastLoggedIn()
     {
         return $this->lastLoggedIn;
     }
 
-    public function setLastLoggedIn(?DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
@@ -1025,14 +985,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->agreeTermsUse = $agreeTermsUse;
 
         if ($agreeTermsUse) {
-            $this->agreeTermsUseDate = new DateTime('now');
+            $this->agreeTermsUseDate = new \DateTime('now');
         }
 
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getAgreeTermsUseDate()
     {
@@ -1322,7 +1282,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
     }
 
     public function getCreatedBy(): ?User
@@ -1368,7 +1328,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set preRegisterValidatedDate.
      *
-     * @param DateTime $preRegisterValidatedDate
+     * @param \DateTime $preRegisterValidatedDate
      */
     public function setPreRegisterValidatedDate($preRegisterValidatedDate): User
     {
@@ -1380,7 +1340,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get preRegisterValidatedDate.
      */
-    public function getPreRegisterValidatedDate(): ?DateTime
+    public function getPreRegisterValidatedDate(): ?\DateTime
     {
         return $this->preRegisterValidatedDate;
     }
