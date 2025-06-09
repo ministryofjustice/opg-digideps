@@ -12,14 +12,42 @@ logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
 
 
+def valid_alarm_name(topic, subject):
+    alarm_filters = {
+        "custom_cloudwatch_alarms": [
+            {
+                "match": "breakglass console login check",
+                "must_include": ["ALARM:"],
+            },
+            # Add more rules here
+        ],
+        # You can add other topic keys here
+    }
+
+    for alarm_type, rules in alarm_filters.items():
+        if alarm_type in topic:
+            for rule in rules:
+                if rule["match"] in subject:
+                    if all(
+                        keyword in subject for keyword in rule.get("must_include", [])
+                    ):
+                        return True
+                    return False
+
+    return True
+
+
 def generate_message(event):
     payload = ""
     if "Records" in event:
         for record in event["Records"]:
             if "Sns" in record:
                 message = json.loads(record["Sns"]["Message"])
-                region = record["Sns"]["TopicArn"].split(":")[3]
-                if "AlarmName" in message:
+                subject = record["Sns"]["Subject"]
+                topic_arn = record["Sns"]["TopicArn"]
+                region = topic_arn.split(":")[3]
+                valid = valid_alarm_name(topic_arn, subject)
+                if "AlarmName" in message and valid:
                     payload = alarm_message(message, region)
     elif "GithubActions" in event:
         message = event["GithubActions"]

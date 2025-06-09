@@ -7,6 +7,10 @@ resource "aws_sns_topic" "alerts" {
   )
 }
 
+data "aws_sns_topic" "custom_cloudwatch_alarms" {
+  name = "custom_cloudwatch_alarms"
+}
+
 #trivy:ignore:avd-aws-0095 - Can't do cross region SNS encryption
 resource "aws_sns_topic" "availability-alert" {
   provider     = aws.global
@@ -30,4 +34,10 @@ resource "aws_sns_topic_subscription" "subscription_availability" {
   endpoint  = aws_lambda_function.monitor_notify_lambda.arn
   protocol  = "lambda"
   topic_arn = aws_sns_topic.availability-alert.arn
+}
+
+resource "aws_sns_topic_subscription" "custom_cloudwatch_alarms" {
+  endpoint  = aws_lambda_function.monitor_notify_lambda.arn
+  protocol  = "lambda"
+  topic_arn = data.aws_sns_topic.custom_cloudwatch_alarms.arn
 }
