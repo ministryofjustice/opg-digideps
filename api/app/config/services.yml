@@ -454,3 +454,6 @@ services:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
         public: true
+
+    App\v2\Service\DeputyshipCandidatesConverter:
+        public: true
