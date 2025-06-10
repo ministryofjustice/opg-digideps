@@ -206,6 +206,33 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * @Route("/report/documents/submissionRedirect", name="report_documents_submit_more_redirect")
+     *
+     * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
+     *
+     * @return RedirectResponse
+     *
+     * @throws \Exception
+     */
+    public function handleRedirectPostDocSubmission(Request $request)
+    {
+        $reportId = $request->get('reportId');
+
+        $report = null !== $reportId ? $this->reportApi->getReport($reportId, self::$jmsGroups) : null;
+
+        $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isDeputyOrg()) {
+            return $this->redirect($this->clientApi->generateClientProfileLink($report->getClient()));
+        } else {
+            return $this->redirectToRoute('homepage');
+        }
+    }
+
+    /**
      * @Route("/report/{reportId}/documents/reupload", name="report_documents_reupload")
      *
      * @Template("@App/Report/Document/reupload.html.twig")
@@ -325,14 +352,14 @@ class DocumentController extends AbstractController
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
-            $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
-
             /** @var User $user */
             $user = $this->getUser();
 
             if ($user->isDeputyOrg()) {
+                $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
                 $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
             } else {
+                $nextLink = $this->generateUrl('report_documents_submit_more_redirect');
                 $backLink = $this->generateUrl('homepage');
             }
         }
@@ -485,62 +512,6 @@ class DocumentController extends AbstractController
     {
         $this->restClient->delete('/document/'.$documentId);
         $this->addFlash('notice', 'Document has been removed');
-    }
-
-    /**
-     * Confirm additional documents form.
-     *
-     * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
-     *
-     * @Template("@App/Report/Document/submitMoreDocumentsConfirm.html.twig")
-     *
-     * @return array
-     */
-    public function submitMoreConfirmAction(Request $request, $reportId)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
-
-        $fromPage = $request->get('from');
-
-        $backLink = $this->generateUrl('report_documents', ['reportId' => $reportId]);
-        $nextLink = $this->generateUrl('report_documents_submit_more_confirmed', ['reportId' => $reportId]);
-
-        return [
-            'report' => $report,
-            'backLink' => $backLink,
-            'nextLink' => $nextLink,
-            'fromPage' => $fromPage,
-        ];
-    }
-
-    /**
-     * Confirmed send additional documents.
-     *
-     * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
-     *
-     * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
-     *
-     * @return RedirectResponse
-     *
-     * @throws \Exception
-     */
-    public function submitMoreConfirmedAction(Request $request, $reportId)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
-
-        // submit the report to generate the submission entry only
-        $this->restClient->put('report/'.$report->getId().'/submit-documents', $report, ['submit']);
-
-        $this->addFlash('notice', 'The documents attached for your '.$report->getPeriod().' report have been sent to OPG');
-
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($user->isDeputyOrg()) {
-            return $this->redirect($this->clientApi->generateClientProfileLink($report->getClient()));
-        } else {
-            return $this->redirectToRoute('homepage');
-        }
     }
 
     /**

@@ -7,17 +7,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            <h2 class="govuk-heading-m">{{ (page ~ '.documentList') | trans }}</h2>
-        </div>
-        <div class="govuk-grid-column-one-half text--right">
-        {% if page == 'submitMoreDocumentsConfirm' %}
-            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
-                <strong>
-                    <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
-                </strong>
-            </a>
-        {% endif %}
+            <h2 class="govuk-heading-m">{{ (page ~ '.selectedDocuments') | trans }}</h2>
         </div>
     </div>
 
@@ -53,7 +43,7 @@
     </dl>
 
     {% if page == 'attachPage' %}
-        <a href="{{ nextLink }}" class="button push-double--bottom behat-link-continue-to-submit">{{ (page ~ '.continueToSubmit') | trans }}</a>
+        <a href="{{ nextLink }}" class="button push-double--bottom behat-link-continue-to-submit">{{ (page ~ '.sendDocuments') | trans }}</a>
     {% endif %}
 
 {% endif %}
