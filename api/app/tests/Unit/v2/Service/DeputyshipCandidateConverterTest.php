@@ -95,7 +95,7 @@ class DeputyshipCandidateConverterTest extends TestCase
         $mockResult1->success = true;
         $mockResult1->data = $orderId;
 
-        $this->mockDbAccess->expects($this->exactly(2))->method('beginTransaction');
+        $this->mockDbAccess->expects($this->once())->method('beginTransaction');
         $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($mockResult1);
         $this->mockDbAccess->expects($this->once())->method('rollback');
 
@@ -143,7 +143,7 @@ class DeputyshipCandidateConverterTest extends TestCase
 
         // expect rollbacks as this is a dry run: once for the insert order, once for the transaction around the
         // candidates
-        $this->mockDbAccess->expects($this->exactly(2))->method('rollback');
+        $this->mockDbAccess->expects($this->once())->method('rollback');
 
         // call
         $builderResult = $this->sut->convert($candidateGroup, true);
