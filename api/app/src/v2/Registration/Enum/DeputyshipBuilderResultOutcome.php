@@ -19,7 +19,7 @@ enum DeputyshipBuilderResultOutcome: string
     case CandidateListError = 'invalid candidate list - more than one court order UID';
 
     // happens if there is no court order insert candidate and no existing court order could be found
-    case NoExistingOrder = 'no insert order candidate and no existing court order with UID could be found';
+    case NoExistingOrder = 'no insert order candidate or no existing court order with UID could be found';
 
     // happens if an insert order candidate could not be applied
     case InsertOrderFailed = 'unable to apply insert order candidate';
