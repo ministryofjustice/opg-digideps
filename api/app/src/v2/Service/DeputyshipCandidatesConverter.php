@@ -31,15 +31,7 @@ class DeputyshipCandidatesConverter
         if (!is_null($insertOrder)) {
             $result = $this->dbAccess->insertOrder($insertOrder);
 
-            if ($result->success) {
-                if ($dryRun) {
-                    $this->dbAccess->rollback();
-                } else {
-                    $this->dbAccess->endTransaction();
-                }
-
-                $buildResult->addCandidateResult($result);
-            } else {
+            if (!$result->success) {
                 $this->dbAccess->rollback();
 
                 $errors = [];
@@ -49,12 +41,16 @@ class DeputyshipCandidatesConverter
 
                 return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::InsertOrderFailed, $errors);
             }
+
+            $buildResult->addCandidateResult($result);
         }
 
         $result = $this->dbAccess->findOrderId($candidatesGroup->orderUid);
 
         // court order could not be found
         if (!$result->success) {
+            $this->dbAccess->rollback();
+
             $errors = [];
             if (!is_null($result->error)) {
                 $errors[] = $result->error;
@@ -65,12 +61,6 @@ class DeputyshipCandidatesConverter
 
         /** @var int $courtOrderId */
         $courtOrderId = $result->data;
-
-        // because we're using an iterator, it's not simple to count how many candidates we're going to
-        // be dealing with; so we always start a transaction in case there is 1 or more; if we knew how many
-        // candidates there were, we could avoid the transaction altogether, but this would mean counting them
-        // (which defeats the purpose of using an iterator)
-        $this->dbAccess->beginTransaction();
 
         $failed = false;
 
