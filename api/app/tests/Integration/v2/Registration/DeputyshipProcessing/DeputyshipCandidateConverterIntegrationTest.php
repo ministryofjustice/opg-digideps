@@ -71,7 +71,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
         ];
 
         // candidate group 2: different court order for same case number - currently fails due to unique key violation
-        // candidates: add court order B, add court order ndr for B
+        // candidates: add court order B, add court order ndr for B (which references the same NDR as group 1)
         $candidatesGroup2 = new DeputyshipCandidatesGroup();
         $candidatesGroup2->orderUid = $orderUid2;
         $candidatesGroup2->insertOrder = [
@@ -85,7 +85,8 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid2, 'ndrId' => $ndr->getId()],
         ];
 
-        // candidate group 3: separate court order for different client - also currently fails even though it's unrelated, due to transaction breakage on group 2
+        // candidate group 3: separate court order for different client - this is unrelated and should not
+        // fail due to a breakage on group 2
         // candidates: add court order C
         $candidatesGroup3 = new DeputyshipCandidatesGroup();
         $candidatesGroup3->orderUid = $orderUid3;
@@ -98,16 +99,15 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
         ];
 
         $result = $this->sut->convert($candidatesGroup1, dryRun: false);
-        print_r($result);
-
-        echo "++++++++++++++++++++++++++\n";
+        self::assertEquals(2, $result->getNumCandidatesApplied(), 'two group 1 candidates should be applied');
+        self::assertCount(0, $result->getErrors(), 'group 1 should have no errors');
 
         $result = $this->sut->convert($candidatesGroup2, dryRun: false);
-        print_r($result);
-
-        echo "++++++++++++++++++++++++++\n";
+        self::assertEquals(2, $result->getNumCandidatesApplied(), 'two group 2 candidates should be applied');
+        self::assertCount(0, $result->getErrors(), 'group 2 should have no errors');
 
         $result = $this->sut->convert($candidatesGroup3, dryRun: false);
-        print_r($result);
+        self::assertEquals(1, $result->getNumCandidatesApplied(), 'one group 3 candidate should be applied');
+        self::assertCount(0, $result->getErrors(), 'group 3 should have no errors');
     }
 }
