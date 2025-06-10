@@ -6,7 +6,7 @@ resource "aws_instance" "ssm_ec2" {
   vpc_security_group_ids      = [aws_security_group.ssm_instance_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
   user_data                   = templatefile("${path.module}/boot.sh.tpl", {})
-  associate_public_ip_address = true
+  associate_public_ip_address = false
 
   tags = merge(var.tags, {
     Name = var.name
@@ -75,4 +75,19 @@ data "aws_iam_policy_document" "ssm_assume_role" {
       identifiers = ["ec2.amazonaws.com"]
     }
   }
+}
+
+
+locals {
+  user_data = <<EOF
+#cloud-config
+repo_update: true
+repo_upgrade: all
+
+packages:
+- postgresql15.x86_64
+
+runcmd:
+- sudo echo "Running"
+EOF
 }
