@@ -62,6 +62,10 @@ resource "aws_iam_role_policy" "lambda_monitor_notify" {
   role   = aws_iam_role.lambda_monitor_notify.id
 }
 
+data "aws_kms_alias" "custom_sns" {
+  name = "alias/custom_cloudwatch_alarms_sns"
+}
+
 data "aws_iam_policy_document" "lambda_monitor_notify" {
   statement {
     sid    = "allowLogging"
@@ -98,7 +102,8 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
     ]
     resources = [
       aws_sns_topic.alerts.arn,
-      aws_sns_topic.availability-alert.arn
+      aws_sns_topic.availability-alert.arn,
+      data.aws_sns_topic.custom_cloudwatch_alarms.arn
     ]
   }
 
@@ -109,6 +114,7 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
       "kms:Decrypt"
     ]
     resources = [
+      data.aws_kms_alias.custom_sns.target_key_arn,
       module.sns_kms.eu_west_1_target_key_arn
     ]
   }
@@ -166,6 +172,19 @@ resource "aws_lambda_permission" "sns" {
   function_name = aws_lambda_function.monitor_notify_lambda.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.alerts.arn
+  lifecycle {
+    replace_triggered_by = [
+      aws_lambda_function.monitor_notify_lambda
+    ]
+  }
+}
+
+resource "aws_lambda_permission" "sns_custom" {
+  statement_id  = "AllowExecutionFromCustomSNSTopic"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.monitor_notify_lambda.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = data.aws_sns_topic.custom_cloudwatch_alarms.arn
   lifecycle {
     replace_triggered_by = [
       aws_lambda_function.monitor_notify_lambda
