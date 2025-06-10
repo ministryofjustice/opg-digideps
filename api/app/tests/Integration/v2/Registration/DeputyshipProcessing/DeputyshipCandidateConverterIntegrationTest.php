@@ -37,8 +37,18 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
         $this->purger->purge();
     }
 
-    // TODO if we have multiple court orders with the same NDR, this causes a unique key violation, and also prevents subsequent rows from being processed
-    public function testMultipleCourtOrdersWithSameNdr(): void
+    protected function dryRunTestCases(): array
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    /**
+     * @dataProvider dryRunTestCases
+     */
+    public function testMultipleCourtOrdersWithSameNdr(bool $dryRun): void
     {
         $caseNumber = '1122334455';
         $orderUid1 = '78866434545';
@@ -98,15 +108,15 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderMadeDate' => '2025-06-10',
         ];
 
-        $result = $this->sut->convert($candidatesGroup1, dryRun: false);
+        $result = $this->sut->convert($candidatesGroup1, dryRun: $dryRun);
         self::assertEquals(2, $result->getNumCandidatesApplied(), 'two group 1 candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'group 1 should have no errors');
 
-        $result = $this->sut->convert($candidatesGroup2, dryRun: false);
+        $result = $this->sut->convert($candidatesGroup2, dryRun: $dryRun);
         self::assertEquals(2, $result->getNumCandidatesApplied(), 'two group 2 candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'group 2 should have no errors');
 
-        $result = $this->sut->convert($candidatesGroup3, dryRun: false);
+        $result = $this->sut->convert($candidatesGroup3, dryRun: $dryRun);
         self::assertEquals(1, $result->getNumCandidatesApplied(), 'one group 3 candidate should be applied');
         self::assertCount(0, $result->getErrors(), 'group 3 should have no errors');
     }
