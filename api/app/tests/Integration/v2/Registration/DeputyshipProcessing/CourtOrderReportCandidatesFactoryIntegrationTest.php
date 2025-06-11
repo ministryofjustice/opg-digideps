@@ -105,6 +105,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyUid = '12121212';
         $caseNumber = '12345678';
         $orderUid = '66667777';
+        $madeDate = new \DateTime();
 
         // add staging deputyship
         $deputyship = new StagingDeputyship();
@@ -114,6 +115,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->orderType = $orderType;
         $deputyship->isHybrid = $isHybrid;
         $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
         $this->em->persist($deputyship);
         $this->em->flush();
@@ -129,8 +131,8 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $report1 = new Report(
             client: $client,
             type: $compatibleReportType,
-            startDate: new \DateTime(),
-            endDate: new \DateTime(),
+            startDate: $madeDate,
+            endDate: $madeDate,
             dateChecks: false
         );
 
@@ -157,14 +159,16 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     {
         $caseNumber = '77677775';
         $orderUid = '88884444';
+        $madeDate = new \DateTime();
 
         // add pfa/LAY staging deputyship
         $deputyship = new StagingDeputyship();
-        $deputyship->deputyUid = '11112233';
+        $deputyship->deputyUid = '11112234';
         $deputyship->orderUid = $orderUid;
         $deputyship->deputyType = 'LAY';
         $deputyship->orderType = 'pfa';
         $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
         $this->em->persist($deputyship);
         $this->em->flush();
@@ -178,6 +182,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
 
         // add NDR to client
         $ndr = new Ndr($client);
+        $ndr->setStartDate($madeDate);
 
         $this->em->persist($ndr);
         $this->em->flush();
