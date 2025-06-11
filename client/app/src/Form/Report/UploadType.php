@@ -12,12 +12,19 @@ class UploadType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if (!$options['report_submitted']) {
+            $builder
+                ->add('files', FileType::class, [
+                    'required' => false,
+                    'multiple' => true,
+                ])
+                ->add('save', FormTypes\SubmitType::class);
+        }
         $builder
             ->add('files', FileType::class, [
                 'required' => false,
                 'multiple' => true,
-            ])
-            ->add('save', FormTypes\SubmitType::class);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -25,6 +32,7 @@ class UploadType extends AbstractType
         $resolver->setDefaults([
             'validation_groups' => ['document'],
             'translation_domain' => 'report-documents',
+            'report_submitted' => true,
         ]);
     }
 

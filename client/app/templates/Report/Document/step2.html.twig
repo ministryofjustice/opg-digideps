@@ -18,7 +18,7 @@
 
 {% block pageContent %}
 
-    {% if successUploaded == "true" %}
+    {% if successUploaded == "true" and report.isSubmitted == false %}
         {{ macros.successBanner(page ~ '.successUploaded', translationDomain, page ~ '.successUploadedHeader') }}
     {% endif %}
 
@@ -26,31 +26,45 @@
 
     <p class="govuk-body">{{ (page ~ '.selectHelp') | trans }}</p>
 
-    <div class="govuk-inset-text">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <strong>{{ (page ~ '.selectHint1') | trans }}</strong>
-                <br>
-                {{ (page ~ '.selectHint2') | trans }}
-             </div>
+    {% if report.isSubmitted == false %}
+        <div class="govuk-inset-text">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <strong>{{ (page ~ '.selectHint1') | trans }}</strong>
+                    <br>
+                    {{ (page ~ '.selectHint2') | trans }}
+                 </div>
+            </div>
         </div>
-    </div>
 
-    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
-    {{ form_input(form.files,'form.files', {
-        'labelText':  '' | trans ,
-        'labelClass': 'visually-hidden',
-        'inputClass': 'no-border behat-link-choose-file' })
-    }}
+        {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
+        {{ form_input(form.files,'form.files', {
+            'labelText':  '' | trans ,
+            'labelClass': 'visually-hidden',
+            'inputClass': 'no-border behat-link-choose-file' })
+        }}
 
-    <h2 class="govuk-heading-m flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
+        <h2 class="govuk-heading-m flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
 
-    <div class="js-hidden">
-        {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
-    </div>
-    <div class="custom-submit">
-        {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
-    </div>
+        <div class="js-hidden">
+            {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
+        </div>
+        <div class="custom-submit">
+            {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
+        </div>
+    {% else %}
+        {{ form_start(form, {'attr': {'id': 'upload_form_post_submission', 'class': 'push-double--bottom'}}) }}
+        {{ form_input(form.files,'form.files', {
+            'id': 'report_document_upload_files',
+            'labelText':  '' | trans ,
+            'labelClass': 'visually-hidden',
+            'inputClass': 'no-border behat-link-choose-file' })
+        }}
+        <div class="js-hidden">
+            {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
+        </div>
+    {% endif %}
+
     <div>
     <br>
     {% set alertMessage %}
@@ -70,6 +84,7 @@
         'translationDomain': translationDomain,
         'page' : page,
         } %}
+        <a href="{{ nextLink }}" class="button push-double--bottom behat-link-continue-to-submit">{{ (page ~ '.sendDocuments') | trans }}</a>
     {% elseif report.documents | length > 0 %}
         {% include '@App/Report/Document/_list.html.twig'  with {
         'translationDomain': translationDomain,

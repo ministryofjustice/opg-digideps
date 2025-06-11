@@ -41,11 +41,6 @@
             </div>
         {% endfor %}
     </dl>
-
-    {% if page == 'attachPage' %}
-        <a href="{{ nextLink }}" class="button push-double--bottom behat-link-continue-to-submit">{{ (page ~ '.sendDocuments') | trans }}</a>
-    {% endif %}
-
 {% endif %}
 
 {# Previously submitted documents #}
