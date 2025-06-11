@@ -4,7 +4,7 @@ resource "aws_instance" "ssm_ec2" {
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = [aws_security_group.ssm_instance_sg.id]
-  iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
+  iam_instance_profile        = aws_iam_instance_profile.operator_profile.name
   user_data                   = templatefile("${path.module}/boot.sh.tpl", {})
   associate_public_ip_address = false
 
@@ -60,33 +60,37 @@ resource "aws_security_group" "ssm_endpoint_sg" {
 
 
 #Creates a new assumable role
-resource "aws_iam_role" "ssm_role" {
-  name               = "${var.name}-ssm-role"
-  assume_role_policy = data.aws_iam_policy_document.ssm_assume_role.json
+# resource "aws_iam_role" "ssm_role" {
+#   name               = "${var.name}-ssm-role"
+#   assume_role_policy = data.aws_iam_policy_document.ssm_assume_role.json
+# }
+
+data "aws_iam_role" "operator" {
+  name = "operator"
 }
 
 #Binds the new assuamble role above to the 'iam instance profile'
-resource "aws_iam_instance_profile" "ssm_profile" {
+resource "aws_iam_instance_profile" "operator_profile" {
   name = "${var.name}-instance-profile"
-  role = aws_iam_role.ssm_role.name
+  role = data.aws_iam_role.operator
 }
 
 #Sets AmazonSSMManagedInstanceCore to the new role
-resource "aws_iam_role_policy_attachment" "ssm_core" {
-  role       = aws_iam_role.ssm_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
+# resource "aws_iam_role_policy_attachment" "ssm_core" {
+#   role       = aws_iam_role.ssm_role.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# }
 
 #Allows Amazon into the ec2 service
-data "aws_iam_policy_document" "ssm_assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
+# data "aws_iam_policy_document" "ssm_assume_role" {
+#   statement {
+#     actions = ["sts:AssumeRole"]
+#     principals {
+#       type        = "Service"
+#       identifiers = ["ec2.amazonaws.com"]
+#     }
+#   }
+# }
 
 
 locals {
