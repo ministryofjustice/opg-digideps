@@ -19,7 +19,7 @@ locals {
       protocol    = "tcp"
       type        = "ingress"
       target_type = "security_group_id"
-      target      = module.ssm_ec2_instance.aws_security_group.ssm_instance_sg.id
+      target      = module.ssm_ec2_instance.ssm_instance_sg_id
     }
     db_access_tasks = {
       port        = 5432
