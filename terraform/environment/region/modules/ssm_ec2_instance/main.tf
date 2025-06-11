@@ -72,7 +72,7 @@ data "aws_iam_role" "operator" {
 #Binds the new assuamble role above to the 'iam instance profile'
 resource "aws_iam_instance_profile" "operator_profile" {
   name = "${var.name}-instance-profile"
-  role = data.aws_iam_role.operator
+  role = data.aws_iam_role.operator.name
 }
 
 #Sets AmazonSSMManagedInstanceCore to the new role
