@@ -18,23 +18,27 @@ resource "aws_security_group" "ssm_instance_sg" {
   description = "SSM EC2 instance SG"
   vpc_id      = var.vpc_id
 
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = merge(var.tags, {
     Name = "ssm-instance"
   })
+}
+
+resource "aws_security_group_rule" "postgres_ssm_egress" {
+  type              = "egress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.ssm_instance_sg.id
+}
+
+resource "aws_security_group_rule" "https_ssm_egress" {
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.ssm_instance_sg.id
 }
 
 resource "aws_security_group" "ssm_endpoint_sg" {
