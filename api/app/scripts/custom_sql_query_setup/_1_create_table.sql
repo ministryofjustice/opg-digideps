@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS audit.custom_queries (
     run_on TIMESTAMP,
     expected_before INT,
     expected_after INT,
+    maximum_rows_affected INT,
     passed BOOLEAN
 );
 ALTER SEQUENCE audit.custom_queries_id_seq CACHE 1;

@@ -11,7 +11,7 @@ Remember to edit the SQL and validation scripts in this folder.
 Example make commands:
 
 ```
-aws-vault exec identity -- make sql-custom-command-insert workspace=ddls1234000 before=1 after=0
+aws-vault exec identity -- make sql-custom-command-insert workspace=ddls1234000 before=1 after=0 max=1
 aws-vault exec identity -- make sql-custom-command-get workspace=ddls1234000 id=1
 aws-vault exec identity -- make sql-custom-command-sign-off workspace=ddls1234000 id=1
 aws-vault exec identity -- make sql-custom-command-execute workspace=ddls1234000 id=1

@@ -194,7 +194,7 @@ resilience-tests: ##@resilience-tests Run resilience tests (requires app to be u
 
 sql-custom-command-insert: ##@sql-custom-command Run SQL insert custom command
 	docker compose -f docker-compose.commands.yml build sql-custom-command
-	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) insert --sql_file=_run.sql --verification_sql_file=_verification.sql --expected_before=$(before) --expected_after=$(after)
+	docker compose -f docker-compose.commands.yml run --remove-orphans sql-custom-command $(workspace) insert --sql_file=_run.sql --verification_sql_file=_verification.sql --expected_before=$(before) --expected_after=$(after) --maximum_rows_affected=$(max)
 
 sql-custom-command-get: ##@sql-custom-command Run SQL get custom command
 	docker compose -f docker-compose.commands.yml build sql-custom-command
