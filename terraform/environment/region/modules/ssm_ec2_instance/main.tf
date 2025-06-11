@@ -25,6 +25,13 @@ resource "aws_security_group" "ssm_instance_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   tags = merge(var.tags, {
     Name = "ssm-instance"
   })
