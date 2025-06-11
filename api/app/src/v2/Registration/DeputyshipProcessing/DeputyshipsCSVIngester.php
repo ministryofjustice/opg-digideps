@@ -54,7 +54,6 @@ class DeputyshipsCSVIngester
 
         // each $builderResult contains a group of court order entities and relationships to be persisted
         foreach ($builderResults as $builderResult) {
-            // TODO properly log builder result
             $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
         }
 
