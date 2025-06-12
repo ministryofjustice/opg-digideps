@@ -1,8 +1,12 @@
 {
   "procedure": "insert_custom_query",
   "calling_user": "bob.smith",
-  "custom_query": "UPDATE dd_user SET lastname = 'Blah' WHERE lastname = 'Manager1';",
-  "validation_query": "SELECT COUNT(*) FROM dd_user WHERE lastname = 'Manager1';",
-  "expected_before": 1,
-  "expected_after": 0
+  "custom_query": "update dd_user set firstname = 'Bob' where id in (9,10);",
+  "validation_query": "SELECT COUNT(*) FROM dd_user WHERE firstname = 'Bob';",
+  "expected_before": 0,
+  "expected_after": 2,
+  "maximum_rows_affected": 1,
+  "user_token": "",
+  "workspace": "local",
+  "db_endpoint": "postgres"
 }

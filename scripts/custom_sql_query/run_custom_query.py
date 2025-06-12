@@ -108,6 +108,7 @@ def run_insert(
     verification_sql_file,
     expected_before,
     expected_after,
+    maximum_rows_affected,
     workspace,
     db_endpoint,
 ):
@@ -142,6 +143,9 @@ def run_insert(
         print("Supply the expected_after argument")
         sys.exit(1)
 
+    if maximum_rows_affected is None:
+        print("Supply the maximum_rows_affected argument")
+
     payload = {
         "procedure": "insert_custom_query",
         "calling_user": calling_user,
@@ -149,6 +153,7 @@ def run_insert(
         "validation_query": sql_verification_cleaned,
         "expected_before": expected_before,
         "expected_after": expected_after,
+        "maximum_rows_affected": maximum_rows_affected,
         "user_token": get_user_token(),
         "workspace": workspace,
         "db_endpoint": db_endpoint,
@@ -269,6 +274,7 @@ def main(
     verification_sql_file=None,
     expected_before=None,
     expected_after=None,
+    maximum_rows_affected=None,
 ):
     sql_file = f"/function/{sql_file}"
     verification_sql_file = f"/function/{verification_sql_file}"
@@ -290,6 +296,7 @@ def main(
             verification_sql_file,
             expected_before,
             expected_after,
+            maximum_rows_affected,
             workspace,
             db_endpoint,
         )
@@ -346,6 +353,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--expected_after", type=int, help="Expected result after running the query."
     )
+    parser.add_argument(
+        "--maximum_rows_affected",
+        type=int,
+        help="Maximum rows affected after running the query.",
+    )
 
     args = parser.parse_args()
 
@@ -358,4 +370,5 @@ if __name__ == "__main__":
         verification_sql_file=args.verification_sql_file,
         expected_before=args.expected_before,
         expected_after=args.expected_after,
+        maximum_rows_affected=args.maximum_rows_affected,
     )
