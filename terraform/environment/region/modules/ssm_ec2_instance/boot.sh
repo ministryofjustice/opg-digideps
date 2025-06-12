@@ -5,41 +5,41 @@ exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&
 cat << 'EOF' > /usr/local/bin/database
 #!/bin/bash
 
-command="\${1:-}"
+command="${1:-}"
 
 secret_exists() {
-  local name="\$1"
-  aws secretsmanager describe-secret --secret-id "\$name" >/dev/null 2>&1
+  local name="$1"
+  aws secretsmanager describe-secret --secret-id "$name" >/dev/null 2>&1
 }
 
 get_secret_value() {
-  local name="\$1"
-  aws secretsmanager get-secret-value --secret-id "\$name" --query SecretString --output text 2>/dev/null
+  local name="$1"
+  aws secretsmanager get-secret-value --secret-id "$name" --query SecretString --output text 2>/dev/null
 }
 
 list_databases() {
   printf "%-30s %-70s %-35s %-35s\n" "Database" "Endpoint" "digidepsmaster password" "readonly password"
   printf "%-30s %-70s %-35s %-35s\n" "---------" "---------" "------------------------" "------------------"
 
-  dbs=\$(aws rds describe-db-clusters --query "DBClusters[?Engine=='aurora-postgresql'].[DBClusterIdentifier,Endpoint]" --output text)
+  dbs=$(aws rds describe-db-clusters --query "DBClusters[?Engine=='aurora-postgresql'].[DBClusterIdentifier,Endpoint]" --output text)
 
   while read -r identifier endpoint; do
-    if [[ "\$identifier" == *ddls* ]]; then
+    if [[ "$identifier" == *ddls* ]]; then
       env="default"
     else
-      env="\${identifier#api-}"
+      env="${identifier#api-}"
     fi
 
-    digideps_secret="\${env}/database-password"
-    readonly_secret="\${env}/readonly-sql-db-password"
+    digideps_secret="${env}/database-password"
+    readonly_secret="${env}/readonly-sql-db-password"
 
-    if [[ "\$env" == "default" ]]; then
-      if ! secret_exists "\$digideps_secret"; then
+    if [[ "$env" == "default" ]]; then
+      if ! secret_exists "$digideps_secret"; then
         digideps_secret="Access Denied"
         readonly_secret="Access Denied"
       fi
     else
-      if ! secret_exists "\$digideps_secret"; then
+      if ! secret_exists "$digideps_secret"; then
         if secret_exists "default/database-password"; then
           digideps_secret="default/database-password"
         else
@@ -47,7 +47,7 @@ list_databases() {
         fi
       fi
 
-      if ! secret_exists "\$readonly_secret"; then
+      if ! secret_exists "$readonly_secret"; then
         if secret_exists "default/readonly-sql-db-password"; then
           readonly_secret="default/readonly-sql-db-password"
         else
@@ -56,8 +56,8 @@ list_databases() {
       fi
     fi
 
-    printf "%-30s %-70s %-35s %-35s\n" "\$identifier" "\$endpoint" "\$digideps_secret" "\$readonly_secret"
-  done <<< "\$dbs"
+    printf "%-30s %-70s %-35s %-35s\n" "$identifier" "$endpoint" "$digideps_secret" "$readonly_secret"
+  done <<< "$dbs"
 
   echo
   echo "To connect: database connect <database> <view|admin>"
@@ -65,44 +65,44 @@ list_databases() {
 }
 
 connect_to_database() {
-  identifier="\${1:-}"
-  access="\${2:-}"
+  identifier="${1:-}"
+  access="${2:-}"
 
-  if [[ -z "\$identifier" || -z "\$access" ]]; then
+  if [[ -z "$identifier" || -z "$access" ]]; then
     echo "Usage: database connect <database> <view|admin>"
     exit 1
   fi
 
-  dbs=\$(aws rds describe-db-clusters --query "DBClusters[?DBClusterIdentifier=='\$identifier'].[DBClusterIdentifier,Endpoint]" --output text)
-  read -r cluster_id endpoint <<< "\$dbs"
+  dbs=$(aws rds describe-db-clusters --query "DBClusters[?DBClusterIdentifier=='$identifier'].[DBClusterIdentifier,Endpoint]" --output text)
+  read -r cluster_id endpoint <<< "$dbs"
 
-  if [[ -z "\$endpoint" || "\$endpoint" == "None" ]]; then
-    echo "Could not find endpoint for cluster '\$identifier'"
+  if [[ -z "$endpoint" || "$endpoint" == "None" ]]; then
+    echo "Could not find endpoint for cluster '$identifier'"
     exit 1
   fi
 
-  if [[ "\$identifier" == *ddls* ]]; then
+  if [[ "$identifier" == *ddls* ]]; then
     env="default"
   else
-    env="\${identifier#api-}"
+    env="${identifier#api-}"
   fi
 
-  if [[ "\$access" == "admin" ]]; then
+  if [[ "$access" == "admin" ]]; then
     user="digidepsmaster"
-    secret_name="\${env}/database-password"
-  elif [[ "\$access" == "view" ]]; then
+    secret_name="${env}/database-password"
+  elif [[ "$access" == "view" ]]; then
     user="readonly_sql_user"
-    secret_name="\${env}/readonly-sql-db-password"
+    secret_name="${env}/readonly-sql-db-password"
   else
     echo "Invalid access level: must be 'view' or 'admin'"
     exit 1
   fi
 
-  if ! secret_exists "\$secret_name"; then
-    if [[ "\$env" != "default" ]]; then
-      fallback="default/\${secret_name#*/}"
-      if secret_exists "\$fallback"; then
-        secret_name="\$fallback"
+  if ! secret_exists "$secret_name"; then
+    if [[ "$env" != "default" ]]; then
+      fallback="default/${secret_name#*/}"
+      if secret_exists "$fallback"; then
+        secret_name="$fallback"
       else
         echo "Access Denied"
         exit 1
@@ -113,27 +113,27 @@ connect_to_database() {
     fi
   fi
 
-  password=\$(get_secret_value "\$secret_name")
-  if [[ -z "\$password" ]]; then
+  password=$(get_secret_value "$secret_name")
+  if [[ -z "$password" ]]; then
     echo "Failed to retrieve password"
     exit 1
   fi
 
-  echo "Connecting to \$endpoint as \$user"
-  PGPASSWORD="\$password" psql -h "\$endpoint" -U "\$user" -d postgres -p 5432
+  echo "Connecting to $endpoint as $user"
+  PGPASSWORD="$password" psql -h "$endpoint" -U "$user" -d postgres -p 5432
 }
 
-case "\$command" in
+case "$command" in
   list)
     list_databases
     ;;
   connect)
-    connect_to_database "\$2" "\$3"
+    connect_to_database "$2" "$3"
     ;;
   *)
     echo "Usage:"
-    echo "  \$0 list"
-    echo "  \$0 connect <cluster-identifier> <view|admin>"
+    echo "  $0 list"
+    echo "  $0 connect <cluster-identifier> <view|admin>"
     exit 1
     ;;
 esac
