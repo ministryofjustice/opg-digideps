@@ -94,12 +94,20 @@ def authenticate_or_store_token(secret_name, username, user_token, skip_auth):
 
 
 def run_insert_custom_query(event, conn):
+    print("Gets Here")
     calling_user = event["calling_user"]
+    print(calling_user)
     custom_query = event["custom_query"]
+    print(custom_query)
     validation_query = event["validation_query"]
+    print(validation_query)
     expected_before = event["expected_before"]
+    print(expected_before)
     expected_after = event["expected_after"]
+    print(expected_after)
     maximum_rows_affected = event["maximum_rows_affected"]
+    print(maximum_rows_affected)
+    print("Loaded Everything")
     try:
         cursor = conn.cursor()
 
@@ -112,17 +120,19 @@ def run_insert_custom_query(event, conn):
             maximum_rows_affected,
             None,
         ]
+        print("created prodedure args")
         sql = "CALL audit.insert_custom_query(%s, %s, %s, %s, %s, %s, %s);"
+        print("put them in to call")
         cursor.execute(sql, procedure_args)
+        print("executed")
         result = cursor.fetchall()
-        result_object = {}
-        for row in result:
-            for idx, value in enumerate(row):
-                result_object["id_inserted"] = value
+        print("fetched")
+
         conn.commit()
         cursor.close()
         conn.close()
-
+        print("got result")
+        print(result)
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
         return {"message": "Stored procedure failed to execute", "result": e}

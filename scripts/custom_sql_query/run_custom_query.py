@@ -158,7 +158,7 @@ def run_insert(
         "workspace": workspace,
         "db_endpoint": db_endpoint,
     }
-
+    print(payload)
     return lambda_invoke(lambda_client, function_name, payload)
 
 
