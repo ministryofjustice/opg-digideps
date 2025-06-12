@@ -5,7 +5,7 @@ resource "aws_instance" "ssm_ec2" {
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = [aws_security_group.ssm_instance_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.instance_profile.name
-  user_data                   = templatefile("${path.module}/boot.sh.tpl", {})
+  user_data_base64            = base64encode(file("${path.module}/boot.sh"))
   associate_public_ip_address = false
 
   tags = merge(var.tags, {

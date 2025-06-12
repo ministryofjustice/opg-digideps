@@ -14,12 +14,19 @@ locals {
       target_type = "security_group_id"
       target      = data.aws_security_group.cloud9.id
     }
-    ssm_ec2 = {
+    ssm_ec2_operator = {
       port        = 5432
       protocol    = "tcp"
       type        = "ingress"
       target_type = "security_group_id"
-      target      = module.ssm_ec2_instance.ssm_instance_sg_id
+      target      = module.ssm_ec2_instance_operator.ssm_instance_sg_id
+    }
+    ssm_ec2_breakglass = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "ingress"
+      target_type = "security_group_id"
+      target      = module.ssm_ec2_instance_breakglass.ssm_instance_sg_id
     }
     db_access_tasks = {
       port        = 5432
