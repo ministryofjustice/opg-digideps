@@ -1,4 +1,4 @@
-module "ssm_ec2_instance" {
+module "ssm_ec2_instance_breakglass" {
   source = "./modules/ssm_ec2_instance"
 
   instance_type = "t3.micro"
@@ -10,7 +10,7 @@ module "ssm_ec2_instance" {
   environment = local.environment
 }
 
-module "ssm_ec2_instance" {
+module "ssm_ec2_instance_operator" {
   source = "./modules/ssm_ec2_instance"
 
   instance_type = "t3.micro"
