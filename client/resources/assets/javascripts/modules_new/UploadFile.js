@@ -26,7 +26,6 @@ const uploadFile = {
           if (fileElement.files.length > 0) {
             form.submit()
           }
-
         })
       }
     })
@@ -55,7 +54,6 @@ const uploadFile = {
         event.target.submit()
       }
     })
-
   }
 
 }

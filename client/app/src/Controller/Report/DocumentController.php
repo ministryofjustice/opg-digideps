@@ -212,13 +212,11 @@ class DocumentController extends AbstractController
      *
      * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
      *
-     * @return RedirectResponse
-     *
      * @throws \Exception
      */
-    public function handleRedirectPostDocSubmission(Request $request)
+    public function handleRedirectPostDocSubmission(Request $request): RedirectResponse
     {
-        $reportId = $request->get('reportId');
+        $reportId = $request->query->getInt('reportId');
 
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
@@ -316,7 +314,7 @@ class DocumentController extends AbstractController
         ];
     }
 
-    private function identifyMissingFilesInS3Bucket($report): array
+    private function identifyMissingFilesInS3Bucket(EntityDir\Report\Report $report): array
     {
         $documentIds = [];
 
@@ -379,7 +377,7 @@ class DocumentController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
@@ -405,7 +403,7 @@ class DocumentController extends AbstractController
      *
      * @return array|RedirectResponse|Response
      */
-    public function deleteConfirmAction(Request $request, $documentId)
+    public function deleteConfirmAction(Request $request, string $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -464,7 +462,7 @@ class DocumentController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, $documentId)
+    public function deleteDocument(Request $request, string $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -513,7 +511,7 @@ class DocumentController extends AbstractController
         return $this->redirect($returnUrl);
     }
 
-    private function deleteMissingS3DocFromDocumentTable($documentId)
+    private function deleteMissingS3DocFromDocumentTable(string $documentId): void
     {
         $this->restClient->delete('/document/'.$documentId);
         $this->addFlash('notice', 'Document has been removed');
