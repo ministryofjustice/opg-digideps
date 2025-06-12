@@ -115,14 +115,9 @@ def run_insert_custom_query(event, conn):
         sql = "CALL audit.insert_custom_query(%s, %s, %s, %s, %s, %s, %s);"
         cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
-        result_object = {}
-        for row in result:
-            for idx, value in enumerate(row):
-                result_object["id_inserted"] = value
         conn.commit()
         cursor.close()
         conn.close()
-
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
         return {"message": "Stored procedure failed to execute", "result": e}
