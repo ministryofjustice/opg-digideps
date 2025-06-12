@@ -47,32 +47,13 @@ data "aws_iam_role" "ssm_role" {
   name = var.name
 }
 
-#Binds the new assuamble role above to the 'iam instance profile'
 resource "aws_iam_instance_profile" "instance_profile" {
   name = "${var.name}-instance-profile"
   role = data.aws_iam_role.ssm_role.name
 }
 
-
-#Creates a new assumable role
-# resource "aws_iam_role" "ssm_role" {
-#   name               = "${var.name}-ssm-role"
-#   assume_role_policy = data.aws_iam_policy_document.ssm_assume_role.json
-# }
-
-#Sets AmazonSSMManagedInstanceCore to the new role
-# resource "aws_iam_role_policy_attachment" "ssm_core" {
-#   role       = aws_iam_role.ssm_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-# }
-
-#Allows Amazon into the ec2 service
-# data "aws_iam_policy_document" "ssm_assume_role" {
-#   statement {
-#     actions = ["sts:AssumeRole"]
-#     principals {
-#       type        = "Service"
-#       identifiers = ["ec2.amazonaws.com"]
-#     }
-#   }
-# }
+resource "aws_iam_role_policy_attachment" "ssm_core_role_for_instance_profile" {
+  count      = var.name == "operator" ? 1 : 0
+  role       = data.aws_iam_role.ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
