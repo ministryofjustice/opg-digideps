@@ -220,7 +220,10 @@ class DocumentController extends AbstractController
     {
         $reportId = $request->get('reportId');
 
-        $report = null !== $reportId ? $this->reportApi->getReport($reportId, self::$jmsGroups) : null;
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
+
+        // submit the report to generate the submission entry only
+        $this->restClient->put('report/'.$reportId.'/submit-documents', $report, ['submit']);
 
         $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
 
@@ -357,11 +360,11 @@ class DocumentController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
 
+            $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
+
             if ($user->isDeputyOrg()) {
-                $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
                 $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
             } else {
-                $nextLink = $this->generateUrl('report_documents_submit_more_redirect');
                 $backLink = $this->generateUrl('homepage');
             }
         }
