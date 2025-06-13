@@ -86,12 +86,14 @@ class DeputyshipProcessingRawDbAccess
                         'order_made_date' => ':orderMadeDate',
                         'created_at' => 'now()',
                         'updated_at' => 'now()',
+                        'client_id' => ':clientId',
                     ]
                 )
                 ->setParameter('courtOrderUid', $insertOrder['orderUid'])
                 ->setParameter('orderType', $insertOrder['orderType'] ?? '')
                 ->setParameter('status', $insertOrder['status'] ?? '')
                 ->setParameter('orderMadeDate', $orderMadeDate->format('Y-m-d'))
+                ->setParameter('clientId', $insertOrder['clientId'])
                 ->executeQuery();
 
             return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrder, true, $result);
