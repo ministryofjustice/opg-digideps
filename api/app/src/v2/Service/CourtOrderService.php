@@ -28,8 +28,6 @@ class CourtOrderService
     {
         /** @var ?CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $uid]);
-        var_dump($courtOrder);
-        $this->logger->error((string) $courtOrder->getNdr()->getId());
 
         if (is_null($courtOrder)) {
             $this->logger->error("Could not find court order with UID {$uid}");

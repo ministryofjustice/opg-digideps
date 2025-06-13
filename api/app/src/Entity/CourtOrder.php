@@ -76,7 +76,9 @@ class CourtOrder
     private Client $client;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"}, fetch="EAGER")
+     *
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="SET NULL")
      */
     #[JMS\Type(Ndr::class)]
     #[JMS\Groups(['court-order-full'])]
