@@ -918,4 +918,13 @@ trait SelfRegistrationTrait
             $caseNumber,
         );
     }
+
+    /**
+     * @Then the report status should be :status
+     */
+    public function reportStatusShouldBe(string $status)
+    {
+        $this->iAmOnLayMainPage();
+        $this->assertPageContainsText($status);
+    }
 }
