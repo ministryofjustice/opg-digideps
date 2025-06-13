@@ -33,6 +33,7 @@ Feature: Lay Deputy Self Registration
         And a Lay Deputy registers with valid details using unicode characters
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
+        Then the report status should be "not started"
 
     @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
