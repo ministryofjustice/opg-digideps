@@ -62,12 +62,13 @@ class CourtOrderReportCandidatesFactory
                             (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
                         )
                     )
-                ) AS report_is_compatible
+                ) AS report_type_is_compatible
             FROM staging.deputyship d
             LEFT JOIN client c ON d.case_number = c.case_number
             LEFT JOIN report r ON c.id = r.client_id
+            WHERE r.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
         ) compat
-        WHERE report_is_compatible = true
+        WHERE report_type_is_compatible = true
         GROUP BY court_order_uid, report_id
         ORDER BY court_order_uid, report_id;
     SQL;
@@ -81,7 +82,9 @@ class CourtOrderReportCandidatesFactory
         FROM staging.deputyship d
         INNER JOIN client c ON d.case_number = c.case_number
         INNER JOIN odr ON c.id = odr.client_id
-        WHERE d.order_type = 'pfa' AND d.deputy_type = 'LAY'
+        WHERE d.order_type = 'pfa'
+        AND d.deputy_type = 'LAY'
+        AND odr.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
         GROUP BY d.order_uid, odr.id
         ORDER BY d.order_uid, odr.id;
     SQL;

@@ -39,8 +39,8 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $this->purger->purge();
     }
 
-    // create a report which is not compatible with a deputyship (CSV row)
-    private function createIncompatibleReport(Client $client, string $orderType, string $deputyType): Report
+    // create a report which is not compatible with a deputyship (CSV row) due to type differences
+    private function createIncompatiblyTypedReport(Client $client, string $orderType, string $deputyType): Report
     {
         // a 104 is not compatible with a hybrid or pfa deputyship
         $incompatibleReportType = '104';
@@ -60,6 +60,33 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
             type: $incompatibleReportType,
             startDate: new \DateTime(),
             endDate: new \DateTime(),
+            dateChecks: false
+        );
+    }
+
+    // create a report which is not compatible with a deputyship due to starting too early
+    private function createIncompatiblyDatedReport(Client $client, string $orderType, string $deputyType, \DateTime $madeDate): Report
+    {
+        // make sure types are compatible
+        $compatibleReportType = '102';
+        if ('hw' === $orderType) {
+            $compatibleReportType = '104';
+        }
+
+        if ('PA' === $deputyType) {
+            $compatibleReportType .= '-6';
+        } elseif ('PRO' === $deputyType) {
+            $compatibleReportType .= '-5';
+        }
+
+        // report starts a year before the made date of the court order, so is not compatible for that reason
+        $oneYearAgo = $madeDate->modify('-1 year');
+
+        return new Report(
+            client: $client,
+            type: $compatibleReportType,
+            startDate: $oneYearAgo,
+            endDate: $oneYearAgo,
             dateChecks: false
         );
     }
@@ -105,6 +132,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyUid = '12121212';
         $caseNumber = '12345678';
         $orderUid = '66667777';
+        $madeDate = new \DateTime();
 
         // add staging deputyship
         $deputyship = new StagingDeputyship();
@@ -114,6 +142,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->orderType = $orderType;
         $deputyship->isHybrid = $isHybrid;
         $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
         $this->em->persist($deputyship);
         $this->em->flush();
@@ -129,18 +158,22 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $report1 = new Report(
             client: $client,
             type: $compatibleReportType,
-            startDate: new \DateTime(),
-            endDate: new \DateTime(),
+            startDate: $madeDate,
+            endDate: $madeDate,
             dateChecks: false
         );
 
         $this->em->persist($report1);
         $this->em->flush();
 
-        // add an incompatible report (just to make sure we don't pick it up as compatible)
-        $report2 = $this->createIncompatibleReport($client, $orderType, $deputyType);
+        // add an incompatibly typed report (just to make sure we don't pick it up as compatible)
+        $report2 = $this->createIncompatiblyTypedReport($client, $orderType, $deputyType);
+
+        // add an incompatibly dated report (again, to make sure it's not picked up as a candidate)
+        $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $deputyType, $madeDate);
 
         $this->em->persist($report2);
+        $this->em->persist($report3);
         $this->em->flush();
 
         // create compatible report candidates
@@ -157,14 +190,16 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     {
         $caseNumber = '77677775';
         $orderUid = '88884444';
+        $madeDate = new \DateTime();
 
         // add pfa/LAY staging deputyship
         $deputyship = new StagingDeputyship();
-        $deputyship->deputyUid = '11112233';
+        $deputyship->deputyUid = '11112234';
         $deputyship->orderUid = $orderUid;
         $deputyship->deputyType = 'LAY';
         $deputyship->orderType = 'pfa';
         $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
         $this->em->persist($deputyship);
         $this->em->flush();
@@ -178,6 +213,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
 
         // add NDR to client
         $ndr = new Ndr($client);
+        $ndr->setStartDate($madeDate);
 
         $this->em->persist($ndr);
         $this->em->flush();

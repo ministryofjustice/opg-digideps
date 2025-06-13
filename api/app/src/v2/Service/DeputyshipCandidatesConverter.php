@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Service;
 
+use App\Model\DeputyshipProcessingRawDbAccess;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
@@ -15,71 +16,84 @@ use App\v2\Registration\Enum\DeputyshipCandidateAction;
  */
 class DeputyshipCandidatesConverter
 {
-    public function __construct()
-    {
+    public function __construct(
+        private readonly DeputyshipProcessingRawDbAccess $dbAccess,
+    ) {
     }
 
-    // TODO replace stub functionality with real functionality
-    private function findOrderId(string $orderUid): int
+    public function convert(DeputyshipCandidatesGroup $candidatesGroup, bool $dryRun): DeputyshipBuilderResult
     {
-        return 0;
-    }
+        $this->dbAccess->beginTransaction();
 
-    private function insertOrder(array $insertOrder): int
-    {
-        return 0;
-    }
+        $buildResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
-    private function insertOrderDeputy(int $courtOrderId, array $candidate): void
-    {
-    }
-
-    private function insertOrderReport(int $courtOrderId, array $candidate): void
-    {
-    }
-
-    private function insertOrderNdr(int $courtOrderId, array $candidate): void
-    {
-    }
-
-    private function updateOrderStatus(int $courtOrderId, array $candidate): void
-    {
-    }
-
-    private function updateDeputyStatus(int $courtOrderId, array $candidate): void
-    {
-    }
-
-    public function createEntitiesFromCandidates(DeputyshipCandidatesGroup $candidatesGroup): DeputyshipBuilderResult
-    {
-        // could use DeputyProcessingLookupCache for the court order UID lookup
         $insertOrder = $candidatesGroup->insertOrder;
-        if (is_null($insertOrder)) {
-            $courtOrderId = $this->findOrderId($candidatesGroup->orderUid);
-        } else {
-            $courtOrderId = $this->insertOrder($insertOrder);
+        if (!is_null($insertOrder)) {
+            $result = $this->dbAccess->insertOrder($insertOrder);
+
+            if (!$result->success) {
+                $this->dbAccess->rollback();
+
+                $errors = [];
+                if (!is_null($result->error)) {
+                    $errors[] = $result->error;
+                }
+
+                return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::InsertOrderFailed, $errors);
+            }
+
+            $buildResult->addCandidateResult($result);
         }
+
+        $result = $this->dbAccess->findOrderId($candidatesGroup->orderUid);
+
+        // court order could not be found
+        if (!$result->success) {
+            $this->dbAccess->rollback();
+
+            $errors = [];
+            if (!is_null($result->error)) {
+                $errors[] = $result->error;
+            }
+
+            return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::NoExistingOrder, $errors);
+        }
+
+        /** @var int $courtOrderId */
+        $courtOrderId = $result->data;
+
+        $failed = false;
 
         foreach ($candidatesGroup->getIterator() as $candidate) {
             $action = $candidate['action'];
 
             if (DeputyshipCandidateAction::InsertOrderDeputy === $action) {
-                $this->insertOrderDeputy($courtOrderId, $candidate);
+                $result = $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::InsertOrderReport === $action) {
-                $this->insertOrderReport($courtOrderId, $candidate);
+                $result = $this->dbAccess->insertOrderReport($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::InsertOrderNdr === $action) {
-                $this->insertOrderNdr($courtOrderId, $candidate);
+                $result = $this->dbAccess->insertOrderNdr($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::UpdateOrderStatus === $action) {
-                $this->updateOrderStatus($courtOrderId, $candidate);
+                $result = $this->dbAccess->updateOrderStatus($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::UpdateDeputyStatus === $action) {
-                $this->updateDeputyStatus($courtOrderId, $candidate);
+                $result = $this->dbAccess->updateDeputyStatus($courtOrderId, $candidate);
+            }
+
+            $buildResult->addCandidateResult($result);
+
+            $failed = !$result->success;
+
+            if ($failed) {
+                break;
             }
         }
 
-        // TODO actually build entities and relationships using $candidatesGroup
-        return new DeputyshipBuilderResult(
-            outcome: DeputyshipBuilderResultOutcome::EntitiesBuiltSuccessfully,
-            message: 'Builder: processed '.$candidatesGroup->totalCandidates().' candidates'
-        );
+        if ($failed || $dryRun) {
+            $this->dbAccess->rollback();
+        } else {
+            $this->dbAccess->endTransaction();
+        }
+
+        return $buildResult;
     }
 }

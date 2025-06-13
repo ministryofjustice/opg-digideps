@@ -16,20 +16,51 @@ doctrine:
                 charset: UTF8
                 options:
                     redis: "@snc_redis.default"
+            ingestwriter:
+                driver: pdo_pgsql
+                host: "%database_host%"
+                port: "%database_port%"
+                dbname: "%database_name%"
+                user: "%database_user%"
+                password: "%database_password%"
+                sslmode: "%database_ssl_mode%"
+                sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
+                server_version: 13.4
+                wrapper_class: App\DBAL\ConnectionWrapper
+                charset: UTF8
+                options:
+                    redis: "@snc_redis.default"
         types:
             uuid: Ramsey\Uuid\Doctrine\UuidType
 
     orm:
-        auto_mapping: true
+        default_entity_manager: default
         auto_generate_proxy_classes: "%kernel.debug%"
         proxy_dir: "%kernel.cache_dir%/doctrine/orm/Proxies"
-        mappings:
-            commonEntities:
-                type: annotation
-                dir: "%kernel.project_dir%/src/Entity"
-                prefix: App\Entity
-                is_bundle: false
-        filters:
-            softdeleteable:
-                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
-                enabled: true
+        entity_managers:
+            default:
+                connection: default
+                auto_mapping: true
+                mappings:
+                    commonEntities:
+                        type: annotation
+                        dir: "%kernel.project_dir%/src/Entity"
+                        prefix: App\Entity
+                        is_bundle: false
+                filters:
+                    softdeleteable:
+                        class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                        enabled: true
+            # separate entity manager for use during ingest, to prevent transactions interfering with queries
+            ingestwriter:
+                connection: ingestwriter
+                mappings:
+                    ingestEntities:
+                        type: annotation
+                        dir: "%kernel.project_dir%/src/Entity"
+                        prefix: App\Entity
+                        is_bundle: false
+                filters:
+                    softdeleteable:
+                        class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                        enabled: true
