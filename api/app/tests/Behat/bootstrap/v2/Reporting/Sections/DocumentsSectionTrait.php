@@ -300,15 +300,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When /^I continue to submit the empty form$/
-     */
-    public function iContinueToSubmitTheEmptyForm()
-    {
-        $this->clickLink('Send documents');
-        $this->iAmOnLayMainPage();
-    }
-
-    /**
      * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
      */
     public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
@@ -376,5 +367,49 @@ trait DocumentsSectionTrait
         $this->findFileNamesInDls($descriptionLists, [$formattedDocName]);
 
         $this->clickLink('Save and continue');
+    }
+
+    /**
+     * @Given /^a flash message should be displayed to the user confirming the document upload$/
+     */
+    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheUpload()
+    {
+        $alertMessage = 'Your uploaded files are now attached to this report.';
+
+        $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
+        }
+    }
+
+    /**
+     * @Then I should see :imageName listed as a previously submitted document
+     */
+    public function iShouldSeeListedAsAPreviouslySubmittedDocument($submittedDocs)
+    {
+        $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDocs);
+        $fileNameItems = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
+
+        $this->assertPageContainsText('Previously submitted documents');
+
+        //            if(count($fileNameItems) > 1){
+        //                foreach ($fileNameItems as $item) {
+        //                    foreach($submittedDocs as $submittedDoc){
+        //                        $this->assertStringEqualsString($submittedDoc, $item->getText(), 'File found');
+        //                    }
+        //                }
+        //            } else {
+        $this->assertStringEqualsString($submittedDocs, $fileNameItems, 'File found');
+        //            }
+
+        //        }
     }
 }
