@@ -378,14 +378,6 @@ trait IVisitFrontendTrait
     }
 
     /**
-     * @Given /^I visit the send more documents page$/
-     */
-    public function iVisitTheSendMoreDocumentsPage()
-    {
-        $this->visitFrontendPath($this->getDocumentsSubmitMoreUrl($this->loggedInUserDetails->getPreviousReportId()));
-    }
-
-    /**
      * @Given /^I visit the activate user page for the user I am interacting with$/
      */
     public function iVisitTheActivateUserPageInteractingUser()

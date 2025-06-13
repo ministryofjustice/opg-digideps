@@ -31,12 +31,13 @@ attachPage:
   selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 15MB.
   uploadHeading: 2. Upload the documents to your report
   noDocuments: No documents
+  selectedDocuments: Selected documents
   documentList: Attached documents
   documentListPrevious: Previously submitted documents
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
-  continueToSubmit: Continue to send documents
+  sendDocuments: Send documents
   pleaseWait: The file is being uploaded.
   successUploadedHeader: Files uploaded
   successUploaded: Your uploaded files are now attached to this report and listed below
@@ -81,19 +82,6 @@ deletePage:
   summary:
     fileName: File name
     createdOn: Date attached
-
-submitMoreDocumentsConfirm:
-  htmlTitle: "Send your documents to OPG - Complete the deputy report | GOV.UK"
-  pageTitle: Send your documents to OPG
-  supportTitle: Attach documents
-  para01: |
-    Below are the documents you've attached but not yet sent to OPG. When you've finished
-    attaching your documents, please click send to submit them to us.
-  documentList: Attached documents
-  filename: Filename
-  dateAttached: Date attached
-  deleteDocument: Remove
-  submitButton: Send documents
 
 reUploadPage:
   pageTitle: Re-upload documents

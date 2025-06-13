@@ -434,7 +434,7 @@ class Report implements ReportInterface
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      *
-     * @ORM\OrderBy({"createdOn"="DESC"})
+     * @ORM\OrderBy({"createdOn"="DESC", "fileName"="ASC"})
      */
     private $documents;
 
