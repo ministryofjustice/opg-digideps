@@ -218,16 +218,19 @@ class PreRegistration
      */
     private ?bool $isCoDeputy;
 
+    /**
+     * @param string $realm one of the REALM_* string constants on this class
+     *
+     * @throws \Exception
+     */
     public static function getReportTypeByOrderType(string $reportType, string $orderType, string $realm): string
     {
         // drop opg from string
-        $reportType = substr($reportType, 3);
         $orderType = trim(strtolower($orderType));
+        $fullReportType = substr($reportType, 3);
 
-        if (Report::TYPE_HEALTH_WELFARE !== $reportType && 'hw' === $orderType) {
+        if (Report::TYPE_HEALTH_WELFARE !== $fullReportType && 'hw' === $orderType) {
             $fullReportType = sprintf('%s-4', $reportType);
-        } else {
-            $fullReportType = $reportType;
         }
 
         $fullReportType = match ($realm) {
