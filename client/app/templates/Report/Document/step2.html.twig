@@ -60,12 +60,19 @@
             'labelClass': 'visually-hidden',
             'inputClass': 'no-border behat-link-choose-file' })
         }}
+
         <div class="js-hidden">
             {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
+
+            <button class="govuk-button behat-link-attach-file js-uploading">
+                {{ 'form.submitButton' | trans}}
+            </button>
         </div>
+
     {% endif %}
 
     <div>
+
     <br>
     {% set alertMessage %}
         <p class="govuk-body">{{ (page ~ '.pleaseWait') | trans }}</p>

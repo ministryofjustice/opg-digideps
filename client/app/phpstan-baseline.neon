@@ -3486,11 +3486,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:deleteMissingS3DocFromDocumentTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:getDocument\\(\\) should return App\\\\Entity\\\\Report\\\\Document but returns mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
