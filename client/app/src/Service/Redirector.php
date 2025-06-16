@@ -83,48 +83,50 @@ class Redirector
     public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
     {
         // none of these corrections apply to admin
-        if (!$user->hasAdminRole()) {
-            if ($user->getIsCoDeputy()) {
-                $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+        if ($user->hasAdminRole()) {
+            return false;
+        }
 
-                // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
-                    $route = 'lay_home';
+        if ($user->getIsCoDeputy()) {
+            $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+
+            // already verified - shouldn't be on verification page
+            if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
+                $route = 'lay_home';
+            }
+
+            // unverified codeputy invitation
+            if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+                $route = 'codep_verification';
+            }
+        } elseif (!$user->isDeputyOrg()) {
+            // client is not added
+            if (!$user->getIdOfClientWithDetails()) {
+                $clients = [];
+                $deputyUid = $user->getDeputyUid();
+                if (is_null($deputyUid)) {
+                    $this->logger->error(
+                        "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                        '(via Redirector::getCorrectRouteIfDifferent)'
+                    );
+                } else {
+                    // Check if user has multiple clients
+                    $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
                 }
 
-                // unverified codeputy invitation
-                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
-                    $route = 'codep_verification';
+                if (is_null($clients)) {
+                    $this->logger->error(
+                        "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
+                        '(via Redirector::getCorrectRouteIfDifferent)'
+                    );
+                } elseif (0 == count($clients)) {
+                    $route = 'client_add';
                 }
-            } elseif (!$user->isDeputyOrg()) {
-                // client is not added
-                if (!$user->getIdOfClientWithDetails()) {
-                    $clients = [];
-                    $deputyUid = $user->getDeputyUid();
-                    if (is_null($deputyUid)) {
-                        $this->logger->error(
-                            "Deputy with ID {$user->getId()} has NULL deputy_uid ".
-                            '(via Redirector::getCorrectRouteIfDifferent)'
-                        );
-                    } else {
-                        // Check if user has multiple clients
-                        $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
-                    }
+            }
 
-                    if (is_null($clients)) {
-                        $this->logger->error(
-                            "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
-                            '(via Redirector::getCorrectRouteIfDifferent)'
-                        );
-                    } elseif (0 == count($clients)) {
-                        $route = 'client_add';
-                    }
-                }
-
-                // incomplete user info
-                if (!$user->hasAddressDetails()) {
-                    $route = 'user_details';
-                }
+            // incomplete user info
+            if (!$user->hasAddressDetails()) {
+                $route = 'user_details';
             }
         }
 
