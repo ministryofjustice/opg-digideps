@@ -55,13 +55,6 @@ module "api_rds_security_group" {
   environment = local.environment
 }
 
-data "aws_security_group" "ssm_ec2_operator" {
-  filter {
-    name   = "tag:Name"
-    values = "ssm-operator-instance"
-  }
-}
-
 // Egress rules allowing the SSM instance to connect to the database.
 resource "aws_security_group_rule" "postgres_ssm_egress_operator" {
   description = "${var.name}-ssm-instance-postgres - ${var.environment}"
