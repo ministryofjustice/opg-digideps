@@ -16,8 +16,8 @@ BEGIN
         created_on,
         expected_before,
         expected_after,
-        maximum_rows_affected,
-        passed
+        passed,
+        maximum_rows_affected
     )
     VALUES (
         query,
@@ -26,8 +26,8 @@ BEGIN
         NOW(),
         expected_before,
         expected_after,
-        maximum_rows_affected,
-        FALSE
+        FALSE,
+        maximum_rows_affected
     )
     RETURNING id INTO new_id;
 END;
