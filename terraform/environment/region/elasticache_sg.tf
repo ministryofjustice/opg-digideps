@@ -52,14 +52,14 @@ resource "aws_security_group_rule" "api_to_cache" {
 
 #Allow the SSM Instance to talk to the Redis Cluster
 
-# data "aws_security_group" "ssm_ec2_operator" {
+# data "aws_security_group" "ssm_ec2_operator_redis" {
 #   filter {
 #     name   = "tag:Name"
 #     values = "ssm-operator-instance"
 #   }
 # }
 
-# data "aws_security_group" "ssm_ec2_breakglass" {
+# data "aws_security_group" "ssm_ec2_breakglass_redis" {
 #   filter {
 #     name   = "tag:Name"
 #     values = "ssm-breakglass-instance"
@@ -72,7 +72,7 @@ resource "aws_security_group_rule" "api_to_cache" {
 #   from_port                = 6379
 #   to_port                  = 6379
 #   protocol                 = "tcp"
-#   source_security_group_id = data.aws_security_group.ssm_ec2_operator.id
+#   source_security_group_id = data.aws_security_group.ssm_ec2_operator_redis.id
 #   security_group_id        = data.aws_security_group.cache_api_sg.id
 # }
 
@@ -82,6 +82,6 @@ resource "aws_security_group_rule" "api_to_cache" {
 #   from_port                = 6379
 #   to_port                  = 6379
 #   protocol                 = "tcp"
-#   source_security_group_id = data.aws_security_group.ssm_ec2_breakglass.id
+#   source_security_group_id = data.aws_security_group.ssm_ec2_breakglass_redis.id
 #   security_group_id        = data.aws_security_group.cache_api_sg.id
 # }
