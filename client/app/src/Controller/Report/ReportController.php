@@ -246,7 +246,7 @@ class ReportController extends AbstractController
         } else {
             return array_merge([
                 'ndrEnabled' => false,
-                'client' => $clientWithCoDeputies,
+                'client' => $client,
             ],
                 $resultsArray
             );
