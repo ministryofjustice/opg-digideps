@@ -14,20 +14,20 @@ locals {
       target_type = "security_group_id"
       target      = data.aws_security_group.cloud9.id
     }
-    ssm_ec2_operator = {
-      port        = 5432
-      protocol    = "tcp"
-      type        = "ingress"
-      target_type = "security_group_id"
-      target      = module.ssm_ec2_instance_operator.ssm_instance_sg_id
-    }
-    ssm_ec2_breakglass = {
-      port        = 5432
-      protocol    = "tcp"
-      type        = "ingress"
-      target_type = "security_group_id"
-      target      = module.ssm_ec2_instance_breakglass.ssm_instance_sg_id
-    }
+    # ssm_ec2_operator = {
+    #   port        = 5432
+    #   protocol    = "tcp"
+    #   type        = "ingress"
+    #   target_type = "security_group_id"
+    #   target      = data.aws_security_group.ssm_ec2_operator.id
+    # }
+    # ssm_ec2_breakglass = {
+    #   port        = 5432
+    #   protocol    = "tcp"
+    #   type        = "ingress"
+    #   target_type = "security_group_id"
+    #   target      = data.aws_security_group.ssm_ec2_breakglass.id
+    # }
     db_access_tasks = {
       port        = 5432
       type        = "ingress"
@@ -61,3 +61,40 @@ module "api_rds_security_group" {
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
 }
+
+# data "aws_security_group" "ssm_ec2_operator" {
+#   filter {
+#     name   = "tag:Name"
+#     values = "ssm-operator-instance"
+#   }
+# }
+
+# data "aws_security_group" "ssm_ec2_breakglass" {
+#   filter {
+#     name   = "tag:Name"
+#     values = "ssm-breakglass-instance"
+#   }
+# }
+
+# Egress rules allowing the SSM instance to connect to the database.
+# resource "aws_security_group_rule" "postgres_ssm_egress_operator" {
+#   description       = "${var.name}-ssm-instance-postgres - ${var.environment}"
+#   type              = "egress"
+#   from_port         = 5432
+#   to_port           = 5432
+#   protocol          = "tcp"
+
+#   source_security_group_id = data.aws_security_group.ssm_ec2_operator.id
+#   security_group_id = module.api_rds_security_group.id
+# }
+
+# resource "aws_security_group_rule" "postgres_ssm_egress_breakglass" {
+#   description       = "${var.name}-ssm-instance-postgres - ${var.environment}"
+#   type              = "egress"
+#   from_port         = 5432
+#   to_port           = 5432
+#   protocol          = "tcp"
+
+#   source_security_group_id = data.aws_security_group.ssm_ec2_breakglass.id
+#   security_group_id = module.api_rds_security_group.id
+# }

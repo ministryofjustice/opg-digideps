@@ -23,7 +23,12 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "environment" {
-  description = "The environment the SSM will be deployed in."
-  type        = string
+# variable "kms_key_id" {
+#   description = "The KMS key ID for Cloudwatch logs"
+#   type = string
+# }
+
+variable "instance_profile" {
+  description = "The Instance Profile used by the EC2S"
+  type = string
 }
