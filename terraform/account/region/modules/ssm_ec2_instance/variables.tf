@@ -30,5 +30,5 @@ variable "vpc_id" {
 
 variable "instance_profile" {
   description = "The Instance Profile used by the EC2S"
-  type = string
+  type        = string
 }

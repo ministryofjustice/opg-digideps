@@ -8,7 +8,7 @@ module "ssm_ec2_instance_breakglass" {
   //kms_key_id    = module.logs_kms.eu_west_1_target_key_arn
   instance_profile = data.aws_iam_instance_profile.breakglass.name
 
-  vpc_id      = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id
 }
 
 module "ssm_ec2_instance_operator" {
@@ -21,7 +21,7 @@ module "ssm_ec2_instance_operator" {
   //kms_key_id    = module.logs_kms.eu_west_1_target_key_arn
   instance_profile = data.aws_iam_instance_profile.operator.name
 
-  vpc_id      = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id
 }
 
 data "aws_iam_instance_profile" "operator" {
