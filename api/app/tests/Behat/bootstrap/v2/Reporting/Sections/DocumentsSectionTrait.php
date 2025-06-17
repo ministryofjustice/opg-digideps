@@ -66,12 +66,9 @@ trait DocumentsSectionTrait
 
     /**
      * @Then the documents summary page should not contain any documents
-     * @Then the send more documents page should not contain any documents to upload
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
     {
-        $this->visitFrontendPath($this->getDocumentsStep2Url($this->loggedInUserDetails->getPreviousReportId()));
-
         $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
         if (count($descriptionLists) > 1) {

@@ -153,7 +153,6 @@ class DocumentController extends AbstractController
         LoggerInterface $logger,
     ) {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
-        list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
         $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
         $form = $this->createForm(FormDir\Report\UploadType::class, null, [
@@ -197,6 +196,8 @@ class DocumentController extends AbstractController
             }
         }
 
+        list($nextLink, $backLink) = $this->buildNavigationLinks($report, $request->get('successUploaded'));
+
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
@@ -217,13 +218,14 @@ class DocumentController extends AbstractController
     public function handleRedirectPostDocSubmission(Request $request): RedirectResponse
     {
         $reportId = $request->query->getInt('reportId');
-
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         // submit the report to generate the submission entry only
         $this->restClient->put('report/'.$reportId.'/submit-documents', $report, ['submit']);
 
-        $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
+        if ('true' === $request->get('successUploaded')) {
+            $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
+        }
 
         /** @var User $user */
         $user = $this->getUser();
@@ -349,7 +351,7 @@ class DocumentController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function buildNavigationLinks(EntityDir\Report\Report $report): array
+    private function buildNavigationLinks(EntityDir\Report\Report $report, $successfulUpload): array
     {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
@@ -358,7 +360,11 @@ class DocumentController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
 
-            $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
+            if ('true' === $successfulUpload) {
+                $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId(), 'successUploaded' => $successfulUpload]);
+            } else {
+                $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
+            }
 
             if ($user->isDeputyOrg()) {
                 $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
