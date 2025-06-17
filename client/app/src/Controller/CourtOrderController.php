@@ -34,14 +34,23 @@ class CourtOrderController extends AbstractController
         /** @var Client $client */
         $client = $this->clientApi->getById($courtOrder->getClient()->getId());
 
-        error_log((string) $courtOrder->getNdr()->getId());
-
-        return [
+        $templateValues = [
+            'clientHasCoDeputies' => !empty($client->getCoDeputies()),
             'coDeputies' => $courtOrder->getCoDeputies(strval($user->getDeputyUid())),
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
-            'clientFullName' => $client->getFullName(),
+            'client' => $client,
         ];
+
+        if (!empty($courtOrder->getNdr())) {
+            return array_merge($templateValues, [
+                'ndrEnabled' => true,
+            ]);
+        }
+
+        return array_merge($templateValues, [
+            'ndrEnabled' => false,
+        ]);
     }
 
     #[Route(path: '/multi-report', name: "courtorders_reports_by_user", methods: ['GET'])]
