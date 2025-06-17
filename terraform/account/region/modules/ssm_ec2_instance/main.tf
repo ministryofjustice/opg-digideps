@@ -9,7 +9,8 @@ resource "aws_instance" "ssm_ec2" {
   associate_public_ip_address = false
 
   tags = merge(var.tags, {
-    Name = "ssm-${var.name}-instance"
+    Name        = "ssm-${var.name}-instance",
+    AllowedRole = var.name
   })
 }
 
