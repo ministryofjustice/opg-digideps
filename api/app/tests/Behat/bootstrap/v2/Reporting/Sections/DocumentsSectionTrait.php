@@ -70,6 +70,8 @@ trait DocumentsSectionTrait
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
     {
+        $this->visitFrontendPath($this->getDocumentsStep2Url($this->loggedInUserDetails->getPreviousReportId()));
+
         $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
         if (count($descriptionLists) > 1) {
@@ -393,23 +395,28 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see :imageName listed as a previously submitted document
      */
-    public function iShouldSeeListedAsAPreviouslySubmittedDocument($submittedDocs)
+    public function iShouldSeeListedAsAPreviouslySubmittedDocument($submittedDoc)
     {
-        $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDocs);
+        $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDoc);
         $fileNameItems = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
 
         $this->assertPageContainsText('Previously submitted documents');
 
-        //            if(count($fileNameItems) > 1){
-        //                foreach ($fileNameItems as $item) {
-        //                    foreach($submittedDocs as $submittedDoc){
-        //                        $this->assertStringEqualsString($submittedDoc, $item->getText(), 'File found');
-        //                    }
-        //                }
-        //            } else {
-        $this->assertStringEqualsString($submittedDocs, $fileNameItems, 'File found');
-        //            }
+        $this->assertStringEqualsString($submittedDoc, $fileNameItems, 'File found');
+    }
 
-        //        }
+    /**
+     * @Then /^I should see "([^"]*)" and "([^"]*)" as previously submitted documents$/
+     */
+    public function iShouldSeeAndAsPreviouslySubmittedDocuments($fileOne, $fileTwo)
+    {
+        $fileNames = [$fileOne, $fileTwo];
+
+        foreach ($fileNames as $fileName) {
+            $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $fileName);
+            $fileNameItem = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
+
+            $this->assertStringEqualsString($fileName, $fileNameItem, 'File found');
+        }
     }
 }
