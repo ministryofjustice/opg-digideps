@@ -23,3 +23,32 @@ resource "aws_iam_role_policy_attachment" "ssm_core_role_for_instance_profile" {
   role       = data.aws_iam_role.operator.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
+
+resource "aws_iam_policy" "allow_start_stop_ssm_operator_instances" {
+  name        = "AllowStartStopSSMOperatorInstances"
+  description = "Allow start / stop of the ssm-operator-instance"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowStartStopOperatorInstance"
+        Effect = "Allow"
+        Action = [
+          "ec2:StartInstances",
+          "ec2:StopInstances"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "ec2:ResourceTag/Name" = "ssm-operator-instance"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_operator_policy" {
+  role       = "operator"
+  policy_arn = aws_iam_policy.allow_start_stop_ssm_operator_instances.arn
+}
