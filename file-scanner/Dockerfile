@@ -1,12 +1,12 @@
 # Build Stage
-FROM golang:1.24.3-alpine3.21 AS build
+FROM golang:1.24.4-alpine3.22 AS build
 WORKDIR /go/src/clamav-rest
 
 COPY file-scanner/. .
 RUN go mod vendor && go build -v -o file-scanner
 
 # Final Runtime Stage
-FROM alpine:3.21
+FROM alpine:3.22
 
 WORKDIR /app
 
