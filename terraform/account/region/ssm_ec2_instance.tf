@@ -49,6 +49,6 @@ resource "aws_iam_policy" "allow_start_stop_ssm_operator_instances" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach_operator_policy" {
-  role       = "operator"
+  role       = data.aws_iam_role.operator.name
   policy_arn = aws_iam_policy.allow_start_stop_ssm_operator_instances.arn
 }
