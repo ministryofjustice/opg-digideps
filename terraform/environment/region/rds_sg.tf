@@ -67,6 +67,6 @@ resource "aws_security_group_rule" "postgres_ssm_egress_operator" {
   to_port     = 5432
   protocol    = "tcp"
 
-  source_security_group_id = data.aws_security_group.ssm_ec2_operator.id
-  security_group_id        = module.api_rds_security_group.id
+  source_security_group_id = module.api_rds_security_group.id
+  security_group_id        = data.aws_security_group.ssm_ec2_operator.id
 }
