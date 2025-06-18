@@ -36,7 +36,7 @@ class CoDeputyController extends AbstractController
         DeputyApi $deputyApi,
         RestClient $restClient,
         TranslatorInterface $translator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->clientApi = $clientApi;
         $this->userApi = $userApi;
@@ -76,7 +76,7 @@ class CoDeputyController extends AbstractController
                 $form->get('client'.ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
             }
 
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isValid()) {
                 $selfRegisterData = new SelfRegisterData();
                 $selfRegisterData->setFirstname($form['firstname']->getData());
                 $selfRegisterData->setLastname($form['lastname']->getData());

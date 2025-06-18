@@ -236,6 +236,7 @@ class ReportController extends AbstractController
             return array_merge([
                 'ndrEnabled' => true,
                 'client' => $client,
+                'deputyUid' => $user->getDeputyUid(),
                 'ndr' => $client->getNdr(),
                 'reportsSubmitted' => $client->getSubmittedReports(),
                 'reportActive' => $client->getActiveReport(),
@@ -338,28 +339,16 @@ class ReportController extends AbstractController
     }
 
     /**
-     * Create report
-     * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
-     * action "add" will instead add another report.
+     * Create report.
      *
-     * @Route("/report/{action}/{clientId}", name="report_create",
-     *   defaults={ "action" = "create"},
-     *   requirements={ "action" = "(create|add)"}
-     * )
+     * @Route("/report/create/{clientId}/{deputyUid}", name="report_create")
      *
      * @Template("@App/Report/Report/create.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId, $action = false)
+    public function createAction(Request $request, int $clientId, string $deputyUid): array|RedirectResponse
     {
+        /** @var Client $client */
         $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
-
-        $existingReports = $this->reportApi->getReportsIndexedById($client);
-
-        if (count($existingReports)) {
-            throw $this->createAccessDeniedException('Client already has a report');
-        }
 
         $report = new Report();
         $report->setClient($client);
@@ -368,16 +357,14 @@ class ReportController extends AbstractController
             'report',
             ReportType::class,
             $report,
-            [
-                'translation_domain' => 'registration',
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]), // TODO useless ?
-            ]
+            ['translation_domain' => 'registration']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->post('report', $form->getData());
+            // the report type is looked up on the API side based on the client and deputy (see <api>/ReportController::addAction)
+            $this->restClient->post(sprintf('report/%s', $deputyUid), $form->getData());
 
             $user = $this->userApi->getUserWithData();
             $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);

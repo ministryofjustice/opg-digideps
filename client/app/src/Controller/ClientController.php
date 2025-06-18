@@ -152,15 +152,15 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getFirstClient();
         $existingClientId = 0;
-        if (!empty($client)) {
+        $client_validated = false;
+        if (is_null($client)) {
+            // new client
+            $client = new Client();
+        } else {
             // update existing client
             $existingClientId = $client->getId();
             $client = $this->restClient->get('client/'.$client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $client_validated = true;
-        } else {
-            // new client
-            $client = new Client();
-            $client_validated = false;
         }
 
         $form = $this->createForm(ClientType::class, $client);
@@ -169,13 +169,13 @@ class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 // validate against pre-registration data
-                if (!$client_validated) {
-                    $this->preRegistrationApi->verify($client);
-                    $response = $this->clientApi->create($form->getData());
-                } else {
+                if ($client_validated) {
                     $upsertData = $form->getData();
                     $upsertData->setId($existingClientId);
                     $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
+                } else {
+                    $this->preRegistrationApi->verify($client);
+                    $response = $this->clientApi->create($form->getData());
                 }
 
                 /** @var User $currentUser */
@@ -184,14 +184,14 @@ class ClientController extends AbstractController
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
-                $url = $currentUser->isNdrEnabled()
-                    ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
-                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
-
                 if ($currentUser->isNdrEnabled()) {
+                    $url = $this->generateUrl('lay_home', ['clientId' => $response['id']]);
+
                     $event = new RegistrationSucceededEvent($currentUser);
 
                     $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
+                } else {
+                    $url = $this->generateUrl('report_create', ['clientId' => $response['id'], 'deputyUid' => $user->getDeputyUid()]);
                 }
 
                 return $this->redirect($url);

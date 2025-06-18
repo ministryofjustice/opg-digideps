@@ -2,8 +2,11 @@
 
 namespace App\Service;
 
+use App\Entity\Client;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
+use App\Service\Client\Internal\PreRegistrationApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -27,6 +30,7 @@ class Redirector
         protected RequestStack $requestStack,
         protected string $env,
         private ClientApi $clientApi,
+        private PreRegistrationApi $preRegistrationApi,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -79,104 +83,61 @@ class Redirector
     public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
     {
         // none of these corrections apply to admin
-        if (!$user->hasAdminRole()) {
-            if ($user->getIsCoDeputy()) {
-                $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+        if ($user->hasAdminRole()) {
+            return false;
+        }
 
-                // already verified - shouldn't be on verification page
-                if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
-                    $route = 'lay_home';
+        if ($user->getIsCoDeputy()) {
+            $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
+
+            // already verified - shouldn't be on verification page
+            if ('codep_verification' == $currentRoute && $coDeputyClientConfirmed) {
+                $route = 'lay_home';
+            }
+
+            // unverified codeputy invitation
+            if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+                $route = 'codep_verification';
+            }
+        } elseif (!$user->isDeputyOrg()) {
+            // client is not added
+            if (!$user->getIdOfClientWithDetails()) {
+                $clients = [];
+                $deputyUid = $user->getDeputyUid();
+                if (is_null($deputyUid)) {
+                    $this->logger->error(
+                        "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                        '(via Redirector::getCorrectRouteIfDifferent)'
+                    );
+                } else {
+                    // Check if user has multiple clients
+                    $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
                 }
 
-                // unverified codeputy invitation
-                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
-                    $route = 'codep_verification';
+                if (is_null($clients)) {
+                    $this->logger->error(
+                        "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
+                        '(via Redirector::getCorrectRouteIfDifferent)'
+                    );
+                } elseif (0 == count($clients)) {
+                    $route = 'client_add';
                 }
-            } elseif (!$user->isDeputyOrg()) {
-                // client is not added
-                if (!$user->getIdOfClientWithDetails()) {
-                    $clients = [];
-                    $deputyUid = $user->getDeputyUid();
-                    if (is_null($deputyUid)) {
-                        $this->logger->error(
-                            "Deputy with ID {$user->getId()} has NULL deputy_uid ".
-                            '(via Redirector::getCorrectRouteIfDifferent)'
-                        );
-                    } else {
-                        // Check if user has multiple clients
-                        $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid);
-                    }
+            }
 
-                    if (is_null($clients)) {
-                        $this->logger->error(
-                            "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
-                            '(via Redirector::getCorrectRouteIfDifferent)'
-                        );
-                    } elseif (0 == count($clients)) {
-                        $route = 'client_add';
-                    }
-                }
-
-                // incomplete user info
-                if (!$user->hasAddressDetails()) {
-                    $route = 'user_details';
-                }
+            // incomplete user info
+            if (!$user->hasAddressDetails()) {
+                $route = 'user_details';
             }
         }
 
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
     }
 
-    /**
-     * @return string
-     */
-    private function getLayDeputyHomepage(User $user, $activeClientId = null)
+    private function getLayDeputyHomepage(User $user, ?int $activeClientId = null): string
     {
         // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
-        }
-
-        // redirect to create report if report is not created
-        $allActiveClients = [];
-
-        $deputyUid = $user->getDeputyUid();
-        if (is_null($deputyUid)) {
-            $this->logger->error(
-                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
-                '(via Redirector::getLayDeputyHomepage)'
-            );
-        } else {
-            $allActiveClients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, ['client-reports', 'report']);
-        }
-
-        if (is_null($allActiveClients)) {
-            $this->logger->error(
-                "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null ".
-                '(via Redirector::getLayDeputyHomepage)'
-            );
-            $allActiveClients = [];
-        }
-
-        foreach ($allActiveClients as $activeClient) {
-            if (count($activeClient->getReportIds()) >= 1) {
-                break;
-            }
-
-            if (!$user->isNdrEnabled()) {
-                $clientId = $user->getIdOfClientWithDetails();
-                if (is_null($clientId)) {
-                    $this->logger->error(
-                        "Unable to get client ID for user with ID {$user->getId()}; ".
-                        'getIdOfClientWithDetails() returned a null value'
-                    );
-
-                    // attempt to rectify failed client ID fetch by using the active client's ID instead
-                    $clientId = $activeClient->getId();
-                }
-
-                return $this->router->generate('report_create', ['clientId' => $clientId]);
-            }
         }
 
         if (is_null($activeClientId)) {
@@ -190,6 +151,39 @@ class Redirector
 
                 return $this->router->generate('invalid_data');
             }
+        }
+
+        $deputyUid = $user->getDeputyUid();
+        if (is_null($deputyUid)) {
+            $this->logger->error(
+                "Deputy with ID {$user->getId()} has NULL deputy_uid ".
+                '(via Redirector::getLayDeputyHomepage)'
+            );
+
+            return $this->router->generate('invalid_data');
+        }
+
+        // get the active client
+        /** @var Client $activeClient */
+        $activeClient = $this->clientApi->getById($activeClientId);
+
+        // check whether the active client has a compatible report
+        $response = $this->preRegistrationApi->getReportTypeBasedOnSirius($activeClient->getCaseNumber(), $deputyUid);
+        $reportType = json_decode($response, associative: true)['data'];
+
+        $hasCompatibleReport = false;
+
+        /** @var Report $report */
+        foreach ($activeClient->getReports() as $report) {
+            if ($report->getType() === $reportType) {
+                $hasCompatibleReport = true;
+                break;
+            }
+        }
+
+        // redirect to create report if no compatible report exists
+        if (!$hasCompatibleReport && !$user->isNdrEnabled()) {
+            return $this->router->generate('report_create', ['clientId' => $activeClientId, 'deputyUid' => $deputyUid]);
         }
 
         return $this->router->generate('lay_home', ['clientId' => $activeClientId]);
