@@ -25,52 +25,60 @@ class CourtOrderReportCandidatesFactory
 {
     /** @var string */
     private const COMPATIBLE_REPORTS_QUERY = <<<SQL
-        SELECT court_order_uid, report_id FROM (
-            SELECT
-                d.order_uid AS court_order_uid,
-                r.id AS report_id,
-                (
+        SELECT * FROM (
+            SELECT court_order_uid, report_id FROM (
+                SELECT
+                    d.order_uid AS court_order_uid,
+                    r.id AS report_id,
                     (
-                        d.deputy_type = 'LAY'
-                        AND (
-                            (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102', '103'))
-                            OR
-                            (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104'))
-                            OR
-                            (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4', '103-4'))
+                        (
+                            d.deputy_type = 'LAY'
+                            AND (
+                                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102', '103'))
+                                OR
+                                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104'))
+                                OR
+                                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4', '103-4'))
+                            )
                         )
-                    )
-                    OR
-                    (
-                        d.deputy_type = 'PA'
-                        AND (
-                            (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-6', '103-6'))
-                            OR
-                            (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-6'))
-                            OR
-                            (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-6', '103-4-6'))
+                        OR
+                        (
+                            d.deputy_type = 'PA'
+                            AND (
+                                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-6', '103-6'))
+                                OR
+                                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-6'))
+                                OR
+                                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-6', '103-4-6'))
+                            )
                         )
-                    )
-                    OR
-                    (
-                        d.deputy_type = 'PRO'
-                        AND (
-                            (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-5', '103-5'))
-                            OR
-                            (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-5'))
-                            OR
-                            (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
+                        OR
+                        (
+                            d.deputy_type = 'PRO'
+                            AND (
+                                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-5', '103-5'))
+                                OR
+                                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-5'))
+                                OR
+                                (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
+                            )
                         )
-                    )
-                ) AS report_type_is_compatible
-            FROM staging.deputyship d
-            LEFT JOIN client c ON d.case_number = c.case_number
-            LEFT JOIN report r ON c.id = r.client_id
-            WHERE r.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
-        ) compat
-        WHERE report_type_is_compatible = true
-        GROUP BY court_order_uid, report_id
-        ORDER BY court_order_uid, report_id;
+                    ) AS report_type_is_compatible
+                FROM staging.deputyship d
+                INNER JOIN client c ON d.case_number = c.case_number
+                INNER JOIN report r ON c.id = r.client_id
+                WHERE r.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
+            ) compat
+            WHERE report_type_is_compatible = true
+            GROUP BY court_order_uid, report_id
+            ORDER BY court_order_uid, report_id
+        ) report_candidates
+        EXCEPT (
+            SELECT co.court_order_uid, cor.report_id
+            FROM court_order_report cor
+            INNER JOIN court_order co
+            ON cor.court_order_id = co.id
+        );
     SQL;
 
     // NDRs are only assigned for pfa court orders, and only to Lay deputies, hence the WHERE clause
