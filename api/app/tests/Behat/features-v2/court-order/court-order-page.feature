@@ -39,3 +39,12 @@ Feature: Court order page
         Then I should be on the court order page
         When I visit the court order page of the 'second' court order that 'I am' associated with
         Then I should be on the court order page
+
+    @lay-pfa-with-ndr-not-started
+    Scenario: A deputy can view their NDR on their PFA court order
+        When Given a Lay Deputy has not started an NDR report
+        And I am associated with '1' 'pfa' court order
+        When I visit the page of a court order that 'I am' associated with
+        Then I should be on the court order page
+        And I should see an NDR on the court order page with a status of 'Not started' with standard report status of 'Not available'
+        Then I can procced to fill out the NDR
