@@ -258,7 +258,7 @@ class DocumentController extends AbstractController
         $backLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
+        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
 
         if ('tooBig' == $request->get('error')) {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
