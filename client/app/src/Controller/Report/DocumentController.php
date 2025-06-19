@@ -153,10 +153,11 @@ class DocumentController extends AbstractController
         LoggerInterface $logger,
     ) {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
-        list($nextLink, $backLink) = $this->buildNavigationLinks($report);
 
         $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
+        $form = $this->createForm(FormDir\Report\UploadType::class, null, [
+            'action' => $formAction, 'report_submitted' => $report->isSubmitted(),
+        ]);
 
         if ('tooBig' == $request->get('error')) {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
@@ -195,14 +196,48 @@ class DocumentController extends AbstractController
             }
         }
 
+        /** @var string $successfullyUploaded */
+        $successfullyUploaded = $request->get('successUploaded');
+
+        list($nextLink, $backLink) = $this->buildNavigationLinks($report, $successfullyUploaded);
+
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $backLink,
             'nextLink' => $nextLink,
-            'successUploaded' => $request->get('successUploaded'),
+            'successUploaded' => $successfullyUploaded,
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * @Route("/report/documents/submissionRedirect", name="report_documents_submit_more_redirect")
+     *
+     * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
+     *
+     * @throws \Exception
+     */
+    public function handleRedirectPostDocSubmission(Request $request): RedirectResponse
+    {
+        $reportId = $request->query->getInt('reportId');
+        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
+
+        // submit the report to generate the submission entry only
+        $this->restClient->put('report/'.$reportId.'/submit-documents', $report, ['submit']);
+
+        if ('true' === $request->get('successUploaded')) {
+            $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isDeputyOrg()) {
+            return $this->redirect($this->clientApi->generateClientProfileLink($report->getClient()));
+        } else {
+            return $this->redirectToRoute('homepage');
+        }
     }
 
     /**
@@ -223,7 +258,7 @@ class DocumentController extends AbstractController
         $backLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction]);
+        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
 
         if ('tooBig' == $request->get('error')) {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
@@ -284,7 +319,7 @@ class DocumentController extends AbstractController
         ];
     }
 
-    private function identifyMissingFilesInS3Bucket($report): array
+    private function identifyMissingFilesInS3Bucket(EntityDir\Report\Report $report): array
     {
         $documentIds = [];
 
@@ -319,16 +354,20 @@ class DocumentController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function buildNavigationLinks(EntityDir\Report\Report $report): array
+    private function buildNavigationLinks(EntityDir\Report\Report $report, ?string $successfulUpload = null): array
     {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
-            $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
-
             /** @var User $user */
             $user = $this->getUser();
+
+            if ('true' === $successfulUpload) {
+                $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId(), 'successUploaded' => $successfulUpload]);
+            } else {
+                $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
+            }
 
             if ($user->isDeputyOrg()) {
                 $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
@@ -347,7 +386,7 @@ class DocumentController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
@@ -373,7 +412,7 @@ class DocumentController extends AbstractController
      *
      * @return array|RedirectResponse|Response
      */
-    public function deleteConfirmAction(Request $request, $documentId)
+    public function deleteConfirmAction(Request $request, string $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -432,7 +471,7 @@ class DocumentController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, $documentId)
+    public function deleteDocument(Request $request, string $documentId)
     {
         $document = $this->getDocument($documentId);
 
@@ -481,66 +520,10 @@ class DocumentController extends AbstractController
         return $this->redirect($returnUrl);
     }
 
-    private function deleteMissingS3DocFromDocumentTable($documentId)
+    private function deleteMissingS3DocFromDocumentTable(string $documentId): void
     {
         $this->restClient->delete('/document/'.$documentId);
         $this->addFlash('notice', 'Document has been removed');
-    }
-
-    /**
-     * Confirm additional documents form.
-     *
-     * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
-     *
-     * @Template("@App/Report/Document/submitMoreDocumentsConfirm.html.twig")
-     *
-     * @return array
-     */
-    public function submitMoreConfirmAction(Request $request, $reportId)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
-
-        $fromPage = $request->get('from');
-
-        $backLink = $this->generateUrl('report_documents', ['reportId' => $reportId]);
-        $nextLink = $this->generateUrl('report_documents_submit_more_confirmed', ['reportId' => $reportId]);
-
-        return [
-            'report' => $report,
-            'backLink' => $backLink,
-            'nextLink' => $nextLink,
-            'fromPage' => $fromPage,
-        ];
-    }
-
-    /**
-     * Confirmed send additional documents.
-     *
-     * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
-     *
-     * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
-     *
-     * @return RedirectResponse
-     *
-     * @throws \Exception
-     */
-    public function submitMoreConfirmedAction(Request $request, $reportId)
-    {
-        $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
-
-        // submit the report to generate the submission entry only
-        $this->restClient->put('report/'.$report->getId().'/submit-documents', $report, ['submit']);
-
-        $this->addFlash('notice', 'The documents attached for your '.$report->getPeriod().' report have been sent to OPG');
-
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($user->isDeputyOrg()) {
-            return $this->redirect($this->clientApi->generateClientProfileLink($report->getClient()));
-        } else {
-            return $this->redirectToRoute('homepage');
-        }
     }
 
     /**
