@@ -305,9 +305,9 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($duplicateUser);
         }
 
-        $ndr = '';
-        $report = '';
-        $multiClientSecondReport = '';
+        $ndr = null;
+        $report = null;
+        $multiClientSecondReport = null;
 
         if ($data['ndr']) {
             $ndr = new Ndr($client);
@@ -362,10 +362,17 @@ class LayUserFixtures extends AbstractDataFixture
         }
     }
 
-    private function populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report, $ndr)
-    {
+    private function populateCourtOrderTable(
+        array $data,
+        ObjectManager $manager,
+        int $iteration,
+        int $offset,
+        Client $client,
+        ?Report $report,
+        ?Ndr $ndr
+    ) {
         $courtOrder = new CourtOrder();
-        $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration, -$offset);
+        $courtOrderUid = substr_replace($data['courtOrderUid'], (string) $iteration, -$offset);
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType($data['orderType']);
@@ -379,11 +386,11 @@ class LayUserFixtures extends AbstractDataFixture
         $this->deputy->associateWithCourtOrder($courtOrder);
 
         // Associate court order with reports if it's not an NDR
-        if (!str_ends_with($data['id'], '-NDR')) {
+        if (!str_ends_with($data['id'], '-NDR') && !is_null($report)) {
             $courtOrder->addReport($report);
 
             $manager->persist($courtOrder);
-        } else {
+        } else if (!is_null($ndr)) {
             $courtOrder->setNdr($ndr);
 
             $manager->persist($courtOrder);
@@ -395,7 +402,18 @@ class LayUserFixtures extends AbstractDataFixture
         return $courtOrder;
     }
 
-    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport, $ndr)
+    private function handleHybridCoDeputyAndMultiClients(
+        array $data,
+        ObjectManager $manager,
+        int $iteration,
+        int $offset,
+        CourtOrder $courtOrder,
+        User $user2,
+        Client $client,
+        Client $client2,
+        ?Report $report,
+        ?Report $multiClientSecondReport,
+        ?Ndr $ndr)
     {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
@@ -426,10 +444,10 @@ class LayUserFixtures extends AbstractDataFixture
             $this->deputy->associateWithCourtOrder($courtOrderHW);
 
             // Associate court order with reports, excluding NDRs
-            if (!$data['ndr']) {
+            if (!$data['ndr'] && !is_null($report)) {
                 $courtOrderPfa->addReport($report);
                 $courtOrderHW->addReport($report);
-            } else {
+            } else if (!empty($ndr)) {
                 $courtOrderPfa->setNdr($ndr);
             }
 
@@ -441,7 +459,7 @@ class LayUserFixtures extends AbstractDataFixture
             if (str_ends_with($data['id'], '-4-Co')) {
                 $coDeputy = clone $this->deputy;
 
-                $coDeputy->setDeputyUid($user2->getDeputyUid());
+                $coDeputy->setDeputyUid((string) $user2->getDeputyUid());
                 $coDeputy->setEmail1($user2->getEmail());
                 $coDeputy->setLastname($user2->getLastname());
                 $coDeputy->setUser($user2);
@@ -456,7 +474,7 @@ class LayUserFixtures extends AbstractDataFixture
         } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id']) {
             $coDeputy = clone $this->deputy;
 
-            $coDeputy->setDeputyUid($user2->getDeputyUid());
+            $coDeputy->setDeputyUid((string) $user2->getDeputyUid());
             $coDeputy->setEmail1($user2->getEmail());
             $coDeputy->setLastname($user2->getLastname());
             $coDeputy->setUser($user2);
@@ -465,7 +483,7 @@ class LayUserFixtures extends AbstractDataFixture
             $coDeputy->associateWithCourtOrder($courtOrder);
 
             $manager->persist($coDeputy);
-        } elseif ($data['multi-client']) {
+        } elseif ($data['multi-client'] && !is_null($multiClientSecondReport)) {
             // add court order for additional client
             $additionalCourtOrder = new CourtOrder();
             $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration. 2, -2);
