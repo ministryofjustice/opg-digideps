@@ -354,7 +354,7 @@ class DocumentController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function buildNavigationLinks(EntityDir\Report\Report $report, string $successfulUpload): array
+    private function buildNavigationLinks(EntityDir\Report\Report $report, ?string $successfulUpload = null): array
     {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
