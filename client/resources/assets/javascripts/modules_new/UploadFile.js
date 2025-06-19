@@ -13,7 +13,6 @@ const uploadFile = {
 
         fileElement.addEventListener('change', function () {
           if (event.target.getAttribute('id') === 'upload_form_post_submission') {
-
             const actionUrl = event.target.getAttribute('action')
             const fsize = fileElement.files[0].size
 
