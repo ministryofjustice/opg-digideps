@@ -2,18 +2,6 @@
 Feature: Attaching Further Documents
 
     @lay-pfa-high-submitted @super-admin
-    Scenario: A user attempts to send further documents but there are no documents attached
-        Given a Lay Deputy has submitted a report
-        When I attach a supporting document "test-image.png" to the "submitted" report
-        Then the documents summary page should not contain any documents
-        Given a super admin user accesses the admin app
-        Given the document sync enabled flag is set to '0'
-        When I navigate to the admin report submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the "New" column
-        Then I should not see the submission under the "New" tab with the court order number of the user I am interacting with
-        Given the document sync enabled flag is set to '1'
-
-    @lay-pfa-high-submitted @super-admin
     Scenario: A user attempts to send further documents
         Given a Lay Deputy has submitted a report
         When I attach a supporting document "test-image.png" to the "submitted" report

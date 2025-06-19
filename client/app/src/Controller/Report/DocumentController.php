@@ -196,14 +196,17 @@ class DocumentController extends AbstractController
             }
         }
 
-        list($nextLink, $backLink) = $this->buildNavigationLinks($report, $request->get('successUploaded'));
+        /** @var string $successfullyUploaded */
+        $successfullyUploaded = $request->get('successUploaded');
+
+        list($nextLink, $backLink) = $this->buildNavigationLinks($report, $successfullyUploaded);
 
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $backLink,
             'nextLink' => $nextLink,
-            'successUploaded' => $request->get('successUploaded'),
+            'successUploaded' => $successfullyUploaded,
             'form' => $form->createView(),
         ];
     }
@@ -351,7 +354,7 @@ class DocumentController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function buildNavigationLinks(EntityDir\Report\Report $report, $successfulUpload): array
+    private function buildNavigationLinks(EntityDir\Report\Report $report, string $successfulUpload): array
     {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
