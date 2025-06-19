@@ -17,7 +17,7 @@ class DeputyshipBuilder
     ) {
     }
 
-    private function processCandidates(?string $orderUid, array $candidatesList): DeputyshipBuilderResult
+    private function processCandidates(?string $orderUid, array $candidatesList, bool $dryRun): DeputyshipBuilderResult
     {
         if (is_null($orderUid)) {
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::Skipped);
@@ -29,19 +29,19 @@ class DeputyshipBuilder
             return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidateListError);
         }
 
-        return $this->converter->createEntitiesFromCandidates($candidatesGroup);
+        return $this->converter->convert($candidatesGroup, $dryRun);
     }
 
     /**
-     * @param \Traversable<array<string, string>> $candidates Assumption is that these are sorted by court order UID,
-     *                                                        so we can group them by UID even though we are processing
-     *                                                        one row at a time.
+     * @param \Traversable<array<string, mixed>> $candidates Assumption is that these are sorted by court order UID,
+     *                                                       so we can group them by UID even though we are processing
+     *                                                       one row at a time.
      *
      * Once we have a group, we create the entities (in the correct order) and yield the result to the caller.
      *
      * @return \Traversable<DeputyshipBuilderResult>
      */
-    public function build(\Traversable $candidates): \Traversable
+    public function build(\Traversable $candidates, bool $dryRun = false): \Traversable
     {
         $currentOrderUid = null;
         $candidatesList = [];
@@ -59,7 +59,7 @@ class DeputyshipBuilder
                 $candidatesList[] = $candidate;
             } elseif (count($candidatesList) > 0) {
                 // process group
-                yield $this->processCandidates($currentOrderUid, $candidatesList);
+                yield $this->processCandidates($currentOrderUid, $candidatesList, $dryRun);
 
                 // reset and start new group
                 $candidatesList = [$candidate];
@@ -68,6 +68,6 @@ class DeputyshipBuilder
         }
 
         // create entities for any stragglers
-        yield $this->processCandidates($currentOrderUid, $candidatesList);
+        yield $this->processCandidates($currentOrderUid, $candidatesList, $dryRun);
     }
 }

@@ -1,5 +1,8 @@
 {
   "procedure": "execute_custom_query",
   "calling_user": "bob.smith",
-  "query_id": 3
+  "query_id": 1,
+  "user_token": "",
+  "workspace": "local",
+  "db_endpoint": "postgres"
 }

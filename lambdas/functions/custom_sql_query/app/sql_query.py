@@ -49,7 +49,9 @@ def hash_token(token, salt):
     return hashlib.pbkdf2_hmac("sha256", token.encode(), salt.encode(), 310000).hex()
 
 
-def authenticate_or_store_token(secret_name, username, user_token):
+def authenticate_or_store_token(secret_name, username, user_token, skip_auth):
+    if skip_auth:
+        return True, "Local Bypass"
     response = get_secret(secret_name)
     secret_data = json.loads(response)
 
@@ -97,6 +99,7 @@ def run_insert_custom_query(event, conn):
     validation_query = event["validation_query"]
     expected_before = event["expected_before"]
     expected_after = event["expected_after"]
+    maximum_rows_affected = event["maximum_rows_affected"]
     try:
         cursor = conn.cursor()
 
@@ -106,19 +109,15 @@ def run_insert_custom_query(event, conn):
             calling_user,
             expected_before,
             expected_after,
+            maximum_rows_affected,
             None,
         ]
-        sql = "CALL audit.insert_custom_query(%s, %s, %s, %s, %s, %s);"
+        sql = "CALL audit.insert_custom_query(%s, %s, %s, %s, %s, %s, %s);"
         cursor.execute(sql, procedure_args)
         result = cursor.fetchall()
-        result_object = {}
-        for row in result:
-            for idx, value in enumerate(row):
-                result_object["id_inserted"] = value
         conn.commit()
         cursor.close()
         conn.close()
-
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
         return {"message": "Stored procedure failed to execute", "result": e}
@@ -195,6 +194,7 @@ def run_get_custom_query(event, conn):
             "run_on",
             "expected_before",
             "expected_after",
+            "maximum_rows_affected",
             "passed",
             "result_message",
         ]
@@ -260,9 +260,10 @@ def lambda_handler(event, context):
     user_token = event["user_token"]
     workspace = event["workspace"]
     db_endpoint = event["db_endpoint"]
+    skip_auth = True if workspace == "local" and db_endpoint == "postgres" else False
     db_secret_name, users_sql_users = get_secret_names(workspace)
     authenticated, msg = authenticate_or_store_token(
-        users_sql_users, calling_user, user_token
+        users_sql_users, calling_user, user_token, skip_auth
     )
     if not authenticated:
         return {"statusCode": 401, "body": msg}

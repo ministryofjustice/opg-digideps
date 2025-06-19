@@ -39,7 +39,7 @@ parameters:
 
 services:
     em:
-        alias: doctrine.orm.entity_manager
+        alias: doctrine.orm.default_entity_manager
 
     # default configuration for services in *this* file
     _defaults:
@@ -421,7 +421,8 @@ services:
     App\Service\Audit\LocalAuditLogHandler:
         class: App\Service\Audit\LocalAuditLogHandler
 
-    GuzzleHttp\Client:
+    app.guzzlehttp_clientinterface:
+        class: GuzzleHttp\Client
         arguments:
             $config:
                 verify: false
@@ -430,14 +431,15 @@ services:
                 timeout: 20
                 allow_redirects: false
 
-    App\Service\ResponseComparison\ClientsResponseComparer:
-        tags: [{ name: "app.response_comparer" }]
+    app.response_comparer:
+        class: App\Service\ResponseComparison\ClientsResponseComparer
 
     App\Command\ApiComparison:
         arguments:
-            $httpClient: '@GuzzleHttp\Client'
+            $httpClient: "@app.guzzlehttp_clientinterface"
             $redis: "@snc_redis.default"
-            $comparers: app.response_comparer
+            $comparers:
+                - "@app.response_comparer"
 
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
         public: true
@@ -446,4 +448,12 @@ services:
         public: true
 
     App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
+        public: true
+
+    App\Model\DeputyshipProcessingRawDbAccess:
+        arguments:
+            $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
+        public: true
+
+    App\v2\Service\DeputyshipCandidatesConverter:
         public: true

@@ -124,7 +124,7 @@ class DeputyControllerTest extends WebTestCase
             'setDeputyUid' => '7099999990',
         ]);
         self::$fixtureHelper->setPassword($user);
-        //login to get token
+        // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
         // make the API call
@@ -149,7 +149,7 @@ class DeputyControllerTest extends WebTestCase
         ]);
         self::$fixtureHelper->setPassword($user);
 
-        //login to get token
+        // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
         // Make API call
@@ -189,7 +189,7 @@ class DeputyControllerTest extends WebTestCase
         self::$fixtures->flush();
 
         // generate courtOrder and set client and deputy
-        $courtOrder = self::$fixtures->createCourtOrder(7055555550, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder('7055555550', 'pfa', 'ACTIVE');
         $courtOrder->setClient($client);
         CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
         self::$fixtures->persist($courtOrder);
@@ -202,7 +202,7 @@ class DeputyControllerTest extends WebTestCase
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
-        //login to get token
+        // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
         // Make API call

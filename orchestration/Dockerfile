@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine3.20 AS builder
+FROM golang:1.24.4-alpine3.22 AS builder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode
@@ -8,7 +8,7 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
-FROM alpine:3.20
+FROM alpine:3.22
 RUN apk update && apk upgrade
 
 ENV POSTGRES_DATABASE=**None**
