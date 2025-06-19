@@ -66,8 +66,6 @@ class CourtOrder
 
     /**
      * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @phpstan-ignore property.onlyRead (Deserialized from API response)
      */
     private ?Ndr $ndr = null;
 
@@ -222,10 +220,5 @@ class CourtOrder
     public function getNdr(): ?Ndr
     {
         return $this->ndr;
-    }
-
-    public function setNdr(?Ndr $ndr): void
-    {
-        $this->ndr = $ndr;
     }
 }

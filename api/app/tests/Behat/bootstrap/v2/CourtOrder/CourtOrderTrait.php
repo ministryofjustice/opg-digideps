@@ -58,7 +58,7 @@ trait CourtOrderTrait
             foreach ($clientIds as $clientId) {
                 $clients[] = $this->em
                 ->getRepository(Client::class)
-                ->find(['id' => $user->getClientId()]);
+                ->find(['id' => $clientId]);
             }
 
             foreach ($clients as $client) {

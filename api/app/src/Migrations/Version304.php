@@ -24,13 +24,7 @@ final class Version304 extends AbstractMigration
             ALTER TABLE court_order DROP CONSTRAINT FK_E824C0B7B86A31
         SQL);
         $this->addSql(<<<'SQL'
-            DROP INDEX uniq_e824c0b7b86a31
-        SQL);
-        $this->addSql(<<<'SQL'
             ALTER TABLE court_order ADD CONSTRAINT FK_E824C0B7B86A31 FOREIGN KEY (ndr_id) REFERENCES odr (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE INDEX IDX_E824C0B7B86A31 ON court_order (ndr_id)
         SQL);
     }
 
@@ -41,13 +35,7 @@ final class Version304 extends AbstractMigration
             ALTER TABLE court_order DROP CONSTRAINT fk_e824c0b7b86a31
         SQL);
         $this->addSql(<<<'SQL'
-            DROP INDEX IDX_E824C0B7B86A31
-        SQL);
-        $this->addSql(<<<'SQL'
             ALTER TABLE court_order ADD CONSTRAINT fk_e824c0b7b86a31 FOREIGN KEY (ndr_id) REFERENCES odr (id) NOT DEFERRABLE INITIALLY IMMEDIATE
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE UNIQUE INDEX uniq_e824c0b7b86a31 ON court_order (ndr_id)
         SQL);
     }
 }
