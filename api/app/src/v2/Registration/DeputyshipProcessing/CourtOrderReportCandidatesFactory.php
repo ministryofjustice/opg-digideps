@@ -65,8 +65,8 @@ class CourtOrderReportCandidatesFactory
                         )
                     ) AS report_type_is_compatible
                 FROM staging.deputyship d
-                LEFT JOIN client c ON d.case_number = c.case_number
-                LEFT JOIN report r ON c.id = r.client_id
+                INNER JOIN client c ON d.case_number = c.case_number
+                INNER JOIN report r ON c.id = r.client_id
                 WHERE r.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
             ) compat
             WHERE report_type_is_compatible = true
