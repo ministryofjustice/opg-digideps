@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
@@ -226,5 +227,61 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         self::assertEquals(DeputyshipCandidateAction::InsertOrderNdr, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($ndr->getId(), $candidates[0]->ndrId);
+    }
+
+    // if a court_order_report row exists for a court order <-> report relationship, it should
+    // not be selected as a candidate (see DDLS-797)
+    public function testCreateCompatibleReportsDoesNotSuggestAlreadyRelated(): void
+    {
+        $orderMadeDate = new \DateTime();
+
+        // add pfa/LAY staging deputyship referencing an existing court order record
+        $deputyship = new StagingDeputyship();
+        $deputyship->deputyUid = '11112234';
+        $deputyship->orderUid = '9888777666';
+        $deputyship->deputyType = 'LAY';
+        $deputyship->orderType = 'pfa';
+        $deputyship->caseNumber = '9988776655';
+        $deputyship->orderMadeDate = $orderMadeDate->format('Y-m-d');
+        $deputyship->isHybrid = '0';
+
+        $this->em->persist($deputyship);
+
+        // add client
+        $client = new Client();
+        $client->setCaseNumber($deputyship->caseNumber);
+
+        $this->em->persist($client);
+
+        // add compatible report
+        $report = new Report(
+            client: $client,
+            type: '102',
+            startDate: $orderMadeDate->modify('+1 day'),
+            endDate: $orderMadeDate->modify('+1 year'),
+            dateChecks: false
+        );
+
+        $this->em->persist($report);
+
+        // create order and associate with report; this report is a potential candidate,
+        // but should be ignored as a candidate because a relationship already exists
+        $courtOrder = new CourtOrder();
+        $courtOrder->setCourtOrderUid($deputyship->orderUid);
+        $courtOrder->setOrderType('pfa');
+        $courtOrder->setStatus('ACTIVE');
+        $courtOrder->setOrderMadeDate($orderMadeDate);
+        $courtOrder->addReport($report);
+
+        $this->em->persist($courtOrder);
+
+        // write everything to db
+        $this->em->flush();
+
+        // create report candidates
+        $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());
+
+        // check that the existing order <-> report relationship is not one of the candidates
+        self::assertCount(0, $candidates);
     }
 }
