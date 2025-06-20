@@ -335,7 +335,7 @@ class LayUserFixtures extends AbstractDataFixture
         }
 
         // If codeputy was enabled, add a secondary account
-        $user2 = '';
+        $user2 = null;
 
         if ($data['coDeputy']) {
             $user2 = clone $user;
@@ -351,8 +351,8 @@ class LayUserFixtures extends AbstractDataFixture
         }
 
         // create court order and populate linked tables for non-hybrid reports (excluding duplicate clients)
-        $courtOrder = '';
-        if (!str_contains($data['id'], '-4') && 'Lay-Duplicate-Client' != $data['id']) {
+        $courtOrder = null;
+        if (!str_contains($data['id'], '-4') || 'Lay-Duplicate-Client' != $data['id']) {
             $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report, $ndr);
         }
 
@@ -407,8 +407,8 @@ class LayUserFixtures extends AbstractDataFixture
         ObjectManager $manager,
         int $iteration,
         int $offset,
-        CourtOrder $courtOrder,
-        User $user2,
+        ?CourtOrder $courtOrder,
+        ?User $user2,
         Client $client,
         Client $client2,
         ?Report $report,
@@ -456,7 +456,7 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($courtOrderHW);
 
             // create hybrid co-deputy and associate with court order
-            if (str_ends_with($data['id'], '-4-Co')) {
+            if (str_ends_with($data['id'], '-4-Co') && !is_null($user2)) {
                 $coDeputy = clone $this->deputy;
 
                 $coDeputy->setDeputyUid((string) $user2->getDeputyUid());
@@ -471,7 +471,7 @@ class LayUserFixtures extends AbstractDataFixture
             }
 
         // create non-hybrid co-deputy account and associate with court order
-        } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id']) {
+        } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id'] && !is_null($user2)) {
             $coDeputy = clone $this->deputy;
 
             $coDeputy->setDeputyUid((string) $user2->getDeputyUid());
@@ -480,7 +480,9 @@ class LayUserFixtures extends AbstractDataFixture
             $coDeputy->setUser($user2);
 
             // Associate deputy with court order
-            $coDeputy->associateWithCourtOrder($courtOrder);
+            if (!is_null($courtOrder)) {
+                $coDeputy->associateWithCourtOrder($courtOrder);
+            }
 
             $manager->persist($coDeputy);
         } elseif ($data['multi-client'] && !is_null($multiClientSecondReport)) {
