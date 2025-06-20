@@ -292,6 +292,7 @@ services:
       dockerfile: client/docker/app/Dockerfile
       context: .
       args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         ENVIRONMENT: local
     depends_on:
       pact-mock:
