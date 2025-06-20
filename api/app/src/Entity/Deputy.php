@@ -455,7 +455,7 @@ class Deputy
             && null !== $dto->getDeputyEmail();
     }
 
-    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $isActive = true): Deputy
+    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $isActive = true): ?Deputy
     {
         $courtOrderDeputy = new CourtOrderDeputy();
         $courtOrderDeputy->setCourtOrder($courtOrder);

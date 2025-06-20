@@ -49,8 +49,9 @@ trait CourtOrderTrait
         if ($numOfCourtOrders > 1) {
             $clientIds = [];
 
-            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
-            $clientIds[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+            foreach ($this->fixtureUsers as $user) {
+                $clientIds[] = $user->getClientId();
+            }
 
             $clients = [];
 
@@ -61,7 +62,13 @@ trait CourtOrderTrait
             }
 
             foreach ($clients as $client) {
-                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy, $client->getCurrentReport());
+                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
+                    $orderType,
+                    $client,
+                    $deputy,
+                    $client->getCurrentReport(),
+                    $client->getNdr()
+                );
             }
         }
 
@@ -69,7 +76,13 @@ trait CourtOrderTrait
             ->getRepository(Client::class)
             ->find(['id' => $clientId]);
 
-        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder($orderType, $client, $deputy, $client->getCurrentReport());
+        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+            $orderType,
+            $client,
+            $deputy,
+            $client->getCurrentReport(),
+            $client->getNdr()
+        );
     }
 
     /**
@@ -144,4 +157,52 @@ trait CourtOrderTrait
             throw new BehatException(sprintf('Expected %d orders, got %d', $arg1, count($orders)));
         }
     }
+
+    /**
+     * @Given /^I should see an NDR on the court order page with a status of \'([^\']*)\' with a standard report status of \'([^\']*)\'$/
+     */
+    public function iShouldSeeAnNDROnTheCourtOrderPageWithAStandardReportStatusOf($arg1, $arg2)
+    {
+        $this->iAmOnPage(sprintf('{\/courtorder\/deputy\/%s$}', $this->courtOrder->getCourtOrderUid()));
+
+        /** @var array<NodeElement> $paragraph */
+        $paragraph = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/div[1]/p');
+        /** @var array<NodeElement> $ndrStatus */
+        $ndrStatus = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/span');
+        /** @var array<NodeElement> $reportStatus */
+        $reportStatus = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/span');
+
+        $text = 'Your new deputy report';
+        if (!str_contains($paragraph[0]->getText(), $text)) {
+            throw new BehatException(sprintf('Expected to find text \'%s\' on page, unable to find on page', $text));
+        }
+
+        if (!str_contains($ndrStatus[0]->getText(), $arg1)) {
+            throw new BehatException(sprintf(
+                'Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead',
+                $arg1,
+                $ndrStatus[0]->getText()
+            ));
+        }
+
+        if (!str_contains($reportStatus[0]->getText(), $arg2)) {
+            throw new BehatException(sprintf(
+                'Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead',
+                $arg2,
+                $reportStatus[0]->getText()
+            ));
+        }
+
+        $this->clickLink('Start Now');
+    }
+
+    /**
+     * @Then /^I can procced to fill out the NDR$/
+     */
+    public function iCanProccedToFillOutTheNDR()
+    {
+        $this->iAmOnPage(sprintf('{\/ndr\/%s\/overview$}', $this->courtOrder->getNdr()->getId()));
+    }
+
+
 }

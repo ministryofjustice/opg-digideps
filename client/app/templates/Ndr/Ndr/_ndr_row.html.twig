@@ -6,7 +6,7 @@
 
 <div class="behat-region-ndr-card opg-card push-double--bottom">
     <span class="govuk-tag opg-card__tag {{ ndrStatus.status | status_to_tag_css }}">{{ (ndrStatus.status) | trans({}, 'common') }}</span>
-    <h3 class="govuk-heading-m flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+    <h3 class="govuk-heading-m flush--top">{{ client.firstname ~ " " ~ client.lastname }}</h3>
     <div class="govuk-!-padding-top-3">
         <p class="text flush--bottom">{{ ('ndr.instructions') | trans(transOptions) }}</p>
     </div>

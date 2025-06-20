@@ -1,13 +1,34 @@
+    {% if client %}
+        {% set unsubmittedReport = client.unsubmittedReport %}
+    {% endif %}
+
+    {% if courtOrder %}
+        {% set ndr = courtOrder.ndr %}
+        {% set ndrStatus = ndr.getStatusService %}
+
+        {% if courtOrder.unsubmittedReport %}
+            {% set unsubmittedReport = courtOrder.unsubmittedReport %}
+        {% endif %}
+
+        {% if courtOrder.activeReport %}
+            {% set reportActive = courtOrder.activeReport %}
+        {% endif %}
+
+        {% if courtOrder.submittedReports %}
+            {% set reportsSubmitted = courtOrder.submittedReports %}
+        {% endif %}
+    {% endif %}
+
     {% if clientHasCoDeputies %}
         {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
     {% if ndr.submitted %}
 
-        {% if client.unsubmittedReport %}
+        {% if unsubmittedReport %}
             <h2 class="govuk-heading-l">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
             {% include '@App/Ndr/Ndr/_report_row.html.twig' with {
-                reportActive: client.unsubmittedReport,
+                reportActive: unsubmittedReport,
                 ndr: ndr,
             } %}
         {% endif %}

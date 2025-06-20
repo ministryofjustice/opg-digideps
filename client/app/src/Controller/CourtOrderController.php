@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Entity\CourtOrder;
+use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\CourtOrderService;
@@ -24,19 +27,30 @@ class CourtOrderController extends AbstractController
     #[Route(path: '/deputy/{uid}', name: "courtorder_by_uid", requirements:['id' => '\d+'], methods: ['GET'])]
     #[Template("@App/CourtOrder/index.html.twig")]
     public function getOrdersByUidAction(string $uid): array
-    {
+    {   /** @var User $user */
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
+        /** @var CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderService->getByUid($uid);
-
+        /** @var Client $client */
         $client = $this->clientApi->getById($courtOrder->getClient()->getId());
 
-        return [
+        $templateValues = [
+            'clientHasCoDeputies' => !empty($client->getCoDeputies()),
             'coDeputies' => $courtOrder->getCoDeputies(strval($user->getDeputyUid())),
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
-            'clientFullName' => $client->getFullName(),
+            'client' => $client,
         ];
+
+        if (!empty($courtOrder->getNdr())) {
+            return array_merge($templateValues, [
+                'ndrEnabled' => true,
+            ]);
+        }
+
+        return array_merge($templateValues, [
+            'ndrEnabled' => false,
+        ]);
     }
 
     #[Route(path: '/multi-report', name: "courtorders_reports_by_user", methods: ['GET'])]

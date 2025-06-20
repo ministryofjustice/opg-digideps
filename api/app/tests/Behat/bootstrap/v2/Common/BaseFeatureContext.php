@@ -368,6 +368,7 @@ class BaseFeatureContext extends MinkContext
 
     /**
      * @BeforeScenario @ndr-not-started
+     * @BeforeScenario @lay-pfa-with-ndr-not-started
      */
     public function createNdrNotStarted()
     {
@@ -377,6 +378,7 @@ class BaseFeatureContext extends MinkContext
 
     /**
      * @BeforeScenario @ndr-completed
+     * @BeforeScenario @lay-pfa-with-ndr-completed
      */
     public function createNdrCompleted()
     {
