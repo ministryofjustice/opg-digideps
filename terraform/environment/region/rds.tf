@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "operator_rds_connect" {
     actions = ["rds-db:connect"]
 
     resources = [
-      "arn:aws:rds-db:${var.account.region}:${data.aws_caller_identity.current.account_id}:dbuser/${local.db.name}/testuser"
+      "${module.api_aurora[0].cluster_arn}/dbuser/readonly_sql_user"
     ]
   }
 }
