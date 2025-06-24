@@ -57,6 +57,7 @@ class CourtOrderService
 
         // only return court order if the logged-in user is a deputy on it
         $isDeputyOnCourtOrder = false;
+        /** @var Deputy $activeDeputy */
         foreach ($courtOrder->getActiveDeputies() as $activeDeputy) {
             if ($activeDeputy->getDeputyUid() === $deputyUid) {
                 $isDeputyOnCourtOrder = true;

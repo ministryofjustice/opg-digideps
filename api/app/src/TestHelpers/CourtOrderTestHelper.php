@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use Doctrine\ORM\EntityManager;
 
@@ -20,6 +21,7 @@ class CourtOrderTestHelper
         string $status = 'ACTIVE',
         string $type = 'SINGLE',
         ?Report $report = null,
+        ?Ndr $ndr = null,
         ?Deputy $deputy = null,
         bool $isActive = true,
         \DateTime $orderDate = (new \DateTime()),
@@ -34,6 +36,10 @@ class CourtOrderTestHelper
 
         if (!is_null($report)) {
             $courtOrder->addReport($report);
+        }
+
+        if(!is_null($ndr)) {
+            $courtOrder->setNdr($ndr);
         }
 
         $em->persist($courtOrder);

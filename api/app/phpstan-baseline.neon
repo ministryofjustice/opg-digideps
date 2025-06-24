@@ -2946,98 +2946,13 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$client2 with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$courtOrder with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$iteration with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$manager with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$multiClientSecondReport with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$offset with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:handleHybridCoDeputyAndMultiClients\\(\\) has parameter \\$user2 with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
 			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$iteration with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$manager with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$offset with no type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Method App\\\\DataFixtures\\\\LayUserFixtures\\:\\:populateCourtOrderTable\\(\\) has parameter \\$report with no type specified\\.$#"
 			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
 			message: "#^Parameter \\#2 \\$replace of function substr_replace expects array\\|string, int given\\.$#"
 			count: 6
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: "#^Parameter \\#3 \\$offset of function substr_replace expects array\\|int, float\\|int given\\.$#"
-			count: 3
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-

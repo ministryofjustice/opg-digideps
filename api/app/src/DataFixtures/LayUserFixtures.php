@@ -305,8 +305,9 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($duplicateUser);
         }
 
-        $report = '';
-        $multiClientSecondReport = '';
+        $ndr = null;
+        $report = null;
+        $multiClientSecondReport = null;
 
         if ($data['ndr']) {
             $ndr = new Ndr($client);
@@ -334,7 +335,7 @@ class LayUserFixtures extends AbstractDataFixture
         }
 
         // If codeputy was enabled, add a secondary account
-        $user2 = '';
+        $user2 = null;
 
         if ($data['coDeputy']) {
             $user2 = clone $user;
@@ -350,21 +351,28 @@ class LayUserFixtures extends AbstractDataFixture
         }
 
         // create court order and populate linked tables for non-hybrid reports (excluding duplicate clients)
-        $courtOrder = '';
-        if (!str_contains($data['id'], '-4') && 'Lay-Duplicate-Client' != $data['id']) {
-            $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report);
+        $courtOrder = null;
+        if (!str_contains($data['id'], '-4') || 'Lay-Duplicate-Client' != $data['id']) {
+            $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report, $ndr);
         }
 
         // handle hybrid, multi client and co-deputies
         if (str_contains($data['id'], '-4') || $data['multi-client'] || $data['coDeputy']) {
-            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport);
+            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport, $ndr);
         }
     }
 
-    private function populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report)
-    {
+    private function populateCourtOrderTable(
+        array $data,
+        ObjectManager $manager,
+        int $iteration,
+        int $offset,
+        Client $client,
+        ?Report $report,
+        ?Ndr $ndr
+    ) {
         $courtOrder = new CourtOrder();
-        $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration, -$offset);
+        $courtOrderUid = substr_replace($data['courtOrderUid'], (string) $iteration, -$offset);
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType($data['orderType']);
@@ -378,8 +386,12 @@ class LayUserFixtures extends AbstractDataFixture
         $this->deputy->associateWithCourtOrder($courtOrder);
 
         // Associate court order with reports if it's not an NDR
-        if (!str_ends_with($data['id'], '-NDR')) {
+        if (!str_ends_with($data['id'], '-NDR') && !is_null($report)) {
             $courtOrder->addReport($report);
+
+            $manager->persist($courtOrder);
+        } else if (!is_null($ndr)) {
+            $courtOrder->setNdr($ndr);
 
             $manager->persist($courtOrder);
         }
@@ -390,7 +402,18 @@ class LayUserFixtures extends AbstractDataFixture
         return $courtOrder;
     }
 
-    private function handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport)
+    private function handleHybridCoDeputyAndMultiClients(
+        array $data,
+        ObjectManager $manager,
+        int $iteration,
+        int $offset,
+        ?CourtOrder $courtOrder,
+        ?User $user2,
+        Client $client,
+        Client $client2,
+        ?Report $report,
+        ?Report $multiClientSecondReport,
+        ?Ndr $ndr)
     {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
@@ -421,9 +444,11 @@ class LayUserFixtures extends AbstractDataFixture
             $this->deputy->associateWithCourtOrder($courtOrderHW);
 
             // Associate court order with reports, excluding NDRs
-            if (!$data['ndr']) {
+            if (!$data['ndr'] && !is_null($report)) {
                 $courtOrderPfa->addReport($report);
                 $courtOrderHW->addReport($report);
+            } else if (!empty($ndr)) {
+                $courtOrderPfa->setNdr($ndr);
             }
 
             $manager->persist($this->deputy);
@@ -431,10 +456,10 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($courtOrderHW);
 
             // create hybrid co-deputy and associate with court order
-            if (str_ends_with($data['id'], '-4-Co')) {
+            if (str_ends_with($data['id'], '-4-Co') && !is_null($user2)) {
                 $coDeputy = clone $this->deputy;
 
-                $coDeputy->setDeputyUid($user2->getDeputyUid());
+                $coDeputy->setDeputyUid((string) $user2->getDeputyUid());
                 $coDeputy->setEmail1($user2->getEmail());
                 $coDeputy->setLastname($user2->getLastname());
                 $coDeputy->setUser($user2);
@@ -446,10 +471,10 @@ class LayUserFixtures extends AbstractDataFixture
             }
 
         // create non-hybrid co-deputy account and associate with court order
-        } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id']) {
+        } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id'] && !is_null($user2) && !is_null($courtOrder)) {
             $coDeputy = clone $this->deputy;
 
-            $coDeputy->setDeputyUid($user2->getDeputyUid());
+            $coDeputy->setDeputyUid((string) $user2->getDeputyUid());
             $coDeputy->setEmail1($user2->getEmail());
             $coDeputy->setLastname($user2->getLastname());
             $coDeputy->setUser($user2);
@@ -458,7 +483,7 @@ class LayUserFixtures extends AbstractDataFixture
             $coDeputy->associateWithCourtOrder($courtOrder);
 
             $manager->persist($coDeputy);
-        } elseif ($data['multi-client']) {
+        } elseif ($data['multi-client'] && !is_null($multiClientSecondReport)) {
             // add court order for additional client
             $additionalCourtOrder = new CourtOrder();
             $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration. 2, -2);
