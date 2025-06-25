@@ -30,7 +30,7 @@ class CourtOrderController extends AbstractController
      *
      * @param string $uid Court order UID
      *
-     * @return array Court orders and associated data
+     * @return array Court order and associated data
      */
     #[Route(path: '/{uid}', name: 'courtorder_by_uid', requirements: ['uid' => '\d+'], methods: ['GET'])]
     #[Template('@App/CourtOrder/index.html.twig')]
@@ -64,15 +64,15 @@ class CourtOrderController extends AbstractController
     }
 
     /**
-     * Get all court orders and reports for the currently-logged in user.
+     * Show all court orders and reports for the currently-logged in deputy.
      *
      * @return array List of court orders
      */
-    #[Route(path: '/multi-report', name: 'courtorders_reports_by_user', methods: ['GET'])]
+    #[Route(path: '/choose-a-court-order', name: 'courtorders_for_deputy', methods: ['GET'])]
     #[Template('@App/Index/choose-a-court-order.html.twig')]
     public function getAllDeputyCourtOrders(): array
     {   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
-        $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentUser();
+        $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
         return ['courtOrders' => $results];
     }
