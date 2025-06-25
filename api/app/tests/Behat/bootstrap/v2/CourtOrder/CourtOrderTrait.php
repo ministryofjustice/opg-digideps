@@ -13,7 +13,6 @@ use App\Service\Client\Internal\ClientApi;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Element\NodeElement;
 
 trait CourtOrderTrait
@@ -27,7 +26,7 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderPage()
     {
-        $this->visitFrontendPath('/courtorder/deputy/700000000001');
+        $this->visitFrontendPath('/courtorder/700000000001');
     }
 
     /**
@@ -91,7 +90,7 @@ trait CourtOrderTrait
     public function iVisitTheCourtOrderPageThatIAmAssociatedWith($arg1)
     {
         if ('I am' === $arg1) {
-            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $this->courtOrder->getCourtOrderUid()));
+            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrder->getCourtOrderUid()));
         } else {
             $clientTestHelper = new ClientTestHelper();
             $deputyTestHelper = new DeputyTestHelper();
@@ -105,7 +104,7 @@ trait CourtOrderTrait
             $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy, $client->getCurrentReport())
                 ->getCourtOrderUid();
 
-            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $courtOrderUid));
+            $this->visitFrontendPath(sprintf('/courtorder/%s', $courtOrderUid));
         }
     }
 
@@ -115,9 +114,9 @@ trait CourtOrderTrait
     public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg)
     {
         if ('first' == $firstOrSecond && 'I am' == $arg) {
-            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $this->courtOrders[0]->getCourtOrderUid()));
+            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[0]->getCourtOrderUid()));
         } else {
-            $this->visitFrontendPath(sprintf('/courtorder/deputy/%s', $this->courtOrders[1]->getCourtOrderUid()));
+            $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[1]->getCourtOrderUid()));
         }
     }
 
@@ -141,7 +140,7 @@ trait CourtOrderTrait
      */
     public function iVisitTheMultipleCourtOrderPage()
     {
-        $this->visitFrontendPath('/courtorder/multi-report');
+        $this->visitFrontendPath('/courtorder/choose-a-court-order');
     }
 
     /**
@@ -149,7 +148,7 @@ trait CourtOrderTrait
      */
     public function iShouldSeeCourtOrdersOnThePage(int $arg1)
     {
-        $this->iAmOnPage('{\/courtorder\/multi-report$}');
+        $this->iAmOnPage('{\/courtorder\/choose-a-court-order$}');
 
         $orders = $this->findAllXpathElements("//div[contains(concat(' ', normalize-space(@class), ' '), ' opg-overview-courtorder ')]");
 
@@ -178,19 +177,11 @@ trait CourtOrderTrait
         }
 
         if (!str_contains($ndrStatus[0]->getText(), $arg1)) {
-            throw new BehatException(sprintf(
-                'Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead',
-                $arg1,
-                $ndrStatus[0]->getText()
-            ));
+            throw new BehatException(sprintf('Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead', $arg1, $ndrStatus[0]->getText()));
         }
 
         if (!str_contains($reportStatus[0]->getText(), $arg2)) {
-            throw new BehatException(sprintf(
-                'Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead',
-                $arg2,
-                $reportStatus[0]->getText()
-            ));
+            throw new BehatException(sprintf('Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead', $arg2, $reportStatus[0]->getText()));
         }
 
         $this->clickLink('Start Now');
@@ -203,6 +194,4 @@ trait CourtOrderTrait
     {
         $this->iAmOnPage(sprintf('{\/ndr\/%s\/overview$}', $this->courtOrder->getNdr()->getId()));
     }
-
-
 }
