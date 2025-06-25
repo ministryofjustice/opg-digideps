@@ -7,22 +7,22 @@ namespace App\Tests\Behat\v2\Common;
 trait AssertTrait
 {
     public function assertStringContainsString(
-        $expected,
-        $found,
-        string $comparisonSubject
+        string $needle,
+        string $haystack,
+        string $reasonForFailedAssert,
     ) {
-        $foundFormatted = strval(trim(strtolower($found)));
-        $expectedFormatted = strval(trim(strtolower($expected)));
+        $haystack = trim(strtolower($haystack));
+        $needle = trim(strtolower($needle));
         assert(
-            str_contains($foundFormatted, $expectedFormatted),
-            $this->getAssertMessage($expectedFormatted, $foundFormatted, $comparisonSubject)
+            str_contains($haystack, $needle),
+            $this->getAssertMessage($needle, $haystack, $reasonForFailedAssert)
         );
     }
 
     public function assertStringEqualsString(
         $expected,
         $found,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         $foundFormatted = strval(trim(strtolower((string) $found)));
         $expectedFormatted = strval(trim(strtolower((string) $expected)));
@@ -35,7 +35,7 @@ trait AssertTrait
     public function assertIntEqualsInt(
         $expected,
         $found,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         assert(
             $expected == $found,
@@ -45,7 +45,7 @@ trait AssertTrait
 
     public function assertBoolIsTrue(
         $expected,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         assert(
             true === $expected,
@@ -56,7 +56,7 @@ trait AssertTrait
     public function assertStringDoesNotContainString(
         $notExpected,
         $found,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         $foundFormatted = strval(trim(strtolower($found)));
         $notExpectedFormatted = strval(trim(strtolower($notExpected)));
@@ -69,7 +69,7 @@ trait AssertTrait
     public function assertStringDoesNotEqualString(
         $notExpected,
         $found,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         $foundFormatted = strval(trim(strtolower($found)));
         $notExpectedFormatted = strval(trim(strtolower($notExpected)));
@@ -80,9 +80,9 @@ trait AssertTrait
     }
 
     private function getAssertMessage(
-        $expected,
-        $found,
-        string $comparisonSubject
+        string $expected,
+        string $found,
+        string $comparisonSubject,
     ) {
         $message = <<<MESSAGE
 
@@ -160,7 +160,7 @@ MESSAGE;
     public function assertIsClass(
         $expectedClassName,
         $actual,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         if (is_null($actual)) {
             assert(
@@ -180,7 +180,7 @@ MESSAGE;
 
     public function assertIsNull(
         $actual,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         assert(
             is_null($actual),
@@ -231,7 +231,7 @@ MESSAGE;
     public function assertEntitiesAreTheSame(
         $expectedEntity,
         $actualEntity,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         if (is_null($actualEntity)) {
             assert(
@@ -259,7 +259,7 @@ MESSAGE;
     public function assertEntitiesAreNotTheSame(
         $expectedEntity,
         $actualEntity,
-        string $comparisonSubject
+        string $comparisonSubject,
     ) {
         if (is_null($actualEntity)) {
             assert(
