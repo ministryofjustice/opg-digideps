@@ -69,7 +69,7 @@
 
         </div>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'data-single-submit-form': 'true'}}) }}
 
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
