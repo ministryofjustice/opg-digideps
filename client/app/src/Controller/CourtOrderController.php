@@ -74,10 +74,6 @@ class CourtOrderController extends AbstractController
     {   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentUser();
 
-        if (empty($results)) {
-            $this->redirectToRoute('homepage');
-        }
-
         return ['courtOrders' => $results];
     }
 }
