@@ -31,6 +31,15 @@ chooseAnOrder:
   caseNumber: Case number
   reportType: Report Type
 
+accountSetupInProgress:
+  thankYou: "Thank you for registering"
+  explanation: "Your account is being set up."
+  instruction: "Please log in tomorrow after 7am to see your reports."
+  contactsIntro: "If your reports are not available at that time, please contact us:"
+  openingHours: "Monday to Friday 9am to 5pm"
+  relayUk: "Relay UK (if you cannot hear or speak on the phone)"
+  relayUkNumber: "18001 0300 123 1300"
+
 codeputy:
   inviteAnotherDeputy: Invite another deputy
 

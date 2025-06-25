@@ -10,61 +10,57 @@
 
 {% block pageContent %}
 
-    {% if results|length == 0 %}
-        <p>Your account is being set up</p>
-    {% else %}
-        <h3 class="govuk-heading-m">
-            {{ 'chooseAnOrder.title'| trans }}
-        </h3>
-        {% for reports in courtOrders %}
-            <div class="govuk-summary-card opg-overview-courtorder">
-                <div class="govuk-summary-card__title-wrapper">
-                    <h2 class="govuk-summary-card__title">
-                        {{ reports.client.firstName }} {{ reports.client.lastName }}
-                    </h2>
-                    <ul class="govuk-summary-card__actions">
-                        <li class="govuk-summary-card__action">
-                            <a href="{{ path('courtorder_by_uid', {'uid': reports.courtOrder.courtOrderLink}) }}">
-                                {{ 'chooseAnOrder.courtOrderLink'| trans }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="govuk-summary-card__content">
-                    <dl class="govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{ 'chooseAnOrder.courtOrderNumber'| trans }}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{ reports.courtOrder.courtOrderUid }}
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{ 'chooseAnOrder.caseNumber'| trans }}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{ reports.client.caseNumber }}
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{ 'chooseAnOrder.reportType'| trans }}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {% set reportType = (reports.report.type matches '{\-4}') ?
-                                    'Property and financial; Health and welfare'
-                                    : ('104' in reports.report.type) ? 'Health and welfare'
-                                    : 'Property and financial'  %}
-                                {{ reportType }}
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
+    <h3 class="govuk-heading-m">
+        {{ 'chooseAnOrder.title'| trans }}
+    </h3>
+    {% for reports in courtOrders %}
+        <div class="govuk-summary-card opg-overview-courtorder">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">
+                    {{ reports.client.firstName }} {{ reports.client.lastName }}
+                </h2>
+                <ul class="govuk-summary-card__actions">
+                    <li class="govuk-summary-card__action">
+                        <a href="{{ path('courtorder_by_uid', {'uid': reports.courtOrder.courtOrderLink}) }}">
+                            {{ 'chooseAnOrder.courtOrderLink'| trans }}
+                        </a>
+                    </li>
+                </ul>
             </div>
-        {% endfor %}
-    {% endif %}
+            <div class="govuk-summary-card__content">
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'chooseAnOrder.courtOrderNumber'| trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ reports.courtOrder.courtOrderUid }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'chooseAnOrder.caseNumber'| trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ reports.client.caseNumber }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'chooseAnOrder.reportType'| trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {% set reportType = (reports.report.type matches '{\-4}') ?
+                                'Property and financial; Health and welfare'
+                                : ('104' in reports.report.type) ? 'Health and welfare'
+                                : 'Property and financial'  %}
+                            {{ reportType }}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    {% endfor %}
 
     <noscript>
         {{ hidden_ga_event('Javascript Disabled') }}
