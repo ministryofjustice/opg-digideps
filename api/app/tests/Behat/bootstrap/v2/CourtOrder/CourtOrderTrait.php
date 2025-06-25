@@ -194,4 +194,12 @@ trait CourtOrderTrait
     {
         $this->iAmOnPage(sprintf('{\/ndr\/%s\/overview$}', $this->courtOrder->getNdr()->getId()));
     }
+
+    /**
+     * @Then /^I should see a message explaining that my account is being set up$/
+     */
+    public function iShouldSeeAccountBeingSetUpMessage()
+    {
+        $this->assertStringContainsString('Your account is being set up', $this->getPageContent(), 'page should contain message about account being set up');
+    }
 }
