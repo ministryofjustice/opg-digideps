@@ -52,7 +52,7 @@ resource "aws_route53_record" "api_postgres" {
 data "aws_caller_identity" "current" {}
 
 
-# Allow the Operator Role to Connect
+#Allow the Operator Role to Connect
 
 data "aws_iam_role" "operator" {
   name = "operator"
