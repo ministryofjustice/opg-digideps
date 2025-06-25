@@ -18,6 +18,7 @@ import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
 import GoogleAnalyticsObject from './modules_new/GoogleAnalyticsObject'
 import GoogleAnalyticsGtag from './modules_new/GoogleAnalyticsGtag'
 import EnableJavascript from './modules_new/EnableJavascript'
+import FormSingleSubmit from './modules_new/FormSingleSubmit'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -63,6 +64,8 @@ window.addEventListener('DOMContentLoaded', () => {
   GoogleAnalyticsObject.init(document)
 
   GoogleAnalyticsGtag.init(document)
+
+  FormSingleSubmit.init(document)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
