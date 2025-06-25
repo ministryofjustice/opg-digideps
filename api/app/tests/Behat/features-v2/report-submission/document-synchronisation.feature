@@ -28,7 +28,7 @@ Feature: Synchronising Documents with Sirius
     @super-admin @prof-admin-health-welfare-submitted
     Scenario: Submitting supporting documents after a report submission sets the synchronisation status to queued
         Given a Professional Deputy has submitted a Health and Welfare report
-        And I attached a supporting document "test-image.png" to the submitted report
+        And I attach a supporting document "test-image.png" to the "submitted" report
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
@@ -38,7 +38,7 @@ Feature: Synchronising Documents with Sirius
     @super-admin @prof-admin-health-welfare-submitted
     Scenario: Running the document-sync command syncs queued documents with Sirius
         Given a Professional Deputy has submitted a Health and Welfare report
-        And I attached a supporting document "test-image.png" to the submitted report
+        And I attach a supporting document "test-image.png" to the "submitted" report
         When a super admin user accesses the admin app
         And I run the document-sync command
         And I visit the admin submissions page

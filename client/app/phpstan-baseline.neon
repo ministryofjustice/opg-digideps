@@ -3486,32 +3486,7 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:deleteConfirmAction\\(\\) has parameter \\$documentId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:deleteDocument\\(\\) has parameter \\$documentId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:deleteMissingS3DocFromDocumentTable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:deleteMissingS3DocFromDocumentTable\\(\\) has parameter \\$documentId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:getDocument\\(\\) should return App\\\\Entity\\\\Report\\\\Document but returns mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:identifyMissingFilesInS3Bucket\\(\\) has parameter \\$report with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
 
@@ -3522,21 +3497,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:step1Action\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:submitMoreConfirmAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:submitMoreConfirmedAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
 
