@@ -40,6 +40,12 @@ Feature: Court order page
         When I visit the court order page of the 'second' court order that 'I am' associated with
         Then I should be on the court order page
 
+    @lay-pfa-no-court-orders-message @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A lay deputy logs in but has no court orders associated with them yet
+        When a lay deputy with no court orders logs in
+        And I visit the multiple court order page
+        Then I should see a message explaining that my account is being set up
+
     @lay-pfa-with-ndr-not-started
     Scenario: A deputy can view their NDR on their PFA court order
         Given a Lay Deputy has not started an NDR report

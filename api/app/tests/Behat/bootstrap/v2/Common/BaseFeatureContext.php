@@ -69,6 +69,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
     public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid;
     public UserDetails $layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
 
     public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
@@ -622,14 +623,21 @@ class BaseFeatureContext extends MinkContext
     {
         $deputyUid = 123456789000 + rand(1, 999);
         $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+
+        $deputyUid = 123433389000 + rand(1, 999);
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+
         $nonPrimaryUserWithNoDeputyUidDetails = new UserDetails(
             $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId.'-b', null, -1)
         );
 
+        $deputyUid = 123452222001 + rand(1, 999);
+        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId.'999', null, $deputyUid));
+
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid = $nonPrimaryUserWithNoDeputyUidDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders = $primaryUserNoCourtOrders;
     }
 
     /**

@@ -345,6 +345,21 @@ trait AuthTrait
     }
 
     /**
+     * @Given /^a lay deputy with no court orders logs in$/
+     */
+    public function aLayDeputyWithNoCourtOrdersLogsIn()
+    {
+        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $userEmail);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
      * @Given /^a Lay Deputy with no deputy UID tries to login with their non-primary email address$/
      */
     public function aLayDeputyWithNoDeputyUidTriesToLoginWithTheirEmailAddress()
