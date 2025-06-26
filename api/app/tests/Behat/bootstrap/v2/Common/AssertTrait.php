@@ -33,33 +33,33 @@ trait AssertTrait
     }
 
     public function assertIntEqualsInt(
-        $expected,
-        $found,
+        int $expected,
+        int $found,
         string $comparisonSubject,
     ) {
         assert(
             $expected == $found,
-            $this->getAssertMessage($expected, $found, $comparisonSubject)
+            $this->getAssertMessage("$expected", "$found", $comparisonSubject)
         );
     }
 
     public function assertBoolIsTrue(
-        $expected,
+        bool $expected,
         string $comparisonSubject,
     ) {
         assert(
             true === $expected,
-            $this->getAssertMessage($expected, 'false', $comparisonSubject)
+            $this->getAssertMessage("$expected", 'false', $comparisonSubject)
         );
     }
 
     public function assertStringDoesNotContainString(
-        $notExpected,
-        $found,
+        string $notExpected,
+        string $found,
         string $comparisonSubject,
     ) {
-        $foundFormatted = strval(trim(strtolower($found)));
-        $notExpectedFormatted = strval(trim(strtolower($notExpected)));
+        $foundFormatted = trim(strtolower($found));
+        $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
             !str_contains($foundFormatted, $notExpectedFormatted),
             $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
@@ -67,12 +67,12 @@ trait AssertTrait
     }
 
     public function assertStringDoesNotEqualString(
-        $notExpected,
-        $found,
+        string $notExpected,
+        string $found,
         string $comparisonSubject,
     ) {
-        $foundFormatted = strval(trim(strtolower($found)));
-        $notExpectedFormatted = strval(trim(strtolower($notExpected)));
+        $foundFormatted = trim(strtolower($found));
+        $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
             $foundFormatted != $notExpectedFormatted,
             $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
