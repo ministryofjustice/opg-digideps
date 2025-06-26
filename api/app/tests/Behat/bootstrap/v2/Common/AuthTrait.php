@@ -309,7 +309,7 @@ trait AuthTrait
     public function IShouldBeRedirectedAndDeniedAccessToContinue()
     {
         $this->assertIntEqualsInt(
-            '403',
+            403,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -322,7 +322,7 @@ trait AuthTrait
     public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised()
     {
         $this->assertIntEqualsInt(
-            '404',
+            404,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
