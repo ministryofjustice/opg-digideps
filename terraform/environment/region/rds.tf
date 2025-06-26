@@ -20,6 +20,7 @@ module "api_aurora" {
   tags                                = var.default_tags
   log_group                           = aws_cloudwatch_log_group.api_cluster.name
   iam_database_authentication_enabled = true
+  db_cluster_parameter_group_name     = aws_rds_cluster_parameter_group.iam_auth.name
 }
 
 locals {
@@ -99,4 +100,23 @@ resource "aws_iam_policy" "database_readonly_connect" {
 resource "aws_iam_role_policy_attachment" "database_readonly_connect_attach" {
   role       = aws_iam_role.database_readonly_access.name
   policy_arn = aws_iam_policy.database_readonly_connect.arn
+}
+
+# Creater a Parameter Group with The Correct "family" (aurora-postgresqlXX)
+locals {
+  postgres_major_version = split(".", var.account.psql_engine_version)[0]
+  aurora_family          = "aurora-postgresql${local.postgres_major_version}"
+}
+
+resource "aws_rds_cluster_parameter_group" "iam_auth" {
+  name        = "api-iam-auth-params"
+  family      = local.aurora_family
+  description = "Parameter group for API Aurora Cluster with IAM Auth enabled"
+
+  parameter {
+    name  = "rds.iam_authentication"
+    value = "1"
+  }
+
+  tags = var.default_tags
 }
