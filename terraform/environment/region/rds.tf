@@ -53,18 +53,35 @@ resource "aws_route53_record" "api_postgres" {
 data "aws_caller_identity" "current" {}
 
 
-#Allow the Operator Role to Connect
+# Allow the Operator Role to Connect via another Role.
 
 data "aws_iam_role" "operator" {
   name = "operator"
 }
 
-
-data "aws_iam_policy_document" "operator_rds_connect" {
+data "aws_iam_policy_document" "database_readonly_assume" {
   statement {
-    sid    = "AllowRdsConnect"
-    effect = "Allow"
+    sid     = "AllowAssume"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
 
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_iam_role.operator.arn]
+    }
+  }
+}
+
+resource "aws_iam_role" "database_readonly_access" {
+  name               = "database-readonly-access"
+  assume_role_policy = data.aws_iam_policy_document.database_readonly_assume.json
+  tags               = var.default_tags
+}
+
+data "aws_iam_policy_document" "database_readonly_connect" {
+  statement {
+    sid     = "AllowRdsConnect"
+    effect  = "Allow"
     actions = ["rds-db:connect"]
 
     resources = [
@@ -73,13 +90,13 @@ data "aws_iam_policy_document" "operator_rds_connect" {
   }
 }
 
-resource "aws_iam_policy" "operator_rds_connect" {
-  name        = "operator-rds-readonly-access"
-  description = "Allow operator role to connect to RDS via IAM Auth."
-  policy      = data.aws_iam_policy_document.operator_rds_connect.json
+resource "aws_iam_policy" "database_readonly_connect" {
+  name        = "database-readonly-access"
+  description = "Allow database-readonly-access role to connect to RDS via IAM Auth."
+  policy      = data.aws_iam_policy_document.database_readonly_connect.json
 }
 
-resource "aws_iam_role_policy_attachment" "operator_rds_connect" {
-  role       = data.aws_iam_role.operator.name
-  policy_arn = aws_iam_policy.operator_rds_connect.arn
+resource "aws_iam_role_policy_attachment" "database_readonly_connect_attach" {
+  role       = aws_iam_role.database_readonly_access.name
+  policy_arn = aws_iam_policy.database_readonly_connect.arn
 }
