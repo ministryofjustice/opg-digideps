@@ -536,7 +536,7 @@ class DocumentController extends AbstractController
     {
         $documentId = $request->query->getInt('documentId');
 
-        return $this->deleteDocument($request, $documentId);
+        return $this->deleteDocument($request, strval($documentId));
     }
 
     /**
