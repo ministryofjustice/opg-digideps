@@ -156,9 +156,3 @@ variable "log_group" {
   description = "The name of the CloudWatch Logs log group."
   type        = string
 }
-
-variable "db_cluster_parameter_group_name" {
-  description = "Name of the DB cluster parameter group."
-  type        = string
-  default     = null
-}
