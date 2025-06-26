@@ -184,16 +184,13 @@ class ClientController extends AbstractController
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
-                $url = $currentUser->isNdrEnabled()
-                    ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
-                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
-
                 if ($currentUser->isNdrEnabled()) {
                     $event = new RegistrationSucceededEvent($currentUser);
 
                     $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
                 }
 
+                $url = $this->generateUrl('lay_home', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {
