@@ -75,7 +75,7 @@ class CourtOrderController extends AbstractController
     {   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
-        if (0 === count($results)) {
+        if (is_null($results) || 0 === count($results)) {
             return $this->render('@App/Index/account-setup-in-progress.html.twig');
         }
 
