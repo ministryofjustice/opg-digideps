@@ -103,14 +103,20 @@ trait ReportSubmissionTrait
     }
 
     /**
-     * @When I attach a "second" supporting document :imageName to the :submitted report
-     * @When I attach a supporting document :imageName to the :submitted report
+     * @When I attach a "second" supporting document :imageName to the submitted report
+     * @When I attach a supporting document :imageName to the submitted report
      */
-    public function attachSupportingDocumentToSubmittedReport(string $imageName, $reportStatus)
+    public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
         $this->iVisitTheDocumentsStep2Page();
         $this->attachDocument($imageName);
+    }
 
+    /**
+     * @Given /^I send the documents to complete the upload process on the "([^"]*)" report$/
+     */
+    public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus)
+    {
         if ('submitted' != $reportStatus) {
             $this->clickLink('Continue to send documents');
         }

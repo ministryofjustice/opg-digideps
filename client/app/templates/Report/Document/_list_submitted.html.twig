@@ -34,7 +34,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a
                         class="govuk-link behat-link-delete-documents-button"
-                        href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
+                        href="{{ path('delete_report_documents_post_submission', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
                         {{ (page ~ '.deleteDocument') | trans }}
                     </a>
                 </dd>
