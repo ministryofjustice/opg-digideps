@@ -26,11 +26,12 @@ class DeputyApi
         return $this->restClient->post(self::CREATE_DEPUTY_FROM_USER_ENDPOINT, $currentUser);
     }
 
-    public function findAllDeputyCourtOrdersForCurrentUser(): ?array
+    public function findAllDeputyCourtOrdersForCurrentDeputy(): ?array
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         if (($currentUser instanceof User) !== true) {
             $this->logger->error('Unable to get correct instance of User via TokenStorage');
+
             return null;
         }
 
