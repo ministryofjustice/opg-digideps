@@ -624,7 +624,7 @@ class BaseFeatureContext extends MinkContext
         $deputyUid = 123456789000 + rand(1, 999);
         $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
 
-        $deputyUid = 123433389000 + rand(1, 999);
+        // NB tests depend on this user having the same deputyUid as $primaryUserDetails
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
 
         $nonPrimaryUserWithNoDeputyUidDetails = new UserDetails(
