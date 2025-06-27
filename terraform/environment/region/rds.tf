@@ -53,7 +53,7 @@ resource "aws_route53_record" "api_postgres" {
 data "aws_caller_identity" "current" {}
 
 
-# Allow the Operator Role to Connect via another Role.
+# Allow the Operator Role to Connect via another Role
 
 data "aws_iam_role" "operator" {
   name = "operator"
@@ -73,7 +73,7 @@ data "aws_iam_policy_document" "database_readonly_assume" {
 }
 
 resource "aws_iam_role" "database_readonly_access" {
-  name               = "database-readonly-access"
+  name               = "readonly-db-iam"
   assume_role_policy = data.aws_iam_policy_document.database_readonly_assume.json
   tags               = var.default_tags
 }
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "database_readonly_connect" {
     actions = ["rds-db:connect"]
 
     resources = [
-      "${module.api_aurora[0].cluster_arn}/dbuser/readonly_sql_user"
+      "${module.api_aurora[0].cluster_arn}/dbuser/readonly-db-iam"
     ]
   }
 }
