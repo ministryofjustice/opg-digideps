@@ -208,7 +208,7 @@ trait DocumentsSectionTrait
      *
      * @Given /^I remove the "([^"]*)" document I uploaded$/
      */
-    public function iRemoveOneDocumentIUploaded($fileName)
+    public function iRemoveOneDocumentIUploaded($fileName = null)
     {
         if ($fileName) {
             $documentToPop = $fileName;
