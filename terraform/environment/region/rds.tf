@@ -73,7 +73,7 @@ data "aws_iam_policy_document" "database_readonly_assume" {
 }
 
 resource "aws_iam_role" "database_readonly_access" {
-  name               = "readonly-db-iam"
+  name               = "readonly-db-iam-${local.environment}"
   assume_role_policy = data.aws_iam_policy_document.database_readonly_assume.json
   tags               = var.default_tags
 }
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "database_readonly_connect" {
     actions = ["rds-db:connect"]
 
     resources = [
-      "${module.api_aurora[0].cluster_arn}/dbuser/readonly-db-iam"
+      "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:*/readonly-db-iam-${local.environment}"
     ]
   }
 }
