@@ -44,10 +44,6 @@ locals {
         {
           name      = "SECRET",
           valueFrom = data.aws_secretsmanager_secret.api_secret.arn
-        },
-        {
-          name      = "LOCAL_ENVIRONMENT",
-          valueFrom = local.environment
         }
       ],
       environment = concat(local.api_base_variables, local.api_service_variables)

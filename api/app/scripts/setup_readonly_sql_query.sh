@@ -20,12 +20,12 @@ for sql_file in $(ls $SQL_DIR/*.sql | sort -V); do
     temp_file=$(mktemp)
 
     # Check if password is empty and exit if it is!
-    if [ -z "$LOCAL_ENVIRONMENT" ]; then
-        echo "LOCAL_ENVIRONMENT is empty. Exiting..."
+    if [ -z "$WORKSPACE" ]; then
+        echo "WORKSPACE is empty. Exiting..."
         exit 1
     fi
 
-    sed "s/string-to-replace-with-local-environment/$LOCAL_ENVIRONMENT/g" "$sql_file" > "$temp_file"
+    sed "s/string-to-replace-with-local-environment/$WORKSPACE/g" "$sql_file" > "$temp_file"
 
     # Run the modified SQL file
     psql -h "$DATABASE_HOSTNAME" -U "$DATABASE_USERNAME" -d "$DATABASE_NAME" -p "$DATABASE_PORT" -f "$temp_file"
