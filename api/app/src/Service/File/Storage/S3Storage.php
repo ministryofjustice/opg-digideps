@@ -59,7 +59,39 @@ class S3Storage
 
     public function delete($key): Result
     {
-        $this->appendTagset($key, [['Key' => 'Purge', 'Value' => 1]]);
+        $newTagset = [['Key' => 'Purge', 'Value' => 1]];
+
+        $this->log('info', "Appending Purge tag for $key to S3");
+        if (empty($key)) {
+            throw new \Exception('Invalid Reference Key: '.$key.' when appending tag');
+        }
+        foreach ($newTagset as $newTag) {
+            if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
+                throw new \Exception('Invalid Tagset updating: '.$key.print_r($newTagset, true));
+            }
+        }
+
+        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
+        // get the objects tags and then append with PUT
+        $this->log('info', "Retrieving tagset for $key from S3");
+        $existingTags = $this->s3Client->getObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $key,
+        ]);
+
+        $newTagset = array_merge($existingTags['TagSet'], $newTagset);
+        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
+        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
+
+        // Update tags in S3
+        $this->s3Client->putObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $key,
+            'Tagging' => [
+                'TagSet' => $newTagset,
+            ],
+        ]);
+        $this->log('info', "Tagset Updated for $key ");
 
         return $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,
@@ -173,46 +205,6 @@ class S3Storage
         }
 
         return $response;
-    }
-
-    /**
-     * Appends new tagset to S3 Object.
-     *
-     * @throws \Exception
-     */
-    public function appendTagset($key, $newTagset)
-    {
-        $this->log('info', "Appending Purge tag for $key to S3");
-        if (empty($key)) {
-            throw new \Exception('Invalid Reference Key: '.$key.' when appending tag');
-        }
-        foreach ($newTagset as $newTag) {
-            if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
-                throw new \Exception('Invalid Tagset updating: '.$key.print_r($newTagset, true));
-            }
-        }
-
-        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
-        // get the objects tags and then append with PUT
-        $this->log('info', "Retrieving tagset for $key from S3");
-        $existingTags = $this->s3Client->getObjectTagging([
-            'Bucket' => $this->bucketName,
-            'Key' => $key,
-        ]);
-
-        $newTagset = array_merge($existingTags['TagSet'], $newTagset);
-        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
-        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
-
-        // Update tags in S3
-        $this->s3Client->putObjectTagging([
-            'Bucket' => $this->bucketName,
-            'Key' => $key,
-            'Tagging' => [
-                'TagSet' => $newTagset,
-            ],
-        ]);
-        $this->log('info', "Tagset Updated for $key ");
     }
 
     /**
