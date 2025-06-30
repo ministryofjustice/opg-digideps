@@ -11,8 +11,6 @@ use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameFixer;
-use App\Service\File\Storage\S3Storage;
-use DateTime;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
@@ -27,9 +25,6 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 class DocumentSyncServiceTest extends KernelTestCase
 {
     use ProphecyTrait;
-
-    /** @var S3Storage&ObjectProphecy */
-    private $s3Storage;
 
     /** @var SiriusApiGatewayClient&ObjectProphecy */
     private $siriusApiGatewayClient;
@@ -46,7 +41,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     /** @var FileNameFixer&ObjectProphecy */
     private $fileNameFixer;
 
-    /** @var DateTime */
+    /** @var \DateTime */
     private $reportSubmittedDate;
     private $reportEndDate;
     private $reportStartDate;
@@ -61,16 +56,13 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->reportStartDate = new DateTime('2018-05-14');
-        $this->reportEndDate = new DateTime('2019-05-13');
-        $this->reportSubmittedDate = new DateTime('2019-06-20');
+        $this->reportStartDate = new \DateTime('2018-05-14');
+        $this->reportEndDate = new \DateTime('2019-05-13');
+        $this->reportSubmittedDate = new \DateTime('2019-06-20');
         $this->reportSubmissionId = 9876;
         $this->reportPdfSubmissionUuid = '5a8b1a26-8296-4373-ae61-f8d0b250e123';
         $this->fileName = 'test.pdf';
         $this->s3Reference = 'dd_doc_98765_01234567890123';
-
-        /* @var S3Storage&ObjectProphecy $s3Storage */
-        $this->s3Storage = self::prophesize(S3Storage::class);
 
         /* @var SiriusApiGatewayClient&ObjectProphecy $siriusApiGatewayClient */
         $this->siriusApiGatewayClient = self::prophesize(SiriusApiGatewayClient::class);
@@ -86,11 +78,12 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension(Argument::any())->willReturn($this->fileName);
 
         /* @var Serializer serializer */
-        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
+        $this->serializer = self::bootKernel(['debug' => false])->getContainer()->get('jms_serializer');
     }
 
     /**
      * @test
+     *
      * @dataProvider reportTypeProvider
      */
     public function syncDocumentReportPdfSyncSuccess(string $reportTypeCode, string $expectedReportType)
@@ -126,7 +119,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()
@@ -157,7 +150,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn(new Document());
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -214,7 +206,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()
@@ -245,7 +237,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn(new Document());
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -289,7 +280,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
-        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+        $failureResponse = new Response(403, [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
@@ -318,7 +309,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -356,7 +346,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
@@ -383,7 +373,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn(new Document());
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -423,7 +412,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -451,7 +439,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
-        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+        $failureResponse = new Response(403, [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
@@ -480,7 +468,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -494,9 +481,10 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     /**
      * @test
+     *
      * @dataProvider errorCodeProvider
      */
-    public function sendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(string $errorCode, string $expectedErrorType, int $syncAttempts)
+    public function sendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(int $errorCode, string $expectedErrorType, int $syncAttempts)
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -559,7 +547,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -572,9 +559,9 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function errorCodeProvider()
     {
         return [
-            '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR, 0],
-            '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
-            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3],
+            '4XX error code' => [400, Document::SYNC_STATUS_PERMANENT_ERROR, 0],
+            '5XX error code' => [500, Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
+            '5XX error code - 4th attempt' => [500, Document::SYNC_STATUS_PERMANENT_ERROR, 3],
         ];
     }
 
@@ -604,7 +591,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
@@ -631,7 +618,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn(new Document());
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
@@ -692,7 +678,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->willReturn($this->serializer->serialize(new Document(), 'json'));
 
         $sut = new DocumentSyncService(
-            $this->s3Storage->reveal(),
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),

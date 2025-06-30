@@ -12496,11 +12496,6 @@ parameters:
 			path: src/Service/DocumentSyncService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:retrieveDocumentContentFromS3\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:setDocsNotSyncedCount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/DocumentSyncService.php
@@ -12517,11 +12512,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:syncSupportingDocument\\(\\) should return App\\\\Entity\\\\Report\\\\Document\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$document$#"
 			count: 1
 			path: src/Service/DocumentSyncService.php
 
@@ -12681,27 +12671,12 @@ parameters:
 			path: src/Service/File/Scanner/Exception/VirusFoundException.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'Invalid Reference…' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
 			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObjects\\(\\)\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
 
 		-
 			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObjectTagging\\(\\)\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
 
@@ -12716,32 +12691,12 @@ parameters:
 			path: src/Service/File/Storage/S3Storage.php
 
 		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:appendTagset\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:appendTagset\\(\\) has parameter \\$newTagset with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:checkFileExistsInS3\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
 
 		-
 			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:checkFileExistsInS3\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:delete\\(\\) has parameter \\$key with no type specified\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
 
