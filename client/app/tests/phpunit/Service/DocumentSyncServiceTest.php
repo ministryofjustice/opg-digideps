@@ -19,8 +19,8 @@ use JMS\Serializer\Serializer;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class DocumentSyncServiceTest extends KernelTestCase
 {
@@ -125,6 +125,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($successResponse);
 
+        $mockStream = $this->createMock(StreamInterface::class);
         $this->restClient
             ->apiCall(
                 'put',
@@ -135,7 +136,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn(new SymfonyResponse('9876'));
+            ->willReturn($mockStream);
 
         $this->restClient
             ->apiCall(
@@ -212,6 +213,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->shouldBeCalled()
             ->willReturn($successResponse);
 
+        $mockStream = $this->createMock(StreamInterface::class);
         $this->restClient
             ->apiCall(
                 'put',
@@ -222,7 +224,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn(new SymfonyResponse('9876'));
+            ->willReturn($mockStream);
 
         $this->restClient
             ->apiCall(
