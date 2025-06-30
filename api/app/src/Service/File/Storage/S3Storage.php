@@ -84,7 +84,6 @@ class S3Storage
                 throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
-                $s3Result = [];
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
@@ -195,7 +194,6 @@ class S3Storage
 
         // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
         // get the objects tags and then append with PUT
-
         $this->log('info', "Retrieving tagset for $key from S3");
         $existingTags = $this->s3Client->getObjectTagging([
             'Bucket' => $this->bucketName,
@@ -222,8 +220,6 @@ class S3Storage
      */
     private function log($level, $message)
     {
-        // echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
-
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
         ]]);
