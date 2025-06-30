@@ -14,25 +14,14 @@ use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameFixer;
-use App\Service\File\Storage\S3Storage;
-use Exception;
 use GuzzleHttp\Psr7\MimeType;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Throwable;
+use Psr\Http\Message\StreamInterface;
 
 class DocumentSyncService
 {
-    const PERMANENT_ERRORS = [
-        Response::HTTP_REQUEST_ENTITY_TOO_LARGE,
-        Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-    ];
-
-    const MISSING_FILE_EXTENSION_ERROR =
+    public const MISSING_FILE_EXTENSION_ERROR =
         'File extension is missing from filename. This file will need to be manually synced with Sirius';
-
-    /** @var S3Storage */
-    private $storage;
 
     /** @var SiriusApiGatewayClient */
     private $siriusApiGatewayClient;
@@ -52,13 +41,11 @@ class DocumentSyncService
     private FileNameFixer $fileNameFixer;
 
     public function __construct(
-        S3Storage $storage,
         SiriusApiGatewayClient $siriusApiGatewayClient,
         RestClient $restClient,
         SiriusApiErrorTranslator $errorTranslator,
-        FileNameFixer $fileNameFixer
+        FileNameFixer $fileNameFixer,
     ) {
-        $this->storage = $storage;
         $this->siriusApiGatewayClient = $siriusApiGatewayClient;
         $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
@@ -99,7 +86,7 @@ class DocumentSyncService
     }
 
     /**
-     * @return QueuedDocumentData|Exception|mixed|Throwable|null
+     * @return QueuedDocumentData|\Exception|mixed|\Throwable|null
      */
     public function syncDocument(QueuedDocumentData $documentData)
     {
@@ -116,9 +103,6 @@ class DocumentSyncService
         }
     }
 
-    /**
-     * @param QueuedDocumentData $document
-     */
     public function syncReportDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
@@ -129,7 +113,7 @@ class DocumentSyncService
             $this->handleReportSubmissionUpdate($documentData->getReportSubmissionId(), $data['data']['id']);
 
             return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->handleSyncErrors($e, $documentData);
 
             return null;
@@ -142,7 +126,7 @@ class DocumentSyncService
             $this->handleSiriusSync($documentData);
 
             return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->handleSyncErrors($e, $documentData);
 
             return null;
@@ -155,7 +139,7 @@ class DocumentSyncService
         $mimeType = MimeType::fromFilename($fileName);
 
         if (is_null($mimeType)) {
-            throw (new Exception(self::MISSING_FILE_EXTENSION_ERROR, 400));
+            throw new \Exception(self::MISSING_FILE_EXTENSION_ERROR, 400);
         }
 
         $file = (new SiriusDocumentFile())
@@ -167,7 +151,7 @@ class DocumentSyncService
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
                 ->setReportingPeriodFrom($documentData->getReportStartDate())
                 ->setReportingPeriodTo($this->determineEndDate($documentData))
-                ->setYear((intval($documentData->getReportStartDate()->format('Y'))))
+                ->setYear(intval($documentData->getReportStartDate()->format('Y')))
                 ->setDateSubmitted($documentData->getReportSubmitDate())
                 ->setType($this->determineReportType($documentData))
                 ->setSubmissionId($documentData->getReportSubmissionId());
@@ -201,14 +185,6 @@ class DocumentSyncService
     public function determineEndDate(QueuedDocumentData $documentData)
     {
         return $documentData->getNdrId() ? $documentData->getReportStartDate() : $documentData->getReportEndDate();
-    }
-
-    /**
-     * @return string
-     */
-    private function retrieveDocumentContentFromS3(QueuedDocumentData $documentData)
-    {
-        return (string) $this->storage->retrieve($documentData->getStorageReference());
     }
 
     /**
@@ -247,7 +223,7 @@ class DocumentSyncService
     }
 
     /**
-     * @return Exception|mixed|Throwable
+     * @return \Exception|mixed|\Throwable
      */
     private function handleDocumentStatusUpdate(QueuedDocumentData $documentData, string $status, ?string $errorMessage = null)
     {
@@ -267,17 +243,15 @@ class DocumentSyncService
                 [],
                 false
             );
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
             return $exception;
         }
     }
 
-    /**
-     * @return mixed
-     */
-    private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid)
+    private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid): StreamInterface
     {
-        return $this->restClient->apiCall(
+        /** @var StreamInterface $responseBody */
+        $responseBody = $this->restClient->apiCall(
             'put',
             sprintf('report-submission/%s/update-uuid', $reportSubmissionId),
             json_encode(['uuid' => $uuid]),
@@ -285,9 +259,11 @@ class DocumentSyncService
             [],
             false
         );
+
+        return $responseBody;
     }
 
-    private function handleSyncErrors(Throwable $e, QueuedDocumentData $documentData)
+    private function handleSyncErrors(\Throwable $e, QueuedDocumentData $documentData)
     {
         if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
             $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
