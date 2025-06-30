@@ -5,7 +5,7 @@ namespace App\Service\File\Storage;
 use Aws\Result;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3ClientInterface;
+use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
 
@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
  */
 class S3Storage
 {
-    // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
+    // If a file is deleted in S3 it will return an AccessDenied error until it's permanently deleted
     public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
 
     /**
@@ -31,7 +31,7 @@ class S3Storage
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
     public function __construct(
-        private readonly S3ClientInterface $s3Client,
+        private readonly S3Client $s3Client,
         private readonly string $bucketName,
         private readonly LoggerInterface $logger,
     ) {
@@ -48,7 +48,7 @@ class S3Storage
             /** @var Stream $stream */
             $stream = $result['Body'];
 
-            return $stream->read($stream->getSize());
+            return $stream->read($stream->getSize() ?? 0);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
@@ -57,29 +57,22 @@ class S3Storage
         }
     }
 
-    public function delete($key): Result
+    public function delete(string $key): Result
     {
-        $newTagset = [['Key' => 'Purge', 'Value' => 1]];
-
         $this->log('info', "Appending Purge tag for $key to S3");
-        if (empty($key)) {
-            throw new \Exception('Invalid Reference Key: '.$key.' when appending tag');
-        }
-        foreach ($newTagset as $newTag) {
-            if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
-                throw new \Exception('Invalid Tagset updating: '.$key.print_r($newTagset, true));
-            }
-        }
 
-        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
-        // get the objects tags and then append with PUT
+        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347;
+        // get the object's tags and then append with PUT
         $this->log('info', "Retrieving tagset for $key from S3");
-        $existingTags = $this->s3Client->getObjectTagging([
+        $result = $this->s3Client->getObjectTagging([
             'Bucket' => $this->bucketName,
             'Key' => $key,
         ]);
 
-        $newTagset = array_merge($existingTags['TagSet'], $newTagset);
+        /** @var array $existingTags */
+        $existingTags = $result['TagSet'];
+
+        $newTagset = array_merge($existingTags, [['Key' => 'Purge', 'Value' => 1]]);
         $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
         $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
 
@@ -145,7 +138,7 @@ class S3Storage
             ],
         ];
 
-        $this->log('info', json_encode($resultsSummary));
+        $this->log('info', json_encode($resultsSummary) ?: '');
 
         return $resultsSummary;
     }
@@ -170,7 +163,7 @@ class S3Storage
         return $objectsToDelete;
     }
 
-    private function handleS3DeletionErrors(array $s3Result)
+    private function handleS3DeletionErrors(array $s3Result): void
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
@@ -183,7 +176,7 @@ class S3Storage
         }
     }
 
-    public function store($key, $body): Result
+    public function store(string $key, string $body): Result
     {
         $response = $this->s3Client->putObject([
             'Bucket' => $this->bucketName,
@@ -210,7 +203,7 @@ class S3Storage
     /**
      * Log message using the internal logger.
      */
-    private function log($level, $message)
+    private function log(string $level, string $message): void
     {
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',

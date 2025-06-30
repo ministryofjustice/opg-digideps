@@ -7,12 +7,10 @@ use Aws\Exception\AwsException;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class S3StorageTest extends TestCase
@@ -32,7 +30,7 @@ class S3StorageTest extends TestCase
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete'.microtime(1);
 
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('putObject')
             ->with(m::type('array'))
@@ -88,7 +86,7 @@ class S3StorageTest extends TestCase
         $this->assertEquals(204, $ret->toArray()['@metadata']['statusCode']);
 
         // Subsequent call to getObject requires a new mock to allow getObject to throw Exception since file removed
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
         $awsClient->shouldReceive('getObject')->with(
             m::type('array')
         )->andThrow(FileNotFoundException::class);
@@ -112,9 +110,7 @@ class S3StorageTest extends TestCase
 
     public function testSuccessfulUploadBinaryContent()
     {
-        /** @var S3ClientInterface */
-
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
         $awsClient->shouldReceive('getObject')->with(
@@ -140,13 +136,11 @@ class S3StorageTest extends TestCase
 
     public function testFailedUploadBinaryContent()
     {
-        /** @var S3ClientInterface */
-
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
 
-        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);;
+        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(false);
 
         // create timestamped file and key to undo effects of potential previous executions
@@ -155,10 +149,7 @@ class S3StorageTest extends TestCase
 
         /** @var LoggerInterface */
         $mockLogger = m::mock(LoggerInterface::class);
-        $mockLogger->shouldReceive('log')->withAnyArgs([
-            'error',
-            'Failed to upload file to S3. Filename: '. $key
-        ]);
+        $mockLogger->shouldReceive('log')->withAnyArgs();
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
@@ -170,7 +161,7 @@ class S3StorageTest extends TestCase
     {
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
 
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('listObjectVersions')->with(
             [
@@ -226,7 +217,7 @@ class S3StorageTest extends TestCase
     {
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
 
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('listObjectVersions')->with(
             [
@@ -279,7 +270,7 @@ class S3StorageTest extends TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->expectException('RuntimeException', 'Could not remove file');
+        $this->expectException(\RuntimeException::class);
 
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
@@ -295,8 +286,7 @@ class S3StorageTest extends TestCase
     {
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
 
-        /** @var S3ClientInterface */
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('listObjectVersions')->with(
             [
@@ -314,7 +304,7 @@ class S3StorageTest extends TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->expectException('RuntimeException', 'Could not remove file: No results returned');
+        $this->expectException(\RuntimeException::class);
 
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
@@ -327,9 +317,9 @@ class S3StorageTest extends TestCase
     {
         $key = '';
 
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
-        $this->expectException('RuntimeException', 'Could not remove file');
+        $this->expectException(\RuntimeException::class);
 
         $awsClient->shouldNotReceive('deleteObjects')->never();
 
@@ -349,7 +339,7 @@ class S3StorageTest extends TestCase
     {
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
 
-        $awsClient = m::mock(S3ClientInterface::class);
+        $awsClient = m::mock(S3Client::class);
 
         $awsClient->shouldReceive('listObjectVersions')->with(
             [
@@ -367,7 +357,7 @@ class S3StorageTest extends TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->expectException('RuntimeException', 'Could not remove file');
+        $this->expectException(\RuntimeException::class);
 
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
@@ -380,7 +370,6 @@ class S3StorageTest extends TestCase
     {
         $key = 'nonExistentFile.png';
 
-        /** @var ObjectProphecy|S3Client $awsClient */
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'The specified key does not exist.',
@@ -394,7 +383,7 @@ class S3StorageTest extends TestCase
 
         $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
 
-        $this->expectException(FileNotFoundException::class, "Cannot find file with reference {$key}");
+        $this->expectException(FileNotFoundException::class);
 
         $this->object->retrieve($key);
     }
@@ -403,7 +392,6 @@ class S3StorageTest extends TestCase
     {
         $key = 'nonExistentFile.png';
 
-        /** @var ObjectProphecy|S3Client $awsClient */
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'Access Denied.',
@@ -417,7 +405,7 @@ class S3StorageTest extends TestCase
 
         $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
 
-        $this->expectException(FileNotFoundException::class, "Cannot find file with reference {$key}");
+        $this->expectException(FileNotFoundException::class);
 
         $this->object->retrieve($key);
     }
@@ -426,7 +414,6 @@ class S3StorageTest extends TestCase
     {
         $key = 'nonExistentFile.png';
 
-        /** @var ObjectProphecy|S3Client $awsClient */
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'Some other error message',
@@ -440,7 +427,7 @@ class S3StorageTest extends TestCase
 
         $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
 
-        $this->expectException(S3Exception::class, 'Some other error message');
+        $this->expectException(S3Exception::class);
 
         $this->object->retrieve($key);
     }
