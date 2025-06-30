@@ -84,7 +84,6 @@ class S3Storage
                 throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
-                $s3Result = [];
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
@@ -222,8 +221,6 @@ class S3Storage
      */
     private function log($level, $message): void
     {
-        // echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
-
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
         ]]);
