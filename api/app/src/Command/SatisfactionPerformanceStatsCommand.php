@@ -65,7 +65,7 @@ class SatisfactionPerformanceStatsCommand extends Command
                 ];
             }
 
-            $satisfactionScoresJson = json_encode($satisfactionScores, JSON_PRETTY_PRINT);
+            $satisfactionScoresJson = json_encode($satisfactionScores, JSON_PRETTY_PRINT) ?: '';
 
             $s3FileName = 'complete_the_deputy_report_'.$statsYear.'_'.$statsMonth.'.json';
 
