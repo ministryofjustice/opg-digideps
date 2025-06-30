@@ -12686,11 +12686,6 @@ parameters:
 			path: src/Service/File/ImageConvertor.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:removeFromS3\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/S3FileUploader.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\S3FileUploader\\:\\:getSanitisedFileName\\(\\) should return string but returns array\\|string\\|null\\.$#"
 			count: 1
 			path: src/Service/File/S3FileUploader.php
@@ -12717,11 +12712,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$fileBody of method App\\\\Service\\\\File\\\\MimeTypeAndExtensionChecker\\:\\:check\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Service/File/S3FileUploader.php
-
-		-
-			message: "#^Property App\\\\Service\\\\File\\\\S3FileUploader\\:\\:\\$options is never read, only written\\.$#"
 			count: 1
 			path: src/Service/File/S3FileUploader.php
 
@@ -12849,36 +12839,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$length of method GuzzleHttp\\\\Psr7\\\\Stream\\:\\:read\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:delete\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:retrieve\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
 
 		-
 			message: "#^Cannot call method getMessage\\(\\) on Symfony\\\\Component\\\\Validator\\\\ConstraintViolationInterface\\|null\\.$#"

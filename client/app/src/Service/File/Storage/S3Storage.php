@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
  * Original logic
  * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
  */
-class S3Storage implements StorageInterface
+class S3Storage
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
     public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
@@ -33,7 +33,7 @@ class S3Storage implements StorageInterface
     public function __construct(
         private S3ClientInterface $s3Client,
         private string $bucketName,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 
