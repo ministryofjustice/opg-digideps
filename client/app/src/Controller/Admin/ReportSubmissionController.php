@@ -8,7 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity as EntityDir;
 use App\Service\Client\RestClient;
 use App\Service\DocumentDownloader;
-use App\Service\File\Storage\S3Storage;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\ParameterStoreService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -34,7 +34,7 @@ class ReportSubmissionController extends AbstractController
     private $documentDownloader;
 
     /**
-     * @var S3Storage
+     * @var ClientS3Storage
      */
     private $s3Storage;
 
@@ -50,9 +50,9 @@ class ReportSubmissionController extends AbstractController
 
     public function __construct(
         DocumentDownloader $documentDownloader,
-        S3Storage $s3Storage,
+        ClientS3Storage $s3Storage,
         TranslatorInterface $translator,
-        RestClient $restClient
+        RestClient $restClient,
     ) {
         $this->documentDownloader = $documentDownloader;
         $this->s3Storage = $s3Storage;

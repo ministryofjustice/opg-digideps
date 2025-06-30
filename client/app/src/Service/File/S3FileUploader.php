@@ -9,14 +9,14 @@ use App\Entity\Report\Report;
 use App\Entity\ReportInterface;
 use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
 use App\Service\Client\RestClient;
-use App\Service\File\Storage\S3Storage;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\Time\DateTimeProvider;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
     public function __construct(
-        private S3Storage $s3Storage,
+        private ClientS3Storage $s3Storage,
         private RestClient $restClient,
         private FileNameFixer $fileNameFixer,
         private DateTimeProvider $dateTimeProvider,
