@@ -10,16 +10,15 @@ use App\Entity\Report\ReportSubmission;
 use App\Model\MissingDocument;
 use App\Model\RetrievedDocument;
 use App\Service\Client\RestClient;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\File\Storage\FileNotFoundException;
-use App\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
-use Throwable;
 use Twig\Environment;
 
 class DocumentService
 {
     /**
-     * @var S3Storage
+     * @var ClientS3Storage
      */
     private $s3Storage;
 
@@ -41,7 +40,7 @@ class DocumentService
     /**
      * DocumentService constructor.
      */
-    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
+    public function __construct(ClientS3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
     {
         $this->s3Storage = $s3Storage;
         $this->restClient = $restClient;
@@ -62,9 +61,9 @@ class DocumentService
 
         try {
             if (is_numeric($documentId) && !empty($storageRef)) {
-                //Ensure document is removed from s3 and database
+                // Ensure document is removed from s3 and database
                 $s3Result = $this->deleteFromS3($document);
-                //remove from db
+                // remove from db
                 $endpointResult = $this->restClient->delete('document/'.$documentId);
             }
             if ($endpointResult) {
@@ -74,21 +73,21 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $message = "cannot delete $documentId, ref $storageRef. Error: ".$e->getMessage();
             $this->log('error', $message);
 
             // rethrow exception to be caught by controller
-            throw ($e);
+            throw $e;
         }
     }
 
     /**
      * @param Document $document
      *
-     * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
-     *
      * @return bool true if delete is successful
+     *
+     * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
      */
     private function deleteFromS3(DocumentInterface $document)
     {
@@ -108,13 +107,10 @@ class DocumentService
 
     /**
      * Log message using the internal logger.
-     *
-     * @param $level
-     * @param $message
      */
     private function log($level, $message)
     {
-        //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
+        // echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
 
         $this->logger->log($level, $message, ['extra' => [
             'service' => 'documents-service',

@@ -5,7 +5,7 @@ namespace App\Service\File\Storage;
 use Aws\Result;
 use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3ClientInterface;
+use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
 
@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
  * Original logic
  * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
  */
-class S3Storage
+class ClientS3Storage
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
     public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
@@ -31,7 +31,7 @@ class S3Storage
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
     public function __construct(
-        private S3ClientInterface $s3Client,
+        private S3Client $s3Client,
         private string $bucketName,
         private LoggerInterface $logger,
     ) {
@@ -48,7 +48,7 @@ class S3Storage
             /** @var Stream $stream */
             $stream = $result['Body'];
 
-            return $stream->read($stream->getSize());
+            return $stream->read($stream->getSize() ?? 0);
         } catch (S3Exception $e) {
             if (in_array($e->getAwsErrorCode(), self::MISSING_FILE_AWS_ERROR_CODES)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
@@ -103,7 +103,7 @@ class S3Storage
             ],
         ];
 
-        $this->log('info', json_encode($resultsSummary));
+        $this->log('info', json_encode($resultsSummary) ?: 'result summary was not JSON encoded');
 
         return $resultsSummary;
     }
@@ -132,16 +132,23 @@ class S3Storage
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
-                $this->log('error', 'Unable to remove file from S3 -
-                            Key: '.$s3Error['Key'].', VersionId: '.
-                    $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
+                $this->log(
+                    'error',
+                    'Unable to remove file from S3 - Key: '.$s3Error['Key'].', VersionId: '.
+                        $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']
+                );
             }
-            $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
-            throw new \RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
+
+            $this->log(
+                'error',
+                'Unable to remove key from S3: '.(json_encode($s3Result['Errors']) ?: 'could not JSON encode errors')
+            );
+
+            throw new \RuntimeException('Could not remove files: '.(json_encode($s3Result['Errors']) ?: 'could not JSON encode errors'));
         }
     }
 
-    public function store($key, $body): Result
+    public function store(string $key, string $body): Result
     {
         $response = $this->s3Client->putObject([
             'Bucket' => $this->bucketName,
@@ -168,7 +175,7 @@ class S3Storage
     /**
      * Log message using the internal logger.
      */
-    private function log($level, $message): void
+    private function log(string $level, string $message): void
     {
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
@@ -176,7 +183,7 @@ class S3Storage
     }
 
     // check if file exists in S3 bucket
-    public function checkFileExistsInS3($key)
+    public function checkFileExistsInS3(string $key): bool
     {
         if ($this->s3Client->doesObjectExistV2($this->bucketName, $key)) {
             return true;

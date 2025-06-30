@@ -6,7 +6,7 @@ namespace App\Service\File;
 
 use App\Entity\Report\Document;
 use App\Service\Client\RestClient;
-use App\Service\File\Storage\S3Storage;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\Time\DateTimeProvider;
 use App\TestHelpers\DocumentHelpers;
 use App\TestHelpers\ReportHelpers;
@@ -33,7 +33,7 @@ class S3FileUploaderTest extends KernelTestCase
     {
         $this->projectDir = self::bootKernel()->getProjectDir();
 
-        $this->storage = self::prophesize(S3Storage::class);
+        $this->storage = self::prophesize(ClientS3Storage::class);
         $this->restClient = self::prophesize(RestClient::class);
         $this->fileNameFixer = self::prophesize(FileNameFixer::class);
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);

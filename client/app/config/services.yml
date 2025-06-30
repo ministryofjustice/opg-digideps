@@ -163,7 +163,7 @@ services:
   Aws\S3\S3Client:
     arguments: ["%s3_client_params%"]
 
-  App\Service\File\Storage\S3Storage:
+  App\Service\File\Storage\ClientS3Storage:
     arguments: ['@Aws\S3\S3Client', "%s3_bucket_name%", "@logger"]
 
   App\Command\DocumentRecoverCommand:
