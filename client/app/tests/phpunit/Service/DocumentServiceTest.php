@@ -11,10 +11,9 @@ use App\Entity\Report\ReportSubmission;
 use App\Model\MissingDocument;
 use App\Model\RetrievedDocument;
 use App\Service\Client\RestClient;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\File\Storage\FileNotFoundException;
-use App\Service\File\Storage\S3Storage;
 use Doctrine\Common\Collections\ArrayCollection;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -28,7 +27,7 @@ class DocumentServiceTest extends TestCase
     use ProphecyTrait;
 
     protected DocumentService $object;
-    private ObjectProphecy|S3Storage $s3Storage;
+    private ObjectProphecy|ClientS3Storage $s3Storage;
     private ObjectProphecy|RestClient $restClient;
     private ObjectProphecy|Environment $twig;
     private ObjectProphecy|LoggerInterface $logger;
@@ -39,8 +38,8 @@ class DocumentServiceTest extends TestCase
 
     public function setUp(): void
     {
-        /** @var ObjectProphecy|S3Storage $s3Storage */
-        $s3Storage = self::prophesize(S3Storage::class);
+        /** @var ObjectProphecy|ClientS3Storage $s3Storage */
+        $s3Storage = self::prophesize(ClientS3Storage::class);
         /** @var ObjectProphecy|RestClient $restClient */
         $restClient = self::prophesize(RestClient::class);
         /** @var ObjectProphecy|LoggerInterface $logger */
@@ -107,13 +106,13 @@ class DocumentServiceTest extends TestCase
         $this->s3Storage
             ->removeFromS3('r1')
             ->shouldBeCalled()
-            ->willThrow(Exception::class);
+            ->willThrow(\Exception::class);
 
         $this->restClient
             ->delete(Argument::cetera())
             ->shouldNotBeCalled();
 
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
 
         $this->object->removeDocumentFromS3($document);
     }

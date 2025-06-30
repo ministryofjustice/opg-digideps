@@ -24,7 +24,7 @@ use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
-use App\Service\File\Storage\S3Storage;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
@@ -132,7 +132,7 @@ class ReportController extends AbstractController
         private FormFactoryInterface $formFactory,
         private TranslatorInterface $translator,
         private ObservableEventDispatcher $eventDispatcher,
-        private S3Storage $s3Storage,
+        private ClientS3Storage $s3Storage,
     ) {
     }
 
