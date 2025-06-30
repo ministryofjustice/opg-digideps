@@ -33,7 +33,7 @@ output "cluster_arn" {
   value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].arn : aws_rds_cluster.cluster[0].arn
 }
 
-output "cluster_id" {
-  description = "ID for the Aurora cluster."
-  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].cluster_identifier : aws_rds_cluster.cluster[0].cluster_identifier
+output "cluster_resource_id" {
+  description = "Resource ID for the Aurora cluster."
+  value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].cluster_resource_id : aws_rds_cluster.cluster[0].cluster_resource_id
 }

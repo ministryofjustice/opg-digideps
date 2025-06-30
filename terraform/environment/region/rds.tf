@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "database_readonly_connect" {
     actions = ["rds-db:connect"]
 
     resources = [
-      "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_id}/readonly-db-iam-${local.environment}"
+      "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}"
     ]
   }
 }

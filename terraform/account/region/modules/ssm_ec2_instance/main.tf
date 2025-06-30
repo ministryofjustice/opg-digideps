@@ -12,6 +12,13 @@ resource "aws_instance" "ssm_ec2" {
     Name        = "ssm-${var.name}-instance",
     AllowedRole = var.name
   })
+
+  # lifecycle {
+  #   replace_triggered_by = [
+  #     filesha256("${path.module}/boot.sh")
+  #   ]
+  # }
+
 }
 
 resource "aws_security_group" "ssm_instance_sg" {
