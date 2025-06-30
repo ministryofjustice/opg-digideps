@@ -9,20 +9,19 @@ use App\Entity\Report\Report;
 use App\Entity\ReportInterface;
 use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
 use App\Service\Client\RestClient;
-use App\Service\File\Storage\StorageInterface;
+use App\Service\File\Storage\S3Storage;
 use App\Service\Time\DateTimeProvider;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
 {
     public function __construct(
-        private StorageInterface $s3Storage,
+        private S3Storage $s3Storage,
         private RestClient $restClient,
         private FileNameFixer $fileNameFixer,
         private DateTimeProvider $dateTimeProvider,
         private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
         private ImageConvertor $imageConvertor,
-        private array $options = []
     ) {
     }
 
@@ -65,7 +64,7 @@ class S3FileUploader
      * @return Document
      */
     public function uploadFileAndPersistDocument(
-        ReportInterface $report, string $body, string $fileName, bool $isReportPdf, bool $overwrite = false
+        ReportInterface $report, string $body, string $fileName, bool $isReportPdf, bool $overwrite = false,
     ) {
         $storageReference = sprintf(
             'dd_doc_%s_%s%s',

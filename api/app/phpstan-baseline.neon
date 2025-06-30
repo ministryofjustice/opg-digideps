@@ -8601,36 +8601,6 @@ parameters:
 			path: src/Service/File/Storage/S3Storage.php
 
 		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:delete\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:retrieve\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Formatter\\\\RestFormatter\\:\\:setJmsSerialiserGroups\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Formatter/RestFormatter.php
