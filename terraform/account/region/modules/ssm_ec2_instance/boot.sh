@@ -18,109 +18,74 @@ get_secret_value() {
 }
 
 list_databases() {
-  printf "%-30s %-70s %-35s %-35s\n" "Database" "Endpoint" "digidepsmaster password" "readonly password"
-  printf "%-30s %-70s %-35s %-35s\n" "---------" "---------" "------------------------" "------------------"
+  printf "%-30s %-70s\n" "Database" "Endpoint"
+  printf "%-30s %-70s\n" "---------" "---------"
 
   dbs=$(aws rds describe-db-clusters --query "DBClusters[?Engine=='aurora-postgresql'].[DBClusterIdentifier,Endpoint]" --output text)
 
   while read -r identifier endpoint; do
-    if [[ "$identifier" == *ddls* ]]; then
-      env="default"
-    else
-      env="${identifier#api-}"
-    fi
-
-    digideps_secret="${env}/database-password"
-    readonly_secret="${env}/readonly-sql-db-password"
-
-    if [[ "$env" == "default" ]]; then
-      if ! secret_exists "$digideps_secret"; then
-        digideps_secret="Access Denied"
-        readonly_secret="Access Denied"
-      fi
-    else
-      if ! secret_exists "$digideps_secret"; then
-        if secret_exists "default/database-password"; then
-          digideps_secret="default/database-password"
-        else
-          digideps_secret="Access Denied"
-        fi
-      fi
-
-      if ! secret_exists "$readonly_secret"; then
-        if secret_exists "default/readonly-sql-db-password"; then
-          readonly_secret="default/readonly-sql-db-password"
-        else
-          readonly_secret="Access Denied"
-        fi
-      fi
-    fi
-
-    printf "%-30s %-70s %-35s %-35s\n" "$identifier" "$endpoint" "$digideps_secret" "$readonly_secret"
+    printf "%-30s %-70s\n" "$identifier" "$endpoint"
   done <<< "$dbs"
 
   echo
-  echo "To connect: database connect <database> <view|admin>"
-  echo "Example:    database connect api-ddls5451990 admin"
+  echo "To connect: database connect <database> <read|edit>"
+  echo "Example:    database connect api-ddls5462026 read"
 }
 
 connect_to_database() {
-  identifier="${1:-}"
-  access="${2:-}"
+  identifier="$1"
+  access="$2"
 
   if [[ -z "$identifier" || -z "$access" ]]; then
-    echo "Usage: database connect <database> <view|admin>"
+    echo "Usage: database connect <identifier> <read|edit>"
     exit 1
   fi
 
-  dbs=$(aws rds describe-db-clusters --query "DBClusters[?DBClusterIdentifier=='$identifier'].[DBClusterIdentifier,Endpoint]" --output text)
-  read -r cluster_id endpoint <<< "$dbs"
-
-  if [[ -z "$endpoint" || "$endpoint" == "None" ]]; then
-    echo "Could not find endpoint for cluster '$identifier'"
-    exit 1
-  fi
-
-  if [[ "$identifier" == *ddls* ]]; then
-    env="default"
-  else
-    env="${identifier#api-}"
-  fi
-
-  if [[ "$access" == "admin" ]]; then
+  if [[ "$access" == "edit" ]]; then
     user="digidepsmaster"
-    secret_name="${env}/database-password"
-  elif [[ "$access" == "view" ]]; then
-    user="readonly_sql_user"
-    secret_name="${env}/readonly-sql-db-password"
-  else
-    echo "Invalid access level: must be 'view' or 'admin'"
-    exit 1
-  fi
-
-  if ! secret_exists "$secret_name"; then
-    if [[ "$env" != "default" ]]; then
-      fallback="default/${secret_name#*/}"
+    secret_name="${workspace}/database-password"
+    if ! secret_exists "$secret_name"; then
+      fallback="default/database-password"
       if secret_exists "$fallback"; then
         secret_name="$fallback"
       else
         echo "Access Denied"
         exit 1
       fi
-    else
-      echo "Access Denied"
+    fi
+
+    password=$(get_secret_value "$secret_name")
+    if [[ -z "$password" ]]; then
+      echo "Failed to retrieve password"
       exit 1
     fi
-  fi
 
-  password=$(get_secret_value "$secret_name")
-  if [[ -z "$password" ]]; then
-    echo "Failed to retrieve password"
+    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${identifier}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+
+    echo "Connecting to $HOST as $user"
+    PGPASSWORD="$password" psql -h "$HOST" -U "$user" -d api -p 5432
+
+  elif [[ "$access" == "read" ]]; then
+    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${identifier}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+
+    CREDS=$(aws sts assume-role --role-arn "arn:aws:iam::$ACCOUNT_ID:role/readonly-db-iam-${workspace}" --role-session-name db-readonly-session)
+
+    export AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r .Credentials.AccessKeyId)
+    export AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r .Credentials.SecretAccessKey)
+    export AWS_SESSION_TOKEN=$(echo "$CREDS" | jq -r .Credentials.SessionToken)
+
+    curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /tmp/rds-combined-ca-bundle.pem
+
+    TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username readonly-db-iam-${workspace} --region eu-west-1)
+
+    echo "Connecting to $HOST as readonly-db-iam-${workspace}"
+    PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${workspace} sslmode=require sslrootcert=/tmp/rds-combined-ca-bundle.pem"
+
+  else
+    echo "Invalid access level: must be 'read' or 'edit'"
     exit 1
   fi
-
-  echo "Connecting to $endpoint as $user"
-  PGPASSWORD="$password" psql -h "$endpoint" -U "$user" -d postgres -p 5432
 }
 
 case "$command" in
@@ -133,7 +98,7 @@ case "$command" in
   *)
     echo "Usage:"
     echo "  $0 list"
-    echo "  $0 connect <cluster-identifier> <view|admin>"
+    echo "  $0 connect <identifier> <read|edit>"
     exit 1
     ;;
 esac
