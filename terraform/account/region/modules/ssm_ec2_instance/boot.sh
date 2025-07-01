@@ -6,6 +6,7 @@ cat << 'EOF' > /usr/local/bin/database
 #!/bin/bash
 
 command="${1:-}"
+environment="${2:-}"
 
 secret_exists() {
   local name="$1"
@@ -18,32 +19,49 @@ get_secret_value() {
 }
 
 list_databases() {
-  printf "%-30s %-70s\n" "Database" "Endpoint"
-  printf "%-30s %-70s\n" "---------" "---------"
+  printf "%-20s %-30s %-70s\n" "Environment" "Database" "Endpoint"
+  printf "%-20s %-30s %-70s\n" "-----------" "---------" "---------"
 
   dbs=$(aws rds describe-db-clusters --query "DBClusters[?Engine=='aurora-postgresql'].[DBClusterIdentifier,Endpoint]" --output text)
 
-  while read -r identifier endpoint; do
-    printf "%-30s %-70s\n" "$identifier" "$endpoint"
+  while read -r database endpoint; do
+    env=$(echo "$database" | awk -F'-' '{print $2}')
+    printf "%-20s %-30s %-70s\n" "$env" "$database" "$endpoint"
   done <<< "$dbs"
 
   echo
-  echo "To connect: database connect <database> <read|edit>"
-  echo "Example:    database connect api-ddls5462026 read"
+  echo "To connect: database connect <environment|database> <read|edit>"
+  echo "Example:    database connect production02 read"
 }
 
 connect_to_database() {
-  identifier="$1"
+  input="$1"
   access="$2"
 
-  if [[ -z "$identifier" || -z "$access" ]]; then
-    echo "Usage: database connect <identifier> <read|edit>"
+  if [[ -z "$input" || -z "$access" ]]; then
+    echo "Usage: database connect <environment|database> <read|edit>"
+    exit 1
+  fi
+
+  if [[ "$input" == api-* ]]; then
+    database="$input"
+    environment=$(echo "$input" | awk -F'-' '{print $2}')
+  else
+    database="api-$input"
+    environment="$input"
+  fi
+
+  exists=$(aws rds describe-db-clusters --query "DBClusters[?DBClusterIdentifier=='${database}'].DBClusterIdentifier" --output text)
+
+  if [[ -z "$exists" ]]; then
+    echo "Error: Database '${database}' does not exist."
     exit 1
   fi
 
   if [[ "$access" == "edit" ]]; then
     user="digidepsmaster"
-    secret_name="${workspace}/database-password"
+    secret_name="${environment}/database-password"
+
     if ! secret_exists "$secret_name"; then
       fallback="default/database-password"
       if secret_exists "$fallback"; then
@@ -60,16 +78,31 @@ connect_to_database() {
       exit 1
     fi
 
-    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${identifier}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${database}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+
+    if [[ -z "$HOST" || "$HOST" == "None" ]]; then
+      echo "Error: Could not resolve DB instance for '${database}-0'"
+      exit 1
+    fi
 
     echo "Connecting to $HOST as $user"
     PGPASSWORD="$password" psql -h "$HOST" -U "$user" -d api -p 5432
 
   elif [[ "$access" == "read" ]]; then
     ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${identifier}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${database}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
 
-    CREDS=$(aws sts assume-role --role-arn "arn:aws:iam::$ACCOUNT_ID:role/readonly-db-iam-${workspace}" --role-session-name db-readonly-session)
+    if [[ -z "$HOST" || "$HOST" == "None" ]]; then
+      echo "Error: Could not resolve DB instance for '${database}-0'"
+      exit 1
+    fi
+
+    CREDS=$(aws sts assume-role --role-arn "arn:aws:iam::$ACCOUNT_ID:role/readonly-db-iam-${environment}" --role-session-name db-readonly-session 2>/dev/null)
+
+    if [[ -z "$CREDS" ]]; then
+      echo "Error: Could not assume readonly role for environment '${environment}'"
+      exit 1
+    fi
 
     export AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r .Credentials.AccessKeyId)
     export AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r .Credentials.SecretAccessKey)
@@ -77,10 +110,10 @@ connect_to_database() {
 
     curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /tmp/rds-combined-ca-bundle.pem
 
-    TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username readonly-db-iam-${workspace} --region eu-west-1)
+    TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username readonly-db-iam-${environment} --region eu-west-1)
 
-    echo "Connecting to $HOST as readonly-db-iam-${workspace}"
-    PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${workspace} sslmode=require sslrootcert=/tmp/rds-combined-ca-bundle.pem"
+    echo "Connecting to $HOST as readonly-db-iam-${environment}"
+    PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${environment} sslmode=require sslrootcert=/tmp/rds-combined-ca-bundle.pem"
 
   else
     echo "Invalid access level: must be 'read' or 'edit'"
@@ -97,8 +130,8 @@ case "$command" in
     ;;
   *)
     echo "Usage:"
-    echo "  $0 list"
-    echo "  $0 connect <identifier> <read|edit>"
+    echo "database list"
+    echo "database connect <environment|database> <read|edit>"
     exit 1
     ;;
 esac
