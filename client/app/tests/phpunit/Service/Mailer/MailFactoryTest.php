@@ -170,7 +170,7 @@ class MailFactoryTest extends TestCase
 
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
-        $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
+        $this->translator->trans('helpline', [], 'common')->shouldBeCalled()->willReturn('07987654321');
 
         $profDeputy = $this->generateUser()->setRoleName(User::ROLE_PROF_ADMIN);
 
@@ -189,7 +189,7 @@ class MailFactoryTest extends TestCase
 
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('paSupportEmail', [], 'common')->shouldBeCalled()->willReturn('pa-email@publicguardian.gov.uk');
-        $this->translator->trans('helplinePA', [], 'common')->shouldBeCalled()->willReturn('07777777777');
+        $this->translator->trans('helpline', [], 'common')->shouldBeCalled()->willReturn('07777777777');
 
         $paDeputy = $this->generateUser()->setRoleName(User::ROLE_PA_ADMIN);
 
@@ -235,7 +235,7 @@ class MailFactoryTest extends TestCase
 
         $this->translator->trans('activation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
         $this->translator->trans('profSupportEmail', [], 'common')->shouldBeCalled()->willReturn('prof-email@publicguardian.gov.uk');
-        $this->translator->trans('helplineProf', [], 'common')->shouldBeCalled()->willReturn('07987654321');
+        $this->translator->trans('helpline', [], 'common')->shouldBeCalled()->willReturn('07987654321');
 
         $expectedTemplateParams = [
             'link' => 'https://front.base.url/activate/regToken',
