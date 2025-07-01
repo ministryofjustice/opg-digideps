@@ -487,8 +487,11 @@ class DocumentController extends AbstractController
             try {
                 $result = $this->documentService->removeDocumentFromS3($document); // rethrows any exception
 
-                if ($result) {
+                if ($result && !$report->isSubmitted()) {
                     $this->addFlash('notice', 'Document has been removed');
+                } elseif ($result && $report->isSubmitted()) {
+                    $documentName = $document->getFileName();
+                    $this->addFlash('fileRemovalSuccess', sprintf('File named %s has been removed', $documentName));
                 }
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
@@ -499,9 +502,9 @@ class DocumentController extends AbstractController
                 );
             }
         }
+
         if ($report->isSubmitted()) {
-            // if report is submitted, then this remove path has come from adding additional documents so return the user
-            // to the step 2 page.
+            // if report is submitted, then this remove path has come from adding additional documents so return the user to the step 2 page.
             $returnUrl = $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
         } else {
             $reportDocumentStatus = $report->getStatus()->getDocumentsState();
@@ -524,6 +527,16 @@ class DocumentController extends AbstractController
     {
         $this->restClient->delete('/document/'.$documentId);
         $this->addFlash('notice', 'Document has been removed');
+    }
+
+    /**
+     * @Route("/report/documents/deleteFilePostSubmission", name="delete_report_documents_post_submission")
+     */
+    public function deleteSelectedFilePostReportSubmission(Request $request): RedirectResponse
+    {
+        $documentId = $request->query->getInt('documentId');
+
+        return $this->deleteDocument($request, strval($documentId));
     }
 
     /**

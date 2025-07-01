@@ -66,6 +66,7 @@ trait DocumentsSectionTrait
 
     /**
      * @Then the documents summary page should not contain any documents
+     * @Then the document upload page should not contain any documents
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
     {
@@ -204,12 +205,18 @@ trait DocumentsSectionTrait
 
     /**
      * @When I remove one document I uploaded
+     *
+     * @Given /^I remove the "([^"]*)" document I uploaded$/
      */
-    public function iRemoveOneDocumentIUploaded()
+    public function iRemoveOneDocumentIUploaded($fileName = null)
     {
-        $filenames = $this->uploadedDocumentFilenames;
-        $documentToPop = $filenames[0];
-        unset($filenames[0]);
+        if ($fileName) {
+            $documentToPop = $fileName;
+        } else {
+            $filenames = $this->uploadedDocumentFilenames;
+            $documentToPop = $filenames[0];
+            unset($filenames[0]);
+        }
 
         $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $documentToPop);
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
@@ -226,9 +233,11 @@ trait DocumentsSectionTrait
         }
 
         $removeLink->click();
-        $this->pressButton('confirm_delete_confirm');
 
-        $this->uploadedDocumentFilenames = $filenames;
+        if (!$fileName) {
+            $this->pressButton('confirm_delete_confirm');
+            $this->uploadedDocumentFilenames = $filenames;
+        }
     }
 
     /**
@@ -414,6 +423,27 @@ trait DocumentsSectionTrait
             $fileNameItem = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
 
             $this->assertStringEqualsString($fileName, $fileNameItem, 'File found');
+        }
+    }
+
+    /**
+     * @Then /^a flash message should be displayed to the user confirming the removal of "([^"]*)"$/
+     */
+    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved($fileName)
+    {
+        $alertMessage = sprintf('File named %s has been removed', $fileName);
+
+        $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
         }
     }
 }
