@@ -52,14 +52,16 @@ class DocumentCleanupCommand extends Command
         $minutesOld = intval($input->getArgument('max-age-minutes'));
         $earliestCreatedOn = (new \DateTime())->modify('- '.$minutesOld.' minutes');
 
-        $success = $this->documentService->deleteUnsubmittedDocumentsOlderThan($earliestCreatedOn);
-
-        if (!$success) {
+        try {
+            $numDeleted = $this->documentService->deleteDocumentsOlderThan($earliestCreatedOn);
+        } catch (\Exception $e) {
+            // normally we wouldn't indiscriminately catch exceptions, but the document service uses
+            // S3 and Doctrine, which might throw undeclared exceptions
             $output->writeln(
                 sprintf(
                     '%s - failure - Document clean up failed. Output: %s',
                     self::JOB_NAME,
-                    'what went wrong'
+                    $e->getMessage()
                 )
             );
 
@@ -68,9 +70,9 @@ class DocumentCleanupCommand extends Command
 
         $output->writeln(
             sprintf(
-                '%s - success - Document clean up complete. Output: %s',
+                '%s - success - Document clean up complete. Output: %d documents were deleted',
                 self::JOB_NAME,
-                'what went right'
+                $numDeleted
             )
         );
 

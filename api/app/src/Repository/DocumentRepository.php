@@ -430,7 +430,7 @@ WHERE id IN ($idsString)";
         }
     }
 
-    public function delete(Document $document): bool
+    public function delete(Document $document): void
     {
         $em = $this->getEntityManager();
 
