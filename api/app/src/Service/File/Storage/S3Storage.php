@@ -32,6 +32,16 @@ class S3Storage
     ) {
     }
 
+    /**
+     * Log message using the internal logger.
+     */
+    private function log(string $level, string $message): void
+    {
+        $this->logger->log($level, $message."\n", ['extra' => [
+            'service' => 's3-storage',
+        ]]);
+    }
+
     public function retrieve(string $key): string
     {
         try {
@@ -76,19 +86,9 @@ class S3Storage
         return $response;
     }
 
-    /**
-     * Log message using the internal logger.
-     */
-    private function log(string $level, string $message): void
-    {
-        $this->logger->log($level, $message, ['extra' => [
-            'service' => 's3-storage',
-        ]]);
-    }
-
     public function tagForDeletion(string $key): bool
     {
-        $this->log('info', "Appending Purge tag for $key to S3");
+        $this->log('warning', "Appending Purge=1 tag for $key to S3");
 
         // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347/DDLS-761;
         // get the object's tags and then append with PUT
@@ -98,7 +98,10 @@ class S3Storage
                 'Key' => $key,
             ]);
         } catch (S3Exception $e) {
-            $this->log('error', "Failed to retrieve tagset for $key; message = {$e->getMessage()}");
+            $this->log(
+                'error',
+                "Failed to retrieve tagset for $key (object probably already gone); message = {$e->getMessage()}"
+            );
 
             return false;
         }
@@ -106,9 +109,19 @@ class S3Storage
         /** @var array $existingTags */
         $existingTags = $result['TagSet'];
 
-        $newTagset = array_merge($existingTags, [['Key' => 'Purge', 'Value' => '1']]);
+        // remove existing Purge=1 tags
+        $filteredTags = array_filter($existingTags, fn ($item) => 'Purge' !== $item['Key'] || '1' !== $item['Value']);
+
+        // if filtered tags is different, then we removed a Purge=1 tag from it;
+        // this means it is already present on the S3 object, so we don't need to add it and can return now
+        if ($filteredTags !== $existingTags) {
+            $this->log('info', "Object $key is already marked with Purge=1 (to be deleted)");
+
+            return true;
+        }
+
+        $newTags = array_merge($existingTags, [['Key' => 'Purge', 'Value' => '1']]);
         $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
-        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
 
         // Update tags in S3
         try {
@@ -116,7 +129,7 @@ class S3Storage
                 'Bucket' => $this->bucketName,
                 'Key' => $key,
                 'Tagging' => [
-                    'TagSet' => $newTagset,
+                    'TagSet' => $newTags,
                 ],
             ]);
 
