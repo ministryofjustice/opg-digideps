@@ -246,6 +246,15 @@ resource "aws_cloudwatch_log_group" "waf_web_acl" {
   }
 }
 
+resource "aws_cloudwatch_log_anomaly_detector" "waf_web_acl" {
+  detector_name           = "aws-waf-logs"
+  log_group_arn_list      = [aws_cloudwatch_log_group.waf_web_acl.arn]
+  anomaly_visibility_time = 14
+  evaluation_frequency    = "TEN_MIN"
+  enabled                 = "true"
+  kms_key_id              = module.anomaly_kms.eu_west_1_target_key_id
+}
+
 resource "aws_kms_key" "waf_cloudwatch_log_encryption" {
   description             = "AWS WAF Cloudwatch encryption ${var.account.name}"
   deletion_window_in_days = 10
