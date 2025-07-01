@@ -1,24 +1,44 @@
 <?php
 
-namespace App\Controller;
+namespace App\Tests\Integration\Controller;
 
-use App\Tests\Integration\Controller\AbstractTestController;
+use App\Entity\User;
+use App\Service\JWT\JWTService;
+use App\TestHelpers\CourtOrderTestHelper;
+use App\TestHelpers\DeputyTestHelper;
+use App\TestHelpers\ReportTestHelper;
+use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use App\Tests\Integration\Fixtures;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DeputyControllerTest extends AbstractTestController
+class DeputyControllerTest extends WebTestCase
 {
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static JsonHttpTestClient $client;
+    private static Fixtures $fixtures;
+    private static EntityManager $em;
+    private static FixtureHelper $fixtureHelper;
+    private static string $deputySecret;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        $browser = static::createClient(['environment' => 'test', 'debug' => false]);
+        $container = static::getContainer();
 
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        /** @var JWTService $jwtService */
+        $jwtService = $container->get('App\Service\JWT\JWTService');
+        self::$client = new JsonHttpTestClient($browser, $jwtService);
 
-        self::fixtures()->flush()->clear();
+        /** @var EntityManager $em */
+        $em = $container->get('em');
+        self::$em = $em;
+        self::$fixtures = new Fixtures(self::$em);
+
+        /** @var FixtureHelper $fixtureHelper */
+        $fixtureHelper = $container->get(FixtureHelper::class);
+        self::$fixtureHelper = $fixtureHelper;
+
+        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
     }
 
     /**
@@ -26,61 +46,172 @@ class DeputyControllerTest extends AbstractTestController
      */
     public static function tearDownAfterClass(): void
     {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
+        self::$fixtures->clear();
     }
 
     public function testAddAuth()
     {
         $url = '/deputy/add';
 
-        $this->assertEndpointNeedsAuth('POST', $url);
+        self::$client->assertEndpointNeedsAuth('POST', $url);
     }
 
     public function testAdd()
     {
-        self::$tokenDeputy = $this->loginAsDeputy();
+        $firstName = 'Bill';
+        $lastName = 'Baggins';
+        $email = 'deputy@example.org';
+        $deputyUid = '7999999990';
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
-        $return = $this->assertJsonRequest('POST', '/deputy/add', [
+        $return = self::$client->assertJsonRequest('POST', '/deputy/add', [
             'data' => [
-                'firstname' => 'n',
-                'lastname' => 's',
-                'email' => 'n.s@example.org',
-                'deputy_uid' => '7999999990',
+                'firstname' => $firstName,
+                'lastname' => $lastName,
+                'email' => $email,
+                'deputy_uid' => $deputyUid,
             ],
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $token,
         ]);
 
-        $deputy = $this->fixtures()->clear()->getRepo('Deputy')->find($return['data']['id']);
+        $deputy = self::$fixtures->clear()->getRepo('Deputy')->find($return['data']['id']);
 
-        $this->assertEquals('n', $deputy->getFirstname());
-        $this->assertEquals('s', $deputy->getLastname());
-        $this->assertEquals('n.s@example.org', $deputy->getEmail1());
-        $this->assertEquals('7999999990', $deputy->getDeputyUid());
+        $this->assertEquals($firstName, $deputy->getFirstname());
+        $this->assertEquals($lastName, $deputy->getLastname());
+        $this->assertEquals($email, $deputy->getEmail1());
+        $this->assertEquals($deputyUid, $deputy->getDeputyUid());
     }
 
     public function testAddDeputyIdAlreadyExists()
     {
-        self::$tokenDeputy = $this->loginAsDeputy();
+        $firstName = 'Bill';
+        $lastName = 'Baggins';
+        $email = 'deputy@example.org';
+        $deputyUid = '7999999990';
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
 
-        $return = $this->assertJsonRequest('POST', '/deputy/add', [
+        $return = self::$client->assertJsonRequest('POST', '/deputy/add', [
             'data' => [
-                'firstname' => 'd',
-                'lastname' => 'e',
-                'email' => 'd.e@example.org',
-                'deputy_uid' => '7999999990',
+                'firstname' => $firstName,
+                'lastname' => $lastName,
+                'email' => $email,
+                'deputy_uid' => $deputyUid,
             ],
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $token,
         ]);
 
-        $deputy = $this->fixtures()->clear()->getRepo('Deputy')->find($return['data']['id']);
+        $deputy = self::$fixtures->clear()->getRepo('Deputy')->find($return['data']['id']);
 
-        $this->assertEquals('n', $deputy->getFirstname());
-        $this->assertEquals('s', $deputy->getLastname());
-        $this->assertEquals('n.s@example.org', $deputy->getEmail1());
-        $this->assertEquals('7999999990', $deputy->getDeputyUid());
+        $this->assertEquals($firstName, $deputy->getFirstname());
+        $this->assertEquals($lastName, $deputy->getLastname());
+        $this->assertEquals($email, $deputy->getEmail1());
+        $this->assertEquals($deputyUid, $deputy->getDeputyUid());
+    }
+
+    public function testDeputyReportUrlNeedsAuth()
+    {
+        self::$client->assertEndpointNeedsAuth('GET', '/v2/deputy/7999999990/courtorders');
+    }
+
+    public function testGetDeputyReportsNotFound()
+    {
+        $email = 'n.s1@example.org';
+        $user = self::$fixtures->createUser([
+            'setEmail' => $email,
+            'setRoleName' => User::ROLE_LAY_DEPUTY,
+            'setDeputyUid' => '7099999990',
+        ]);
+        self::$fixtureHelper->setPassword($user);
+        // login to get token
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+
+        // make the API call
+        self::$client->assertJsonRequest(
+            'GET',
+            '/v2/deputy/7000000000/courtorders',
+            ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
+        );
+
+        self::$fixtures->remove($user)->flush()->clear();
+    }
+
+    public function testGetDeputyReportsEmptyResponse()
+    {
+        // setup required user for auth
+        $email = 'n.s2@example.org';
+        $deputyUid = '7099999991';
+        $user = self::$fixtures->createUser([
+            'setEmail' => $email,
+            'setRoleName' => User::ROLE_LAY_DEPUTY,
+            'setDeputyUid' => $deputyUid,
+        ]);
+        self::$fixtureHelper->setPassword($user);
+
+        // login to get token
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+
+        // Make API call
+        $responseJson = self::$client->assertJsonRequest(
+            'GET',
+            "/v2/deputy/{$deputyUid}/courtorders",
+            ['AuthToken' => $token, 'mustSucceed' => true]
+        );
+
+        $this->assertCount(0, $responseJson['data']);
+
+        self::$fixtures->remove($user)->flush()->clear();
+    }
+
+    public function testGetDeputyReportsReturnsResults()
+    {
+        $email = 'n.s3@example.org';
+        $deputyUid = '7044444440';
+
+        // create user
+        $user = self::$fixtures->createUser([
+            'setEmail' => $email,
+            'setRoleName' => User::ROLE_LAY_DEPUTY,
+            'setDeputyUid' => $deputyUid,
+        ]);
+        self::$fixtureHelper->setPassword($user);
+
+        // generate deputy and set user
+        $deputy = DeputyTestHelper::generateDeputy($email, $deputyUid, $user);
+        self::$fixtures->persist($deputy);
+        self::$fixtures->flush();
+
+        // generate client and set deputy
+        $client = self::$fixtures->createClient($user);
+        $client->setDeputy($deputy);
+        self::$fixtures->persist($client);
+        self::$fixtures->flush();
+
+        // generate courtOrder and set client and deputy
+        $courtOrder = self::$fixtures->createCourtOrder('7055555550', 'pfa', 'ACTIVE');
+        $courtOrder->setClient($client);
+        CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
+        self::$fixtures->persist($courtOrder);
+        self::$fixtures->flush();
+
+        // generate and add a report to the court order
+        $startDate = new \DateTime();
+        $report = ReportTestHelper::generateReport(self::$em, $client, startDate: $startDate);
+        $courtOrder->addReport($report);
+        self::$fixtures->persist($courtOrder);
+        self::$fixtures->flush();
+
+        // login to get token
+        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+
+        // Make API call
+        $responseJson = self::$client->assertJsonRequest(
+            'GET',
+            "/v2/deputy/{$deputyUid}/courtorders",
+            ['AuthToken' => $token, 'mustSucceed' => true]
+        );
+
+        self::assertCount(1, $responseJson['data']);
     }
 }

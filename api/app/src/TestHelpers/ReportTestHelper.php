@@ -32,20 +32,26 @@ use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
-    public function generateReport(EntityManager $em, Client $client = null, string $type = null, DateTime $startDate = null, DateTime $endDate = null): Report
-    {
-        $client = $client ? $client : (new ClientTestHelper())->generateClient($em);
-        $type = $type ? $type : Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $startDate = $startDate ? $startDate : new DateTime('2 years ago');
-        $endDate = $endDate ? $endDate : (clone $startDate)->add(new \DateInterval('P1Y'));
+    public static function generateReport(
+        EntityManager $em, 
+        Client $client = null, 
+        string $type = null,  
+        DateTime $startDate = null,
+        DateTime $endDate = null,
+        bool $dateChecks = true
+    ): Report {
+        $client = $client ?: ClientTestHelper::generateClient($em);
+        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
+        $startDate = $startDate ?: new \DateTime('2 years ago');
+        $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate);
-        $this->completeBankAccounts($report, $em);
+        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
+        self::completeBankAccounts($report, $em);
 
         return $report;
     }
 
-    public function generateNdr(EntityManager $em, User $deputy, Client $client = null): Ndr
+    public static function generateNdr(EntityManager $em, User $deputy, ?Client $client = null): Ndr
     {
         $ndr = new Ndr($client);
         $deputy->setNdrEnabled(true);
@@ -53,53 +59,57 @@ class ReportTestHelper
 
         $deputy->addClient($client);
 
-        $this->completeBankAccounts($ndr, $em);
+        self::completeBankAccounts($ndr, $em);
 
         return $ndr;
     }
 
-    public function completeLayReport(ReportInterface $report, EntityManager $em): void
+    public static function completeLayReport(ReportInterface $report, EntityManager $em): void
     {
-        $this->completeDecisions($report);
-        $this->completeContacts($report);
-        $this->completeVisitsCare($report);
-        $this->completeActions($report);
-        $this->completeOtherInfo($report);
-        $this->completeDocuments($report);
-        $this->completeDeputyExpenses($report);
-        $this->completeGifts($report);
-        $this->completeMoneyIn($report);
-        $this->completeMoneyOut($report);
-        $this->completeMoneyInShort($report);
-        $this->completeMoneyOutShort($report);
-        $this->completeAssets($report);
-        $this->completeDebts($report, $em);
-        $this->completeLifestyle($report);
-        $this->completeClientBenefitsCheck($report);
+        self::completeDecisions($report);
+        self::completeContacts($report);
+        self::completeVisitsCare($report);
+        self::completeActions($report);
+        self::completeOtherInfo($report);
+        self::completeDocuments($report);
+        self::completeDeputyExpenses($report);
+        self::completeGifts($report);
+        self::completeMoneyIn($report);
+        self::completeMoneyOut($report);
+        self::completeMoneyInShort($report);
+        self::completeMoneyOutShort($report);
+        self::completeAssets($report);
+        self::completeDebts($report, $em);
+        self::completeLifestyle($report);
+        self::completeClientBenefitsCheck($report);
     }
 
-    public function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
+    public static function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
     {
-        $this->completeVisitsCare($report);
-        $this->completeActions($report);
-        $this->completeOtherInfo($report);
-        $this->completeDeputyExpenses($report);
-        $this->completeIncomeBenefits($report);
-        $this->completeAssets($report);
-        $this->completeDebts($report, $em);
-        $this->completeClientBenefitsCheck($report);
+        self::completeVisitsCare($report);
+        self::completeActions($report);
+        self::completeOtherInfo($report);
+        self::completeDeputyExpenses($report);
+        self::completeIncomeBenefits($report);
+        self::completeAssets($report);
+        self::completeDebts($report, $em);
+        self::completeClientBenefitsCheck($report);
     }
 
-    public function submitReport(ReportInterface $report, EntityManager $em): void
+    public static function submitReport(ReportInterface $report, EntityManager $em, ?User $submittedBy = null, ?DateTime $submitDate = null): void
     {
-        if ($report->getClient()->getOrganisation()) {
-            $submittedBy = $report->getClient()->getOrganisation()->getUsers()[0];
-        } else {
-            $submittedBy = $report->getClient()->getUsers()->first();
+        if (is_null($submittedBy)) {
+            if ($report->getClient()->getOrganisation()) {
+                $submittedBy = $report->getClient()->getOrganisation()->getUsers()[0];
+            } else {
+                $submittedBy = $report->getClient()->getUsers()->first();
+            }
         }
 
-        $submitDate = clone $report->getStartDate();
-        $submitDate->modify('+365 day');
+        if (is_null($submitDate)) {
+            $submitDate = clone $report->getStartDate();
+            $submitDate->modify('+365 day');
+        }
 
         $reportPdf = new Document($report);
         $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
@@ -148,7 +158,7 @@ class ReportTestHelper
         $newReportEndDate->modify('+365 day');
 
         $client = $report->getClient();
-        $newReport = $this->generateReport($em, $client, $report->getType(), $newReportStartDate, $newReportEndDate);
+        $newReport = self::generateReport($em, $client, $report->getType(), $newReportStartDate, $newReportEndDate);
 
         $client->addReport($newReport);
         $newReport->setClient($client);
@@ -158,20 +168,21 @@ class ReportTestHelper
     }
 
     /**
+     * @param ReportInterface $report
      * @throws \Exception
      */
-    private function completeDecisions(ReportInterface $report): void
+    private static function completeDecisions(ReportInterface $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
         (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new DateTime());
     }
 
-    private function completeContacts(ReportInterface $report): void
+    private static function completeContacts(ReportInterface $report): void
     {
         $report->setReasonForNoContacts('No need for contacts');
     }
 
-    private function completeVisitsCare(ReportInterface $report): void
+    private static function completeVisitsCare(ReportInterface $report): void
     {
         if ($report instanceof Ndr) {
             $vc = (new NdrVisitsCare())
@@ -190,7 +201,7 @@ class ReportTestHelper
         $report->setVisitsCare($vc);
     }
 
-    private function completeActions(ReportInterface $report): void
+    private static function completeActions(ReportInterface $report): void
     {
         if ($report instanceof Ndr) {
             $report
@@ -206,12 +217,12 @@ class ReportTestHelper
         }
     }
 
-    private function completeOtherInfo(ReportInterface $report): void
+    private static function completeOtherInfo(ReportInterface $report): void
     {
         $report->setActionMoreInfo('no');
     }
 
-    private function completeLifestyle(ReportInterface $report): void
+    private static function completeLifestyle(ReportInterface $report): void
     {
         $ls = (new Lifestyle())
             ->setReport($report);
@@ -220,17 +231,17 @@ class ReportTestHelper
         $report->setLifestyle($ls);
     }
 
-    private function completeDocuments(ReportInterface $report): void
+    private static function completeDocuments(ReportInterface $report): void
     {
         $report->setWishToProvideDocumentation('no');
     }
 
-    private function completeGifts(ReportInterface $report): void
+    private static function completeGifts(ReportInterface $report): void
     {
         $report->setGiftsExist('no');
     }
 
-    private function completeBankAccounts(ReportInterface $report, EntityManager $em): void
+    private static function completeBankAccounts(ReportInterface $report, EntityManager $em): void
     {
         if ($report instanceof Ndr) {
             $ba = (new NdrBankAccount())
@@ -250,38 +261,38 @@ class ReportTestHelper
         }
     }
 
-    private function completeMoneyIn(ReportInterface $report): void
+    private static function completeMoneyIn(ReportInterface $report): void
     {
         if (Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
             || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyInExists('Yes');
         }
-        
+
         $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    private function completeMoneyOut(ReportInterface $report): void
+    private static function completeMoneyOut(ReportInterface $report): void
     {
         if (Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
             || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyOutExists('Yes');
         }
-        
+
         $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
         $mt2 = (new MoneyTransaction($report))->setCategory('electricity')->setAmount(100);
         $report->addMoneyTransaction($mt2);
     }
 
-    private function completeAssets(ReportInterface $report): void
+    private static function completeAssets(ReportInterface $report): void
     {
         $report->setNoAssetToAdd(true);
     }
 
-    private function completeDebts(ReportInterface $report, EntityManager $em): void
+    private static function completeDebts(ReportInterface $report, EntityManager $em): void
     {
         $report->setHasDebts('yes');
 
@@ -308,29 +319,27 @@ class ReportTestHelper
         $em->persist($report);
     }
 
-    private function completeMoneyInShort(ReportInterface $report): void
+    private static function completeMoneyInShort(ReportInterface $report): void
     {
         if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) 
-        {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyInExists('No');
             $report->setReasonForNoMoneyIn('No money in');
         }
     }
 
-    private function completeMoneyOutShort(ReportInterface $report): void
+    private static function completeMoneyOutShort(ReportInterface $report): void
     {
         if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType())
-        {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
             $report->setMoneyOutExists('No');
             $report->setReasonForNoMoneyOut('No money out');
         }
     }
 
-    private function completeDeputyExpenses(ReportInterface $report): void
+    private static function completeDeputyExpenses(ReportInterface $report): void
     {
         if ($report instanceof Ndr || $report->isLayReport()) {
             $report->setPaidForAnything('no');
@@ -350,7 +359,7 @@ class ReportTestHelper
         }
     }
 
-    private function completeIncomeBenefits(ReportInterface $report)
+    private static function completeIncomeBenefits(ReportInterface $report)
     {
         if (!$report instanceof Ndr) {
             return;
@@ -362,7 +371,7 @@ class ReportTestHelper
             ->setExpectCompensationDamages('no');
     }
 
-    private function completeClientBenefitsCheck(ReportInterface $report): void
+    private static function completeClientBenefitsCheck(ReportInterface $report): void
     {
         $typeOfIncome = $report instanceof Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
         $clientBenefitsCheck = $report instanceof Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();

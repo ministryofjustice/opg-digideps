@@ -4,9 +4,7 @@ namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity as EntityDir;
-use App\Entity\User;
 use App\Form as FormDir;
-use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
@@ -22,24 +20,11 @@ class ActionController extends AbstractController
         'action-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    /** @var StepRedirector */
-    private $stepRedirector;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        StepRedirector $stepRedirector,
-        private ClientApi $clientApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->stepRedirector = $stepRedirector;
     }
 
     /**
@@ -49,10 +34,6 @@ class ActionController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getActionsState()['state']) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
@@ -60,7 +41,6 @@ class ActionController extends AbstractController
 
         return [
             'report' => $report,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -131,10 +111,6 @@ class ActionController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getActionsState()['state'] && 'skip-step' != $fromPage) {
@@ -145,7 +121,6 @@ class ActionController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
             'status' => $report->getStatus(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 

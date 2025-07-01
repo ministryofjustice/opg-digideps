@@ -17,32 +17,8 @@ class AssetController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets", requirements={"ndrId":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
-    public function getAll($ndrId)
-    {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
-        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
-        
-        $assets = $this->em->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
-
-        if (0 == count($assets)) {
-            return [];
-        }
-
-        $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
-
-        return $assets;
-    }
-
-    /**
-     * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById($ndrId, $assetId)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
@@ -56,11 +32,8 @@ class AssetController extends RestController
         return $asset;
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/asset", requirements={"ndrId":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/asset', requirements: ['ndrId' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, $ndrId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -82,11 +55,8 @@ class AssetController extends RestController
         return ['id' => $asset->getId()];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function edit(Request $request, $ndrId, $assetId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -104,11 +74,8 @@ class AssetController extends RestController
         return ['id' => $asset->getId()];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete($ndrId, $assetId)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);

@@ -1,0 +1,28 @@
+app:
+    resource: "../../src/Controller/"
+    type: attribute
+    prefix: /
+
+app_v2:
+    resource: "../../src/v2/Controller/"
+    type: attribute
+    prefix: /v2
+
+app_v2_registration:
+    resource: "../../src/v2/Registration/Controller/"
+    type: attribute
+    prefix: /v2
+
+app_v2_fixture:
+    resource: "../../src/v2/Fixture/Controller/"
+    type: attribute
+    prefix: /v2
+
+app_v2_tools:
+    resource: "../../src/v2/Tools/Controller/"
+    type: attribute
+    prefix: /v2
+
+kernel:
+    resource: ../../src/Kernel.php
+    type: attribute

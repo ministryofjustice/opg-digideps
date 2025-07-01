@@ -5,6 +5,7 @@ namespace App\Controller\Ndr;
 use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Document;
+use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,31 +21,27 @@ class NdrController extends RestController
     }
 
     /**
-     * @Route("/ndr/{id}", methods={"GET"})
-     *
      * @param int $id
      */
+    #[Route(path: '/ndr/{id}', methods: ['GET'])]
     public function getById(Request $request, $id)
     {
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['ndr'];
+        $groups = $request->query->has('groups') ? $request->query->all('groups') : ['ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
 
         /* @var $report EntityDir\Ndr\Ndr */
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
 
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
+            $this->denyAccessUnlessGranted(User::ROLE_LAY_DEPUTY);
             $this->denyAccessIfNdrDoesNotBelongToUser($report);
         }
 
         return $report;
     }
 
-    /**
-     * @Route("/ndr/{id}/submit", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{id}/submit', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function submit(Request $request, $id, ReportService $reportService)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
@@ -63,7 +60,7 @@ class NdrController extends RestController
         }
 
         /** @var Document $reportPdf */
-        $reportPdf = $this->em->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $reportPdf = $this->em->getRepository(Document::class)->find($documentId);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
         $reportPdf->setSynchronisedBy($this->getUser());
 
@@ -81,22 +78,22 @@ class NdrController extends RestController
         $ndr->setSubmitDate(new \DateTime($data['submit_date']));
 
         // submit and create new year's report
-        $nextYearReport = $reportService
-            ->submit($ndr, $this->getUser(), new \DateTime($data['submit_date']), $documentId);
+        /** @var User $user */
+        $user = $this->getUser();
 
-        return ['id' => $nextYearReport->getId()];
+        $nextYearReport = $reportService->submit($ndr, $user, new \DateTime($data['submit_date']), $documentId);
+
+        return ['id' => $nextYearReport?->getId()];
     }
 
-    /**
-     * @Route("/ndr/{id}", methods={"PUT"})
-     */
+    #[Route(path: '/ndr/{id}', methods: ['PUT'])]
     public function update(Request $request, $id)
     {
         /* @var $ndr EntityDir\Ndr\Ndr */
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
 
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
-            $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
+            $this->denyAccessUnlessGranted(User::ROLE_LAY_DEPUTY);
             $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         }
 

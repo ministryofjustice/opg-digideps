@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Twig\Environment;
 
@@ -54,7 +54,7 @@ class ReportSubmissionServiceTest extends TestCase
     private $twig;
     /** @var ObjectProphecy&HtmlToPdfGenerator */
     private $pdfGenerator;
-    /** @var ObjectProphecy&Logger */
+    /** @var ObjectProphecy&LoggerInterface */
     private $logger;
     /** @var ObjectProphecy&TransactionsCsvGenerator */
     private $csvGenerator;
@@ -70,7 +70,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockMailFactory = m::mock(MailFactory::class);
         $this->mockTemplatingEngine = m::mock(Environment::class);
         $this->mockPdfGenerator = m::mock(HtmlToPdfGenerator::class);
-        $this->mockLogger = m::mock(Logger::class);
+        $this->mockLogger = m::mock(LoggerInterface::class);
         $this->mockCsvGenerator = m::mock(TransactionsCsvGenerator::class);
 
         $this->mockReport = m::mock(ReportInterface::class);
@@ -81,7 +81,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mailFactory = self::prophesize(MailFactory::class);
         $this->twig = self::prophesize(Environment::class);
         $this->pdfGenerator = self::prophesize(HtmlToPdfGenerator::class);
-        $this->logger = self::prophesize(Logger::class);
+        $this->logger = self::prophesize(LoggerInterface::class);
         $this->csvGenerator = self::prophesize(TransactionsCsvGenerator::class);
     }
 

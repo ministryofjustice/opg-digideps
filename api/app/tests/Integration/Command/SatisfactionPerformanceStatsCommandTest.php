@@ -9,6 +9,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class SatisfactionPerformanceStatsCommandTest extends KernelTestCase
 {
+    private CommandTester $commandTester;
+
     public function setUp(): void
     {
         $kernel = static::createKernel();

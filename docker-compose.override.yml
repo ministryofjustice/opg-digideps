@@ -49,7 +49,6 @@ services:
   api-app:
     volumes:
       - ./api/app/app:/var/www/app
-      - ./api/app/config:/var/www/config
       - ./api/app/public:/var/www/public
       - ./api/app/scripts:/var/www/scripts
       - ./api/app/src:/var/www/src
@@ -75,3 +74,41 @@ services:
   aws:
     volumes:
       - .:/app
+
+  client-unit-tests:
+    volumes:
+      - ./build/coverage-client:/var/www/build/coverage-client
+      - ./client/app/app:/var/www/app
+      - ./client/app/public:/var/www/public
+      - ./client/app/src:/var/www/src
+      - ./client/app/templates:/var/www/templates
+      - ./client/app/tests:/var/www/tests
+      - ./client/app/translations:/var/www/translations
+
+  api-unit-tests:
+    volumes:
+      - ./api/app/app:/var/www/app
+      - ./api/app/public:/var/www/public
+      - ./api/app/src:/var/www/src
+      - ./api/app/tests:/var/www/tests
+      - ./build/coverage-api:/var/www/build/coverage-api
+
+  api-integration-tests:
+    volumes:
+      - ./api/app/app:/var/www/app
+      - ./api/app/public:/var/www/public
+      - ./api/app/src:/var/www/src
+      - ./api/app/tests:/var/www/tests
+
+  end-to-end-tests:
+    volumes:
+      - ./api/app/tests/Behat/snapshots:/tmp/html
+      - ./api/app/tests/Behat/bootstrap:/var/www/tests/Behat/bootstrap
+      - ./api/app/tests/Behat/features-v2:/var/www/tests/Behat/features-v2
+      - ./api/app/tests/Behat/fixtures:/var/www/tests/Behat/fixtures
+
+  node-js:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./client/resources/assets:/app/assets

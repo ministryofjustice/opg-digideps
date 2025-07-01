@@ -143,7 +143,6 @@ locals {
 }
 
 # Additional definition for memory intensive commands (only app needed)
-
 resource "aws_ecs_task_definition" "api_high_memory" {
   family                   = "api-high-memory-${local.environment}"
   requires_compatibilities = ["FARGATE"]
@@ -158,4 +157,25 @@ resource "aws_ecs_task_definition" "api_high_memory" {
     operating_system_family = "LINUX"
   }
   tags = var.default_tags
+}
+
+# Additional definition for task overrides based on api container
+module "api_task_override" {
+  source = "./modules/task"
+  name   = "api-task-override"
+
+  cluster_name          = aws_ecs_cluster.main.name
+  container_definitions = "[${local.api_container}]"
+  tags                  = var.default_tags
+  environment           = local.environment
+  execution_role_arn    = aws_iam_role.execution_role_db.arn
+  subnet_ids            = data.aws_subnet.private[*].id
+  task_role_arn         = aws_iam_role.integration_tests.arn
+  security_group_id     = module.api_service_security_group.id
+  cpu                   = 1024
+  memory                = 2048
+  architecture          = "ARM64"
+  os                    = "LINUX"
+  override              = []
+  service_name          = "api_app"
 }

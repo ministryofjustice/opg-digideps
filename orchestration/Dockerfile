@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine3.20 AS builder
+FROM golang:1.24.4-alpine3.22 AS builder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode
@@ -8,7 +8,7 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
-FROM alpine:3.20
+FROM alpine:3.22
 RUN apk update && apk upgrade
 
 ENV POSTGRES_DATABASE=**None**
@@ -23,7 +23,10 @@ ENV S3_PREFIX=**None**
 ENV S3_S3V4=yes
 
 # install DB and JS tooling
-RUN apk add --no-cache --update postgresql python3 py3-pip
+RUN apk add --no-cache --update \
+    python3 \
+    py3-pip
+
 RUN apk add --no-cache --update nodejs npm
 RUN apk add --no-cache --update aws-cli
 RUN apk add --no-cache \
@@ -32,6 +35,10 @@ RUN apk add --no-cache \
     chromium
 RUN apk update && apk upgrade
 
+# Use 14 as later versions can cause issues with our backup and restore
+RUN apk add --no-cache \
+    --repository http://dl-cdn.alpinelinux.org/alpine/v3.17/main \
+    postgresql14-client=14.15-r0
 RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
 COPY backup.sh /backup.sh

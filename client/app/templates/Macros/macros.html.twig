@@ -1,24 +1,13 @@
-{% macro breadcrumbs(report, isMultiClientDeputy) %}
+{% macro breadcrumbs(report) %}
     {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
     <div class="govuk-breadcrumbs">
         <ol class="govuk-breadcrumbs__list">
-            {% if isMultiClientDeputy %}
-                <li class="govuk-breadcrumbs__list-item">
-                    <a href="{{ path('choose_a_client') }}" class="govuk-breadcrumbs__link">
-                        {{ 'chooseAClient' | trans({}, 'common' ) }}
-                    </a>
-                </li>
-            {% endif %}
                 <li class="govuk-breadcrumbs__list-item">
                     {% if isOrgUser %}
                         <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
                             {{ 'dashboard' | trans({}, 'common' ) }}
-                        </a>
-                    {% elseif isMultiClientDeputy  %}
-                        <a href="{{ path('lay_home', {clientId: report.client.id}) }}" class="govuk-breadcrumbs__link">
-                            {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
                         </a>
                     {% else  %}
                         <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
@@ -94,7 +83,7 @@
             {% else %}
                 <li class="govuk-breadcrumbs__list-item">
                     <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
-                        Deputy reports
+                        Your reports
                     </a>
                 </li>
                 {% if 'settings' in section and section != 'settings' and section != 'settings-client'%}
@@ -331,7 +320,46 @@
                 </div>
                 <div class="govuk-notification-banner__content">
                     <p class="govuk-body"> {{ message.sentenceOne }}</p>
-                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong></p>
+                    <p class="govuk-body"> {{ message.sentenceTwo }} <strong>{{ message.primaryEmail }}</strong>.</p>
+                </div>
+            </div>
+        {% elseif alertType == 'nonPrimaryRedirectUnknownEmail' %}
+            <div class="govuk-notification-banner width-two-thirds" role="region"
+                 aria-labelledby="govuk-notification-banner-title"
+                 data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-body">{{ message.sentenceOne }}</p>
+                    <p class="govuk-body">{{ message.sentenceTwo }}</p>
+                    <p class="govuk-body">{{ message.sentenceThree }}</p>
+                </div>
+            </div>
+        {% elseif alertType == 'clientEditSuccess' %}
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="region"
+                 aria-labelledby="govuk-notification-banner-title"
+                 data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Success
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <h3 class="govuk-notification-banner__heading">{{ message }}</h3>
+                </div>
+            </div>
+        {% elseif alertType == 'fileUploadSuccess' %}
+            <div class="moj-banner moj-banner--success">
+                {{ _self.icon('success', 'moj-banner__icon') }}
+                <div class="moj-banner__message">
+                        <h2 class="govuk-heading-m">
+                            Files uploaded
+                        </h2>
+                    <span class="moj-banner__assistive">Success</span>
+                        {{ message }}
                 </div>
             </div>
         {% else %}

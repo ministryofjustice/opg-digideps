@@ -385,7 +385,7 @@ trait SelfRegistrationTrait
 
         $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
-        $this->assertIntEqualsInt((int) $this->deputyUid, $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
+        $this->assertIntEqualsInt(intval($this->deputyUid), $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
         $this->assertStringEqualsString('102 Petty France', $deputy->getAddress1(), 'Asserting Address Line 1 is the same');
         $this->assertStringEqualsString('MOJ', $deputy->getAddress2(), 'Asserting Address Line 2 is the same');
         $this->assertStringEqualsString('London', $deputy->getAddress3(), 'Asserting Address Line 3 is the same');
@@ -917,5 +917,14 @@ trait SelfRegistrationTrait
             'Dewey',
             $caseNumber,
         );
+    }
+
+    /**
+     * @Then the report status should be :status
+     */
+    public function reportStatusShouldBe(string $status)
+    {
+        $this->iAmOnLayMainPage();
+        $this->assertPageContainsText($status);
     }
 }

@@ -67,7 +67,9 @@ class BaseFeatureContext extends MinkContext
 
     public UserDetails $layPfaHighNotStartedMultiClientDeputyPrimaryUser;
     public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid;
     public UserDetails $layPfaHighNotStartedMultiClientDeputySecondNonPrimaryUser;
+    public UserDetails $layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
 
     public UserDetails $profNamedDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profNamedDeputyCompletedHealthWelfareDetails;
@@ -367,6 +369,7 @@ class BaseFeatureContext extends MinkContext
 
     /**
      * @BeforeScenario @ndr-not-started
+     * @BeforeScenario @lay-pfa-with-ndr-not-started
      */
     public function createNdrNotStarted()
     {
@@ -376,6 +379,7 @@ class BaseFeatureContext extends MinkContext
 
     /**
      * @BeforeScenario @ndr-completed
+     * @BeforeScenario @lay-pfa-with-ndr-completed
      */
     public function createNdrCompleted()
     {
@@ -619,10 +623,21 @@ class BaseFeatureContext extends MinkContext
     {
         $deputyUid = 123456789000 + rand(1, 999);
         $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
+
+        // NB tests depend on this user having the same deputyUid as $primaryUserDetails
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
+
+        $nonPrimaryUserWithNoDeputyUidDetails = new UserDetails(
+            $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId.'-b', null, -1)
+        );
+
+        $deputyUid = 123452222001 + rand(1, 999);
+        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId.'999', null, $deputyUid));
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid = $nonPrimaryUserWithNoDeputyUidDetails;
+        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders = $primaryUserNoCourtOrders;
     }
 
     /**

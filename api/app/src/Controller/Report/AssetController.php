@@ -19,11 +19,8 @@ class AssetController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $reportId, $assetId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -33,17 +30,14 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['asset'];
+            ? $request->query->all('groups') : ['asset'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $asset;
     }
 
-    /**
-     * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"}, methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/asset', requirements: ['reportId' => '\d+'], methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function add(Request $request, $reportId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -68,11 +62,8 @@ class AssetController extends RestController
         return ['id' => $asset->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function edit(Request $request, $reportId, $assetId)
     {
         $data = $this->formatter->deserializeBodyContent($request);
@@ -92,11 +83,8 @@ class AssetController extends RestController
         return ['id' => $asset->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function delete($reportId, $assetId)
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);

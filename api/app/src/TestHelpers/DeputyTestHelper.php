@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace App\TestHelpers;
 
 use App\Entity\Deputy;
+use App\Entity\User;
 use Faker\Factory;
 
 class DeputyTestHelper
 {
-    /**
-     * @return Deputy
-     */
-    public function generateDeputy(?string $email = null, ?string $deputyUid = null)
+    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
     {
         $faker = Factory::create('en_GB');
 
-        return (new Deputy())
-            ->setDeputyUid($deputyUid ?: $faker->randomNumber(8))
+        $deputy = (new Deputy())
+            ->setDeputyUid($deputyUid ?: ''.$faker->randomNumber(8))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail1($email ?: $faker->safeEmail().rand(1, 100000))
@@ -26,5 +24,11 @@ class DeputyTestHelper
             ->setAddress3($faker->county)
             ->setAddressPostcode($faker->postcode())
             ->setPhoneMain($faker->phoneNumber());
+
+        if (!is_null($user)) {
+            $deputy->setUser($user);
+        }
+
+        return $deputy;
     }
 }

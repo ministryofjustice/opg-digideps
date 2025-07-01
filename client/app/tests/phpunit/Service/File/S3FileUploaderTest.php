@@ -27,6 +27,7 @@ class S3FileUploaderTest extends KernelTestCase
     private ObjectProphecy $fileNameFixer;
     private ObjectProphecy $dateTimeProvider;
     private ObjectProphecy $mimeTypeAndExtensionChecker;
+    private ObjectProphecy|ImageConvertor $imageConvertor;
 
     public function setUp(): void
     {

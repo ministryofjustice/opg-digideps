@@ -12,52 +12,36 @@ use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetOther as ReportAssetOther;
 use App\Entity\Report\AssetProperty as ReportAssetProperty;
-use App\Entity\Report\BankAccount as BankAccountEntity;
 use App\Entity\Report\BankAccount as ReportBankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
-use App\Repository\ReportRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectRepository;
+use App\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class ReportService
 {
-    /**
-     * @var ObjectRepository
-     */
-    private $preRegistrationRepository;
-
-    /**
-     * @var ObjectRepository
-     */
-    private $assetRepository;
-
-    /**
-     * @var ObjectRepository
-     */
-    private $bankAccountRepository;
+    private PreRegistrationRepository $preRegistrationRepository;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportRepository $reportRepository
+        private readonly LoggerInterface $logger,
     ) {
-        $this->preRegistrationRepository = $em->getRepository(PreRegistration::class);
-        $this->assetRepository = $em->getRepository(Asset::class);
-        $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
+        /** @var PreRegistrationRepository $preRegistrationRepository */
+        $preRegistrationRepository = $em->getRepository(PreRegistration::class);
+
+        $this->preRegistrationRepository = $preRegistrationRepository;
     }
 
     /**
      * Set report submitted and create a new year report.
      *
-     * @param string|null $ndrDocumentId
-     *
-     * @return Report
+     * @throws \Exception
      */
-    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, $ndrDocumentId = null)
+    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, ?string $ndrDocumentId = null): ?Report
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
@@ -90,23 +74,34 @@ class ReportService
 
         $this->em->persist($submission);
 
-        //      Set user to active once they have submitted a report
+        $client = $currentReport->getClient();
+        $clientId = $client->getId();
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $this->logger->warning("Report submitted for client ID $clientId at $now");
+
+        // Set user to active once they have submitted a report
         $user->setActive(true);
 
-        $newYearReport = [];
+        $newYearReport = null;
 
         if ($currentReport instanceof Ndr) {
             // Find the first report and clone assets/accounts across
-            $reports = $currentReport->getClient()->getReports();
+            $reports = $client->getReports();
 
             if (1 === count($reports)) {
+                $this->logger->warning("Populating existing report for client $clientId (NDR submitted, existing report) at $now");
+
                 $newYearReport = $reports[0];
 
                 $this->clonePersistentResources($newYearReport, $currentReport);
             } elseif (0 === count($reports)) {
+                $this->logger->warning("Creating next year report for client $clientId (NDR submitted, NO existing report) at $now");
+
                 $newYearReport = $this->createNextYearReport($currentReport);
             }
         } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+            $this->logger->warning("Creating next year report for client $clientId (NO NDR, existing unsubmitted report) at $now");
+
             // unsubmitted report
             $currentReport->setUnSubmitDate(null);
             $currentReport->setUnsubmittedSectionsList(null);
@@ -114,13 +109,15 @@ class ReportService
             // Find the next report and clone assets/accounts across
             $calculatedEndDate = clone $currentReport->getEndDate();
             $calculatedEndDate->modify('+12 months');
-            $newYearReport = $currentReport->getClient()->getReportByEndDate($calculatedEndDate);
 
-            if ($newYearReport) {
+            $newYearReport = $client->getReportByEndDate($calculatedEndDate);
+            if (!is_null($newYearReport)) {
                 $this->clonePersistentResources($newYearReport, $currentReport);
             }
         } else {
             // first-time submission
+            $this->logger->warning("Creating next year report for client $clientId (NO NDR, NO existing report) at $now");
+
             $newYearReport = $this->createNextYearReport($currentReport);
         }
 
@@ -311,39 +308,47 @@ class ReportService
         $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
         $this->em->persist($newReport);
 
+        $createdAtStr = 'unknown';
+        $createdAt = $newReport->getCreatedAt();
+        if (!is_null($createdAt)) {
+            $createdAtStr = $createdAt->format('Y-m-d H:i:s');
+        }
+
+        $this->logger->warning(
+            "Created next year report for client ID {$client->getId()} ".
+            "; created at = {$createdAtStr} ".
+            "; start date = {$startDate->format('Y-m-d')} ".
+            "; end date = {$endDate->format('Y-m-d')}"
+        );
+
         return $newReport;
     }
 
     /**
      * Set report type based on CasRec record (if existing).
      *
-     * @return string|null type
-     *
      * @throws \Exception
      */
-    public function getReportTypeBasedOnSirius(Client $client)
+    public function getReportTypeBasedOnSirius(Client $client): ?string
     {
         $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
-        if ($preRegistration instanceof PreRegistration) {
-            if (count($client->getUsers())) {
-                if ($client->getUsers()->first()->isLayDeputy()) {
-                    return PreRegistration::getReportTypeByOrderType(
-                        $preRegistration->getTypeOfReport(),
-                        $preRegistration->getOrderType(),
-                        PreRegistration::REALM_LAY
-                    );
-                }
-            }
+        if (
+            !($preRegistration instanceof PreRegistration)
+            || count($client->getUsers()) < 1
+            || !$client->getUsers()->first()->isLayDeputy()
+        ) {
+            return null;
         }
 
-        return null;
+        return PreRegistration::getReportTypeByOrderType(
+            $preRegistration->getTypeOfReport(),
+            $preRegistration->getOrderType(),
+            PreRegistration::REALM_LAY
+        );
     }
 
-    /**
-     * @param mixed $sectionList
-     */
-    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, $sectionList)
+    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, ?string $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);
@@ -385,46 +390,6 @@ class ReportService
     }
 
     /**
-     * If one report started, return the other nonStarted reports with the same start/end date.
-     *
-     * @return Report[] indexed by ID
-     */
-    public function findDeleteableReports(Collection $reports)
-    {
-        $reportIdToStatus = [];
-        foreach ($reports as $ur) {
-            /* @var $ur Report */
-            $reportIdToStatus[$ur->getId()] = [
-                'status' => $ur->getStatus()->getStatus(),
-                'start' => $ur->getStartDate()->format('Y-m-d'),
-                'end' => $ur->getEndDate()->format('Y-m-d'),
-                'sections' => $ur->getStatus()->getSectionStatus(),
-            ];
-        }
-
-        $ret = [];
-        foreach ($reports as $report1) {
-            /* @var $report1 Report */
-            foreach ($reports as $report2) {
-                /* @var $report2 Report */
-                if ($report1->getId() === $report2->getId()) {
-                    continue;
-                }
-                // find report with same date that have not started
-                if (
-                    $report1->getStatus()->hasStarted()
-                    && $report1->hasSamePeriodAs($report2)
-                    && !$report2->getStatus()->hasStarted()
-                ) {
-                    $ret[$report2->getId()] = $report2;
-                }
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
      * In all the the cases, return original $status.
      *
@@ -444,7 +409,7 @@ class ReportService
     /**
      * @return bool
      */
-    public static function isDue(\DateTime $endDate = null)
+    public static function isDue(?\DateTime $endDate = null)
     {
         if (!$endDate) {
             return false;
@@ -452,6 +417,6 @@ class ReportService
 
         $endOfToday = new \DateTime('today midnight');
 
-        return $endDate <= $endOfToday;
+        return $endDate < $endOfToday;
     }
 }

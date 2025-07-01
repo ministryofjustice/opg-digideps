@@ -17,11 +17,8 @@ class AccountController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/account", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/{ndrId}/account', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addAccountAction(Request $request, $ndrId)
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
@@ -41,15 +38,12 @@ class AccountController extends RestController
         return ['id' => $account->getId()];
     }
 
-    /**
-     * @Route("/ndr/account/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/account/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
         if ($request->query->has('groups')) {
-            $this->formatter->setJmsSerialiserGroups((array) $request->query->get('groups'));
+            $this->formatter->setJmsSerialiserGroups($request->query->all('groups'));
         }
 
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');
@@ -60,11 +54,8 @@ class AccountController extends RestController
         return $account;
     }
 
-    /**
-     * @Route("/ndr/account/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/account/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function editAccountAction(Request $request, $id)
     {
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
@@ -79,11 +70,8 @@ class AccountController extends RestController
         return $account->getId();
     }
 
-    /**
-     * @Route("/ndr/account/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/account/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function accountDelete($id)
     {
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */

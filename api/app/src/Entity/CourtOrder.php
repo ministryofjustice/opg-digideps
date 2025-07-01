@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -23,81 +24,111 @@ class CourtOrder
     use CreateUpdateTimestamps;
 
     /**
-     * @var int
-     *
-     * @JMS\Type("integer")
+     * @ORM\Id
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
      *
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    private int $id;
 
     /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     *
      * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
      */
-    private $courtOrderUid;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
+    private string $courtOrderUid;
 
     /**
-     * @var string
+     * e.g. "pfa" or "hw".
      *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="type", type="string", length=10, nullable=false)
+     * @ORM\Column(name="order_type", type="string", length=10, nullable=false)
      */
-    private $type;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    private string $orderType;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="active", type="boolean", options = { "default": true })
+     * @ORM\Column(name="status", type="string", length=10, nullable=false)
      */
-    private $active;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    private string $status;
 
     /**
-     * @var Client
-     *
-     * @JMS\Type("App\Entity\Client")
-     *
+     * @ORM\Column(name="order_made_date", type="datetime", nullable=false)
+     */
+    #[JMS\Type('datetime')]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    private \DateTime $orderMadeDate;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
-    private $client;
+    #[JMS\Type(Client::class)]
+    #[JMS\Groups(['court-order-full'])]
+    private Client $client;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Report>")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"}, fetch="EAGER")
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    #[JMS\Type(Ndr::class)]
+    #[JMS\Groups(['court-order-full'])]
+    private ?Ndr $ndr = null;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
      * @ORM\JoinTable(name="court_order_report",
      *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
      *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
      *     )
+     *
+     * @var Collection<int, Report>
      */
-    private $reports;
+    #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
+    #[JMS\Groups(['court-order-full'])]
+    private Collection $reports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="id", referencedColumnName="court_order_id")
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
      */
+    #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
 
     public function __construct()
     {
         $this->courtOrderDeputyRelationships = new ArrayCollection();
         $this->reports = new ArrayCollection();
+    }
+
+    /**
+     * active means "not discharged".
+     *
+     * @return Deputy[]
+     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['court-order-full'])]
+    public function getActiveDeputies(): array
+    {
+        $activeDeputies = [];
+
+        /** @var CourtOrderDeputy $rel */
+        foreach ($this->courtOrderDeputyRelationships as $rel) {
+            if ($rel->isActive()) {
+                $activeDeputies[] = $rel->getDeputy();
+            }
+        }
+
+        return $activeDeputies;
     }
 
     public function getId(): int
@@ -112,38 +143,38 @@ class CourtOrder
         return $this;
     }
 
-    public function getCourtOrderUid(): int
+    public function getCourtOrderUid(): string
     {
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(int $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
     {
         $this->courtOrderUid = $courtOrderUid;
 
         return $this;
     }
 
-    public function getType(): string
+    public function getOrderType(): string
     {
-        return $this->type;
+        return $this->orderType;
     }
 
-    public function setType(string $type): CourtOrder
+    public function setOrderType(string $orderType): CourtOrder
     {
-        $this->type = $type;
+        $this->orderType = $orderType;
 
         return $this;
     }
 
-    public function isActive(): bool
+    public function getStatus(): string
     {
-        return $this->active;
+        return $this->status;
     }
 
-    public function setActive(bool $active): CourtOrder
+    public function setStatus(string $status): CourtOrder
     {
-        $this->active = $active;
+        $this->status = $status;
 
         return $this;
     }
@@ -160,10 +191,50 @@ class CourtOrder
         return $this;
     }
 
+    public function getOrderMadeDate(): \DateTime
+    {
+        return $this->orderMadeDate;
+    }
+
+    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    {
+        $this->orderMadeDate = $orderMadeDate;
+
+        return $this;
+    }
+
     public function addReport(Report $report): CourtOrder
     {
         $this->reports->add($report);
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, CourtOrderDeputy>
+     */
+    public function getDeputyRelationships(): Collection
+    {
+        return $this->courtOrderDeputyRelationships;
+    }
+
+    public function setNdr(Ndr $ndr): CourtOrder
+    {
+        $this->ndr = $ndr;
+
+        return $this;
+    }
+
+    public function getNdr(): ?Ndr
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
     }
 }

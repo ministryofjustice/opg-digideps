@@ -23,10 +23,6 @@ class Deputy
     use CreateUpdateTimestamps;
 
     /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
@@ -34,201 +30,141 @@ class Deputy
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @ORM\SequenceGenerator(sequenceName="deputy_id_seq", allocationSize=1, initialValue=1)
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
      */
-    private $id;
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private int $id;
 
     /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
-     * @JMS\Exclude
+     * @var ArrayCollection<int, Client>
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
      *
      * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
      */
-    private $clients;
+    #[JMS\Exclude]
+    private Collection $clients;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
      */
-    private $deputyUid;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private string $deputyUid;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
-    private $firstname;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private string $firstname;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
      */
-    private $lastname;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private string $lastname;
 
     /**
-     * @var string
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email1", type="string", length=60, nullable=false, unique=false)
      */
-    private $email1;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private string $email1;
 
     /**
-     * @var string
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email2", type="string", length=60, nullable=true, unique=false)
      */
-    private $email2;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $email2 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
      */
-    private $email3;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $email3 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
-    private $address1;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $address1 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
-    private $address2;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $address2 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
-    private $address3;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $address3 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
-    private $address4;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $address4 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
-    private $address5;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $address5 = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
-    private $addressPostcode;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $addressPostcode = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user", "team", "report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
-    private $addressCountry;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'team', 'report-submitted-by', 'deputy'])]
+    private ?string $addressCountry = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
-    private $phoneMain;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $phoneMain = null;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submitted-by", "deputy"})
-     *
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
-    private $phoneAlternative;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    private ?string $phoneAlternative = null;
 
     /**
-     * @JMS\Type("App\Entity\User")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove", "persist"})
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
-    private ?User $user;
+    #[JMS\Type('App\Entity\User')]
+    private ?User $user = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist"})
+     * @var ArrayCollection<int, CourtOrderDeputy>
      *
-     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
+     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist", "remove"})
      */
     private Collection $courtOrderDeputyRelationships;
 
@@ -237,20 +173,12 @@ class Deputy
         $this->courtOrderDeputyRelationships = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
 
@@ -258,316 +186,233 @@ class Deputy
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<int, Client>
      */
-    public function getClients()
+    public function getClients(): Collection
     {
         return $this->clients;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyUid()
+    public function getDeputyUid(): string
     {
         return $this->deputyUid;
     }
 
-    /**
-     * @param string $deputyUid
-     *
-     * @return $this
-     */
-    public function setDeputyUid($deputyUid)
+    public function setDeputyUid(string $deputyUid): self
     {
         $this->deputyUid = $deputyUid;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstname()
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
 
-    /**
-     * @param string $firstname
-     *
-     * @return $this
-     */
-    public function setFirstname($firstname)
+    public function setFirstname(string $firstname): self
     {
         $this->firstname = trim($firstname);
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastname()
+    public function getLastname(): string
     {
         return $this->lastname;
     }
 
-    /**
-     * @param string $lastname
-     *
-     * @return $this
-     */
-    public function setLastname($lastname)
+    public function setLastname(string $lastname): self
     {
         $this->lastname = trim($lastname);
 
         return $this;
     }
 
-    /**
-     * @return string
-     * @return $this
-     */
-    public function getEmail1()
+    public function getEmail1(): string
     {
         return $this->email1;
     }
 
-    /**
-     * @param string $email1
-     *
-     * @return $this
-     */
-    public function setEmail1($email1)
+    public function setEmail1(string $email1): self
     {
         $this->email1 = trim($email1);
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail2()
+    public function getEmail2(): ?string
     {
         return $this->email2;
     }
 
-    /**
-     * @param string $email2
-     *
-     * @return $this
-     */
-    public function setEmail2($email2)
+    public function setEmail2(?string $email2): self
     {
         if (!is_null($email2)) {
-            $this->email2 = trim($email2);
+            $email2 = trim($email2);
         }
+
+        $this->email2 = $email2;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail3()
+    public function getEmail3(): ?string
     {
         return $this->email3;
     }
 
-    /**
-     * @param string $email3
-     *
-     * @return $this
-     */
-    public function setEmail3($email3)
+    public function setEmail3(?string $email3): self
     {
         if (!is_null($email3)) {
-            $this->email3 = trim($email3);
+            $email3 = trim($email3);
         }
+
+        $this->email3 = $email3;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress1()
+    public function getAddress1(): ?string
     {
         return $this->address1;
     }
 
-    /**
-     * @param string $address1
-     *
-     * @return $this
-     */
-    public function setAddress1($address1)
+    public function setAddress1(?string $address1): self
     {
-        $this->address1 = trim($address1);
+        if (!is_null($address1)) {
+            $address1 = trim($address1);
+        }
+
+        $this->address1 = $address1;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
-    /**
-     * @param string $address2
-     *
-     * @return $this
-     */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2): self
     {
-        $this->address2 = trim($address2);
+        if (!is_null($address2)) {
+            $address2 = trim($address2);
+        }
+
+        $this->address2 = $address2;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress3()
+    public function getAddress3(): ?string
     {
         return $this->address3;
     }
 
-    /**
-     * @param string $address3
-     *
-     * @return $this
-     */
-    public function setAddress3($address3)
+    public function setAddress3(?string $address3): self
     {
-        $this->address3 = trim($address3);
+        if (!is_null($address3)) {
+            $address3 = trim($address3);
+        }
+
+        $this->address3 = $address3;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress4()
+    public function getAddress4(): ?string
     {
         return $this->address4;
     }
 
-    /**
-     * @param string $address4
-     *
-     * @return $this
-     */
-    public function setAddress4($address4)
+    public function setAddress4(?string $address4): self
     {
-        $this->address4 = trim($address4);
+        if (!is_null($address4)) {
+            $address4 = trim($address4);
+        }
+
+        $this->address4 = $address4;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress5()
+    public function getAddress5(): ?string
     {
         return $this->address5;
     }
 
-    /**
-     * @param string $address5
-     *
-     * @return $this
-     */
-    public function setAddress5($address5)
+    public function setAddress5(?string $address5): self
     {
-        $this->address5 = trim($address5);
+        if (!is_null($address5)) {
+            $address5 = trim($address5);
+        }
+
+        $this->address5 = $address5;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressPostcode()
+    public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
     }
 
-    /**
-     * @param string $addressPostcode
-     *
-     * @return $this
-     */
-    public function setAddressPostcode($addressPostcode)
+    public function setAddressPostcode(?string $addressPostcode): self
     {
-        $this->addressPostcode = trim($addressPostcode);
+        if (!is_null($addressPostcode)) {
+            $addressPostcode = trim($addressPostcode);
+        }
+
+        $this->addressPostcode = $addressPostcode;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressCountry()
+    public function getAddressCountry(): ?string
     {
         return $this->addressCountry;
     }
 
-    /**
-     * @return $this
-     */
-    public function setAddressCountry($addressCountry)
+    public function setAddressCountry(?string $addressCountry): self
     {
-        $this->addressCountry = trim($addressCountry);
+        if (!is_null($addressCountry)) {
+            $addressCountry = trim($addressCountry);
+        }
+
+        $this->addressCountry = $addressCountry;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhoneMain()
+    public function getPhoneMain(): ?string
     {
         return $this->phoneMain;
     }
 
-    /**
-     * @param string $phoneMain
-     *
-     * @return $this
-     */
-    public function setPhoneMain($phoneMain)
+    public function setPhoneMain(?string $phoneMain): self
     {
         if (!is_null($phoneMain)) {
-            $this->phoneMain = trim($phoneMain);
+            $phoneMain = trim($phoneMain);
         }
+
+        $this->phoneMain = $phoneMain;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhoneAlternative()
+    public function getPhoneAlternative(): ?string
     {
         return $this->phoneAlternative;
     }
 
-    /**
-     * @param string $phoneAlternative
-     *
-     * @return $this
-     */
-    public function setPhoneAlternative($phoneAlternative)
+    public function setPhoneAlternative(?string $phoneAlternative): self
     {
         if (!is_null($phoneAlternative)) {
-            $this->phoneAlternative = trim($phoneAlternative);
+            $phoneAlternative = trim($phoneAlternative);
         }
+
+        $this->phoneAlternative = $phoneAlternative;
 
         return $this;
     }
@@ -584,7 +429,7 @@ class Deputy
         return $this;
     }
 
-    public function addressHasChanged(OrgDeputyshipDto $dto)
+    public function addressHasChanged(OrgDeputyshipDto $dto): bool
     {
         return $this->getAddress1() !== $dto->getDeputyAddress1()
              || $this->getAddress2() !== $dto->getDeputyAddress2()
@@ -610,12 +455,12 @@ class Deputy
             && null !== $dto->getDeputyEmail();
     }
 
-    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $discharged = false): Deputy
+    public function associateWithCourtOrder(CourtOrder $courtOrder, bool $isActive = true): Deputy
     {
         $courtOrderDeputy = new CourtOrderDeputy();
         $courtOrderDeputy->setCourtOrder($courtOrder);
         $courtOrderDeputy->setDeputy($this);
-        $courtOrderDeputy->setDischarged($discharged);
+        $courtOrderDeputy->setIsActive($isActive);
 
         $this->courtOrderDeputyRelationships[] = $courtOrderDeputy;
 
@@ -629,7 +474,7 @@ class Deputy
         foreach ($this->courtOrderDeputyRelationships as $element) {
             $result[] = [
                 'courtOrder' => $element->getCourtOrder(),
-                'discharged' => $element->isDischarged(),
+                'isActive' => $element->isActive(),
             ];
         }
 

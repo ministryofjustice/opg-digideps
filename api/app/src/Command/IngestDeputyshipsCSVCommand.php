@@ -12,6 +12,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -33,7 +35,16 @@ class IngestDeputyshipsCSVCommand extends Command
     {
         $this
             ->setDescription('Processes the Deputyships CSV Report from the S3 bucket.')
-            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive');
+            ->addArgument('csv-filename', InputArgument::REQUIRED, 'Specify the file name of the CSV to retreive')
+            ->addOption(
+                'dry-run',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'CSV ingest and candidates are always applied, and the builder always creates court order entities
+                and relationships; but if this is set to true, the court order changes are rolled back and not persisted
+                to the database',
+                'false'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -43,6 +54,11 @@ class IngestDeputyshipsCSVCommand extends Command
 
         /** @var string $deputyshipsCSVFile */
         $deputyshipsCSVFile = $input->getArgument('csv-filename');
+
+        $dryRun = ('true' === $input->getOption('dry-run'));
+        if ($dryRun) {
+            $output->writeln('*** deputyships-ingest running in DRY RUN mode: court order data will not be saved ***');
+        }
 
         $fileLocation = "/tmp/$deputyshipsCSVFile";
 
@@ -64,7 +80,24 @@ class IngestDeputyshipsCSVCommand extends Command
             return Command::FAILURE;
         }
 
-        $result = $this->deputyshipsCSVIngester->processCsv($fileLocation);
+        try {
+            $logger = new ConsoleLogger($output);
+            $this->deputyshipsCSVIngester->setLogger($logger);
+
+            $result = $this->deputyshipsCSVIngester->processCsv($fileLocation, $dryRun);
+        } catch (\Exception $e) {
+            $output->writeln(
+                sprintf(
+                    '%s - failure - Unexpected exception occurred while processing CSV: %s',
+                    self::JOB_NAME,
+                    $e->getMessage(),
+                )
+            );
+
+            $this->verboseLogger->error($e->getTraceAsString());
+
+            return Command::FAILURE;
+        }
 
         if (!$result->success) {
             $output->writeln(

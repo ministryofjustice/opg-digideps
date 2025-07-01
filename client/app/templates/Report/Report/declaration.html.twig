@@ -12,20 +12,9 @@
 {% block breadcrumbs %}
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
-            {% if isMultiClientDeputy %}
-                <li class="govuk-breadcrumbs__list-item">
-                    <a href="{{ path('choose_a_client') }}" class="govuk-breadcrumbs__link">
-                        {{ 'chooseAClient' | trans({}, 'common' ) }}
-                    </a>
-                </li>
-            {% endif %}
             <li>
                 {% if app.user.isDeputyOrg() %}
                     <a href="{{ path('org_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
-                {% elseif isMultiClientDeputy  %}
-                    <a href="{{ path('lay_home', {clientId: report.client.id}) }}" class="govuk-breadcrumbs__link">
-                        {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
-                    </a>
                 {% else %}
                     <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}</a>
                 {% endif %}
@@ -80,7 +69,7 @@
 
         </div>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'data-single-submit-form': 'true'}}) }}
 
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 

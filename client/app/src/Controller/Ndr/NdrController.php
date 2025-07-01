@@ -57,7 +57,7 @@ class NdrController extends AbstractController
         private SatisfactionApi $satisfactionApi,
         private NdrApi $ndrApi,
         private HtmlToPdfGenerator $htmlToPdf,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -106,13 +106,10 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
-        $deputyHasMultiClients = !$user->isDeputyOrg() && count($this->clientApi->getAllClientsByDeputyUid($user->getDeputyUid())) > 1;
-
         return [
             'client' => $client,
             'ndr' => $ndr,
             'ndrStatus' => $ndrStatus,
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -139,7 +136,6 @@ class NdrController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($user);
 
         $backLink = $this->generateUrl('lay_home', ['clientId' => $clientId]);
 
@@ -147,7 +143,6 @@ class NdrController extends AbstractController
             'ndr' => $ndr,
             'deputy' => $user,
             'ndrStatus' => $ndrStatusService,
-            'isMultiClientDeputy' => $isMultiClientDeputy,
             'backLink' => $backLink,
         ];
     }
@@ -224,10 +219,6 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
-        /** @var User $currentUser */
-        $currentUser = $this->getUser();
-        $isMultiClientDeputy = $this->clientApi->checkDeputyHasMultiClients($currentUser);
-
         $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -263,7 +254,6 @@ class NdrController extends AbstractController
             'ndr' => $ndr,
             'client' => $client,
             'form' => $form->createView(),
-            'isMultiClientDeputy' => $isMultiClientDeputy,
         ];
     }
 
@@ -299,7 +289,7 @@ class NdrController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $ndr->getType(), $this->getUser(), null, $ndr->getId());
+            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $ndr->getType(), null, $ndr->getId());
 
             return $this->redirect($this->generateUrl('ndr_post_submission_user_research', ['ndrId' => $ndrId, 'satisfactionId' => $satisfactionId]));
         }

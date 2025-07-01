@@ -39,7 +39,7 @@ parameters:
 
 services:
     em:
-        alias: doctrine.orm.entity_manager
+        alias: doctrine.orm.default_entity_manager
 
     # default configuration for services in *this* file
     _defaults:
@@ -236,10 +236,6 @@ services:
         class: App\Repository\PreRegistrationRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\ClientContactRepository:
-        class: App\Repository\ClientContactRepository
-        tags: ["doctrine.repository_service"]
-
     App\Repository\ClientRepository:
         class: App\Repository\ClientRepository
         tags: ["doctrine.repository_service"]
@@ -250,6 +246,14 @@ services:
 
     App\Repository\ChecklistRepository:
         class: App\Repository\ChecklistRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\CourtOrderRepository:
+        class: App\Repository\CourtOrderRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\CourtOrderDeputyRepository:
+        class: App\Repository\CourtOrderDeputyRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\DeputyRepository:
@@ -278,6 +282,10 @@ services:
 
     App\Repository\SatisfactionRepository:
         class: App\Repository\SatisfactionRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\StagingDeputyshipRepository:
+        class: App\Repository\StagingDeputyshipRepository
         tags: ["doctrine.repository_service"]
 
     App\Repository\UserRepository:
@@ -412,3 +420,40 @@ services:
 
     App\Service\Audit\LocalAuditLogHandler:
         class: App\Service\Audit\LocalAuditLogHandler
+
+    app.guzzlehttp_clientinterface:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                verify: false
+                headers:
+                    Content-Type: application/json
+                timeout: 20
+                allow_redirects: false
+
+    app.response_comparer:
+        class: App\Service\ResponseComparison\ClientsResponseComparer
+
+    App\Command\ApiComparison:
+        arguments:
+            $httpClient: "@app.guzzlehttp_clientinterface"
+            $redis: "@snc_redis.default"
+            $comparers:
+                - "@app.response_comparer"
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
+        public: true
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
+        public: true
+
+    App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
+        public: true
+
+    App\Model\DeputyshipProcessingRawDbAccess:
+        arguments:
+            $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
+        public: true
+
+    App\v2\Service\DeputyshipCandidatesConverter:
+        public: true

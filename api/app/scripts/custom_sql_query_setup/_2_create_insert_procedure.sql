@@ -4,6 +4,7 @@ CREATE OR REPLACE PROCEDURE audit.insert_custom_query(
     IN created_by VARCHAR(255),
     IN expected_before INT,
     IN expected_after INT,
+    IN maximum_rows_affected INT,
     INOUT new_id INT
 )
 LANGUAGE plpgsql SECURITY DEFINER AS $$
@@ -15,7 +16,8 @@ BEGIN
         created_on,
         expected_before,
         expected_after,
-        passed
+        passed,
+        maximum_rows_affected
     )
     VALUES (
         query,
@@ -24,7 +26,8 @@ BEGIN
         NOW(),
         expected_before,
         expected_after,
-        FALSE
+        FALSE,
+        maximum_rows_affected
     )
     RETURNING id INTO new_id;
 END;

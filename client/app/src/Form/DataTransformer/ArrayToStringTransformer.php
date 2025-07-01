@@ -4,18 +4,18 @@ namespace App\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @implements DataTransformerInterface<string, array>
+ */
 class ArrayToStringTransformer implements DataTransformerInterface
 {
-    private $keys;
-
-    public function __construct(array $keys = [])
+    public function __construct(private array $keys = [])
     {
-        $this->keys = $keys;
     }
 
-    public function transform($string)
+    public function transform(mixed $value): array
     {
-        $length = strlen($string);
+        $length = strlen($value);
         $keyCount = count($this->keys);
 
         $sub = floor($length / $keyCount);
@@ -26,13 +26,13 @@ class ArrayToStringTransformer implements DataTransformerInterface
         $start = 0;
         $counter = 0;
 
-        foreach ($this->keys as $value) {
+        foreach ($this->keys as $key) {
             ++$counter;
 
             if ((0 != $remainder) && ($counter == $keyCount)) {
-                $result[$value] = substr($string, $start);
+                $result[$key] = substr($value, $start);
             } else {
-                $result[$value] = substr($string, $start, $sub);
+                $result[$key] = substr($value, $start, $sub);
             }
             $start = $start + $sub;
         }
@@ -40,10 +40,8 @@ class ArrayToStringTransformer implements DataTransformerInterface
         return $result;
     }
 
-    public function reverseTransform($array)
+    public function reverseTransform($value)
     {
-        $string = implode('', $array);
-
-        return $string;
+        return implode('', $value);
     }
 }

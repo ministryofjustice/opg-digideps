@@ -37,7 +37,6 @@ Feature: Users logging into the service
         And I press "change_password_save"
         Then the form should be valid
 
-
     @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user tries to login to the service with their non primary account
         Given a Lay Deputy tries to login with their "non-primary" email address
@@ -47,12 +46,20 @@ Feature: Users logging into the service
         Then they get redirected back to the log in page
 
     @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user tries to login to the service with their non primary account but primary account has no deputy UID (DDLS-671)
+        Given a Lay Deputy with no deputy UID tries to login with their non-primary email address
+        Then they get redirected back to the log in page
+        And a flash message should be displayed to the user which tells them to use their primary account as no email can be retrieved
+        When the user tries to access their clients report overview page
+        Then they get redirected back to the log in page
+
+    @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user tries to login to the service with their primary account
         And a Lay Deputy tries to login with their "primary" email address
         Then they should be on the Choose a Client homepage
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
-        When the Lay deputy navigates back to the Choose a Client homepage
+        When the Lay deputy navigates to the Choose a client page
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
         And when they log out they shouldn't see a flash message for non primary accounts
@@ -63,7 +70,7 @@ Feature: Users logging into the service
         Then they should be on the Choose a Client homepage
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
-        When the Lay deputy navigates back to the Choose a Client homepage
+        When the Lay deputy navigates to the Choose a client page
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
         And when they log out they shouldn't see a flash message for non primary accounts
@@ -73,7 +80,7 @@ Feature: Users logging into the service
         And a Lay Deputy tries to login with their "primary" email address
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
-        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+        And the Lay deputy navigates to the Choose a client page
 
     @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user logs in with their primary account and uses breadcrumbs to navigate report overview page
@@ -84,25 +91,22 @@ Feature: Users logging into the service
         And the Lay Deputy navigates back to the Client dashboard using the breadcrumb
         Then they should be on the "primary" Client's dashboard
         When the Lay deputy navigates to the report overview page
-        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+        And the Lay deputy navigates to the Choose a client page
 
     @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate Your details page
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate to Your details page
         And a Lay Deputy tries to login with their "primary" email address
         When the Lay deputy navigates to your details page
-        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+        And the Lay deputy navigates to the Choose a client page
 
     @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate Client details page
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate to Client details page
         And a Lay Deputy tries to login with their "primary" email address
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
         When the Lay deputy navigates to client details page
-        And the Lay deputy navigates back to the Choose a Client homepage using the breadcrumb
+        And the Lay deputy navigates to the Choose a client page
         When they choose their "primary" Client
-        Then they should be on the "primary" Client's dashboard
-        When the Lay deputy navigates to client details page
-        And the Lay Deputy navigates back to the Client dashboard using the breadcrumb
         Then they should be on the "primary" Client's dashboard
 
     @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
@@ -135,7 +139,7 @@ Feature: Users logging into the service
         Then a Lay Deputy tries to login with their "primary" email address
         When they choose their "non-primary" Client
         Then they should be on the "non-primary" Client's dashboard
-        And I should see the NDR report on the reports page
+        And I 'should' see the NDR report on the reports page
 
     @super-admin @lay-pfa-high-not-started-multi-client-deputy-with-ndr
     Scenario: A user logs into the service with their primary account and unticks the NDR checkbox attached to primary account
@@ -145,7 +149,7 @@ Feature: Users logging into the service
         Then a Lay Deputy tries to login with their "primary" email address
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
-        And I should not see the NDR report on the reports page
+        And I 'should not' see the NDR report on the reports page
 
     @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client
     Scenario: A user tries to login to the service with their secondary account that has no active clients attached to it

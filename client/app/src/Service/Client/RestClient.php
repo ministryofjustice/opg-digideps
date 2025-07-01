@@ -2,6 +2,7 @@
 
 namespace App\Service\Client;
 
+use App\Entity\CourtOrder;
 use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
@@ -222,6 +223,22 @@ class RestClient implements RestClientInterface
     }
 
     /**
+     * @template T of object
+     * @param class-string<T> $deserializationClass
+     * @return T
+     */
+    public function getAndDeserialize(string $endpoint, string $deserializationClass): object
+    {
+        /** @var array $resultArray */
+        $resultArray = $this->get($endpoint, 'array');
+
+        /** @var T $deserializedObject */
+        $deserializedObject = $this->serializer->deserialize(json_encode($resultArray, JSON_THROW_ON_ERROR), $deserializationClass, 'json');
+
+        return $deserializedObject;
+    }
+
+    /**
      * @param string              $endpoint  e.g. /user
      * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array               $jmsGroups deserialise_groups
@@ -255,16 +272,18 @@ class RestClient implements RestClientInterface
         return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
 
-    /**
-     * @param string $endpoint e.g. /user
-     *
-     * @return string response body
-     */
-    public function delete($endpoint)
+    public function delete(string $endpoint): ?array
     {
-        return $this->apiCall('delete', $endpoint, null, 'array', [
+        $response = $this->rawSafeCall('delete', $endpoint, [
+            'addClientSecret' => false,
             'addAuthToken' => true,
         ]);
+
+        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
+            return null;
+        }
+
+        return $this->extractDataArray($response);
     }
 
     /**
@@ -313,6 +332,8 @@ class RestClient implements RestClientInterface
             return $responseArray;
         } elseif ('[]' == substr($expectedResponseType, -2)) {
             return $this->arrayToEntities($expectedResponseType, $responseArray);
+        } elseif (class_exists($expectedResponseType)) {
+            return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } elseif (class_exists('App\\Entity\\'.$expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {

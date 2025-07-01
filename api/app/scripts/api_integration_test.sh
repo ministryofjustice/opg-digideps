@@ -26,8 +26,12 @@ export PGDATABASE=digideps_unit_test
 export PGUSER=${DATABASE_USERNAME:=api}
 export SSL=${DATABASE_SSL:=allow}
 
+INTEGRATION_SELECTION=$1
+SUITE=$2
+TEST_CASE=$3
+
 # Check the argument provided and run the corresponding test suites
-case "$1" in
+case "$INTEGRATION_SELECTION" in
   selection-1)
     # API Run 1
     printf '\n Running Controller Suite \n\n'
@@ -84,10 +88,27 @@ case "$1" in
     # generate HTML coverage report
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
     ;;
+  selection-solo)
+    #Run solo test suite
+    if [[ -z "$TEST_CASE" ]]; then
+      TEST_FILTER=""
+    fi
+
+    #Run solo test case in test suite
+    if [[ -n "$TEST_CASE" ]]; then
+      TEST_FILTER="--filter $TEST_CASE"
+    fi
+
+    printf "\nRunning Solo Test: %s %s \n\n" $SUITE $TEST_CASE
+    php vendor/bin/phpunit -c tests/Integration $TEST_FILTER "tests/Integration/$SUITE"
+
+    # generate HTML coverage report
+    php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
+    ;;
   *)
-    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all"
+    echo "Invalid argument. Please provide one of the following arguments: selection-1, selection-2, selection-3, selection-all, selection-solo"
     exit 1
     ;;
 esac
 
-php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-integration-tests.xml" "./tests/coverage"
+php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-integration-tests-$1.xml" "./tests/coverage"

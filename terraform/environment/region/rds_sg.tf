@@ -14,6 +14,13 @@ locals {
       target_type = "security_group_id"
       target      = data.aws_security_group.cloud9.id
     }
+    ssm_ec2_operator = {
+      port        = 5432
+      protocol    = "tcp"
+      type        = "ingress"
+      target_type = "security_group_id"
+      target      = data.aws_security_group.ssm_ec2_operator.id
+    }
     db_access_tasks = {
       port        = 5432
       type        = "ingress"
@@ -33,7 +40,7 @@ locals {
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = module.lamdba_custom_sql_query.lambda_sg.id
+      target      = data.aws_security_group.lambda_custom_sql.id
     }
   }
 }
@@ -46,4 +53,20 @@ module "api_rds_security_group" {
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.vpc.id
   environment = local.environment
+}
+
+data "aws_security_group" "ssm_ec2_operator" {
+  name = "operator-ssm-instance"
+}
+
+// Egress rules allowing the SSM instance to connect to the database.
+resource "aws_security_group_rule" "postgres_ssm_egress_operator" {
+  description = "operator-ssm-instance-postgres"
+  type        = "egress"
+  from_port   = 5432
+  to_port     = 5432
+  protocol    = "tcp"
+
+  source_security_group_id = module.api_rds_security_group.id
+  security_group_id        = data.aws_security_group.ssm_ec2_operator.id
 }

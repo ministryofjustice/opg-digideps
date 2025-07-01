@@ -229,7 +229,7 @@ class Report implements ReportInterface
     /**
      * @var string TYPE_ constants
      *
-     * @JMS\Groups({"report", "report-type"})
+     * @JMS\Groups({"report", "report-type", "deputy-court-order-basic"})
      *
      * @JMS\Type("string")
      *
@@ -434,7 +434,7 @@ class Report implements ReportInterface
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      *
-     * @ORM\OrderBy({"createdOn"="DESC"})
+     * @ORM\OrderBy({"createdOn"="DESC", "fileName"="ASC"})
      */
     private $documents;
 
@@ -503,15 +503,13 @@ class Report implements ReportInterface
     private $significantDecisionsMade;
 
     /**
-     * @var array
-     *
      * @JMS\Groups({"report"})
      *
      * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
      *
      * @JMS\Type("string")
      */
-    private $unsubmittedSectionsList;
+    private ?string $unsubmittedSectionsList;
 
     /**
      * @var Checklist
@@ -589,7 +587,7 @@ class Report implements ReportInterface
     private $reasonForNoMoneyOut;
 
     /**
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report-with-court-orders"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
      *
@@ -1266,18 +1264,12 @@ class Report implements ReportInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getUnsubmittedSectionsList()
+    public function getUnsubmittedSectionsList(): ?string
     {
         return $this->unsubmittedSectionsList;
     }
 
-    /**
-     * @param array|null $unsubmittedSectionsList
-     */
-    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    public function setUnsubmittedSectionsList(?string $unsubmittedSectionsList): void
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
     }

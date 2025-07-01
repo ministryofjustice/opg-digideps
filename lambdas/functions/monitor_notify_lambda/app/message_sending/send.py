@@ -23,12 +23,7 @@ def get_slack_webhook_secret(secret_name, channel_identifier):
 
 
 def send_message(payload):
-    # Data for the message
-    data = {"text": payload["text"]}
-    # Send the POST request to the Slack webhook URL
-    webhook_url = get_slack_webhook_secret("slack-webhook-url", payload["channel"])
-    response = requests.post(webhook_url, data=json.dumps(data))
-    # Check the response
+    # Create a response object
     response_object = {
         "statusCode": None,
         "headers": {
@@ -37,6 +32,17 @@ def send_message(payload):
         },
         "body": "",
     }
+    if payload == "":
+        response_object["statusCode"] = 400
+        response_object["body"] = "Invalid request - Not a valid slack alert"
+        return response_object
+
+    # Data for the message
+    data = {"text": payload["text"]}
+    # Send the POST request to the Slack webhook URL
+    webhook_url = get_slack_webhook_secret("slack-webhook-url", payload["channel"])
+    response = requests.post(webhook_url, data=json.dumps(data))
+
     if response.status_code == 200:
         logger.info(f"Slack message sent")
         response_object["statusCode"] = 200

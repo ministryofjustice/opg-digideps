@@ -26,13 +26,23 @@ on:
         required: false
         default: 120
         type: string
+      oidc_timeout:
+        description: "Timeout for the task"
+        required: false
+        default: 3600
+        type: string
       override:
         description: "Override for the task"
         required: false
         default: ""
         type: string
+      hide_logs:
+        description: "Hide log output"
+        required: false
+        default: "false"
+        type: string
 env:
-  HELPER_VERSION: "0.10.1"
+  HELPER_VERSION: "0.10.4"
 jobs:
   run-task:
     runs-on: ubuntu-latest
@@ -43,7 +53,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@c9c5dfb290b8f614df0884928c521165ba83d630 # v3.1.4
         with:
           terraform_directory: terraform/environment
 
@@ -93,12 +103,12 @@ jobs:
           terraform output -json > terraform.output.json
         working-directory: terraform/environment
 
-      - name: configure OIDC AWS credentials for terraform
+      - name: configure OIDC AWS credentials for gh run task
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"
           role-session-name: github-actions-terraform-run-task
-          role-duration-seconds: 3600
+          role-duration-seconds: ${{ inputs.oidc_timeout }}
           aws-region: eu-west-1
 
       - name: run task
@@ -106,15 +116,16 @@ jobs:
           OVERRIDE: ${{ inputs.override }}
           TASK_NAME: ${{ inputs.task_name }}
           TIMEOUT: ${{ inputs.timeout }}
+          HIDE_LOGS: ${{ inputs.hide_logs }}
         run: |
           echo ${TASK_NAME}
           echo ${TIMEOUT}
           echo ${OVERRIDE}
           if [ "${OVERRIDE}" == "" ]
           then
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -assumeRoleFromTFOut false
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -assumeRoleFromTFOut false -hideLogs ${HIDE_LOGS}
           else
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE} -assumeRoleFromTFOut false
+            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE} -assumeRoleFromTFOut false -hideLogs ${HIDE_LOGS}
           fi
         working-directory: terraform/environment
 

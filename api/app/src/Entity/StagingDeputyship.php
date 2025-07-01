@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use League\Csv\Serializer;
 
 /**
@@ -15,27 +16,32 @@ use League\Csv\Serializer;
  * Column names in the database (as defined here) *must* match the column names in the CSV, as we do no
  * transformation/translation when dumping data into this table.
  *
- * @ORM\Table(name="deputyship", schema="staging", indexes={
+ * @ORM\Table(name="deputyship", schema="staging")
  *
- *   @ORM\Index(name="deputy_uid_idx", columns={"DeputyUid"}),
- *   @ORM\Index(name="order_uid_idx", columns={"OrderUid"})
- * })
- *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\StagingDeputyshipRepository")
  */
 class StagingDeputyship
 {
     /**
      * @ORM\Id
      *
+     * @JMS\Type("integer")
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     *
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @ORM\SequenceGenerator(sequenceName="deputyship_id_seq", allocationSize=1, initialValue=1)
+     */
+    public ?int $id = null;
+
+    /**
      * @ORM\Column(name="order_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'OrderUid')]
     public string $orderUid;
 
     /**
-     * @ORM\Id
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=30)
      */
     #[Serializer\MapCell(column: 'DeputyUid')]
@@ -102,6 +108,8 @@ class StagingDeputyship
     public ?string $deputyType;
 
     /**
+     * This is true if the deputy is ACTIVE on the order, false otherwise.
+     *
      * @ORM\Column(name="deputy_status_on_order", type="string", length=30, nullable=true)
      */
     #[Serializer\MapCell(column: 'DeputyStatusOnOrder')]
@@ -124,4 +132,9 @@ class StagingDeputyship
      */
     #[Serializer\MapCell(column: 'IsHybrid')]
     public ?string $isHybrid;
+
+    public function deputyIsActiveOnOrder(): bool
+    {
+        return 'ACTIVE' === $this->deputyStatusOnOrder;
+    }
 }

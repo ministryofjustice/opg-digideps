@@ -3,20 +3,16 @@
 namespace App\Service\Client\TokenStorage;
 
 use Mockery as m;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
 
 class RedisStorageTest extends TestCase
 {
-    /**
-     * @var RedisStorage
-     */
-    private $object;
-
-    /**
-     * @var Client
-     */
-    private $redis;
+    private Client&MockInterface $redis;
+    private string $prefix;
+    private string $workspace;
+    private RedisStorage $object;
 
     public function setUp(): void
     {

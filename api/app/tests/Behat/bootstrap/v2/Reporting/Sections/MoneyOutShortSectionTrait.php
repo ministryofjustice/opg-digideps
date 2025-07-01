@@ -204,7 +204,7 @@ trait MoneyOutShortSectionTrait
      */
     public function iShouldSeeCorrectValidationMessage()
     {
-        $this->assertOnAlertMessage('Please input a value of at least £1,000');
+        $this->assertOnAlertMessage('The amount must be between £1000 and £100,000,000,000');
     }
 
     /**

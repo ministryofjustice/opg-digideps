@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Registration\Enum\DeputyshipProcessingStatus;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**
  * Ingest the deputyship CSV exported from Sirius.
@@ -15,48 +15,49 @@ class DeputyshipsCSVIngester
         private readonly DeputyshipsCSVLoader $deputyshipsCSVLoader,
         private readonly DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
         private readonly DeputyshipBuilder $deputyshipBuilder,
-        private readonly DeputyshipPersister $deputyshipPersister,
         private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
     ) {
     }
 
+    public function setLogger(ConsoleLogger $logger): void
+    {
+        $this->deputyshipsIngestResultRecorder->setLogger($logger);
+    }
+
     /**
      * Process the CSV file at $fileLocation.
+     *
+     * If $dryRun is true, the full CSV process is applied, including creating court orders and relationships,
+     * but none of the court order data are saved to the database (all transactions are rolled back). The
+     * deputyship and selectedcandidates tables will still be populated.
      */
-    public function processCsv(string $fileLocation): DeputyshipsCSVIngestResult
+    public function processCsv(string $fileLocation, bool $dryRun = false): DeputyshipsCSVIngestResult
     {
-        // load the CSV into the staging table in the database
-        $loadedOk = $this->deputyshipsCSVLoader->load($fileLocation);
-        $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($fileLocation, $loadedOk);
+        $this->deputyshipsIngestResultRecorder->recordStart();
 
-        if (!$loadedOk) {
-            // early return if CSV load failed
+        // load the CSV into the staging table in the database
+        $loadResult = $this->deputyshipsCSVLoader->load($fileLocation);
+        $this->deputyshipsIngestResultRecorder->recordCsvLoadResult($loadResult);
+        if (!$loadResult->loadedOk) {
             return $this->deputyshipsIngestResultRecorder->result();
         }
 
-        // find the candidate deputyships which have changed or need to be added;
-        // note that we return state objects which are used as the start state for processing each row
-        $candidates = $this->deputyshipsCandidatesSelector->select();
-        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidates($candidates);
-
-        foreach ($candidates as $state) {
-            // build the CourtOrder and related entities without saving them; see matching rules at
-            // https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/4179689475/Ingesting+the+Sirius+deputyship+CSV
-            $state = $this->deputyshipBuilder->build($state);
-
-            // persist the entities to the database (NB this could be chunked within the persister)
-            $state = $this->deputyshipPersister->persist($state);
-
-            // record what happened for later logging
-            $status = $state->status;
-            if (DeputyshipProcessingStatus::SKIPPED === $status) {
-                $this->deputyshipsIngestResultRecorder->recordSkippedRow($state);
-            } elseif (DeputyshipProcessingStatus::FAILED === $status) {
-                $this->deputyshipsIngestResultRecorder->recordFailedRow($state);
-            } elseif (DeputyshipProcessingStatus::SUCCEEDED == $status) {
-                $this->deputyshipsIngestResultRecorder->recordProcessedRow($state);
-            }
+        // find the candidate deputyships which have changed or need to be added
+        $candidatesResult = $this->deputyshipsCandidatesSelector->select();
+        $this->deputyshipsIngestResultRecorder->recordDeputyshipCandidatesResult($candidatesResult);
+        if (!$candidatesResult->success()) {
+            return $this->deputyshipsIngestResultRecorder->result();
         }
+
+        // create CourtOrder and related entities in groups, grouped by court order UID
+        $builderResults = $this->deputyshipBuilder->build($candidatesResult->candidates, dryRun: $dryRun);
+
+        // each $builderResult contains a group of court order entities and relationships to be persisted
+        foreach ($builderResults as $builderResult) {
+            $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+        }
+
+        $this->deputyshipsIngestResultRecorder->recordEnd();
 
         // get a summary of what happened during the ingest
         return $this->deputyshipsIngestResultRecorder->result();

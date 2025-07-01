@@ -6,6 +6,7 @@ use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -107,10 +108,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var int
      *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"user", "report-submitted-by", "user-id", "user-list"})
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @ORM\Id
@@ -119,83 +116,70 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['user', 'report-submitted-by', 'user-id', 'user-list'])]
     private $id;
 
     /**
-     * @JMS\Groups({"user-clients"})
-     *
-     * @JMS\Type("ArrayCollection<App\Entity\Client>")
-     *
      * @ORM\ManyToMany(targetEntity="App\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
+    #[JMS\Groups(['user-clients'])]
+    #[JMS\Type('ArrayCollection<App\Entity\Client>')]
     private $clients;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Organisation>")
-     *
-     * @JMS\Groups({"user-organisations"})
-     *
-     * @JMS\Accessor(getter="getOrganisations")
-     *
      * @ORM\ManyToMany(targetEntity="App\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
      *
      * @var ArrayCollection
      */
+    #[JMS\Type('ArrayCollection<App\Entity\Organisation>')]
+    #[JMS\Groups(['user-organisations'])]
+    #[JMS\Accessor(getter: 'getOrganisations')]
     private $organisations;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
-     *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'report-submitted-by', 'user-name', 'user-list'])]
     private $firstname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'report-submitted-by', 'user-name', 'user-list'])]
     private $lastname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
-     *
-     * @JMS\Groups({ "user-login"})
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Groups(['user-login'])]
+    #[JMS\Exclude]
     private $password;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"user", "report-submitted-by", "user-email", "user-list"})
-     *
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
      */
+    #[JMS\Groups(['user', 'report-submitted-by', 'user-email', 'user-list'])]
+    #[JMS\Type('string')]
     private $email;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user", "user-list"})
-     *
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user', 'user-list'])]
     private $active;
 
     /**
@@ -208,46 +192,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['user'])]
     private $registrationDate;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user'])]
     private $registrationToken;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['user'])]
     private $tokenDate;
 
     /**
      * @var string ROLE_
      *             see roles in Role class
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user", "report-submitted-by", "user-rolename", "user-list", "team-users"})
-     *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'report-submitted-by', 'user-rolename', 'user-list', 'team-users'])]
     private $roleName;
 
     /**
@@ -255,143 +231,117 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * does not get stored in the database.
      *
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user'])]
     private $gaTrackingId;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user", "report-submitted-by", "user-list", "user-phone-main"})
-     *
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'report-submitted-by', 'user-list', 'user-phone-main'])]
     private $phoneMain;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user", "report-submitted-by"})
-     *
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'report-submitted-by'])]
     private $phoneAlternative;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['user'])]
     private $lastLoggedIn;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user'])]
     private $deputyNo;
 
     /**
      * @var int
      *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['user'])]
     private $deputyUid;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user", "user-login"})
-     *
      * @ORM\Column(name="odr_enabled", type="boolean", nullable=true, options = { "default": false })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user', 'user-login'])]
     private $ndrEnabled;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="ad_managed", type="boolean", nullable=true, options = { "default": false })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user'])]
     private $adManaged;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user", "user-list"})
-     *
      * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user', 'user-list'])]
     private $jobTitle;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="agree_terms_use", type="boolean", nullable=true, options = { "default": false })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user'])]
     private $agreeTermsUse;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="agree_terms_use_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['user'])]
     private $agreeTermsUseDate;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="codeputy_client_confirmed", type="boolean", nullable=false, options = { "default": false })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user'])]
     private $coDeputyClientConfirmed;
 
     /**
      * @var UserResearchResponse|null
      *
-     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
-     *
-     * @JMS\Groups({"user", "satisfaction", "user-research"})
-     *
      * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
+    #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Groups(['user', 'satisfaction', 'user-research'])]
     private $userResearchResponse;
 
     /**
@@ -400,69 +350,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="user")
      *
      * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @JMS\Type("App\Entity\User")
-     *
-     * @JMS\Groups({"user", "created-by"})
-     *
-     * @JMS\MaxDepth(3)
      */
+    #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['user', 'created-by'])]
+    #[JMS\MaxDepth(3)]
     private $createdBy;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="deletion_protection", type="boolean", nullable=true, options = { "default": null })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user'])]
     private $deletionProtection;
 
     /**
-     * @JMS\Type("App\Entity\Deputy")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user", cascade={"persist"})
      */
+    #[JMS\Type('App\Entity\Deputy')]
     private ?Deputy $deputy;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="pre_register_validated", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['user'])]
     private $preRegisterValidatedDate;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="registration_route", type="string", length=30, nullable=false, options = { "default": "UNKNOWN" })
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user'])]
     private $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
 
     /**
      * @var bool
      *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @ORM\Column(name="is_primary", type="boolean", nullable=false, options = { "default": false })
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user'])]
     private $isPrimary = false;
 
-    /**
-     * Constructor.
-     */
     public function __construct($coDeputyClientConfirmed = false)
     {
         $this->clients = new ArrayCollection();
@@ -824,46 +759,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return string
      */
-    public function getAddress1()
-    {
-        return $this->address1;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress2()
-    {
-        return $this->address2;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress3()
-    {
-        return $this->address3;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddressPostcode()
-    {
-        return $this->addressPostcode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddressCountry()
-    {
-        return $this->addressCountry;
-    }
-
-    /**
-     * @return string
-     */
     public function getPhoneMain()
     {
         return $this->phoneMain;
@@ -954,15 +849,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Return Id of the client (if it has details).
-     *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("id_of_client_with_details")
-     *
-     * @JMS\Groups({"user"})
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('id_of_client_with_details')]
+    #[JMS\Groups(['user'])]
+    #[JMS\Type('integer')]
     public function getIdOfClientWithDetails()
     {
         return $this->getFirstClient() && $this->getFirstClient()->hasDetails()
@@ -970,15 +861,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             : null;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"user-login"})
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\SerializedName("active_report_id")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['user-login'])]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('active_report_id')]
     public function getActiveReportId()
     {
         $client = $this->getFirstClient() ? $this->getFirstClient() : null;
@@ -993,29 +879,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"user"})
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\SerializedName("number_of_reports")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['user'])]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('number_of_reports')]
     public function getNumberOfReports()
     {
         return $this->getFirstClient() ? count($this->getFirstClient()->getReports()) : 0;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"user"})
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\SerializedName("number_of_submitted_reports")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['user'])]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('number_of_submitted_reports')]
     public function getNumberOfSubmittedReports()
     {
         if (!$this->getFirstClient()) {
@@ -1144,16 +1020,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Return true if the client has other users.
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\SerializedName("is_co_deputy")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @return bool
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('boolean')]
+    #[JMS\SerializedName('is_co_deputy')]
+    #[JMS\Groups(['user'])]
     public function isCoDeputy()
     {
         $isCoDeputy = false;
@@ -1425,29 +1297,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("is_case_manager")
-     *
-     * @JMS\Groups({"user"})
-     *
-     * @JMS\Type("bool")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('is_case_manager')]
+    #[JMS\Groups(['user'])]
+    #[JMS\Type('bool')]
     public function isCaseManager(): bool
     {
         return in_array($this->getRoleName(), $this::$caseManagerRoles);
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("created_by_case_manager")
-     *
-     * @JMS\Groups({"user"})
-     *
-     * @JMS\Type("bool")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('created_by_case_manager')]
+    #[JMS\Groups(['user'])]
+    #[JMS\Type('bool')]
     public function createdByCaseManager(): bool
     {
         return $this->getCreatedBy() && $this->getCreatedBy()->isCaseManager();

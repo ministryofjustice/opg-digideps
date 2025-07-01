@@ -17,11 +17,8 @@ class VisitsCareController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @Route("/ndr/visits-care", methods={"POST"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/visits-care', methods: ['POST'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function addAction(Request $request)
     {
         $visitsCare = new EntityDir\Ndr\VisitsCare();
@@ -40,11 +37,8 @@ class VisitsCareController extends RestController
         return ['id' => $visitsCare->getId()];
     }
 
-    /**
-     * @Route("/ndr/visits-care/{id}", methods={"PUT"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/visits-care/{id}', methods: ['PUT'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function updateAction(Request $request, $id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id);
@@ -59,12 +53,10 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/ndr/{ndrId}/visits-care", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     *
      * @param int $ndrId
      */
+    #[Route(path: '/ndr/{ndrId}/visits-care', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function findByNdrIdAction($ndrId)
     {
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
@@ -76,15 +68,13 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/ndr/visits-care/{id}", methods={"GET"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     *
      * @param int $id
      */
+    #[Route(path: '/ndr/visits-care/{id}', methods: ['GET'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function getOneById(Request $request, $id)
     {
-        $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['visits-care'];
+        $serialiseGroups = $request->query->has('groups') ? $request->query->all('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
@@ -93,11 +83,8 @@ class VisitsCareController extends RestController
         return $visitsCare;
     }
 
-    /**
-     * @Route("/ndr/visits-care/{id}", methods={"DELETE"})
-     *
-     * @Security("is_granted('ROLE_DEPUTY')")
-     */
+    #[Route(path: '/ndr/visits-care/{id}', methods: ['DELETE'])]
+    #[Security("is_granted('ROLE_DEPUTY')")]
     public function deleteVisitsCare($id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Ndr\VisitsCare */

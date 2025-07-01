@@ -1,0 +1,108 @@
+{% extends '@App/Layouts/application.html.twig' %}
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'homepage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ client.fullName }}{% endblock %}
+{% block supportTitleBottom %}{{ reportType }}{% endblock %}
+
+{% block pageContent %}
+    {% if courtOrder.hasCoDeputies %}
+        {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
+    {% endif %}
+
+    {% if courtOrder.ndr %}
+        {% include '@App/Ndr/Ndr/index.html.twig' %}
+    {% else %}
+        {% if courtOrder.unsubmittedReport %}
+            {% set report = courtOrder.unsubmittedReport %}
+            {% set status = report.status.status %}
+            {% set behatRegion = 'report-unsubmitted' %}
+            {% set buttonText = 'reviewReport' %}
+            {% set transOptions = {
+                '%startDate%': report.startDate | date("j F Y"),
+                '%endDate%': report.endDate | date("j F Y")
+            } %}
+            <h2 class="govuk-heading-l">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
+            {% embed '@App/Report/Report/_report_row.html.twig' %}
+                {% block bottomLeftContent %}
+                    {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}
+                {% endblock %}
+            {% endembed %}
+        {% endif %}
+
+        {# current report #}
+        {% if courtOrder.activeReport %}
+            {% set report = courtOrder.activeReport %}
+            {% set status = report.status.status %}
+            {% set behatRegion = 'report-active' %}
+            {% set buttonText = report.status.status != 'notStarted' ? 'continue' : 'startNow' %}
+            {% set transOptions = {
+                '%startDate%': report.startDate | date("j F Y"),
+                '%endDate%': report.endDate | date("j F Y")
+            } %}
+            <h2 class="govuk-heading-l">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
+            {% embed '@App/Report/Report/_report_row.html.twig' %}
+                {% block bottomLeftContent %}
+                    {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
+                    <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">
+                        {{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}
+                    </a>
+                {% endblock %}
+            {% endembed %}
+        {% endif %}
+
+        {% if courtOrder.submittedReports %}
+            <h2 class="govuk-heading-l govuk-!-margin-top-6">{{ 'submittedReports' | trans({}, 'common') }}</h2>
+
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.reportType') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.submissionDate') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body behat-region-submitted-reports">
+                {% for report in courtOrder.submittedReports %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <a href="{{ path('report_review', {reportId: report.id}) }}">
+                                {{ 'annualDeputyReport' | trans({}, 'common') }}
+                            </a>
+                        </td>
+                        <td class="govuk-table__cell">{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+                        <td class="govuk-table__cell">{{ report.submitDate | date("j F Y") }}</td>
+                        <td class="govuk-table__cell text--right">
+                            <a href="{{ path('report_review', {reportId: report.id}) }}" class="govuk-link behat-link-report-review">
+                                {{ 'view' | trans({}, 'common') }}
+                            </a><br>
+                            <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="govuk-link behat-link-report-download">
+                                {{ (page ~ '.downloadPdf') | trans }}
+                            </a><br>
+                            <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap govuk-link behat-link-add-more-documents">
+                                {{ (page ~ '.attachDocuments') | trans }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    {% endif %}
+
+
+
+    <noscript>
+        {{ hidden_ga_event('Javascript Disabled') }}
+    </noscript>
+{% endblock %}

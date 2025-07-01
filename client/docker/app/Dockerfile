@@ -11,22 +11,21 @@ COPY client/app/config config
 COPY client/app/src src
 RUN composer dump-autoload --optimize
 
-FROM php:8.1.28-fpm-alpine3.19 AS base
+FROM php:8.3.21-fpm-alpine3.21 AS base
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG TAG=${TAG:-latest}
 ARG ENVIRONMENT=${ENVIRONMENT:-production}
 WORKDIR /var/www
 ENV TIMEOUT=60
-ENV PHP_EXT_DIR=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 # Install core PHP extensions
 RUN apk update && apk upgrade
 RUN apk add --no-cache \
     su-exec \
     libzip-dev \
     unzip \
-    php81-pecl-igbinary \
-    php81-pecl-redis \
-    php81-pecl-imagick  \
+    php82-pecl-igbinary \
+    php82-pecl-redis \
+    php82-pecl-imagick  \
     gmp \
     gmp-dev \
     libheif \
@@ -41,16 +40,12 @@ RUN apk add --no-cache autoconf build-base
 RUN pecl install pcov && docker-php-ext-enable pcov
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
-ARG XDEBUG_IDEKEY_CLIENT=PHPSTORM
 RUN if [[ $REQUIRE_XDEBUG = 1 ]] ; then \
-        pecl install xdebug-3.1.4  ;\
-        docker-php-ext-enable $PHP_EXT_DIR/xdebug.so ; \
-        echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-        echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-        echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-        echo "xdebug.log = /tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-        echo "xdebug.idekey = ${XDEBUG_IDEKEY_CLIENT}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ; \
-    fi ;
+    apk add --update linux-headers && \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
+    apk del linux-headers; \
+fi ;
 
 # Create var directories
 RUN mkdir -p var/cache \
@@ -85,6 +80,7 @@ COPY --chown=www-data:www-data client/app/admin.env admin.env
 COPY --chown=www-data:www-data client/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data client/docker/app/config/meta.json.tmpl /var/www/public/meta.json.tmpl
 COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
+COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 RUN chown -R www-data:www-data scripts \
     && sed "s|TAG|${TAG}|" /var/www/public/meta.json.tmpl > /var/www/public/meta.json
 RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml

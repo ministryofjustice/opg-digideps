@@ -11,14 +11,16 @@ DECLARE
     v_run_on TIMESTAMP;
     v_expected_before INT;
     v_expected_after INT;
+    v_maximum_rows_affected INT;
     v_result_before INT;
     v_result_after INT;
+    v_row_count INT;
 BEGIN
     -- Retrieve details for the specified query_id
     SELECT query, confirmation_query, created_by, signed_off_by, run_on,
-           expected_before, expected_after
+           expected_before, expected_after, maximum_rows_affected
     INTO v_query, v_confirmation_query, v_created_by, v_signed_off_by, v_run_on,
-         v_expected_before, v_expected_after
+         v_expected_before, v_expected_after, v_maximum_rows_affected
     FROM audit.custom_queries
     WHERE id = query_id;
 
@@ -50,6 +52,14 @@ BEGIN
 
     -- Execute the main query
     EXECUTE v_query;
+
+    -- Capture the number of rows affected
+    GET DIAGNOSTICS v_row_count = ROW_COUNT;
+
+    -- Check if the number of affected rows exceeds threshold
+    IF v_row_count > v_maximum_rows_affected THEN
+        RAISE EXCEPTION 'Too many rows affected (%), threshold is %, aborting.', v_row_count, v_maximum_rows_affected;
+    END IF;
 
     -- Re-run the confirmation_query and check the result after running the query
     EXECUTE v_confirmation_query INTO v_result_after;

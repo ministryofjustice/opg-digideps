@@ -72,157 +72,130 @@ class PreRegistration
     private int $id;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
      */
+    #[Assert\NotBlank]
+    #[JMS\Type('string')]
     private string $caseNumber;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="client_firstname", type="string", length=100, nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $clientFirstname;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
+    #[Assert\NotBlank]
+    #[JMS\Type('string')]
     private string $clientLastname;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="client_address_1", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $clientAddress1;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="client_address_2", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $clientAddress2;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="client_address_3", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $clientAddress3;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="client_address_4", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $clientAddress4;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="client_address_5", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $clientAddress5;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="client_postcode", type="string", length=10, nullable=true)
-     *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
+     * @ORM\Column(name="client_postcode", type="string", length=20, nullable=true)
      */
+    #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
+    #[JMS\Type('string')]
     private ?string $clientPostcode;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="deputy_uid", type="string", length=100, nullable=false)
      */
+    #[Assert\NotBlank]
+    #[JMS\Type('string')]
     private string $deputyUid;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="deputy_firstname", type="string", length=100, nullable=true)
-     *
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank]
+    #[JMS\Type('string')]
     private string $deputyFirstname;
 
     /**
-     * @Assert\NotBlank()
-     *
      * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
-     *
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank]
+    #[JMS\Type('string')]
     private string $deputySurname;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="deputy_address_1", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $deputyAddress1;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="deputy_address_2", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $deputyAddress2;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="deputy_address_3", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $deputyAddress3;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="deputy_address_4", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $deputyAddress4;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="deputy_address_5", type="string", nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $deputyAddress5;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
-     *
-     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
+     * @ORM\Column(name="deputy_postcode", type="string", length=20, nullable=true)
      */
+    #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
+    #[JMS\Type('string')]
     private ?string $deputyPostCode;
 
     /**
-     * @JMS\Type("string")
-     *
      * @ORM\Column(name="type_of_report", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
     private ?string $typeOfReport;
 
     /**
-     * @JMS\Type("bool")
-     *
      * @ORM\Column(name="ndr", type="boolean", nullable=true)
      */
+    #[JMS\Type('bool')]
     private ?bool $ndr;
 
     /**

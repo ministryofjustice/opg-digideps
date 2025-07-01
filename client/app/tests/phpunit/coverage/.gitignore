@@ -1,4 +1,2 @@
-# Ignore everything in this directory
-.gitignore
-# Except this file
-!.gitignore
+client-unit-tests.cov
+client-unit-tests.xml

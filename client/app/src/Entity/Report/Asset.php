@@ -59,13 +59,13 @@ abstract class Asset
      *
      * @Assert\Type( type="numeric", message="asset.value.type")
      *
-     * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.value.outOfRange")
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.value.outOfRange")
      *
      * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property-value"})
      *
      * @Assert\Type( type="numeric", message="asset.property.value.type", groups={"property-value"})
      *
-     * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.property.value.outOfRange", groups={"property-value"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.value.outOfRange", groups={"property-value"})
      *
      * @JMS\Type("string")
      */

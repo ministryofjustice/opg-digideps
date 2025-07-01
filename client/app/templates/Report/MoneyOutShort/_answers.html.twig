@@ -158,9 +158,9 @@
             <tbody class="govuk-table__body">
             {% for tr in report.moneyTransactionsShortOut %}
                 <tr class="govuk-table__row behat-region-transaction-{{ tr.description | behat_namify }}">
-                    <th scope="row" class="govuk-table__header">
+                    <td class="govuk-table__cell">
                         {{ tr.description }}<br/>
-                    </th>
+                    </td>
                     <td class="govuk-table__cell">
                         {{ tr.date ? tr.date | date("j F Y")  : '-' }}
                     </td>

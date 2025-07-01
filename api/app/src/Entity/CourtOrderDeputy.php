@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Link table between court orders and deputies.
  *
  * @ORM\Table(name="court_order_deputy")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CourtOrderDeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -25,22 +26,24 @@ class CourtOrderDeputy
     private CourtOrder $courtOrder;
 
     /**
+     * @JMS\Groups({"deputy"})
+     *
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false)
      */
     private Deputy $deputy;
 
     /**
-     * @ORM\Column(name="discharged", type="boolean", nullable=false)
+     * @ORM\Column(name="is_active", type="boolean", nullable=false)
      */
-    private bool $discharged;
+    private bool $isActive;
 
     public function __construct()
     {
-        $this->discharged = false;
+        $this->isActive = true;
     }
 
     public function getDeputy(): Deputy
@@ -67,14 +70,14 @@ class CourtOrderDeputy
         return $this;
     }
 
-    public function isDischarged(): bool
+    public function isActive(): bool
     {
-        return $this->discharged;
+        return $this->isActive;
     }
 
-    public function setDischarged(bool $discharged): CourtOrderDeputy
+    public function setIsActive(bool $isActive): CourtOrderDeputy
     {
-        $this->discharged = $discharged;
+        $this->isActive = $isActive;
 
         return $this;
     }

@@ -21,7 +21,7 @@ class Fee
      * @JMS\Type("string")
      * @JMS\Groups({"fee"})
      * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"fees"})
-     * @Assert\Range(min=0, max=100000000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"fees"})
+     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "fee.amount.notInRangeMessage", groups={"fees"})
      */
     private $amount;
 

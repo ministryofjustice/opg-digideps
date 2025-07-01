@@ -26,7 +26,6 @@ parameters:
     gds: "%env(GA_GDS)%"
   opg_docker_tag: "%env(OPG_DOCKER_TAG)%"
   email_params:
-    feedback_send_to_address: "%env(FEEDBACK_ADDRESS)%"
     update_send_to_address: "%env(UPDATE_ADDRESS)%"
   htmltopdf_address: "%env(HTMLTOPDF_ADDRESS)%"
   s3_bucket_name: "%env(S3_BUCKETNAME)%"

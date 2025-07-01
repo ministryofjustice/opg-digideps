@@ -22,6 +22,23 @@ chooseAClient:
   courtOrderNumber: Court Order number
   reportType: Report Type
 
+chooseAnOrder:
+  htmlTitle: Choose a Court Order - Complete the deputy report | GOV.UK
+  pageTitle: Choose a Court Order
+  title: Select the client and report you want to manage.
+  courtOrderNumber: Court Order number
+  courtOrderLink: Manage
+  caseNumber: Case number
+  reportType: Report Type
+
+accountSetupInProgress:
+  thankYou: "Thank you for registering"
+  explanation: "Your account is being set up."
+  instruction: "Please log in tomorrow after 7am to see your reports."
+  contactsIntro: "If your reports are not available at that time, please contact us:"
+  relayUk: "Relay UK (if you cannot hear or speak on the phone)"
+  relayUkNumber: "18001 0300 123 1300"
+
 codeputy:
   inviteAnotherDeputy: Invite another deputy
 

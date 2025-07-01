@@ -1,5 +1,9 @@
 clients:
   title: Your clients
-  caseNumber: Case number
-  manageLinkText: Manage
+  action: Select which report you want to manage.
+  header:
+    client: Client
+    caseNumber: Case number
+    address: Address
+  editLinkText: Edit
   noClientsMessage: No clients to show

@@ -65,11 +65,8 @@ class ClientController extends AbstractController
 
         $client = $this->clientApi->getById($clientId);
 
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
         return [
             'client' => $client,
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 
@@ -94,9 +91,6 @@ class ClientController extends AbstractController
      */
     public function editClientDetailsAction(Request $request, int $clientId)
     {
-        $user = $this->userApi->getUserWithData();
-        $deputyHasMultiClients = $this->clientApi->checkDeputyHasMultiClients($user);
-
         $from = $request->get('from');
         $preUpdateClient = $this->clientApi->getById($clientId);
 
@@ -110,6 +104,7 @@ class ClientController extends AbstractController
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
             'action' => $this->generateUrl('client_edit', ['clientId' => $clientId, 'action' => 'edit', 'from' => $from]),
             'validation_groups' => ['lay-deputy-client-edit'],
+            'include_court_date_field' => false,
         ]);
 
         $form->handleRequest($request);
@@ -120,7 +115,7 @@ class ClientController extends AbstractController
             $postUpdateClient->setId($preUpdateClient->getId());
             $this->clientApi->update($preUpdateClient, $postUpdateClient, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
 
-            $this->addFlash('notice', htmlentities($postUpdateClient->getFirstname())."'s data edited");
+            $this->addFlash('clientEditSuccess', htmlentities($postUpdateClient->getFirstname())."'s details have been saved");
 
             $activeReport = $postUpdateClient->getActiveReport();
 
@@ -128,13 +123,12 @@ class ClientController extends AbstractController
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
             }
 
-            return $this->redirect($this->generateUrl('client_show', ['clientId' => $clientId]));
+            return $this->redirect($this->generateUrl('deputyship_details_clients'));
         }
 
         return [
             'client' => $preUpdateClient,
             'form' => $form->createView(),
-            'deputyHasMultiClients' => $deputyHasMultiClients,
         ];
     }
 

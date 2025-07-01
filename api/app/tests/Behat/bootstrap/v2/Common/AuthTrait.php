@@ -309,7 +309,7 @@ trait AuthTrait
     public function IShouldBeRedirectedAndDeniedAccessToContinue()
     {
         $this->assertIntEqualsInt(
-            '403',
+            403,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -317,11 +317,12 @@ trait AuthTrait
 
     /**
      * @Then /^I should be redirected and denied access to continue as client not found$/
+     * @Then /^I should be redirected and denied access to view the court order$/
      */
-    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFound()
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised()
     {
         $this->assertIntEqualsInt(
-            '404',
+            404,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -334,6 +335,36 @@ trait AuthTrait
     {
         $this->loggedInUserDetails = 'primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $userEmail);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
+     * @Given /^a lay deputy with no court orders logs in$/
+     */
+    public function aLayDeputyWithNoCourtOrdersLogsIn()
+    {
+        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $userEmail);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
+     * @Given /^a Lay Deputy with no deputy UID tries to login with their non-primary email address$/
+     */
+    public function aLayDeputyWithNoDeputyUidTriesToLoginWithTheirEmailAddress()
+    {
+        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid;
 
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 
@@ -359,6 +390,29 @@ trait AuthTrait
         $alertMessage =
             sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s',
                 $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail());
+
+        $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "govuk-notification-banner__content"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
+        }
+    }
+
+    /**
+     * @Given /^a flash message should be displayed to the user which tells them to use their primary account as no email can be retrieved$/
+     */
+    public function aFlashMessageShouldBeDisplayedUserShouldUsePrimaryAccount(): void
+    {
+        $alertMessage = 'This account has been closed. '.
+            'You can now access all of your reports in the same place from your primary account. '.
+            'If you need assistance, contact your case manager';
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
@@ -552,18 +606,14 @@ trait AuthTrait
     }
 
     /**
-     * @Then I should see the NDR report on the reports page
+     * @Then /^I \'([^\']*)\' see the NDR report on the reports page$/
      */
-    public function theyShouldBeOnNDRReportPage(): void
+    public function theyShouldBeOnNDRReportPage($arg1): void
     {
-        $this->assertPageContainsText('New deputy report');
-    }
-
-    /**
-     * @Then I should not see the NDR report on the reports page
-     */
-    public function theyShouldNotBeOnNDRReportPage(): void
-    {
-        $this->assertPageNotContainsText('New deputy report');
+        if ('should' == $arg1) {
+            $this->assertPageContainsText('New deputy report');
+        } else {
+            $this->assertPageNotContainsText('New deputy report');
+        }
     }
 }
