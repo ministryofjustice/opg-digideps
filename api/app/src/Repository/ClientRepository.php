@@ -230,4 +230,16 @@ class ClientRepository extends ServiceEntityRepository
 
         return $mapping;
     }
+
+    public function getClientAbandonedAtRegistration(int $userId): ?array
+    {
+        $query = 'SELECT  c.* FROM client c INNER JOIN deputy_case dc ON c.id = dc.client_id WHERE dc.user_id = :userId';
+
+        $con = $this->getEntityManager()->getConnection();
+        $stmt = $con->prepare($query);
+        $result = $stmt->executeQuery(['userId' => $userId]);
+        $resultsArray = $result->fetchAllAssociative();
+
+        return 0 === count($resultsArray) ? null : $resultsArray;
+    }
 }
