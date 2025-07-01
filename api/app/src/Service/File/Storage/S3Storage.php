@@ -3,7 +3,6 @@
 namespace App\Service\File\Storage;
 
 use Aws\Result;
-use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\Stream;
@@ -25,10 +24,6 @@ class S3Storage
      *
      * https://github.com/aws/aws-sdk-php
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html.
-     *
-     * for fake s3:
-     * https://github.com/jubos/fake-s3
-     * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
     public function __construct(
         private readonly S3Client $s3Client,
@@ -54,125 +49,6 @@ class S3Storage
                 throw new FileNotFoundException("Cannot find file with reference $key");
             }
             throw $e;
-        }
-    }
-
-    public function delete(string $key): Result
-    {
-        $this->log('info', "Appending Purge tag for $key to S3");
-
-        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347;
-        // get the object's tags and then append with PUT
-        $this->log('info', "Retrieving tagset for $key from S3");
-        $result = $this->s3Client->getObjectTagging([
-            'Bucket' => $this->bucketName,
-            'Key' => $key,
-        ]);
-
-        /** @var array $existingTags */
-        $existingTags = $result['TagSet'];
-
-        $newTagset = array_merge($existingTags, [['Key' => 'Purge', 'Value' => 1]]);
-        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
-        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
-
-        // Update tags in S3
-        $this->s3Client->putObjectTagging([
-            'Bucket' => $this->bucketName,
-            'Key' => $key,
-            'Tagging' => [
-                'TagSet' => $newTagset,
-            ],
-        ]);
-        $this->log('info', "Tagset Updated for $key ");
-
-        return $this->s3Client->deleteObject([
-            'Bucket' => $this->bucketName,
-            'Key' => $key,
-        ]);
-    }
-
-    public function removeFromS3(string $key): array
-    {
-        if (empty($key)) {
-            throw new \RuntimeException('Could not remove file: Document not specified');
-        } else {
-            /*
-             * ListObjectVersions is permitted by ListBucketVersions in IAM.
-             */
-            $objectVersions = $this->s3Client->listObjectVersions([
-                'Bucket' => $this->bucketName,
-                'Prefix' => $key,
-            ]);
-
-            if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
-                throw new \RuntimeException('Could not remove file: No results returned');
-            } else {
-                $objectVersions = $objectVersions->toArray();
-
-                $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
-                if (empty($objectsToDelete)) {
-                    throw new \RuntimeException('Could not remove file: No objects founds');
-                } else {
-                    $s3Result = $this->s3Client->deleteObjects([
-                        'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $objectsToDelete],
-                    ]);
-                    $s3Result = $s3Result->toArray();
-
-                    $this->handleS3DeletionErrors($s3Result);
-                }
-
-                return $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
-            }
-        }
-    }
-
-    private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result): array
-    {
-        $resultsSummary = [
-            'objectVersions' => $objectVersions,
-            'objectsToDelete' => $objectsToDelete,
-            'results' => [
-                's3Result' => $s3Result,
-            ],
-        ];
-
-        $this->log('info', json_encode($resultsSummary) ?: '');
-
-        return $resultsSummary;
-    }
-
-    /**
-     * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3.
-     */
-    private function prepareObjectsToDelete(array $objectVersions): array
-    {
-        $objectsToDelete = [];
-        if (array_key_exists('Versions', $objectVersions)) {
-            foreach ($objectVersions['Versions'] as $versionData) {
-                if (strlen($versionData['VersionId']) > 0) {
-                    $objectsToDelete[] = [
-                        'Key' => $versionData['Key'],
-                        'VersionId' => $versionData['VersionId'],
-                    ];
-                }
-            }
-        }
-
-        return $objectsToDelete;
-    }
-
-    private function handleS3DeletionErrors(array $s3Result): void
-    {
-        if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
-            foreach ($s3Result['Errors'] as $s3Error) {
-                $this->log('error', 'Unable to remove file from S3 -
-                            Key: '.$s3Error['Key'].', VersionId: '.
-                    $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
-            }
-            $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
-            throw new \RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
         }
     }
 
@@ -208,5 +84,49 @@ class S3Storage
         $this->logger->log($level, $message, ['extra' => [
             'service' => 's3-storage',
         ]]);
+    }
+
+    public function tagForDeletion(string $key): bool
+    {
+        $this->log('info', "Appending Purge tag for $key to S3");
+
+        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347/DDLS-761;
+        // get the object's tags and then append with PUT
+        try {
+            $result = $this->s3Client->getObjectTagging([
+                'Bucket' => $this->bucketName,
+                'Key' => $key,
+            ]);
+        } catch (S3Exception $e) {
+            $this->log('error', "Failed to retrieve tagset for $key; message = {$e->getMessage()}");
+
+            return false;
+        }
+
+        /** @var array $existingTags */
+        $existingTags = $result['TagSet'];
+
+        $newTagset = array_merge($existingTags, [['Key' => 'Purge', 'Value' => '1']]);
+        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
+        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
+
+        // Update tags in S3
+        try {
+            $this->s3Client->putObjectTagging([
+                'Bucket' => $this->bucketName,
+                'Key' => $key,
+                'Tagging' => [
+                    'TagSet' => $newTagset,
+                ],
+            ]);
+
+            $this->log('info', "Tagset updated for $key");
+        } catch (S3Exception $e) {
+            $this->log('error', "Failed to update tagset for $key; message = {$e->getMessage()}");
+
+            return false;
+        }
+
+        return true;
     }
 }
