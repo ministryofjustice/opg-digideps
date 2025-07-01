@@ -17,7 +17,7 @@ form:
   email:
     label: Deputy email address
     existingError: |
-      There's a problem with your email address. Please contact us for help on 0115 934 2700.
+      There's a problem with your email address. Please contact us for help on 0300 456 0300.
   firstName:
     label: Deputy first name
   lastName:

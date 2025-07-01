@@ -15,8 +15,7 @@ module "environment_secrets" {
     "private-jwt-key-base64",
     "smoke-test-variables",
     "custom-sql-db-password",
-    "custom-sql-users",
-    "readonly-sql-db-password"
+    "custom-sql-users"
   ]
   kms_key = module.secret_kms.eu_west_1_target_key_arn
   tags    = var.default_tags

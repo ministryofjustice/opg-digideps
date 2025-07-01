@@ -145,13 +145,13 @@ profSupportEmail: opg.pro@publicguardian.gov.uk
 # Helpline
 helplineTitle: Telephone
 helplineGeneral: 0300 456 0300
-helpline: 0115 934 2700
+helpline: 0300 456 0300
 helplinePA: 0115 934 2817
 helplineProf: 0115 934 2819
 
 # Opening Hours
 openingHoursTitle: Opening Hours
-openingHoursText: "Monday to Friday: 8am to 6pm (except public holidays)"
+openingHoursText: "Monday to Friday 9am to 5pm"
 
 # Validation and errors
 summaryHeading: There are some problems on this page

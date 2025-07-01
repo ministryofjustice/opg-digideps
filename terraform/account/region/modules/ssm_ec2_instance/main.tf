@@ -6,12 +6,14 @@ resource "aws_instance" "ssm_ec2" {
   vpc_security_group_ids      = [aws_security_group.ssm_instance_sg.id]
   iam_instance_profile        = var.instance_profile
   user_data_base64            = base64encode(file("${path.module}/boot.sh"))
+  user_data_replace_on_change = true
   associate_public_ip_address = false
 
   tags = merge(var.tags, {
     Name        = "ssm-${var.name}-instance",
     AllowedRole = var.name
   })
+
 }
 
 resource "aws_security_group" "ssm_instance_sg" {
