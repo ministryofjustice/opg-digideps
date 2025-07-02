@@ -1,67 +1,126 @@
 <?php
 
-namespace App\Service\File\Storage;
+namespace App\Tests\Unit\Service\File\Storage;
 
+use App\Service\File\Storage\FileNotFoundException;
+use App\Service\File\Storage\FileUploadFailedException;
+use App\Service\File\Storage\S3Storage;
 use Aws\Command;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class S3StorageTest extends TestCase
 {
-    use ProphecyTrait;
+    public function tearDown(): void
+    {
+        \Mockery::close();
+    }
 
-    private S3Storage $sut;
-
-    private function generateAwsResult($statusCode, $data = [], $body = '')
+    private function generateAwsResult(int $statusCode, array $data = [], ?Stream $body = null): Result
     {
         $args = array_merge(['@metadata' => ['statusCode' => $statusCode]], $data);
-        if (!empty($body)) {
+
+        if (!is_null($body)) {
             $args['Body'] = $body;
         }
 
         return new Result($args);
     }
 
-    public function testTagForDeletion()
+    public function testTagForDeletionS3ObjectAlreadyMarkedForDeletion(): void
     {
-        // create timestamped file and key to undo effects of potential previous executions
+        $key = 'storagetest-upload-download-delete'.microtime(1);
+
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
+
+        $awsClient->shouldReceive('getObjectTagging')
+            ->andReturn(['TagSet' => [['Key' => 'Purge', 'Value' => '1']]]);
+
+        // we don't need to put the tag as it's already set on the object
+        $awsClient->shouldNotReceive('putObjectTagging');
+
+        $mockLogger = \Mockery::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log');
+
+        // sut
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+
+        // test
+        $ret = $sut->tagForDeletion($key);
+
+        // assert
+        $this->assertTrue($ret);
+    }
+
+    public function testTagForDeletionMissingObject(): void
+    {
+        $key = 'storagetest-upload-download-delete'.microtime(1);
+
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
+
+        $awsClient->shouldReceive('getObjectTagging')
+            ->andThrow(self::createMock(S3Exception::class));
+
+        // sut
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
+
+        // test
+        $ret = $sut->tagForDeletion($key);
+
+        // assert
+        $this->assertFalse($ret);
+    }
+
+    public function testTagForDeletionPutTagsFails(): void
+    {
+        $key = 'storagetest-upload-download-delete'.microtime(1);
+
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
+        $awsClient->shouldReceive('getObjectTagging')
+            ->andReturn(['TagSet' => []]);
+        $awsClient->shouldReceive('putObjectTagging')
+            ->andThrow(self::createMock(S3Exception::class));
+
+        // sut
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
+
+        // test
+        $ret = $sut->tagForDeletion($key);
+
+        // assert
+        $this->assertFalse($ret);
+    }
+
+    public function testTagForDeletion(): void
+    {
         $key = 'storagetest-upload-download-delete'.microtime(1);
 
         $currentTags = [
-            'TagSet' => [
-                [
-                    'Key' => 'someKey',
-                    'Value' => 'someValue',
-                ],
+            [
+                'Key' => 'someKey',
+                'Value' => 'someValue',
             ],
         ];
 
-        $expectedTags = array_merge($currentTags, ['Purge' => 1]);
+        $expectedTags = array_merge($currentTags, [['Key' => 'Purge', 'Value' => '1']]);
 
-        $awsClient = m::mock(S3Client::class);
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('getObjectTagging')
-            ->with(m::type('array'))
-            ->once()
-            ->andReturn($currentTags);
+            ->andReturn(['TagSet' => $currentTags]);
 
         $awsClient->shouldReceive('putObjectTagging')
-            ->with($expectedTags)
-            ->once();
-
-        $mockLogger = m::mock(LoggerInterface::class);
+            ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key, 'Tagging' => ['TagSet' => $expectedTags]]);
 
         // sut
-        $this->sut = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
 
         // test
-        $ret = $this->sut->tagForDeletion($key);
+        $ret = $sut->tagForDeletion($key);
 
         // assert
         $this->assertTrue($ret);
@@ -69,103 +128,97 @@ class S3StorageTest extends TestCase
 
     public function testSuccessfulUploadBinaryContent()
     {
-        $awsClient = m::mock(S3Client::class);
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
+
+        $fileContent = 'cat.jpg';
+
+        $mockStream = fopen('php://memory', 'r+');
+        fwrite($mockStream, $fileContent);
+        rewind($mockStream);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
-        $awsClient->shouldReceive('getObject')->with(
-            m::type('array')
-        )->andReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__.'/cat.jpg'))));
+        $awsClient->shouldReceive('getObject')->andReturn(
+            $this->generateAwsResult(
+                200,
+                [],
+                new Stream($mockStream)
+            )
+        );
 
         $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(true);
 
-        /** @var LoggerInterface */
-        $mockLogger = m::mock(LoggerInterface::class);
-        $mockLogger->shouldReceive('log')->withAnyArgs();
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
 
-        $this->sut = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
-
-        // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
-        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
 
-        $this->sut->store($key, $fileContent);
-        $this->assertEquals($fileContent, $this->sut->retrieve($key));
+        $sut->store($key, $fileContent);
+
+        $this->assertEquals($fileContent, $sut->retrieve($key));
     }
 
     public function testFailedUploadBinaryContent()
     {
-        $awsClient = m::mock(S3Client::class);
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
 
         $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(false);
 
-        // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
         $fileContent = file_get_contents(__DIR__.'/cat.jpg');
 
-        /** @var LoggerInterface */
-        $mockLogger = m::mock(LoggerInterface::class);
-        $mockLogger->shouldReceive('log')->withAnyArgs();
-
-        $this->sut = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
 
         $this->expectException(FileUploadFailedException::class);
-        $this->sut->store($key, $fileContent);
+
+        $sut->store($key, $fileContent);
     }
 
     public function testRetrieveFromS3WhenAccessDenied()
     {
         $key = 'nonExistentFile.png';
 
-        $awsClient = self::prophesize(S3Client::class);
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
+
         $s3Exception = new S3Exception(
             'Access Denied.',
             new Command('getObject'),
             ['code' => 'AccessDenied']
         );
 
-        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+        $awsClient->shouldReceive('getObject')
+            ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])
+            ->andThrow($s3Exception);
 
-        $logger = self::prophesize(LoggerInterface::class);
-
-        $this->sut = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
 
         $this->expectException(FileNotFoundException::class);
 
-        $this->sut->retrieve($key);
+        $sut->retrieve($key);
     }
 
     public function testRetrieveFromS3NotMissingFileError()
     {
         $key = 'nonExistentFile.png';
 
-        $awsClient = self::prophesize(S3Client::class);
+        $awsClient = \Mockery::mock(S3ClientInterface::class);
+
         $s3Exception = new S3Exception(
             'Some other error message',
             new Command('getObject'),
             ['code' => 'InvalidRequest']
         );
 
-        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+        $awsClient->shouldReceive('getObject')
+            ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])
+            ->andThrow($s3Exception);
 
-        $logger = self::prophesize(LoggerInterface::class);
-
-        $this->sut = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', self::createMock(LoggerInterface::class));
 
         $this->expectException(S3Exception::class);
 
-        $this->sut->retrieve($key);
-    }
-
-    private function createMockStream(string $content): Stream
-    {
-        $stream = fopen('php://memory', 'r+');
-        fwrite($stream, $content);
-        rewind($stream);
-
-        return new Stream($stream);
+        $sut->retrieve($key);
     }
 }
