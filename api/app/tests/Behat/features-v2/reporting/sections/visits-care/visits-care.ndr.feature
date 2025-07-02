@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @visits-care.ndr
+@v2 @v2_reporting_1 @visits-care.ndr
 Feature: Visits and Care (NDR)
 
 @ndr-not-started
