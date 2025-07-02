@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @section-navigation
+@v2 @v2_reporting_1 @section-navigation
 Feature: Section navigation from summary pages - Lay
 
     @lay-pfa-high-completed
