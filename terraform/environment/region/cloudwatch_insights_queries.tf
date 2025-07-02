@@ -12,3 +12,16 @@ fields @timestamp
 | display @timestamp, case_number, client_lastname, deputy_lastname, deputy_postcode, @message
 EOF
 }
+
+resource "aws_cloudwatch_query_definition" "readonly_db_iam_assumptions" {
+  name            = "IAM Audit/${local.environment} readonly-db-iam role assumptions"
+  log_group_names = [aws_cloudwatch_log_group.cloudtrail.name]
+
+  query_string = <<EOF
+fields @timestamp, eventName, userIdentity.arn, requestParameters.roleArn, sourceIPAddress
+| filter eventName = "AssumeRole"
+| filter requestParameters.roleArn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/readonly-db-iam-${local.environment}"
+| sort @timestamp desc
+| limit 50
+EOF
+}
