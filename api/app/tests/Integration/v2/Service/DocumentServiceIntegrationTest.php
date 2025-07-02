@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Service;
 
+use App\Entity\Report\ReportSubmission;
 use App\Repository\DocumentRepository;
 use App\Service\File\Storage\S3Storage;
 use App\Tests\Integration\Fixtures;
@@ -81,17 +82,21 @@ class DocumentServiceIntegrationTest extends KernelTestCase
 
         $oldDocRef = self::PREFIX.'oldDoc';
         $newDocRef = self::PREFIX.'newDoc';
+        $submittedDocRef = self::PREFIX.'submittedDoc';
 
         // add files to S3, to associate with documents
         $this->s3Storage->store($oldDocRef, 'foo bar');
         $this->s3Storage->store($newDocRef, 'bar baz');
+        $this->s3Storage->store($submittedDocRef, 'goo goo');
 
-        // add two reports so we can create documents
+        // add reports so we can create documents
         $client = $this->fixtures->createClient();
         $report1 = $this->fixtures->createReport($client);
         $report2 = $this->fixtures->createReport($client);
+        $report3 = $this->fixtures->createReport($client);
 
-        // add two documents: one which is old and should be deleted, and one which is new and should remain
+        // add documents: one which is old and should be deleted, one which is new and should remain,
+        // one which has been submitted and should remain
         $oldDoc = $this->fixtures->createDocument($report1, $oldDocRef, false);
         $oldDoc->setCreatedOn($oneYearAgo);
         $oldDoc->setStorageReference($oldDocRef);
@@ -100,12 +105,18 @@ class DocumentServiceIntegrationTest extends KernelTestCase
         $newDoc->setCreatedOn($now);
         $newDoc->setStorageReference($newDocRef);
 
+        $submittedDoc = $this->fixtures->createDocument($report3, $submittedDocRef, false);
+        $submittedDoc->setCreatedOn($oneYearAgo);
+        $submittedDoc->setStorageReference($submittedDocRef);
+        $submittedDoc->setReportSubmission(new ReportSubmission($report3, $this->fixtures->createUser()));
+
         $this->em->persist($oldDoc);
         $this->em->persist($newDoc);
+        $this->em->persist($submittedDoc);
         $this->em->flush();
 
         // test
-        $numMarkedForDeletion = $this->sut->deleteDocumentsOlderThan($now);
+        $numMarkedForDeletion = $this->sut->deleteUnsubmittedDocumentsOlderThan($now);
 
         // check correct objects are marked for deletion
         self::assertEquals(1, $numMarkedForDeletion);
@@ -126,8 +137,17 @@ class DocumentServiceIntegrationTest extends KernelTestCase
 
         self::assertNotContains(['Key' => 'Purge', 'Value' => '1'], $tags);
 
-        // check old database record has been deleted and the new remains
+        // submitted document, although old, should not be marked
+        $tags = $this->s3Client->getObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $submittedDocRef,
+        ])->get('TagSet');
+
+        self::assertNotContains(['Key' => 'Purge', 'Value' => '1'], $tags);
+
+        // check old database record has been deleted and the new and submitted remain
         self::assertNull($this->documentRepository->findOneBy(['fileName' => $oldDocRef]));
         self::assertNotNull($this->documentRepository->findOneBy(['fileName' => $newDocRef]));
+        self::assertNotNull($this->documentRepository->findOneBy(['fileName' => $submittedDocRef]));
     }
 }
