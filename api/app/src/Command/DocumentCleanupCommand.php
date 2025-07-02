@@ -52,7 +52,7 @@ class DocumentCleanupCommand extends Command
         $earliestCreatedOn = (new \DateTime())->modify('- '.$minutesOld.' minutes');
 
         try {
-            $numDeleted = $this->documentService->deleteDocumentsOlderThan($earliestCreatedOn);
+            $numDeleted = $this->documentService->deleteUnsubmittedDocumentsOlderThan($earliestCreatedOn);
         } catch (\Exception $e) {
             // normally we wouldn't indiscriminately catch exceptions, but the document service uses
             // S3 and Doctrine, which might throw undeclared exceptions
