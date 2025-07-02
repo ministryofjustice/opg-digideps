@@ -37,8 +37,7 @@ class DocumentCleanupCommand extends Command
                 name: 'max-age-minutes',
                 mode: InputArgument::OPTIONAL,
                 description: 'Set the maximum age in minutes of documents to be retained; any document with a '.
-                    'creation data before (now - max-age-minutes) with a null report_submission_id is deleted, '.
-                    'and its S3 object marked for removal',
+                    'creation data before (now - max-age-minutes) is deleted, and its S3 object marked for removal',
                 default: 60 * 48 // two days, in minutes
             );
     }

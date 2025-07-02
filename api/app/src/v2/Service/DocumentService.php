@@ -13,7 +13,7 @@ class DocumentService
 {
     public function __construct(
         private readonly DocumentRepository $documentRepository,
-        private readonly S3Storage $s3Storage,
+        private readonly S3Storage $s3UploadBucketClient,
         private LoggerInterface $logger,
     ) {
     }
@@ -38,13 +38,13 @@ class DocumentService
             ->getQuery()
             ->execute();
 
-        $numDeleted = 0;
+        $numMarkedForDeletion = 0;
 
         foreach ($documents as $document) {
             $ref = $document->getStorageReference();
 
             // tag the S3 object for deletion with Purge=1
-            $success = $this->s3Storage->tagForDeletion($ref);
+            $success = $this->s3UploadBucketClient->tagForDeletion($ref);
 
             if (!$success) {
                 $this->logger->error("Unable to tag S3 object $ref for deletion");
@@ -54,7 +54,7 @@ class DocumentService
             // delete the Document entity
             try {
                 $this->documentRepository->delete($document);
-                ++$numDeleted;
+                ++$numMarkedForDeletion;
             } catch (\Exception $e) {
                 $this->logger->error(
                     "Could not delete Document entity with ID {$document->getId()} and S3 ref ".
@@ -63,6 +63,6 @@ class DocumentService
             }
         }
 
-        return $numDeleted;
+        return $numMarkedForDeletion;
     }
 }
