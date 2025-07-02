@@ -115,13 +115,13 @@ class S3Storage
         // if filtered tags is different, then we removed a Purge=1 tag from it;
         // this means it is already present on the S3 object, so we don't need to add it and can return now
         if ($filteredTags !== $existingTags) {
-            $this->log('info', "Object $key is already marked with Purge=1 (to be deleted)");
+            $this->log('warning', "Object $key is already marked with Purge=1 (to be deleted)");
 
             return true;
         }
 
         $newTags = array_merge($existingTags, [['Key' => 'Purge', 'Value' => '1']]);
-        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
+        $this->log('warning', "Tagset retrieved for $key : ".print_r($existingTags, true));
 
         // Update tags in S3
         try {
@@ -133,7 +133,7 @@ class S3Storage
                 ],
             ]);
 
-            $this->log('info', "Tagset updated for $key");
+            $this->log('warning', "Tagset updated for $key");
         } catch (S3Exception $e) {
             $this->log('error', "Failed to update tagset for $key; message = {$e->getMessage()}");
 
