@@ -26,6 +26,9 @@ class DocumentService
     /**
      * Delete documents older than the specified number of minutes which have no associated submission.
      * Tag any associated S3 objects with Purge=1, which marks them for automatic deletion by policy.
+     *
+     * @return int The number of S3 objects marked for deletion; the same number of Document entities
+     *             will have been deleted from the database
      */
     public function deleteUnsubmittedDocumentsOlderThan(\DateTime $earliestCreatedOn): int
     {
