@@ -91,7 +91,7 @@ data "aws_iam_policy_document" "database_readonly_connect" {
 }
 
 resource "aws_iam_policy" "database_readonly_connect" {
-  name        = "database-readonly-access"
+  name        = "database-readonly-access-${local.environment}"
   description = "Allow database-readonly-access role to connect to RDS via IAM Auth."
   policy      = data.aws_iam_policy_document.database_readonly_connect.json
 }
