@@ -4,7 +4,7 @@ namespace App\Service\File\Storage;
 
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
 
@@ -26,7 +26,7 @@ class S3Storage
      * http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.S3.S3Client.html.
      */
     public function __construct(
-        private readonly S3Client $s3Client,
+        private readonly S3ClientInterface $s3Client,
         private readonly string $bucketName,
         private readonly LoggerInterface $logger,
     ) {
