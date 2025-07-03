@@ -55,10 +55,19 @@ def authenticate_or_store_token(secret_name, username, user_token, skip_auth):
     response = get_secret(secret_name)
     secret_data = json.loads(response)
 
-    if username not in secret_data:
-        return False, "User not authorised"
+    print(username)
+    print(len(user_token))
 
-    if username in secret_data and secret_data[username]["token_hash"]:
+    for key, value in secret_data.items():
+        print(key)
+
+    if username not in secret_data:
+        return False, "User not authorised - Username does not exist"
+
+    if (
+        secret_data[username]["token_hash"]
+        and len(secret_data[username]["token_hash"]) > 0
+    ):
         stored_hash = secret_data[username]["token_hash"]
         salt = secret_data[username]["salt"]
         computed_hash = hash_token(user_token, salt)
@@ -69,7 +78,7 @@ def authenticate_or_store_token(secret_name, username, user_token, skip_auth):
         if computed_hash == stored_hash:
             return True, "Token Success"
 
-        return False, "User not authorised"
+        return False, "User not authorised - Token mismatch"
 
     # If no user_token exists, enforce secure user_token policy
     if (
