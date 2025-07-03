@@ -117,8 +117,8 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        $memMessage = '******* PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
-        $this->logMessage($memMessage);
+        $memMessage = 'PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
+        $this->logger->warning($this->formatMessage($memMessage));
 
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
