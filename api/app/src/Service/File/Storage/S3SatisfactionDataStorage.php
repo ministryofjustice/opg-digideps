@@ -2,7 +2,7 @@
 
 namespace App\Service\File\Storage;
 
-use Aws\S3\S3ClientInterface;
+use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -23,7 +23,7 @@ class S3SatisfactionDataStorage extends S3Storage
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    public function __construct(S3ClientInterface $s3Client, string $bucketName, LoggerInterface $logger)
+    public function __construct(S3Client $s3Client, string $bucketName, LoggerInterface $logger)
     {
         parent::__construct($s3Client, $bucketName, $logger);
     }

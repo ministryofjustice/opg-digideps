@@ -429,4 +429,12 @@ WHERE id IN ($idsString)";
             $stmt->executeQuery();
         }
     }
+
+    public function delete(Document $document): void
+    {
+        $em = $this->getEntityManager();
+
+        $em->remove($document);
+        $em->flush();
+    }
 }

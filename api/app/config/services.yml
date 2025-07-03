@@ -225,6 +225,10 @@ services:
     App\Service\File\Storage\S3Storage:
         arguments: ['@Aws\S3\S3Client', "%s3_sirius_bucket%", "@logger"]
 
+    App\Service\File\Storage\S3Storage $s3UploadBucketStorage:
+        class: App\Service\File\Storage\S3Storage
+        arguments: ['@Aws\S3\S3Client', "%s3_bucketname%", "@logger"]
+
     App\Service\File\Storage\S3SatisfactionDataStorage:
         parent: App\Service\File\Storage\S3Storage
         arguments:

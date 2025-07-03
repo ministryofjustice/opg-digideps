@@ -19,6 +19,7 @@ parameters:
   workspace: "%env(WORKSPACE)%"
   s3_satisfaction_bucket: opg-performance-data
   s3_sirius_bucket: "%env(S3_SIRIUS_BUCKET)%"
+  s3_bucketname: "%env(S3_BUCKETNAME)%"
   pa_pro_report_csv_filename: "%env(PA_PRO_REPORT_CSV_FILENAME)%"
   lay_report_csv_filename: "%env(LAY_REPORT_CSV_FILENAME)%"
 EOF

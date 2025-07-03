@@ -51,76 +51,6 @@ parameters:
 			path: src/Command/DocumentSyncCommand.php
 
 		-
-			message: "#^Call to method getMessage\\(\\) on an unknown class App\\\\Command\\\\Throwable\\.$#"
-			count: 1
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Caught class App\\\\Command\\\\Throwable not found\\.$#"
-			count: 1
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Left side of && is always false\\.$#"
-			count: 1
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_chunk expects array, mixed given\\.$#"
-			count: 1
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\$email of method App\\\\Command\\\\ProcessLayCSVCommand\\:\\:process\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 4
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 2
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Result of method App\\\\Command\\\\ProcessLayCSVCommand\\:\\:process\\(\\) \\(void\\) is used\\.$#"
-			count: 1
-			path: src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_chunk expects array, mixed given\\.$#"
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\$email of method App\\\\Command\\\\ProcessOrgCSVCommand\\:\\:process\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 3
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: "#^Property App\\\\Command\\\\ProcessOrgCSVCommand\\:\\:\\$redis is never read, only written\\.$#"
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: "#^Property App\\\\Command\\\\ProcessOrgCSVCommand\\:\\:\\$workspace is never read, only written\\.$#"
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Command/ValidationCommand.php
@@ -12566,11 +12496,6 @@ parameters:
 			path: src/Service/DocumentSyncService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:retrieveDocumentContentFromS3\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:setDocsNotSyncedCount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/DocumentSyncService.php
@@ -12587,11 +12512,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:syncSupportingDocument\\(\\) should return App\\\\Entity\\\\Report\\\\Document\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$document$#"
 			count: 1
 			path: src/Service/DocumentSyncService.php
 
@@ -12686,11 +12606,6 @@ parameters:
 			path: src/Service/File/ImageConvertor.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:removeFromS3\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/S3FileUploader.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\S3FileUploader\\:\\:getSanitisedFileName\\(\\) should return string but returns array\\|string\\|null\\.$#"
 			count: 1
 			path: src/Service/File/S3FileUploader.php
@@ -12717,11 +12632,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$fileBody of method App\\\\Service\\\\File\\\\MimeTypeAndExtensionChecker\\:\\:check\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Service/File/S3FileUploader.php
-
-		-
-			message: "#^Property App\\\\Service\\\\File\\\\S3FileUploader\\:\\:\\$options is never read, only written\\.$#"
 			count: 1
 			path: src/Service/File/S3FileUploader.php
 
@@ -12759,126 +12669,6 @@ parameters:
 			message: "#^Property App\\\\Service\\\\File\\\\Scanner\\\\Exception\\\\VirusFoundException\\:\\:\\$message has no type specified\\.$#"
 			count: 1
 			path: src/Service/File/Scanner/Exception/VirusFoundException.php
-
-		-
-			message: "#^Binary operation \"\\.\" between 'Invalid Reference…' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObjects\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:listObjectVersions\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:appendTagset\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:appendTagset\\(\\) has parameter \\$newTagset with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:checkFileExistsInS3\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:checkFileExistsInS3\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:delete\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:log\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:log\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:store\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:store\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Parameter \\#1 \\$length of method GuzzleHttp\\\\Psr7\\\\Stream\\:\\:read\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:delete\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:retrieve\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has parameter \\$body with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
-
-		-
-			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\StorageInterface\\:\\:store\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: src/Service/File/Storage/StorageInterface.php
 
 		-
 			message: "#^Cannot call method getMessage\\(\\) on Symfony\\\\Component\\\\Validator\\\\ConstraintViolationInterface\\|null\\.$#"

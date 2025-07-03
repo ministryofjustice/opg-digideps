@@ -14,8 +14,8 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\DocumentService;
 use App\Service\File\S3FileUploader;
+use App\Service\File\Storage\ClientS3Storage;
 use App\Service\File\Storage\FileUploadFailedException;
-use App\Service\File\Storage\S3Storage;
 use App\Service\File\Verifier\MultiFileFormUploadVerifier;
 use App\Service\StepRedirector;
 use Exception;
@@ -48,7 +48,7 @@ class DocumentController extends AbstractController
         private TranslatorInterface $translator,
         private DocumentService $documentService,
         private LoggerInterface $logger,
-        private S3Storage $s3Storage,
+        private ClientS3Storage $s3Storage,
     ) {
     }
 
