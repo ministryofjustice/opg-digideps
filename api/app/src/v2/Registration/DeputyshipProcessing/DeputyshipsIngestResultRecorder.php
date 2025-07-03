@@ -28,6 +28,8 @@ class DeputyshipsIngestResultRecorder
 
     private ?\DateTimeInterface $endDateTime = null;
 
+    private bool $dryRun = false;
+
     public function __construct(
         private LoggerInterface $logger,
     ) {
@@ -52,7 +54,12 @@ class DeputyshipsIngestResultRecorder
     private function logError(string $errorMessage): void
     {
         $this->errorMessages[] = $errorMessage;
-        $this->logger->error($this->formatMessage($errorMessage));
+
+        if ($this->dryRun) {
+            $this->logger->warning('{ERROR if not dry run} - '.$this->formatMessage($errorMessage));
+        } else {
+            $this->logger->error($this->formatMessage($errorMessage));
+        }
     }
 
     public function recordStart(\DateTimeInterface $startDateTime = new \DateTimeImmutable()): void
@@ -95,11 +102,11 @@ class DeputyshipsIngestResultRecorder
         $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
 
         // these messages are not output with logMessage() or logError() because there will be a lot of them
-        $this->logger->warning($this->formatMessage('++++++++ '.$builderResult->getMessage()));
+        $this->logMessage('++++++++ '.$builderResult->getMessage());
 
         $errorMessage = $builderResult->getErrorMessage();
         if (!is_null($errorMessage)) {
-            $this->logger->error($this->formatMessage('!!!!!!! '.$errorMessage));
+            $this->logError('!!!!!!! '.$errorMessage);
         }
     }
 
@@ -110,7 +117,7 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        $memMessage = '******* PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
+        $memMessage = 'PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
         $this->logger->warning($this->formatMessage($memMessage));
 
         // note that we don't count builder errors towards the overall success of the ingest
@@ -143,5 +150,10 @@ class DeputyshipsIngestResultRecorder
     public function setLogger(ConsoleLogger $logger): void
     {
         $this->logger = $logger;
+    }
+
+    public function setDryRun(bool $dryRun): void
+    {
+        $this->dryRun = $dryRun;
     }
 }
