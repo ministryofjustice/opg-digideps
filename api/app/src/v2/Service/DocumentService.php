@@ -51,7 +51,7 @@ class DocumentService
             $success = $this->s3UploadBucketClient->tagForDeletion($ref);
 
             if (!$success) {
-                $this->logger->error("Unable to tag S3 object $ref for deletion");
+                $this->logger->error("Unable to tag S3 object $ref for deletion; object probably does not exist");
                 continue;
             }
 
