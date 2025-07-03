@@ -55,6 +55,7 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-05-23 10:10:10',
+            'clientId' => 1,
         ];
 
         // use SUT to insert the order
@@ -93,13 +94,14 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
         $this->fixtures->persist($deputy, $courtOrder)->flush();
 
         // use SUT to add association
-        $courtOrderId = $this->sut->findOrderId($courtOrderUid);
+        /** @var int $courtOrderId */
+        $courtOrderId = $this->sut->findOrderId($courtOrderUid)->data;
 
         $this->sut->beginTransaction();
-        $success = $this->sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
+        $result = $this->sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
         $this->sut->endTransaction();
 
-        self::assertTrue($success);
+        self::assertTrue($result->success);
 
         // check there's one association matching deputy and court order IDs
         $result = $this->getQueryBuilder()
@@ -127,13 +129,14 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
         $this->fixtures->persist($client, $report, $courtOrder)->flush();
 
         // use SUT to add association
-        $courtOrderId = $this->sut->findOrderId($courtOrderUid);
+        /** @var int $courtOrderId */
+        $courtOrderId = $this->sut->findOrderId($courtOrderUid)->data;
 
         $this->sut->beginTransaction();
-        $success = $this->sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
+        $result = $this->sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
         $this->sut->endTransaction();
 
-        self::assertTrue($success);
+        self::assertTrue($result->success);
 
         // check association exists
         $result = $this->getQueryBuilder()

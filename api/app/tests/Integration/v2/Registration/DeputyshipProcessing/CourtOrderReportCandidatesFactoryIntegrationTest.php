@@ -95,25 +95,25 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     private function compatibleReportDataProvider(): array
     {
         return [
-            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '102'],
-            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '103'],
-            ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => '0', 'compatibleReportType' => '104'],
+            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102'],
+            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '103'],
+            ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => null, 'compatibleReportType' => '104'],
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '102-4'],
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '103-4'],
             ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '102-4'],
             ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '103-4'],
 
-            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '102-6'],
-            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '103-6'],
-            ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => '0', 'compatibleReportType' => '104-6'],
+            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102-6'],
+            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '103-6'],
+            ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => null, 'compatibleReportType' => '104-6'],
             ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '102-4-6'],
             ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '103-4-6'],
             ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '102-4-6'],
             ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '103-4-6'],
 
-            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '102-5'],
-            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '103-5'],
-            ['deputyType' => 'PRO', 'orderType' => 'hw', 'isHybrid' => '0', 'compatibleReportType' => '104-5'],
+            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102-5'],
+            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '103-5'],
+            ['deputyType' => 'PRO', 'orderType' => 'hw', 'isHybrid' => null, 'compatibleReportType' => '104-5'],
             ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '102-4-5'],
             ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '103-4-5'],
             ['deputyType' => 'PRO', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '102-4-5'],
@@ -127,7 +127,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     public function testCreateCompatibleReportCandidates(
         string $deputyType,
         string $orderType,
-        string $isHybrid,
+        ?string $isHybrid,
         string $compatibleReportType,
     ): void {
         $deputyUid = '12121212';
