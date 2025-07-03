@@ -33,6 +33,7 @@ class DeputyshipsCSVIngester
      */
     public function processCsv(string $fileLocation, bool $dryRun = false): DeputyshipsCSVIngestResult
     {
+        $this->deputyshipsIngestResultRecorder->setDryRun($dryRun);
         $this->deputyshipsIngestResultRecorder->recordStart();
 
         // load the CSV into the staging table in the database
