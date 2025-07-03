@@ -6,6 +6,7 @@ use App\Entity as EntityDir;
 use App\Entity\Report\Report;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
+use App\Repository\ReportSubmissionRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
@@ -49,7 +50,7 @@ class DoctrineListener
         $entityManager = $args->getEntityManager();
 
         if ($entity instanceof EntityDir\Report\Document && !is_null($entity->getReportSubmission())) {
-            /** @var EntityDir\Repository\ReportSubmissionRepository $reportSubmissionRepo */
+            /** @var ReportSubmissionRepository $reportSubmissionRepo */
             $reportSubmissionRepo = $entityManager->getRepository(EntityDir\Report\ReportSubmission::class);
             $reportSubmissionRepo->updateArchivedStatus($entity->getReportSubmission());
         }
