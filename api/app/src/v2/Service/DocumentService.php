@@ -37,7 +37,7 @@ class DocumentService
         $documents = $this->documentRepository->createQueryBuilder('d')
             ->where('d.createdOn < :earliestCreatedOn')
             ->andWhere('d.storageReference IS NOT NULL')
-            ->andWhere('d.reportSubmission IS NULL')
+            ->andWhere('d.synchronisationStatus IS NULL')
             ->setParameter('earliestCreatedOn', $earliestCreatedOn)
             ->getQuery()
             ->execute();

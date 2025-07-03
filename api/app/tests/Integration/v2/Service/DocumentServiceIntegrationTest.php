@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Service;
 
-use App\Entity\Report\ReportSubmission;
+use App\Entity\SynchronisableInterface;
 use App\Repository\DocumentRepository;
 use App\Service\File\Storage\S3Storage;
 use App\Tests\Integration\Fixtures;
@@ -96,7 +96,7 @@ class DocumentServiceIntegrationTest extends KernelTestCase
         $report3 = $this->fixtures->createReport($client);
 
         // add documents: one which is old and should be deleted, one which is new and should remain,
-        // one which has been submitted and should remain
+        // one which is queued for sync (even though very old) and should remain
         $oldDoc = $this->fixtures->createDocument($report1, $oldDocRef, false);
         $oldDoc->setCreatedOn($oneYearAgo);
         $oldDoc->setStorageReference($oldDocRef);
@@ -108,7 +108,7 @@ class DocumentServiceIntegrationTest extends KernelTestCase
         $submittedDoc = $this->fixtures->createDocument($report3, $submittedDocRef, false);
         $submittedDoc->setCreatedOn($oneYearAgo);
         $submittedDoc->setStorageReference($submittedDocRef);
-        $submittedDoc->setReportSubmission(new ReportSubmission($report3, $this->fixtures->createUser()));
+        $submittedDoc->setSynchronisationStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
 
         $this->em->persist($oldDoc);
         $this->em->persist($newDoc);
