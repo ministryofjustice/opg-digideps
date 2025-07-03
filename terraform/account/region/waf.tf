@@ -252,7 +252,7 @@ resource "aws_cloudwatch_log_anomaly_detector" "waf_web_acl" {
   anomaly_visibility_time = 14
   evaluation_frequency    = "TEN_MIN"
   enabled                 = "true"
-  kms_key_id              = module.anomaly_kms.eu_west_1_target_key_id
+  kms_key_id              = module.anomaly_kms.eu_west_1_target_key_arn
 }
 
 resource "aws_kms_key" "waf_cloudwatch_log_encryption" {

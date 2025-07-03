@@ -19,7 +19,7 @@ module "anomaly_kms" {
 data "aws_iam_policy_document" "kms_anomaly_merged_for_development" {
   provider = aws.global
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_sns.json,
+    data.aws_iam_policy_document.cloudwatch_anomaly_kms_key_policy.json,
     data.aws_iam_policy_document.kms_base_permissions.json,
     data.aws_iam_policy_document.kms_development_account_operator_admin.json
   ]
@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "kms_anomaly_merged_for_development" {
 data "aws_iam_policy_document" "kms_anomaly_merged" {
   provider = aws.global
   source_policy_documents = [
-    data.aws_iam_policy_document.kms_sns.json,
+    data.aws_iam_policy_document.cloudwatch_anomaly_kms_key_policy.json,
     data.aws_iam_policy_document.kms_base_permissions.json
   ]
 }
@@ -40,33 +40,53 @@ data "aws_iam_policy_document" "cloudwatch_anomaly_kms_key_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["cloudwatch.amazonaws.com"]
+      identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
     }
 
     actions = [
-      "kms:Decrypt",
       "kms:Encrypt",
+      "kms:Decrypt",
       "kms:GenerateDataKey*",
-      "kms:DescribeKey",
+      "kms:DescribeKey"
     ]
 
     resources = ["*"]
 
     condition {
-      test     = "StringEquals"
-      variable = "kms:ViaService"
+      test     = "ArnLike"
+      variable = "kms:EncryptionContext:aws:logs:arn"
 
       values = [
-        "logs.${data.aws_region.current.name}.amazonaws.com"
+        "arn:aws:logs:${data.aws_region.current.name}:${var.account.account_id}:anomaly-detector:*"
       ]
     }
+  }
+
+  statement {
+    sid    = "AllowCloudWatchToUseKeyForAnomalyDetectionReencrypt"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
+    }
+
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey"
+    ]
+
+    resources = ["*"]
 
     condition {
-      test     = "StringEquals"
-      variable = "kms:CallerAccount"
+      test     = "ArnLike"
+      variable = "kms:EncryptionContext:aws-crypto-ec:aws:logs:arn"
 
       values = [
-        var.account.account_id
+        "arn:aws:logs:${data.aws_region.current.name}:${var.account.account_id}:anomaly-detector:*"
       ]
     }
   }
