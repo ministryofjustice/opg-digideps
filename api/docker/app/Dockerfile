@@ -60,6 +60,7 @@ COPY --chown=www-data:www-data --from=composer /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/app app
 COPY --chown=www-data:www-data api/app/config config
+COPY --chown=www-data:www-data api/app/openapi openapi
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/src src
