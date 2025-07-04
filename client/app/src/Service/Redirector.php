@@ -78,6 +78,8 @@ class Redirector
 
     public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
     {
+        $coDeputySignupRoutes = [User::UNKNOWN_REGISTRATION_ROUTE, User::CO_DEPUTY_INVITE];
+
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
             if ($user->getIsCoDeputy()) {
@@ -89,7 +91,7 @@ class Redirector
                 }
 
                 // unverified codeputy invitation
-                if (!$coDeputyClientConfirmed && User::CO_DEPUTY_INVITE == $user->getRegistrationRoute()) {
+                if (!$coDeputyClientConfirmed && in_array($user->getRegistrationRoute(), $coDeputySignupRoutes)) {
                     $route = 'codep_verification';
                 }
             } elseif (!$user->isDeputyOrg()) {
