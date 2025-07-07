@@ -1,4 +1,4 @@
-# The SSM EC2 Instance and how to Connect to The DatBase
+# The SSM EC2 Instance and how to Connect to The DataBase
 
 ## Overview
 
