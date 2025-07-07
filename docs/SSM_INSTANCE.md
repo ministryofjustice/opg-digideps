@@ -40,9 +40,9 @@ database connect <environment|database> <read|edit>
 For example:
 
 ```
-database connect production02 read
+database connect ddls546f2048 read
 ```
 
-![Here shows an Example of how to connect to the Production Database](production_database_connect.png)
+![Here shows an Example of how to connect to a Database](database_connect.png)
 
 Read access uses IAM authentication, where your role assumes into a role associated with that database before creating temporary credentials that are passed back to the SSM session without the engineer having any visibility over the credentials. Everything you do on the instance will be heavily monitored, including all `SELECT` statements and any suspicious activity. Edit access is more restricted and requires access to the database secrets in the account. This is restricted in higher environments, but in lower environments, it will automatically retrieve the password from Secrets Manager and pass it through to the `psql` connect command.
