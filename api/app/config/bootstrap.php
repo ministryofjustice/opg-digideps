@@ -14,6 +14,7 @@ if (is_array($env = @include dirname(__DIR__).'/.env.local.php') && (!isset($env
     (new Dotenv(false))->populate($env);
 } else {
     // load all the .env files
+    file_put_contents('php://stderr', print_r('loading api env file!', true));
     (new Dotenv(false))->loadEnv(dirname(__DIR__).'/api.env');
 }
 
