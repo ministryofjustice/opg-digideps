@@ -42,6 +42,15 @@ resource "aws_cloudwatch_log_group" "api_cluster" {
   tags              = var.default_tags
 }
 
+resource "aws_cloudwatch_log_anomaly_detector" "api_cluster" {
+  detector_name           = "postgresql"
+  log_group_arn_list      = [aws_cloudwatch_log_group.api_cluster.arn]
+  anomaly_visibility_time = 14
+  evaluation_frequency    = "TEN_MIN"
+  enabled                 = "true"
+  kms_key_id              = data.aws_kms_alias.cloudwatch_application_logs_encryption.target_key_arn
+}
+
 resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
