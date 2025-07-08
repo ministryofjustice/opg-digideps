@@ -205,13 +205,13 @@ Description=Run auto shutdown check at 12 AM daily
 
 [Timer]
 OnCalendar=*-*-* 00:00:00
-Persistent=true
 
 [Install]
 WantedBy=timers.target
 EOF
 
-cat << 'EOF' > /etc/motd
+sudo tee /etc/update-motd.d/50-digideps > /dev/null <<'EOF'
+cat << 'EOM'
 Welcome to the DigiDeps SSM Server
 
 Available commands:
@@ -219,10 +219,13 @@ Available commands:
   database list
     → Shows all connectable Aurora PostgreSQL databases with access info
 
-  database connect <database> <view|admin>
+  database connect <environment|database> <read|edit>
     → Connects you to the given database using psql
-    → Example: database connect production02 view
+    → Example: database connect production02 read
+EOM
 EOF
+
+sudo chmod +x /etc/update-motd.d/50-digideps
 
 
 systemctl enable autoshutdown.timer
