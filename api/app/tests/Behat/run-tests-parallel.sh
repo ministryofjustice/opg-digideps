@@ -2,17 +2,57 @@
 
 export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 export APP_ENV=dev
+
 if [ -f ./api.env ]; then
-  echo "== Sourcing env from api.env =="
-  set -a
-  source ./api.env
-  set +a
+  echo "== Sourcing env from api.env (only missing vars) =="
+
+  while IFS='=' read -r key value || [ -n "$key" ]; do
+    # Skip empty lines or comments
+    case "$key" in
+      ''|\#*) continue ;;
+    esac
+
+    # Skip keys that start with AWS_
+    case "$key" in
+      AWS_*) continue ;;
+    esac
+
+    # Strip possible surrounding quotes
+    value=$(echo "$value" | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/")
+
+    # Check if variable is already set
+    eval "is_set=\${$key+x}"
+
+    if [ -z "$is_set" ]; then
+      export "$key=$value"
+    fi
+  done < ./api.env
 fi
+
 if [ -f ./tests/Behat/test.env ]; then
-  echo "== Sourcing env from test.env =="
-  set -a
-  source ./tests/Behat/test.env
-  set +a
+  echo "== Sourcing env from test.env (only missing vars) =="
+
+  while IFS='=' read -r key value || [ -n "$key" ]; do
+    # Skip empty lines or comments
+    case "$key" in
+      ''|\#*) continue ;;
+    esac
+
+    # Skip keys that start with AWS_
+    case "$key" in
+      AWS_*) continue ;;
+    esac
+
+    # Strip possible surrounding quotes
+    value=$(echo "$value" | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/")
+
+    # Check if variable is already set
+    eval "is_set=\${$key+x}"
+
+    if [ -z "$is_set" ]; then
+      export "$key=$value"
+    fi
+  done < ./tests/Behat/test.env
 fi
 
 start=$(date +%s)
