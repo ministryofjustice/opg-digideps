@@ -9,6 +9,7 @@ if [ -f ./api.env ]; then
   source ./api.env
   set +a
 fi
+
 if [ -f ./tests/Behat/test.env ]; then
   echo "== Sourcing env from test.env =="
   set -a
