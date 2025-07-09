@@ -127,19 +127,23 @@ class MoneyTransaction
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"transaction"})
      */
-    private $id;
+    private string $id;
 
     /**
      * @JMS\Type("string")
+     *
      * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-group"})
      */
     private $group;
 
     /**
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"transaction"})
+     *
      * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-category"})
      */
     private $category;
@@ -153,8 +157,11 @@ class MoneyTransaction
      * @var array
      *
      * @JMS\Type("string")
+     *
      * @JMS\Groups({"transaction"})
+     *
      * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-amount"})
+     *
      * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage = "moneyTransaction.form.amount.notInRangeMessage", groups={"transaction-amount"})
      */
     private $amount;
@@ -163,56 +170,40 @@ class MoneyTransaction
      * @var string
      *
      * @JMS\Groups({"transaction"})
+     *
      * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
+     *
      * @JMS\Type("string")
      */
     private $description;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
+    public function setId(string $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getGroup()
     {
         return $this->group;
     }
 
-    /**
-     * @param mixed $group
-     */
     public function setGroup($group)
     {
         $this->group = $group;
     }
 
-    /**
-     * @return mixed
-     */
     public function getCategory()
     {
         return $this->category;
     }
 
-    /**
-     * @param mixed $category
-     */
     public function setCategory($category)
     {
         if (MoneyTransaction::isValidCategory($category)) {
@@ -240,17 +231,11 @@ class MoneyTransaction
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * @param mixed $description
-     */
     public function setDescription($description)
     {
         $this->description = $description;
@@ -269,8 +254,8 @@ class MoneyTransaction
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
 
             if (
-                (($groupId === $categoryId) && $category == $groupId) ||
-                $category == $categoryId
+                (($groupId === $categoryId) && $category == $groupId)
+                || $category == $categoryId
             ) {
                 return true;
             }
@@ -282,7 +267,9 @@ class MoneyTransaction
      * Get the type (in/out) based on the category.
      *
      * @JMS\VirtualProperty
+     *
      * @JMS\SerializedName("type")
+     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @return string in/out

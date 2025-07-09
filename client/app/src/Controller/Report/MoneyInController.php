@@ -329,7 +329,7 @@ class MoneyInController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         foreach ($report->getMoneyTransactionsIn() as $t) {
-            if ($t->getId() === $transactionId) {
+            if ($t->getId() === "$transactionId") {
                 $transaction = $t;
                 break;
             }

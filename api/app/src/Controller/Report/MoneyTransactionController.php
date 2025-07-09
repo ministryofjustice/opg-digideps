@@ -6,7 +6,6 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Repository\MoneyTransactionRepository;
 use App\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +19,9 @@ class MoneyTransactionController extends RestController
     ];
 
     public function __construct(
-       private readonly EntityManagerInterface $em,
-       private readonly RestFormatter $formatter,
-       private readonly MoneyTransactionRepository $moneyTransactionRepository
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly MoneyTransactionRepository $moneyTransactionRepository,
     ) {
         parent::__construct($em);
     }
@@ -35,8 +34,8 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [
-           'category' => 'notEmpty',
-           'amount' => 'notEmpty',
+            'category' => 'notEmpty',
+            'amount' => 'notEmpty',
         ]);
 
         $t = new EntityDir\Report\MoneyTransaction($report);
@@ -78,7 +77,8 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        /** @var $t EntityDir\Report\MoneyTransaction */
+        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -116,7 +116,7 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // Entity is soft-deletable, so set the DeletedAt to hard delete
-        $t->setDeletedAt(new DateTime());
+        $t->setDeletedAt(new \DateTime());
         $this->em->remove($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
@@ -136,7 +136,7 @@ class MoneyTransactionController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new DateTime());
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
 
         $this->em->flush($t);
 

@@ -347,7 +347,7 @@ trait MoneyInSectionTrait
             'Yes, remove item of income'
         );
 
-        foreach ($this->moneyInTransaction[0] as $moneyType => $value) {
+        foreach ($this->moneyInTransaction[0] as $value) {
             $this->subtractFromGrandTotal($value);
         }
 
