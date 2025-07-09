@@ -276,7 +276,7 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/delete/fee/{feeId}", requirements={"feeId":"\d+"}. name="prof_service_fee_delete")
+     * @Route("/delete/fee/{feeId}", requirements={"feeId":"\d+"}, name="prof_service_fee_delete")
      */
     public function deleteAction(Request $request, int $reportId, int $feeId): RedirectResponse
     {
