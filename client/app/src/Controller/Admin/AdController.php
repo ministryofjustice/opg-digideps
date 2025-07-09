@@ -35,10 +35,8 @@ class AdController extends AbstractController
      * @Security("is_granted('ROLE_AD')")
      *
      * @Template("@App/Admin/Ad/index.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): array|RedirectResponse
     {
         $filters = [
             'order_by' => $request->get('order_by', 'id'),
@@ -95,10 +93,8 @@ class AdController extends AbstractController
      * @Security("is_granted('ROLE_AD')")
      *
      * @Template("@App/Admin/Ad/viewUser.html.twig")
-     *
-     * @return array|Response|null
      */
-    public function viewUserAction(Request $request)
+    public function viewUserAction(Request $request): array|Response|null
     {
         $what = $request->get('what');
         $filter = $request->get('filter');
@@ -106,7 +102,7 @@ class AdController extends AbstractController
         try {
             $user = $this->restClient->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports',
                 'report', 'ndr', ]);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'User not found',
             ]);
@@ -129,10 +125,8 @@ class AdController extends AbstractController
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
      *
      * @Security("is_granted('ROLE_AD')")
-     *
-     * @return RedirectResponse|Response|null
      */
-    public function adLoginAsDeputyAction($deputyId)
+    public function adLoginAsDeputyAction($deputyId): RedirectResponse|Response|null
     {
         $adUser = $this->getUser();
 

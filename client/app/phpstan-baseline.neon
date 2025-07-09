@@ -1176,67 +1176,12 @@ parameters:
 			path: src/Controller/IndexController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:accessDenied\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:accessibilityAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:cookiesAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:loginCheckAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:logoutAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:privacyAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:sessionKeepAliveAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\IndexController\\:\\:termsAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
 			count: 1
 			path: src/Controller/IndexController.php
 
 		-
 			message: "#^Parameter \\#1 \\$seconds of static method App\\\\Service\\\\StringUtils\\:\\:secondsToHoursMinutes\\(\\) expects int, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\IndexController\\:\\:\\$deputyProvider is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\IndexController\\:\\:\\$eventDispatcher is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\IndexController\\:\\:\\$tokenStorage is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/IndexController.php
 
