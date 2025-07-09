@@ -9,7 +9,6 @@ use App\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -25,18 +24,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private TranslatorInterface $translator,
-        private RouterInterface $router,
-        private string $environment,
-        private ParameterBagInterface $params,
+        private readonly RestClient $restClient,
+        private readonly TranslatorInterface $translator,
+        private readonly RouterInterface $router,
+        private readonly string $environment,
+        private readonly ParameterBagInterface $params,
     ) {
     }
 
     /**
      * @Route("/", name="homepage")
      */
-    public function indexAction(Redirector $redirector): RedirectResponse|Response|null
+    public function indexAction(Redirector $redirector): Response
     {
         if ($url = $redirector->getHomepageRedirect()) {
             return $this->redirect($url);
@@ -55,7 +54,7 @@ class IndexController extends AbstractController
      *
      * @Template("@App/Index/login.html.twig")
      */
-    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils): ?Response
+    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
         $form = $this->createForm(FormDir\LoginType::class);
         $vars = [
@@ -90,7 +89,6 @@ class IndexController extends AbstractController
         }
 
         // different page version for timeout and manual logout
-        /** @var SessionInterface */
         $session = $request->getSession();
 
         if ('logoutPage' === $session->get('loggedOutFrom')) {
@@ -125,7 +123,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/error-503", name="error-503")
      */
-    public function error503(Request $request): ?Response
+    public function error503(Request $request): Response
     {
         $vars = [];
         $vars['request'] = $request;
@@ -250,7 +248,7 @@ class IndexController extends AbstractController
     /**
      * Get referer, only if matching an existing route.
      *
-     * @return string|null referer URL, null if not existing or inside the $excludedRoutes
+     * @return ?string referer URL, null if not existing or inside the $excludedRoutes
      */
     protected function getRefererUrlSafe(Request $request, array $excludedRoutes = []): ?string
     {

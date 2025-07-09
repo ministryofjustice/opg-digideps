@@ -23,27 +23,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CoDeputyController extends AbstractController
 {
-    private ClientApi $clientApi;
-    private UserApi $userApi;
-    private DeputyApi $deputyApi;
-    private RestClient $restClient;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ClientApi $clientApi,
-        UserApi $userApi,
-        DeputyApi $deputyApi,
-        RestClient $restClient,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
+        private readonly ClientApi $clientApi,
+        private readonly UserApi $userApi,
+        private readonly DeputyApi $deputyApi,
+        private readonly RestClient $restClient,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->clientApi = $clientApi;
-        $this->userApi = $userApi;
-        $this->deputyApi = $deputyApi;
-        $this->restClient = $restClient;
-        $this->translator = $translator;
-        $this->logger = $logger;
     }
 
     /**
@@ -51,7 +38,7 @@ class CoDeputyController extends AbstractController
      *
      * @Template("@App/CoDeputy/verification.html.twig")
      */
-    public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
+    public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator): array|RedirectResponse
     {
         $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
@@ -165,11 +152,9 @@ class CoDeputyController extends AbstractController
      *
      * @Template("@App/CoDeputy/add.html.twig")
      *
-     * @return array|RedirectResponse
-     *
      * @throws \Throwable
      */
-    public function addAction(Request $request, Redirector $redirector, $clientId)
+    public function addAction(Request $request, Redirector $redirector, int $clientId): array|RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -222,11 +207,9 @@ class CoDeputyController extends AbstractController
      *
      * @Template("@App/CoDeputy/resendActivation.html.twig")
      *
-     * @return array|RedirectResponse
-     *
      * @throws \Throwable
      */
-    public function resendActivationAction(Request $request, string $email)
+    public function resendActivationAction(Request $request, string $email): array|RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
         $existingCoDeputy = $this->userApi->getByEmail($email);

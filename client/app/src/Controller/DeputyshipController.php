@@ -28,7 +28,7 @@ class DeputyshipController extends AbstractController
      *
      * @Template("@App/Deputyship/client-list.html.twig")
      */
-    public function clientListAction(): RedirectResponse|array
+    public function clientListAction(): array|RedirectResponse
     {
         /** @var ?User $user */
         $user = $this->tokenStorage->getToken()?->getUser();

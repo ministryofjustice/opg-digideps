@@ -11,6 +11,7 @@ use App\Service\Redirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,7 +31,7 @@ class SettingsController extends AbstractController
      *
      * @Template("@App/Settings/index.html.twig")
      **/
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector): array|RedirectResponse
     {
         if ($this->getUser()->isDeputyOrg()) {
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
@@ -55,7 +56,7 @@ class SettingsController extends AbstractController
      *
      * @Template("@App/Settings/passwordEdit.html.twig")
      */
-    public function passwordEditAction(Request $request)
+    public function passwordEditAction(Request $request): array|RedirectResponse
     {
         $user = $this->userApi->getUserWithData();
 
@@ -87,7 +88,7 @@ class SettingsController extends AbstractController
      *
      * @Template("@App/Settings/emailEdit.html.twig")
      */
-    public function emailEditAction(Request $request)
+    public function emailEditAction(Request $request): array|RedirectResponse
     {
         $user = $this->userApi->getUserWithData();
 
@@ -117,14 +118,14 @@ class SettingsController extends AbstractController
     }
 
     /**
-     * - display the Your details page.
+     * Display the Your details page.
      *
      * @Route("/deputyship-details/your-details", name="user_show")
      * @Route("/org/settings/your-details", name="org_profile_show")
      *
      * @Template("@App/Settings/profile.html.twig")
      **/
-    public function profileAction()
+    public function profileAction(): array
     {
         return [
             'user' => $this->getUser(),
@@ -141,7 +142,7 @@ class SettingsController extends AbstractController
      *
      * @throw AccessDeniedException
      **/
-    public function profileEditAction(Request $request)
+    public function profileEditAction(Request $request): array|RedirectResponse
     {
         $preUpdateDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -204,11 +205,9 @@ class SettingsController extends AbstractController
      * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
      * becoming Professional team members.
      *
-     * @return string
-     *
      * @throws AccessDeniedException
      */
-    private function determineNoAdminRole()
+    private function determineNoAdminRole(): string
     {
         if ($this->isGranted(EntityDir\User::ROLE_PA_ADMIN)) {
             return EntityDir\User::ROLE_PA_TEAM_MEMBER;

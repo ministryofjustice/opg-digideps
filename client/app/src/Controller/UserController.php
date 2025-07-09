@@ -28,12 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class UserController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private UserApi $userApi,
-        private ClientApi $clientApi,
-        private TranslatorInterface $translator,
-        private LoggerInterface $logger,
-        private ObservableEventDispatcher $eventDispatcher,
+        private readonly RestClient $restClient,
+        private readonly UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
     }
 

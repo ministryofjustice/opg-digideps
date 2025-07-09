@@ -19,11 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class HealthController extends AbstractController
 {
     public function __construct(
-        private string $symfonyEnvironment,
-        private string $symfonyDebug,
-        private string $environment,
-        private LoggerInterface $logger,
-        private string $hostedEnv,
+        private readonly string $symfonyEnvironment,
+        private readonly string $symfonyDebug,
+        private readonly string $environment,
+        private readonly LoggerInterface $logger,
+        private readonly string $hostedEnv,
     ) {
     }
 

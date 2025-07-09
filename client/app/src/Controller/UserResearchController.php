@@ -11,30 +11,20 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserResearchApi;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserResearchController extends AbstractController
 {
-    private UserResearchApi $userResearchApi;
-    private ReportApi $reportApi;
-    private TranslatorInterface $translator;
-    private FormFactoryInterface $formFactory;
-    private NdrApi $ndrApi;
-
     public function __construct(
-        UserResearchApi $userResearchApi,
-        ReportApi $reportApi,
-        TranslatorInterface $translator,
-        FormFactoryInterface $formFactory,
-        NdrApi $ndrApi,
+        private readonly UserResearchApi $userResearchApi,
+        private readonly ReportApi $reportApi,
+        private readonly TranslatorInterface $translator,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly NdrApi $ndrApi,
     ) {
-        $this->userResearchApi = $userResearchApi;
-        $this->reportApi = $reportApi;
-        $this->translator = $translator;
-        $this->formFactory = $formFactory;
-        $this->ndrApi = $ndrApi;
     }
 
     /**
@@ -42,10 +32,8 @@ class UserResearchController extends AbstractController
      * @Route("/ndr/{ndrId}/post_submission_user_research", name="ndr_post_submission_user_research")
      *
      * @Template("@App/UserResearch/postSubmissionUserResearch.html.twig")
-     *
-     * @return array
      */
-    public function postSubmissionUserResearch(Request $request, ?int $reportId = null, ?int $ndrId = null)
+    public function postSubmissionUserResearch(Request $request, ?int $reportId = null, ?int $ndrId = null): array|RedirectResponse
     {
         $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr']);
 
@@ -79,10 +67,8 @@ class UserResearchController extends AbstractController
      * @Route("/ndr/{ndrId}/post_submission_user_research/submitted", name="ndr_user_research_submitted")
      *
      * @Template("@App/UserResearch/userResearchSubmitted.html.twig")
-     *
-     * @return array
      */
-    public function userResearchSubmitted(?int $reportId = null, ?int $ndrId = null)
+    public function userResearchSubmitted(?int $reportId = null, ?int $ndrId = null): array|RedirectResponse
     {
         $report = !is_null($reportId) ? $this->reportApi->getReport($reportId, ['report']) : $this->ndrApi->getNdr($ndrId, ['ndr-client', 'client-id']);
 
