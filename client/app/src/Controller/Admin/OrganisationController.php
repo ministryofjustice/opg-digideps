@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,11 +30,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class OrganisationController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private LoggerInterface $logger,
-        private OrganisationApi $organisationApi,
-        private ObservableEventDispatcher $eventDispatcher,
-        private TokenStorageInterface $tokenStorage,
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger,
+        private readonly OrganisationApi $organisationApi,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 
@@ -44,7 +45,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Admin/Organisation/index.html.twig")
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         $organisations = $this->restClient->get('v2/organisation/list', 'Organisation[]');
 
@@ -59,10 +60,8 @@ class OrganisationController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN')")
      *
      * @Template("@App/Admin/Organisation/view.html.twig")
-     *
-     * @return array<mixed>|Response
      */
-    public function viewAction(Request $request, int $id)
+    public function viewAction(Request $request, int $id): array|Response
     {
         /** @var $organisation Organisation */
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
@@ -108,7 +107,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request): array|RedirectResponse
     {
         $organisation = new Organisation();
 
@@ -148,7 +147,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
-    public function editAction(Request $request, $id = null)
+    public function editAction(Request $request, ?int $id = null): array|RedirectResponse
     {
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
 
@@ -187,7 +186,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Common/confirmDelete.html.twig")
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, int $id): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -229,7 +228,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Admin/Organisation/add-user.html.twig")
      */
-    public function addUserAction(Request $request, $id, TranslatorInterface $translator)
+    public function addUserAction(Request $request, int $id, TranslatorInterface $translator): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\Admin\OrganisationAddUserType::class);
         $form->handleRequest($request);
@@ -293,7 +292,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Common/confirmDelete.html.twig")
      */
-    public function deleteUserAction(Request $request, $id, $userId)
+    public function deleteUserAction(Request $request, int $id, int $userId): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -303,6 +302,7 @@ class OrganisationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                /** @var User $currentUser */
                 $currentUser = $this->getUser();
                 $this->organisationApi->removeUserFromOrganisation($organisation, $userToRemove, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
@@ -327,7 +327,7 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    private function dispatchOrgCreatedEvent(Organisation $organisation)
+    private function dispatchOrgCreatedEvent(Organisation $organisation): void
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANUAL_ORG_CREATION;
 
@@ -353,7 +353,7 @@ class OrganisationController extends AbstractController
     /**
      * @return array<mixed>
      */
-    private static function getFiltersFromRequest(Request $request)
+    private static function getFiltersFromRequest(Request $request): array
     {
         return [
             'q' => $request->get('q'),

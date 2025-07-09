@@ -11,46 +11,28 @@ use App\Form\Admin\Fixture\PreRegistrationFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Twig\Environment;
 
 /**
  * @Route("/admin/fixtures")
  */
 class FixtureController extends AbstractController
 {
-    private Environment $twig;
-    private SerializerInterface $serializer;
-    private RestClient $restClient;
-    private ReportApi $reportApi;
-    private UserApi $userApi;
-    private DeputyProvider $deputyProvider;
-    private string $symfonyEnvironment;
-
     public function __construct(
-        Environment $twig,
-        SerializerInterface $serializer,
-        RestClient $restClient,
-        ReportApi $reportApi,
-        UserApi $userApi,
-        DeputyProvider $deputyProvider,
-        string $symfonyEnvironment,
+        private readonly SerializerInterface $serializer,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly UserApi $userApi,
+        private readonly string $symfonyEnvironment,
     ) {
-        $this->twig = $twig;
-        $this->serializer = $serializer;
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->userApi = $userApi;
-        $this->deputyProvider = $deputyProvider;
-        $this->symfonyEnvironment = $symfonyEnvironment;
     }
 
     /**
@@ -60,7 +42,7 @@ class FixtureController extends AbstractController
      *
      * @Template("@App/Admin/Fixtures/index.html.twig")
      */
-    public function fixtures()
+    public function fixtures(): array
     {
         return [];
     }
@@ -72,12 +54,13 @@ class FixtureController extends AbstractController
      *
      * @Template("@App/Admin/Fixtures/layCourtOrders.html.twig")
      */
-    public function layCourtOrdersAction(Request $request)
+    public function layCourtOrdersAction(Request $request): array
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
+        /** @var FormInterface $form */
         $form = $this->createForm(LayCourtOrderFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_LAY),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
@@ -153,12 +136,13 @@ class FixtureController extends AbstractController
      *
      * @Template("@App/Admin/Fixtures/orgCourtOrders.html.twig")
      */
-    public function orgCourtOrdersAction(Request $request)
+    public function orgCourtOrdersAction(Request $request): array
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
+        /** @var FormInterface $form */
         $form = $this->createForm(OrgCourtOrderFixtureType::class, null, [
             'deputyType' => $request->get('deputy-type', User::TYPE_PROF),
             'reportType' => $request->get('report-type', Report::TYPE_HEALTH_WELFARE),
@@ -198,11 +182,20 @@ class FixtureController extends AbstractController
         return ['form' => $form->createView()];
     }
 
-    private function retrieveFormData($form, $request): array
+    private function retrieveFormData(FormInterface $form, Request $request): array
     {
+        /** @var array $submitted */
         $submitted = $form->getData();
-        $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
-        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', is_null($submitted['deputyType']) ? null : strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+
+        $deputyType = $submitted['deputyType'] ?? '';
+
+        /** @var string $courtDateFromRequest */
+        $courtDateFromRequest = $request->get('court-date');
+        $courtDate = $courtDateFromRequest ? new \DateTime($courtDateFromRequest) : new \DateTime();
+
+        $deputyEmail = sprintf('original-%s-deputy-%s@fixture.com', strtolower($deputyType), mt_rand(1000, 9999));
+        $deputyEmail = $request->query->get('deputy-email', $deputyEmail);
+
         $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
         $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
@@ -219,7 +212,7 @@ class FixtureController extends AbstractController
      * @TODO replace with https://symfony.com/doc/4.4/components/serializer.html#skipping-null-values
      * when using Symfony 4+
      */
-    private function removeNullValues(array $deputiesDataArray)
+    private function removeNullValues(array $deputiesDataArray): array
     {
         foreach ($deputiesDataArray as $index => $properties) {
             foreach ($properties as $key => $property) {
@@ -239,7 +232,7 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
-    public function completeReportSectionsAction(Request $request, string $reportType, $reportId): JsonResponse
+    public function completeReportSectionsAction(Request $request, string $reportType, int $reportId): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -247,8 +240,7 @@ class FixtureController extends AbstractController
 
         $sections = $request->get('sections');
 
-        $this
-            ->restClient
+        $this->restClient
             ->put("v2/fixture/complete-sections/$reportType/$reportId?sections=$sections", []);
 
         return new JsonResponse(['Report updated']);
@@ -259,7 +251,7 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
-    public function createAdmin(Request $request)
+    public function createAdmin(Request $request): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -283,7 +275,7 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
-    public function getUserIDByEmail(string $email)
+    public function getUserIDByEmail(string $email): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -306,7 +298,7 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
-    public function createUser(Request $request)
+    public function createUser(Request $request): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -332,7 +324,7 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      */
-    public function deleteUser(Request $request)
+    public function deleteUser(Request $request): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -354,14 +346,13 @@ class FixtureController extends AbstractController
      *
      * @throws \Throwable
      */
-    public function createClientAndAttachToDeputy(Request $request)
+    public function createClientAndAttachToDeputy(Request $request): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
-        $this
-            ->restClient
+        $this->restClient
             ->post(
                 'v2/fixture/createClientAttachDeputy',
                 json_encode(
@@ -389,14 +380,13 @@ class FixtureController extends AbstractController
      *
      * @throws \Throwable
      */
-    public function createClientAndAttachToOrg(Request $request)
+    public function createClientAndAttachToOrg(Request $request): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
         }
 
-        $this
-            ->restClient
+        $this->restClient
             ->post(
                 'v2/fixture/createClientAttachOrgs',
                 json_encode(
@@ -423,7 +413,7 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
      */
-    public function getUserRegistrationToken(Request $request)
+    public function getUserRegistrationToken(Request $request): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -441,10 +431,8 @@ class FixtureController extends AbstractController
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @Template("@App/Admin/Fixtures/preRegistration.html.twig")
-     *
-     * @return array
      */
-    public function createPreRegistration(Request $request)
+    public function createPreRegistration(Request $request): array
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -479,11 +467,9 @@ class FixtureController extends AbstractController
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
-     * @return void
-     *
      * @throws \Exception
      */
-    public function unsubmitReport(int $reportId)
+    public function unsubmitReport(int $reportId): void
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -505,10 +491,8 @@ class FixtureController extends AbstractController
      * @Route("/move-users-clients-to-users-org/{userEmail}", methods={"GET"}, name="move_users_clients_to_org")
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return Response
      */
-    public function moveUsersClientsToUsersOrg(string $userEmail)
+    public function moveUsersClientsToUsersOrg(string $userEmail): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -534,10 +518,8 @@ class FixtureController extends AbstractController
      * @Route("/activateOrg/{orgName}", methods={"GET"}, name="activate_org")
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return Response
      */
-    public function activateOrg(string $orgName)
+    public function activateOrg(string $orgName): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();

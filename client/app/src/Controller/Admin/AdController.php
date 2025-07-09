@@ -23,9 +23,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private UserApi $userApi,
-        private ParameterBagInterface $params,
+        private readonly RestClient $restClient,
+        private readonly UserApi $userApi,
+        private readonly ParameterBagInterface $params,
     ) {
     }
 
@@ -126,7 +126,7 @@ class AdController extends AbstractController
      *
      * @Security("is_granted('ROLE_AD')")
      */
-    public function adLoginAsDeputyAction($deputyId): RedirectResponse|Response|null
+    public function adLoginAsDeputyAction($deputyId): Response
     {
         $adUser = $this->getUser();
 

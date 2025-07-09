@@ -167,18 +167,23 @@ class IndexController extends AbstractController
      */
     public function editUserAction(Request $request, TranslatorInterface $translator): array|Response
     {
-        $filter = $request->get('filter');
+        /** @var ?int $userId */
+        $userId = $request->get('filter');
+
+        if (is_null($userId)) {
+            return $this->renderNotFound();
+        }
 
         try {
             /* @var User $user */
-            $user = $this->getPopulatedUser($filter);
-        } catch (\Throwable $e) {
+            $user = $this->getPopulatedUser($userId);
+        } catch (\Throwable) {
             return $this->renderNotFound();
         }
 
         try {
             $this->denyAccessUnlessGranted('edit-user', $user);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             $accessErrorMessage = 'You do not have permission to edit this user';
 
             return $this->render('@App/Admin/Index/error.html.twig', [
@@ -228,7 +233,7 @@ class IndexController extends AbstractController
         return $view;
     }
 
-    private function getPopulatedUser($id): User
+    private function getPopulatedUser(int $id): User
     {
         /* @var User $user */
         $user = $this->restClient->get("user/{$id}", 'User', ['user-rolename']);
@@ -250,10 +255,8 @@ class IndexController extends AbstractController
      * @Route("/edit-ndr/{id}", methods={"POST"}, name="admin_editNdr")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @param string $id
      */
-    public function editNdrAction(Request $request, $id): RedirectResponse
+    public function editNdrAction(Request $request, int $id): RedirectResponse
     {
         $ndr = $this->restClient->get('ndr/'.$id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
         $ndrForm = $this->createForm(FormDir\NdrType::class, $ndr);
@@ -279,10 +282,8 @@ class IndexController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
      * @Template("@App/Admin/Index/deleteConfirm.html.twig")
-     *
-     * @param int $id
      */
-    public function deleteConfirmAction($id): array
+    public function deleteConfirmAction(int $id): array
     {
         /** @var User $userToDelete */
         $userToDelete = $this->restClient->get("user/{$id}", 'User');
@@ -296,10 +297,8 @@ class IndexController extends AbstractController
      * @Route("/delete/{id}", methods={"GET"}, name="admin_delete")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @param int $id
      */
-    public function deleteAction($id): RedirectResponse
+    public function deleteAction(int $id): RedirectResponse
     {
         $user = $this->userApi->get($id, ['user', 'client', 'client-reports', 'report']);
 
@@ -565,7 +564,7 @@ class IndexController extends AbstractController
             ->getData();
     }
 
-    private function handleLayUploadForm($fileName): \Throwable|\Exception|array
+    private function handleLayUploadForm($fileName): array
     {
         return (new CsvToArray($fileName, false, true))
             ->setOptionalColumns([
@@ -590,7 +589,7 @@ class IndexController extends AbstractController
             ->getData();
     }
 
-    private function dispatchCSVUploadEvent()
+    private function dispatchCSVUploadEvent(): void
     {
         $csvUploadedEvent = new CSVUploadedEvent(
             User::TYPE_LAY,
@@ -600,7 +599,7 @@ class IndexController extends AbstractController
         $this->eventDispatcher->dispatch($csvUploadedEvent, CSVUploadedEvent::NAME);
     }
 
-    private function dispatchAdminManagerDeletedEvent(User $userToDelete)
+    private function dispatchAdminManagerDeletedEvent(User $userToDelete): void
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_DELETED;
 

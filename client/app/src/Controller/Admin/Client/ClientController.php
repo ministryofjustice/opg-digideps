@@ -122,7 +122,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Admin/Client/Client/unarchived.html.twig")
      */
-    public function unarchiveAction(string $id): ?RedirectResponse
+    public function unarchiveAction(string $id): array|RedirectResponse
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null === $client->getArchivedAt()) {
@@ -131,6 +131,6 @@ class ClientController extends AbstractController
 
         $this->clientApi->unarchiveClient($id);
 
-        return null;
+        return [];
     }
 }

@@ -45,7 +45,7 @@ class ReportSubmissionController extends AbstractController
      *
      * @return array<mixed>|Response
      */
-    public function indexAction(Request $request, ParameterStoreService $parameterStoreService)
+    public function indexAction(Request $request, ParameterStoreService $parameterStoreService): array|Response
     {
         if ($request->isMethod('POST')) {
             $ret = $this->processPost($request);
@@ -169,26 +169,22 @@ class ReportSubmissionController extends AbstractController
      *
      * @return array<mixed>
      */
-    public function downloadReady(Request $request)
+    public function downloadReady(Request $request): array
     {
         return ['reportSubmissionIds' => $request->query->get('reportSubmissionIds')];
     }
 
     /**
      * Process a post.
-     *
-     * @param Request $request request
-     *
-     * @return Response|void
      */
-    private function processPost(Request $request)
+    private function processPost(Request $request): array|Response
     {
         $checkedBoxes = $request->request->all('checkboxes');
 
         if (empty($checkedBoxes)) {
             $this->addFlash('error', 'Please select at least one report submission');
 
-            return;
+            return [];
         }
 
         $checkedBoxes = array_keys($checkedBoxes);
@@ -237,6 +233,8 @@ class ReportSubmissionController extends AbstractController
                     }
             }
         }
+
+        return [];
     }
 
     /**
@@ -254,7 +252,7 @@ class ReportSubmissionController extends AbstractController
     /**
      * @return array<mixed>
      */
-    private static function getFiltersFromRequest(Request $request)
+    private static function getFiltersFromRequest(Request $request): array
     {
         $order = 'new' === $request->get('status', 'new') ? 'DESC' : 'ASC';
 

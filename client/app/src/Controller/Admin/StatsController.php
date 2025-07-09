@@ -46,7 +46,7 @@ class StatsController extends AbstractController
         private readonly AssetsTotalsCSVGenerator $assetsTotalsCSVGenerator,
         private readonly ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
         private readonly InactiveAdminUsersCsvGenerator $inactiveAdminUserCsvGenerator,
-        private readonly ReportImbalanceCsvGenerator $reportImbalanceCsvGenerator
+        private readonly ReportImbalanceCsvGenerator $reportImbalanceCsvGenerator,
     ) {
     }
 
@@ -60,7 +60,7 @@ class StatsController extends AbstractController
     public function stats(
         Request $request,
         ReportSubmissionSummaryMapper $mapper,
-        ReportSubmissionBurFixedWidthTransformer $transformer
+        ReportSubmissionBurFixedWidthTransformer $transformer,
     ): array|Response {
         $form = $this->createFilterTypeForm($request, ReportSubmissionDownloadFilterType::class);
 
@@ -99,7 +99,7 @@ class StatsController extends AbstractController
                 $csv = $this->satisfactionCsvGenerator->generateSatisfactionResponsesCsv($reportSatisfactionSummaries);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -129,7 +129,7 @@ class StatsController extends AbstractController
                 $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -214,8 +214,9 @@ class StatsController extends AbstractController
      *
      * @Template("@App/Admin/Stats/reports.html.twig")
      */
-    public function reports(): void
+    public function reports(): array
     {
+        return [];
     }
 
     /**
@@ -225,7 +226,7 @@ class StatsController extends AbstractController
      *
      * @Template("@App/Admin/Stats/userAccountReports.html.twig")
      */
-    public function userAccountReports(): array|Response
+    public function userAccountReports(): array
     {
         return $this->statsApi->getAdminUserAccountReportData();
     }
@@ -257,7 +258,7 @@ class StatsController extends AbstractController
                 $csv = $this->clientBenefitMetricsCsvGenerator->generateClientBenefitsMetricCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -356,7 +357,7 @@ class StatsController extends AbstractController
                 $csv = $this->reportImbalanceCsvGenerator->generateReportImbalanceCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }

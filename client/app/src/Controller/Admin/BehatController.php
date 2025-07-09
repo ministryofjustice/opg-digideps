@@ -17,8 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class BehatController extends AbstractController
 {
     public function __construct(
-        private KernelInterface $kernel,
-        private string $symfonyEnvironment,
+        private readonly KernelInterface $kernel,
+        private readonly string $symfonyEnvironment,
     ) {
     }
 

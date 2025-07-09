@@ -19,26 +19,30 @@ use Symfony\Component\Routing\Annotation\Route;
 class ToolsController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient
+        private readonly RestClient $restClient,
     ) {
     }
 
     /**
      * @Route("/", name="admin_tools")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Tools/index.html.twig")
      */
-    public function tools()
+    public function tools(): array
     {
         return [];
     }
 
     /**
      * @Route("/report-reassignment", name="admin_tools_report_reassignment")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Tools/report-reasssignment.html.twig")
      */
-    public function reportAssignmentAction(Request $request)
+    public function reportAssignmentAction(Request $request): array
     {
         $form = $this->createForm(ReportReassignmentType::class, null, ['method' => 'POST']);
 

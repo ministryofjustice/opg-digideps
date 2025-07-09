@@ -7,6 +7,7 @@ use App\Form as FormDir;
 use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,23 +16,19 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SettingController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
     public function __construct(
-        RestClient $restClient
+        private readonly RestClient $restClient,
     ) {
-        $this->restClient = $restClient;
     }
 
     /**
      * @Route("/service-notification", name="admin_setting_service_notifications")
+     *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
      * @Template("@App/Admin/Setting/serviceNotification.html.twig")
      */
-    public function serviceNotificationAction(Request $request)
+    public function serviceNotificationAction(Request $request): array|RedirectResponse
     {
         $endpoint = 'setting/service-notification';
         $setting = $this->restClient->get($endpoint, 'Setting');
