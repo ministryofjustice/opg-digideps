@@ -25,13 +25,15 @@ class AdController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private UserApi $userApi,
-        private ParameterBagInterface $params
+        private ParameterBagInterface $params,
     ) {
     }
 
     /**
      * @Route("/", name="ad_homepage")
+     *
      * @Security("is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Ad/index.html.twig")
      *
      * @return array|RedirectResponse
@@ -53,7 +55,7 @@ class AdController extends AbstractController
         $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [
             'roleChoices' => [EntityDir\User::ROLE_LAY_DEPUTY => 'Lay deputy'],
             'roleNameSetTo' => EntityDir\User::ROLE_LAY_DEPUTY,
-         ]);
+        ]);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -88,8 +90,10 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route("/view-user", name="ad_view_user", methods={"GET", "POST"})
+     * @Route("/view-user", methods={"GET", "POST"}, name="ad_view_user")
+     *
      * @Security("is_granted('ROLE_AD')")
+     *
      * @Template("@App/Admin/Ad/viewUser.html.twig")
      *
      * @return array|Response|null
@@ -123,9 +127,8 @@ class AdController extends AbstractController
 
     /**
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
-     * @Security("is_granted('ROLE_AD')")
      *
-     * @param $deputyId
+     * @Security("is_granted('ROLE_AD')")
      *
      * @return RedirectResponse|Response|null
      */
@@ -151,11 +154,11 @@ class AdController extends AbstractController
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->params->get('non_admin_host'), '/');
             $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
-                    'adId' => $adUser->getId(),
-                    'userToken' => $deputy->getRegistrationToken(),
-                    'adFirstname' => $adUser->getFirstname(),
-                    'adLastname' => $adUser->getLastname(),
-                ]);
+                'adId' => $adUser->getId(),
+                'userToken' => $deputy->getRegistrationToken(),
+                'adFirstname' => $adUser->getFirstname(),
+                'adLastname' => $adUser->getLastname(),
+            ]);
 
             return $this->redirect($redirectUrl);
         } catch (\Throwable $e) {

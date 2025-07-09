@@ -10,11 +10,9 @@ use GuzzleHttp\ClientInterface;
  */
 class ClamAvAvailability extends ServiceAvailabilityAbstract
 {
-    private ClientInterface $fileScannerClient;
-
-    public function __construct(ClientInterface $fileScannerClient)
-    {
-        $this->fileScannerClient = $fileScannerClient;
+    public function __construct(
+        private readonly ClientInterface $fileScannerClient,
+    ) {
     }
 
     public function ping()

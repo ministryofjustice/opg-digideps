@@ -49,7 +49,7 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", requirements={"step":"\d+"}, name="bank_accounts_step")
      *
      * @Template("@App/Report/BankAccount/step.html.twig")
      *

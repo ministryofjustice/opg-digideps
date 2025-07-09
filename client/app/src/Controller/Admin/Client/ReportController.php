@@ -7,6 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Entity\SynchronisableInterface;
+use App\Entity\User;
 use App\Exception\ReportNotSubmittedException;
 use App\Form\Admin\CloseReportConfirmType;
 use App\Form\Admin\CloseReportType;
@@ -20,7 +21,6 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\ParameterStoreService;
 use App\Service\ReportSubmissionService;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -39,7 +39,7 @@ class ReportController extends AbstractController
 {
     /**
      * JMS groups used for report preview and PDF
-     * //TODO consider take/merge the value from ReportController::$reportGroupsAll.
+     * TODO consider take/merge the value from ReportController::$reportGroupsAll.
      *
      * @var array
      */
@@ -95,22 +95,10 @@ class ReportController extends AbstractController
         'client-benefits-check-state',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi,
-        LoggerInterface $logger
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->logger = $logger;
     }
 
     /**
@@ -313,7 +301,7 @@ class ReportController extends AbstractController
     /**
      * Generate and upload the.
      *
-     * @Route("regenerate-pdf", name="admin_regenerate_pdf", methods={"GET"})
+     * @Route("regenerate-pdf", methods={"GET"}, name="admin_regenerate_pdf")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
@@ -476,9 +464,12 @@ class ReportController extends AbstractController
             $this->restClient->put('report/'.$report->getId(), $report, ['report_type', 'report_due_date']);
 
             if ($form->has('confirm') && 'yes' === $form['confirm']->getData() && $report->isSubmitted()) {
+                /** @var User $user */
+                $user = $this->getUser();
+
                 $this->reportApi->unsubmit(
                     $report,
-                    $this->getUser(),
+                    $user,
                     AuditEvents::TRIGGER_UNSUBMIT_REPORT
                 );
                 $this->upsertChecklistInformation($report);

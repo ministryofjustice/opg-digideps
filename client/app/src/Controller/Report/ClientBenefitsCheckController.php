@@ -42,9 +42,7 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check", name="client_benefits_check", requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * }))
+     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check", requirements={"reportOrNdr"="(report|ndr)"}, name="client_benefits_check")
      *
      * @Template("@App/Report/ClientBenefitsCheck/start.html.twig")
      *
