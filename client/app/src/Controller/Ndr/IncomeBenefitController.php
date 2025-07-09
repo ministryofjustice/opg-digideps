@@ -35,10 +35,8 @@ class IncomeBenefitController extends AbstractController
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
      *
      * @Template("@App/Ndr/IncomeBenefit/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($ndrId)
+    public function startAction(int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getIncomeBenefitsState()['state']) {
@@ -55,7 +53,7 @@ class IncomeBenefitController extends AbstractController
      *
      * @Template("@App/Ndr/IncomeBenefit/step.html.twig")
      */
-    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
+    public function stepAction(Request $request, int $ndrId, int $step, TranslatorInterface $translator): array|RedirectResponse
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -115,7 +113,7 @@ class IncomeBenefitController extends AbstractController
      *
      * @Template("@App/Ndr/IncomeBenefit/summary.html.twig")
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

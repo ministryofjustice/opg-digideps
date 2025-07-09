@@ -976,31 +976,6 @@ parameters:
 			path: src/Controller/Ndr/ActionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/ActionController.php
@@ -1226,106 +1201,6 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:addAnotherAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:addAnotherAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:deleteAction\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:deleteAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:existAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:existAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherAddAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherAddAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherAddAction\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherEditAction\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherEditAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:typeAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:typeAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
 			path: src/Controller/Ndr/AssetController.php
@@ -1406,51 +1281,6 @@ parameters:
 			path: src/Controller/Ndr/BankAccountController.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:addAnotherAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:addAnotherAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:deleteAction\\(\\) has parameter \\$accountId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:deleteAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
 			path: src/Controller/Ndr/BankAccountController.php
@@ -1483,56 +1313,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 2
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:editAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:existAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:existAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:managementAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:managementAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:startAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
 			path: src/Controller/Ndr/DebtController.php
 
 		-
@@ -1586,66 +1366,6 @@ parameters:
 			path: src/Controller/Ndr/DeputyExpenseController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:addAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:addAnotherAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:addAnotherAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:deleteAction\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:deleteAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:editAction\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:editAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:existAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:existAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
 			path: src/Controller/Ndr/DeputyExpenseController.php
@@ -1676,36 +1396,6 @@ parameters:
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
 			path: src/Controller/Ndr/IncomeBenefitController.php
@@ -1719,36 +1409,6 @@ parameters:
 			message: "#^Property App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:getPdfBinaryContent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:getPdfBinaryContent\\(\\) has parameter \\$ndr with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:pdfViewAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:reviewAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submitConfirmationAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submitFeedbackAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
 
 		-
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Model\\\\FeedbackReport, mixed given\\.$#"
@@ -1767,41 +1427,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:startAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/OtherInfoController.php
 
@@ -1832,26 +1457,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method setNdr\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -4172,11 +3777,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\Asset\\:\\:\\$ndr has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Asset.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Asset\\:\\:\\$title has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Asset.php
 

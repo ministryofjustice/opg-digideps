@@ -32,10 +32,8 @@ class VisitsCareController extends AbstractController
      * @Route("/ndr/{ndrId}/visits-care", name="ndr_visits_care")
      *
      * @Template("@App/Ndr/VisitsCare/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getVisitsCareState()['state']) {
@@ -51,10 +49,8 @@ class VisitsCareController extends AbstractController
      * @Route("/ndr/{ndrId}/visits-care/step/{step}", name="ndr_visits_care_step")
      *
      * @Template("@App/Ndr/VisitsCare/step.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
+    public function stepAction(Request $request, int $ndrId, int $step, TranslatorInterface $translator): array|RedirectResponse
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -83,10 +79,10 @@ class VisitsCareController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /* @var EntityDir\Ndr\VisitsCare $data */
             $data = $form->getData();
-            /* @var $data EntityDir\Ndr\VisitsCare */
-            $data
-                ->setNdr($ndr)
+
+            $data->setNdr($ndr)
                 ->keepOnlyRelevantVisitsCareData();
 
             if (null === $visitsCare->getId()) {
@@ -118,10 +114,8 @@ class VisitsCareController extends AbstractController
      * @Route("/ndr/{ndrId}/visits-care/summary", name="ndr_visits_care_summary")
      *
      * @Template("@App/Ndr/VisitsCare/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

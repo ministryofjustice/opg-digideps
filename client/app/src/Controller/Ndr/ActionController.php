@@ -32,10 +32,8 @@ class ActionController extends AbstractController
      * @Route("/ndr/{ndrId}/actions", name="ndr_actions")
      *
      * @Template("@App/Ndr/Action/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($ndrId)
+    public function startAction(int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getActionsState()['state']) {
@@ -52,7 +50,7 @@ class ActionController extends AbstractController
      *
      * @Template("@App/Ndr/Action/step.html.twig")
      */
-    public function stepAction(Request $request, $ndrId, $step)
+    public function stepAction(Request $request, int $ndrId, int $step): array|RedirectResponse
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
@@ -99,7 +97,7 @@ class ActionController extends AbstractController
      *
      * @Template("@App/Ndr/Action/summary.html.twig")
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, $ndrId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

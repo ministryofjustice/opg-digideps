@@ -29,10 +29,8 @@ class AssetController extends AbstractController
      * @Route("/ndr/{ndrId}/assets", name="ndr_assets")
      *
      * @Template("@App/Ndr/Asset/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($ndrId)
+    public function startAction(int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getAssetsState()['state']) {
@@ -49,7 +47,7 @@ class AssetController extends AbstractController
      *
      * @Template("@App/Ndr/Asset/exist.html.twig")
      */
-    public function existAction(Request $request, $ndrId)
+    public function existAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ('GET' == $request->getMethod() && $ndr->getAssets()) { // if assets are added, set form default to "Yes"
@@ -91,7 +89,7 @@ class AssetController extends AbstractController
      *
      * @Template("@App/Ndr/Asset/type.html.twig")
      */
-    public function typeAction(Request $request, $ndrId)
+    public function typeAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeTitle::class, new EntityDir\Ndr\AssetOther(), []);
@@ -120,7 +118,7 @@ class AssetController extends AbstractController
      *
      * @Template("@App/Ndr/Asset/Other/add.html.twig")
      */
-    public function otherAddAction(Request $request, $ndrId, $title)
+    public function otherAddAction(Request $request, int $ndrId, string $title): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $asset = new EntityDir\Ndr\AssetOther();
@@ -152,7 +150,7 @@ class AssetController extends AbstractController
      *
      * @Template("@App/Ndr/Asset/Other/edit.html.twig")
      */
-    public function otherEditAction(Request $request, $ndrId, $assetId = null)
+    public function otherEditAction(Request $request, int $ndrId, ?int $assetId = null): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($assetId) {
@@ -186,7 +184,7 @@ class AssetController extends AbstractController
      *
      * @Template("@App/Ndr/Asset/addAnother.html.twig")
      */
-    public function addAnotherAction(Request $request, $ndrId)
+    public function addAnotherAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
@@ -213,7 +211,7 @@ class AssetController extends AbstractController
      *
      * @Template("@App/Ndr/Asset/Property/step.html.twig")
      */
-    public function propertyStepAction(Request $request, $ndrId, $step, $assetId = null)
+    public function propertyStepAction(Request $request, int $ndrId, int $step, ?int $assetId = null): array|RedirectResponse
     {
         $totalSteps = 8;
         if ($step < 1 || $step > $totalSteps) {
@@ -334,10 +332,8 @@ class AssetController extends AbstractController
      * @Route("/ndr/{ndrId}/assets/summary", name="ndr_assets_summary")
      *
      * @Template("@App/Ndr/Asset/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($ndrId)
+    public function summaryAction(int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getAssetsState()['state']) {
@@ -353,10 +349,8 @@ class AssetController extends AbstractController
      * @Route("/ndr/{ndrId}/assets/{assetId}/delete", name="ndr_asset_delete")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $ndrId, $assetId)
+    public function deleteAction(Request $request, int $ndrId, int $assetId): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);

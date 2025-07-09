@@ -9,6 +9,7 @@ use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,7 +31,7 @@ class OtherInfoController extends AbstractController
      *
      * @Template("@App/Ndr/OtherInfo/start.html.twig")
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getOtherInfoState()['state']) {
@@ -47,7 +48,7 @@ class OtherInfoController extends AbstractController
      *
      * @Template("@App/Ndr/OtherInfo/step.html.twig")
      */
-    public function stepAction(Request $request, $ndrId, $step)
+    public function stepAction(Request $request, int $ndrId, int $step): array|RedirectResponse
     {
         $totalSteps = 1; // only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
@@ -92,7 +93,7 @@ class OtherInfoController extends AbstractController
      *
      * @Template("@App/Ndr/OtherInfo/summary.html.twig")
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

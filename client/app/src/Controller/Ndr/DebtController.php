@@ -8,6 +8,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,7 +27,7 @@ class DebtController extends AbstractController
      *
      * @Template("@App/Ndr/Debt/start.html.twig")
      */
-    public function startAction(Request $request, $ndrId)
+    public function startAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getDebtsState()['state']) {
@@ -43,7 +44,7 @@ class DebtController extends AbstractController
      *
      * @Template("@App/Ndr/Debt/exist.html.twig")
      */
-    public function existAction(Request $request, $ndrId)
+    public function existAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(
@@ -82,7 +83,7 @@ class DebtController extends AbstractController
      *
      * @Template("@App/Ndr/Debt/edit.html.twig")
      */
-    public function editAction(Request $request, $ndrId)
+    public function editAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Debt\DebtsType::class, $ndr);
@@ -120,7 +121,7 @@ class DebtController extends AbstractController
      *
      * @Template("@App/Ndr/Debt/management.html.twig")
      */
-    public function managementAction(Request $request, $ndrId)
+    public function managementAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Ndr\Debt\DebtManagementType::class, $ndr);
@@ -159,7 +160,7 @@ class DebtController extends AbstractController
      *
      * @Template("@App/Ndr/Debt/summary.html.twig")
      */
-    public function summaryAction(Request $request, $ndrId)
+    public function summaryAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
