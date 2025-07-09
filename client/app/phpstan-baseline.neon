@@ -9686,11 +9686,6 @@ parameters:
 			path: src/EventSubscriber/LogoutSubscriber.php
 
 		-
-			message: "#^Property App\\\\EventSubscriber\\\\LogoutSubscriber\\:\\:\\$router is never read, only written\\.$#"
-			count: 1
-			path: src/EventSubscriber/LogoutSubscriber.php
-
-		-
 			message: "#^Method App\\\\EventSubscriber\\\\NdrSubmittedSubscriber\\:\\:sendEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/EventSubscriber/NdrSubmittedSubscriber.php

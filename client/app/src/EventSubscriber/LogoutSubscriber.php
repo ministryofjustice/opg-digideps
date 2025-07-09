@@ -12,26 +12,11 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class LogoutSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var RestClientInterface
-     */
-    private $restClient;
-
-    public function __construct(TokenStorageInterface $tokenStorage, RestClientInterface $restClient, RouterInterface $router)
-    {
-        $this->tokenStorage = $tokenStorage;
-        $this->restClient = $restClient;
-        $this->router = $router;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly RestClientInterface $restClient,
+        private readonly RouterInterface $router,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -54,7 +39,7 @@ class LogoutSubscriber implements EventSubscriberInterface
         }
         $request->getSession()->set('fromLogoutPage', 1);
 
-        $response = new RedirectResponse('/login');
+        $response = new RedirectResponse($this->router->generate('login'));
 
         $event->setResponse($response);
     }

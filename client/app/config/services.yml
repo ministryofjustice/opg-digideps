@@ -327,6 +327,8 @@ services:
         }
 
   App\EventListener\ForbiddenExceptionListener:
+    arguments:
+      $router: "@router"
     tags:
       - {
           name: kernel.event_listener,

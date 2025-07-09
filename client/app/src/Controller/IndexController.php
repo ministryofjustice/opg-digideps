@@ -59,7 +59,7 @@ class IndexController extends AbstractController
     /**
      * Session logic for login is now in LoginFormAuthenticator as of Symfony 5.4.
      *
-     * @Route("login", name="login")
+     * @Route("/login", name="login")
      *
      * @Template("@App/Index/login.html.twig")
      *
@@ -126,14 +126,14 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("login_check", name="login_check")
+     * @Route("/login_check", name="login_check")
      */
     public function loginCheckAction()
     {
     }
 
     /**
-     * @Route("error-503", name="error-503")
+     * @Route("/error-503", name="error-503")
      *
      * @return Response|null
      */
@@ -148,7 +148,7 @@ class IndexController extends AbstractController
     /**
      * keep session alive. Called from session timeout dialog.
      *
-     * @Route("session-keep-alive", name="session-keep-alive", methods={"GET"})
+     * @Route("/session-keep-alive", name="session-keep-alive", methods={"GET"})
      */
     public function sessionKeepAliveAction(Request $request)
     {
