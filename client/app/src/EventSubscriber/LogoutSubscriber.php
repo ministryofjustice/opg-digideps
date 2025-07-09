@@ -5,7 +5,6 @@ namespace App\EventSubscriber;
 use App\Service\Client\RestClientInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
@@ -15,7 +14,6 @@ class LogoutSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly RestClientInterface $restClient,
-        private readonly RouterInterface $router,
     ) {
     }
 
@@ -39,7 +37,7 @@ class LogoutSubscriber implements EventSubscriberInterface
         }
         $request->getSession()->set('fromLogoutPage', 1);
 
-        $response = new RedirectResponse($this->router->generate('login'));
+        $response = new RedirectResponse('/login');
 
         $event->setResponse($response);
     }
