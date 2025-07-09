@@ -149,7 +149,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "pa_uploads_branch_replication"
 
     expiration {
       days                         = 10
-      expired_object_delete_marker = true
+      expired_object_delete_marker = false
     }
   }
 }

@@ -12,6 +12,15 @@ resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
   retention_in_days = 180
 }
 
+resource "aws_cloudwatch_log_anomaly_detector" "vpc_flow_logs" {
+  detector_name           = "vpc-flow-logs"
+  log_group_arn_list      = [aws_cloudwatch_log_group.vpc_flow_logs.arn]
+  anomaly_visibility_time = 14
+  evaluation_frequency    = "TEN_MIN"
+  enabled                 = "true"
+  kms_key_id              = module.anomaly_kms.eu_west_1_target_key_arn
+}
+
 # To monitor the default VPC. Logs should be empty.
 resource "aws_flow_log" "vpc_flow_logs_default" {
   iam_role_arn    = aws_iam_role.vpc_flow_logs.arn

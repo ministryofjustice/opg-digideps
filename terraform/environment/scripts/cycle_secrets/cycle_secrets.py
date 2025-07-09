@@ -128,7 +128,7 @@ def modify_db_instances_password(session, workspaces, aws_config):
             exit(1)
 
 
-def restart_ecs_services(session, workspaces, aws_config):
+def restart_ecs_services(session, workspaces, aws_config, api_only=False):
     """
     Force new deployments for ECS services across given workspaces to get the new secrets.
     """
@@ -136,7 +136,11 @@ def restart_ecs_services(session, workspaces, aws_config):
 
     for workspace in workspaces:
         cluster = workspace
-        services = [f"api-{workspace}", f"admin-{workspace}", f"front-{workspace}"]
+        services = (
+            [f"api-{workspace}"]
+            if api_only
+            else [f"api-{workspace}", f"admin-{workspace}", f"front-{workspace}"]
+        )
 
         passed = True
         for service_name in services:
@@ -182,6 +186,7 @@ def main(environment, secret_type):
     elif secret_type == "database":
         cycle_secrets(session, workspaces, aws_config, db_secrets_list)
         modify_db_instances_password(session, workspaces, aws_config)
+        restart_ecs_services(session, workspaces, aws_config, True)
     else:
         print(f"Incorrect secret type of {secret_type}")
         sys.exit(1)

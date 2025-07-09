@@ -6,7 +6,11 @@ BEGIN
      CREATE USER "readonly-db-iam-string-to-replace-with-local-environment" WITH LOGIN;
   END IF;
 
-  GRANT rds_iam TO "readonly-db-iam-string-to-replace-with-local-environment";
+  IF EXISTS (SELECT * FROM pg_roles WHERE rolname = 'rds_iam') THEN
+     GRANT rds_iam TO "readonly-db-iam-string-to-replace-with-local-environment";
+  END IF;
+
+  ALTER USER "readonly-db-iam-string-to-replace-with-local-environment" SET log_statement = 'all';
 
 END
 $$

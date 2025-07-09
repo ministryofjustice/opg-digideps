@@ -7,14 +7,13 @@ use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
 use App\Tests\Integration\Fixtures;
 use Doctrine\ORM\EntityManager;
+use Osteel\OpenApi\Testing\ValidatorBuilder;
+use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @property JWTService|null $jwtService
- */
 abstract class AbstractTestController extends WebTestCase
 {
     protected static EntityManager $em;
@@ -24,6 +23,8 @@ abstract class AbstractTestController extends WebTestCase
     protected static string|false $adminSecret;
     protected ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
+    private ?ValidatorInterface $openapiValidator = null;
+
 
     /**
      * Create static client and fixtures.
@@ -62,10 +63,7 @@ abstract class AbstractTestController extends WebTestCase
         parent::tearDownAfterClass();
     }
 
-    /**
-     * @return Fixtures
-     */
-    public static function fixtures()
+    public static function fixtures(): Fixtures
     {
         return self::$fixtures;
     }
@@ -103,7 +101,6 @@ abstract class AbstractTestController extends WebTestCase
             $rawData
         );
 
-        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: '.$headers['CONTENT_TYPE']);
 
@@ -166,11 +163,8 @@ abstract class AbstractTestController extends WebTestCase
         $this->assertEquals($email, $responseArray['email']);
         $this->loggedInUserId = $responseArray['id'];
 
-        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
-        $token = $response->headers->get('AuthToken');
-
-        return $token;
+        return $response->headers->get('AuthToken');
     }
 
     protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
@@ -306,12 +300,26 @@ abstract class AbstractTestController extends WebTestCase
         parent::tearDown();
 
         // clean up vars
-        $refl = new \ReflectionObject($this);
-        foreach ($refl->getProperties() as $prop) {
-            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
-                $prop->setAccessible(true);
-                $prop->setValue($this, null);
+        $reflectionObject = new \ReflectionObject($this);
+        foreach ($reflectionObject->getProperties() as $property) {
+            if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $property->setValue($this, null);
             }
         }
+    }
+
+    private function getOpenApiSpecification()
+    {
+        if ($this->openapiValidator === null) {
+            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();
+        }
+
+        return $this->openapiValidator;
+    }
+
+    protected function validateResponseAgainstOpenApiSpecification(string $path, string $method): void
+    {
+        $validator = $this->getOpenApiSpecification();
+        $this->assertTrue($validator->validate(self::$frameworkBundleClient->getResponse(), $path, $method));
     }
 }

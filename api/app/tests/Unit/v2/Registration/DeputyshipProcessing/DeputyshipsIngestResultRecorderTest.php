@@ -14,12 +14,13 @@ use Psr\Log\LoggerInterface;
 
 class DeputyshipsIngestResultRecorderTest extends TestCase
 {
+    private LoggerInterface $mockLogger;
     private DeputyshipsIngestResultRecorder $sut;
 
     public function setUp(): void
     {
-        $mockLogger = $this->createMock(LoggerInterface::class);
-        $this->sut = new DeputyshipsIngestResultRecorder($mockLogger);
+        $this->mockLogger = $this->createMock(LoggerInterface::class);
+        $this->sut = new DeputyshipsIngestResultRecorder($this->mockLogger);
     }
 
     public function testRecordCsvLoadResultFailure(): void
@@ -51,14 +52,14 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $expectedMessage = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database '.
+        $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database '.
             'updates; number of candidates applied = 0; number of candidates failed = 0; successfully ingested '.
             'deputyships CSV';
 
         $result = $this->sut->result();
 
         self::assertTrue($result->success);
-        self::assertStringContainsString($expectedMessage, $result->message);
+        self::assertStringContainsString($expectedMessage1, $result->message);
     }
 
     public function testRecordBuilderResult(): void
@@ -95,5 +96,20 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
         $result = $this->sut->result();
 
         self::assertStringContainsString($expected, $result->message);
+    }
+
+    public function testDryRun(): void
+    {
+        $this->sut->setDryRun(true);
+
+        // logger should only log at warning level
+        $this->mockLogger->expects($this->once())->method('warning')->willReturnCallback(
+            function (string $message) {
+                self::assertStringContainsString('failed to load deputyships CSV from', $message);
+            }
+        );
+
+        // record a failed ingest step
+        $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/test.csv', false));
     }
 }
