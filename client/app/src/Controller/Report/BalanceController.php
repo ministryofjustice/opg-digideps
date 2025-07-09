@@ -35,8 +35,8 @@ class BalanceController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
@@ -44,10 +44,8 @@ class BalanceController extends AbstractController
      * @Route("/report/{reportId}/balance", name="balance")
      *
      * @Template("@App/Report/Balance/balance.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function balanceAction(Request $request, $reportId)
+    public function balanceAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ReasonForBalanceType::class, $report);
@@ -65,13 +63,5 @@ class BalanceController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'balance';
     }
 }
