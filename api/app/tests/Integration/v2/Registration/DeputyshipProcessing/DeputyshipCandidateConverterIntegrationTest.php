@@ -75,6 +75,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2022-06-10',
+            'clientId' => $client->getId(),
         ];
         $candidatesGroup1->insertOthers = [
             ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid1, 'ndrId' => $ndr->getId()],
@@ -90,6 +91,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
+            'clientId' => $client->getId(),
         ];
         $candidatesGroup2->insertOthers = [
             ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid2, 'ndrId' => $ndr->getId()],
@@ -106,6 +108,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
+            'clientId' => $client->getId(),
         ];
 
         $result = $this->sut->convert($candidatesGroup1, dryRun: $dryRun);

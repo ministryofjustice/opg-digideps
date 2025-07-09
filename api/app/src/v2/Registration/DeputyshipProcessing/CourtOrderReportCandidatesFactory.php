@@ -34,9 +34,9 @@ class CourtOrderReportCandidatesFactory
                         (
                             d.deputy_type = 'LAY'
                             AND (
-                                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102', '103'))
+                                (d.order_type = 'pfa' AND d.is_hybrid IS NULL AND r.type IN ('102', '103'))
                                 OR
-                                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104'))
+                                (d.order_type = 'hw' AND d.is_hybrid IS NULL AND r.type IN ('104'))
                                 OR
                                 (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4', '103-4'))
                             )
@@ -45,9 +45,9 @@ class CourtOrderReportCandidatesFactory
                         (
                             d.deputy_type = 'PA'
                             AND (
-                                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-6', '103-6'))
+                                (d.order_type = 'pfa' AND d.is_hybrid IS NULL AND r.type IN ('102-6', '103-6'))
                                 OR
-                                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-6'))
+                                (d.order_type = 'hw' AND d.is_hybrid IS NULL AND r.type IN ('104-6'))
                                 OR
                                 (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-6', '103-4-6'))
                             )
@@ -56,9 +56,9 @@ class CourtOrderReportCandidatesFactory
                         (
                             d.deputy_type = 'PRO'
                             AND (
-                                (d.order_type = 'pfa' AND d.is_hybrid = '0' AND r.type IN ('102-5', '103-5'))
+                                (d.order_type = 'pfa' AND d.is_hybrid IS NULL AND r.type IN ('102-5', '103-5'))
                                 OR
-                                (d.order_type = 'hw' AND d.is_hybrid = '0' AND r.type IN ('104-5'))
+                                (d.order_type = 'hw' AND d.is_hybrid IS NULL AND r.type IN ('104-5'))
                                 OR
                                 (d.order_type IN ('hw', 'pfa') AND d.is_hybrid = '1' AND r.type IN ('102-4-5', '103-4-5'))
                             )
