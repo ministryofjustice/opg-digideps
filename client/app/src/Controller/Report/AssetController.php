@@ -214,7 +214,7 @@ class AssetController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/assets/property/step{step}/{assetId}", name="assets_property_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/assets/property/step{step}/{assetId}", requirements={"step":"\d+"}, name="assets_property_step")
      *
      * @Template("@App/Report/Asset/Property/step.html.twig")
      */

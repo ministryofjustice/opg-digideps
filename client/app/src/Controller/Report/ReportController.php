@@ -669,7 +669,7 @@ class ReportController extends AbstractController
     /**
      * Used for active and archived report.
      *
-     * @Route("/report/{reportId}/pdf-debug")
+     * @Route("/report/{reportId}/pdf-debug", name="report_pdf_debug")
      *
      * @return Response|null
      */
