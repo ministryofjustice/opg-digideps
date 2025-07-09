@@ -21,9 +21,9 @@ class OtherInfoController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
@@ -31,10 +31,8 @@ class OtherInfoController extends AbstractController
      * @Route("/report/{reportId}/any-other-info", name="other_info")
      *
      * @Template("@App/Report/OtherInfo/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
@@ -50,10 +48,8 @@ class OtherInfoController extends AbstractController
      * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
      *
      * @Template("@App/Report/OtherInfo/step.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function stepAction(Request $request, int $reportId, int $step): array|RedirectResponse
     {
         $totalSteps = 1; // only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
@@ -97,10 +93,8 @@ class OtherInfoController extends AbstractController
      * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
      *
      * @Template("@App/Report/OtherInfo/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -112,13 +106,5 @@ class OtherInfoController extends AbstractController
             'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'otherInfo';
     }
 }

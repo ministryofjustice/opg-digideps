@@ -40,15 +40,15 @@ class DocumentController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private S3FileUploader $fileUploader,
-        private ClientApi $clientApi,
-        private StepRedirector $stepRedirector,
-        private TranslatorInterface $translator,
-        private DocumentService $documentService,
-        private LoggerInterface $logger,
-        private S3Storage $s3Storage,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly S3FileUploader $fileUploader,
+        private readonly ClientApi $clientApi,
+        private readonly StepRedirector $stepRedirector,
+        private readonly TranslatorInterface $translator,
+        private readonly DocumentService $documentService,
+        private readonly LoggerInterface $logger,
+        private readonly S3Storage $s3Storage,
     ) {
     }
 
@@ -83,10 +83,8 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/step/1", name="documents_step")
      *
      * @Template("@App/Report/Document/step1.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function step1Action(Request $request, $reportId)
+    public function step1Action(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -142,17 +140,15 @@ class DocumentController extends AbstractController
      *
      * @Template("@App/Report/Document/step2.html.twig")
      *
-     * @return array|RedirectResponse
-     *
      * @throws \Exception
      */
     public function step2Action(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
-        string $reportId,
+        int $reportId,
         LoggerInterface $logger,
-    ) {
-        $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
+    ): array|RedirectResponse {
+        $report = $this->reportApi->refreshReportStatusCache("$reportId", ['documents'], self::$jmsGroups);
 
         $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
         $form = $this->createForm(FormDir\Report\UploadType::class, null, [
@@ -244,16 +240,14 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/reupload", name="report_documents_reupload")
      *
      * @Template("@App/Report/Document/reupload.html.twig")
-     *
-     * @return array|RedirectResponse
      */
     public function documentReUpload(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
-        string $reportId,
+        int $reportId,
         LoggerInterface $logger,
-    ) {
-        $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
+    ): array|RedirectResponse {
+        $report = $this->reportApi->refreshReportStatusCache("$reportId", ['documents'], self::$jmsGroups);
 
         $backLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
@@ -383,10 +377,8 @@ class DocumentController extends AbstractController
      * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
      *
      * @Template("@App/Report/Document/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, int $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
@@ -409,10 +401,8 @@ class DocumentController extends AbstractController
      * @Route("/documents/{documentId}/delete", name="delete_document")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse|Response
      */
-    public function deleteConfirmAction(Request $request, string $documentId)
+    public function deleteConfirmAction(Request $request, string $documentId): array|RedirectResponse|Response
     {
         $document = $this->getDocument($documentId);
 
@@ -454,10 +444,8 @@ class DocumentController extends AbstractController
 
     /**
      * Retrieves the document object with required associated entities to populate the table and back links.
-     *
-     * @return Document
      */
-    private function getDocument(string $documentId)
+    private function getDocument(string $documentId): Document
     {
         return $this->restClient->get(
             'document/'.$documentId,
@@ -468,10 +456,8 @@ class DocumentController extends AbstractController
 
     /**
      * Removes a document, adds a flash message and redirects to page.
-     *
-     * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, string $documentId)
+    public function deleteDocument(Request $request, string $documentId): RedirectResponse
     {
         $document = $this->getDocument($documentId);
 
@@ -537,13 +523,5 @@ class DocumentController extends AbstractController
         $documentId = $request->query->getInt('documentId');
 
         return $this->deleteDocument($request, strval($documentId));
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'documents';
     }
 }

@@ -22,9 +22,9 @@ class VisitsCareController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
@@ -32,10 +32,8 @@ class VisitsCareController extends AbstractController
      * @Route("/report/{reportId}/visits-care", name="visits_care")
      *
      * @Template("@App/Report/VisitsCare/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
@@ -51,10 +49,8 @@ class VisitsCareController extends AbstractController
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
      *
      * @Template("@App/Report/VisitsCare/step.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
+    public function stepAction(Request $request, int $reportId, int $step, TranslatorInterface $translator): array|RedirectResponse
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
@@ -119,10 +115,8 @@ class VisitsCareController extends AbstractController
      * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
      *
      * @Template("@App/Report/VisitsCare/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -139,13 +133,5 @@ class VisitsCareController extends AbstractController
             'report' => $report,
             'status' => $report->getStatus(),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'visitsCare';
     }
 }

@@ -27,9 +27,9 @@ class MoneyInController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
@@ -37,10 +37,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in", name="money_in")
      *
      * @Template("@App/Report/MoneyIn/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInState()['state']) {
@@ -56,10 +54,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/exist", name="does_money_in_exist")
      *
      * @Template("@App/Report/MoneyIn/exist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\DoesMoneyInExistType::class, $report);
@@ -143,10 +139,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/no-money-in-exists", name="no_money_in_exists")
      *
      * @Template("@App/Report/MoneyIn/noMoneyInToReport.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function noMoneyInToReport(Request $request, $reportId)
+    public function noMoneyInToReport(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
@@ -176,12 +170,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", requirements={"step":"\d+"}, name="money_in_step")
      *
      * @Template("@App/Report/MoneyIn/step.html.twig")
-     *
-     * @param null $transactionId
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step, AuthorizationCheckerInterface $authorizationChecker, $transactionId = null)
+    public function stepAction(Request $request, int $reportId, int $step, AuthorizationCheckerInterface $authorizationChecker, ?int $transactionId = null): array|RedirectResponse
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -286,10 +276,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
      *
      * @Template("@App/Report/MoneyIn/addAnother.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
@@ -315,10 +303,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
      *
      * @Template("@App/Report/MoneyIn/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -337,10 +323,8 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transactionId, TranslatorInterface $translator)
+    public function deleteAction(Request $request, int $reportId, int $transactionId, TranslatorInterface $translator): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -387,13 +371,5 @@ class MoneyInController extends AbstractController
             'summary' => $summary,
             'backLink' => $this->generateUrl('money_in_summary', ['reportId' => $reportId]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'moneyIn';
     }
 }

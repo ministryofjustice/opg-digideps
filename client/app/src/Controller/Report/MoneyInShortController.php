@@ -23,8 +23,8 @@ class MoneyInShortController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
@@ -32,10 +32,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
      *
      * @Template("@App/Report/MoneyInShort/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -52,10 +50,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/exist", name="does_money_in_short_exist")
      *
      * @Template("@App/Report/MoneyInShort/exist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -116,10 +112,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/no-money-in-short-exists", name="no_money_in_short_exists")
      *
      * @Template("@App/Report/MoneyInShort/noMoneyInShortToReport.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function noMoneyInShortToReport(Request $request, $reportId)
+    public function noMoneyInShortToReport(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
@@ -149,10 +143,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
      *
      * @Template("@App/Report/MoneyInShort/category.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function categoryAction(Request $request, $reportId)
+    public function categoryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = 'summary' == $request->get('from');
@@ -188,10 +180,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/oneOffPaymentsExist", name="money_in_short_one_off_payments_exist")
      *
      * @Template("@App/Report/MoneyInShort/oneOffPaymentsExist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function oneOffPaymentsExistAction(Request $request, $reportId)
+    public function oneOffPaymentsExistAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -249,10 +239,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
      *
      * @Template("@App/Report/MoneyInShort/add.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $record = new MoneyTransactionShort('in');
@@ -280,10 +268,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
      *
      * @Template("@App/Report/MoneyInShort/addAnother.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -309,10 +295,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
      *
      * @Template("@App/Report/MoneyInShort/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $transactionId)
+    public function editAction(Request $request, int $reportId, int $transactionId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = $this->restClient->get('report/'.$report->getId().'/money-transaction-short/'.$transactionId, 'Report\MoneyTransactionShort');
@@ -340,10 +324,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $transactionId)
+    public function deleteAction(Request $request, int $reportId, int $transactionId): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -380,10 +362,8 @@ class MoneyInShortController extends AbstractController
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
      *
      * @Template("@App/Report/MoneyInShort/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -397,13 +377,5 @@ class MoneyInShortController extends AbstractController
             'report' => $report,
             'status' => $report->getStatus(),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'moneyInShort';
     }
 }

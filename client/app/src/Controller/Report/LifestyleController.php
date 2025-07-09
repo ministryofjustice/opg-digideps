@@ -21,9 +21,9 @@ class LifestyleController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
@@ -31,10 +31,8 @@ class LifestyleController extends AbstractController
      * @Route("/report/{reportId}/lifestyle", name="lifestyle")
      *
      * @Template("@App/Report/Lifestyle/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getLifestyleState()['state']) {
@@ -50,10 +48,8 @@ class LifestyleController extends AbstractController
      * @Route("/report/{reportId}/lifestyle/step/{step}", name="lifestyle_step")
      *
      * @Template("@App/Report/Lifestyle/step.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function stepAction(Request $request, int $reportId, int $step): array|RedirectResponse
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
@@ -110,10 +106,8 @@ class LifestyleController extends AbstractController
      * @Route("/report/{reportId}/lifestyle/summary", name="lifestyle_summary")
      *
      * @Template("@App/Report/Lifestyle/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -130,13 +124,5 @@ class LifestyleController extends AbstractController
             'report' => $report,
             'status' => $report->getStatus(),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'lifestyle';
     }
 }

@@ -30,29 +30,18 @@ class ProfDeputyCostsEstimateController extends AbstractController
         'prof-deputy-estimate-management-costs',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("", name="prof_deputy_costs_estimate")
+     *
      * @Template("@App/Report/ProfDeputyCostsEstimate/start.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId, ProfCostsEstimateSubSectionRouteResolver $routeResolver)
+    public function startAction(int $reportId, ProfCostsEstimateSubSectionRouteResolver $routeResolver): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $state = $report->getStatus()->getProfDeputyCostsEstimateState()['state'];
@@ -68,13 +57,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/how-charged", name="prof_deputy_costs_estimate_how_charged")
+     *
      * @Template("@App/Report/ProfDeputyCostsEstimate/howCharged.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function howChargedAction(Request $request, $reportId)
+    public function howChargedAction(Request $request, int $reportId): array|RedirectResponse
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
@@ -105,13 +91,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
+     *
      * @Template("@App/Report/ProfDeputyCostsEstimate/breakdown.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function breakdownAction(Request $request, $reportId)
+    public function breakdownAction(Request $request, int $reportId): array|RedirectResponse
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -148,13 +131,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/more-info", name="prof_deputy_costs_estimate_more_info")
+     *
      * @Template("@App/Report/ProfDeputyCostsEstimate/moreInfo.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function moreInfoAction(Request $request, $reportId)
+    public function moreInfoAction(Request $request, int $reportId): array|RedirectResponse
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
@@ -181,13 +161,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * @Route("/summary", name="prof_deputy_costs_estimate_summary")
+     *
      * @Template("@App/Report/ProfDeputyCostsEstimate/summary.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -208,10 +185,8 @@ class ProfDeputyCostsEstimateController extends AbstractController
      * Retrieves the list of default estimate cost type IDs using virtual property from api
      * Used to generate the page since with no initial data, we cant display form inputs
      * without this list.
-     *
-     * @return array
      */
-    private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
+    private function generateDefaultEstimateCosts(Report $report): array
     {
         $estimateCosts = [];
 
@@ -228,22 +203,17 @@ class ProfDeputyCostsEstimateController extends AbstractController
         return $estimateCosts;
     }
 
-    /**
-     * @param $id
-     */
-    private function persistUpdate($id, Report $report, array $groups)
+    private function persistUpdate(int $id, Report $report, array $groups)
     {
         $this->restClient->put('report/'.$id, $report, $groups);
     }
 
-    /**
-     * @param $originalHowChargedValue
-     *
-     * @return string
-     */
-    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, $originalHowChargedValue)
+    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, string $originalHowChargedValue): string
     {
-        $updatedHowCharged = $form->getData()->getProfDeputyCostsEstimateHowCharged();
+        /** @var Report $report */
+        $report = $form->getData();
+
+        $updatedHowCharged = $report->getProfDeputyCostsEstimateHowCharged();
 
         if ($this->answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)) {
             return 'prof_deputy_costs_estimate_breakdown';
@@ -254,23 +224,9 @@ class ProfDeputyCostsEstimateController extends AbstractController
             'prof_deputy_costs_estimate_breakdown';
     }
 
-    /**
-     * @param $originalHowChargedValue
-     * @param $updatedHowCharged
-     *
-     * @return bool
-     */
-    private function answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)
+    private function answerHasChangedFromFixedToNonFixed(string $originalHowChargedValue, string $updatedHowCharged): bool
     {
-        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $originalHowChargedValue &&
-            Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $updatedHowCharged;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'profDeputyCostsEstimate';
+        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $originalHowChargedValue
+            && Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $updatedHowCharged;
     }
 }
