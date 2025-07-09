@@ -241,11 +241,6 @@ parameters:
 			path: src/Controller/Admin/AjaxController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:detailsAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:dischargeAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/Client/ClientController.php
@@ -256,13 +251,8 @@ parameters:
 			path: src/Controller/Admin/Client/ClientController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:unarchiveAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
 			message: "#^Parameter \\#1 \\$clientId of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getWithUsersV2\\(\\) expects int, string given\\.$#"
-			count: 3
+			count: 2
 			path: src/Controller/Admin/Client/ClientController.php
 
 		-
@@ -322,11 +312,6 @@ parameters:
 
 		-
 			message: "#^Match expression does not handle remaining value\\: non\\-falsy\\-string$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ReportController\\:\\:manageCloseReportConfirmAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/Client/ReportController.php
 

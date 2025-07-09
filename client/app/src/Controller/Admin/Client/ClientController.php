@@ -18,8 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClientController extends AbstractController
 {
     public function __construct(
-        private ClientApi $clientApi,
-        private UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly UserApi $userApi,
     ) {
     }
 
@@ -29,11 +29,9 @@ class ClientController extends AbstractController
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @param string $id
-     *
      * @Template("@App/Admin/Client/Client/details.html.twig")
      */
-    public function detailsAction($id)
+    public function detailsAction(int $id): array|RedirectResponse
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null !== $client->getArchivedAt()) {
@@ -58,10 +56,8 @@ class ClientController extends AbstractController
      * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @return RedirectResponse
      */
-    public function detailsByCaseNumberAction(string $caseNumber)
+    public function detailsByCaseNumberAction(string $caseNumber): RedirectResponse
     {
         $client = $this->clientApi->getByCaseNumber($caseNumber);
 
@@ -74,10 +70,8 @@ class ClientController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
      * @Template("@App/Admin/Client/Client/discharge.html.twig")
-     *
-     * @return array
      */
-    public function dischargeAction($id)
+    public function dischargeAction($id): array
     {
         $client = $this->clientApi->getWithUsersV2($id);
 
@@ -92,11 +86,9 @@ class ClientController extends AbstractController
      *
      * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
-     * @return RedirectResponse
-     *
      * @throws \Exception
      */
-    public function dischargeConfirmAction($id)
+    public function dischargeConfirmAction($id): RedirectResponse
     {
         $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
@@ -130,7 +122,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Admin/Client/Client/unarchived.html.twig")
      */
-    public function unarchiveAction(string $id)
+    public function unarchiveAction(string $id): ?RedirectResponse
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null === $client->getArchivedAt()) {
@@ -138,5 +130,7 @@ class ClientController extends AbstractController
         }
 
         $this->clientApi->unarchiveClient($id);
+
+        return null;
     }
 }

@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/report/{id}/", requirements={"id":"\d+"})
+ * @Route("/admin/report/{id}", requirements={"id":"\d+"})
  */
 class ReportController extends AbstractController
 {
@@ -102,17 +102,13 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("checklist", name="admin_report_checklist")
+     * @Route("/checklist", name="admin_report_checklist")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @param string $id
-     *
      * @Template("@App/Admin/Client/Report/checklist.html.twig")
-     *
-     * @return array|RedirectResponse|Response
      */
-    public function checklistAction(Request $request, $id)
+    public function checklistAction(Request $request, string $id): array|Response
     {
         $report = $this->reportApi->getReport(
             intval($id),
@@ -139,6 +135,7 @@ class ReportController extends AbstractController
         $buttonClicked = $form->getClickedButton();
 
         $reviewChecklist = $this->restClient->get('report/'.$report->getId().'/checklist', 'Report\\ReviewChecklist');
+
         /** @var Form $reviewForm */
         $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
@@ -146,6 +143,7 @@ class ReportController extends AbstractController
         if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
             /** @var SubmitButton $button */
             $button = $reviewForm->getClickedButton();
+
             if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
                 $reviewChecklist->setIsSubmitted(true);
             }
@@ -232,15 +230,13 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("checklist-submitted", name="admin_report_checklist_submitted")
+     * @Route("/checklist-submitted", name="admin_report_checklist_submitted")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
-     * @return array
-     *
      * @Template("@App/Admin/Client/Report/checklistSubmitted.html.twig")
      */
-    public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore)
+    public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore): array
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist']);
         $syncFeatureIsEnabled = false;
@@ -265,13 +261,11 @@ class ReportController extends AbstractController
     /**
      * Generate and return Checklist as Response object.
      *
-     * @Route("checklist.pdf", name="admin_checklist_pdf")
+     * @Route("/checklist.pdf", name="admin_checklist_pdf")
      *
      * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return Response
      */
-    public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService)
+    public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
@@ -301,15 +295,13 @@ class ReportController extends AbstractController
     /**
      * Generate and upload the.
      *
-     * @Route("regenerate-pdf", methods={"GET"}, name="admin_regenerate_pdf")
+     * @Route("/regenerate-pdf", methods={"GET"}, name="admin_regenerate_pdf")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @Template("@App/Admin/ReportSubmission/regenerate-pdf.html.twig")
-     *
-     * @return array
      */
-    public function regeneratePDF(int $id, ReportSubmissionService $reportSubmissionService)
+    public function regeneratePDF(int $id, ReportSubmissionService $reportSubmissionService): array
     {
         $report = $this->reportApi->getReport($id, self::$reportGroupsAll);
         $reportSubmissionService->generateReportPdf($report, true);
@@ -320,7 +312,7 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("manage", name="admin_report_manage")
+     * @Route("/manage", name="admin_report_manage")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -328,11 +320,9 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Admin/Client/Report/manage.html.twig")
      *
-     * @return array|Response|RedirectResponse
-     *
      * @throws \Exception
      */
-    public function manageAction(Request $request, $id)
+    public function manageAction(Request $request, $id): array|Response
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
@@ -432,17 +422,15 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("manage-confirm", name="admin_report_manage_confirm")
+     * @Route("/manage-confirm", name="admin_report_manage_confirm")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @return array|Response|RedirectResponse
+     * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      *
      * @throws \Exception
-     *
-     * @Template("@App/Admin/Client/Report/manageConfirm.html.twig")
      */
-    public function manageConfirmAction(Request $request, $id)
+    public function manageConfirmAction(Request $request, $id): array|Response
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
@@ -520,17 +508,15 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
+     * @Route("/manage-close-report-confirm", name="admin_report_manage_close_report_confirm")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @return array|RedirectResponse
      *
      * @Template("@App/Admin/Client/Report/manageCloseReportConfirm.html.twig")
      *
      * @throws \Exception
      */
-    public function manageCloseReportConfirmAction(Request $request, $id)
+    public function manageCloseReportConfirmAction(Request $request, string $id): array|RedirectResponse
     {
         $form = $this->createForm(CloseReportConfirmType::class);
         $form->handleRequest($request);

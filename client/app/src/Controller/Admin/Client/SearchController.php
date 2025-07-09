@@ -20,19 +20,19 @@ class SearchController extends AbstractController
     private $restClient;
 
     public function __construct(
-        RestClient $restClient
+        RestClient $restClient,
     ) {
         $this->restClient = $restClient;
     }
 
     /**
      * @Route("/search", name="admin_client_search")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     * @Template("@App/Admin/Client/Search/search.html.twig")
      *
-     * @return array|string
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Client/Search/search.html.twig")
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): array|string
     {
         $searchQuery = $request->query->all('search_clients');
         $form = $this->createForm(SearchClientType::class, null, ['method' => 'GET']);
