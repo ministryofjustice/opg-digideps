@@ -77,7 +77,7 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        /** @var $t EntityDir\Report\MoneyTransaction */
+        /** @var EntityDir\Report\MoneyTransaction $t */
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
