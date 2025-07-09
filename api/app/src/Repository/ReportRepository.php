@@ -131,8 +131,17 @@ class ReportRepository extends ServiceEntityRepository
         } else {
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
-                ->leftJoin('r.client', 'c')
-                ->leftJoin('c.organisation', 'o')
+                ->innerJoin('r.client', 'c')
+                ->innerJoin('c.organisation', 'o')
+                // join report table to itself to calculate the earliest due date for dual reports if they exist
+                ->innerJoin(
+                    'App\Entity\Report\Report',
+                    'r2',
+                    'WITH',
+                    'r2.client = r.client'
+                )
+                // group the earliest due date for each grouped set of reports linked to the same client
+                ->addSelect('MIN(r2.dueDate) AS HIDDEN minDueDate')
                 ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
         }
 
@@ -165,10 +174,14 @@ class ReportRepository extends ServiceEntityRepository
         }
 
         $qb
-            ->setFirstResult($query->get('offset', 0))
-            ->setMaxResults($query->get('limit', 15))
+            // group non-aggregated fields to allow use alongside aggregated MIN(r2.due_date) field
+            ->groupBy('r.id, c.id, o.id')
+            // Additional clause for dual reports => orders reports by end date and groups dual reports which are then ordered by due date
+            ->orderBy('minDueDate', 'ASC')
+            ->addOrderBy('c.caseNumber', 'ASC')
             ->addOrderBy('r.endDate', 'ASC')
-            ->addOrderBy('c.caseNumber', 'ASC');
+            ->setFirstResult($query->get('offset', 0))
+            ->setMaxResults($query->get('limit', 15));
 
         $result = $qb->getQuery()->getArrayResult();
 
@@ -286,7 +299,7 @@ END deputy_type";
 
     public function getAllReportedImbalanceMetrics(
         ?\DateTime $fromDate = null,
-        ?\DateTime $toDate = null
+        ?\DateTime $toDate = null,
     ) {
         if (is_null($fromDate) || is_null($toDate)) {
             $fromDate = new \DateTime('first day of last month');
