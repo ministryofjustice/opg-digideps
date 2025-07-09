@@ -74,6 +74,8 @@ class BehatController extends AbstractController
             if (str_contains($output->fetch(), ChecklistSyncCommand::COMPLETED_MESSAGE)) {
                 return new Response('');
             }
+
+            sleep(1);
         }
     }
 }
