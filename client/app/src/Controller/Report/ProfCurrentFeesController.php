@@ -27,29 +27,18 @@ class ProfCurrentFeesController extends AbstractController
         'report-prof-estimate-fees',
     ];
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ReportApi */
-    private $reportApi;
-
     public function __construct(
-        RestClient $restClient,
-        ReportApi $reportApi
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
     }
 
     /**
      * @Route("", name="prof_current_fees")
+     *
      * @Template("@App/Report/ProfCurrentFees/start.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getProfCurrentFeesState()['state']) {
@@ -63,23 +52,22 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/exist", name="prof_current_fees_exist")
+     *
      * @Template("@App/Report/ProfCurrentFees/exist.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(ProfServiceFeeExistType::class, $report);
         $form->handleRequest($request);
-        $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($report->getCurrentProfPaymentsReceived()) {
                 case 'yes':
-                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'exist']);
+                    return $this->redirectToRoute(
+                        'current_service_fee_step',
+                        ['reportId' => $reportId, 'step' => 1, 'from' => 'exist']
+                    );
                 case 'no':
                     $this->restClient->put('report/'.$reportId, $report, ['current-prof-payments-received']);
 
@@ -100,18 +88,13 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/step/{step}/{feeId}", name="current_service_fee_step", requirements={"step":"\d+"})
+     * @Route("/step/{step}/{feeId}", requirements={"step":"\d+"}, name="current_service_fee_step")
+     *
      * @Template("@App/Report/ProfCurrentFees/step.html.twig")
-     *
-     * @param $reportId
-     * @param $step
-     * @param null $feeId
-     *
-     * @return array|RedirectResponse
      *
      * @throws \Exception
      */
-    public function stepAction(Request $request, $reportId, $step, $feeId = null)
+    public function stepAction(Request $request, int $reportId, int $step, ?int $feeId = null): array|RedirectResponse
     {
         $totalSteps = 2;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -120,12 +103,14 @@ class ProfCurrentFeesController extends AbstractController
         }
         $fromPage = $request->get('from');
 
-        if ($feeId) { //edit
+        if ($feeId) {
+            // edit
             $profServiceFee = array_filter($report->getCurrentProfServiceFees(), function ($f) use ($feeId) {
                 return $f->getId() == $feeId;
             });
             $profServiceFee = array_shift($profServiceFee);
-        } else { // add
+        } else {
+            // add
             $profServiceFee = new EntityDir\Report\ProfServiceFeeCurrent();
             if (!empty($request->get('serviceTypeId'))) {
                 $profServiceFee->setServiceTypeId($request->get('serviceTypeId'));
@@ -143,21 +128,30 @@ class ProfCurrentFeesController extends AbstractController
         $buttonClicked = $form->getClickedButton();
 
         if ($buttonClicked && $form->isSubmitted() && $form->isValid()) {
-            /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
+            /** @var EntityDir\Report\ProfServiceFee $profServiceFee */
             $profServiceFee = $form->getData();
             $profServiceFee->setReport($report);
 
             if (1 == $step) {
                 if (!empty($profServiceFee->getId())) {
                     // Update: update service type only
-                    $this->restClient->put('prof-service-fee/'.$profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType']);
-//                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+                    $this->restClient->put(
+                        'prof-service-fee/'.$profServiceFee->getId(),
+                        $profServiceFee,
+                        ['prof-service-fee-serviceType']
+                    );
 
-                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $profServiceFee->getId(), 'from' => $fromPage]);
+                    return $this->redirectToRoute(
+                        'current_service_fee_step',
+                        ['reportId' => $reportId, 'step' => 2, 'feeId' => $profServiceFee->getId(), 'from' => $fromPage]
+                    );
                 }
 
                 // Create. Just redirect to next step
-                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'serviceTypeId' => $profServiceFee->getServiceTypeId(), 'from' => $fromPage]);
+                return $this->redirectToRoute(
+                    'current_service_fee_step',
+                    ['reportId' => $reportId, 'step' => 2, 'serviceTypeId' => $profServiceFee->getServiceTypeId(), 'from' => $fromPage]
+                );
             }
 
             if (2 == $step) {
@@ -166,17 +160,16 @@ class ProfCurrentFeesController extends AbstractController
                     throw new \Exception('Invalid service type');
                 }
 
-                if (empty($profServiceFee->getId())) { //NEW
+                if (empty($profServiceFee->getId())) { // NEW
                     // Create: POST entire entity + report
                     $this->restClient->post(
                         'report/'.$report->getId().'/prof-service-fee',
                         $profServiceFee,
                         ['report-object', 'prof-service-fees']
                     );
-//                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
-                } else { // EDIT
+                } else {
+                    // Edit
                     $this->restClient->put('prof-service-fee/'.$profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType', 'prof-service-fees']);
-//                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
                 }
 
                 // Handle add another pattern
@@ -187,7 +180,7 @@ class ProfCurrentFeesController extends AbstractController
                         [
                             'reportId' => $reportId,
                             'step' => 1,
-                            'from' => 'another', //2nd addition will have a link to go back to summary (or breadcrumbs)
+                            'from' => 'another', // 2nd addition will have a link to go back to summary (or breadcrumbs)
                         ]
                     );
                 }
@@ -230,13 +223,10 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/previous-estimates/fee/{feeId}", name="previous_estimates")
+     *
      * @Template("@App/Report/ProfCurrentFees/previousEstimates.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function previousEstimatesAction(Request $request, $reportId)
+    public function previousEstimatesAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ProfServicePreviousFeesEstimateType::class, $report);
@@ -271,34 +261,25 @@ class ProfCurrentFeesController extends AbstractController
 
     /**
      * @Route("/summary", name="prof_service_fees_summary")
+     *
      * @Template("@App/Report/ProfCurrentFees/summary.html.twig")
-     *
-     * @param $reportId
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getProfCurrentFeesState()['state']) {
             return $this->redirect($this->generateUrl('prof_current_fees', ['reportId' => $reportId]));
         }
 
-        return
-            [
-                'report' => $report,
-            ];
+        return [
+            'report' => $report,
+        ];
     }
 
     /**
-     * @Route("/delete/fee/{feeId}", name="prof_service_fee_delete", requirements={"feeId":"\d+"})
-     *
-     * @param $reportId
-     * @param $feeId
-     *
-     * @return RedirectResponse
+     * @Route("/delete/fee/{feeId}", requirements={"feeId":"\d+"}. name="prof_service_fee_delete")
      */
-    public function deleteAction(Request $request, $reportId, $feeId)
+    public function deleteAction(Request $request, int $reportId, int $feeId): RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -308,13 +289,5 @@ class ProfCurrentFeesController extends AbstractController
         }
 
         return $this->redirect($this->generateUrl('prof_service_fees_summary', ['reportId' => $reportId]));
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'profCurrentFees';
     }
 }
