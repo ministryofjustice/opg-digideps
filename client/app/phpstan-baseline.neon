@@ -276,11 +276,6 @@ parameters:
 			path: src/Controller/Admin/Client/ClientController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:\\$restClient is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Controller/Admin/Client/ReportController.php
@@ -371,17 +366,7 @@ parameters:
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: "#^Parameter \\#2 \\$user of method App\\\\Service\\\\Client\\\\Internal\\\\ReportApi\\:\\:unsubmit\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: "#^Part \\$form\\['dueDateChoice'\\]\\-\\>getData\\(\\) \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\Client\\\\ReportController\\:\\:\\$logger is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/Admin/Client/ReportController.php
 
@@ -546,11 +531,6 @@ parameters:
 			path: src/Controller/Admin/FixtureController.php
 
 		-
-			message: "#^Parameter \\#2 \\$user of method App\\\\Service\\\\Client\\\\Internal\\\\ReportApi\\:\\:unsubmit\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
 			message: "#^Part \\$sections \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: src/Controller/Admin/FixtureController.php
@@ -651,23 +631,8 @@ parameters:
 			path: src/Controller/Admin/IndexController.php
 
 		-
-			message: "#^Parameter \\#2 \\$currentUser of class App\\\\Event\\\\AdminManagerDeletedEvent constructor expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\IndexController\\:\\:\\$layDeputyshipApi is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\IndexController\\:\\:\\$orgService is never read, only written\\.$#"
-			count: 1
 			path: src/Controller/Admin/IndexController.php
 
 		-
@@ -802,11 +767,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$organisation of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) expects App\\\\Entity\\\\Organisation, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#2 \\$currentUser of class App\\\\Event\\\\OrgCreatedEvent constructor expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
 
