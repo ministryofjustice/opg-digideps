@@ -146,7 +146,7 @@ class MoneyTransaction
      *
      * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-category"})
      */
-    private string $category;
+    private ?string $category = null;
 
     /**
      * @JMS\Type("string")
@@ -154,7 +154,7 @@ class MoneyTransaction
     private string $type;
 
     /**
-     * @JMS\Type("float")
+     * @JMS\Type("string")
      *
      * @JMS\Groups({"transaction"})
      *
@@ -162,7 +162,7 @@ class MoneyTransaction
      *
      * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage = "moneyTransaction.form.amount.notInRangeMessage", groups={"transaction-amount"})
      */
-    private float $amount;
+    private string $amount;
 
     /**
      * @JMS\Type("string")
@@ -171,7 +171,7 @@ class MoneyTransaction
      *
      * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
      */
-    private string $description;
+    private ?string $description = null;
 
     public function getId(): string
     {
@@ -197,38 +197,38 @@ class MoneyTransaction
         return $this;
     }
 
-    public function getCategory(): string
+    public function getCategory(): ?string
     {
         return $this->category;
     }
 
-    public function setCategory(string $category): static
+    public function setCategory(?string $category): static
     {
-        if (MoneyTransaction::isValidCategory($category)) {
+        if ($this->isValidCategory($category)) {
             $this->category = $category;
         }
 
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    public function setAmount(string $amount): static
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -238,7 +238,7 @@ class MoneyTransaction
     /**
      * Checks category is valid.
      */
-    public static function isValidCategory(string $category = ''): bool
+    private function isValidCategory(?string $category = ''): bool
     {
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
