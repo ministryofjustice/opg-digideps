@@ -173,10 +173,11 @@ class ReportRepository extends ServiceEntityRepository
             return $qb->getQuery()->getSingleScalarResult();
         }
 
+        // Additional order by clause added for orgs involved with both sides of a dual report => orders reports by end date and grouped dual reports are ordered by due date
+
         $qb
             // group non-aggregated fields to allow use alongside aggregated MIN(r2.due_date) field
             ->groupBy('r.id, c.id, o.id')
-            // Additional clause for dual reports => orders reports by end date and groups dual reports which are then ordered by due date
             ->orderBy('minDueDate', 'ASC')
             ->addOrderBy('c.caseNumber', 'ASC')
             ->addOrderBy('r.endDate', 'ASC')
