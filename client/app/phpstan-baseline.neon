@@ -6751,47 +6751,12 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:getType\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setAmount\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setBankAccount\\(\\) has parameter \\$bankAccount with no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setBankAccountId\\(\\) has parameter \\$bankAccountId with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setCategory\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setDescription\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setGroup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Parameter \\#1 \\$category of static method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:isValidCategory\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
@@ -6807,31 +6772,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$categories has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$category has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$description \\(string\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$group has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
@@ -11277,11 +11217,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\Csv\\\\TransactionsCsvGenerator\\:\\:generateTransactionsCsvLines\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Csv/TransactionsCsvGenerator.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Service/Csv/TransactionsCsvGenerator.php
 

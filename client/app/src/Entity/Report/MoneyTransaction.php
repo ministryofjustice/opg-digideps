@@ -137,7 +137,7 @@ class MoneyTransaction
      *
      * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-group"})
      */
-    private $group;
+    private string $group;
 
     /**
      * @JMS\Type("string")
@@ -146,17 +146,15 @@ class MoneyTransaction
      *
      * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-category"})
      */
-    private $category;
+    private string $category;
 
     /**
      * @JMS\Type("string")
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var array
-     *
-     * @JMS\Type("string")
+     * @JMS\Type("float")
      *
      * @JMS\Groups({"transaction"})
      *
@@ -164,18 +162,16 @@ class MoneyTransaction
      *
      * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage = "moneyTransaction.form.amount.notInRangeMessage", groups={"transaction-amount"})
      */
-    private $amount;
+    private float $amount;
 
     /**
-     * @var string
+     * @JMS\Type("string")
      *
      * @JMS\Groups({"transaction"})
      *
      * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
-     *
-     * @JMS\Type("string")
      */
-    private $description;
+    private string $description;
 
     public function getId(): string
     {
@@ -189,22 +185,24 @@ class MoneyTransaction
         return $this;
     }
 
-    public function getGroup()
+    public function getGroup(): string
     {
         return $this->group;
     }
 
-    public function setGroup($group)
+    public function setGroup(string $group): static
     {
         $this->group = $group;
+
+        return $this;
     }
 
-    public function getCategory()
+    public function getCategory(): string
     {
         return $this->category;
     }
 
-    public function setCategory($category)
+    public function setCategory(string $category): static
     {
         if (MoneyTransaction::isValidCategory($category)) {
             $this->category = $category;
@@ -213,42 +211,34 @@ class MoneyTransaction
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param array $amount
-     */
-    public function setAmount($amount)
+    public function setAmount(float $amount): static
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
      * Checks category is valid.
-     *
-     * @param string $category
-     *
-     * @return bool
      */
-    public static function isValidCategory($category = '')
+    public static function isValidCategory(string $category = ''): bool
     {
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
@@ -271,10 +261,8 @@ class MoneyTransaction
      * @JMS\SerializedName("type")
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     *
-     * @return string in/out
      */
-    public function getType()
+    public function getType(): ?string
     {
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;

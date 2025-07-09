@@ -209,7 +209,13 @@ class MoneyOutController extends AbstractController
         }
 
         // add URL-data into model
-        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
+        /** @var ?string $category */
+        $category = $dataFromUrl['category'] ?? null;
+
+        if (!is_null($category)) {
+            $transaction->setCategory($category);
+        }
+
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl,
         ]);
@@ -330,14 +336,15 @@ class MoneyOutController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
+        $transaction = null;
         foreach ($report->getMoneyTransactionsOut() as $t) {
-            if ($t->getId() === $transactionId) {
+            if ($t->getId() === "$transactionId") {
                 $transaction = $t;
                 break;
             }
         }
 
-        if (!isset($transaction)) {
+        if (is_null($transaction)) {
             throw $this->createNotFoundException('Transaction not found');
         }
 
