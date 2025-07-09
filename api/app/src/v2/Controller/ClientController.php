@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -91,28 +92,5 @@ class ClientController extends RestController
         }
 
         return $this->buildSuccessResponse($transformedDto);
-    }
-
-    #[Route(path: '/abandoned-registration', name: 'abandoned_registration', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")]
-    public function abandonedRegistration(Request $request): JsonResponse
-    {   /** @var User $user */
-        $user = $this->getUser();
-
-        if ($user->isLayDeputy()) {
-            $userId = $user->getId();
-        } elseif ($request->query->has('uid')) {
-            $userId = $request->query->get('uid');
-        } else {
-            throw $this->createAccessDeniedException('Unable to search for an abandoned registration');
-        }
-
-        $abandonedClient = $this->repository->getClientAbandonedAtRegistration($userId);
-
-        if (1 >= count($abandonedClient)) {
-            throw $this->createNotFoundException('More than one abandoned client found');
-        }
-
-        return $this->buildSuccessResponse($abandonedClient);
     }
 }
