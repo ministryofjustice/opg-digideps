@@ -56,4 +56,4 @@ if [ -f ./tests/Behat/test.env ]; then
   done < ./tests/Behat/test.env
 fi
 
-./vendor/bin/behat --config=./tests/Behat/behat.yml  --tags '@smoke'  --stop-on-failure $@
+./vendor/bin/behat --config=./tests/Behat/behat.yml --profile v2-tests-browserkit --tags '@smoke'  --stop-on-failure $@

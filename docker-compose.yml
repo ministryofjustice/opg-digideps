@@ -377,8 +377,6 @@ services:
         condition: service_started
     volumes:
       - ./api/app/tests/Behat/snapshots:/tmp/html
-    environment:
-      APP_ENV: local
 
   node-js:
     image: opg-digideps-resources
