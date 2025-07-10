@@ -208,25 +208,20 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $this->restClient->put('report/'.$id, $report, $groups);
     }
 
-    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, string $originalHowChargedValue): string
+    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, ?string $originalHowChargedValue): string
     {
         /** @var Report $report */
         $report = $form->getData();
 
         $updatedHowCharged = $report->getProfDeputyCostsEstimateHowCharged();
 
-        if ($this->answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)) {
+        // if answer changed from fixed to non-fixed, show estimate breakdown
+        if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $originalHowChargedValue && Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $updatedHowCharged) {
             return 'prof_deputy_costs_estimate_breakdown';
         }
 
         return ('summary' === $request->get('from') || Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $updatedHowCharged) ?
             'prof_deputy_costs_estimate_summary' :
             'prof_deputy_costs_estimate_breakdown';
-    }
-
-    private function answerHasChangedFromFixedToNonFixed(string $originalHowChargedValue, string $updatedHowCharged): bool
-    {
-        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $originalHowChargedValue
-            && Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $updatedHowCharged;
     }
 }
