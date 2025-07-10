@@ -1,14 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
+use App\Entity\Client;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\Expense;
 use App\Entity\Report\Gift;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\ReportInterface;
-use Common\Form\Elements\Validators\Money;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -22,7 +23,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
     private $mockReport;
 
     /**
-     * Set up the mockservies
+     * Set up the mockservies.
      */
     public function setUp(): void
     {
@@ -35,7 +36,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
 
     public function testGenerateTransactionsCsvNoTransactions()
     {
-        $this->mockReport = $this->generateMockReport(99, 0, 0, 0, 0);
+        $this->mockReport = $this->generateMockReport(99);
 
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
         $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
@@ -59,17 +60,11 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
         $this->assertEquals(10, preg_match_all('/Money in/', $csvString));
 
         $this->assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
-        $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12\-34\-56\)/', $csvString));
+        $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12-34-56\)/', $csvString));
     }
 
     /**
-     * Generates a mock Report with id and associated transactions
-     *
-     * @param $reportId
-     * @param $numGifts
-     * @param $numExpenses
-     * @param $numMoneyOut
-     * @param $numMoneyIn
+     * Generates a mock Report with id and associated transactions.
      */
     private function generateMockReport(
         $reportId,
@@ -78,7 +73,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
         $numMoneyOut = 0,
         $numMoneyIn = 0,
         $dueDate = '2/5/2018',
-        $submitDate = '4/28/2018'
+        $submitDate = '4/28/2018',
     ) {
         $mockReport = m::mock(ReportInterface::class);
 
@@ -117,51 +112,45 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
     }
 
     /**
-     * Generates $qty of Mock entited of class $class
+     * Generates $qty of Mock entited of class $class.
      *
-     * @param $class
-     * @param $qty
      * @return array
      */
     private function generateMockTransactions($class, $qty)
     {
         $mocks = [];
-        for ($i=0; $i < $qty; $i++) {
+        for ($i = 0; $i < $qty; ++$i) {
             array_push($mocks, $this->generateMockTransactionEntity($class, $i));
         }
+
         return $mocks;
     }
 
     /**
      * Generates instance of mock Entity $class. Counter used to differentiate properties only.
-     *
-     * @param $class
-     * @param $counter
-     * @return mixed
      */
     private function generateMockTransactionEntity($class, $counter)
     {
         $mock = new $class();
-        $mock->setAmount(10.00);
-        //$mock->setIsJointAccount(true);
+        $mock->setAmount('10.00');
+
         switch ($class) {
             case Gift::class:
-                $mock->setExplanation('explanation for gift ' . $counter);
+                $mock->setExplanation('explanation for gift '.$counter);
                 break;
             case Expense::class:
-                $mock->setExplanation('explanation for expense ' . $counter);
+                $mock->setExplanation('explanation for expense '.$counter);
                 break;
             case MoneyTransaction::class:
                 // Assign Category based on counter
-                $mock->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories)-1)][0]);
-                $mock->setDescription('description for transaction ' . $counter);
+                $mock->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories) - 1)][0]);
+                $mock->setDescription('description for transaction '.$counter);
 
                 break;
         }
 
-
         // set all even numbers to have a bank account
-        $bankAccount = ($counter%3 == 0) ? $this->generateBankAccount($counter) : null;
+        $bankAccount = (0 == $counter % 3) ? $this->generateBankAccount($counter) : null;
         $mock->setBankAccount($bankAccount);
 
         return $mock;
@@ -170,30 +159,28 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
     /**
      * Generates instance of mock bank account. $counter used to differentiate.
      *
-     * @param $counter
-     * @return \Mockery\Mock
+     * @return \Mockery\LegacyMockInterface
      */
     private function generateBankAccount($counter)
     {
         $mockBankAccount = m::mock(BankAccount::class)->makePartial();
         $mockBankAccount->shouldReceive('getDisplayName')->andReturn('(**** 1234) 12-34-56)');
-        $mockBankAccount->shouldReceive('getBank')->andReturn('Custom bank name ' . $counter);
+        $mockBankAccount->shouldReceive('getBank')->andReturn('Custom bank name '.$counter);
 
         return $mockBankAccount;
     }
 
     /**
-     * Generates instance of mock user
+     * Generates instance of mock user.
      *
-     * @param $counter
-     * @return \Mockery\Mock
+     * @return \Mockery\LegacyMockInterface
      */
     private function generateMockClient($counter)
     {
         $mock = m::mock(Client::class)->makePartial();
-        $mock->shouldReceive('getFirstname')->andReturn('Firstname' . $counter);
-        $mock->shouldReceive('getLastname')->andReturn('Lastname' . $counter);
-        $mock->shouldReceive('getCaseNumber')->andReturn($counter . $counter . $counter . $counter);
+        $mock->shouldReceive('getFirstname')->andReturn('Firstname'.$counter);
+        $mock->shouldReceive('getLastname')->andReturn('Lastname'.$counter);
+        $mock->shouldReceive('getCaseNumber')->andReturn($counter.$counter.$counter.$counter);
         $mock->shouldReceive('getTotalReportCount')->andReturn($counter * 2);
         $mock->shouldReceive('getUnsubmittedReportsCount')->andReturn(1);
         $mock->shouldReceive('getCourtDate')->andReturn(new \DateTime('11/8/2011'));
