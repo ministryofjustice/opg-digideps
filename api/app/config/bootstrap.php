@@ -11,12 +11,9 @@ if (!class_exists(Dotenv::class)) {
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
 if (is_array($env = @include dirname(__DIR__).'/.env.local.php') && (!isset($env['APP_ENV']) || ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? $env['APP_ENV']) === $env['APP_ENV'])) {
-    file_put_contents('php://stderr', print_r('populating with env', true));
-    file_put_contents('php://stderr', print_r('env is :'.$env, true));
     (new Dotenv(false))->populate($env);
 } else {
     // load all the .env files
-    file_put_contents('php://stderr', print_r('loading api env file!', true));
     (new Dotenv(false))->loadEnv(dirname(__DIR__).'/api.env');
 }
 
