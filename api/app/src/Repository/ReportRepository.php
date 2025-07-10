@@ -142,7 +142,9 @@ class ReportRepository extends ServiceEntityRepository
                 )
                 // allows sorting by the earliest due date for each grouped set of reports linked to the same client
                 ->addSelect('MIN(r2.dueDate) AS HIDDEN minDueDate')
-                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
+                ->where('o.isActivated = true')
+                ->andWhere($qb->expr()->in('o.id', ':orgIdsOrUserId'))
+                ->setParameter(':orgIdsOrUserId', $orgIdsOrUserId);
         }
 
         $qb
