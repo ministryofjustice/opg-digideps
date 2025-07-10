@@ -29,7 +29,7 @@ for sql_file in $(ls $SQL_DIR/*.sql | sort -V); do
     sed "s/string_to_replace_with_real_password/$CUSTOM_SQL_DATABASE_PASSWORD/g" "$sql_file" > "$temp_file"
 
     # Run the modified SQL file
-    psql -h "$DATABASE_HOSTNAME" -U "$DATABASE_USERNAME" -d "$DATABASE_NAME" -p "$DATABASE_PORT" -f "$temp_file"
+    psql -h "$DATABASE_HOSTNAME" -U "$DATABASE_USERNAME" -d postgres -p "$DATABASE_PORT" -f "$temp_file"
 
     # Check for errors
     if [ $? -ne 0 ]; then
