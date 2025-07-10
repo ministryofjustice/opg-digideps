@@ -97,7 +97,7 @@ class ActionController extends AbstractController
      *
      * @Template("@App/Ndr/Action/summary.html.twig")
      */
-    public function summaryAction(Request $request, $ndrId): array|RedirectResponse
+    public function summaryAction(Request $request, int $ndrId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

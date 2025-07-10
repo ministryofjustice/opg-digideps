@@ -147,7 +147,7 @@ class OrganisationController extends AbstractController
      *
      * @Template("@App/Admin/Organisation/form.html.twig")
      */
-    public function editAction(Request $request, ?int $id = null): array|RedirectResponse
+    public function editAction(Request $request, int $id): array|RedirectResponse
     {
         $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
 
@@ -249,7 +249,7 @@ class OrganisationController extends AbstractController
                 if ($organisation->hasUser($userToAdd)) {
                     $errors[] = 'form.email.alreadyInOrgError';
                 }
-            } catch (RestClientException $e) {
+            } catch (RestClientException) {
                 $errors[] = 'form.email.notFoundError';
             }
         }
@@ -264,6 +264,7 @@ class OrganisationController extends AbstractController
 
         if ($form->get('confirm')->isClicked()) {
             try {
+                /** @var User $currentUser */
                 $currentUser = $this->getUser();
                 $this->organisationApi->addUserToOrganisation($organisation, $userToAdd, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
@@ -280,7 +281,7 @@ class OrganisationController extends AbstractController
         return [
             'form' => $form->createView(),
             'organisation' => $organisation,
-            'user' => isset($userToAdd) ? $userToAdd : new User(),
+            'user' => $userToAdd ?? new User(),
             'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()]),
         ];
     }
@@ -350,9 +351,6 @@ class OrganisationController extends AbstractController
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 
-    /**
-     * @return array<mixed>
-     */
     private static function getFiltersFromRequest(Request $request): array
     {
         return [

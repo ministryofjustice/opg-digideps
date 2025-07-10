@@ -108,10 +108,10 @@ class ReportController extends AbstractController
      *
      * @Template("@App/Admin/Client/Report/checklist.html.twig")
      */
-    public function checklistAction(Request $request, string $id): array|Response
+    public function checklistAction(Request $request, int $id): array|Response
     {
         $report = $this->reportApi->getReport(
-            intval($id),
+            $id,
             array_merge(
                 self::$reportGroupsAll,
                 [
@@ -238,7 +238,7 @@ class ReportController extends AbstractController
      */
     public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore): array
     {
-        $report = $this->reportApi->getReport(intval($id), ['report-checklist']);
+        $report = $this->reportApi->getReport($id, ['report-checklist']);
         $syncFeatureIsEnabled = false;
 
         if ('1' === $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC)) {
@@ -267,7 +267,7 @@ class ReportController extends AbstractController
      */
     public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService): Response
     {
-        $report = $this->reportApi->getReport(intval($id), array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
+        $report = $this->reportApi->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
         $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
         $response = new Response($pdfBinary);
@@ -316,15 +316,13 @@ class ReportController extends AbstractController
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
-     * @param string $id
-     *
      * @Template("@App/Admin/Client/Report/manage.html.twig")
      *
      * @throws \Exception
      */
-    public function manageAction(Request $request, $id): array|Response
+    public function manageAction(Request $request, int $id): array|Response
     {
-        $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
+        $report = $this->reportApi->getReport($id, ['report-checklist', 'action']);
 
         $formClass = ($report->isSubmitted()) ? ManageSubmittedReportType::class : ManageActiveReportType::class;
         $form = $this->createForm($formClass, $report);
@@ -430,9 +428,9 @@ class ReportController extends AbstractController
      *
      * @throws \Exception
      */
-    public function manageConfirmAction(Request $request, $id): array|Response
+    public function manageConfirmAction(Request $request, int $id): array|Response
     {
-        $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
+        $report = $this->reportApi->getReport($id, ['report-checklist', 'action']);
 
         $sessionData = $request->getSession()->get('report-management-changes');
         if (null === $sessionData || !$this->sufficientDataInSession($sessionData)) {
@@ -516,13 +514,13 @@ class ReportController extends AbstractController
      *
      * @throws \Exception
      */
-    public function manageCloseReportConfirmAction(Request $request, string $id): array|RedirectResponse
+    public function manageCloseReportConfirmAction(Request $request, int $id): array|RedirectResponse
     {
         $form = $this->createForm(CloseReportConfirmType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $this->reportApi->getReport(intval($id));
+            $report = $this->reportApi->getReport($id);
             $report->setSubmitted(true);
             $report->setUnSubmitDate(null);
             $this->restClient->put('report/'.$id, $report, ['submitted', 'unsubmit_date']);
