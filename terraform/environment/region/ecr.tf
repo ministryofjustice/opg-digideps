@@ -4,6 +4,7 @@ locals {
   images = {
     api              = "${data.aws_ecr_repository.images["api"].repository_url}:${var.docker_tag}"
     api-webserver    = "${data.aws_ecr_repository.images["api-webserver"].repository_url}:${var.docker_tag}"
+    test             = "${data.aws_ecr_repository.images["test"].repository_url}:${var.docker_tag}"
     client           = "${data.aws_ecr_repository.images["client"].repository_url}:${var.docker_tag}"
     client-webserver = "${data.aws_ecr_repository.images["client-webserver"].repository_url}:${local.client_web_tag}"
     orchestration    = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.docker_tag}"
@@ -16,6 +17,7 @@ locals {
   repositories = [
     "api",
     "api-webserver",
+    "test",
     "client",
     "client-webserver",
     "dr-backup",

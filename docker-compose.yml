@@ -126,6 +126,7 @@ services:
     build:
       context: .
       dockerfile: ./api/docker/app/Dockerfile
+      target: production
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -138,6 +139,7 @@ services:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
       WORKSPACE: local
+      PROD_IMAGE: true
     env_file:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
@@ -261,8 +263,8 @@ services:
       - --dynamic
 
   composer:
-    image: composer:2.5.7
-    command: ["install"]
+    image: composer:2.8.9
+    command: ["install", "--no-dev"]
 
   custom-sql-query:
     image: custom-sql-query:latest
@@ -370,6 +372,8 @@ services:
       context: .
       args:
         ENVIRONMENT: local
+        PROD_IMAGE: false
+      target: end-to-end-tests
     depends_on:
       localstack:
         condition: service_healthy
