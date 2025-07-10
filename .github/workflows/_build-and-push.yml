@@ -52,6 +52,12 @@ jobs:
             platform: "arm64"
             runs_on: "ubuntu-24.04-arm"
 
+          - svc_name: "test"
+            sub_folder: "."
+            docker_file: "api/docker/app/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "sync"
             sub_folder: "orchestration"
             docker_file: "Dockerfile"
@@ -130,14 +136,23 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
           TAG: ${{ inputs.tag }}
         run: |
+          if [ "${IMAGE_NAME}" = "test" ]; then
+            PROD_IMAGE=false
+            TARGET_STAGE="--target end-to-end-tests"
+          else
+            PROD_IMAGE=true
+            TARGET_STAGE="--target production"
+          fi
+
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} ${TARGET_STAGE}\
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
+            --build-arg PROD_IMAGE=${PROD_IMAGE} \
             --tag ${IMAGE_NAME}:latest \
             --output type=docker \
             .
@@ -146,11 +161,12 @@ jobs:
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} ${TARGET_STAGE}\
             --tag ${IMAGE_NAME}:latest \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
+            --build-arg PROD_IMAGE=${PROD_IMAGE} \
             --output type=docker \
             .
           fi
