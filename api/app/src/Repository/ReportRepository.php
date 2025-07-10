@@ -140,7 +140,7 @@ class ReportRepository extends ServiceEntityRepository
                     'WITH',
                     'r2.client = r.client'
                 )
-                // group the earliest due date for each grouped set of reports linked to the same client
+                // allows sorting by the earliest due date for each grouped set of reports linked to the same client
                 ->addSelect('MIN(r2.dueDate) AS HIDDEN minDueDate')
                 ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
         }
@@ -173,10 +173,9 @@ class ReportRepository extends ServiceEntityRepository
             return $qb->getQuery()->getSingleScalarResult();
         }
 
-        // Additional order by clause added for orgs involved with both sides of a dual report => orders reports by end date and grouped dual reports are ordered by due date
-
+        // Additional order by clause added for orgs involved with both sides of a dual report => reports are ordered by end date and grouped dual reports are ordered by due date
         $qb
-            // group non-aggregated fields to allow use alongside aggregated MIN(r2.due_date) field
+            // need to group non-aggregated fields to allow use alongside aggregated MIN(r2.due_date) field
             ->groupBy('r.id, c.id, o.id')
             ->orderBy('minDueDate', 'ASC')
             ->addOrderBy('c.caseNumber', 'ASC')
