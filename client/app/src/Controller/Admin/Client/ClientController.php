@@ -71,7 +71,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Admin/Client/Client/discharge.html.twig")
      */
-    public function dischargeAction($id): array
+    public function dischargeAction(int $id): array
     {
         $client = $this->clientApi->getWithUsersV2($id);
 
@@ -88,7 +88,7 @@ class ClientController extends AbstractController
      *
      * @throws \Exception
      */
-    public function dischargeConfirmAction($id): RedirectResponse
+    public function dischargeConfirmAction(int $id): RedirectResponse
     {
         $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
@@ -102,7 +102,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Admin/Client/Client/archived.html.twig")
      */
-    public function archivedAction(string $id): RedirectResponse|array
+    public function archivedAction(int $id): RedirectResponse|array
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null === $client->getArchivedAt()) {
@@ -122,9 +122,10 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Admin/Client/Client/unarchived.html.twig")
      */
-    public function unarchiveAction(string $id): array|RedirectResponse
+    public function unarchiveAction(int $id): array|RedirectResponse
     {
         $client = $this->clientApi->getWithUsersV2($id);
+
         if (null === $client->getArchivedAt()) {
             return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
         }

@@ -15,12 +15,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ClientApi
 {
-    private const GET_CLIENT_BY_ID = 'client/%s';
-    private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
+    private const GET_CLIENT_BY_ID = 'client/%d';
+    private const DELETE_CLIENT_BY_ID = 'client/%d/delete';
     private const UPDATE_CLIENT = 'client/upsert';
     private const CREATE_CLIENT = 'client/upsert';
-    private const UNARCHIVE_CLIENT = 'client/%s/unarchive';
-    private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
+    private const UNARCHIVE_CLIENT = 'client/%d/unarchive';
+    private const GET_CLIENT_BY_ID_V2 = 'v2/client/%d';
     private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
     private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
     private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
@@ -82,7 +82,7 @@ class ClientApi
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
-            'Client',
+            Client::class,
             [
                 'client',
                 'client-users',
@@ -149,7 +149,7 @@ class ClientApi
         return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
     }
 
-    public function unarchiveClient(string $id): void
+    public function unarchiveClient(int $id): void
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $this->restClient->put(sprintf(self::UNARCHIVE_CLIENT, $id), $currentUser);
