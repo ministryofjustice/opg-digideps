@@ -11,15 +11,14 @@ use App\Entity\User;
 use App\Repository\ReportRepository;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepositoryTest extends ApiBaseTestCase
 {
-    private ReportRepository $sut;
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
     public const QUERY_LIMIT = 2;
+    private ReportRepository $sut;
 
     public function setUp(): void
     {
@@ -27,41 +26,15 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->purgeDatabase();
 
         $this->fixtures = new Fixtures($this->entityManager);
-        $this->sut = $this->entityManager->getRepository(Report::class);
+
+        /** @var ReportRepository $repo */
+        $repo = $this->entityManager->getRepository(Report::class);
+
+        $this->sut = $repo;
     }
 
     /**
-     * @test
-     */
-    public function fetchQueuedChecklists()
-    {
-        $this
-            ->ensureChecklistsExistInDatabase()
-            ->fetchChecklists()
-            ->assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned()
-            ->assertQueuedChecklistsAreUpdatedToInProgress();
-    }
-
-    /** @test */
-    public function findAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive()
-    {
-        $client = (new Client())->setCaseNumber('4932965t');
-        $this->entityManager->persist($client);
-
-        $existingReport = $this->buildReport($client);
-
-        $this->entityManager->flush();
-        $this->entityManager->refresh($existingReport);
-        $this->entityManager->refresh($client);
-        $this->entityManager->refresh($client->getUsers()[0]);
-
-        $result = $this->sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
-        self::assertEquals($existingReport, $result[0]);
-    }
-
-    /**
-     * @throws ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     private function ensureChecklistsExistInDatabase(): ReportRepositoryTest
     {
@@ -79,9 +52,6 @@ class ReportRepositoryTest extends ApiBaseTestCase
         return $this;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\DBALException
-     */
     private function fetchChecklists(): ReportRepositoryTest
     {
         $this->queryResult = $this->sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
@@ -109,9 +79,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
     }
 
     /**
-     * @return ReportRepositoryTest
-     *
-     * @throws ORMException
+     * @throws \Exception
      */
     private function buildChecklistWithStatus(Client $client, ?string $status): Checklist
     {
@@ -156,9 +124,6 @@ class ReportRepositoryTest extends ApiBaseTestCase
         return $report;
     }
 
-    /**
-     * @throws ORMException
-     */
     public function testReportsAreSortedByEndDateAndGroupedForDualReports(): void
     {
         // create organisation
@@ -195,8 +160,28 @@ class ReportRepositoryTest extends ApiBaseTestCase
         self::assertEquals($reports[3]['id'], $report1->getId());
     }
 
-    protected function tearDown(): void
+    public function testFetchQueuedChecklists(): void
     {
-        parent::tearDown();
+        $this
+            ->ensureChecklistsExistInDatabase()
+            ->fetchChecklists()
+            ->assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned()
+            ->assertQueuedChecklistsAreUpdatedToInProgress();
+    }
+
+    public function testFindAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive(): void
+    {
+        $client = (new Client())->setCaseNumber('4932965t');
+        $this->entityManager->persist($client);
+
+        $existingReport = $this->buildReport($client);
+
+        $this->entityManager->flush();
+        $this->entityManager->refresh($existingReport);
+        $this->entityManager->refresh($client);
+        $this->entityManager->refresh($client->getUsers()[0]);
+
+        $result = $this->sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
+        self::assertEquals($existingReport, $result[0]);
     }
 }
