@@ -43,7 +43,7 @@ class Deputy
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
      *
-     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id")
+     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id", onDelete="CASCADE")
      */
     #[JMS\Exclude]
     private Collection $clients;
