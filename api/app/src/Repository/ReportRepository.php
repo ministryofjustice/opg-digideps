@@ -131,9 +131,20 @@ class ReportRepository extends ServiceEntityRepository
         } else {
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
-                ->leftJoin('r.client', 'c')
-                ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
+                ->innerJoin('r.client', 'c')
+                ->innerJoin('c.organisation', 'o')
+                // join report table to itself to calculate the earliest due date for dual reports if they exist
+                ->innerJoin(
+                    'App\Entity\Report\Report',
+                    'r2',
+                    'WITH',
+                    'r2.client = r.client'
+                )
+                // allows sorting by the earliest due date for each grouped set of reports linked to the same client
+                ->addSelect('MIN(r2.dueDate) AS HIDDEN minDueDate')
+                ->where('o.isActivated = true')
+                ->andWhere($qb->expr()->in('o.id', ':orgIdsOrUserId'))
+                ->setParameter(':orgIdsOrUserId', $orgIdsOrUserId);
         }
 
         $qb
@@ -164,11 +175,15 @@ class ReportRepository extends ServiceEntityRepository
             return $qb->getQuery()->getSingleScalarResult();
         }
 
+        // Additional order by clause added for orgs involved with both sides of a dual report => reports are ordered by end date and grouped dual reports are ordered by due date
         $qb
-            ->setFirstResult($query->get('offset', 0))
-            ->setMaxResults($query->get('limit', 15))
+            // need to group non-aggregated fields to allow use alongside aggregated MIN(r2.due_date) field
+            ->groupBy('r.id, c.id, o.id')
+            ->orderBy('minDueDate', 'ASC')
+            ->addOrderBy('c.caseNumber', 'ASC')
             ->addOrderBy('r.endDate', 'ASC')
-            ->addOrderBy('c.caseNumber', 'ASC');
+            ->setFirstResult($query->get('offset', 0))
+            ->setMaxResults($query->get('limit', 15));
 
         $result = $qb->getQuery()->getArrayResult();
 
@@ -286,7 +301,7 @@ END deputy_type";
 
     public function getAllReportedImbalanceMetrics(
         ?\DateTime $fromDate = null,
-        ?\DateTime $toDate = null
+        ?\DateTime $toDate = null,
     ) {
         if (is_null($fromDate) || is_null($toDate)) {
             $fromDate = new \DateTime('first day of last month');

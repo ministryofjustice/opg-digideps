@@ -37,6 +37,7 @@ jobs:
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --build-arg ENVIRONMENT=local \
+          --build-arg PROD_IMAGE=false \
           --tag api-unit-tests:latest \
           --target ci-tests \
           --output type=docker .
@@ -48,6 +49,8 @@ jobs:
 
       - name: run api unit tests
         id: unit-tests
+        env:
+          TARGET: ci-tests
         run: make api-unit-tests ADDITIONAL_CONFIG=""
 
       - name: archive test results

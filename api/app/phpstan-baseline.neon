@@ -7816,16 +7816,6 @@ parameters:
 			path: src/Repository/ReportRepository.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, mixed given\\.$#"
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
 			count: 3
 			path: src/Repository/ReportSubmissionRepository.php
