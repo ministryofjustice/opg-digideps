@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
-use App\Entity\Role;
 use App\Entity\User;
 
 class UserControllerTest extends AbstractTestController
@@ -12,8 +11,6 @@ class UserControllerTest extends AbstractTestController
     private static $deputy1;
     private static $admin1;
     private static $deputy2;
-    private static $primaryUserAccount;
-    private static $nonPrimaryUserAccount;
     private static $tokenAdmin;
     private static $tokenSuperAdmin;
     private static $tokenDeputy;
@@ -31,8 +28,6 @@ class UserControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
         self::$deputy2 = self::fixtures()->createUser();
-        self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
-        self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
 
         self::fixtures()->flush()->clear();
     }
@@ -42,9 +37,9 @@ class UserControllerTest extends AbstractTestController
      */
     public static function tearDownAfterClass(): void
     {
-        parent::tearDownAfterClass();
+        // parent::tearDownAfterClass();
 
-        self::fixtures()->clear();
+        // self::fixtures()->clear();
     }
 
     public function testAddAuth()
@@ -364,6 +359,36 @@ class UserControllerTest extends AbstractTestController
             'mustFail' => true,
             'assertResponseCode' => 403,
             'AuthToken' => self::$tokenAdmin,
+        ]);
+    }
+
+    // DDLS-860 - deleting a user with associated court orders via admin UI, which calls DELETE /user/<id>
+    public function testDeleteWithAssociatedCourtOrders()
+    {
+        $user = self::fixtures()->createUser();
+        $user->setRoleName(User::ROLE_LAY_DEPUTY);
+
+        $deputy = self::fixtures()->createDeputy([
+            'setLastName' => 'DIRKOS',
+            'setUser' => $user,
+        ]);
+
+        $courtOrder = self::fixtures()->createCourtOrder(
+            uid: '9944938281',
+            type: 'pfa',
+            status: 'ACTIVE',
+        );
+
+        $deputy->associateWithCourtOrder($courtOrder);
+
+        self::fixtures()->persist($user, $deputy, $courtOrder);
+        self::fixtures()->flush();
+
+        $url = sprintf('/user/%d', $user->getId());
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenSuperAdmin,
         ]);
     }
 
