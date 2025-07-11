@@ -6,31 +6,25 @@ use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Repository\DeputyRepository;
 use App\TestHelpers\DeputyTestHelper;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Tests\Integration\ApiBaseTestCase;
 use Faker\Factory;
 use Faker\Generator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyTest extends KernelTestCase
+class DeputyTest extends ApiBaseTestCase
 {
-    private EntityManagerInterface $em;
     private Generator $faker;
     private DeputyRepository $deputyRepository;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
+        parent::setUp();
+
         $this->faker = Factory::create();
 
         /* @var DeputyRepository $deputyRepository */
-        $this->deputyRepository = $this->em->getRepository(Deputy::class);
-    }
+        $deputyRepository = $this->entityManager->getRepository(Deputy::class);
 
-    protected function tearDown(): void
-    {
-        (new ORMPurger($this->em))->purge();
+        $this->deputyRepository = $deputyRepository;
     }
 
     public function testGetCourtOrdersWithStatus(): void
@@ -50,9 +44,9 @@ class DeputyTest extends KernelTestCase
 
         $deputy->associateWithCourtOrder($courtOrder);
 
-        $this->em->persist($courtOrder);
-        $this->em->persist($deputy);
-        $this->em->flush();
+        $this->entityManager->persist($courtOrder);
+        $this->entityManager->persist($deputy);
+        $this->entityManager->flush();
 
         // retrieve the deputy from the db and check the association is populated correctly
         $retrievedDeputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
@@ -91,9 +85,9 @@ class DeputyTest extends KernelTestCase
 
         $deputy->associateWithCourtOrder($courtOrder);
 
-        $this->em->persist($courtOrder);
-        $this->em->persist($deputy);
-        $this->em->flush();
+        $this->entityManager->persist($courtOrder);
+        $this->entityManager->persist($deputy);
+        $this->entityManager->flush();
 
         // check deputy persisted and court_order <-> deputy association exists
         $retrievedDeputy = $this->deputyRepository->findOneBy(['deputyUid' => $fakeDeputyUid]);
@@ -103,7 +97,7 @@ class DeputyTest extends KernelTestCase
         self::assertCount(1, $courtOrders);
 
         // delete the deputy and confirm that it and the court_order_deputy entry are gone
-        $this->em->remove($deputy);
-        $this->em->flush();
+        $this->entityManager->remove($deputy);
+        $this->entityManager->flush();
     }
 }
