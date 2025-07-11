@@ -32,14 +32,11 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-    /**
-     * clear fixtures.
-     */
     public static function tearDownAfterClass(): void
     {
-        // parent::tearDownAfterClass();
+        parent::tearDownAfterClass();
 
-        // self::fixtures()->clear();
+        self::fixtures()->clear();
     }
 
     public function testAddAuth()
