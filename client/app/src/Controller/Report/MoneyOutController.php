@@ -173,7 +173,7 @@ class MoneyOutController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", requirements={"step":"\d+"}, name="money_out_step")
      *
      * @Template("@App/Report/MoneyOut/step.html.twig")
      *

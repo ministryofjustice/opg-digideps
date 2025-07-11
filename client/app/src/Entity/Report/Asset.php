@@ -100,11 +100,9 @@ abstract class Asset
     /**
      * Set title.
      *
-     * @param string $title
-     *
      * @return static
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
 
@@ -113,10 +111,8 @@ abstract class Asset
 
     /**
      * Get title.
-     *
-     * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }

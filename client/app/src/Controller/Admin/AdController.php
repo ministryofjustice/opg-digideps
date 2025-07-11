@@ -25,18 +25,18 @@ class AdController extends AbstractController
     public function __construct(
         private RestClient $restClient,
         private UserApi $userApi,
-        private ParameterBagInterface $params
+        private ParameterBagInterface $params,
     ) {
     }
 
     /**
      * @Route("/", name="ad_homepage")
-     * @Security("is_granted('ROLE_AD')")
-     * @Template("@App/Admin/Ad/index.html.twig")
      *
-     * @return array|RedirectResponse
+     * @Security("is_granted('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Ad/index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): array|RedirectResponse
     {
         $filters = [
             'order_by' => $request->get('order_by', 'id'),
@@ -53,7 +53,7 @@ class AdController extends AbstractController
         $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [
             'roleChoices' => [EntityDir\User::ROLE_LAY_DEPUTY => 'Lay deputy'],
             'roleNameSetTo' => EntityDir\User::ROLE_LAY_DEPUTY,
-         ]);
+        ]);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -88,13 +88,13 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route("/view-user", name="ad_view_user", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_AD')")
-     * @Template("@App/Admin/Ad/viewUser.html.twig")
+     * @Route("/view-user", methods={"GET", "POST"}, name="ad_view_user")
      *
-     * @return array|Response|null
+     * @Security("is_granted('ROLE_AD')")
+     *
+     * @Template("@App/Admin/Ad/viewUser.html.twig")
      */
-    public function viewUserAction(Request $request)
+    public function viewUserAction(Request $request): array|Response|null
     {
         $what = $request->get('what');
         $filter = $request->get('filter');
@@ -102,7 +102,7 @@ class AdController extends AbstractController
         try {
             $user = $this->restClient->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports',
                 'report', 'ndr', ]);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'User not found',
             ]);
@@ -123,13 +123,10 @@ class AdController extends AbstractController
 
     /**
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
+     *
      * @Security("is_granted('ROLE_AD')")
-     *
-     * @param $deputyId
-     *
-     * @return RedirectResponse|Response|null
      */
-    public function adLoginAsDeputyAction($deputyId)
+    public function adLoginAsDeputyAction($deputyId): RedirectResponse|Response|null
     {
         $adUser = $this->getUser();
 
@@ -151,11 +148,11 @@ class AdController extends AbstractController
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->params->get('non_admin_host'), '/');
             $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
-                    'adId' => $adUser->getId(),
-                    'userToken' => $deputy->getRegistrationToken(),
-                    'adFirstname' => $adUser->getFirstname(),
-                    'adLastname' => $adUser->getLastname(),
-                ]);
+                'adId' => $adUser->getId(),
+                'userToken' => $deputy->getRegistrationToken(),
+                'adFirstname' => $adUser->getFirstname(),
+                'adLastname' => $adUser->getLastname(),
+            ]);
 
             return $this->redirect($redirectUrl);
         } catch (\Throwable $e) {

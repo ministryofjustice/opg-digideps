@@ -307,7 +307,6 @@ services:
     arguments:
       $tokenStorage: "@security.token_storage"
       $restClient: "@rest_client"
-      $router: "@router"
     tags: ["kernel.event_subscriber"]
 
   App\EventListener\ResponseNoCacheListener:

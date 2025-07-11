@@ -44,7 +44,7 @@ trait PageUrlsTrait
     private string $healthAndLifestyleSummaryUrl = '/%s/%s/lifestyle/summary';
     private string $incomeBenefitsSectionUrl = '/%s/%s/income-benefits';
     private string $incomeBenefitsSectionSummaryUrl = '/%s/%s/income-benefits/summary';
-    private string $layStartPageUrl = '/lay';
+    private string $layStartPageUrl = '/';
     private string $moneyInSectionUrl = '/%s/%s/money-in';
     private string $moneyInSummarySectionUrl = '/%s/%s/money-in/summary';
     private string $moneyInShortSectionUrl = '/%s/%s/money-in-short';
@@ -485,7 +485,7 @@ trait PageUrlsTrait
     {
         return sprintf($this->orgAddUserUrl, $orgId);
     }
-    
+
     public function getOrgSettingsUrl(): string
     {
         return $this->orgSettingsUrl;
