@@ -1,7 +1,15 @@
 #!/bin/sh
 
+# Export variables (.env files not auto loaded)
+cat ./api.env ./tests/Behat/test.env > /tmp/combined.env
+while IFS= read -r line; do
+    eval "$line"
+done < <(./tests/Behat/source-env-files.sh /tmp/combined.env)
+rm /tmp/combined.env
 export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
-export APP_ENV=dev
+
+echo "==== APP_ENV ====:"
+echo $APP_ENV
 
 start=$(date +%s)
 

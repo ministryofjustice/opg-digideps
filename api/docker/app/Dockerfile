@@ -1,32 +1,31 @@
-# Set default to production image unless overridden
-ARG PROD_IMAGE=true
-
 ##############################
 # Stage 1: Composer Build
 ##############################
 FROM composer:2.8.9 AS composer
 
-ARG PROD_IMAGE
 WORKDIR /app
 
 COPY api/app/composer.json .
 COPY api/app/composer.lock .
-
-# Install dependencies conditionally
-RUN if [ "$PROD_IMAGE" = "true" ]; then \
-      composer install --no-dev --prefer-dist --no-interaction --no-scripts; \
-    else \
-      composer install --prefer-dist --no-interaction --no-scripts; \
-    fi
-
-RUN composer check-platform-reqs
-
 COPY api/app/app app
 COPY api/app/config config
 COPY api/app/src src
 
+##############################
+# Stage 1a: Composer Build NoDev Dependencies
+##############################
+FROM composer AS composer-runtime
+RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts;
+RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 
+##############################
+# Stage 1b: Composer Build Dev
+##############################
+FROM composer AS composer-devtools
+RUN composer install --prefer-dist --no-interaction --no-scripts;
+RUN composer check-platform-reqs
+RUN composer dump-autoload --optimize
 
 ##############################
 # Stage 2: Base PHP Image
@@ -76,22 +75,15 @@ RUN mkdir -p var/cache var/logs /var/log/app \
 ##############################
 FROM base AS application
 
-COPY --chown=www-data:www-data --from=composer /app/vendor vendor
-COPY --chown=www-data:www-data --from=composer /app/app app
-COPY --chown=www-data:www-data --from=composer /app/config config
-COPY --chown=www-data:www-data --from=composer /app/src src
-COPY --chown=www-data:www-data --from=composer /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
+COPY --chown=www-data:www-data api/app/openapi openapi
 COPY --chown=www-data:www-data api/app/postgres.env postgres.env
 COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
 COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-
-RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml
-RUN chmod 544 /var/www/wait-for-db.sh
 
 RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
@@ -100,15 +92,16 @@ RUN mkdir certs && chmod 755 certs \
 ##############################
 # Stage 4a: Production Image
 ##############################
-FROM application AS production
+FROM application AS runtime
 
-ARG PROD_IMAGE
-RUN if [ "$PROD_IMAGE" = "true" ]; then \
-    echo "== Building production image =="; \
-    else \
-    echo "== Skipping production, use end-to-end-tests ==" && exit 1; \
-    fi
+COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
+COPY --chown=www-data:www-data --from=composer-runtime /app/app app
+COPY --chown=www-data:www-data --from=composer-runtime /app/config config
+COPY --chown=www-data:www-data --from=composer-runtime /app/src src
+COPY --chown=www-data:www-data --from=composer-runtime /app/composer.lock composer.lock
 
+RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml
+RUN chmod 544 /var/www/wait-for-db.sh
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup --env=prod --no-debug
 
@@ -124,33 +117,33 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 
 
 ##############################
-# Stage 4b: tests
+# Stage 4b: devtools for tests
 ##############################
-FROM application AS tests
-
-# Only in test builds: copy test code & tools
+FROM application AS devtools-base
+COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
+COPY --chown=www-data:www-data --from=composer-devtools /app/app app
+COPY --chown=www-data:www-data --from=composer-devtools /app/config config
+COPY --chown=www-data:www-data --from=composer-devtools /app/src src
+COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/tests tests
 COPY --chown=www-data:www-data api/app/phpstan.neon .
 COPY --chown=www-data:www-data api/app/phpstan-baseline.neon .
+
+RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml
+RUN chmod 544 /var/www/wait-for-db.sh
 # Make Behat test scripts executable
-RUN chmod 544 /var/www/tests/Behat/run-tests*.sh
+RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
+    && chmod 544 /var/www/tests/Behat/source-env-files.sh
+
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 ##############################
-# Stage 4b-1: End-to-End Tests
+# Stage 4b-1: DevTools (End-to-End Tests, Unit Tests, Task Runners)
 ##############################
-FROM tests AS end-to-end-tests
-ARG PROD_IMAGE
-RUN if [ "$PROD_IMAGE" = "false" ]; then \
-    echo "== Building end-to-end test image =="; \
-    else \
-    echo "== Skipping end-to-end-tests, use production ==" && exit 1; \
-    fi \
-
+FROM devtools-base AS devtools
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
-
 USER www-data
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
@@ -159,10 +152,11 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php-fpm"]
 
 ##############################
-# Stage 4b-1: CI-Tests
+# Stage 4b-2: CI-Tests
 ##############################
-FROM tests AS ci-tests
-USER www-data
+FROM devtools-base AS ci-tests
+USER root
+
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \

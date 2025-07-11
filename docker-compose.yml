@@ -126,7 +126,7 @@ services:
     build:
       context: .
       dockerfile: ./api/docker/app/Dockerfile
-      target: production
+      target: runtime
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -136,10 +136,9 @@ services:
       - redis-api
       - localstack
     environment:
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-prod}
       APP_DEBUG: ${APP_DEBUG:-0}
       WORKSPACE: local
-      PROD_IMAGE: true
     env_file:
       - ./api/app/api.env
       - ./api/app/tests/Behat/test.env
@@ -318,15 +317,17 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
         ENVIRONMENT: local
+        PROD_IMAGE: false
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-test}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./api/app/api.env
@@ -342,6 +343,7 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -357,7 +359,7 @@ services:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-test}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./api/app/api.env
@@ -370,10 +372,11 @@ services:
     build:
       dockerfile: api/docker/app/Dockerfile
       context: .
+      target: devtools
       args:
         ENVIRONMENT: local
-        PROD_IMAGE: false
-      target: end-to-end-tests
+    environment:
+      APP_ENV: dev
     depends_on:
       localstack:
         condition: service_healthy
@@ -381,11 +384,6 @@ services:
         condition: service_started
     volumes:
       - ./api/app/tests/Behat/snapshots:/tmp/html
-    env_file:
-      - ./api/app/api.env
-      - ./api/app/tests/Behat/test.env
-    environment:
-      APP_ENV: local
 
   node-js:
     image: opg-digideps-resources

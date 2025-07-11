@@ -137,11 +137,9 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           if [ "${IMAGE_NAME}" = "test" ]; then
-            PROD_IMAGE=false
-            TARGET_STAGE="--target end-to-end-tests"
-          else
-            PROD_IMAGE=true
-            TARGET_STAGE="--target production"
+            TARGET_STAGE="--target devtools"
+          elif [ "${IMAGE_NAME}" = "api" ]; then
+            TARGET_STAGE="--target runtime"
           fi
 
           if [ "${BRANCH_NAME}" == "main" ]; then
