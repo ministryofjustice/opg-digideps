@@ -41,6 +41,7 @@ jobs:
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --build-arg ENVIRONMENT=local \
+          --build-arg PROD_IMAGE=false \
           --tag api-integration-tests:latest \
           --target ci-tests \
           --output type=docker .
@@ -53,6 +54,7 @@ jobs:
       - name: run api integration tests
         env:
           SELECTION: ${{ inputs.selection }}
+          TARGET: ci-tests
         id: integration-tests
         run: make api-integration-tests ADDITIONAL_CONFIG="" INTEGRATION_SELECTION=${{ inputs.selection }}
 

@@ -139,7 +139,7 @@ jobs:
           if [ "${IMAGE_NAME}" = "test" ]; then
             PROD_IMAGE=false
             TARGET_STAGE="--target end-to-end-tests"
-          else
+          elif [ "${IMAGE_NAME}" = "api" ]; then
             PROD_IMAGE=true
             TARGET_STAGE="--target production"
           fi
