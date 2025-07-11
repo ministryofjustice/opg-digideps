@@ -20,6 +20,7 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\SelfRegisterData;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClientInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserApi
@@ -35,27 +36,16 @@ class UserApi
     protected const GET_PRIMARY_USER_ACCOUNT_ENDPOINT = 'user/get-primary-user-account/%s';
     protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
 
-    /** @var RestClientInterface */
-    protected $restClient;
-
-    /** @var TokenStorageInterface */
-    protected $tokenStorage;
-
-    /** @var ObservableEventDispatcher */
-    protected $eventDispatcher;
-
     public function __construct(
-        RestClientInterface $restClient,
-        TokenStorageInterface $tokenStorage,
-        ObservableEventDispatcher $eventDispatcher,
+        private readonly RestClientInterface $restClient,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
-        $this->restClient = $restClient;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function createUser(User $userToCreate, array $jmsGroups = ['admin_add_user'])
+    public function createUser(User $userToCreate, array $jmsGroups = ['admin_add_user']): User
     {
+        /** @var User $createdUser */
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
@@ -68,8 +58,9 @@ class UserApi
         return $createdUser;
     }
 
-    public function createOrgUser(User $userToCreate, array $jmsGroups = ['org_team_add'])
+    public function createOrgUser(User $userToCreate, array $jmsGroups = ['org_team_add']): User
     {
+        /** @var User $createdUser */
         $createdUser = $this->restClient->post(self::USER_ENDPOINT, $userToCreate, $jmsGroups, 'User');
 
         $userCreatedEvent = new OrgUserCreatedEvent($createdUser);
@@ -78,46 +69,49 @@ class UserApi
         return $createdUser;
     }
 
-    /**
-     * @return User
-     */
-    public function get(int $id, array $jmsGroups = [])
+    public function get(int $id, array $jmsGroups = []): User
     {
-        return $this->restClient->get(
+        /** @var User $user */
+        $user = $this->restClient->get(
             sprintf(self::USER_BY_ID_ENDPOINT, $id),
             'User',
             $jmsGroups
         );
+
+        return $user;
     }
 
-    public function getByEmail(string $email, array $jmsGroups = [])
+    public function getByEmail(string $email, array $jmsGroups = []): User
     {
-        return $this->restClient->get(
+        /** @var User $user */
+        $user = $this->restClient->get(
             sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email),
             'User',
             $jmsGroups
         );
+
+        return $user;
     }
 
-    public function getByEmailOrgAdmins(string $email, array $jmsGroups = [])
+    public function getByEmailOrgAdmins(string $email, array $jmsGroups = []): User
     {
-        return $this->restClient->get(
+        /** @var User $user */
+        $user = $this->restClient->get(
             sprintf(self::GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT, $email),
             'User',
             $jmsGroups
         );
+
+        return $user;
     }
 
-    /**
-     * @return User
-     */
-    public function getUserWithData(array $jmsGroups = [])
+    public function getUserWithData(array $jmsGroups = []): User
     {
         $jmsGroups[] = 'user';
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        /** @var User */
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->restClient->get(
@@ -127,21 +121,22 @@ class UserApi
         );
     }
 
-    /**
-     * @param array $jmsGroups
-     */
-    public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, $jmsGroups = [])
+    public function update(User $preUpdateUser, User $postUpdateUser, string $trigger, array $jmsGroups = []): array
     {
+        /** @var array $userIdArray */
         $userIdArray = $this->restClient->put(
             sprintf(self::USER_BY_ID_ENDPOINT, $preUpdateUser->getId()),
             $postUpdateUser,
             $jmsGroups
         );
 
+        /** @var User $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+
         $userUpdatedEvent = new UserUpdatedEvent(
             $preUpdateUser,
             $postUpdateUser,
-            $this->tokenStorage->getToken()->getUser(),
+            $user,
             $trigger
         );
 
@@ -150,23 +145,21 @@ class UserApi
         return $userIdArray;
     }
 
-    public function delete(User $userToDelete, string $trigger)
+    public function delete(User $userToDelete, string $trigger): void
     {
         $this->restClient->delete(sprintf(self::USER_BY_ID_ENDPOINT, $userToDelete->getId()));
 
-        /** @var User */
+        /** @var User $deletedBy */
         $deletedBy = $this->tokenStorage->getToken()->getUser();
 
         $userDeletedEvent = new UserDeletedEvent($userToDelete, $deletedBy, $trigger);
         $this->eventDispatcher->dispatch($userDeletedEvent, UserDeletedEvent::NAME);
     }
 
-    /**
-     * @return User
-     */
-    public function recreateToken(string $email)
+    public function recreateToken(string $email): User
     {
-        return $this->restClient->apiCall(
+        /** @var User $user */
+        $user = $this->restClient->apiCall(
             'put',
             sprintf(self::RECREATE_USER_TOKEN_ENDPOINT, $email),
             null,
@@ -174,9 +167,11 @@ class UserApi
             [],
             false
         );
+
+        return $user;
     }
 
-    public function activate(string $email)
+    public function activate(string $email): void
     {
         $activatedUser = $this->recreateToken($email);
 
@@ -184,7 +179,7 @@ class UserApi
         $this->eventDispatcher->dispatch($userActivatedEvent, UserActivatedEvent::NAME);
     }
 
-    public function reInviteCoDeputy(string $email, User $loggedInUser)
+    public function reInviteCoDeputy(string $email, User $loggedInUser): void
     {
         $invitedCoDeputy = $this->recreateToken($email);
 
@@ -192,7 +187,7 @@ class UserApi
         $this->eventDispatcher->dispatch($CoDeputyInvitedEvent, CoDeputyInvitedEvent::NAME);
     }
 
-    public function reInviteDeputy(string $email)
+    public function reInviteDeputy(string $email): void
     {
         $invitedDeputy = $this->recreateToken($email);
 
@@ -200,7 +195,7 @@ class UserApi
         $this->eventDispatcher->dispatch($deputyInvitedEvent, DeputyInvitedEvent::NAME);
     }
 
-    public function resetPassword(string $email)
+    public function resetPassword(string $email): void
     {
         $passwordResetUser = $this->recreateToken($email);
 
@@ -208,7 +203,7 @@ class UserApi
         $this->eventDispatcher->dispatch($passwordResetEvent, UserPasswordResetEvent::NAME);
     }
 
-    public function selfRegister(SelfRegisterData $selfRegisterData)
+    public function selfRegister(SelfRegisterData $selfRegisterData): void
     {
         $registeredDeputy = $this->restClient->apiCall(
             'post',
@@ -223,10 +218,7 @@ class UserApi
         $this->eventDispatcher->dispatch($deputySelfRegisteredEvent, DeputySelfRegisteredEvent::NAME);
     }
 
-    /**
-     * @return User
-     */
-    public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName, int $clientId)
+    public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName, int $clientId): User
     {
         $createdCoDeputy = $this->restClient->post(
             sprintf(self::CREATE_CODEPUTY_ENDPOINT, $clientId),
@@ -241,22 +233,30 @@ class UserApi
         return $createdCoDeputy;
     }
 
-    public function agreeTermsUse($token)
+    public function agreeTermsUse(string $token): StreamInterface
     {
-        return $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
+        /** @var StreamInterface $stream */
+        $stream = $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
+
+        return $stream;
     }
 
-    public function clearRegistrationToken(string $token)
+    public function clearRegistrationToken(string $token): StreamInterface
     {
-        return $this->restClient->apiCall(
+        /** @var StreamInterface $stream */
+        $stream = $this->restClient->apiCall(
             'put',
             sprintf(self::CLEAR_REGISTRATION_TOKEN_ENDPOINT, $token),
             null, 'raw', [], false);
+
+        return $stream;
     }
 
-    private function dispatchAdminManagerCreatedEvent(User $createdUser)
+    private function dispatchAdminManagerCreatedEvent(User $createdUser): void
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED;
+
+        /** @var User $currentUser */
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent(
@@ -289,8 +289,7 @@ class UserApi
     {
         return $this->restClient->get(
             sprintf(self::GET_PRIMARY_USER_ACCOUNT_ENDPOINT, $deputyUid),
-            'User',
-            []
+            'User'
         );
     }
 }
