@@ -41,19 +41,13 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     }
 
     // create a report which is not compatible with a deputyship (CSV row) due to type differences
-    private function createIncompatiblyTypedReport(Client $client, string $orderType, string $deputyType): Report
+    private function createIncompatiblyTypedReport(Client $client, string $orderType): Report
     {
         // a 104 is not compatible with a hybrid or pfa deputyship
         $incompatibleReportType = '104';
         if ('hw' === $orderType) {
             // a 102 is not compatible with a hybrid or hw deputyship
             $incompatibleReportType = '102';
-        }
-
-        if ('PA' === $deputyType) {
-            $incompatibleReportType .= '-6';
-        } elseif ('PRO' === $deputyType) {
-            $incompatibleReportType .= '-5';
         }
 
         return new Report(
@@ -66,18 +60,12 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     }
 
     // create a report which is not compatible with a deputyship due to starting too early
-    private function createIncompatiblyDatedReport(Client $client, string $orderType, string $deputyType, \DateTime $madeDate): Report
+    private function createIncompatiblyDatedReport(Client $client, string $orderType, \DateTime $madeDate): Report
     {
         // make sure types are compatible
         $compatibleReportType = '102';
         if ('hw' === $orderType) {
             $compatibleReportType = '104';
-        }
-
-        if ('PA' === $deputyType) {
-            $compatibleReportType .= '-6';
-        } elseif ('PRO' === $deputyType) {
-            $compatibleReportType .= '-5';
         }
 
         // report starts a year before the made date of the court order, so is not compatible for that reason
@@ -168,10 +156,10 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $this->em->flush();
 
         // add an incompatibly typed report (just to make sure we don't pick it up as compatible)
-        $report2 = $this->createIncompatiblyTypedReport($client, $orderType, $deputyType);
+        $report2 = $this->createIncompatiblyTypedReport($client, $orderType);
 
         // add an incompatibly dated report (again, to make sure it's not picked up as a candidate)
-        $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $deputyType, $madeDate);
+        $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $madeDate);
 
         $this->em->persist($report2);
         $this->em->persist($report3);
