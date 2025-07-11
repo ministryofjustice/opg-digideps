@@ -6,5 +6,15 @@ namespace App\Service\Client;
 
 interface RestClientInterface
 {
-    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array');
+    /**
+     * Error Messages.
+     */
+    public const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
+    public const ERROR_FORMAT = 'Cannot decode endpoint response';
+
+    public function post(string $endpoint, mixed $data, array $jmsGroups = [], $expectedResponseType = 'array');
+
+    public function put(string $endpoint, mixed $data, array $jmsGroups = []);
+
+    public function delete(string $endpoint): ?array;
 }

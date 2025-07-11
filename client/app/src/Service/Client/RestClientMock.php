@@ -12,13 +12,11 @@ class RestClientMock implements RestClientInterface
     private $responses = [];
 
     /**
-     * @param $endpoint
-     * @param $mixed
      * @param string $expectedResponseType
      *
      * @return Response|mixed
      */
-    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array')
+    public function post($endpoint, $data, array $jmsGroups = [], $expectedResponseType = 'array')
     {
         return $this->returnQueuedOrSuccessResponse();
     }

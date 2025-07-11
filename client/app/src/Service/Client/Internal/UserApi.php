@@ -73,9 +73,9 @@ class UserApi
     {
         /** @var User $user */
         $user = $this->restClient->get(
-            sprintf(self::USER_BY_ID_ENDPOINT, $id),
-            'User',
-            $jmsGroups
+            endpoint: sprintf(self::USER_BY_ID_ENDPOINT, $id),
+            expectedResponseType: User::class,
+            jmsGroups: $jmsGroups
         );
 
         return $user;
@@ -85,9 +85,9 @@ class UserApi
     {
         /** @var User $user */
         $user = $this->restClient->get(
-            sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email),
-            'User',
-            $jmsGroups
+            endpoint: sprintf(self::GET_USER_BY_EMAIL_ENDPOINT, $email),
+            expectedResponseType: User::class,
+            jmsGroups: $jmsGroups
         );
 
         return $user;
@@ -98,7 +98,7 @@ class UserApi
         /** @var User $user */
         $user = $this->restClient->get(
             sprintf(self::GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT, $email),
-            'User',
+            User::class,
             $jmsGroups
         );
 
@@ -116,7 +116,7 @@ class UserApi
 
         return $this->restClient->get(
             sprintf(self::USER_BY_ID_ENDPOINT, $user->getId()),
-            'User',
+            User::class,
             $jmsGroups
         );
     }
@@ -125,9 +125,9 @@ class UserApi
     {
         /** @var array $userIdArray */
         $userIdArray = $this->restClient->put(
-            sprintf(self::USER_BY_ID_ENDPOINT, $preUpdateUser->getId()),
-            $postUpdateUser,
-            $jmsGroups
+            endpoint: sprintf(self::USER_BY_ID_ENDPOINT, $preUpdateUser->getId()),
+            data: $postUpdateUser,
+            jmsGroups: $jmsGroups
         );
 
         /** @var User $user */
@@ -160,12 +160,11 @@ class UserApi
     {
         /** @var User $user */
         $user = $this->restClient->apiCall(
-            'put',
-            sprintf(self::RECREATE_USER_TOKEN_ENDPOINT, $email),
-            null,
-            'User',
-            [],
-            false
+            method: 'put',
+            endpoint: sprintf(self::RECREATE_USER_TOKEN_ENDPOINT, $email),
+            data: null,
+            expectedResponseType: User::class,
+            authenticated: false
         );
 
         return $user;
@@ -206,12 +205,11 @@ class UserApi
     public function selfRegister(SelfRegisterData $selfRegisterData): void
     {
         $registeredDeputy = $this->restClient->apiCall(
-            'post',
-            self::DEPUTY_SELF_REGISTER_ENDPOINT,
-            $selfRegisterData,
-            'User',
-            [],
-            false
+            method: 'post',
+            endpoint: self::DEPUTY_SELF_REGISTER_ENDPOINT,
+            data: $selfRegisterData,
+            expectedResponseType: User::class,
+            authenticated: false
         );
 
         $deputySelfRegisteredEvent = new DeputySelfRegisteredEvent($registeredDeputy);
@@ -221,10 +219,10 @@ class UserApi
     public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName, int $clientId): User
     {
         $createdCoDeputy = $this->restClient->post(
-            sprintf(self::CREATE_CODEPUTY_ENDPOINT, $clientId),
-            $invitedCoDeputy,
-            ['codeputy'],
-            'User'
+            endpoint: sprintf(self::CREATE_CODEPUTY_ENDPOINT, $clientId),
+            data: $invitedCoDeputy,
+            jmsgroups: ['codeputy'],
+            expectedResponseType: User::class
         );
 
         $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputyName);
@@ -245,9 +243,12 @@ class UserApi
     {
         /** @var StreamInterface $stream */
         $stream = $this->restClient->apiCall(
-            'put',
-            sprintf(self::CLEAR_REGISTRATION_TOKEN_ENDPOINT, $token),
-            null, 'raw', [], false);
+            method: 'put',
+            endpoint: sprintf(self::CLEAR_REGISTRATION_TOKEN_ENDPOINT, $token),
+            data: null,
+            expectedResponseType: 'raw',
+            authenticated: false
+        );
 
         return $stream;
     }
@@ -274,13 +275,20 @@ class UserApi
             return null;
         }
 
-        $jsonString = (string) $this->restClient->get(
-            sprintf(self::GET_PRIMARY_EMAIL, $deputyUid),
-            'raw'
+        /** @var string $jsonString */
+        $jsonString = $this->restClient->get(
+            endpoint: sprintf(self::GET_PRIMARY_EMAIL, $deputyUid),
+            expectedResponseType: 'raw'
         );
 
+        $decoded = json_decode($jsonString, true);
+
         /** @var ?string $value */
-        $value = json_decode($jsonString, true)['data'];
+        $value = null;
+
+        if (!is_null($decoded)) {
+            $value = $decoded['data'];
+        }
 
         return $value;
     }
@@ -288,8 +296,8 @@ class UserApi
     public function getPrimaryUserAccount(int $deputyUid): User
     {
         return $this->restClient->get(
-            sprintf(self::GET_PRIMARY_USER_ACCOUNT_ENDPOINT, $deputyUid),
-            'User'
+            endpoint: sprintf(self::GET_PRIMARY_USER_ACCOUNT_ENDPOINT, $deputyUid),
+            expectedResponseType: User::class
         );
     }
 }

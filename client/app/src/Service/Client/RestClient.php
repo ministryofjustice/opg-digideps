@@ -2,7 +2,6 @@
 
 namespace App\Service\Client;
 
-use App\Entity\CourtOrder;
 use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
@@ -31,8 +30,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class RestClient implements RestClientInterface
 {
-    public const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
-
     /**
      * Keep here a list of options for the methods
      * Needed on the rawSafeCall.
@@ -76,13 +73,6 @@ class RestClient implements RestClientInterface
      */
     public const HEADER_JWT = 'JWT';
 
-    /**
-     * Error Messages.
-     */
-    public const ERROR_CONNECT = 'API returned an exception';
-    public const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
-    public const ERROR_FORMAT = 'Cannot decode endpoint response';
-
     public function __construct(
         protected ContainerInterface $container,
         protected ClientInterface $client,
@@ -92,7 +82,7 @@ class RestClient implements RestClientInterface
         protected string $clientSecret,
         protected ParameterBagInterface $params,
         protected HttpClientInterface $openInternetClient,
-        protected JWTService $JWTService
+        protected JWTService $JWTService,
     ) {
         $this->saveHistory = $params->get('kernel.debug');
         $this->history = [];
@@ -105,7 +95,7 @@ class RestClient implements RestClientInterface
      *
      * @param array $credentials with keys "token" or "email" and "password"
      *
-     * @return User
+     * @return array In format [<User $user>, <string $authToken>]
      */
     public function login(array $credentials)
     {
@@ -177,15 +167,10 @@ class RestClient implements RestClientInterface
      */
     public function loadUserByToken($token)
     {
-        return $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [], false);
-    }
+        /** @var User $user */
+        $user = $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [], false);
 
-    /**
-     * @param string $token
-     */
-    public function agreeTermsUse($token)
-    {
-        $this->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
+        return $user;
     }
 
     /**
@@ -218,13 +203,15 @@ class RestClient implements RestClientInterface
         }
 
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
-                'addAuthToken' => true,
-            ] + $options);
+            'addAuthToken' => true,
+        ] + $options);
     }
 
     /**
      * @template T of object
+     *
      * @param class-string<T> $deserializationClass
+     *
      * @return T
      */
     public function getAndDeserialize(string $endpoint, string $deserializationClass): object
@@ -240,12 +227,12 @@ class RestClient implements RestClientInterface
 
     /**
      * @param string              $endpoint  e.g. /user
-     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param string|object|array $data      HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array               $jmsGroups deserialise_groups
      *
      * @return string response body
      */
-    public function put($endpoint, $mixed, array $jmsGroups = [])
+    public function put(string $endpoint, mixed $data, array $jmsGroups = [])
     {
         $options = [];
 
@@ -253,23 +240,23 @@ class RestClient implements RestClientInterface
             $options['deserialise_groups'] = $jmsGroups;
         }
 
-        return $this->apiCall('put', $endpoint, $mixed, 'array', $options);
+        return $this->apiCall('put', $endpoint, $data, 'array', $options);
     }
 
     /**
      * @param string              $endpoint  e.g. /user
-     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param string|object|array $data      HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array               $jmsGroups deserialise_groups
      *
      * @return string response body
      */
-    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array', $options = [])
+    public function post(string $endpoint, mixed $data, array $jmsGroups = [], $expectedResponseType = 'array', $options = [])
     {
         if ($jmsGroups) {
             $options['deserialise_groups'] = $jmsGroups;
         }
 
-        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
+        return $this->apiCall('post', $endpoint, $data, $expectedResponseType, $options);
     }
 
     public function delete(string $endpoint): ?array
@@ -293,7 +280,10 @@ class RestClient implements RestClientInterface
      */
     public function registerUser(SelfRegisterData $selfRegData)
     {
-        return $this->apiCall('post', 'selfregister', $selfRegData, 'User', [], false);
+        /** @var User $user */
+        $user = $this->apiCall('post', 'selfregister', $selfRegData, 'User', [], false);
+
+        return $user;
     }
 
     /**
@@ -311,9 +301,9 @@ class RestClient implements RestClientInterface
         }
 
         $response = $this->rawSafeCall($method, $endpoint, $options + [
-                'addClientSecret' => !$authenticated,
-                'addAuthToken' => $authenticated,
-            ]);
+            'addClientSecret' => !$authenticated,
+            'addAuthToken' => $authenticated,
+        ]);
         if ('raw' == $expectedResponseType) {
             return $response->getBody();
         }
@@ -512,13 +502,12 @@ class RestClient implements RestClientInterface
     }
 
     /**
-     * @param string            $url
-     * @param string            $method
-     * @param float             $start
-     * @param array             $options
-     * @param ResponseInterface $response
+     * @param string $url
+     * @param string $method
+     * @param float  $start
+     * @param array  $options
      */
-    private function logRequest($url, $method, $start, $options, ResponseInterface $response = null)
+    private function logRequest($url, $method, $start, $options, ?ResponseInterface $response = null)
     {
         if (!$this->saveHistory) {
             return;
@@ -529,7 +518,7 @@ class RestClient implements RestClientInterface
             'method' => $method,
             'time' => microtime(true) - $start,
             'options' => print_r($options, true),
-            'responseCode' => $response ? $response->getStatusCode() : null,
+            'responseCode' => $response?->getStatusCode(),
             'responseBody' => $response ? print_r(json_decode((string) $response->getBody(), true), true) : $response,
             'responseRaw' => $response ? (string) $response->getBody() : 'n.a.',
         ];
@@ -583,10 +572,5 @@ class RestClient implements RestClientInterface
         }
 
         return false;
-    }
-
-    private function debugJsonString($jsonString)
-    {
-        echo '<pre>'.json_encode(json_decode($jsonString), JSON_PRETTY_PRINT).'</pre>';
     }
 }
