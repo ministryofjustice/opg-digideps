@@ -6166,11 +6166,6 @@ parameters:
 			path: src/Entity/Report/Asset.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Asset\\:\\:\\$title has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Asset.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Asset\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Asset.php
