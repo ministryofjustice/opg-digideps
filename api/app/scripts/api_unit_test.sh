@@ -4,6 +4,9 @@
 # exit on error
 set -e
 
+ls -alt tests/
+ls -alt tests/coverage
+
 php vendor/bin/phpunit -c tests/Unit tests/Unit/ --coverage-php tests/coverage/api-unit.cov
 
 case "$1" in

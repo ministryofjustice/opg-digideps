@@ -29,7 +29,10 @@ class ConnectionWrapper extends Connection
     private SecretsManagerClient $secretClient;
 
     public function __construct(
-        array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null
+        array $params,
+        Driver $driver,
+        ?Configuration $config = null,
+        ?EventManager $eventManager = null,
     ) {
         parent::__construct($params, $driver, $config, $eventManager);
 
