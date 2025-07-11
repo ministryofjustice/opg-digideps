@@ -133,7 +133,9 @@ COPY --chown=www-data:www-data api/app/tests tests
 COPY --chown=www-data:www-data api/app/phpstan.neon .
 COPY --chown=www-data:www-data api/app/phpstan-baseline.neon .
 # Make Behat test scripts executable
-RUN chmod 544 /var/www/tests/Behat/run-tests*.sh
+RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
+    && chmod 544 /var/www/tests/source-env-files.sh
+
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
