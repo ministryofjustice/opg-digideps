@@ -68,7 +68,9 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         self::TYPE_COMBINED_HIGH_ASSETS,
     ];
 
-    public const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+    public const HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
+    public const PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
+    public const PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
 
     // Decisions
     public const SIGNIFICANT_DECISION_MADE = 'Yes';
@@ -1366,7 +1368,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function determineReportType()
     {
-        switch ($this->getType()) {
+        // Remove report type suffix if there is one.
+        if (str_ends_with($this->getType(), '-5') || str_ends_with($this->getType(), '-6')) {
+            $type = substr($this->getType(), 0, -2);
+        } else {
+            $type = $this->getType();
+        }
+
+        switch ($type) {
             case self::TYPE_HEALTH_WELFARE:
                 return self::TYPE_ABBREVIATION_HW;
             case self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS:
@@ -1375,6 +1384,15 @@ class Report implements ReportInterface, StartEndDateComparableInterface
             default:
                 return self::TYPE_ABBREVIATION_COMBINED;
         }
+    }
+
+    public function getReportTypeDefinition(): string
+    {
+        return match ($this->determineReportType()) {
+            'HW' => self::HEALTH_AND_WELFARE_REPORT,
+            'PF' => self::PROPERTY_AND_AFFAIRS_REPORT,
+            default => self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT,
+        };
     }
 
     public function getClientBenefitsCheck(): ?ClientBenefitsCheck
