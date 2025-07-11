@@ -18,7 +18,7 @@ locals {
   reset_database_container = jsonencode(
     {
       name    = "reset-database",
-      image   = local.images.api,
+      image   = local.images.test,
       command = ["sh", "scripts/reset_db_fixtures.sh"],
       logConfiguration = {
         logDriver = "awslogs",
