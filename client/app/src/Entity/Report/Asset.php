@@ -52,7 +52,7 @@ abstract class Asset
      *
      * @JMS\Type("string")
      */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @Assert\NotBlank(message="asset.value.notBlank")
@@ -102,7 +102,7 @@ abstract class Asset
      *
      * @return static
      */
-    public function setTitle(string $title)
+    public function setTitle(?string $title)
     {
         $this->title = $title;
 
@@ -112,7 +112,7 @@ abstract class Asset
     /**
      * Get title.
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
