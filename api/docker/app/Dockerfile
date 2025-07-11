@@ -133,7 +133,9 @@ COPY --chown=www-data:www-data api/app/tests tests
 COPY --chown=www-data:www-data api/app/phpstan.neon .
 COPY --chown=www-data:www-data api/app/phpstan-baseline.neon .
 # Make Behat test scripts executable
-RUN chmod 544 /var/www/tests/Behat/run-tests*.sh
+RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
+    && chmod 544 /var/www/tests/Behat/source-env-files.sh
+
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
@@ -146,7 +148,7 @@ RUN if [ "$PROD_IMAGE" = "false" ]; then \
     echo "== Building end-to-end test image =="; \
     else \
     echo "== Skipping end-to-end-tests, use production ==" && exit 1; \
-    fi \
+    fi
 
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
@@ -162,7 +164,7 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 # Stage 4b-1: CI-Tests
 ##############################
 FROM tests AS ci-tests
-USER www-data
+USER root
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
