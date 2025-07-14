@@ -64,7 +64,7 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
         $this->sut->endTransaction();
 
         // use SUT to find the ID of the order just inserted
-        $orderId = $this->sut->findOrderId($uid);
+        $orderId = $this->sut->findOrderId($uid)->data;
 
         // get the order from the db and check it looks right
         $order = $this->getQueryBuilder()

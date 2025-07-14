@@ -77,6 +77,15 @@ class DeputyshipProcessingRawDbAccess
         try {
             $qb = $this->ingestWriterEm->getConnection()->createQueryBuilder();
 
+            $qb->insert('client')
+                ->values(
+                    [
+                        'id' => ':clientId',
+                    ]
+                )
+                ->setParameter('clientId', $insertOrder['clientId'] ?? '')
+                ->executeQuery();
+
             $result = $qb->insert('court_order')
                 ->values(
                     [
