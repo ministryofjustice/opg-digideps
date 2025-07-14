@@ -88,7 +88,7 @@ api-unit-tests: ##@unit-tests Run the api unit tests
 
 INTEGRATION_SELECTION := selection-all
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
+	docker compose -f docker-compose.yml -f docker-compose.override.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 api-integration-tests-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
 #Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testLoginFailWrongPassword (test case argument is optional)
