@@ -31,8 +31,8 @@ editClient:
     defaultOption: Please select ...
 
 showClient:
-  htmlTitle: "%client%'s details - Complete the deputy report | GOV.UK"
-  pageTitle: "%client%'s details"
+  htmlTitle: "%client% details - Complete the deputy report | GOV.UK"
+  pageTitle: "%client% details"
   clientTable:
     header:
       caseNumber: Case number

@@ -55,6 +55,10 @@ class DeputyshipFeatureContext extends BaseFeatureContext
         $client3 = $this->fixtureHelper->generateClient($this->user);
         $client3->setFirstname(self::FIRST_NAMES[2]);
 
+        $this->em->persist($client1);
+        $this->em->persist($client2);
+        $this->em->persist($client3);
+
         $this->user->addClient($client1);
         $this->user->addClient($client2);
         $this->user->addClient($client3);
@@ -70,6 +74,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     {
         $client = $this->fixtureHelper->generateClient($this->user);
         $client->setLastname($familyName);
+        $this->em->persist($client);
 
         $this->user->addClient($client);
 
@@ -113,7 +118,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     public function clientListShowsClientsInAlphaOrder(): void
     {
         // get the divs holding the client details
-        $clientDivs = $this->findAllCssElements('h2.govuk-summary-card__title');
+        $clientDivs = $this->findAllCssElements('th.govuk-table__header');
         assert(
             count($clientDivs) === count(self::FIRST_NAMES),
             'Expected '.count(self::FIRST_NAMES).' clients, but found '.count($clientDivs)

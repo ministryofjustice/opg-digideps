@@ -77,13 +77,6 @@ Feature: Lay Deputy Self Registration
         Then they shouldn't be able to register to deputise for a client with already registered details
         And they should see a 'deputy already linked to case number' error
 
-    @super-admin
-    Scenario: A Lay user entering an invalid reporting period
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
-        When I run the lay CSV command the file contains 4 new pre-registration entities
-        And a Lay Deputy registers to deputise for a client with valid details but invalid reporting period
-        Then I should see an 'invalid reporting period' error
-
     @super-admin @lay-pfa-high-completed
     Scenario: A multi-client deputy can invite a co-deputy to report on a client attached to their secondary account and co-deputy can register with a 10 digit case number
         Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'

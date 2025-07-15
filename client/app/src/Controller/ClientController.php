@@ -178,22 +178,23 @@ class ClientController extends AbstractController
                     $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
                 }
 
+                $client->setId($response['id']);
+
+                $report = new Report();
+                $report->setClient($client);
+                $this->restClient->post('report', $report);
+
+
                 /** @var User $currentUser */
                 $currentUser = $this->userApi->getUserWithData();
 
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
-                $url = $currentUser->isNdrEnabled()
-                    ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
-                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+                $event = new RegistrationSucceededEvent($currentUser);
+                $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
 
-                if ($currentUser->isNdrEnabled()) {
-                    $event = new RegistrationSucceededEvent($currentUser);
-
-                    $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
-                }
-
+                $url = $this->generateUrl('lay_home', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {

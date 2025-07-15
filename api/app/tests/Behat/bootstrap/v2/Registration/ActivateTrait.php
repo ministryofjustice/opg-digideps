@@ -89,10 +89,6 @@ trait ActivateTrait
             $this->loginToFrontendAs($this->getUserForTestRun()['email']);
             $this->completeUserDetailsSection();
         }
-
-        if ('lay' === $this->getUserForTestRun()['type']) {
-            $this->completeClientDetailsSection();
-        }
     }
 
     private function completeSetPasswordStep()
@@ -228,12 +224,10 @@ trait ActivateTrait
         sleep(1);
 
         switch ($userType) {
-            case 'lay':
-                $this->completeReportDatesSection();
-                break;
             case 'org':
                 $this->completeOrgUserDetailsSection();
                 break;
+            case 'lay':
             case 'ndr':
                 $this->completeClientDetailsSection();
                 break;
@@ -302,8 +296,6 @@ trait ActivateTrait
         $this->completeUserDetailsSection();
 
         $this->completeClientDetailsSectionUsingUnicode();
-
-        $this->completeFinalRegistrationSection($this->getUserForTestRun()['type']);
     }
 
     public function fillComplexField($field, $value): void

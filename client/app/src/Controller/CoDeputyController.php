@@ -23,28 +23,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CoDeputyController extends AbstractController
 {
-    private ClientApi $clientApi;
-    private UserApi $userApi;
-    private DeputyApi $deputyApi;
-    private RestClient $restClient;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ClientApi $clientApi,
-        UserApi $userApi,
-        DeputyApi $deputyApi,
-        RestClient $restClient,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
-    ) {
-        $this->clientApi = $clientApi;
-        $this->userApi = $userApi;
-        $this->deputyApi = $deputyApi;
-        $this->restClient = $restClient;
-        $this->translator = $translator;
-        $this->logger = $logger;
-    }
+        private readonly ClientApi $clientApi,
+        private readonly UserApi $userApi,
+        private readonly DeputyApi $deputyApi,
+        private readonly RestClient $restClient,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger
+    ) {}
 
     /**
      * @Route("/codeputy/verification", name="codep_verification")
@@ -186,7 +172,7 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, $clientId);
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, (int) $clientId);
 
                 $this->userApi->update(
                     $loggedInUser,

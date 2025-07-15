@@ -688,15 +688,10 @@ class Report implements ReportInterface
         return $this;
     }
 
-    /**
-     * set Due date to +21 days after end date (Lay reports) if end date before 13/11/19 otherwise +56 days.
-     */
     public function updateDueDateBasedOnEndDate()
     {
-        // due date set to 8 weeks (56 days) after the end date unless lay reports where end date is beyond
-        // 13/11/19. Then it is 21 days (DDPB-2996)
         $this->dueDate = clone $this->endDate;
-        if ($this->isLayReport() && $this->getEndDate()->format('Ymd') >= '20191113') {
+        if ($this->isLayReport()) {
             $this->dueDate->add(new \DateInterval('P21D'));
         } else {
             $this->dueDate->add(new \DateInterval('P56D'));

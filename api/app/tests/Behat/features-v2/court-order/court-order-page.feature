@@ -32,9 +32,9 @@ Feature: Court order page
     @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A multi client deputy can view all of their court orders
         When a Lay Deputy tries to login with their "primary" email address
-        And I am associated with '2' 'pfa' court order(s)
+        And I am associated with '3' 'pfa' court order(s)
         When I visit the multiple court order page
-        Then I should see '2' court orders on the page
+        Then I should see '3' court orders on the page
         When I visit the court order page of the 'first' court order that 'I am' associated with
         Then I should be on the court order page
         When I visit the court order page of the 'second' court order that 'I am' associated with

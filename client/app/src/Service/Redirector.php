@@ -177,7 +177,7 @@ class Redirector
                     $clientId = $activeClient->getId();
                 }
 
-                return $this->router->generate('report_create', ['clientId' => $clientId]);
+                return $this->router->generate('lay_home', ['clientId' => $clientId]);
             }
         }
 

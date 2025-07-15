@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
+use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
@@ -15,6 +16,7 @@ use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -50,6 +52,7 @@ class ReportController extends RestController
         private readonly EntityManagerInterface $em,
         private readonly AuthService $authService,
         private readonly RestFormatter $formatter,
+        private readonly PreRegistrationRepository $preRegRepository,
     ) {
         parent::__construct($em);
     }
@@ -68,17 +71,17 @@ class ReportController extends RestController
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
         }
+        /** @var Client $client */
         $client = $this->findEntityBy(Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $this->formatter->validateArray($reportData, [
-            'start_date' => 'notEmpty',
-            'end_date' => 'notEmpty',
-        ]);
+        /** @var EntityDir\PreRegistration[] $preRegistrationRecord */
+        $preRegistrationRecord = $this->preRegRepository->findByCaseNumber($client->getCaseNumber());
+        $endDate = clone $startDate = $preRegistrationRecord[0]->getOrderDate();
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
+        $report = new Report($client, $reportType, $startDate, $endDate->add(new \DateInterval('P12M1D')));
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());

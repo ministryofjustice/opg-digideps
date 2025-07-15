@@ -229,7 +229,7 @@ class ComponentsExtension extends AbstractExtension
         } elseif ($user->getIsCoDeputy()) {
             $availableStepIds = ['password', 'codep_verify'];
         } else {
-            $availableStepIds = ['password', 'user_details', 'client_details', 'create_report'];
+            $availableStepIds = ['password', 'user_details', 'client_details'];
         }
 
         $progressSteps = [];
