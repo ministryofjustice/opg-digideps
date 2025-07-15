@@ -688,13 +688,14 @@ class Report implements ReportInterface
         return $this;
     }
 
-    /**
-     * set Due date to +21 days after end date (Lay reports).
-     */
     public function updateDueDateBasedOnEndDate()
     {
         $this->dueDate = clone $this->endDate;
-        $this->dueDate->add(new \DateInterval('P21D'));
+        if ($this->isLayReport()) {
+            $this->dueDate->add(new \DateInterval('P21D'));
+        } else {
+            $this->dueDate->add(new \DateInterval('P56D'));
+        }
     }
 
     /**
