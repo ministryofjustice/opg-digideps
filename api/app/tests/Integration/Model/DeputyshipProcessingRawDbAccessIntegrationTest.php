@@ -50,12 +50,17 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
     {
         $uid = substr(uniqid(), 0, 10);
 
+        // add the client which will be referenced in the candidate
+        $client = $this->fixtures->createClient();
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
+
         $candidate = [
             'orderUid' => $uid,
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-05-23 10:10:10',
-            'clientId' => 1,
+            'clientId' => $client->getId(),
         ];
 
         // use SUT to insert the order
