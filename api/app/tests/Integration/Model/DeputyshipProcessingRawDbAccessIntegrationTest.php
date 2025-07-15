@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace app\tests\Integration\Model;
 
 use App\Model\DeputyshipProcessingRawDbAccess;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
+class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManagerInterface $entityManager;
     private Fixtures $fixtures;
     private DeputyshipProcessingRawDbAccess $sut;
 
@@ -22,10 +19,9 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
     {
         parent::setUp();
 
-        $container = self::bootKernel()->getContainer();
-        $this->entityManager = $container->get('doctrine')->getManager('ingestwriter');
-
         $this->fixtures = new Fixtures($this->entityManager);
+
+        $container = self::bootKernel()->getContainer();
 
         /** @var DeputyshipProcessingRawDbAccess $sut */
         $sut = $container->get(DeputyshipProcessingRawDbAccess::class);
@@ -35,7 +31,7 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        (new ORMPurger($this->entityManager))->purge();
+        $this->purgeDatabase();
     }
 
     private function getQueryBuilder(): QueryBuilder
