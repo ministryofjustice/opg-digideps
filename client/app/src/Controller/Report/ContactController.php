@@ -21,8 +21,8 @@ class ContactController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
@@ -30,10 +30,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts", name="contacts")
      *
      * @Template("@App/Report/Contact/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -50,10 +48,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
      *
      * @Template("@App/Report/Contact/exist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\ContactExistType::class, $report);
@@ -89,10 +85,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/add", name="contacts_add")
      *
      * @Template("@App/Report/Contact/add.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = new EntityDir\Report\Contact();
@@ -132,10 +126,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
      *
      * @Template("@App/Report/Contact/addAnother.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -161,10 +153,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
      *
      * @Template("@App/Report/Contact/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, int $contactId)
+    public function editAction(Request $request, int $reportId, int $contactId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = $this->restClient->get('report/contact/'.$contactId, 'Report\\Contact');
@@ -195,10 +185,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
      *
      * @Template("@App/Report/Contact/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -215,10 +203,8 @@ class ContactController extends AbstractController
      * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, int $contactId)
+    public function deleteAction(Request $request, int $reportId, int $contactId): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -248,13 +234,5 @@ class ContactController extends AbstractController
             ],
             'backLink' => $this->generateUrl('contacts', ['reportId' => $reportId]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'contacts';
     }
 }

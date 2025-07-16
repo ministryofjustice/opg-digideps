@@ -29,8 +29,6 @@ class CourtOrderController extends AbstractController
     /**
      * Get a court order by its UID.
      *
-     * @param string $uid Court order UID
-     *
      * @return array Court order and associated data
      */
     #[Route(path: '/{uid}', name: 'courtorder_by_uid', requirements: ['uid' => '\d+'], methods: ['GET'])]
