@@ -16,7 +16,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepositoryTest extends TestCase
 {
@@ -29,7 +28,6 @@ class ReportRepositoryTest extends TestCase
         $this->mockEm = m::mock(EntityManagerInterface::class);
         $mockManagerRegistry = m::mock(ManagerRegistry::class);
         $mockMetaClass = m::mock(ClassMetadata::class);
-        $this->mockParameterBag = m::mock(ParameterBag::class);
 
         $mockManagerRegistry->shouldReceive('getManagerForClass')->andReturn($this->mockEm);
         $this->mockEm->shouldReceive('getClassMetadata')->andReturn($mockMetaClass);

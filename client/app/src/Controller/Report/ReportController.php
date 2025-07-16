@@ -168,21 +168,6 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/lay", name="lay_home_deprecated")
-     *
-     * @Template("@App/Report/Report/index.html.twig")
-     *
-     * @return RedirectResponse
-     */
-    public function indexAction()
-    {
-        // Moved to ClientController::indexAction()
-        return $this->redirectToRoute('homepage');
-    }
-
-    /**
-     * List of reports.
-     *
      * @Route("/client/{clientId}", name="lay_home")
      *
      * @Template("@App/Report/Report/index.html.twig")
@@ -343,8 +328,8 @@ class ReportController extends AbstractController
      * action "add" will instead add another report.
      *
      * @Route("/report/{action}/{clientId}", name="report_create",
-     *   defaults={ "action" = "create"},
-     *   requirements={ "action" = "(create|add)"}
+     *   defaults={"action"="create"},
+     *   requirements={"action"="(create|add)"}
      * )
      *
      * @Template("@App/Report/Report/create.html.twig")
@@ -669,7 +654,7 @@ class ReportController extends AbstractController
     /**
      * Used for active and archived report.
      *
-     * @Route("/report/{reportId}/pdf-debug")
+     * @Route("/report/{reportId}/pdf-debug", name="report_pdf_debug")
      *
      * @return Response|null
      */

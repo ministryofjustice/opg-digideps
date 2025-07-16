@@ -32,7 +32,7 @@ class CourtOrderDeputy
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", cascade={"persist"})
      *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private Deputy $deputy;
 

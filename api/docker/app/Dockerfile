@@ -33,7 +33,6 @@ RUN composer dump-autoload --optimize
 FROM php:8.3.21-fpm-alpine3.21 AS base
 
 ARG PLATFORM=${PLATFORM:-amd64}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -152,9 +151,9 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php-fpm"]
 
 ##############################
-# Stage 4b-2: CI-Tests
+# Stage 4b-2: DevTools admin (largely for CI-Tests in runners)
 ##############################
-FROM devtools-base AS ci-tests
+FROM devtools-base AS devtools-admin
 USER root
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \

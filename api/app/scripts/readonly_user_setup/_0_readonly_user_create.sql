@@ -10,6 +10,10 @@ BEGIN
      GRANT rds_iam TO "readonly-db-iam-string-to-replace-with-local-environment";
   END IF;
 
+  IF EXISTS (SELECT * FROM pg_roles WHERE rolname = 'pg_read_all_data') THEN
+     GRANT pg_read_all_data TO "readonly-db-iam-string-to-replace-with-local-environment";
+  END IF;
+
   ALTER USER "readonly-db-iam-string-to-replace-with-local-environment" SET log_statement = 'all';
 
 END

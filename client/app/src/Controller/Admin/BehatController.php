@@ -6,7 +6,6 @@ namespace App\Controller\Admin;
 
 use App\Command\ChecklistSyncCommand;
 use App\Controller\AbstractController;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -19,20 +18,16 @@ class BehatController extends AbstractController
 {
     public function __construct(
         private KernelInterface $kernel,
-        private string $symfonyEnvironment
+        private string $symfonyEnvironment,
     ) {
     }
 
     /**
-     * @Route("/admin/behat/run-document-sync-command", name="behat_admin_run_document_sync_command", methods={"GET"})
+     * @Route("/admin/behat/run-document-sync-command", methods={"GET"}, name="behat_admin_run_document_sync_command")
      *
-     * @param KernelInterface $kernel
-     *
-     * @return Response
-     *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function runDocumentSyncCommand()
+    public function runDocumentSyncCommand(): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -50,15 +45,11 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/admin/behat/run-checklist-sync-command", name="behat_admin_run_checklist_sync_command", methods={"GET"})
+     * @Route("/admin/behat/run-checklist-sync-command", methods={"GET"}, name="behat_admin_run_checklist_sync_command")
      *
-     * @param KernelInterface $kernel
-     *
-     * @return Response
-     *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function runChecklistSyncCommand()
+    public function runChecklistSyncCommand(): Response
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -83,6 +74,8 @@ class BehatController extends AbstractController
             if (str_contains($output->fetch(), ChecklistSyncCommand::COMPLETED_MESSAGE)) {
                 return new Response('');
             }
+
+            sleep(1);
         }
     }
 }

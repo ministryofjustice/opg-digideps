@@ -173,7 +173,7 @@ class MoneyInController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", requirements={"step":"\d+"}, name="money_in_step")
      *
      * @Template("@App/Report/MoneyIn/step.html.twig")
      *
