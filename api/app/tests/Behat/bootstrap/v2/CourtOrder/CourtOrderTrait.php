@@ -255,10 +255,8 @@ trait CourtOrderTrait
      */
     public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder()
     {
-        $rows = $this->findAllCssElements('[data-role="court-order-co-deputy-awaiting-registration"]');
-        assertCount(1, $rows);
-
-        $rowText = $rows[0]->getText();
-        assertStringContainsString($this->coDeputy->getEmail1(), $rowText);
+        $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-awaiting-registration"]');
+        assertCount(1, $coDeputyNameElts);
+        assertStringContainsString($this->coDeputy->getEmail1(), $coDeputyNameElts[0]->getText());
     }
 }
