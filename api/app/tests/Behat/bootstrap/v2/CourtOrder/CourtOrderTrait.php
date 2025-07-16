@@ -158,7 +158,7 @@ trait CourtOrderTrait
     }
 
     /**
-     * @Given /^I should see an NDR on the court order page with a status of \'([^\']*)\' with a standard report status of \'([^\']*)\'$/
+     * @Given /^I should see an NDR on the court order page with a status of \'([^\']*)\' with standard report status of \'([^\']*)\'$/
      */
     public function iShouldSeeAnNDROnTheCourtOrderPageWithAStandardReportStatusOf($arg1, $arg2)
     {
