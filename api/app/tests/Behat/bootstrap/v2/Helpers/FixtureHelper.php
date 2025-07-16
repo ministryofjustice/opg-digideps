@@ -1397,7 +1397,7 @@ class FixtureHelper
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $ndr, $deputy);
     }
 
-    public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): void
+    public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy
     {
         $user = $this->userTestHelper::createUser();
 
@@ -1410,5 +1410,7 @@ class FixtureHelper
         $this->em->persist($user);
         $this->em->persist($deputy);
         $this->em->flush();
+
+        return $deputy;
     }
 }
