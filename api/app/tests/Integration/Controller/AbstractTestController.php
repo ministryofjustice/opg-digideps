@@ -6,7 +6,6 @@ use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
 use App\Tests\Integration\Fixtures;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Osteel\OpenApi\Testing\ValidatorBuilder;
 use Osteel\OpenApi\Testing\ValidatorInterface;
@@ -52,14 +51,6 @@ abstract class AbstractTestController extends WebTestCase
         self::$adminSecret = getenv('SECRETS_ADMIN_KEY');
 
         unset($em);
-    }
-
-    /**
-     * clear fixtures.
-     */
-    public static function tearDownAfterClass(): void
-    {
-        (new ORMPurger(self::$em))->purge();
     }
 
     public static function fixtures(): Fixtures
