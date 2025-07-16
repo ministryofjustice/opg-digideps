@@ -15,11 +15,15 @@ use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertStringContainsString;
+
 trait CourtOrderTrait
 {
     public CourtOrder $courtOrder;
     public array $courtOrders;
     public ClientApi $clientApi;
+    private Deputy $coDeputy;
 
     /**
      * @Given I visit the court order page
@@ -243,7 +247,7 @@ trait CourtOrderTrait
     public function aCoDeputyIsAssociatedWithTheCourtOrder()
     {
         // create deputy with null last_logged_in datetime, so they show as "awaiting registration"
-        $this->fixtureHelper->createDeputyOnOrder($this->courtOrder);
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder);
     }
 
     /**
@@ -251,6 +255,10 @@ trait CourtOrderTrait
      */
     public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder()
     {
-        $this->printLastResponse();
+        $rows = $this->findAllCssElements('[data-role="court-order-co-deputy-awaiting-registration"]');
+        assertCount(1, $rows);
+
+        $rowText = $rows[0]->getText();
+        assertStringContainsString($this->coDeputy->getEmail1(), $rowText);
     }
 }

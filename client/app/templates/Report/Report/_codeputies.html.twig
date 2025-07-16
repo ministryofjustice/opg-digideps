@@ -29,10 +29,11 @@
 
     <tbody class="govuk-table__body">
         {% for deputy in coDeputies %}
-            <tr class="govuk-table__row">
+            {% set email = deputy.getEmail() %}
+            <tr class="govuk-table__row" data-role="court-order-co-deputy">
                 {# accounting for deputies created manually by case managers without codeputy flag set#}
                 {% if deputy.getLastLoggedIn() is not null %}
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-role="court-order-co-deputy-registered">
                         {{ deputy.firstname }} {{ deputy.lastname }}
                     </td>
                     <td class="govuk-table__cell">
@@ -40,14 +41,14 @@
                     </td>
                     <td></td>
                 {% else %}
-                    <td class="govuk-table__cell">
-                        {{ deputy.email }}
+                    <td class="govuk-table__cell" data-role="court-order-co-deputy-awaiting-registration">
+                        {{ email }}
                     </td>
                     <td class="govuk-table__cell">
                         Awaiting registration
                     </td>
                     <td class="govuk-table__cell text--right">
-                        <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-link-resend-invite govuk-link">
+                        <a href="{{ path('codep_resend_activation', {'email': email}) }}" class="behat-link-resend-invite govuk-link">
                             Edit/Resend invite
                         </a>
                     </td>
