@@ -4,12 +4,10 @@ namespace App\Controller;
 
 use App\Form as FormDir;
 use App\Service\Client\RestClient;
-use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use App\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +16,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
@@ -29,9 +26,6 @@ class IndexController extends AbstractController
 {
     public function __construct(
         private RestClient $restClient,
-        private DeputyProvider $deputyProvider,
-        private EventDispatcherInterface $eventDispatcher,
-        private TokenStorageInterface $tokenStorage,
         private TranslatorInterface $translator,
         private RouterInterface $router,
         private string $environment,
@@ -41,10 +35,8 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/", name="homepage")
-     *
-     * @return RedirectResponse|Response|null
      */
-    public function indexAction(Redirector $redirector)
+    public function indexAction(Redirector $redirector): RedirectResponse|Response|null
     {
         if ($url = $redirector->getHomepageRedirect()) {
             return $this->redirect($url);
@@ -59,13 +51,11 @@ class IndexController extends AbstractController
     /**
      * Session logic for login is now in LoginFormAuthenticator as of Symfony 5.4.
      *
-     * @Route("login", name="login")
+     * @Route("/login", name="login")
      *
      * @Template("@App/Index/login.html.twig")
-     *
-     * @return Response|null
      */
-    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils)
+    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils): ?Response
     {
         $form = $this->createForm(FormDir\LoginType::class);
         $vars = [
@@ -126,18 +116,16 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("login_check", name="login_check")
+     * @Route("/login_check", name="login_check")
      */
-    public function loginCheckAction()
+    public function loginCheckAction(): void
     {
     }
 
     /**
-     * @Route("error-503", name="error-503")
-     *
-     * @return Response|null
+     * @Route("/error-503", name="error-503")
      */
-    public function error503(Request $request)
+    public function error503(Request $request): ?Response
     {
         $vars = [];
         $vars['request'] = $request;
@@ -148,9 +136,9 @@ class IndexController extends AbstractController
     /**
      * keep session alive. Called from session timeout dialog.
      *
-     * @Route("session-keep-alive", name="session-keep-alive", methods={"GET"})
+     * @Route("/session-keep-alive", methods={"GET"}, name="session-keep-alive")
      */
-    public function sessionKeepAliveAction(Request $request)
+    public function sessionKeepAliveAction(Request $request): Response
     {
         /** @var SessionInterface */
         $session = $request->getSession();
@@ -162,7 +150,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/access-denied", name="access_denied")
      */
-    public function accessDenied()
+    public function accessDenied(): Response
     {
         return new Response(
             $this->renderView('@App/Index/access-denied.html.twig'),
@@ -173,7 +161,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/terms", name="terms")
      */
-    public function termsAction(Request $request)
+    public function termsAction(Request $request): Response
     {
         return $this->render('@App/Index/terms.html.twig', [
             'backlink' => $this->getRefererUrlSafe($request, ['terms']),
@@ -183,7 +171,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/privacy", name="privacy")
      */
-    public function privacyAction(Request $request)
+    public function privacyAction(Request $request): Response
     {
         return $this->render('@App/Index/privacy.html.twig', [
             'backlink' => $this->getRefererUrlSafe($request, ['privacy']),
@@ -193,7 +181,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/accessibility", name="accessibility")
      */
-    public function accessibilityAction(Request $request)
+    public function accessibilityAction(Request $request): Response
     {
         return $this->render('@App/Index/accessibility.html.twig', [
             'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
@@ -203,7 +191,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/logout", name="app_logout")
      */
-    public function logoutAction(Request $request)
+    public function logoutAction(Request $request): void
     {
         // Handled as automatically as part of Symfony security component
     }
@@ -211,7 +199,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/cookies", name="cookies")
      */
-    public function cookiesAction(Request $request)
+    public function cookiesAction(Request $request): Response
     {
         $form = $this->createForm(FormDir\CookiePermissionsType::class);
 
@@ -264,7 +252,7 @@ class IndexController extends AbstractController
      *
      * @return string|null referer URL, null if not existing or inside the $excludedRoutes
      */
-    protected function getRefererUrlSafe(Request $request, array $excludedRoutes = [])
+    protected function getRefererUrlSafe(Request $request, array $excludedRoutes = []): ?string
     {
         $referer = $request->headers->get('referer');
 

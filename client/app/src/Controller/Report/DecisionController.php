@@ -23,8 +23,8 @@ class DecisionController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
@@ -32,10 +32,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions", name="decisions")
      *
      * @Template("@App/Report/Decision/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -52,10 +50,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
      *
      * @Template("@App/Report/Decision/mentalCapacity.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function mentalCapacityAction(Request $request, $reportId)
+    public function mentalCapacityAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = 'summary' == $request->get('from');
@@ -92,10 +88,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      *
      * @Template("@App/Report/Decision/mentalAssessment.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function mentalAssessmentAction(Request $request, $reportId)
+    public function mentalAssessmentAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = 'summary' == $request->get('from');
@@ -132,10 +126,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/exist", name="decisions_exist")
      *
      * @Template("@App/Report/Decision/exist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\DecisionExistType::class, $report);
@@ -184,10 +176,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/add", name="decisions_add")
      *
      * @Template("@App/Report/Decision/add.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = new EntityDir\Report\Decision();
@@ -227,10 +217,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
      *
      * @Template("@App/Report/Decision/addAnother.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -256,10 +244,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
      *
      * @Template("@App/Report/Decision/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $decisionId)
+    public function editAction(Request $request, int $reportId, int $decisionId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = $this->restClient->get('report/decision/'.$decisionId, 'Report\\Decision');
@@ -290,10 +276,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
      *
      * @Template("@App/Report/Decision/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -316,10 +300,8 @@ class DecisionController extends AbstractController
      * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $decisionId)
+    public function deleteAction(Request $request, int $reportId, int $decisionId): array|RedirectResponse
     {
         $form = $this->createForm(FormDir\ConfirmDeleteType::class);
         $form->handleRequest($request);
@@ -347,13 +329,5 @@ class DecisionController extends AbstractController
             ],
             'backLink' => $this->generateUrl('decisions', ['reportId' => $reportId]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'decisions';
     }
 }

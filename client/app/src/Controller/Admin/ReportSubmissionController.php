@@ -28,40 +28,16 @@ class ReportSubmissionController extends AbstractController
     public const ACTION_ARCHIVE = 'archive';
     public const ACTION_SYNCHRONISE = 'synchronise';
 
-    /**
-     * @var DocumentDownloader
-     */
-    private $documentDownloader;
-
-    /**
-     * @var S3Storage
-     */
-    private $s3Storage;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
     public function __construct(
-        DocumentDownloader $documentDownloader,
-        S3Storage $s3Storage,
-        TranslatorInterface $translator,
-        RestClient $restClient
+        private readonly DocumentDownloader $documentDownloader,
+        private readonly S3Storage $s3Storage,
+        private readonly TranslatorInterface $translator,
+        private readonly RestClient $restClient,
     ) {
-        $this->documentDownloader = $documentDownloader;
-        $this->s3Storage = $s3Storage;
-        $this->translator = $translator;
-        $this->restClient = $restClient;
     }
 
     /**
-     * @Route("/documents/list", name="admin_documents", methods={"GET", "POST"})
+     * @Route("/documents/list", methods={"GET", "POST"}, name="admin_documents")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -118,7 +94,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * @Route("/documents/list/download", name="admin_documents_download", methods={"GET"})
+     * @Route("/documents/list/download", methods={"GET"}, name="admin_documents_download")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
@@ -147,7 +123,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * @Route("/documents/{submissionId}/{documentId}/download", name="admin_document_download", methods={"GET"})
+     * @Route("/documents/{submissionId}/{documentId}/download", methods={"GET"}, name="admin_document_download")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      */
@@ -185,7 +161,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * @Route("/documents/list/download_ready", name="admin_documents_download_ready", methods={"GET"})
+     * @Route("/documents/list/download_ready", methods={"GET"}, name="admin_documents_download_ready")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *

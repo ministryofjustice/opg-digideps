@@ -88,7 +88,7 @@ RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/p
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-FROM application AS ci-tests
+FROM application AS devtools-admin
 # We use this setup for certain commands as part of the CI processing of unit tests
 CMD ["sh", "-c", "php-fpm"]
 

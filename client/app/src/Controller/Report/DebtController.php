@@ -21,8 +21,8 @@ class DebtController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
@@ -30,10 +30,8 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts", name="debts")
      *
      * @Template("@App/Report/Debt/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction(Request $request, $reportId)
+    public function startAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getDebtsState()['state']) {
@@ -49,10 +47,8 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/exist", name="debts_exist")
      *
      * @Template("@App/Report/Debt/exist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -90,10 +86,8 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/edit", name="debts_edit")
      *
      * @Template("@App/Report/Debt/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId)
+    public function editAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -135,10 +129,8 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/management", name="debts_management")
      *
      * @Template("@App/Report/Debt/management.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function managementAction(Request $request, $reportId)
+    public function managementAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
@@ -175,10 +167,8 @@ class DebtController extends AbstractController
      * @Route("/report/{reportId}/debts/summary", name="debts_summary")
      *
      * @Template("@App/Report/Debt/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -191,13 +181,5 @@ class DebtController extends AbstractController
             'report' => $report,
             'status' => $report->getStatus(),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'debts';
     }
 }

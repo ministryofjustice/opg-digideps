@@ -33,7 +33,7 @@ class OrganisationController extends AbstractController
         private LoggerInterface $logger,
         private OrganisationApi $organisationApi,
         private ObservableEventDispatcher $eventDispatcher,
-        private TokenStorageInterface $tokenStorage
+        private TokenStorageInterface $tokenStorage,
     ) {
     }
 
@@ -54,7 +54,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"}, methods={"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"}, name="admin_organisation_view")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
@@ -142,7 +142,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="admin_organisation_edit", requirements={"id":"\d+"})
+     * @Route("/{id}/edit", requirements={"id":"\d+"}, name="admin_organisation_edit")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
@@ -181,7 +181,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete", name="admin_organisation_delete", requirements={"id":"\d+"})
+     * @Route("/{id}/delete", requirements={"id":"\d+"}, name="admin_organisation_delete")
      *
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
@@ -223,7 +223,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/add-user", name="admin_organisation_member_add", requirements={"id":"\d+"})
+     * @Route("/{id}/add-user", requirements={"id":"\d+"}, name="admin_organisation_member_add")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
@@ -287,7 +287,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete-user/{userId}", name="admin_organisation_member_delete", requirements={"id":"\d+"})
+     * @Route("/{id}/delete-user/{userId}", requirements={"id":"\d+"}, name="admin_organisation_member_delete")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
@@ -330,7 +330,10 @@ class OrganisationController extends AbstractController
     private function dispatchOrgCreatedEvent(Organisation $organisation)
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANUAL_ORG_CREATION;
+
+        /** @var User $currentUser */
         $currentUser = $this->tokenStorage->getToken()->getUser();
+
         $organisationArray = [
             'id' => $organisation->getId(),
             'name' => $organisation->getName(),
