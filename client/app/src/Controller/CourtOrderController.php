@@ -45,7 +45,7 @@ class CourtOrderController extends AbstractController
 
         $templateValues = [
             'clientHasCoDeputies' => !empty($client->getCoDeputies()),
-            'coDeputies' => $courtOrder->getCoDeputies(strval($user->getDeputyUid())),
+            'coDeputies' => $courtOrder->getCoDeputies(),
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
