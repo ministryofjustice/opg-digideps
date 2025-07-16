@@ -237,6 +237,8 @@ trait CourtOrderTrait
      */
     public function aCoDeputyIsAssociatedWithTheCourtOrder()
     {
+        // create deputy with null last_logged_in datetime, so they show as "awaiting registration"
+        $this->fixtureHelper->createDeputyOnOrder($this->courtOrder);
     }
 
     /**
@@ -244,5 +246,6 @@ trait CourtOrderTrait
      */
     public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder()
     {
+        $this->printLastResponse();
     }
 }
