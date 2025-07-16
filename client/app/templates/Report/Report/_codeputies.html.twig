@@ -30,7 +30,7 @@
     <tbody class="govuk-table__body">
         {% for deputy in coDeputies %}
             <tr class="govuk-table__row">
-{#                accounting for deputies created manually by case managers without codeputy flag set#}
+                {# accounting for deputies created manually by case managers without codeputy flag set#}
                 {% if deputy.LastLoggedIn is not null %}
                     <td class="govuk-table__cell">
                         {{ deputy.firstname }} {{ deputy.lastname }}
