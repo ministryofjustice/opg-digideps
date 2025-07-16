@@ -233,7 +233,7 @@ trait CourtOrderTrait
     }
 
     /**
-     * @Given /^a co-deputy is associated with the court order$/
+     * @Given /^an unregistered co-deputy is associated with the court order$/
      */
     public function aCoDeputyIsAssociatedWithTheCourtOrder()
     {
