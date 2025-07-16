@@ -55,10 +55,20 @@ Feature: Court order page
         And I should see an NDR on the court order page with a status of 'Not started' with standard report status of 'Not available'
         Then I can procced to fill out the NDR
 
-    @lay-pfa-low-not-started @lay-pfa-court-order-with-unregistered-co-deputy
+    @lay-pfa-low-not-started @lay-pfa-court-order-co-deputy @lay-pfa-court-order-co-deputy-unregistered
     Scenario: Court order with invited co-deputy who is awaiting registration
         Given a Lay Deputy has not started a Pfa Low Assets report
         And I am associated with a 'pfa' court order
         And an unregistered co-deputy is associated with the court order
         When I visit the page of a court order that 'I am' associated with
-        Then I should see that the co-deputy is awaiting registration
+        Then I should see that I am a registered deputy
+        And I should see that the co-deputy is awaiting registration
+
+    @lay-pfa-low-not-started @lay-pfa-court-order-co-deputy @lay-pfa-court-order-co-deputy-registered
+    Scenario: Court order with invited co-deputy who is awaiting registration
+        Given a Lay Deputy has not started a Pfa Low Assets report
+        And I am associated with a 'pfa' court order
+        And a registered co-deputy is associated with the court order
+        When I visit the page of a court order that 'I am' associated with
+        Then I should see that I am a registered deputy
+        And I should see that the co-deputy is registered
