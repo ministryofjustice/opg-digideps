@@ -12,12 +12,10 @@ use App\Exception\RestClientException;
 use App\Form as FormDir;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\LayDeputyshipApi;
 use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DataImporter\CsvToArray;
-use App\Service\OrgService;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Predis\ClientInterface;
@@ -58,9 +56,7 @@ class IndexController extends AbstractController
         private readonly KernelInterface $kernel,
         private readonly EventDispatcherInterface $dispatcher,
         private readonly S3Client $s3,
-        private readonly LayDeputyshipApi $layDeputyshipApi,
-        private readonly OrgService $orgService,
-        private readonly string $workspace
+        private readonly string $workspace,
     ) {
     }
 
@@ -143,7 +139,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/user/{id}", name="admin_user_view", requirements={"id":"\d+"})
+     * @Route("/user/{id}", requirements={"id":"\d+"}, name="admin_user_view")
      *
      * @Security("is_granted('ROLE_ADMIN')")
      *
@@ -161,7 +157,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
+     * @Route("/edit-user", methods={"GET", "POST"}, name="admin_editUser")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -251,7 +247,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
+     * @Route("/edit-ndr/{id}", methods={"POST"}, name="admin_editNdr")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -278,7 +274,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
+     * @Route("/delete-confirm/{id}", methods={"GET"}, name="admin_delete_confirm")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -297,7 +293,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
+     * @Route("/delete/{id}", methods={"GET"}, name="admin_delete")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -459,8 +455,6 @@ class IndexController extends AbstractController
         ]);
         $processForm->handleRequest($request);
 
-        $outputStreamResponse = isset($_GET['ajax']);
-
         if ($processForm->isSubmitted() && $processForm->isValid()) {
             /** Run the org CSV command as a background task */
             $email = $this->tokenStorage->getToken()->getUser()->getUserIdentifier();
@@ -609,6 +603,8 @@ class IndexController extends AbstractController
     private function dispatchAdminManagerDeletedEvent(User $userToDelete)
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANAGER_MANUALLY_DELETED;
+
+        /** @var User $currentUser */
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $adminManagerDeletedEvent = new AdminManagerDeletedEvent(
