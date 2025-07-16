@@ -37,9 +37,8 @@ jobs:
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --build-arg ENVIRONMENT=local \
-          --build-arg PROD_IMAGE=false \
           --tag api-phpstan:latest \
-          --target ci-tests \
+          --target devtools-admin \
           --output type=docker .
 
       - name: Move cache
@@ -50,6 +49,6 @@ jobs:
       - name: run api phpstan
         id: api-phpstan
         env:
-          TARGET: ci-tests
+          TARGET: devtools-admin
         run: |
           make phpstan-api

@@ -6,32 +6,21 @@ namespace App\Controller;
 
 use App\Entity\Ndr\Ndr;
 use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BehatController extends AbstractController
 {
-    private UserApi $userApi;
-    private string $symfonyEnvironment;
-    private RestClient $restClient;
-
     public function __construct(
-        UserApi $userApi,
-        string $symfonyEnvironment,
-        RestClient $restClient
+        private readonly UserApi $userApi,
+        private readonly string $symfonyEnvironment,
     ) {
-        $this->userApi = $userApi;
-        $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->restClient = $restClient;
     }
 
     /**
-     * @Route("/behat/frontend/user/{email}/details", name="behat_front_get_user_details_by_email", methods={"GET"})
-     *
-     * @return JsonResponse
+     * @Route("/behat/frontend/user/{email}/details", methods={"GET"}, name="behat_front_get_user_details_by_email")
      */
-    public function getUserDetails(string $email)
+    public function getUserDetails(string $email): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();

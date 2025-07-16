@@ -33,24 +33,20 @@ class ClientBenefitsCheckController extends AbstractController
     ];
 
     public function __construct(
-        private ReportApi $reportApi,
-        private ClientBenefitsCheckApi $benefitCheckApi,
-        private StepRedirector $stepRedirector,
-        private MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
-        private NdrApi $ndrApi,
+        private readonly ReportApi $reportApi,
+        private readonly ClientBenefitsCheckApi $benefitCheckApi,
+        private readonly StepRedirector $stepRedirector,
+        private readonly MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
+        private readonly NdrApi $ndrApi,
     ) {
     }
 
     /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check", name="client_benefits_check", requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * }))
+     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check", requirements={"reportOrNdr"="(report|ndr)"}, name="client_benefits_check")
      *
      * @Template("@App/Report/ClientBenefitsCheck/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function start(int $reportId, string $reportOrNdr)
+    public function start(int $reportId, string $reportOrNdr): array|RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -77,10 +73,8 @@ class ClientBenefitsCheckController extends AbstractController
      * }))
      *
      * @Template("@App/Report/ClientBenefitsCheck/step.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function step(Request $request, int $reportId, int $step, string $reportOrNdr)
+    public function step(Request $request, int $reportId, int $step, string $reportOrNdr): array|RedirectResponse
     {
         $totalSteps = 3;
 
@@ -176,15 +170,15 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/summary", name="client_benefits_check_summary"), requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * }))
+     * @Route(
+     *     "/{reportOrNdr}/{reportId}/client-benefits-check/summary",
+     *     requirements={"reportOrNdr"="(report|ndr)"},
+     *     name="client_benefits_check_summary"
+     * )
      *
      * @Template("@App/Report/ClientBenefitsCheck/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summary(int $reportId, string $reportOrNdr)
+    public function summary(int $reportId, string $reportOrNdr): array|RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -197,15 +191,15 @@ class ClientBenefitsCheckController extends AbstractController
     }
 
     /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}", name="client_benefits_check_remove_money_type", requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * })))
+     * @Route(
+     *     "/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}",
+     *     requirements={"reportOrNdr"="(report|ndr)"},
+     *     name="client_benefits_check_remove_money_type"
+     * )
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId, string $reportOrNdr)
+    public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId, string $reportOrNdr): array|RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);

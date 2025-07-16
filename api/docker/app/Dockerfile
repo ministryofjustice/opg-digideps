@@ -31,9 +31,8 @@ RUN composer dump-autoload --optimize
 # Stage 2: Base PHP Image
 ##############################
 FROM php:8.3.21-fpm-alpine3.21 AS base
-
 ARG PLATFORM=${PLATFORM:-amd64}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
+
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
@@ -74,7 +73,7 @@ RUN mkdir -p var/cache var/logs /var/log/app \
 # Stage 3: Application (Shared)
 ##############################
 FROM base AS application
-
+ARG ENVIRONMENT=${ENVIRONMENT:-production}
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
@@ -93,7 +92,7 @@ RUN mkdir certs && chmod 755 certs \
 # Stage 4a: Production Image
 ##############################
 FROM application AS runtime
-
+ARG ENVIRONMENT=${ENVIRONMENT:-production}
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
 COPY --chown=www-data:www-data --from=composer-runtime /app/config config
@@ -152,9 +151,9 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php-fpm"]
 
 ##############################
-# Stage 4b-2: CI-Tests
+# Stage 4b-2: DevTools admin (largely for CI-Tests in runners)
 ##############################
-FROM devtools-base AS ci-tests
+FROM devtools-base AS devtools-admin
 USER root
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \

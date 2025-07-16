@@ -84,15 +84,15 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests sh scripts/client-unit-tests.sh cov-html
 
 api-unit-tests: ##@unit-tests Run the api unit tests
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=dev -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
 
 INTEGRATION_SELECTION := selection-all
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=dev -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 api-integration-tests-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
 #Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testLoginFailWrongPassword (test case argument is optional)
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=dev -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
