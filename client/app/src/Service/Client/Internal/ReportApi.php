@@ -11,7 +11,6 @@ use App\Entity\User;
 use App\Event\ReportSubmittedEvent;
 use App\Event\ReportUnsubmittedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\DisplayableException;
 use App\Exception\ReportSubmittedException;
 use App\Exception\RestClientException;
 use App\Service\Client\RestClient;
@@ -26,24 +25,18 @@ class ReportApi
     private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
     private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ObservableEventDispatcher */
-    private $eventDispatcher;
-
-    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher)
-    {
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(
+        private readonly RestClient $restClient,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+    ) {
     }
 
     /**
-     * @param array $groups
+     * @param string[] $groups
      *
      * @return Report[]
      */
-    public function getReportsIndexedById(Client $client, $groups = [])
+    public function getReportsIndexedById(Client $client, array $groups = []): array
     {
         $reports = $client->getReports();
 
@@ -60,10 +53,7 @@ class ReportApi
         return $ret;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport(int $reportId, array $groups = [])
+    public function getReport(int $reportId, array $groups = []): Report
     {
         $groups[] = 'report';
         $groups[] = 'report-client';
@@ -89,19 +79,11 @@ class ReportApi
     }
 
     /**
-     * @return Report
-     *
-     * @throws DisplayableException  if report doesn't have specified section
      * @throws NotFoundHttpException if report is submitted
      */
-    public function getReportIfNotSubmitted(int $reportId, array $groups = [])
+    public function getReportIfNotSubmitted(int $reportId, array $groups = []): Report
     {
         $report = $this->getReport($reportId, $groups);
-
-        $sectionId = $this->getSectionId();
-        if ($sectionId && !$report->hasSection($sectionId)) {
-            throw new DisplayableException('Section not accessible with this report type.');
-        }
 
         if ($report->getSubmitted()) {
             throw new ReportSubmittedException();
@@ -110,10 +92,7 @@ class ReportApi
         return $report;
     }
 
-    /**
-     * @return Ndr
-     */
-    public function getNdr(int $ndrId, array $groups)
+    public function getNdr(int $ndrId, array $groups): Ndr
     {
         $groups[] = 'ndr';
         $groups[] = 'ndr-client';
@@ -123,10 +102,7 @@ class ReportApi
         return $this->restClient->get(sprintf(self::NDR_ENDPOINT_BY_ID, $ndrId), 'Ndr\Ndr', $groups);
     }
 
-    /**
-     * @return Ndr
-     */
-    public function getNdrIfNotSubmitted(int $reportId, array $groups = [])
+    public function getNdrIfNotSubmitted(int $reportId, array $groups = []): Ndr
     {
         $report = $this->getNdr($reportId, $groups);
         if ($report->getSubmitted()) {
@@ -136,12 +112,7 @@ class ReportApi
         return $report;
     }
 
-    protected function getSectionId()
-    {
-        return null;
-    }
-
-    public function submit(Report $reportToSubmit, User $submittedBy)
+    public function submit(Report $reportToSubmit, User $submittedBy): void
     {
         $uri = sprintf(self::REPORT_SUBMIT_ENDPOINT, $reportToSubmit->getId());
         $newYearReportId = $this->restClient->put($uri, $reportToSubmit, ['submit']);
@@ -174,13 +145,16 @@ class ReportApi
 
         $uri = sprintf(self::REPORT_REFRESH_CACHE_ENDPOINT, $reportId);
 
-        return $this->restClient->post(
+        /** @var Report $report */
+        $report = $this->restClient->post(
             $uri,
             ['sectionIds' => $sectionIds],
             $jmsGroups,
             'Report\\Report',
             ['query' => ['groups' => $jmsGroups]]
         );
+
+        return $report;
     }
 
     /**

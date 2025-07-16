@@ -154,7 +154,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:13.17
+    image: postgres:14.18
     ports:
       - 5432:5432
     env_file:
@@ -263,7 +263,7 @@ services:
 
   composer:
     image: composer:2.8.9
-    command: ["install", "--no-dev"]
+    command: ["install"]
 
   custom-sql-query:
     image: custom-sql-query:latest
@@ -322,7 +322,6 @@ services:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
         ENVIRONMENT: local
-        PROD_IMAGE: false
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
@@ -343,7 +342,7 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
-      target: devtools
+      target: devtools-admin
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -376,7 +375,7 @@ services:
       args:
         ENVIRONMENT: local
     environment:
-      APP_ENV: dev
+      APP_ENV: ${APP_ENV:-local}
     depends_on:
       localstack:
         condition: service_healthy

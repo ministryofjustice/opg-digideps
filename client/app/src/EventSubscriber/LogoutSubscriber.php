@@ -5,33 +5,16 @@ namespace App\EventSubscriber;
 use App\Service\Client\RestClientInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class LogoutSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var RestClientInterface
-     */
-    private $restClient;
-
-    public function __construct(TokenStorageInterface $tokenStorage, RestClientInterface $restClient, RouterInterface $router)
-    {
-        $this->tokenStorage = $tokenStorage;
-        $this->restClient = $restClient;
-        $this->router = $router;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly RestClientInterface $restClient,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
