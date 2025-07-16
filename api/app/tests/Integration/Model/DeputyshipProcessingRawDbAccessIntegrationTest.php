@@ -21,17 +21,9 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
 
         $this->fixtures = new Fixtures($this->entityManager);
 
-        $container = self::bootKernel()->getContainer();
-
         /** @var DeputyshipProcessingRawDbAccess $sut */
-        $sut = $container->get(DeputyshipProcessingRawDbAccess::class);
+        $sut = $this->container->get(DeputyshipProcessingRawDbAccess::class);
         $this->sut = $sut;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->purgeDatabase();
     }
 
     private function getQueryBuilder(): QueryBuilder
