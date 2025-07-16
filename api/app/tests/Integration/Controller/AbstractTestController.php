@@ -6,13 +6,13 @@ use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
 use App\Tests\Integration\Fixtures;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Osteel\OpenApi\Testing\ValidatorBuilder;
 use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractTestController extends WebTestCase
 {
@@ -24,7 +24,6 @@ abstract class AbstractTestController extends WebTestCase
     protected ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
     private ?ValidatorInterface $openapiValidator = null;
-
 
     /**
      * Create static client and fixtures.
@@ -60,7 +59,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     public static function tearDownAfterClass(): void
     {
-        parent::tearDownAfterClass();
+        (new ORMPurger(self::$em))->purge();
     }
 
     public static function fixtures(): Fixtures
@@ -164,6 +163,7 @@ abstract class AbstractTestController extends WebTestCase
         $this->loggedInUserId = $responseArray['id'];
 
         $response = self::$frameworkBundleClient->getResponse();
+
         return $response->headers->get('AuthToken');
     }
 
@@ -310,8 +310,8 @@ abstract class AbstractTestController extends WebTestCase
 
     private function getOpenApiSpecification()
     {
-        if ($this->openapiValidator === null) {
-            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();
+        if (null === $this->openapiValidator) {
+            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__.'/../../../openapi/specification.yaml')->getValidator();
         }
 
         return $this->openapiValidator;
