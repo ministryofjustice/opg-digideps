@@ -33,7 +33,6 @@ RUN composer dump-autoload --optimize
 FROM php:8.3.21-fpm-alpine3.21 AS base
 
 ARG PLATFORM=${PLATFORM:-amd64}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
 WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443

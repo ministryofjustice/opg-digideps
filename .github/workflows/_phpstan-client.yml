@@ -36,7 +36,6 @@ jobs:
           -f client/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-          --build-arg ENVIRONMENT=local \
           --tag client-phpstan:latest \
           --target ci-tests \
           --output type=docker .

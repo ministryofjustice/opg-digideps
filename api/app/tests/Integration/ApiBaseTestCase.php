@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Integration;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ApiBaseTestCase extends WebTestCase
+class ApiBaseTestCase extends KernelTestCase
 {
-    /** @var \Doctrine\ORM\EntityManagerInterface|null */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {

@@ -33,7 +33,7 @@ class UserController extends AbstractController
         private ClientApi $clientApi,
         private TranslatorInterface $translator,
         private LoggerInterface $logger,
-        private ObservableEventDispatcher $eventDispatcher
+        private ObservableEventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -42,17 +42,16 @@ class UserController extends AbstractController
      *
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
      *
-     * @Route("/user/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
+     * @Route("/user/{action}/{token}", defaults={"action"="activate"}, requirements={
      *   "action" = "(activate|password-reset)"
-     * })
+     * }, name="user_activate")
      */
     public function activateUserAction(
         Request $request,
-        Redirector $redirector,
         DeputyProvider $deputyProvider,
         string $action,
         string $token,
-        RateLimiterFactory $anonymousApiLimiter
+        RateLimiterFactory $anonymousApiLimiter,
     ): Response {
         $isActivatePage = 'activate' === $action;
 
@@ -63,8 +62,6 @@ class UserController extends AbstractController
         $limit = $limiter->consume(1);
 
         if (!$limit->isAccepted() && !$isActivatePage) {
-            $lockedOutPeriod = ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60);
-
             return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');
         } elseif (!$limit->isAccepted() && $isActivatePage) {
             return $this->renderError(sprintf('You have tried to activate your account too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');

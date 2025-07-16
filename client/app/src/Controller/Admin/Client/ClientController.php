@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,14 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClientController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
         private ClientApi $clientApi,
         private UserApi $userApi,
     ) {
     }
 
     /**
-     * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
+     * @Route("/{id}/details", requirements={"id":"\d+"}, name="admin_client_details")
      * //TODO define Security group (AD to remove?)
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
@@ -71,7 +69,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/discharge", name="admin_client_discharge", requirements={"id":"\d+"})
+     * @Route("/{id}/discharge", requirements={"id":"\d+"}, name="admin_client_discharge")
      *
      * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
@@ -90,7 +88,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/discharge-confirm", name="admin_client_discharge_confirm", requirements={"id":"\d+"})
+     * @Route("/{id}/discharge-confirm", requirements={"id":"\d+"}, name="admin_client_discharge_confirm")
      *
      * @Security("is_granted('ROLE_ADMIN_MANAGER')")
      *
@@ -106,7 +104,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/archived", name="admin_client_archived", requirements={"id":"\d+"})
+     * @Route("/{id}/archived", requirements={"id":"\d+"}, name="admin_client_archived")
      *
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
      *
@@ -126,7 +124,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/unarchived", name="admin_client_unarchived", requirements={"id":"\d+"})
+     * @Route("/{id}/unarchived", requirements={"id":"\d+"}, name="admin_client_unarchived")
      *
      * @Security ("is_granted('ROLE_ADMIN_MANAGER')")
      *

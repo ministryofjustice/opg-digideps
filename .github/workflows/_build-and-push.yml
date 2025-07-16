@@ -137,7 +137,7 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           if [ "${IMAGE_NAME}" = "test" ]; then
-            TARGET_STAGE="--target devtools"
+            TARGET_STAGE="--target ci-tests"
           elif [ "${IMAGE_NAME}" = "api" ]; then
             TARGET_STAGE="--target runtime"
           fi

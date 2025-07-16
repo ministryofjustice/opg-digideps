@@ -138,7 +138,7 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
+     * @Route("/report/{reportId}/documents/step/2", defaults={"what"="new"}, name="report_documents")
      *
      * @Template("@App/Report/Document/step2.html.twig")
      *

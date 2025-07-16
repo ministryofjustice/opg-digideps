@@ -10,33 +10,28 @@ use App\Tests\Integration\ApiBaseTestCase;
  */
 class UserTest extends ApiBaseTestCase
 {
-    /** @test */
-    public function getNumberOfSubmittedReports()
+    public function testGetNumberOfSubmittedReports()
     {
         $this->purgeDatabase();
-        $kernel = self::bootKernel();
-        $em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
 
         $submissionHelper = new ReportSubmissionHelper();
         $submittedSubmissions = [];
 
-        foreach (range(1, 2) as $index) {
+        foreach (range(1, 2) as $ignored) {
             $submittedSubmissions[] = $submissionHelper->generateAndPersistSubmittedReportSubmission(
-                $em,
+                $this->entityManager,
                 new \DateTime()
             );
         }
 
         // Submit an extra report for first user
         $submissionHelper->submitAndPersistAdditionalSubmissions(
-            $em,
+            $this->entityManager,
             $submittedSubmissions[0]
         );
 
         // Create a report submission but dont submit it
-        $notSubmittedSubmission = $submissionHelper->generateAndPersistReportSubmission($em);
+        $notSubmittedSubmission = $submissionHelper->generateAndPersistReportSubmission($this->entityManager);
 
         self::assertEquals(
             2,
