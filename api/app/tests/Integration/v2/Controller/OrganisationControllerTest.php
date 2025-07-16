@@ -5,7 +5,6 @@ namespace App\Tests\Integration\v2\Controller;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Tests\Integration\Controller\AbstractTestController;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrganisationControllerTest extends AbstractTestController
@@ -64,6 +63,13 @@ class OrganisationControllerTest extends AbstractTestController
         $this->headers = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
         $this->headersSuperAdmin = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenSuperAdmin];
         $this->headersDeputy = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenDeputyInOrg];
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     /**
