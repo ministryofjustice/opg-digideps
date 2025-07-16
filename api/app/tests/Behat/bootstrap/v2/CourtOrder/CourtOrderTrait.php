@@ -92,13 +92,18 @@ trait CourtOrderTrait
         $clientId = $this->loggedInUserDetails->getClientId();
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 
-        $deputyUid = $this->em
+        $user = $this->em
             ->getRepository(User::class)
-            ->findOneBy(['email' => $userEmail])->getDeputyUid();
+            ->findOneBy(['email' => $userEmail]);
+
+        $deputyUid = $user->getDeputyUid();
 
         $deputy = $this->em
             ->getRepository(Deputy::class)
             ->findOneBy(['deputyUid' => $deputyUid]);
+
+        $deputy->setUser($user);
+        $this->em->persist($deputy);
 
         $client = $this->em
             ->getRepository(Client::class)
