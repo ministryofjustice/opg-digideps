@@ -85,6 +85,35 @@ trait CourtOrderTrait
     }
 
     /**
+     * @Given /^I am associated with a \'([^\']*)\' court order$/
+     */
+    public function iAmAssociatedWithCourtOrderOfType($orderType)
+    {
+        $clientId = $this->loggedInUserDetails->getClientId();
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $deputyUid = $this->em
+            ->getRepository(User::class)
+            ->findOneBy(['email' => $userEmail])->getDeputyUid();
+
+        $deputy = $this->em
+            ->getRepository(Deputy::class)
+            ->findOneBy(['deputyUid' => $deputyUid]);
+
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->find(['id' => $clientId]);
+
+        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+            $orderType,
+            $client,
+            $deputy,
+            $client->getCurrentReport(),
+            $client->getNdr(),
+        );
+    }
+
+    /**
      * @When /^I visit the page of a court order that \'([^\']*)\' associated with$/
      */
     public function iVisitTheCourtOrderPageThatIAmAssociatedWith($arg1)
@@ -201,5 +230,19 @@ trait CourtOrderTrait
     public function iShouldSeeAccountBeingSetUpMessage()
     {
         $this->assertStringContainsString('Your account is being set up', $this->getPageContent(), 'page should contain message about account being set up');
+    }
+
+    /**
+     * @Given /^a co-deputy is associated with the court order$/
+     */
+    public function aCoDeputyIsAssociatedWithTheCourtOrder()
+    {
+    }
+
+    /**
+     * @Given /I should see that the co-deputy is awaiting registration$/
+     */
+    public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder()
+    {
     }
 }
