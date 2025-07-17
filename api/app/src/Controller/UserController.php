@@ -53,8 +53,8 @@ class UserController extends RestController
             'lastname' => 'mustExist',
         ]);
 
-        /** @var User $newUser */
-        $newUser = $this->populateUser(new User(), $data);
+        $newUser = new User();
+        $newUser->populate($data);
 
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -66,81 +66,6 @@ class UserController extends RestController
         $this->formatter->setJmsSerialiserGroups($groups);
 
         return $newUser;
-    }
-
-    /**
-     * call setters on User when $data contains values.
-     * //TODO move to service.
-     */
-    private function populateUser(User $user, array $data)
-    {
-        // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
-        // Also. It'd be possible to differentiate when a NULL value is intentional or not
-        // (*) see options here https://github.com/schmittjoh/serializer/issues/79
-        // http://jmsyst.com/libs/serializer/master/event_system
-
-        $this->hydrateEntityWithArrayData($user, $data, [
-            'firstname' => 'setFirstname',
-            'lastname' => 'setLastname',
-            'email' => 'setEmail',
-            'address1' => 'setAddress1',
-            'address2' => 'setAddress2',
-            'address3' => 'setAddress3',
-            'address_postcode' => 'setAddressPostcode',
-            'address_country' => 'setAddressCountry',
-            'phone_alternative' => 'setPhoneAlternative',
-            'phone_main' => 'setPhoneMain',
-            'ndr_enabled' => 'setNdrEnabled',
-            'ad_managed' => 'setAdManaged',
-            'role_name' => 'setRoleName',
-            'job_title' => 'setJobTitle',
-            'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
-        ]);
-
-        if (array_key_exists('deputy_no', $data) && !empty($data['deputy_no'])) {
-            $user->setDeputyNo($data['deputy_no']);
-        }
-
-        if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
-            $user->setDeputyUid($data['deputy_uid']);
-        }
-
-        if (array_key_exists('last_logged_in', $data)) {
-            $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
-        }
-
-        if (!empty($data['registration_token'])) {
-            $user->setRegistrationToken($data['registration_token']);
-        }
-
-        if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
-            $user->setTokenDate(new \DateTime($data['token_date']));
-        }
-
-        if (!empty($data['role_name'])) {
-            $roleToSet = $data['role_name'];
-            $user->setRoleName($roleToSet);
-        }
-
-        if (!empty($data['active'])) {
-            $user->setActive($data['active']);
-        }
-
-        if (!empty($data['registration_date'])) {
-            $registrationDate = new \DateTime($data['registration_date']);
-            $user->setRegistrationDate($registrationDate);
-        }
-
-        if (!empty($data['pre_register_validated_date'])) {
-            $preRegisterValidateDate = new \DateTime($data['pre_register_validated_date']);
-            $user->setPreRegisterValidatedDate($preRegisterValidateDate);
-        }
-
-        if (array_key_exists('is_primary', $data)) {
-            $user->setIsPrimary($data['is_primary']);
-        }
-
-        return $user;
     }
 
     #[Route(path: '/{id}', methods: ['PUT'])]
@@ -166,7 +91,7 @@ class UserController extends RestController
         $originalUser = clone $requestedUser;
 
         $data = $this->formatter->deserializeBodyContent($request);
-        $this->populateUser($requestedUser, $data);
+        $requestedUser->populate($data);
 
         // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
