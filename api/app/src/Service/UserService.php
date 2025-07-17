@@ -14,7 +14,7 @@ class UserService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ClientRepository $clientRepository,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -31,13 +31,13 @@ class UserService
         match (true) {
             $loggedInUser->isLayDeputy() => $userToAdd->setRegistrationRoute(User::CO_DEPUTY_INVITE),
             $loggedInUser->hasAdminRole() => $userToAdd->setRegistrationRoute(User::ADMIN_INVITE),
-            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE)
+            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE),
         };
 
         $this->em->persist($userToAdd);
         $this->em->flush();
 
-        if ($loggedInUser->isLayDeputy()) {
+        if ($loggedInUser->isLayDeputy() && !is_null($clientId)) {
             $this->addUserToUsersClients($userToAdd, $clientId);
         }
     }
