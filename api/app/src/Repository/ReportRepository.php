@@ -133,7 +133,9 @@ class ReportRepository extends ServiceEntityRepository
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true AND o.id in ('.implode(',', $orgIdsOrUserId).')');
+                ->where('o.isActivated = true')
+                ->andWhere($qb->expr()->in('o.id', ':orgIdsOrUserId'))
+                ->setParameter(':orgIdsOrUserId', $orgIdsOrUserId);
         }
 
         $qb
