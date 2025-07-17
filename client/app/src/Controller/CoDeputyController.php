@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use App\Entity as EntityDir;
+use App\Entity\Client;
 use App\Entity\User;
-use App\Form as FormDir;
+use App\Form\CoDeputyInviteType;
+use App\Form\CoDeputyVerificationType;
 use App\Model\SelfRegisterData;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
@@ -23,35 +26,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CoDeputyController extends AbstractController
 {
-    private ClientApi $clientApi;
-    private UserApi $userApi;
-    private DeputyApi $deputyApi;
-    private RestClient $restClient;
-    private TranslatorInterface $translator;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ClientApi $clientApi,
-        UserApi $userApi,
-        DeputyApi $deputyApi,
-        RestClient $restClient,
-        TranslatorInterface $translator,
-        LoggerInterface $logger
+        private readonly ClientApi $clientApi,
+        private readonly UserApi $userApi,
+        private readonly DeputyApi $deputyApi,
+        private readonly RestClient $restClient,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->clientApi = $clientApi;
-        $this->userApi = $userApi;
-        $this->deputyApi = $deputyApi;
-        $this->restClient = $restClient;
-        $this->translator = $translator;
-        $this->logger = $logger;
     }
 
     /**
-     * @Route("/codeputy/verification", name="codep_verification")
-     *
-     * @Template("@App/CoDeputy/verification.html.twig")
+     * For co-deputies to verify their details and complete registration.
      */
-    public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator)
+    #[Route(path: '/codeputy/verification', name: 'codeputy_verification')]
+    #[Template('@App/CoDeputy/verification.html.twig')]
+    public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator): array|RedirectResponse
     {
         $user = $this->userApi->getUserWithData(['user', 'user-clients', 'client']);
 
@@ -60,12 +50,12 @@ class CoDeputyController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $form = $this->createForm(FormDir\CoDeputyVerificationType::class, $user);
+        $form = $this->createForm(CoDeputyVerificationType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             // get client validation errors, if any, and add to the form
-            $client = new EntityDir\Client();
+            $client = new Client();
             $client->setLastName($form['clientLastname']->getData());
             $client->setCaseNumber($form['clientCaseNumber']->getData());
 
@@ -161,15 +151,13 @@ class CoDeputyController extends AbstractController
     }
 
     /**
-     * @Route("/codeputy/{clientId}/add", name="add_co_deputy")
-     *
-     * @Template("@App/CoDeputy/add.html.twig")
-     *
-     * @return array|RedirectResponse
+     * For an existing deputy to invite a co-deputy (who must exist in the pre_registration table).
      *
      * @throws \Throwable
      */
-    public function addAction(Request $request, Redirector $redirector, $clientId)
+    #[Route(path: '/codeputy/{clientId}/add', name: 'add_co_deputy')]
+    #[Template('@App/CoDeputy/add.html.twig')]
+    public function addAction(Request $request, Redirector $redirector, $clientId): array|RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -179,7 +167,7 @@ class CoDeputyController extends AbstractController
         }
 
         $invitedUser = new User();
-        $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
+        $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
 
         $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
 
@@ -218,20 +206,18 @@ class CoDeputyController extends AbstractController
     }
 
     /**
-     * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
-     *
-     * @Template("@App/CoDeputy/resendActivation.html.twig")
-     *
-     * @return array|RedirectResponse
+     * For an existing deputy to resend an invite to a co-deputy.
      *
      * @throws \Throwable
      */
-    public function resendActivationAction(Request $request, string $email)
+    #[Route(path: '/codeputy/re-invite/{email}', name: 'codep_resend_activation')]
+    #[Template('@App/CoDeputy/resendActivation.html.twig')]
+    public function resendActivationAction(Request $request, string $email): array|RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
         $existingCoDeputy = $this->userApi->getByEmail($email);
 
-        $form = $this->createForm(FormDir\CoDeputyInviteType::class, $existingCoDeputy);
+        $form = $this->createForm(CoDeputyInviteType::class, $existingCoDeputy);
 
         $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
 
