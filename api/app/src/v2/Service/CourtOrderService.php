@@ -8,7 +8,9 @@ use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Repository\CourtOrderRepository;
+use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -17,6 +19,8 @@ class CourtOrderService
     public function __construct(
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly UserRepository $userRepository,
+        private readonly DeputyRepository $deputyRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -74,5 +78,49 @@ class CourtOrderService
         }
 
         return $courtOrder;
+    }
+
+    /**
+     * Find the deputy with given $deputyUid, and associate them with the court order with UID $courtOrderUid.
+     * Entities are persisted.
+     *
+     * @return bool true if the association was made; false if the deputy or court order doesn't exist, or if they
+     *              do and they are already associated
+     */
+    public function associateDeputyWithCourtOrder(string $deputyUid, string $courtOrderUid, bool $isActive = true): bool
+    {
+        $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputyUid]);
+
+        if (is_null($deputy)) {
+            $this->logger->error("Could not find deputy with UID {$deputyUid} while associating with court order {$courtOrderUid}");
+
+            return false;
+        }
+
+        // check whether association already exists
+        foreach ($deputy->getCourtOrdersWithStatus() as $courtOrderWithStatus) {
+            /** @var CourtOrder $existingCourtOrder */
+            $existingCourtOrder = $courtOrderWithStatus['courtOrder'];
+            if ($existingCourtOrder->getCourtOrderUid() === $courtOrderUid) {
+                $this->logger->error("Deputy with UID $deputyUid is already associated with court order with UID $courtOrderUid");
+
+                return false;
+            }
+        }
+
+        $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $courtOrderUid]);
+
+        if (is_null($courtOrder)) {
+            $this->logger->error("Could not find court order with UID {$courtOrderUid} while associating with deputy {$deputyUid}");
+
+            return false;
+        }
+
+        $deputy->associateWithCourtOrder($courtOrder, $isActive);
+
+        $this->entityManager->persist($deputy);
+        $this->entityManager->flush();
+
+        return true;
     }
 }
