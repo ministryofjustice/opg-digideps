@@ -14,7 +14,7 @@ RUN composer dump-autoload --optimize
 FROM php:8.3.21-fpm-alpine3.21 AS base
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG TAG=${TAG:-latest}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
+
 WORKDIR /var/www
 ENV TIMEOUT=60
 # Install core PHP extensions
@@ -60,6 +60,8 @@ RUN wget -q -O /tmp/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/d
     && chown www-data /tmp/commonpasswords.txt
 
 FROM base AS application
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
+
 COPY --chown=www-data:www-data --from=composer /app/app app
 COPY --chown=www-data:www-data --from=composer /app/vendor/bin bin
 COPY --chown=www-data:www-data --from=composer /app/vendor vendor
@@ -88,11 +90,11 @@ RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/p
 # Prebuild cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-FROM application AS ci-tests
+FROM application AS devtools-admin
 # We use this setup for certain commands as part of the CI processing of unit tests
 CMD ["sh", "-c", "php-fpm"]
 
-FROM application AS production
+FROM application AS runtime
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 

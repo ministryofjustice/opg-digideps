@@ -3,6 +3,9 @@ set -e
 
 environment=${1:-development}
 
+echo "APP_ENV: "
+echo $APP_ENV
+
 php app/console doctrine:fixtures:load --no-interaction
 
 # Only run the test fixtures load if the environment is 'local'

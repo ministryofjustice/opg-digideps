@@ -59,6 +59,20 @@ locals {
     }
   ]
 
+  api_service_app_variables = [
+    {
+      name  = "APP_ENV",
+      value = var.account.app_env
+    }
+  ]
+
+  api_testing_app_variables = [
+    {
+      name  = "APP_ENV",
+      value = "dev"
+    }
+  ]
+
   api_service_variables = [
     {
       name  = "ADMIN_HOST",
@@ -67,10 +81,6 @@ locals {
     {
       name  = "FRONTEND_HOST",
       value = "https://${var.front_fully_qualified_domain_name}"
-    },
-    {
-      name  = "APP_ENV",
-      value = var.account.app_env
     },
     {
       name  = "JWT_HOST",

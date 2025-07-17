@@ -7,7 +7,6 @@ while IFS= read -r line; do
 done < <(./tests/Behat/source-env-files.sh /tmp/combined.env)
 rm /tmp/combined.env
 export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
-export APP_ENV=dev
 
 start=$(date +%s)
 

@@ -48,7 +48,7 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug.
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       - api-webserver
       - redis-frontend
@@ -92,7 +92,7 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       - api-webserver
       - redis-frontend
@@ -119,28 +119,6 @@ services:
       - 8072:80
     depends_on:
       - api-app
-    restart: always
-
-  api-app:
-    container_name: opg-digideps-api-app
-    build:
-      context: .
-      dockerfile: ./api/docker/app/Dockerfile
-      args:
-        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
-        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
-        ENVIRONMENT: local
-    depends_on:
-      - postgres
-      - redis-api
-      - localstack
-    environment:
-      APP_ENV: ${APP_ENV:-local}
-      APP_DEBUG: ${APP_DEBUG:-0}
-      WORKSPACE: local
-    env_file:
-      - ./api/app/api.env
-      - ./api/app/tests/Behat/test.env
     restart: always
 
   htmltopdf:
@@ -261,7 +239,7 @@ services:
       - --dynamic
 
   composer:
-    image: composer:2.5.7
+    image: composer:2.8.9
     command: ["install"]
 
   custom-sql-query:
@@ -293,7 +271,7 @@ services:
       context: .
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       pact-mock:
         condition: service_healthy
@@ -316,15 +294,16 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-test}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./api/app/api.env
@@ -340,10 +319,11 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
+      target: devtools-admin
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       postgres:
         condition: service_started
@@ -355,7 +335,7 @@ services:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
       AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
       AWS_SESSION_TOKEN: fakeValue
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-test}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./api/app/api.env
@@ -364,12 +344,38 @@ services:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
 
+  api-app:
+    container_name: opg-digideps-api-app
+    build:
+      context: .
+      dockerfile: ./api/docker/app/Dockerfile
+      target: devtools
+      args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
+        XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
+        LOCAL_RESOURCES: true
+    depends_on:
+      - postgres
+      - redis-api
+      - localstack
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-0}
+      WORKSPACE: local
+    env_file:
+      - ./api/app/api.env
+      - ./api/app/tests/Behat/test.env
+    restart: always
+
   end-to-end-tests:
     build:
       dockerfile: api/docker/app/Dockerfile
       context: .
+      target: devtools
       args:
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
+    environment:
+      APP_ENV: ${APP_ENV:-local}
     depends_on:
       localstack:
         condition: service_healthy
