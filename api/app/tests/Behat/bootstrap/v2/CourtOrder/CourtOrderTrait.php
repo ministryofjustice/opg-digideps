@@ -15,11 +15,31 @@ use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertStringContainsString;
+
 trait CourtOrderTrait
 {
     public CourtOrder $courtOrder;
     public array $courtOrders;
     public ClientApi $clientApi;
+    private Deputy $coDeputy;
+
+    private function getDeputyForLoggedInUser(): ?Deputy
+    {
+        // get the deputy for the logged-in user
+        $user = $this->em
+            ->getRepository(User::class)
+            ->findOneBy(['email' => $this->loggedInUserDetails->getUserEmail()]);
+
+        $deputyUid = $user->getDeputyUid();
+
+        $deputy = $this->em
+            ->getRepository(Deputy::class)
+            ->findOneBy(['deputyUid' => $deputyUid]);
+
+        return $deputy;
+    }
 
     /**
      * @Given I visit the court order page
@@ -35,15 +55,8 @@ trait CourtOrderTrait
     public function iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType)
     {
         $clientId = $this->loggedInUserDetails->getClientId();
-        $userEmail = $this->loggedInUserDetails->getUserEmail();
 
-        $deputyUid = $this->em
-            ->getRepository(User::class)
-            ->findOneBy(['email' => $userEmail])->getDeputyUid();
-
-        $deputy = $this->em
-            ->getRepository(Deputy::class)
-            ->findOneBy(['deputyUid' => $deputyUid]);
+        $deputy = $this->getDeputyForLoggedInUser();
 
         if ($numOfCourtOrders > 1) {
             $clientIds = [];
@@ -81,6 +94,36 @@ trait CourtOrderTrait
             $deputy,
             $client->getCurrentReport(),
             $client->getNdr()
+        );
+    }
+
+    /**
+     * @Given /^I am associated with a \'([^\']*)\' court order$/
+     */
+    public function iAmAssociatedWithCourtOrderOfType($orderType)
+    {
+        $clientId = $this->loggedInUserDetails->getClientId();
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $user = $this->em
+            ->getRepository(User::class)
+            ->findOneBy(['email' => $userEmail]);
+
+        $deputy = $this->getDeputyForLoggedInUser();
+
+        $deputy->setUser($user);
+        $this->em->persist($deputy);
+
+        $client = $this->em
+            ->getRepository(Client::class)
+            ->find(['id' => $clientId]);
+
+        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+            $orderType,
+            $client,
+            $deputy,
+            $client->getCurrentReport(),
+            $client->getNdr(),
         );
     }
 
@@ -158,7 +201,7 @@ trait CourtOrderTrait
     }
 
     /**
-     * @Given /^I should see an NDR on the court order page with a status of \'([^\']*)\' with a standard report status of \'([^\']*)\'$/
+     * @Given /^I should see an NDR on the court order page with a status of \'([^\']*)\' with standard report status of \'([^\']*)\'$/
      */
     public function iShouldSeeAnNDROnTheCourtOrderPageWithAStandardReportStatusOf($arg1, $arg2)
     {
@@ -201,5 +244,77 @@ trait CourtOrderTrait
     public function iShouldSeeAccountBeingSetUpMessage()
     {
         $this->assertStringContainsString('Your account is being set up', $this->getPageContent(), 'page should contain message about account being set up');
+    }
+
+    /**
+     * @Given /^an unregistered co-deputy is associated with the court order$/
+     */
+    public function anUnregisteredCoDeputyIsAssociatedWithTheCourtOrder()
+    {
+        // create deputy with null last_logged_in datetime, so they show as "awaiting registration"
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder);
+    }
+
+    /**
+     * @Given /^a registered co-deputy is associated with the court order$/
+     */
+    public function aRegisteredCoDeputyIsAssociatedWithTheCourtOrder()
+    {
+        // create deputy with a last_logged_in datetime, so they show as "registered",
+        // and associate with the court order (mimicking what will happen when we eventually do this via ingest)
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new \DateTime());
+    }
+
+    /**
+     * @Given /^I should see that I am a registered deputy$/
+     */
+    public function iShouldSeeIAmARegisteredDeputy()
+    {
+        $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-registered"]');
+        $deputy = $this->getDeputyForLoggedInUser();
+
+        $foundDeputy = false;
+        foreach ($coDeputyNameElts as $coDeputyNameElt) {
+            $eltText = $coDeputyNameElt->getText();
+            if (
+                str_contains($eltText, $deputy->getFirstName())
+                && str_contains($eltText, $deputy->getLastName())
+            ) {
+                $foundDeputy = true;
+            }
+        }
+
+        assert($foundDeputy);
+    }
+
+    /**
+     * @Given /^I should see that the co-deputy is awaiting registration$/
+     */
+    public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder()
+    {
+        $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-awaiting-registration"]');
+        assertCount(1, $coDeputyNameElts);
+        assertStringContainsString($this->coDeputy->getEmail1(), $coDeputyNameElts[0]->getText());
+    }
+
+    /**
+     * @Given /^I should see that the co-deputy is registered$/
+     */
+    public function iShouldSeeCoDeputyRegisteredOnCourtOrder()
+    {
+        $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-registered"]');
+
+        $foundDeputy = false;
+        foreach ($coDeputyNameElts as $coDeputyNameElt) {
+            $eltText = $coDeputyNameElt->getText();
+            if (
+                str_contains($eltText, $this->coDeputy->getFirstname())
+                && str_contains($eltText, $this->coDeputy->getLastname())
+            ) {
+                $foundDeputy = true;
+            }
+        }
+
+        assert($foundDeputy);
     }
 }

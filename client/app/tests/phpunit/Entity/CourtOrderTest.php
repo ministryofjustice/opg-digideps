@@ -167,7 +167,7 @@ class CourtOrderTest extends TestCase
 
     public function testGetCoDeputiesWithNoDeputies(): void
     {
-        $this->assertEquals([], $this->courtOrder->getCoDeputies('1234'));
+        $this->assertEquals([], $this->courtOrder->getCoDeputies());
     }
 
     public function testGetCoDeputiesExcludesLoggedInDeputyAndIsOrderedByFirstname()
@@ -186,10 +186,11 @@ class CourtOrderTest extends TestCase
 
         $this->assertEquals(
             [
+                $loggedInDeputy,
                 $coDeputy2,
                 $coDeputy1,
             ],
-            $this->courtOrder->getCoDeputies('1234')
+            $this->courtOrder->getCoDeputies()
         );
     }
 

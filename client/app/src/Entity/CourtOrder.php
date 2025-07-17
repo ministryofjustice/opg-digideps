@@ -194,11 +194,14 @@ class CourtOrder
     }
 
     /**
+     * Return all deputies on the court order, sorted by first name.
+     *
      * @return Deputy[]
      */
-    public function getCoDeputies(string $loggedInDeputyUid): array
+    public function getCoDeputies(): array
     {
-        $deputies = array_filter($this->activeDeputies, fn ($deputy) => $deputy->getDeputyUid() !== $loggedInDeputyUid);
+        $deputies = $this->activeDeputies;
+
         uasort($deputies, fn ($deputyA, $deputyB) => strcmp($deputyA->getFirstName(), $deputyB->getFirstName()));
 
         return array_values($deputies);

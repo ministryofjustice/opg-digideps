@@ -159,6 +159,7 @@ class Deputy
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
     #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['deputy-user'])]
     private ?User $user = null;
 
     /**

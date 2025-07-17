@@ -5,6 +5,7 @@
     {% if courtOrder %}
         {% set ndr = courtOrder.ndr %}
         {% set ndrStatus = ndr.getStatusService %}
+        {% set clientHasCoDeputies = courtOrderHasMultipleDeputies %}
 
         {% if courtOrder.unsubmittedReport %}
             {% set unsubmittedReport = courtOrder.unsubmittedReport %}
