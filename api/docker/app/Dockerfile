@@ -73,7 +73,7 @@ RUN mkdir -p var/cache var/logs /var/log/app \
 # Stage 3: Application (Shared)
 ##############################
 FROM base AS application
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
@@ -92,7 +92,7 @@ RUN mkdir certs && chmod 755 certs \
 # Stage 4a: Production Image
 ##############################
 FROM application AS runtime
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
 COPY --chown=www-data:www-data --from=composer-runtime /app/config config

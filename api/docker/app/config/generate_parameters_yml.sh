@@ -23,7 +23,7 @@ parameters:
   lay_report_csv_filename: "%env(LAY_REPORT_CSV_FILENAME)%"
 EOF
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   s3_client_params:
     version: "latest"
@@ -44,7 +44,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   secrets_manager_client_params:
     version: "latest"
@@ -64,7 +64,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   ssm_client_params:
     version: "latest"
@@ -84,7 +84,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   cloudwatch_logs_client_params:
     version: "latest"

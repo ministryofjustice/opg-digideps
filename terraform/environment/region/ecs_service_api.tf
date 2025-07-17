@@ -101,7 +101,7 @@ locals {
     {
       cpu         = 0,
       essential   = true,
-      image       = local.images.api,
+      image       = local.images.test,
       mountPoints = [],
       name        = "api_app",
       portMappings = [{
