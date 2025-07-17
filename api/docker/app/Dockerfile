@@ -73,7 +73,7 @@ RUN mkdir -p var/cache var/logs /var/log/app \
 # Stage 3: Application (Shared)
 ##############################
 FROM base AS application
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
@@ -89,10 +89,10 @@ RUN mkdir certs && chmod 755 certs \
 
 
 ##############################
-# Stage 4a: Production Image
+# Stage 4a: runtime image (image without test dependencies)
 ##############################
 FROM application AS runtime
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
 COPY --chown=www-data:www-data --from=composer-runtime /app/config config
@@ -116,7 +116,7 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 
 
 ##############################
-# Stage 4b: devtools for tests
+# Stage 4b: devtools image (image with test dependencies)
 ##############################
 FROM application AS devtools-base
 COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
@@ -138,7 +138,7 @@ RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 ##############################
-# Stage 4b-1: DevTools (End-to-End Tests, Unit Tests, Task Runners)
+# Stage 4b-1: devtools image (image with test dependencies - not admin)
 ##############################
 FROM devtools-base AS devtools
 COPY scripts/hardening/harden.sh /harden.sh
@@ -151,7 +151,7 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php-fpm"]
 
 ##############################
-# Stage 4b-2: DevTools admin (largely for CI-Tests in runners)
+# Stage 4b-2: devtools admin image (image with test dependencies - admin)
 ##############################
 FROM devtools-base AS devtools-admin
 USER root

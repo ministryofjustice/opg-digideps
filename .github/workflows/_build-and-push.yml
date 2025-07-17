@@ -137,9 +137,9 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           if [ "${IMAGE_NAME}" = "test" ]; then
-            TARGET_STAGE="--target devtools-admin"
+            TARGET_STAGE="--target devtools"
           elif [ "${IMAGE_NAME}" = "api" ]; then
-            TARGET_STAGE="--target runtime"
+            TARGET_STAGE="--target devtools"
           fi
 
           if [ "${BRANCH_NAME}" == "main" ]; then
@@ -150,7 +150,6 @@ jobs:
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
-            --build-arg PROD_IMAGE=${PROD_IMAGE} \
             --tag ${IMAGE_NAME}:latest \
             --output type=docker \
             .
@@ -164,7 +163,6 @@ jobs:
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
-            --build-arg PROD_IMAGE=${PROD_IMAGE} \
             --output type=docker \
             .
           fi
