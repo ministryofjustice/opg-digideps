@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set -e
 
 groupExists=$( (awslocal logs describe-log-groups | jq '.logGroups[] | select(.logGroupName == "audit-local")') )
