@@ -124,7 +124,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
         return $report;
     }
 
-    public function testReportsAreSortedByEndDateAndGroupedForDualReports(): void
+    public function testReportsAreSortedByDueDate(): void
     {
         // create organisation
         $org = $this->fixtures->createOrganisations(1);
@@ -155,8 +155,8 @@ class ReportRepositoryTest extends ApiBaseTestCase
 
         self::assertCount(4, $reports);
         self::assertEquals($reports[0]['id'], $dualReport1->getId());
-        self::assertEquals($reports[1]['id'], $dualReport2->getId());
-        self::assertEquals($reports[2]['id'], $report2->getId());
+        self::assertEquals($reports[1]['id'], $report2->getId());
+        self::assertEquals($reports[2]['id'], $dualReport2->getId());
         self::assertEquals($reports[3]['id'], $report1->getId());
     }
 
