@@ -11,6 +11,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Random\RandomException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -554,11 +555,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set registrationToken.
      *
-     * @return User
-     *
-     * @throws \Exception
+     * @throws RandomException
      */
-    public function recreateRegistrationToken()
+    public function recreateRegistrationToken(): static
     {
         $userIdWithLeadingZeros = sprintf('%08d', $this->getId());
         $token = bin2hex(random_bytes(16)).$userIdWithLeadingZeros;
