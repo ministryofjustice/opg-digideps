@@ -251,11 +251,6 @@ parameters:
 			path: src/Controller/DeputyController.php
 
 		-
-			message: "#^Parameter \\#2 \\$currentUser of method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/DeputyController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/DeputyController.php
@@ -8471,11 +8466,6 @@ parameters:
 			path: src/Service/DataImporter/CsvToArray.php
 
 		-
-			message: "#^Method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DeputyService.php
-
-		-
 			message: "#^Property App\\\\Service\\\\DeputyService\\:\\:\\$deputyRepository \\(App\\\\Repository\\\\DeputyRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Deputy\\>\\.$#"
 			count: 1
 			path: src/Service/DeputyService.php
@@ -9122,11 +9112,6 @@ parameters:
 
 		-
 			message: "#^Match expression does not handle remaining value\\: true$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/UserService.php
 
