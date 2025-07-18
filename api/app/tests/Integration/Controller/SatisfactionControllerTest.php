@@ -24,6 +24,13 @@ class SatisfactionControllerTest extends AbstractTestController
         }
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
+    }
+
     public function testSatisfactionHasSuitablePermissionsAllowedDeputy()
     {
         $report = $this->prepareReport();

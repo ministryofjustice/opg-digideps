@@ -99,6 +99,8 @@ class QueryTest extends WebTestCase
     {
         $query = new UsersQuery($this::$em);
 
+        $this->addUserWithRegistrationDate('2020-01-01');
+
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
             'dimension' => ['roleName', 'ndrEnabled'],

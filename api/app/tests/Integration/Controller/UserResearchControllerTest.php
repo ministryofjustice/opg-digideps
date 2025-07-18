@@ -27,6 +27,13 @@ class UserResearchControllerTest extends AbstractTestController
         }
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
+    }
+
     /** @test */
     public function userResearchHasSuitablePermissionsNotAllowedAdmin()
     {

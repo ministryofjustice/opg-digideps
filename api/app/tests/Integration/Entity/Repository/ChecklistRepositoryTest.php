@@ -10,20 +10,27 @@ use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
 use App\Repository\ChecklistRepository;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Tests\Integration\ApiBaseTestCase;
 
-class ChecklistRepositoryTest extends KernelTestCase
+class ChecklistRepositoryTest extends ApiBaseTestCase
 {
-    /** @var EntityManager */
-    private $entityManager;
-
     /** @var ChecklistRepository */
     private $checklistRepository;
 
     /** @var \DateTime */
     private $firstJulyAm;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->checklistRepository = $this->entityManager
+            ->getRepository(Checklist::class);
+
+        $this->purgeDatabase();
+
+        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
+    }
 
     /**
      * @test
@@ -95,36 +102,5 @@ class ChecklistRepositoryTest extends KernelTestCase
         $this->entityManager->persist($user);
 
         return $user;
-    }
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        $this->checklistRepository = $this->entityManager
-            ->getRepository(Checklist::class);
-
-        $this->purgeDatabase();
-
-        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
-    }
-
-    private function purgeDatabase()
-    {
-        $purger = new ORMPurger($this->entityManager);
-        $purger->purge();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        // doing this is recommended to avoid memory leaks
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

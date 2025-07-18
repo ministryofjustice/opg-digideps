@@ -100,6 +100,7 @@ services:
       - ./api/app/openapi:/var/www/openapi
       - ./api/app/src:/var/www/src
       - ./api/app/tests:/var/www/tests
+      - ./api/app/scripts:/var/www/scripts
 
   end-to-end-tests:
     volumes:

@@ -59,6 +59,13 @@ class ReportSubmissionControllerTest extends AbstractTestController
         }
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
+    }
+
     public function testGetAllWithFiltersGetOneArchive()
     {
         $reportsGetAllRequest = function (array $params = []) {

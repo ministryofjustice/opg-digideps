@@ -6,29 +6,11 @@ namespace app\tests\Integration\Model;
 
 use App\Entity\StagingSelectedCandidate;
 use App\Model\QueryPager;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class QueryPagerIntegrationTest extends KernelTestCase
+class QueryPagerIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManagerInterface $entityManager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $container = self::bootKernel()->getContainer();
-        $this->entityManager = $container->get('doctrine')->getManager();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        (new ORMPurger($this->entityManager))->purge();
-    }
-
     public function testGetRows(): void
     {
         $courtOrderUid = '99775533';

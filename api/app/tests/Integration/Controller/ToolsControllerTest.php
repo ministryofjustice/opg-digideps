@@ -7,7 +7,6 @@ namespace App\Tests\Integration\Controller;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 
 class ToolsControllerTest extends AbstractTestController
@@ -55,6 +54,13 @@ class ToolsControllerTest extends AbstractTestController
         $this->headersAdmin = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
         $this->headersSuperAdmin = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenSuperAdmin];
         $this->headersDeputy = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenLayDeputy];
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     /**

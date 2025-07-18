@@ -3,42 +3,28 @@
 namespace App\Tests\Integration\Controller;
 
 use App\Entity\User;
-use App\Service\JWT\JWTService;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use App\Tests\Integration\Fixtures;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DeputyControllerTest extends WebTestCase
+class DeputyControllerTest extends AbstractTestController
 {
     private static JsonHttpTestClient $client;
-    private static Fixtures $fixtures;
-    private static EntityManager $em;
     private static FixtureHelper $fixtureHelper;
-    private static string $deputySecret;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        $browser = static::createClient(['environment' => 'test', 'debug' => false]);
+        parent::setup();
+
         $container = static::getContainer();
 
-        /** @var JWTService $jwtService */
-        $jwtService = $container->get('App\Service\JWT\JWTService');
-        self::$client = new JsonHttpTestClient($browser, $jwtService);
-
-        /** @var EntityManager $em */
-        $em = $container->get('em');
-        self::$em = $em;
-        self::$fixtures = new Fixtures(self::$em);
+        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
 
         /** @var FixtureHelper $fixtureHelper */
         $fixtureHelper = $container->get(FixtureHelper::class);
         self::$fixtureHelper = $fixtureHelper;
-
-        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
     }
 
     /**
@@ -46,6 +32,8 @@ class DeputyControllerTest extends WebTestCase
      */
     public static function tearDownAfterClass(): void
     {
+        parent::tearDownAfterClass();
+
         self::$fixtures->clear();
     }
 
@@ -133,8 +121,6 @@ class DeputyControllerTest extends WebTestCase
             '/v2/deputy/7000000000/courtorders',
             ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
-
-        self::$fixtures->remove($user)->flush()->clear();
     }
 
     public function testGetDeputyReportsEmptyResponse()
@@ -160,8 +146,6 @@ class DeputyControllerTest extends WebTestCase
         );
 
         $this->assertCount(0, $responseJson['data']);
-
-        self::$fixtures->remove($user)->flush()->clear();
     }
 
     public function testGetDeputyReportsReturnsResults()

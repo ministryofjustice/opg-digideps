@@ -7,35 +7,35 @@ use App\Repository\UserRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UserRepositoryTest extends WebTestCase
+class UserRepositoryTest extends ApiBaseTestCase
 {
     private UserRepository $sut;
-    private EntityManagerInterface $em;
     private Fixtures $fixtures;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->fixtures = new Fixtures($this->em);
+        parent::setUp();
 
-        $this->sut = $this->em->getRepository(User::class);
+        $this->fixtures = new Fixtures($this->entityManager);
 
-        $purger = new ORMPurger($this->em);
-        $purger->purge();
+        /** @var UserRepository $sut */
+        $sut = $this->entityManager->getRepository(User::class);
+        $this->sut = $sut;
+
+        // important: purge the dd_user table
+        $this->purgeDatabase([]);
     }
 
     protected function tearDown(): void
     {
-        parent::tearDown();
+        // important: purge the dd_user table
+        $this->purgeDatabase([]);
 
-        $this->em->close();
-        unset($this->em);
+        $this->entityManager->close();
+        unset($this->entityManager);
     }
 
     public function testCountsInactiveUsers()
@@ -70,7 +70,7 @@ class UserRepositoryTest extends WebTestCase
         $recentUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
         $this->fixtures->createClient($recentUserWithNoClient);
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $inactiveUsers = $this->sut->findInactive();
 
@@ -83,35 +83,35 @@ class UserRepositoryTest extends WebTestCase
         $reportHelper = new ReportTestHelper();
         $clientHelper = new ClientTestHelper();
 
-        $clientOne = $clientHelper->generateClient($this->em);
-        $activeUserOne = $userHelper->createAndPersistUser($this->em, $clientOne);
-        $reportOne = $reportHelper->generateReport($this->em, $clientOne)->setSubmitDate(new \DateTime());
+        $clientOne = $clientHelper->generateClient($this->entityManager);
+        $activeUserOne = $userHelper->createAndPersistUser($this->entityManager, $clientOne);
+        $reportOne = $reportHelper->generateReport($this->entityManager, $clientOne)->setSubmitDate(new \DateTime());
 
-        $clientTwo = $clientHelper->generateClient($this->em);
-        $activeUserTwo = $userHelper->createAndPersistUser($this->em, $clientTwo);
-        $reportTwo = $reportHelper->generateReport($this->em, $clientTwo)->setSubmitDate(new \DateTime());
+        $clientTwo = $clientHelper->generateClient($this->entityManager);
+        $activeUserTwo = $userHelper->createAndPersistUser($this->entityManager, $clientTwo);
+        $reportTwo = $reportHelper->generateReport($this->entityManager, $clientTwo)->setSubmitDate(new \DateTime());
 
-        $clientThree = $clientHelper->generateClient($this->em);
-        $reportThree = $reportHelper->generateReport($this->em, $clientThree)->setSubmitDate(new \DateTime());
-        $inactiveUserOne = $userHelper->createAndPersistUser($this->em, $clientThree);
+        $clientThree = $clientHelper->generateClient($this->entityManager);
+        $reportThree = $reportHelper->generateReport($this->entityManager, $clientThree)->setSubmitDate(new \DateTime());
+        $inactiveUserOne = $userHelper->createAndPersistUser($this->entityManager, $clientThree);
         $inactiveUserOne->setLastLoggedIn(new \DateTime('-380 days'));
 
-        $clientFour = $clientHelper->generateClient($this->em);
-        $reportFour = $reportHelper->generateReport($this->em, $clientFour);
-        $inactiveUserTwo = $userHelper->createAndPersistUser($this->em, $clientFour);
+        $clientFour = $clientHelper->generateClient($this->entityManager);
+        $reportFour = $reportHelper->generateReport($this->entityManager, $clientFour);
+        $inactiveUserTwo = $userHelper->createAndPersistUser($this->entityManager, $clientFour);
         $inactiveUserTwo->setLastLoggedIn(new \DateTime());
 
-        $this->em->persist($inactiveUserOne);
-        $this->em->persist($inactiveUserTwo);
-        $this->em->persist($reportOne);
-        $this->em->persist($reportTwo);
-        $this->em->persist($reportThree);
-        $this->em->persist($reportFour);
-        $this->em->persist($clientOne);
-        $this->em->persist($clientTwo);
-        $this->em->persist($clientThree);
-        $this->em->persist($clientFour);
-        $this->em->flush();
+        $this->entityManager->persist($inactiveUserOne);
+        $this->entityManager->persist($inactiveUserTwo);
+        $this->entityManager->persist($reportOne);
+        $this->entityManager->persist($reportTwo);
+        $this->entityManager->persist($reportThree);
+        $this->entityManager->persist($reportFour);
+        $this->entityManager->persist($clientOne);
+        $this->entityManager->persist($clientTwo);
+        $this->entityManager->persist($clientThree);
+        $this->entityManager->persist($clientFour);
+        $this->entityManager->flush();
 
         $results = $this->sut->findActiveLaysInLastYear();
         $resultsUserIds = [];
@@ -138,10 +138,10 @@ class UserRepositoryTest extends WebTestCase
         $usersToAdd[] = $paDeputyUser = $userHelper->createUser(null, User::ROLE_PROF_ADMIN);
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $expectedAdminUsersReturned = [$adminUser, $adminManagerUser, $superAdminUser];
         $expectedDeputyUsersNotReturned = [$layDeputyUser, $profDeputyUser, $paDeputyUser];
@@ -176,10 +176,10 @@ class UserRepositoryTest extends WebTestCase
         $nonAdminUserLessThan60Days->setLastLoggedIn(null);
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $expectedAdminUsersReturned = [$adminUserMoreThan60Days, $superAdminUserMoreThan60Days, $adminManagerUserMoreThan60Days];
         $expectedAdminUsersNotReturned = [$adminUserLessThan60Days, $nonAdminUserLessThan60Days];
@@ -210,10 +210,10 @@ class UserRepositoryTest extends WebTestCase
         $activeDeputyUser->setLastLoggedIn(new \DateTime());
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $expectedActiveAdminUsersReturned = [$activeAdminUser, $activeSuperAdminUser, $activeAdminManagerUser];
         $expectedAdminUsersNotReturned = [$inactiveAdminManagerUser, $activeDeputyUser];
@@ -244,10 +244,10 @@ class UserRepositoryTest extends WebTestCase
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-1 day'));
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $expectedLoggedInAdminUsers = [$loggedInAdminUser, $loggedInSuperAdminUser, $loggedInAdminManagerUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
@@ -278,10 +278,10 @@ class UserRepositoryTest extends WebTestCase
         $notRecentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-100 days'));
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $expectedLoggedInAdminUsers = [$loggedInAdminUser, $loggedInSuperAdminUser, $loggedInAdminManagerUser];
         $expectedLoggedOutUsersNotReturned = [$notRecentlyLoggedInAdminManagerUser, $notRecentlyLoggedInDeputyUser];
@@ -315,10 +315,10 @@ class UserRepositoryTest extends WebTestCase
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-10 days'));
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser, $notRecentlyLoggedInSuperAdminManagerUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminUser, $recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
@@ -347,10 +347,10 @@ class UserRepositoryTest extends WebTestCase
             ->setLastLoggedIn(new \DateTime('-26 months'));
 
         foreach ($usersToAdd as $user) {
-            $this->em->persist($user);
+            $this->entityManager->persist($user);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $adminUserIds = [];
         foreach ($usersToAdd as $user) {

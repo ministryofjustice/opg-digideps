@@ -8,9 +8,11 @@ use App\Service\BruteForce\AttemptsInTimeChecker;
 
 class AuthControllerTest extends AbstractTestController
 {
-    public static function setUpBeforeClass(): void
+    public static function tearDownAfterClass(): void
     {
-        parent::setUpBeforeClass();
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     /**

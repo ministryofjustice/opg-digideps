@@ -1,29 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Repository;
 
 use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Integration\ApiBaseTestCase;
 
-class ClientRepositoryTest extends WebTestCase
+class ClientRepositoryTest extends ApiBaseTestCase
 {
     private ClientRepository $sut;
-    private EntityManagerInterface $em;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
+        parent::setUp();
 
-        $this->sut = $this->em->getRepository(Client::class);
+        /** @var ClientRepository $sut */
+        $sut = $this->entityManager->getRepository(Client::class);
 
-        $purger = new ORMPurger($this->em);
-        $purger->purge();
+        $this->sut = $sut;
+
+        $this->purgeDatabase();
     }
 
     public function testgetAllClientsAndReportsByDeputyUid()
@@ -31,19 +31,19 @@ class ClientRepositoryTest extends WebTestCase
         $userHelper = new UserTestHelper();
         $clientHelper = new ClientTestHelper();
 
-        $clientOne = $clientHelper->generateClient($this->em);
-        $activeUserOne = $userHelper->createAndPersistUser($this->em, $clientOne);
+        $clientOne = $clientHelper->generateClient($this->entityManager);
+        $activeUserOne = $userHelper->createAndPersistUser($this->entityManager, $clientOne);
 
-        $clientTwo = $clientHelper->generateClient($this->em);
-        $activeUserTwo = $userHelper->createAndPersistUser($this->em, $clientTwo);
+        $clientTwo = $clientHelper->generateClient($this->entityManager);
+        $activeUserTwo = $userHelper->createAndPersistUser($this->entityManager, $clientTwo);
 
-        $clientThree = $clientHelper->generateClient($this->em, $activeUserTwo);
+        $clientThree = $clientHelper->generateClient($this->entityManager, $activeUserTwo);
 
-        $activeUserOne->setDeputyUid('12345678');
+        $activeUserOne->setDeputyUid(12345678);
         $activeUserTwo->setDeputyUid($activeUserOne->getDeputyUid());
 
-        $this->em->persist($clientThree);
-        $this->em->flush();
+        $this->entityManager->persist($clientThree);
+        $this->entityManager->flush();
 
         $clients = $this->sut->getAllClientsAndReportsByDeputyUid($activeUserOne->getDeputyUid());
 
@@ -51,13 +51,5 @@ class ClientRepositoryTest extends WebTestCase
         self::assertContains($clientOne, $clients);
         self::assertContains($clientTwo, $clients);
         self::assertContains($clientThree, $clients);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->em->close();
-        unset($this->em);
     }
 }

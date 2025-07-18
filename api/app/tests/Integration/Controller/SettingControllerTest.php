@@ -16,22 +16,21 @@ class SettingControllerTest extends AbstractTestController
         parent::setUpBeforeClass();
     }
 
-    /**
-     * clear fixtures.
-     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenAdmin = $this->loginAsAdmin();
+        }
+    }
+
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function setUp(): void
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenAdmin = $this->loginAsAdmin();
-        }
     }
 
     public function testgetOneByIdNotPresent()
