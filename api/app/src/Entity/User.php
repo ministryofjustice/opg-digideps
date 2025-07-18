@@ -1383,9 +1383,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Populate user fields from an array of data.
+     *
+     * If $data is null, the object is returned unchanged.
      */
-    public function populate(array $data): static
+    public function populate(?array $data): static
     {
+        if (is_null($data)) {
+            return $this;
+        }
+
         $keySetters = [
             'firstname' => 'setFirstname',
             'lastname' => 'setLastname',
