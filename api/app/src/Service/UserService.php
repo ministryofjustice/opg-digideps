@@ -7,21 +7,25 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use App\v2\DTO\InviteeDTO;
 use Doctrine\ORM\EntityManagerInterface;
+use Random\RandomException;
 
 class UserService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ClientRepository $clientRepository,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
     ) {
     }
 
     /**
      * Adds a new user to the database.
+     *
+     * @throws RandomException
      */
-    public function addUser(User $loggedInUser, User $userToAdd, ?int $clientId)
+    public function addUser(User $loggedInUser, User $userToAdd, ?int $clientId): User
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
@@ -31,15 +35,17 @@ class UserService
         match (true) {
             $loggedInUser->isLayDeputy() => $userToAdd->setRegistrationRoute(User::CO_DEPUTY_INVITE),
             $loggedInUser->hasAdminRole() => $userToAdd->setRegistrationRoute(User::ADMIN_INVITE),
-            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE)
+            $loggedInUser->isOrgNamedOrAdmin() => $userToAdd->setRegistrationRoute(User::ORG_ADMIN_INVITE),
         };
 
         $this->em->persist($userToAdd);
         $this->em->flush();
 
-        if ($loggedInUser->isLayDeputy()) {
+        if ($loggedInUser->isLayDeputy() && !is_null($clientId)) {
             $this->addUserToUsersClients($userToAdd, $clientId);
         }
+
+        return $userToAdd;
     }
 
     private function addUserToUsersClients($userToAdd, ?int $clientId)
@@ -125,5 +131,26 @@ class UserService
         $this->em->persist($ndr);
 
         return $ndr;
+    }
+
+    /**
+     * @throws RandomException
+     */
+    public function getOrAddUser(InviteeDTO $invitedDeputyData, User $invitingDeputy): User
+    {
+        /** @var ?User $existingUser */
+        $existingUser = $this->userRepository->findOneBy(['email' => $invitedDeputyData->email]);
+
+        if (!is_null($existingUser)) {
+            return $existingUser;
+        }
+
+        $invitedUser = new User();
+        $invitedUser->setEmail($invitedDeputyData->email);
+        $invitedUser->setFirstname($invitedDeputyData->firstname);
+        $invitedUser->setLastname($invitedDeputyData->lastname);
+        $invitedUser->setRoleName($invitedDeputyData->roleName);
+
+        return $this->addUser($invitingDeputy, $invitedUser, null);
     }
 }
