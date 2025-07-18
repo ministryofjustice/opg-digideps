@@ -2356,11 +2356,6 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has parameter \\$object with no type specified\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
@@ -2761,11 +2756,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\UserController\\:\\:recreateToken\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -2827,11 +2817,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/UserController.php
 
