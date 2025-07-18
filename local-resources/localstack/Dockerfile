@@ -1,6 +1,6 @@
 FROM localstack/localstack:4.6.0 AS localstack
 
-RUN apt-get -yq install bash-completion bash
+RUN apt-get -yq install bash
 
 COPY ./client/app/tests/csv/paProDeputyReport.csv /tmp/paProDeputyReport.csv
 COPY ./client/app/tests/csv/layDeputyReport.csv /tmp/layDeputyReport.csv
