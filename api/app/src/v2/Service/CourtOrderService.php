@@ -30,17 +30,16 @@ class CourtOrderService
      */
     public function getByUidAsUser(string $uid, ?UserInterface $user): ?CourtOrder
     {
+        if (is_null($user)) {
+            return null;
+        }
+
         /** @var ?CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $uid]);
 
         if (is_null($courtOrder)) {
             $this->logger->error("Could not find court order with UID {$uid}");
 
-            return null;
-        }
-
-        // check user access to court order
-        if (is_null($user)) {
             return null;
         }
 
@@ -84,11 +83,18 @@ class CourtOrderService
      * Find the deputy with given $deputyUid, and associate them with the court order with UID $courtOrderUid.
      * Entities are persisted.
      *
+     * @param bool $logDuplicateError If set to true, if the relationship already exists, it is logged as an error;
+     *                                otherwise it's ignored and not logged
+     *
      * @return bool true if the association was made; false if the deputy or court order doesn't exist, or if they
      *              do and they are already associated
      */
-    public function associateDeputyWithCourtOrder(string $deputyUid, string $courtOrderUid, bool $isActive = true): bool
-    {
+    public function associateDeputyWithCourtOrder(
+        string $deputyUid,
+        string $courtOrderUid,
+        bool $isActive = true,
+        bool $logDuplicateError = true,
+    ): bool {
         $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputyUid]);
 
         if (is_null($deputy)) {
@@ -102,7 +108,9 @@ class CourtOrderService
             /** @var CourtOrder $existingCourtOrder */
             $existingCourtOrder = $courtOrderWithStatus['courtOrder'];
             if ($existingCourtOrder->getCourtOrderUid() === $courtOrderUid) {
-                $this->logger->error("Deputy with UID $deputyUid is already associated with court order with UID $courtOrderUid");
+                if ($logDuplicateError) {
+                    $this->logger->error("Deputy with UID $deputyUid is already associated with court order with UID $courtOrderUid");
+                }
 
                 return false;
             }
@@ -111,7 +119,7 @@ class CourtOrderService
         $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $courtOrderUid]);
 
         if (is_null($courtOrder)) {
-            $this->logger->error("Could not find court order with UID {$courtOrderUid} while associating with deputy {$deputyUid}");
+            $this->logger->error("Could not find court order with UID {$courtOrderUid} to associate with deputy {$deputyUid}");
 
             return false;
         }
