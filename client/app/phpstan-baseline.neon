@@ -1056,11 +1056,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:verificationAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function reset is passed by reference, so it expects variables only\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php

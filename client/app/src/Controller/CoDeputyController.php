@@ -63,7 +63,7 @@ class CoDeputyController extends AbstractController
 
             foreach ($errors as $error) {
                 $clientProperty = $error->getPropertyPath();
-                $form->get('client'.ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
+                $form->get('client'.ucfirst($clientProperty))->addError(new FormError("{$error->getMessage()}"));
             }
 
             if ($form->isSubmitted() && $form->isValid()) {
