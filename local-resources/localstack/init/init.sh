@@ -36,15 +36,15 @@ awslocal ssm put-parameter --name "/local/parameter/checklist-sync-row-limit" --
 awslocal ssm put-parameter --name "/local/parameter/document-sync-interval-minutes" --value "4" --type String --overwrite
 awslocal ssm put-parameter --name "/local/parameter/document-sync-row-limit" --value "100" --type String --overwrite
 
-awslocal secretsmanager create-secret --name "local/opg-response-slack-token" --secret-string "IAMAFAKETOKEN"
-awslocal secretsmanager create-secret --name "local/database-password" --secret-string "api"
+awslocal secretsmanager create-secret --name "local/opg-response-slack-token" --secret-string "IAMAFAKETOKEN" --region eu-west-1
+awslocal secretsmanager create-secret --name "local/database-password" --secret-string "api" --region eu-west-1
 # 64444001 is client for Lay-OPG102-4 Client 1.
-awslocal secretsmanager create-secret --name "local/smoke-test-variables" --secret-string "{\"admin_user\":\"smoketestddadmin@smoketest.com\",\"admin_password\":\"DigidepsPass1234\",\"client\":\"64444001\",\"deputy_user\":\"lay-opg102-user-1@publicguardian.gov.uk\",\"deputy_password\":\"DigidepsPass1234\"}"
+awslocal secretsmanager create-secret --name "local/smoke-test-variables" --secret-string "{\"admin_user\":\"smoketestddadmin@smoketest.com\",\"admin_password\":\"DigidepsPass1234\",\"client\":\"64444001\",\"deputy_user\":\"lay-opg102-user-1@publicguardian.gov.uk\",\"deputy_password\":\"DigidepsPass1234\"}" --region eu-west-1
 
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -outform PEM -pubout -out public.pem
-awslocal secretsmanager create-secret --name "local/private-jwt-key-base64" --secret-string "$(base64 private.pem)"
-awslocal secretsmanager create-secret --name "local/public-jwt-key-base64" --secret-string "$(base64 public.pem)"
+awslocal secretsmanager create-secret --name "local/private-jwt-key-base64" --secret-string "$(base64 private.pem)" --region eu-west-1
+awslocal secretsmanager create-secret --name "local/public-jwt-key-base64" --secret-string "$(base64 public.pem)" --region eu-west-1
 
 kid=$(echo -n $(base64 public.pem) | openssl dgst -sha256)
 b64headers=$(echo -n "{\"typ\": \"JWT\", \"alg\": \"RS256\", \"jku\": \"http://frontend-webserver/v2/.well-known/jwks.json\", \"kid\": \"${kid}\"}"  | openssl base64 -e -A | tr '+/' '-_' | tr -d '=';)
@@ -55,4 +55,4 @@ b64jwt=${b64headandpay}.${b64digest}
 
 rm private.pem public.pem
 
-awslocal secretsmanager create-secret --name "local/custom-sql-db-password" --secret-string "api"
+awslocal secretsmanager create-secret --name "local/custom-sql-db-password" --secret-string "api" --region eu-west-1
