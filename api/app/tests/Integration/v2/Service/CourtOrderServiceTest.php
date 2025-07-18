@@ -29,20 +29,6 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         $this->sut = $this->getContainer()->get(CourtOrderService::class);
     }
 
-    public function testAssociateDeputyWithCourtOrderNoDeputy(): void
-    {
-        $success = $this->sut->associateDeputyWithCourtOrder('123456', '123567');
-        $this->assertFalse($success);
-    }
-
-    public function testAssociateDeputyWithCourtOrderDeputyButNoNoCourtOrder(): void
-    {
-        $this->fixtures->createDeputy(['setDeputyUid' => '123456']);
-
-        $success = $this->sut->associateDeputyWithCourtOrder('123456', '123567');
-        $this->assertFalse($success);
-    }
-
     public function testAssociateDeputyWithCourtOrderDuplicate(): void
     {
         $deputy = $this->fixtures->createDeputy(['setDeputyUid' => '123456']);
@@ -51,7 +37,7 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         $this->entityManager->persist($deputy);
         $this->entityManager->flush();
 
-        $success = $this->sut->associateDeputyWithCourtOrder('123456', '123567');
+        $success = $this->sut->associateDeputyWithCourtOrder($deputy, $courtOrder);
         $this->assertFalse($success);
     }
 
@@ -62,7 +48,7 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
 
-        $success = $this->sut->associateDeputyWithCourtOrder('x123456', 'x123567');
+        $success = $this->sut->associateDeputyWithCourtOrder($deputy, $courtOrder);
         $this->assertTrue($success);
 
         $rel = $this->courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
