@@ -8,7 +8,6 @@ use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -19,7 +18,6 @@ class CourtOrderService
     public function __construct(
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly UserRepository $userRepository,
-        private readonly DeputyRepository $deputyRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
     ) {
@@ -90,18 +88,13 @@ class CourtOrderService
      *              do and they are already associated
      */
     public function associateDeputyWithCourtOrder(
-        string $deputyUid,
-        string $courtOrderUid,
+        Deputy $deputy,
+        CourtOrder $courtOrder,
         bool $isActive = true,
         bool $logDuplicateError = true,
     ): bool {
-        $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputyUid]);
-
-        if (is_null($deputy)) {
-            $this->logger->error("Could not find deputy with UID {$deputyUid} while associating with court order {$courtOrderUid}");
-
-            return false;
-        }
+        $deputyUid = $deputy->getDeputyUid();
+        $courtOrderUid = $courtOrder->getCourtOrderUid();
 
         // check whether association already exists
         foreach ($deputy->getCourtOrdersWithStatus() as $courtOrderWithStatus) {
@@ -114,14 +107,6 @@ class CourtOrderService
 
                 return false;
             }
-        }
-
-        $courtOrder = $this->courtOrderRepository->findOneBy(['courtOrderUid' => $courtOrderUid]);
-
-        if (is_null($courtOrder)) {
-            $this->logger->error("Could not find court order with UID {$courtOrderUid} to associate with deputy {$deputyUid}");
-
-            return false;
         }
 
         $deputy->associateWithCourtOrder($courtOrder, $isActive);
