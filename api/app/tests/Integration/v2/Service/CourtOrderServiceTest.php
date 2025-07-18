@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Service;
 
+use App\Entity\CourtOrderDeputy;
+use App\Repository\CourtOrderDeputyRepository;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
 use App\v2\Service\CourtOrderService;
@@ -11,6 +13,7 @@ use App\v2\Service\CourtOrderService;
 class CourtOrderServiceTest extends ApiBaseTestCase
 {
     private Fixtures $fixtures;
+    private CourtOrderDeputyRepository $courtOrderDeputyRepository;
     private CourtOrderService $sut;
 
     public function setUp(): void
@@ -18,6 +21,11 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         parent::setUp();
 
         $this->fixtures = new Fixtures($this->entityManager);
+
+        /** @var CourtOrderDeputyRepository $repo */
+        $repo = $this->entityManager->getRepository(CourtOrderDeputy::class);
+        $this->courtOrderDeputyRepository = $repo;
+
         $this->sut = $this->getContainer()->get(CourtOrderService::class);
     }
 
@@ -49,12 +57,16 @@ class CourtOrderServiceTest extends ApiBaseTestCase
 
     public function testAssociateDeputyWithCourtOrderSuccess(): void
     {
-        $this->fixtures->createDeputy(['setDeputyUid' => 'x123456']);
+        $deputy = $this->fixtures->createDeputy(['setDeputyUid' => 'x123456']);
         $courtOrder = $this->fixtures->createCourtOrder('x123567', 'pfa', 'ACTIVE');
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
 
         $success = $this->sut->associateDeputyWithCourtOrder('x123456', 'x123567');
         $this->assertTrue($success);
+
+        $rel = $this->courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
+        $this->assertNotNull($rel);
+        $this->assertTrue($rel->isActive());
     }
 }
