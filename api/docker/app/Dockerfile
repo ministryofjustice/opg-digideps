@@ -30,8 +30,10 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.3.21-fpm-alpine3.21 AS base
+FROM php:8.3.21-fpm-alpine3.21 AS application
 ARG PLATFORM=${PLATFORM:-amd64}
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
+ARG ENVIRONMENT=${ENVIRONMENT:-production}
 
 WORKDIR /var/www
 EXPOSE 80
@@ -65,16 +67,6 @@ RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
     docker-php-ext-enable pcov; \
   fi
 
-RUN mkdir -p var/cache var/logs /var/log/app \
- && chown -R www-data var /var/log/app
-
-
-##############################
-# Stage 3: Application (Shared)
-##############################
-FROM base AS application
-ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
@@ -89,6 +81,12 @@ RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
 RUN mkdir -p /tmp/html && mkdir -p /tmp/sql
+# Create var directories
+RUN mkdir -p var/cache \
+    && mkdir -p var/logs \
+    && mkdir -p /var/log/app \
+    && chown -R www-data var \
+    && chown -R www-data /var/log/app
 
 ##############################
 # Stage 4a: runtime image (image without test dependencies)
@@ -140,11 +138,16 @@ RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
-
 ##############################
 # Stage 4b-1: devtools image (image with test dependencies - not admin)
 ##############################
 FROM devtools-base AS devtools
+
+RUN rm -rf /var/www/var/cache/* /var/www/var/logs/* \
+ && mkdir -p /var/www/var/cache /var/www/var/logs \
+ && chown -R www-data:www-data /var/www/var \
+ && chmod -R ug+rwX /var/www/var
+
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 USER www-data

@@ -126,6 +126,7 @@ services:
     build:
       context: .
       dockerfile: ./api/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -135,7 +136,7 @@ services:
       - redis-api
       - localstack
     environment:
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:-prod}
       APP_DEBUG: ${APP_DEBUG:-0}
       WORKSPACE: local
     env_file:
