@@ -88,6 +88,7 @@ COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/p
 RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
+RUN mkdir -p /tmp/html && mkdir -p /tmp/sql
 
 ##############################
 # Stage 4a: runtime image (image without test dependencies)
@@ -138,6 +139,7 @@ RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
 
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
+
 
 ##############################
 # Stage 4b-1: devtools image (image with test dependencies - not admin)
