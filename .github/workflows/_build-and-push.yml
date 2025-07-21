@@ -52,6 +52,12 @@ jobs:
             platform: "arm64"
             runs_on: "ubuntu-24.04-arm"
 
+          - svc_name: "test"
+            sub_folder: "."
+            docker_file: "api/docker/app/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "sync"
             sub_folder: "orchestration"
             docker_file: "Dockerfile"
@@ -131,8 +137,10 @@ jobs:
           TAG: ${{ inputs.tag }}
           TARGET: ""
         run: |
-          if [ "${IMAGE_NAME}" == "api" ]; then
-           TARGET="--target devtools"
+          if [ "${IMAGE_NAME}" = "test" ]; then
+            TARGET_STAGE="--target devtools"
+          elif [ "${IMAGE_NAME}" = "api" ]; then
+            TARGET_STAGE="--target devtools"
           fi
 
           if [ "${BRANCH_NAME}" == "main" ]; then
