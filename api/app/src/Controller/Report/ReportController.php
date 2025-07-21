@@ -20,6 +20,7 @@ use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/report')]
@@ -77,11 +78,22 @@ class ReportController extends RestController
 
         /** @var EntityDir\PreRegistration[] $preRegistrationRecord */
         $preRegistrationRecord = $this->preRegRepository->findByCaseNumber($client->getCaseNumber());
-        $endDate = clone $startDate = $preRegistrationRecord[0]->getOrderDate();
+        $orderStartDate = $preRegistrationRecord[0]->getOrderDate();
+
+        if (is_null($orderStartDate)) {
+            throw new UnprocessableEntityHttpException(
+                sprintf(
+                    'OrderDate (made_date) is missing for Preregistration record: %s',
+                    $preRegistrationRecord[0]->getId()
+                )
+            );
+        }
+
+        $endDate = clone $orderStartDate;
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, $startDate, $endDate->add(new \DateInterval('P12M1D')));
+        $report = new Report($client, $reportType, $orderStartDate, $endDate->add(new \DateInterval('P12M1D')));
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
