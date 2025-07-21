@@ -38,7 +38,7 @@ jobs:
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
           --build-arg ENVIRONMENT=local \
           --tag api-unit-tests:latest \
-          --target ci-tests \
+          --target devtools-admin \
           --output type=docker .
 
       - name: Move cache

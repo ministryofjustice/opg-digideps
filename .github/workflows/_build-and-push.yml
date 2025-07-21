@@ -134,7 +134,7 @@ jobs:
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} --target devtools \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
@@ -146,7 +146,7 @@ jobs:
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} --target devtools \
             --tag ${IMAGE_NAME}:latest \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
