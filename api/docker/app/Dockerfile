@@ -110,6 +110,8 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup --env=prod 
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 
+RUN chown -R www-data:www-data /var/www/var
+
 USER www-data
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
@@ -139,7 +141,8 @@ RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
 
 # Pre warm cache
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
-
+# Sort out cache ownership
+RUN chown -R www-data:www-data /var/www/var
 
 ##############################
 # Stage 4b-1: devtools image (image with test dependencies - not admin)
