@@ -49,18 +49,22 @@ def get_latest_snapshot(rds_client, cid, cluster=True):
         automated_snapshots = rds_client.describe_db_cluster_snapshots(
             DBClusterIdentifier=cid, SnapshotType="automated"
         )
+        snapshot_key = "DBClusterSnapshots"
+        id_key = "DBClusterSnapshotIdentifier"
     else:
         automated_snapshots = rds_client.describe_db_snapshots(
             DBInstanceIdentifier=cid, SnapshotType="automated"
         )
+        snapshot_key = "DBSnapshots"
+        id_key = "DBSnapshotIdentifier"
 
     snapshots = []
-    if cluster:
-        for snapshot in automated_snapshots["DBClusterSnapshots"]:
-            snapshots.append(str(snapshot["DBClusterSnapshotIdentifier"]))
-    else:
-        for snapshot in automated_snapshots["DBSnapshots"]:
-            snapshots.append(str(snapshot["DBSnapshotIdentifier"]))
+
+    for snapshot in automated_snapshots.get(snapshot_key, []):
+        snapshot_identifier = str(snapshot.get(id_key, ""))
+        # preupgrade is a standard system snapshot we want to exclude
+        if "preupgrade" not in snapshot_identifier:
+            snapshots.append(snapshot_identifier)
 
     snapshots.sort(reverse=True)
     snapshot_id = snapshots[0]

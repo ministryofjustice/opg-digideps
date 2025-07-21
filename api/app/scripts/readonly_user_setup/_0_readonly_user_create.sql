@@ -1,9 +1,21 @@
 DO
 $$
 BEGIN
-  IF NOT EXISTS (SELECT * FROM pg_user WHERE usename = 'readonly_sql_user') THEN
-     CREATE USER readonly_sql_user WITH PASSWORD 'string_to_replace_with_real_password';
+
+  IF NOT EXISTS (SELECT * FROM pg_user WHERE usename = 'readonly-db-iam-string-to-replace-with-local-environment') THEN
+     CREATE USER "readonly-db-iam-string-to-replace-with-local-environment" WITH LOGIN;
   END IF;
+
+  IF EXISTS (SELECT * FROM pg_roles WHERE rolname = 'rds_iam') THEN
+     GRANT rds_iam TO "readonly-db-iam-string-to-replace-with-local-environment";
+  END IF;
+
+  IF EXISTS (SELECT * FROM pg_roles WHERE rolname = 'pg_read_all_data') THEN
+     GRANT pg_read_all_data TO "readonly-db-iam-string-to-replace-with-local-environment";
+  END IF;
+
+  ALTER USER "readonly-db-iam-string-to-replace-with-local-environment" SET log_statement = 'all';
+
 END
 $$
 ;

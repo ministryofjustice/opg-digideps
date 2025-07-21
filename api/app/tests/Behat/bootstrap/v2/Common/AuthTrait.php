@@ -311,7 +311,7 @@ trait AuthTrait
     public function IShouldBeRedirectedAndDeniedAccessToContinue()
     {
         $this->assertIntEqualsInt(
-            '403',
+            403,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -324,7 +324,7 @@ trait AuthTrait
     public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised()
     {
         $this->assertIntEqualsInt(
-            '404',
+            404,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -337,6 +337,21 @@ trait AuthTrait
     {
         $this->loggedInUserDetails = 'primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+
+        $userEmail = $this->loggedInUserDetails->getUserEmail();
+
+        $this->visitPath('/login');
+        $this->fillField('login_email', $userEmail);
+        $this->fillField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+    }
+
+    /**
+     * @Given /^a lay deputy with no court orders logs in$/
+     */
+    public function aLayDeputyWithNoCourtOrdersLogsIn()
+    {
+        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
 
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 

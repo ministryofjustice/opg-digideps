@@ -351,6 +351,25 @@
                     <h3 class="govuk-notification-banner__heading">{{ message }}</h3>
                 </div>
             </div>
+        {% elseif alertType == 'fileUploadSuccess' %}
+            <div class="moj-banner moj-banner--success">
+                {{ _self.icon('success', 'moj-banner__icon') }}
+                <div class="moj-banner__message">
+                    <h2 class="govuk-heading-m">
+                        Files uploaded
+                    </h2>
+                    <span class="moj-banner__assistive">Success</span>
+                    {{ message }}
+                </div>
+            </div>
+        {% elseif alertType == 'fileRemovalSuccess' %}
+            <div class="moj-banner moj-banner--success">
+                {{ _self.icon('success', 'moj-banner__icon') }}
+                <div class="moj-banner__message">
+                    <span class="moj-banner__assistive">Success</span>
+                    {{ message }}
+                </div>
+            </div>
         {% else %}
             <div class="opg-alert">
                 <div class="behat-region-alert-message opg-alert__message">

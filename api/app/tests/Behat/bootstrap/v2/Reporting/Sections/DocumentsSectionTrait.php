@@ -66,7 +66,7 @@ trait DocumentsSectionTrait
 
     /**
      * @Then the documents summary page should not contain any documents
-     * @Then the send more documents page should not contain any documents to upload
+     * @Then the document upload page should not contain any documents
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
     {
@@ -205,12 +205,18 @@ trait DocumentsSectionTrait
 
     /**
      * @When I remove one document I uploaded
+     *
+     * @Given /^I remove the "([^"]*)" document I uploaded$/
      */
-    public function iRemoveOneDocumentIUploaded()
+    public function iRemoveOneDocumentIUploaded($fileName = null)
     {
-        $filenames = $this->uploadedDocumentFilenames;
-        $documentToPop = $filenames[0];
-        unset($filenames[0]);
+        if ($fileName) {
+            $documentToPop = $fileName;
+        } else {
+            $filenames = $this->uploadedDocumentFilenames;
+            $documentToPop = $filenames[0];
+            unset($filenames[0]);
+        }
 
         $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $documentToPop);
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
@@ -227,9 +233,11 @@ trait DocumentsSectionTrait
         }
 
         $removeLink->click();
-        $this->pressButton('confirm_delete_confirm');
 
-        $this->uploadedDocumentFilenames = $filenames;
+        if (!$fileName) {
+            $this->pressButton('confirm_delete_confirm');
+            $this->uploadedDocumentFilenames = $filenames;
+        }
     }
 
     /**
@@ -300,15 +308,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When /^I continue to submit the empty form$/
-     */
-    public function iContinueToSubmitTheEmptyForm()
-    {
-        $this->clickLink('Send documents');
-        $this->iAmOnLayMainPage();
-    }
-
-    /**
      * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
      */
     public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
@@ -376,5 +375,75 @@ trait DocumentsSectionTrait
         $this->findFileNamesInDls($descriptionLists, [$formattedDocName]);
 
         $this->clickLink('Save and continue');
+    }
+
+    /**
+     * @Given /^a flash message should be displayed to the user confirming the document upload$/
+     */
+    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheUpload()
+    {
+        $alertMessage = 'Your uploaded files are now attached to this report.';
+
+        $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
+        }
+    }
+
+    /**
+     * @Then I should see :imageName listed as a previously submitted document
+     */
+    public function iShouldSeeListedAsAPreviouslySubmittedDocument($submittedDoc)
+    {
+        $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDoc);
+        $fileNameItems = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
+
+        $this->assertPageContainsText('Previously submitted documents');
+
+        $this->assertStringEqualsString($submittedDoc, $fileNameItems, 'File found');
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" and "([^"]*)" as previously submitted documents$/
+     */
+    public function iShouldSeeAndAsPreviouslySubmittedDocuments($fileOne, $fileTwo)
+    {
+        $fileNames = [$fileOne, $fileTwo];
+
+        foreach ($fileNames as $fileName) {
+            $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $fileName);
+            $fileNameItem = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
+
+            $this->assertStringEqualsString($fileName, $fileNameItem, 'File found');
+        }
+    }
+
+    /**
+     * @Then /^a flash message should be displayed to the user confirming the removal of "([^"]*)"$/
+     */
+    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved($fileName)
+    {
+        $alertMessage = sprintf('File named %s has been removed', $fileName);
+
+        $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
+
+        if (is_null($alertText)) {
+            throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
+        }
+
+        $alertMessageFound = str_contains($alertText, $alertMessage);
+
+        if (!$alertMessageFound) {
+            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
+        }
     }
 }

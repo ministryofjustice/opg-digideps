@@ -103,14 +103,23 @@ trait ReportSubmissionTrait
     }
 
     /**
-     * @When I attached a supporting document :imageName to the submitted report
+     * @When I attach a "second" supporting document :imageName to the submitted report
+     * @When I attach a supporting document :imageName to the submitted report
      */
     public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
         $this->iVisitTheDocumentsStep2Page();
         $this->attachDocument($imageName);
+    }
 
-        $this->clickLink('Continue to send documents');
+    /**
+     * @Given /^I send the documents to complete the upload process on the "([^"]*)" report$/
+     */
+    public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus)
+    {
+        if ('submitted' != $reportStatus) {
+            $this->clickLink('Continue to send documents');
+        }
 
         $this->clickLink('Send documents');
     }
@@ -120,7 +129,7 @@ trait ReportSubmissionTrait
      */
     public function iSearchForSubmissionsUsingTheFirstNameOfTheClientsWithTheSameFirstName(
         string $whichNameSearched,
-        string $whichNamesAreSame
+        string $whichNamesAreSame,
     ) {
         $userDetails = 'first' === $whichNamesAreSame ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
         $nameToSearchOn = 'first' === $whichNameSearched ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();

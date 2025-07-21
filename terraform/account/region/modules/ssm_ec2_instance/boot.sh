@@ -6,6 +6,7 @@ cat << 'EOF' > /usr/local/bin/database
 #!/bin/bash
 
 command="${1:-}"
+environment="${2:-}"
 
 secret_exists() {
   local name="$1"
@@ -18,109 +19,106 @@ get_secret_value() {
 }
 
 list_databases() {
-  printf "%-30s %-70s %-35s %-35s\n" "Database" "Endpoint" "digidepsmaster password" "readonly password"
-  printf "%-30s %-70s %-35s %-35s\n" "---------" "---------" "------------------------" "------------------"
+  printf "%-20s %-30s %-70s\n" "Environment" "Database" "Endpoint"
+  printf "%-20s %-30s %-70s\n" "-----------" "---------" "---------"
 
   dbs=$(aws rds describe-db-clusters --query "DBClusters[?Engine=='aurora-postgresql'].[DBClusterIdentifier,Endpoint]" --output text)
 
-  while read -r identifier endpoint; do
-    if [[ "$identifier" == *ddls* ]]; then
-      env="default"
-    else
-      env="${identifier#api-}"
-    fi
-
-    digideps_secret="${env}/database-password"
-    readonly_secret="${env}/readonly-sql-db-password"
-
-    if [[ "$env" == "default" ]]; then
-      if ! secret_exists "$digideps_secret"; then
-        digideps_secret="Access Denied"
-        readonly_secret="Access Denied"
-      fi
-    else
-      if ! secret_exists "$digideps_secret"; then
-        if secret_exists "default/database-password"; then
-          digideps_secret="default/database-password"
-        else
-          digideps_secret="Access Denied"
-        fi
-      fi
-
-      if ! secret_exists "$readonly_secret"; then
-        if secret_exists "default/readonly-sql-db-password"; then
-          readonly_secret="default/readonly-sql-db-password"
-        else
-          readonly_secret="Access Denied"
-        fi
-      fi
-    fi
-
-    printf "%-30s %-70s %-35s %-35s\n" "$identifier" "$endpoint" "$digideps_secret" "$readonly_secret"
+  while read -r database endpoint; do
+    env=$(echo "$database" | awk -F'-' '{print $2}')
+    printf "%-20s %-30s %-70s\n" "$env" "$database" "$endpoint"
   done <<< "$dbs"
 
   echo
-  echo "To connect: database connect <database> <view|admin>"
-  echo "Example:    database connect api-ddls5451990 admin"
+  echo "To connect: database connect <environment|database> <read|edit>"
+  echo "Example:    database connect production02 read"
 }
 
 connect_to_database() {
-  identifier="${1:-}"
-  access="${2:-}"
+  input="$1"
+  access="$2"
 
-  if [[ -z "$identifier" || -z "$access" ]]; then
-    echo "Usage: database connect <database> <view|admin>"
+  if [[ -z "$input" || -z "$access" ]]; then
+    echo "Usage: database connect <environment|database> <read|edit>"
     exit 1
   fi
 
-  dbs=$(aws rds describe-db-clusters --query "DBClusters[?DBClusterIdentifier=='$identifier'].[DBClusterIdentifier,Endpoint]" --output text)
-  read -r cluster_id endpoint <<< "$dbs"
-
-  if [[ -z "$endpoint" || "$endpoint" == "None" ]]; then
-    echo "Could not find endpoint for cluster '$identifier'"
-    exit 1
-  fi
-
-  if [[ "$identifier" == *ddls* ]]; then
-    env="default"
+  if [[ "$input" == api-* ]]; then
+    database="$input"
+    environment=$(echo "$input" | awk -F'-' '{print $2}')
   else
-    env="${identifier#api-}"
+    database="api-$input"
+    environment="$input"
   fi
 
-  if [[ "$access" == "admin" ]]; then
+  exists=$(aws rds describe-db-clusters --query "DBClusters[?DBClusterIdentifier=='${database}'].DBClusterIdentifier" --output text)
+
+  if [[ -z "$exists" ]]; then
+    echo "Error: Database '${database}' does not exist."
+    exit 1
+  fi
+
+  if [[ "$access" == "edit" ]]; then
     user="digidepsmaster"
-    secret_name="${env}/database-password"
-  elif [[ "$access" == "view" ]]; then
-    user="readonly_sql_user"
-    secret_name="${env}/readonly-sql-db-password"
-  else
-    echo "Invalid access level: must be 'view' or 'admin'"
-    exit 1
-  fi
+    secret_name="${environment}/database-password"
 
-  if ! secret_exists "$secret_name"; then
-    if [[ "$env" != "default" ]]; then
-      fallback="default/${secret_name#*/}"
+    if ! secret_exists "$secret_name"; then
+      fallback="default/database-password"
       if secret_exists "$fallback"; then
         secret_name="$fallback"
       else
         echo "Access Denied"
         exit 1
       fi
-    else
-      echo "Access Denied"
+    fi
+
+    password=$(get_secret_value "$secret_name")
+    if [[ -z "$password" ]]; then
+      echo "Failed to retrieve password"
       exit 1
     fi
-  fi
 
-  password=$(get_secret_value "$secret_name")
-  if [[ -z "$password" ]]; then
-    echo "Failed to retrieve password"
+    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${database}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+
+    if [[ -z "$HOST" || "$HOST" == "None" ]]; then
+      echo "Error: Could not resolve DB instance for '${database}-0'"
+      exit 1
+    fi
+
+    echo "Connecting to $HOST as $user"
+    PGPASSWORD="$password" psql -h "$HOST" -U "$user" -d api -p 5432
+
+  elif [[ "$access" == "read" ]]; then
+    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+    HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${database}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
+
+    if [[ -z "$HOST" || "$HOST" == "None" ]]; then
+      echo "Error: Could not resolve DB instance for '${database}-0'"
+      exit 1
+    fi
+
+    CREDS=$(aws sts assume-role --role-arn "arn:aws:iam::$ACCOUNT_ID:role/readonly-db-iam-${environment}" --role-session-name db-readonly-session 2>/dev/null)
+
+    if [[ -z "$CREDS" ]]; then
+      echo "Error: Could not assume readonly role for environment '${environment}'"
+      exit 1
+    fi
+
+    export AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r .Credentials.AccessKeyId)
+    export AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r .Credentials.SecretAccessKey)
+    export AWS_SESSION_TOKEN=$(echo "$CREDS" | jq -r .Credentials.SessionToken)
+
+    curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /tmp/rds-combined-ca-bundle.pem
+
+    TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username readonly-db-iam-${environment} --region eu-west-1)
+
+    echo "Connecting to $HOST as readonly-db-iam-${environment}"
+    PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${environment} sslmode=require sslrootcert=/tmp/rds-combined-ca-bundle.pem"
+
+  else
+    echo "Invalid access level: must be 'read' or 'edit'"
     exit 1
   fi
-
-  echo "Connecting to $endpoint as $user"
-  PGPASSWORD="$password" psql -h "$endpoint" -U "$user" -d postgres -p 5432
 }
 
 case "$command" in
@@ -132,8 +130,8 @@ case "$command" in
     ;;
   *)
     echo "Usage:"
-    echo "  $0 list"
-    echo "  $0 connect <cluster-identifier> <view|admin>"
+    echo "database list"
+    echo "database connect <environment|database> <read|edit>"
     exit 1
     ;;
 esac
@@ -207,13 +205,13 @@ Description=Run auto shutdown check at 12 AM daily
 
 [Timer]
 OnCalendar=*-*-* 00:00:00
-Persistent=true
 
 [Install]
 WantedBy=timers.target
 EOF
 
-cat << 'EOF' > /etc/motd
+sudo tee /etc/update-motd.d/50-digideps > /dev/null <<'EOF'
+cat << 'EOM'
 Welcome to the DigiDeps SSM Server
 
 Available commands:
@@ -221,10 +219,13 @@ Available commands:
   database list
     → Shows all connectable Aurora PostgreSQL databases with access info
 
-  database connect <database> <view|admin>
+  database connect <environment|database> <read|edit>
     → Connects you to the given database using psql
-    → Example: database connect production02 view
+    → Example: database connect production02 read
+EOM
 EOF
+
+sudo chmod +x /etc/update-motd.d/50-digideps
 
 
 systemctl enable autoshutdown.timer

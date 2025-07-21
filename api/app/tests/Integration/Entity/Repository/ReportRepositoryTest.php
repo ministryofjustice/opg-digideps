@@ -3,153 +3,38 @@
 namespace App\Tests\Integration\Repository;
 
 use App\Entity\Client;
-use App\Entity\ClientInterface;
 use App\Entity\Report\Checklist;
-use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use App\Repository\ReportRepository;
-use App\Service\Search\ClientSearchFilter;
 use App\Tests\Integration\ApiBaseTestCase;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\Persistence\ManagerRegistry;
-use Mockery as m;
-use Mockery\MockInterface;
+use App\Tests\Integration\Fixtures;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepositoryTest extends ApiBaseTestCase
 {
-    /** @var ReportRepository */
-    private $sut;
-
-    /** @var Report|MockInterface */
-    private $mockReport;
-
-    /** @var ManagerRegistry|MockInterface */
-    private $mockManagerRegistry;
-
-    /** @var ClientInterface|MockInterface */
-    private $mockClient;
-
-    /** @var ReportRepository */
-    private $repository;
-
-    /** @var array */
-    private $queryResult;
-
-    /** @var []Checklist */
-    private $queuedChecklists = [];
-
-    /** @var int */
+    private array $queryResult;
+    private Checklist|array $queuedChecklists = [];
     public const QUERY_LIMIT = 2;
-
-    /**
-     * @var ClientSearchFilter|m\LegacyMockInterface|MockInterface
-     */
-    private $clientSearchFilter;
-
-    /**
-     * @var ClassMetadata|m\LegacyMockInterface|MockInterface
-     */
-    private $mockMetaClass;
-
-    /**
-     * @var EntityManagerInterface|m\LegacyMockInterface|MockInterface
-     */
-    private $mockEm;
+    private ReportRepository $sut;
 
     public function setUp(): void
     {
         parent::setUp();
-
         $this->purgeDatabase();
 
-        $this->mockEm = m::mock(EntityManagerInterface::class);
-        $this->mockManagerRegistry = m::mock(ManagerRegistry::class);
-        $this->mockMetaClass = m::mock(ClassMetadata::class);
+        $this->fixtures = new Fixtures($this->entityManager);
 
-        $this->mockManagerRegistry->shouldReceive('getManagerForClass')->andReturn($this->mockEm);
-        $this->mockEm->shouldReceive('getClassMetadata')->andReturn($this->mockMetaClass);
+        /** @var ReportRepository $repo */
+        $repo = $this->entityManager->getRepository(Report::class);
 
-        $this->clientSearchFilter = m::mock(ClientSearchFilter::class);
-        $this->mockReport = m::mock(Report::class);
-        $this->mockClient = m::mock(ClientInterface::class);
-
-        $this->mockReport->shouldReceive('getClient')
-            ->zeroOrMoreTimes()
-            ->andReturn($this->mockClient);
-
-        $this->sut = new ReportRepository($this->mockManagerRegistry, $this->clientSearchFilter);
-        $this->repository = $this->entityManager->getRepository(Report::class);
-    }
-
-    public function testAddFeesToReportIfMissingForNonPAUser()
-    {
-        $this->mockReport->shouldReceive('isPAReport')->andReturn(false);
-
-        $this->assertNull($this->sut->addFeesToReportIfMissing($this->mockReport));
-    }
-
-    public function testAddFeesToReportIfMissingForPAUserWithFeesMissing()
-    {
-        $this->mockReport->shouldReceive('getFees')->andReturn([]);
-
-        $this->mockReport->shouldReceive('addFee')->times(count(Fee::$feeTypeIds))->andReturnSelf();
-
-        $this->mockEm->shouldReceive('persist')->times(count(Fee::$feeTypeIds));
-
-        $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
-
-        $this->assertEquals(7, $this->sut->addFeesToReportIfMissing($this->mockReport));
-    }
-
-    public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing()
-    {
-        $this->mockReport->shouldReceive('getFees')->andReturn(['foo']);
-
-        $this->mockReport->shouldReceive('addFee')->never();
-
-        $this->mockEm->shouldReceive('persist')->never();
-
-        $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
-
-        $this->assertEquals(0, $this->sut->addFeesToReportIfMissing($this->mockReport));
+        $this->sut = $repo;
     }
 
     /**
-     * @test
-     */
-    public function fetchQueuedChecklists()
-    {
-        $this
-            ->ensureChecklistsExistInDatabase()
-            ->fetchChecklists()
-            ->assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned()
-            ->assertQueuedChecklistsAreUpdatedToInProgress();
-    }
-
-    /** @test */
-    public function findAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive()
-    {
-        $client = (new Client())->setCaseNumber('4932965t');
-        $this->entityManager->persist($client);
-
-        $existingReport = $this->buildReport($client);
-
-        $this->entityManager->flush();
-        $this->entityManager->refresh($existingReport);
-        $this->entityManager->refresh($client);
-        $this->entityManager->refresh($client->getUsers()[0]);
-
-        $result = $this->repository->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
-        self::assertEquals($existingReport, $result[0]);
-    }
-
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     private function ensureChecklistsExistInDatabase(): ReportRepositoryTest
     {
@@ -167,12 +52,9 @@ class ReportRepositoryTest extends ApiBaseTestCase
         return $this;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\DBALException
-     */
     private function fetchChecklists(): ReportRepositoryTest
     {
-        $this->queryResult = $this->repository->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
+        $this->queryResult = $this->sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
 
         // Add 0.5 second buffer time to all doctrine updates and stop test from intermittently failing
         usleep(500000);
@@ -197,9 +79,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
     }
 
     /**
-     * @return ReportRepositoryTest
-     *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws \Exception
      */
     private function buildChecklistWithStatus(Client $client, ?string $status): Checklist
     {
@@ -244,8 +124,64 @@ class ReportRepositoryTest extends ApiBaseTestCase
         return $report;
     }
 
-    protected function tearDown(): void
+    public function testReportsAreSortedByEndDateAndGroupedForDualReports(): void
     {
-        parent::tearDown();
+        // create organisation
+        $org = $this->fixtures->createOrganisations(1);
+
+        // create clients and add to org
+        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PROF);
+
+        $client1 = $this->fixtures->createClient($user);
+        $client2 = $this->fixtures->createClient($user);
+        $clientDual = $this->fixtures->createClient($user);
+
+        $this->entityManager->flush();
+
+        $this->fixtures->addClientToOrganisation($client1->getId(), $org[0]->getId());
+        $this->fixtures->addClientToOrganisation($client2->getId(), $org[0]->getId());
+        $this->fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
+
+        // create reports for clients
+        $report1 = $this->fixtures->createReport($client1)->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
+        $report2 = $this->fixtures->createReport($client2)->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
+
+        $dualReport1 = $this->fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
+        $dualReport2 = $this->fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
+
+        $this->entityManager->flush();
+
+        $reports = $this->sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
+
+        self::assertCount(4, $reports);
+        self::assertEquals($reports[0]['id'], $dualReport1->getId());
+        self::assertEquals($reports[1]['id'], $dualReport2->getId());
+        self::assertEquals($reports[2]['id'], $report2->getId());
+        self::assertEquals($reports[3]['id'], $report1->getId());
+    }
+
+    public function testFetchQueuedChecklists(): void
+    {
+        $this
+            ->ensureChecklistsExistInDatabase()
+            ->fetchChecklists()
+            ->assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned()
+            ->assertQueuedChecklistsAreUpdatedToInProgress();
+    }
+
+    public function testFindAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive(): void
+    {
+        $client = (new Client())->setCaseNumber('4932965t');
+        $this->entityManager->persist($client);
+
+        $existingReport = $this->buildReport($client);
+
+        $this->entityManager->flush();
+        $this->entityManager->refresh($existingReport);
+        $this->entityManager->refresh($client);
+        $this->entityManager->refresh($client->getUsers()[0]);
+
+        $result = $this->sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
+        self::assertEquals($existingReport, $result[0]);
     }
 }

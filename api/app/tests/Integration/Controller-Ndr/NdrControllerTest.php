@@ -47,9 +47,6 @@ class NdrControllerTest extends AbstractTestController
         self::fixtures()->flush();
     }
 
-    /**
-     * clear fixtures.
-     */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();

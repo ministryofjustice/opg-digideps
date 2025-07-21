@@ -24,7 +24,7 @@ trait ACLTrait
     private function canAccessSensitivePage()
     {
         $this->assertIntEqualsInt(
-            '200',
+            200,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -33,7 +33,7 @@ trait ACLTrait
     private function canNotAccessSensitivePage()
     {
         $this->assertIntEqualsInt(
-            '403',
+            403,
             $this->getSession()->getStatusCode(),
             'Status code after accessing endpoint'
         );
@@ -92,7 +92,7 @@ trait ACLTrait
         match (strtolower($page)) {
             'fixtures' => $this->iVisitAdminFixturesPage(),
             'notifications' => $this->iVisitTheAdminNotificationPage(),
-            'tools' => $this->iVisitAdminToolsPage()
+            'tools' => $this->iVisitAdminToolsPage(),
         };
 
         $this->canAccessSensitivePage();
@@ -108,7 +108,7 @@ trait ACLTrait
         match (strtolower($page)) {
             'fixtures' => $this->iVisitAdminFixturesPage(),
             'notifications' => $this->iVisitTheAdminNotificationPage(),
-            'tools' => $this->iVisitAdminToolsPage()
+            'tools' => $this->iVisitAdminToolsPage(),
         };
 
         $this->canNotAccessSensitivePage();

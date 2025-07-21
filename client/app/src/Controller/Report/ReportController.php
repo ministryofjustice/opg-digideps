@@ -146,7 +146,7 @@ class ReportController extends AbstractController
                     [
                         'sentenceOne' => 'This account has been closed.',
                         'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
-                        'sentenceThree' => 'If you need assistance, contact your case manager on 0115 934 2700.',
+                        'sentenceThree' => 'If you need assistance, contact your case manager on 0300 456 0300.',
                     ]
                 );
             } else {
@@ -163,21 +163,6 @@ class ReportController extends AbstractController
         }
 
         return null;
-    }
-
-    /**
-     * List of reports.
-     *
-     * @Route("/lay", name="lay_home_deprecated")
-     *
-     * @Template("@App/Report/Report/index.html.twig")
-     *
-     * @return RedirectResponse
-     */
-    public function indexAction()
-    {
-        // Moved to ClientController::indexAction()
-        return $this->redirectToRoute('homepage');
     }
 
     /**
@@ -343,8 +328,8 @@ class ReportController extends AbstractController
      * action "add" will instead add another report.
      *
      * @Route("/report/{action}/{clientId}", name="report_create",
-     *   defaults={ "action" = "create"},
-     *   requirements={ "action" = "(create|add)"}
+     *   defaults={"action"="create"},
+     *   requirements={"action"="(create|add)"}
      * )
      *
      * @Template("@App/Report/Report/create.html.twig")
@@ -669,7 +654,7 @@ class ReportController extends AbstractController
     /**
      * Used for active and archived report.
      *
-     * @Route("/report/{reportId}/pdf-debug")
+     * @Route("/report/{reportId}/pdf-debug", name="report_pdf_debug")
      *
      * @return Response|null
      */

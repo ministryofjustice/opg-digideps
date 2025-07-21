@@ -7,6 +7,24 @@ const uploadFile = {
         if (filename) {
           document.getElementById('upload-progress')?.classList.remove('hidden')
         }
+
+        const fileElement = document.getElementById('report_document_upload_files')
+        const form = document.getElementById('upload_form_post_submission')
+
+        fileElement.addEventListener('change', function () {
+          if (event.target.getAttribute('id') === 'upload_form_post_submission') {
+            const actionUrl = event.target.getAttribute('action')
+            const fsize = fileElement.files[0].size
+
+            if (fsize > UPLOAD_LIMIT * 1024 * 1024) {
+              window.location = actionUrl + '?error=tooBig'
+            }
+          }
+
+          if (fileElement.files.length > 0) {
+            form.submit()
+          }
+        })
       }
     })
 
@@ -31,7 +49,6 @@ const uploadFile = {
             return
           }
         }
-
         event.target.submit()
       }
     })

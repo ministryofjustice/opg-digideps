@@ -1,0 +1,51 @@
+openapi: 3.1.0
+
+info:
+    title: Deputyship Reporting (DigiDeps) API Schema
+    version: 1.0.0
+
+paths:
+    '/health-check':
+        get:
+            responses:
+                '200':
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                additionalProperties: false
+
+    '/health-check/service':
+        get:
+            responses:
+                '200':
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - success
+                                    - data
+                                    - message
+                                additionalProperties: false
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    data:
+                                        type: object
+                                        properties:
+                                            healthy:
+                                                type: boolean
+                                                example: true
+                                            environment:
+                                                type: string
+                                                example: "test"
+                                            errors:
+                                                type: string
+                                                example: "General database error"
+                                    message:
+                                        type: string
+                                        example: ""

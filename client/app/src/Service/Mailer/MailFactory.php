@@ -100,21 +100,17 @@ class MailFactory
     {
         if ($user->isLayDeputy()) {
             $emailKey = 'layDeputySupportEmail';
-            $phoneKey = 'helpline';
         } elseif ($user->isDeputyPa()) {
             $emailKey = 'paSupportEmail';
-            $phoneKey = 'helplinePA';
         } elseif ($user->isDeputyProf()) {
             $emailKey = 'profSupportEmail';
-            $phoneKey = 'helplineProf';
         } else {
             $emailKey = 'generalSupportEmail';
-            $phoneKey = 'helplineGeneral';
         }
 
         return [
             'email' => $this->translator->trans($emailKey, [], 'common'),
-            'phone' => $this->translator->trans($phoneKey, [], 'common'),
+            'phone' => $this->translator->trans('helpline', [], 'common'),
         ];
     }
 

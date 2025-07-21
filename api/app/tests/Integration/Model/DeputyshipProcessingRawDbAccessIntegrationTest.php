@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace app\tests\Integration\Model;
 
 use App\Model\DeputyshipProcessingRawDbAccess;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
+class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManagerInterface $entityManager;
     private Fixtures $fixtures;
     private DeputyshipProcessingRawDbAccess $sut;
 
@@ -22,20 +19,11 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
     {
         parent::setUp();
 
-        $container = self::bootKernel()->getContainer();
-        $this->entityManager = $container->get('doctrine')->getManager('ingestwriter');
-
         $this->fixtures = new Fixtures($this->entityManager);
 
         /** @var DeputyshipProcessingRawDbAccess $sut */
-        $sut = $container->get(DeputyshipProcessingRawDbAccess::class);
+        $sut = $this->container->get(DeputyshipProcessingRawDbAccess::class);
         $this->sut = $sut;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        (new ORMPurger($this->entityManager))->purge();
     }
 
     private function getQueryBuilder(): QueryBuilder
@@ -50,11 +38,17 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
     {
         $uid = substr(uniqid(), 0, 10);
 
+        // add the client which will be referenced in the candidate
+        $client = $this->fixtures->createClient();
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
+
         $candidate = [
             'orderUid' => $uid,
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-05-23 10:10:10',
+            'clientId' => $client->getId(),
         ];
 
         // use SUT to insert the order
@@ -63,7 +57,7 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
         $this->sut->endTransaction();
 
         // use SUT to find the ID of the order just inserted
-        $orderId = $this->sut->findOrderId($uid);
+        $orderId = $this->sut->findOrderId($uid)->data;
 
         // get the order from the db and check it looks right
         $order = $this->getQueryBuilder()
@@ -93,13 +87,14 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
         $this->fixtures->persist($deputy, $courtOrder)->flush();
 
         // use SUT to add association
-        $courtOrderId = $this->sut->findOrderId($courtOrderUid);
+        /** @var int $courtOrderId */
+        $courtOrderId = $this->sut->findOrderId($courtOrderUid)->data;
 
         $this->sut->beginTransaction();
-        $success = $this->sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
+        $result = $this->sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
         $this->sut->endTransaction();
 
-        self::assertTrue($success);
+        self::assertTrue($result->success);
 
         // check there's one association matching deputy and court order IDs
         $result = $this->getQueryBuilder()
@@ -127,13 +122,14 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends KernelTestCase
         $this->fixtures->persist($client, $report, $courtOrder)->flush();
 
         // use SUT to add association
-        $courtOrderId = $this->sut->findOrderId($courtOrderUid);
+        /** @var int $courtOrderId */
+        $courtOrderId = $this->sut->findOrderId($courtOrderUid)->data;
 
         $this->sut->beginTransaction();
-        $success = $this->sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
+        $result = $this->sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
         $this->sut->endTransaction();
 
-        self::assertTrue($success);
+        self::assertTrue($result->success);
 
         // check association exists
         $result = $this->getQueryBuilder()

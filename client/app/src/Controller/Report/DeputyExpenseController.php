@@ -22,8 +22,8 @@ class DeputyExpenseController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
@@ -31,10 +31,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses", name="deputy_expenses")
      *
      * @Template("@App/Report/DeputyExpense/start.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function startAction($reportId)
+    public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -51,10 +49,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/exist", name="deputy_expenses_exist")
      *
      * @Template("@App/Report/DeputyExpense/exist.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function existAction(Request $request, $reportId)
+    public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
@@ -93,10 +89,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/add", name="deputy_expenses_add")
      *
      * @Template("@App/Report/DeputyExpense/add.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
@@ -142,10 +136,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/add_another", name="deputy_expenses_add_another")
      *
      * @Template("@App/Report/DeputyExpense/addAnother.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAnotherAction(Request $request, $reportId)
+    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -171,10 +163,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/edit/{expenseId}", name="deputy_expenses_edit")
      *
      * @Template("@App/Report/DeputyExpense/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request, $reportId, $expenseId)
+    public function editAction(Request $request, int $reportId, int $expenseId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->restClient->get(
@@ -228,10 +218,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/summary", name="deputy_expenses_summary")
      *
      * @Template("@App/Report/DeputyExpense/summary.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function summaryAction($reportId)
+    public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getExpensesState()['state']) {
@@ -247,10 +235,8 @@ class DeputyExpenseController extends AbstractController
      * @Route("/report/{reportId}/deputy-expenses/{expenseId}/delete", name="deputy_expenses_delete")
      *
      * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $expenseId)
+    public function deleteAction(Request $request, int $reportId, int $expenseId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -280,13 +266,5 @@ class DeputyExpenseController extends AbstractController
             ],
             'backLink' => $this->generateUrl('deputy_expenses', ['reportId' => $reportId]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getSectionId()
-    {
-        return 'deputyExpenses';
     }
 }

@@ -101,6 +101,12 @@
         {% for flashMessage in app.session.flashbag.get('clientEditSuccess') %}
             {{ macros.notification('clientEditSuccess', flashMessage) }}
         {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('fileUploadSuccess') %}
+            {{ macros.notification('fileUploadSuccess', flashMessage) }}
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('fileRemovalSuccess') %}
+            {{ macros.notification('fileRemovalSuccess', flashMessage) }}
+        {% endfor %}
     {% endblock %}
 
     {% block errors %}

@@ -6,35 +6,22 @@ namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Service\DeputyshipCandidatesConverter;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
+class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManager $entityManager;
-    private ORMPurger $purger;
     private DeputyshipCandidatesConverter $sut;
 
     protected function setUp(): void
     {
-        $container = self::bootKernel()->getContainer();
-        $this->entityManager = $container->get('doctrine')->getManager();
-
-        $this->purger = new ORMPurger($this->entityManager);
+        parent::setUp();
 
         /** @var DeputyshipCandidatesConverter $sut */
-        $sut = $container->get(DeputyshipCandidatesConverter::class);
+        $sut = $this->container->get(DeputyshipCandidatesConverter::class);
         $this->sut = $sut;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->purger->purge();
     }
 
     protected function dryRunTestCases(): array
@@ -75,6 +62,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2022-06-10',
+            'clientId' => $client->getId(),
         ];
         $candidatesGroup1->insertOthers = [
             ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid1, 'ndrId' => $ndr->getId()],
@@ -90,6 +78,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
+            'clientId' => $client->getId(),
         ];
         $candidatesGroup2->insertOthers = [
             ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid2, 'ndrId' => $ndr->getId()],
@@ -106,6 +95,7 @@ class DeputyshipCandidateConverterIntegrationTest extends KernelTestCase
             'orderType' => 'pfa',
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
+            'clientId' => $client->getId(),
         ];
 
         $result = $this->sut->convert($candidatesGroup1, dryRun: $dryRun);

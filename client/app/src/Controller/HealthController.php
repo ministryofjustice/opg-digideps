@@ -23,12 +23,12 @@ class HealthController extends AbstractController
         private string $symfonyDebug,
         private string $environment,
         private LoggerInterface $logger,
-        private string $hostedEnv
+        private string $hostedEnv,
     ) {
     }
 
     /**
-     * @Route("", name="health-check", methods={"GET"})
+     * @Route("", methods={"GET"}, name="health_check")
      *
      * @Template("@App/Health/health-check.html.twig")
      */
@@ -38,13 +38,13 @@ class HealthController extends AbstractController
     }
 
     /**
-     * @Route("/service", methods={"GET"})
+     * @Route("/service", methods={"GET"}, name="health_check_service")
      */
     public function serviceHealthAction(
         ApiAvailability $apiAvailability,
         RedisAvailability $redisAvailability,
         ClamAvAvailability $clamAvailability,
-        HtmlToPdfAvailability $htmlAvailability
+        HtmlToPdfAvailability $htmlAvailability,
     ): ?Response {
         $services = [
             $apiAvailability,
@@ -72,11 +72,11 @@ class HealthController extends AbstractController
     }
 
     /**
-     * @Route("/dependencies", methods={"GET"})
+     * @Route("/dependencies", methods={"GET"}, name="health_check_dependency")
      */
     public function dependencyHealthAction(
         NotifyAvailability $notifyAvailability,
-        SiriusApiAvailability $siriusAvailability
+        SiriusApiAvailability $siriusAvailability,
     ): ?Response {
         $services = [
             $notifyAvailability,
@@ -102,12 +102,12 @@ class HealthController extends AbstractController
     }
 
     /**
-     * @Route("/pingdom", methods={"GET"})
+     * @Route("/pingdom", methods={"GET"}, name="health_check_pingdom")
      */
     public function healthCheckXmlAction(
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
-        RedisAvailability $redisAvailability
+        RedisAvailability $redisAvailability,
     ): ?Response {
         $services = [
             $apiAvailability,

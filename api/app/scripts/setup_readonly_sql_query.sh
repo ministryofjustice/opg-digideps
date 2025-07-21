@@ -20,13 +20,12 @@ for sql_file in $(ls $SQL_DIR/*.sql | sort -V); do
     temp_file=$(mktemp)
 
     # Check if password is empty and exit if it is!
-    if [ -z "$READONLY_SQL_DATABASE_PASSWORD" ]; then
-        echo "READONLY_SQL_DATABASE_PASSWORD is empty. Exiting..."
+    if [ -z "$WORKSPACE" ]; then
+        echo "WORKSPACE is empty. Exiting..."
         exit 1
     fi
 
-    # Replace the placeholder string with the real password
-    sed "s/string_to_replace_with_real_password/$READONLY_SQL_DATABASE_PASSWORD/g" "$sql_file" > "$temp_file"
+    sed "s/string-to-replace-with-local-environment/$WORKSPACE/g" "$sql_file" > "$temp_file"
 
     # Run the modified SQL file
     psql -h "$DATABASE_HOSTNAME" -U "$DATABASE_USERNAME" -d "$DATABASE_NAME" -p "$DATABASE_PORT" -f "$temp_file"

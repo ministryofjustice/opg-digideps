@@ -9,51 +9,31 @@ use App\Entity\CourtOrder;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
+class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManager $em;
-    private ORMPurger $purger;
     private CourtOrderReportCandidatesFactory $sut;
 
     protected function setUp(): void
     {
-        $container = self::bootKernel()->getContainer();
-
-        $this->em = $container->get('doctrine')->getManager();
-
-        $this->purger = new ORMPurger($this->em);
+        parent::setUp();
 
         /** @var CourtOrderReportCandidatesFactory $sut */
-        $sut = $container->get(CourtOrderReportCandidatesFactory::class);
+        $sut = $this->container->get(CourtOrderReportCandidatesFactory::class);
         $this->sut = $sut;
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->purger->purge();
-    }
-
     // create a report which is not compatible with a deputyship (CSV row) due to type differences
-    private function createIncompatiblyTypedReport(Client $client, string $orderType, string $deputyType): Report
+    private function createIncompatiblyTypedReport(Client $client, string $orderType): Report
     {
         // a 104 is not compatible with a hybrid or pfa deputyship
         $incompatibleReportType = '104';
         if ('hw' === $orderType) {
             // a 102 is not compatible with a hybrid or hw deputyship
             $incompatibleReportType = '102';
-        }
-
-        if ('PA' === $deputyType) {
-            $incompatibleReportType .= '-6';
-        } elseif ('PRO' === $deputyType) {
-            $incompatibleReportType .= '-5';
         }
 
         return new Report(
@@ -66,18 +46,12 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     }
 
     // create a report which is not compatible with a deputyship due to starting too early
-    private function createIncompatiblyDatedReport(Client $client, string $orderType, string $deputyType, \DateTime $madeDate): Report
+    private function createIncompatiblyDatedReport(Client $client, string $orderType, \DateTime $madeDate): Report
     {
         // make sure types are compatible
         $compatibleReportType = '102';
         if ('hw' === $orderType) {
             $compatibleReportType = '104';
-        }
-
-        if ('PA' === $deputyType) {
-            $compatibleReportType .= '-6';
-        } elseif ('PRO' === $deputyType) {
-            $compatibleReportType .= '-5';
         }
 
         // report starts a year before the made date of the court order, so is not compatible for that reason
@@ -95,25 +69,25 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     private function compatibleReportDataProvider(): array
     {
         return [
-            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '102'],
-            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '103'],
-            ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => '0', 'compatibleReportType' => '104'],
+            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102'],
+            ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '103'],
+            ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => null, 'compatibleReportType' => '104'],
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '102-4'],
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '103-4'],
             ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '102-4'],
             ['deputyType' => 'LAY', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '103-4'],
 
-            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '102-6'],
-            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '103-6'],
-            ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => '0', 'compatibleReportType' => '104-6'],
+            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102-6'],
+            ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '103-6'],
+            ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => null, 'compatibleReportType' => '104-6'],
             ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '102-4-6'],
             ['deputyType' => 'PA', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '103-4-6'],
             ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '102-4-6'],
             ['deputyType' => 'PA', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '103-4-6'],
 
-            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '102-5'],
-            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '0', 'compatibleReportType' => '103-5'],
-            ['deputyType' => 'PRO', 'orderType' => 'hw', 'isHybrid' => '0', 'compatibleReportType' => '104-5'],
+            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102-5'],
+            ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '103-5'],
+            ['deputyType' => 'PRO', 'orderType' => 'hw', 'isHybrid' => null, 'compatibleReportType' => '104-5'],
             ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '102-4-5'],
             ['deputyType' => 'PRO', 'orderType' => 'pfa', 'isHybrid' => '1', 'compatibleReportType' => '103-4-5'],
             ['deputyType' => 'PRO', 'orderType' => 'hw', 'isHybrid' => '1', 'compatibleReportType' => '102-4-5'],
@@ -127,7 +101,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
     public function testCreateCompatibleReportCandidates(
         string $deputyType,
         string $orderType,
-        string $isHybrid,
+        ?string $isHybrid,
         string $compatibleReportType,
     ): void {
         $deputyUid = '12121212';
@@ -145,15 +119,15 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->caseNumber = $caseNumber;
         $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
-        $this->em->persist($deputyship);
-        $this->em->flush();
+        $this->entityManager->persist($deputyship);
+        $this->entityManager->flush();
 
         // add client
         $client = new Client();
         $client->setCaseNumber($caseNumber);
 
-        $this->em->persist($client);
-        $this->em->flush();
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
 
         // add compatible report
         $report1 = new Report(
@@ -164,18 +138,18 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
             dateChecks: false
         );
 
-        $this->em->persist($report1);
-        $this->em->flush();
+        $this->entityManager->persist($report1);
+        $this->entityManager->flush();
 
         // add an incompatibly typed report (just to make sure we don't pick it up as compatible)
-        $report2 = $this->createIncompatiblyTypedReport($client, $orderType, $deputyType);
+        $report2 = $this->createIncompatiblyTypedReport($client, $orderType);
 
         // add an incompatibly dated report (again, to make sure it's not picked up as a candidate)
-        $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $deputyType, $madeDate);
+        $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $madeDate);
 
-        $this->em->persist($report2);
-        $this->em->persist($report3);
-        $this->em->flush();
+        $this->entityManager->persist($report2);
+        $this->entityManager->persist($report3);
+        $this->entityManager->flush();
 
         // create compatible report candidates
         $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());
@@ -202,22 +176,22 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->caseNumber = $caseNumber;
         $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
-        $this->em->persist($deputyship);
-        $this->em->flush();
+        $this->entityManager->persist($deputyship);
+        $this->entityManager->flush();
 
         // add client
         $client = new Client();
         $client->setCaseNumber($caseNumber);
 
-        $this->em->persist($client);
-        $this->em->flush();
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
 
         // add NDR to client
         $ndr = new Ndr($client);
         $ndr->setStartDate($madeDate);
 
-        $this->em->persist($ndr);
-        $this->em->flush();
+        $this->entityManager->persist($ndr);
+        $this->entityManager->flush();
 
         // create NDR candidates
         $candidates = iterator_to_array($this->sut->createCompatibleNdrCandidates());
@@ -245,13 +219,13 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->orderMadeDate = $orderMadeDate->format('Y-m-d');
         $deputyship->isHybrid = '0';
 
-        $this->em->persist($deputyship);
+        $this->entityManager->persist($deputyship);
 
         // add client
         $client = new Client();
         $client->setCaseNumber($deputyship->caseNumber);
 
-        $this->em->persist($client);
+        $this->entityManager->persist($client);
 
         // add compatible report
         $report = new Report(
@@ -262,7 +236,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
             dateChecks: false
         );
 
-        $this->em->persist($report);
+        $this->entityManager->persist($report);
 
         // create order and associate with report; this report is a potential candidate,
         // but should be ignored as a candidate because a relationship already exists
@@ -273,10 +247,10 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $courtOrder->setOrderMadeDate($orderMadeDate);
         $courtOrder->addReport($report);
 
-        $this->em->persist($courtOrder);
+        $this->entityManager->persist($courtOrder);
 
         // write everything to db
-        $this->em->flush();
+        $this->entityManager->flush();
 
         // create report candidates
         $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());

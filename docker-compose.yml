@@ -153,7 +153,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:13.17
+    image: postgres:14.18
     ports:
       - 5432:5432
     env_file:
@@ -292,6 +292,7 @@ services:
       dockerfile: client/docker/app/Dockerfile
       context: .
       args:
+        REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         ENVIRONMENT: local
     depends_on:
       pact-mock:
@@ -376,11 +377,6 @@ services:
         condition: service_started
     volumes:
       - ./api/app/tests/Behat/snapshots:/tmp/html
-    env_file:
-      - ./api/app/api.env
-      - ./api/app/tests/Behat/test.env
-    environment:
-      APP_ENV: local
 
   node-js:
     image: opg-digideps-resources

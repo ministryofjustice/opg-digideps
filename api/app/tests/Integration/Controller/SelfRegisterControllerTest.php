@@ -8,6 +8,13 @@ use App\Entity\User;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
+    }
+
     /** @test */
     public function failsWhenMissingData()
     {

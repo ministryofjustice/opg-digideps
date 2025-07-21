@@ -12,14 +12,14 @@ use Symfony\Component\HttpFoundation\Exception\JsonException;
 
 trait SelfRegistrationTrait
 {
-    private string $invalidCaseNumberError = "The case number you provided does not match our records.\nPlease call 0115 934 2700 to make sure we have a record of your deputyship.";
+    private string $invalidCaseNumberError = "The case number you provided does not match our records.\nPlease call 0300 456 0300 to make sure we have a record of your deputyship.";
     private string $invalidDeputyFirstnameError = "The deputy's first name you provided does not match our records.";
     private string $invalidDeputyLastnameError = "The deputy's last name you provided does not match our records.";
     private string $invalidDeputyPostcodeError = 'The postcode you provided does not match our records.';
     private string $invalidClientLastnameError = "The client's last name you provided does not match our records.";
     private string $incorrectCaseNumberLengthError = "The case number should be 8 or 10 characters long.\nPlease check your case reference number and try again.\n";
-    private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0115 934 2700 to make sure we have the correct record of your deputyship.";
-    private string $deputyAlreadyLinkedToCaseNumberError = 'You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0115 934 2700.';
+    private string $deputyNotUniquelyIdentifiedError = "The information you've given us does not allow us to uniquely identify you as the deputy.\nPlease call 0300 456 0300 to make sure we have the correct record of your deputyship.";
+    private string $deputyAlreadyLinkedToCaseNumberError = 'You are already registered as a deputy for this case. Please check your case number and try again. If you have any questions, call our helpline on 0300 456 0300.';
     private string $reportingPeriodGreaterThanFifteenMonths = 'Check the end date: your reporting period cannot be more than 15 months';
     private string $userEmail;
     private string $coDeputyEmail;
@@ -382,7 +382,7 @@ trait SelfRegistrationTrait
 
         $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
-        $this->assertIntEqualsInt((int) $this->deputyUid, $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
+        $this->assertIntEqualsInt(intval($this->deputyUid), $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
         $this->assertStringEqualsString('102 Petty France', $deputy->getAddress1(), 'Asserting Address Line 1 is the same');
         $this->assertStringEqualsString('MOJ', $deputy->getAddress2(), 'Asserting Address Line 2 is the same');
         $this->assertStringEqualsString('London', $deputy->getAddress3(), 'Asserting Address Line 3 is the same');
