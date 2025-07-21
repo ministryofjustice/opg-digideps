@@ -100,6 +100,7 @@ COPY --chown=www-data:www-data --from=composer-runtime /app/app app
 COPY --chown=www-data:www-data --from=composer-runtime /app/config config
 COPY --chown=www-data:www-data --from=composer-runtime /app/src src
 COPY --chown=www-data:www-data --from=composer-runtime /app/composer.lock composer.lock
+RUN mkdir -p /tmp/html && mkdir -p /tmp/sql
 
 RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml
 RUN chmod 544 /var/www/wait-for-db.sh
