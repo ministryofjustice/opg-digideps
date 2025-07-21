@@ -129,12 +129,17 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
           PLATFORM: ${{ matrix.platform }}
           TAG: ${{ inputs.tag }}
+          TARGET: ""
         run: |
+          if [ "${IMAGE_NAME}" == "api" ]; then
+           TARGET="--target devtools"
+          fi
+
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} ${TARGET} \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
@@ -146,7 +151,7 @@ jobs:
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} ${TARGET} \
             --tag ${IMAGE_NAME}:latest \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
