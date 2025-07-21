@@ -77,7 +77,7 @@ class SnapshotManagement:
         self.DBClusterParameterGroup = "default.aurora-postgresql10"
         self.DBSubnetGroup = "private"
         self.Engine = "aurora-postgresql"
-        self.EngineVersion = "13.20"
+        self.EngineVersion = "14.18"
         self.VpcSecurityGroups = None
         self.StorageEncrypted = True
         self.KmsKeyId = None
