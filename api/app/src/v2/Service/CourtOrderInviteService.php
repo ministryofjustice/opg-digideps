@@ -53,10 +53,28 @@ class CourtOrderInviteService
      */
     public function invite(string $courtOrderUid, User $invitingDeputy, InviteeDTO $invitedDeputyData): bool
     {
-        // check invited deputy is in the prereg table
-        $preRegRecord = $this->preRegistrationRepository->findOneBy(['email' => $invitedDeputyData->email]);
+        // check the court order exists, and inviting deputy is a deputy on it
+        $courtOrder = $this->courtOrderService->getByUidAsUser($courtOrderUid, $invitingDeputy);
+        if (is_null($courtOrder)) {
+            $this->logger->error(
+                "could not invite $invitedDeputyData->email to court order $courtOrderUid: ".
+                'either court order does not exist, or inviting deputy cannot access it'
+            );
+
+            return false;
+        }
+
+        // check invited deputy is in the prereg table and is associated with the court order's case number
+        $caseNumber = $courtOrder->getClient()->getCaseNumber();
+        $preRegRecord = $this->preRegistrationRepository->findOneBy([
+            'email' => $invitedDeputyData->email,
+            'caseNumber' => $caseNumber,
+        ]);
+
         if (is_null($preRegRecord)) {
-            $this->logger->error("Deputy with email {$invitedDeputyData->email} not found in pre-reg table");
+            $this->logger->error(
+                "Deputy with email $invitedDeputyData->email with access to case $caseNumber not found in pre-reg table"
+            );
 
             return false;
         }
@@ -64,18 +82,7 @@ class CourtOrderInviteService
         // check prereg record has deputy UID
         $deputyUid = $preRegRecord->getDeputyUid();
         if (empty($deputyUid) || !is_string($deputyUid)) {
-            $this->logger->error("Deputy with email {$invitedDeputyData->email} has empty deputy UID in pre-reg table");
-
-            return false;
-        }
-
-        // check the court order exists, and inviting deputy is a deputy on it
-        $courtOrder = $this->courtOrderService->getByUidAsUser($courtOrderUid, $invitingDeputy);
-        if (is_null($courtOrder)) {
-            $this->logger->error(
-                "could not invite {$invitedDeputyData->email} to court order $courtOrderUid: ".
-                'either court order does not exist, or inviting deputy cannot access it'
-            );
+            $this->logger->error("Deputy with email $invitedDeputyData->email has empty deputy UID in pre-reg table");
 
             return false;
         }
