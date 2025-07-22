@@ -9,37 +9,27 @@ use App\Entity\Deputy;
 use App\Entity\StagingDeputyship;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
+class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManager $entityManager;
     private DeputyshipsCandidatesSelector $sut;
 
     protected function setUp(): void
     {
-        $container = self::bootKernel()->getContainer();
-        $this->entityManager = $container->get('doctrine')->getManager();
+        parent::setUp();
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
 
-        $csvLoader = $container->get(DeputyshipsCSVLoader::class);
+        $csvLoader = $this->container->get(DeputyshipsCSVLoader::class);
         $csvLoader->load($fileLocation);
 
         /** @var ?DeputyshipsCandidatesSelector $sut */
-        $sut = $container->get(DeputyshipsCandidatesSelector::class);
+        $sut = $this->container->get(DeputyshipsCandidatesSelector::class);
         $this->sut = $sut;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        (new ORMPurger($this->entityManager))->purge();
     }
 
     public function testCourtOrderStatusChange(): void

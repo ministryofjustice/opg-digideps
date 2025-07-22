@@ -39,6 +39,7 @@ class DeputyRepository extends ServiceEntityRepository
 
     /**
      * @return array<int, array<string, array<string, mixed>>>|null
+     *
      * @throws Exception
      */
     public function findReportsInfoByUid(int $uid, bool $includeInactive = false): ?array
@@ -80,7 +81,7 @@ class DeputyRepository extends ServiceEntityRepository
             ->getConnection()
             ->prepare($sql)
             ->executeQuery(['deputyUid' => (string) $uid]);
-        /** @var Array<int, Array<array-key, string>> $result */
+        /** @var array<int, array<array-key, string>> $result */
         $result = $query->fetchAllAssociative();
 
         $data = [];
@@ -90,7 +91,6 @@ class DeputyRepository extends ServiceEntityRepository
             if (preg_match('{,}', $line['courtOrderUid'])) {
                 $courtOrderUids = explode(', ', $line['courtOrderUid']);
                 $courtOrderLink = $courtOrderUids[0];
-
             } else {
                 $courtOrderLink = $line['courtOrderUid'];
             }
@@ -102,13 +102,12 @@ class DeputyRepository extends ServiceEntityRepository
                     'caseNumber' => $line['caseNumber'],
                 ],
                 'report' => [
-                    'id' => $line['reportId'],
                     'type' => $line['type'],
                 ],
                 'courtOrder' => [
                     'courtOrderUid' => $line['courtOrderUid'],
-                    'courtOrderLink' => $courtOrderLink
-                ]
+                    'courtOrderLink' => $courtOrderLink,
+                ],
             ];
         }
 
