@@ -90,14 +90,6 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_year', $regDetails['client']['courtDateYear']);
         $this->pressButton('client_save');
 
-        $this->fillInField('report_startDate_day', $regDetails['report']['startDay']);
-        $this->fillInField('report_startDate_month', $regDetails['report']['startMonth']);
-        $this->fillInField('report_startDate_year', $regDetails['report']['startYear']);
-        $this->fillInField('report_endDate_day', $regDetails['report']['endDay']);
-        $this->fillInField('report_endDate_month', $regDetails['report']['endMonth']);
-        $this->fillInField('report_endDate_year', $regDetails['report']['endYear']);
-        $this->pressButton('report_save');
-
         $this->visitFrontendPath('/logout');
     }
 
@@ -556,17 +548,6 @@ trait SelfRegistrationTrait
         $this->pressButton('client_save');
     }
 
-    private function fillInReportDetailsAndSubmit(): void
-    {
-        $this->fillInField('report_startDate_day', '02');
-        $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2023');
-        $this->fillInField('report_endDate_day', '01');
-        $this->fillInField('report_endDate_month', '01');
-        $this->fillInField('report_endDate_year', '2024');
-        $this->pressButton('report_save');
-    }
-
     /**
      * @Given a Lay Deputy registers to deputise for a client with details that are not unique
      */
@@ -846,19 +827,6 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillClientDetailsAndSubmit();
-
-        $this->fillInInvalidReportDetailsAndSubmit();
-    }
-
-    private function fillInInvalidReportDetailsAndSubmit(): void
-    {
-        $this->fillInField('report_startDate_day', '01');
-        $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2016');
-        $this->fillInField('report_endDate_day', '01');
-        $this->fillInField('report_endDate_month', '04');
-        $this->fillInField('report_endDate_year', '2017');
-        $this->pressButton('report_save');
     }
 
     /**
