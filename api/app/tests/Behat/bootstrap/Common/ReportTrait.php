@@ -10,37 +10,6 @@ trait ReportTrait
     private static $currentReportCache = [];
     protected $sections103 = ['Deputy expenses', 'Decisions', 'Contacts', 'Visits and care', 'Accounts', 'Gifts', 'Money in', 'Money out', 'Assets', 'Debts', 'Actions', 'Other information', 'Documents'];
 
-    /**
-     * @When I set the report end date to :endDateDMY
-     */
-    public function iSetTheReportEndDateToAndEndDateTo($endDateDMY)
-    {
-        /* $startDatePieces = explode('/', $startDateDMY);
-          $this->fillField('report_startDate_day', $startDatePieces[0]);
-          $this->fillField('report_startDate_month', $startDatePieces[1]);
-          $this->fillField('report_startDate_year', $startDatePieces[2]); */
-
-        $endDatePieces = explode('/', $endDateDMY);
-        $this->fillField('report_endDate_day', $endDatePieces[0]);
-        $this->fillField('report_endDate_month', $endDatePieces[1]);
-        $this->fillField('report_endDate_year', $endDatePieces[2]);
-
-        $this->pressButton('report_save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-
-    /**
-     * @When I set the report start date to :endDateDMY
-     */
-    public function iSetTheReportStartDateToAndEndDateTo($startDateDMY)
-    {
-        $startDatePieces = explode('/', $startDateDMY);
-        $this->fillField('report_startDate_day', $startDatePieces[0]);
-        $this->fillField('report_startDate_month', $startDatePieces[1]);
-        $this->fillField('report_startDate_year', $startDatePieces[2]);
-    }
-
     private function gotoOverview()
     {
         $this->clickOnBehatLink('breadcrumbs-report-overview');
