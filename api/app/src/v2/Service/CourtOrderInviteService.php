@@ -33,6 +33,8 @@ use Random\RandomException;
  * Clarifications:
  * - did consider ignoring dd_user.role_name, but it's required for dd_user record (default = ROLE_LAY_DEPUTY)
  * - email code is all in the frontend, so this service does not send the notification email to the user
+ * - if the new deputy already exists when we try to add them, we use the existing deputy; this means we won't be
+ *   updating any of that deputy's details, just using the one already in the database
  */
 class CourtOrderInviteService
 {
@@ -61,7 +63,7 @@ class CourtOrderInviteService
 
         // check prereg record has deputy UID
         $deputyUid = $preRegRecord->getDeputyUid();
-        if (!is_string($deputyUid)) {
+        if (empty($deputyUid) || !is_string($deputyUid)) {
             $this->logger->error("Deputy with email {$invitedDeputyData->email} has empty deputy UID in pre-reg table");
 
             return false;
