@@ -21,4 +21,9 @@ class InviteeDTO
         public string $roleName = User::ROLE_LAY_DEPUTY,
     ) {
     }
+
+    public function isValid(): bool
+    {
+        return '' !== $this->email && '' !== $this->firstname && '' !== $this->lastname && '' !== $this->roleName;
+    }
 }
