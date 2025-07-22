@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Controller;
 
 use App\Entity\User;
+use App\Service\Formatter\RestFormatter;
 use App\v2\DTO\InviteeDTO;
 use App\v2\Service\CourtOrderInviteService;
 use App\v2\Service\CourtOrderService;
@@ -29,6 +30,7 @@ class CourtOrderController extends AbstractController
         private readonly CourtOrderService $courtOrderService,
         private readonly CourtOrderInviteService $courtOrderInviteService,
         private readonly SerializerInterface $serializer,
+        private readonly RestFormatter $formatter,
     ) {
     }
 
@@ -79,21 +81,17 @@ class CourtOrderController extends AbstractController
     #[Security('is_granted("ROLE_DEPUTY")')]
     public function inviteDeputyAction(Request $request, string $uid): JsonResponse
     {
-        /** @var ?array $data */
-        $data = json_decode($request->getContent(), true);
-
-        if (is_null($data)) {
-            return $this->buildErrorResponse('Invalid request data', status: Response::HTTP_NOT_ACCEPTABLE);
+        try {
+            $data = $this->formatter->deserializeBodyContent($request, [
+                'email' => 'notEmpty',
+                'firstname' => 'notEmpty',
+                'lastname' => 'notEmpty',
+            ]);
+        } catch (\InvalidArgumentException) {
+            return $this->buildErrorResponse('invalid invitee details', status: Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        $inviteeDTO = new InviteeDTO(
-            $data['email'] ?? '',
-            $data['firstname'] ?? '',
-            $data['lastname'] ?? '',
-            $data['role_name'] ?? User::ROLE_LAY_DEPUTY,
-        );
-
-        if (!$inviteeDTO->isValid()) {
+        if (0 === count($data)) {
             return $this->buildErrorResponse('invalid invitee details', status: Response::HTTP_NOT_ACCEPTABLE);
         }
 
@@ -104,8 +102,15 @@ class CourtOrderController extends AbstractController
             return $this->buildErrorResponse('invalid inviting user', Response::HTTP_FORBIDDEN);
         }
 
+        $inviteeDTO = new InviteeDTO(
+            $data['email'],
+            $data['firstname'],
+            $data['lastname'],
+            $data['role_name'] ?? User::ROLE_LAY_DEPUTY,
+        );
+
         $success = $this->courtOrderInviteService->invite($uid, $user, $inviteeDTO);
 
-        return new JsonResponse(data: ['invitedSuccessfully' => $success], json: true);
+        return new JsonResponse(data: ['deputyInvitedSuccessfully' => $success], json: true);
     }
 }

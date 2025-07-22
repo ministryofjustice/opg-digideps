@@ -15,9 +15,9 @@ class RestFormatter
     }
 
     /**
-     * @return array|null
+     * @throws \InvalidArgumentException
      */
-    public function deserializeBodyContent(Request $request, array $assertions = [])
+    public function deserializeBodyContent(Request $request, array $assertions = []): array
     {
         $return = $this->formatter->requestContentToArray($request);
         $this->validator->validateArray($return, $assertions);
