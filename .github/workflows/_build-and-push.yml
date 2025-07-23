@@ -135,7 +135,7 @@ jobs:
           BRANCH_NAME: ${{ inputs.branch_name }}
           PLATFORM: ${{ matrix.platform }}
           TAG: ${{ inputs.tag }}
-          TARGET: ""
+          TARGET_STAGE: ""
         run: |
           if [ "${IMAGE_NAME}" = "test" ]; then
             TARGET_STAGE="--target devtools"
@@ -147,7 +147,7 @@ jobs:
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} ${TARGET} \
+            --platform linux/${PLATFORM} ${TARGET_STAGE} \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
@@ -159,7 +159,7 @@ jobs:
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} ${TARGET} \
+            --platform linux/${PLATFORM} ${TARGET_STAGE} \
             --tag ${IMAGE_NAME}:latest \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
