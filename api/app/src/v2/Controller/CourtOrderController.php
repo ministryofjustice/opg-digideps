@@ -6,7 +6,7 @@ namespace App\v2\Controller;
 
 use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
-use App\v2\DTO\InviteeDTO;
+use App\v2\DTO\InviteeDto;
 use App\v2\Service\CourtOrderInviteService;
 use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
@@ -75,11 +75,11 @@ class CourtOrderController extends AbstractController
     /**
      * Invite a co-deputy to a court order.
      *
-     * path on API = /v2/courtorder/<UID>/invite
+     * path on API = /v2/courtorder/<UID>/lay-deputy-invite
      */
-    #[Route('/{uid}/invite', requirements: ['uid' => '\w+'], methods: ['POST'])]
+    #[Route('/{uid}/lay-deputy-invite', requirements: ['uid' => '\w+'], methods: ['POST'])]
     #[Security('is_granted("ROLE_DEPUTY")')]
-    public function inviteDeputyAction(Request $request, string $uid): JsonResponse
+    public function inviteLayDeputyAction(Request $request, string $uid): JsonResponse
     {
         try {
             $data = $this->formatter->deserializeBodyContent($request, [
@@ -87,12 +87,8 @@ class CourtOrderController extends AbstractController
                 'firstname' => 'notEmpty',
                 'lastname' => 'notEmpty',
             ]);
-        } catch (\InvalidArgumentException) {
-            return $this->buildErrorResponse('invalid invitee details', status: Response::HTTP_NOT_ACCEPTABLE);
-        }
-
-        if (0 === count($data)) {
-            return $this->buildErrorResponse('invalid invitee details', status: Response::HTTP_NOT_ACCEPTABLE);
+        } catch (\InvalidArgumentException $e) {
+            return $this->buildErrorResponse("invalid invitee details: {$e->getMessage()}", status: Response::HTTP_NOT_ACCEPTABLE);
         }
 
         /** @var ?User $user */
@@ -102,7 +98,7 @@ class CourtOrderController extends AbstractController
             return $this->buildErrorResponse('invalid inviting user', Response::HTTP_FORBIDDEN);
         }
 
-        $inviteeDTO = new InviteeDTO(
+        $inviteeDTO = new InviteeDto(
             $data['email'],
             $data['firstname'],
             $data['lastname'],
@@ -111,6 +107,6 @@ class CourtOrderController extends AbstractController
 
         $success = $this->courtOrderInviteService->inviteLayDeputy($uid, $user, $inviteeDTO);
 
-        return new JsonResponse(data: ['deputyInvitedSuccessfully' => $success], json: true);
+        return new JsonResponse(data: ['success' => $success]);
     }
 }

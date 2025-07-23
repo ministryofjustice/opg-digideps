@@ -9,7 +9,7 @@ use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DeputyService;
 use App\Service\UserService;
-use App\v2\DTO\InviteeDTO;
+use App\v2\DTO\InviteeDto;
 use Psr\Log\LoggerInterface;
 use Random\RandomException;
 
@@ -53,7 +53,7 @@ class CourtOrderInviteService
      * This should not be used for PA/PRO invites as it requires a matching entry in the pre-reg table to make the
      * invite.
      */
-    public function inviteLayDeputy(string $courtOrderUid, User $invitingLayDeputy, InviteeDTO $invitedDeputyDTO): bool
+    public function inviteLayDeputy(string $courtOrderUid, User $invitingLayDeputy, InviteeDto $invitedDeputyDTO): bool
     {
         // check invited deputy is a Lay
         if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
@@ -75,6 +75,15 @@ class CourtOrderInviteService
 
         // check invited deputy is in the prereg table and is associated with the court order's case number
         $caseNumber = $courtOrder->getClient()->getCaseNumber();
+        if (is_null($caseNumber)) {
+            $this->logger->error(
+                "could not invite $invitedDeputyDTO->email to court order $courtOrderUid: ".
+                'could not find case number for court order'
+            );
+
+            return false;
+        }
+
         $preRegRecord = $this->preRegistrationRepository->findInvitedLayDeputy($invitedDeputyDTO, $caseNumber);
 
         if (is_null($preRegRecord)) {

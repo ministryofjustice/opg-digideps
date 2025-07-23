@@ -12,7 +12,7 @@ use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DeputyService;
 use App\Service\UserService;
-use App\v2\DTO\InviteeDTO;
+use App\v2\DTO\InviteeDto;
 use App\v2\Service\CourtOrderInviteService;
 use App\v2\Service\CourtOrderService;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,7 +47,7 @@ class CourtOrderInviteServiceTest extends TestCase
 
     public function testInviteLayDeputyNotLay(): void
     {
-        $inviteeDTO = new InviteeDTO('foo@bar.com', 'Herbert', 'Glope', User::ROLE_ORG_TEAM_MEMBER);
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope', User::ROLE_ORG_TEAM_MEMBER);
 
         $this->mockLogger->expects(self::once())
             ->method('error')
@@ -62,7 +62,7 @@ class CourtOrderInviteServiceTest extends TestCase
     {
         $courtOrderUid = '91853764';
 
-        $inviteeDTO = new InviteeDTO('foo@bar.com', 'Herbert', 'Glope');
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
         $user = new User();
 
         $this->mockCourtOrderService->expects(self::once())
@@ -84,7 +84,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';
 
-        $inviteeDTO = new InviteeDTO('foo@bar.com', 'Herbert', 'Glope');
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
         $user = new User();
 
         $mockCourtOrder = self::createMock(CourtOrder::class);
@@ -117,7 +117,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';
 
-        $inviteeDTO = new InviteeDTO('foo@bar.com', 'Herbert', 'Glope');
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
         $user = new User();
 
         $mockCourtOrder = self::createMock(CourtOrder::class);
@@ -154,7 +154,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $caseNumber = '1245674332';
         $deputyUid = '12345678';
 
-        $inviteeDTO = new InviteeDTO('foo@bar.com', 'Herbert', 'Glope');
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
         $user = new User();
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);

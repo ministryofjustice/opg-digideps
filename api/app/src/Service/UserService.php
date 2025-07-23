@@ -7,7 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
-use App\v2\DTO\InviteeDTO;
+use App\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
 
@@ -136,7 +136,7 @@ class UserService
     /**
      * @throws RandomException
      */
-    public function getOrAddUser(InviteeDTO $invitedDeputyData, User $invitingDeputy): User
+    public function getOrAddUser(InviteeDto $invitedDeputyData, User $invitingDeputy): User
     {
         /** @var ?User $existingUser */
         $existingUser = $this->userRepository->findOneBy(['email' => $invitedDeputyData->email]);

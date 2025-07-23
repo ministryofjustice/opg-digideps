@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\PreRegistration;
-use App\v2\DTO\InviteeDTO;
+use App\v2\DTO\InviteeDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -123,15 +123,16 @@ class PreRegistrationRepository extends ServiceEntityRepository
      *
      * @return ?PreRegistration null if no record or non-unique record found
      */
-    public function findInvitedLayDeputy(InviteeDTO $inviteeDTO, string $caseNumber): ?PreRegistration
+    public function findInvitedLayDeputy(InviteeDto $inviteeDTO, string $caseNumber): ?PreRegistration
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         try {
+            /** @var ?PreRegistration $result */
             $result = $qb->select('p')
                 ->from(PreRegistration::class, 'p')
                 ->where('LOWER(p.deputyFirstname) = LOWER(:deputyFirstname)')
-                ->andWhere('LOWER(p.deputyLastname) = LOWER(:deputyLastname)')
+                ->andWhere('LOWER(p.deputySurname) = LOWER(:deputyLastname)')
                 ->andWhere('LOWER(p.caseNumber) = LOWER(:caseNumber)')
                 ->setParameter('deputyFirstname', $inviteeDTO->firstname)
                 ->setParameter('deputyLastname', $inviteeDTO->lastname)

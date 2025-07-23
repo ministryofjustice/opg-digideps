@@ -10,7 +10,7 @@ use App\Entity\User;
  * Encapsulate data required to invite someone to something in digideps.
  * Generally this will be a deputy being invited to a court order.
  */
-class InviteeDTO
+class InviteeDto
 {
     public function __construct(
         public string $email,
