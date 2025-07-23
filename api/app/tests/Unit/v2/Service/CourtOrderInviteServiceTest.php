@@ -45,7 +45,20 @@ class CourtOrderInviteServiceTest extends TestCase
         );
     }
 
-    public function testInviteNoAccessToCourtOrder(): void
+    public function testInviteLayDeputyNotLay(): void
+    {
+        $inviteeDTO = new InviteeDTO('foo@bar.com', 'Herbert', 'Glope', User::ROLE_ORG_TEAM_MEMBER);
+
+        $this->mockLogger->expects(self::once())
+            ->method('error')
+            ->with($this->stringContains('they are not a Lay deputy'));
+
+        $invited = $this->sut->inviteLayDeputy('1122334455', new User(), $inviteeDTO);
+
+        self::assertFalse($invited);
+    }
+
+    public function testInviteLayDeputyNoAccessToCourtOrder(): void
     {
         $courtOrderUid = '91853764';
 
@@ -66,7 +79,7 @@ class CourtOrderInviteServiceTest extends TestCase
         self::assertFalse($invited);
     }
 
-    public function testInviteMissingPreRegRecord(): void
+    public function testInviteLayDeputyMissingPreRegRecord(): void
     {
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';
@@ -92,14 +105,14 @@ class CourtOrderInviteServiceTest extends TestCase
 
         $this->mockLogger->expects(self::once())
             ->method('error')
-            ->with($this->stringContains('not found in pre-reg table'));
+            ->with($this->stringContains('no record in pre-reg table'));
 
         $invited = $this->sut->inviteLayDeputy($courtOrderUid, $user, $inviteeDTO);
 
         self::assertFalse($invited);
     }
 
-    public function testInviteNoDeputyUidInPreRegRecord(): void
+    public function testInviteLayDeputyNoDeputyUidInPreRegRecord(): void
     {
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';
@@ -128,14 +141,14 @@ class CourtOrderInviteServiceTest extends TestCase
 
         $this->mockLogger->expects(self::once())
             ->method('error')
-            ->with($this->stringContains('has empty deputy UID in pre-reg table'));
+            ->with($this->stringContains('empty deputy UID in pre-reg table'));
 
         $invited = $this->sut->inviteLayDeputy('91853764', $user, $inviteeDTO);
 
         self::assertFalse($invited);
     }
 
-    public function testInvite(): void
+    public function testInviteLayDeputy(): void
     {
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';

@@ -57,7 +57,7 @@ class CourtOrderInviteService
     {
         // check invited deputy is a Lay
         if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
-            $this->logger->error("could not invite $invitedDeputyDTO->email as they are not a Lay deputy");
+            $this->logger->error("could not invite $invitedDeputyDTO->email: they are not a Lay deputy");
 
             return false;
         }
@@ -79,7 +79,7 @@ class CourtOrderInviteService
 
         if (is_null($preRegRecord)) {
             $this->logger->error(
-                "Deputy $invitedDeputyDTO->email with access to case $caseNumber not found in pre-reg table"
+                "could not invite $invitedDeputyDTO->email to court order $courtOrderUid: no record in pre-reg table"
             );
 
             return false;
@@ -88,7 +88,8 @@ class CourtOrderInviteService
         // check prereg record has deputy UID
         $deputyUid = $preRegRecord->getDeputyUid();
         if (empty($deputyUid) || !is_string($deputyUid)) {
-            $this->logger->error("Deputy with email $invitedDeputyDTO->email has empty deputy UID in pre-reg table");
+            $this->logger->error(
+                "could not invite $invitedDeputyDTO->email to court order $courtOrderUid: empty deputy UID in pre-reg table");
 
             return false;
         }
