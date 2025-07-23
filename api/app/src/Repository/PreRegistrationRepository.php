@@ -128,11 +128,11 @@ class PreRegistrationRepository extends ServiceEntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         try {
-            $result = $qb->select('pr')
-                ->from(PreRegistration::class, 'pr')
-                ->where('LOWER(pr.deputyFirstname) = LOWER(:deputyFirstname)')
-                ->andWhere('LOWER(pr.deputyLastname) = LOWER(:deputyLastname)')
-                ->andWhere('LOWER(pr.caseNumber) = LOWER(:caseNumber)')
+            $result = $qb->select('p')
+                ->from(PreRegistration::class, 'p')
+                ->where('LOWER(p.deputyFirstname) = LOWER(:deputyFirstname)')
+                ->andWhere('LOWER(p.deputyLastname) = LOWER(:deputyLastname)')
+                ->andWhere('LOWER(p.caseNumber) = LOWER(:caseNumber)')
                 ->setParameter('deputyFirstname', $inviteeDTO->firstname)
                 ->setParameter('deputyLastname', $inviteeDTO->lastname)
                 ->setParameter('caseNumber', $caseNumber)
