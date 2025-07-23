@@ -113,6 +113,8 @@ USER www-data
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
+    && ls -alt /var/www/var/cache \
+    && echo 'RUNNING: runtime' \
     && php-fpm"]
 
 
@@ -154,7 +156,7 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && ls -alt /var/www/var/cache \
-    && echo 'TEST MESSAGE' \
+    && echo 'RUNNING: devtools' \
     && php-fpm"]
 
 ##############################
@@ -166,4 +168,6 @@ USER root
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
+    && ls -alt /var/www/var/cache \
+    && echo 'RUNNING: devtools-admin' \
     && php-fpm"]
