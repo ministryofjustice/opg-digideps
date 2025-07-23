@@ -107,6 +107,6 @@ class CourtOrderController extends AbstractController
 
         $result = $this->courtOrderInviteService->inviteLayDeputy($uid, $user, $inviteeDTO);
 
-        return new JsonResponse(data: $result);
+        return new JsonResponse($result);
     }
 }
