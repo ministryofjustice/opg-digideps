@@ -69,8 +69,6 @@ class CourtOrderControllerTest extends WebTestCase
     {
         // add a court order, and make the user a deputy on it
         $courtOrder = self::$fixtures->createCourtOrder('7747728317', 'pfa', 'ACTIVE');
-        self::$fixtures->persist($courtOrder);
-        self::$fixtures->flush();
 
         $user = self::$fixtures->createUser([
             'setEmail' => $emailAddress,
@@ -82,7 +80,7 @@ class CourtOrderControllerTest extends WebTestCase
         $deputy = $this->createDeputyForUser($user);
         $deputy->associateWithCourtOrder($courtOrder);
 
-        self::$fixtures->persist($deputy)->flush();
+        self::$fixtures->persist($courtOrder, $user, $deputy)->flush();
 
         return [$user, $courtOrder, $deputy];
     }
@@ -229,29 +227,29 @@ class CourtOrderControllerTest extends WebTestCase
 
     public function testInviteLayDeputyActionSuccess()
     {
-        // $deputy has access to court order; $user is the User entity for $deputy; $deputy is the inviting deputy
-        [$user, $courtOrder, $invitingDeputy] = $this->addUserAndCourtOrderAndDeputy('successful-court-order-invite-test@opg.gov.uk');
+        // $deputy has access to court order; $user is the User entity for $invitingDeputy
+        [$user, $courtOrder, $invitingDeputy] = $this->addUserAndCourtOrderAndDeputy('court-order-invite-deputy-test@opg.gov.uk');
 
         // client
-        $client = self::$fixtures->createClient($user, ['setCaseNumber' => '1122334455']);
+        $client = self::$fixtures->createClient(settersMap: ['setCaseNumber' => '1122334455']);
         $courtOrder->setClient($client);
-        self::$fixtures->persist($client, $courtOrder)->flush();
+        self::$fixtures->persist($courtOrder)->flush();
 
         // add pre-reg record for deputy to be invited
         $invitedDeputy = new PreRegistration([
-            'CaseNumber' => $client->getCaseNumber(),
+            'Case' => $client->getCaseNumber(),
             'DeputyFirstname' => 'Amz',
             'DeputySurname' => 'Sloroz',
             'DeputyUid' => '123415235',
         ]);
-        self::$fixtures->persist($invitedDeputy)->flush();
+        self::$fixtures->persist($invitedDeputy)->flush()->clear();
 
         // login to get the token for API calls
         $token = self::$client->login($user->getEmail(), 'DigidepsPass1234', self::$deputySecret);
 
         // make the API call to associate a new co-deputy with the court order
         $postData = [
-            'email' => $user->getEmail(),
+            'email' => 'successful-court-order-invite-test@opg.gov.uk',
             'firstname' => $invitedDeputy->getDeputyFirstname(),
             'lastname' => $invitedDeputy->getDeputySurname(),
             'role_name' => User::ROLE_LAY_DEPUTY,
@@ -266,7 +264,6 @@ class CourtOrderControllerTest extends WebTestCase
         // TODO assertions
         print_r($responseJson);
 
-        // clean up
-        self::$fixtures->remove($user, $invitingDeputy, $invitedDeputy, $courtOrder, $client)->flush()->clear();
+        // TODO clean up
     }
 }
