@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\UserApi;
@@ -34,10 +32,9 @@ class CourtOrderController extends AbstractController
     #[Route(path: '/{uid}', name: 'courtorder_by_uid', requirements: ['uid' => '\d+'], methods: ['GET'])]
     #[Template('@App/CourtOrder/index.html.twig')]
     public function getOrderByUidAction(string $uid): array
-    {   /** @var User $user */
+    {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
-        /** @var CourtOrder $courtOrder */
         $courtOrder = $this->courtOrderService->getByUid($uid);
 
         /** @var Client $client */
