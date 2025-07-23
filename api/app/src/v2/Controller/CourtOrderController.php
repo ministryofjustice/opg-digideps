@@ -73,7 +73,7 @@ class CourtOrderController extends AbstractController
     }
 
     /**
-     * Invite a co-deputy to a court order.
+     * Invite a lay co-deputy to a court order.
      *
      * path on API = /v2/courtorder/<UID>/lay-deputy-invite
      */
@@ -102,7 +102,7 @@ class CourtOrderController extends AbstractController
             $data['email'],
             $data['firstname'],
             $data['lastname'],
-            $data['role_name'] ?? User::ROLE_LAY_DEPUTY,
+            User::ROLE_LAY_DEPUTY,
         );
 
         $result = $this->courtOrderInviteService->inviteLayDeputy($uid, $user, $inviteeDTO);
