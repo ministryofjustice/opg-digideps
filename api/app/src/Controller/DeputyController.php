@@ -33,7 +33,7 @@ class DeputyController extends RestController
 
         /** @var User $currentUser */
         $currentUser = $this->getUser();
-        $deputy = $this->deputyService->addDeputy($newDeputy, $currentUser);
+        $deputy = $this->deputyService->getOrAddDeputy($newDeputy, $currentUser);
 
         return ['id' => $deputy->getId()];
     }

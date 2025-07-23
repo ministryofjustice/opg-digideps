@@ -7,6 +7,7 @@ namespace App\Tests\Unit\v2\Service;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DeputyService;
@@ -60,7 +61,7 @@ class CourtOrderInviteServiceTest extends TestCase
             ->method('error')
             ->with($this->stringContains('either court order does not exist, or inviting deputy cannot access it'));
 
-        $invited = $this->sut->invite($courtOrderUid, $user, $inviteeDTO);
+        $invited = $this->sut->inviteLayDeputy($courtOrderUid, $user, $inviteeDTO);
 
         self::assertFalse($invited);
     }
@@ -85,15 +86,15 @@ class CourtOrderInviteServiceTest extends TestCase
         $mockClient->expects(self::once())->method('getCaseNumber')->willReturn($caseNumber);
 
         $this->mockPreRegistrationRepository->expects(self::once())
-            ->method('findOneBy')
-            ->with(['email' => 'foo@bar.com', 'caseNumber' => $caseNumber])
+            ->method('findInvitedLayDeputy')
+            ->with($inviteeDTO, $caseNumber)
             ->willReturn(null);
 
         $this->mockLogger->expects(self::once())
             ->method('error')
             ->with($this->stringContains('not found in pre-reg table'));
 
-        $invited = $this->sut->invite($courtOrderUid, $user, $inviteeDTO);
+        $invited = $this->sut->inviteLayDeputy($courtOrderUid, $user, $inviteeDTO);
 
         self::assertFalse($invited);
     }
@@ -108,7 +109,7 @@ class CourtOrderInviteServiceTest extends TestCase
 
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
-        $mockDeputy = self::createMock(Deputy::class);
+        $mockPreRegistration = self::createMock(PreRegistration::class);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('getByUidAsUser')
@@ -119,17 +120,17 @@ class CourtOrderInviteServiceTest extends TestCase
         $mockClient->expects(self::once())->method('getCaseNumber')->willReturn($caseNumber);
 
         $this->mockPreRegistrationRepository->expects(self::once())
-            ->method('findOneBy')
-            ->with(['email' => 'foo@bar.com', 'caseNumber' => $caseNumber])
-            ->willReturn($mockDeputy);
+            ->method('findInvitedLayDeputy')
+            ->with($inviteeDTO, $caseNumber)
+            ->willReturn($mockPreRegistration);
 
-        $mockDeputy->expects(self::once())->method('getDeputyUid')->willReturn('');
+        $mockPreRegistration->expects(self::once())->method('getDeputyUid')->willReturn('');
 
         $this->mockLogger->expects(self::once())
             ->method('error')
             ->with($this->stringContains('has empty deputy UID in pre-reg table'));
 
-        $invited = $this->sut->invite('91853764', $user, $inviteeDTO);
+        $invited = $this->sut->inviteLayDeputy('91853764', $user, $inviteeDTO);
 
         self::assertFalse($invited);
     }
@@ -144,8 +145,8 @@ class CourtOrderInviteServiceTest extends TestCase
         $user = new User();
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
-        $mockDeputy1 = self::createMock(Deputy::class);
-        $mockDeputy2 = self::createMock(Deputy::class);
+        $mockPreregistration = self::createMock(PreRegistration::class);
+        $mockDeputy = self::createMock(Deputy::class);
         $mockInvitedUser = self::createMock(User::class);
 
         $this->mockCourtOrderService->expects(self::once())
@@ -157,11 +158,11 @@ class CourtOrderInviteServiceTest extends TestCase
         $mockClient->expects(self::once())->method('getCaseNumber')->willReturn($caseNumber);
 
         $this->mockPreRegistrationRepository->expects(self::once())
-            ->method('findOneBy')
-            ->with(['email' => 'foo@bar.com', 'caseNumber' => $caseNumber])
-            ->willReturn($mockDeputy1);
+            ->method('findInvitedLayDeputy')
+            ->with($inviteeDTO, $caseNumber)
+            ->willReturn($mockPreregistration);
 
-        $mockDeputy1->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
+        $mockPreregistration->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('getByUidAsUser')
@@ -174,17 +175,17 @@ class CourtOrderInviteServiceTest extends TestCase
             ->willReturn($mockInvitedUser);
 
         $this->mockDeputyService->expects(self::once())
-            ->method('addDeputy')
+            ->method('getOrAddDeputy')
             ->with(self::isInstanceOf(Deputy::class), $mockInvitedUser)
-            ->willReturn($mockDeputy2);
+            ->willReturn($mockDeputy);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('associateDeputyWithCourtOrder')
-            ->with($mockDeputy2, $mockCourtOrder, true);
+            ->with($mockDeputy, $mockCourtOrder, true);
 
         $this->mockLogger->expects(self::never())->method('error');
 
-        $invited = $this->sut->invite($courtOrderUid, $user, $inviteeDTO);
+        $invited = $this->sut->inviteLayDeputy($courtOrderUid, $user, $inviteeDTO);
 
         self::assertTrue($invited);
     }
