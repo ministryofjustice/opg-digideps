@@ -12,7 +12,6 @@ use App\Service\UserService;
 use App\v2\DTO\InvitedDto;
 use App\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
-use Random\RandomException;
 
 /**
  * Service for inviting deputies to an existing court order.
@@ -97,7 +96,7 @@ class CourtOrderInviteService
         $invitedLayDeputy->setEmail1($invitedDeputyDTO->email);
         $invitedLayDeputy->setDeputyUid($deputyUid);
 
-        // START SAVING STUFF TO THE DATABASE
+        // save stuff to db inside a transaction
         $this->entityManager->beginTransaction();
 
         try {
@@ -109,14 +108,11 @@ class CourtOrderInviteService
 
             // associate deputy with court order, ignoring any existing duplicates
             $this->courtOrderService->associateDeputyWithCourtOrder($persistedDeputy, $courtOrder, logDuplicateError: false);
-        } catch (RandomException $e) {
-            return $invitationResult->setOutcome(
-                "$errorPrefix registration token could not be created: {$e->getMessage()}"
-            );
         } catch (\Exception $e) {
+            // not ideal, but Doctrine doesn't tell us which exceptions it might throw, so we have to catch them all
             $this->entityManager->rollback();
 
-            return $invitationResult->setOutcome("$errorPrefix unexpected database error: {$e->getMessage()}");
+            return $invitationResult->setOutcome("$errorPrefix unexpected error inserting data: {$e->getMessage()}");
         }
 
         $this->entityManager->commit();
