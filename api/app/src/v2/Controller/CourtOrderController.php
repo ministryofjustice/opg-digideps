@@ -11,6 +11,8 @@ use App\v2\Service\CourtOrderInviteService;
 use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,7 @@ class CourtOrderController extends AbstractController
         private readonly CourtOrderInviteService $courtOrderInviteService,
         private readonly SerializerInterface $serializer,
         private readonly RestFormatter $formatter,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -106,6 +109,10 @@ class CourtOrderController extends AbstractController
         );
 
         $result = $this->courtOrderInviteService->inviteLayDeputy($uid, $user, $inviteeDTO);
+
+        if (!$result->success && !is_null($result->message)) {
+            $this->logger->error($result->message);
+        }
 
         return new JsonResponse($result);
     }
