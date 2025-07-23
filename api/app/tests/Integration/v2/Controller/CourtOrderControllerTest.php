@@ -24,22 +24,6 @@ class CourtOrderControllerTest extends WebTestCase
     private static ReportTestHelper $reportTestHelper;
     private static string $deputySecret;
 
-    private function createDeputyForUser(User $user): Deputy
-    {
-        $deputy = new Deputy();
-        $deputy->setEmail1($user->getEmail());
-        $deputy->setDeputyUid('748723'.rand(1, 99999));
-        $deputy->setFirstname('name'.time());
-        $deputy->setLastname('surname'.time());
-
-        $deputy->setUser($user);
-
-        self::$fixtures->persist($deputy);
-        self::$fixtures->flush();
-
-        return $deputy;
-    }
-
     public static function setUpBeforeClass(): void
     {
         $browser = static::createClient(['environment' => 'test', 'debug' => false]);
@@ -62,6 +46,22 @@ class CourtOrderControllerTest extends WebTestCase
         self::$reportTestHelper = new ReportTestHelper();
 
         self::$deputySecret = getenv('SECRETS_FRONT_KEY');
+    }
+
+    private function createDeputyForUser(User $user): Deputy
+    {
+        $deputy = new Deputy();
+        $deputy->setEmail1($user->getEmail());
+        $deputy->setDeputyUid('748723'.rand(1, 99999));
+        $deputy->setFirstname('name'.time());
+        $deputy->setLastname('surname'.time());
+
+        $deputy->setUser($user);
+
+        self::$fixtures->persist($deputy);
+        self::$fixtures->flush();
+
+        return $deputy;
     }
 
     // returns $user (user for $deputy), $courtOrder (associated with $deputy), $deputy
@@ -220,38 +220,53 @@ class CourtOrderControllerTest extends WebTestCase
 
     public function testInviteDeputyActionNoAuthFail()
     {
-        self::$client->assertEndpointNeedsAuth('GET', '/v2/courtorder/94929596/invite');
+        self::$client->assertEndpointNeedsAuth('GET', '/v2/courtorder/94929596/lay-deputy-invite');
     }
 
-    public function testInviteDeputyActionInvalidPayload()
+    public function testInviteLayDeputyActionInvalidPayloadFail()
     {
     }
 
-    public function testInviteDeputyActionSuccess()
+    public function testInviteLayDeputyActionSuccess()
     {
-        // $deputy has access to court order; $user is the User entity for $deputy
-        [$user, $courtOrder, $deputy] = $this->addUserAndCourtOrderAndDeputy('successful-court-order-invite-test@opg.gov.uk');
+        // $deputy has access to court order; $user is the User entity for $deputy; $deputy is the inviting deputy
+        [$user, $courtOrder, $invitingDeputy] = $this->addUserAndCourtOrderAndDeputy('successful-court-order-invite-test@opg.gov.uk');
+
+        // client
+        $client = self::$fixtures->createClient($user, ['setCaseNumber' => '1122334455']);
+        $courtOrder->setClient($client);
+        self::$fixtures->persist($client, $courtOrder)->flush();
 
         // add pre-reg record for deputy to be invited
-        $invitedDeputy = new PreRegistration();
-        $invitedDeputy->setCaseNumber();
-        $invitedDeputy->
+        $invitedDeputy = new PreRegistration([
+            'CaseNumber' => $client->getCaseNumber(),
+            'DeputyFirstname' => 'Amz',
+            'DeputySurname' => 'Sloroz',
+            'DeputyUid' => '123415235',
+        ]);
+        self::$fixtures->persist($invitedDeputy)->flush();
 
         // login to get the token for API calls
         $token = self::$client->login($user->getEmail(), 'DigidepsPass1234', self::$deputySecret);
 
-        // make the API call to associate the second deputy with the court order
+        // make the API call to associate a new co-deputy with the court order
         $postData = [
-            'email' => $email,
-            $data['firstname'] ?? '',
-            $data['lastname'] ?? '',
-            $data['role_name'] ?? User::ROLE_LAY_DEPUTY,
+            'email' => $user->getEmail(),
+            'firstname' => $invitedDeputy->getDeputyFirstname(),
+            'lastname' => $invitedDeputy->getDeputySurname(),
+            'role_name' => User::ROLE_LAY_DEPUTY,
         ];
 
         $responseJson = self::$client->assertJsonRequest(
             'POST',
-            "/v2/courtorder/{$courtOrder->getCourtOrderUid()}/invite",
+            "/v2/courtorder/{$courtOrder->getCourtOrderUid()}/lay-deputy-invite",
             ['AuthToken' => $token, 'mustSucceed' => true, 'data' => $postData]
         );
+
+        // TODO assertions
+        print_r($responseJson);
+
+        // clean up
+        self::$fixtures->remove($user, $invitingDeputy, $invitedDeputy, $courtOrder, $client)->flush()->clear();
     }
 }
