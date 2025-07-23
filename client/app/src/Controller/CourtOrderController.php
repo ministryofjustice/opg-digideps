@@ -62,7 +62,7 @@ class CourtOrderController extends AbstractController
     /**
      * Show all court orders and reports for the currently-logged in deputy.
      *
-     * @return array List of court orders
+     * @return array|Response List of court orders or message if there are none available yet
      */
     #[Route(path: '/choose-a-court-order', name: 'courtorders_for_deputy', methods: ['GET'])]
     #[Template('@App/Index/choose-a-court-order.html.twig')]
