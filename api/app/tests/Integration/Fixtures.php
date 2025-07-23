@@ -6,7 +6,6 @@ use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
-use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
@@ -662,30 +661,5 @@ class Fixtures
     public function deleteUser(int $id): void
     {
         $this->em->remove($this->getRepo(User::class)->find($id));
-    }
-
-    public function deletePreReg(int $id): void
-    {
-        $this->em->remove($this->getRepo(PreRegistration::class)->find($id));
-    }
-
-    public function deleteClient(int $id): void
-    {
-        $this->em->remove($this->getRepo(Client::class)->find($id));
-    }
-
-    public function deleteCourtOrder($id): void
-    {
-        $this->em->remove($this->getRepo(CourtOrder::class)->find($id));
-    }
-
-    public function deleteDeputy(int $id): void
-    {
-        $this->em->remove($this->getRepo(Deputy::class)->find($id));
-    }
-
-    public function deleteDeputyByUid(string $invitedDeputyUid): void
-    {
-        $this->em->remove($this->getRepo(Deputy::class)->findOneBy(['deputyUid' => $invitedDeputyUid]));
     }
 }

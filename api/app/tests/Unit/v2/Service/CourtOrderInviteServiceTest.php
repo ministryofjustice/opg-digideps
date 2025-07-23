@@ -56,7 +56,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $invited = $this->sut->inviteLayDeputy('1122334455', $invitingUser, $inviteeDTO);
 
         self::assertFalse($invited->success);
-        self::assertStringContainsString('invited deputy is not a Lay deputy', $invited->outcome);
+        self::assertStringContainsString('invited deputy is not a Lay deputy', $invited->message);
     }
 
     public function testInviteLayDeputyNoAccessToCourtOrder(): void
@@ -76,7 +76,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $invited = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 
         self::assertFalse($invited->success);
-        self::assertStringContainsString('either court order does not exist, or inviting deputy cannot access it', $invited->outcome);
+        self::assertStringContainsString('either court order does not exist, or inviting deputy cannot access it', $invited->message);
     }
 
     public function testInviteLayDeputyCourtOrderClientHasNoCaseNumber(): void
@@ -102,7 +102,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $invited = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 
         self::assertFalse($invited->success);
-        self::assertStringContainsString('could not find case number for court order', $invited->outcome);
+        self::assertStringContainsString('could not find case number for court order', $invited->message);
     }
 
     public function testInviteLayDeputyMissingPreRegRecord(): void
@@ -134,7 +134,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 
         self::assertFalse($result->success);
-        self::assertStringContainsString('no record in pre-reg table', $result->outcome);
+        self::assertStringContainsString('no record in pre-reg table', $result->message);
     }
 
     public function testInviteLayDeputyNoDeputyUidInPreRegRecord(): void
@@ -169,7 +169,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $result = $this->sut->inviteLayDeputy('91853764', $invitingUser, $inviteeDTO);
 
         self::assertFalse($result->success);
-        self::assertStringContainsString('empty deputy UID in pre-reg table', $result->outcome);
+        self::assertStringContainsString('empty deputy UID in pre-reg table', $result->message);
     }
 
     public function testInviteLayDeputyDatabaseFail(): void
@@ -218,7 +218,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 
         self::assertFalse($result->success);
-        self::assertStringContainsString('unexpected error inserting data', $result->outcome);
+        self::assertStringContainsString('unexpected error inserting data', $result->message);
     }
 
     public function testInviteLayDeputy(): void
