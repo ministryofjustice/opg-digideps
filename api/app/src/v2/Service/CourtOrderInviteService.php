@@ -60,7 +60,7 @@ class CourtOrderInviteService
 
         // check invited deputy is a Lay
         if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
-            return $invitationResult->setOutcome("$errorPrefix they are not a Lay deputy");
+            return $invitationResult->setOutcome("$errorPrefix invited deputy is not a Lay deputy");
         }
 
         // check the court order exists, and inviting deputy is a deputy on it
