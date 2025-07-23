@@ -125,20 +125,20 @@ class PreRegistrationRepository extends ServiceEntityRepository
      */
     public function findInvitedLayDeputy(InviteeDto $inviteeDTO, string $caseNumber): ?PreRegistration
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('p')
+            ->from(PreRegistration::class, 'p')
+            ->where('LOWER(p.deputyFirstname) = LOWER(:deputyFirstname)')
+            ->andWhere('LOWER(p.deputySurname) = LOWER(:deputyLastname)')
+            ->andWhere('LOWER(p.caseNumber) = LOWER(:caseNumber)')
+            ->setParameter('deputyFirstname', $inviteeDTO->firstname)
+            ->setParameter('deputyLastname', $inviteeDTO->lastname)
+            ->setParameter('caseNumber', $caseNumber)
+            ->getQuery();
 
         try {
             /** @var ?PreRegistration $result */
-            $result = $qb->select('p')
-                ->from(PreRegistration::class, 'p')
-                ->where('LOWER(p.deputyFirstname) = LOWER(:deputyFirstname)')
-                ->andWhere('LOWER(p.deputySurname) = LOWER(:deputyLastname)')
-                ->andWhere('LOWER(p.caseNumber) = LOWER(:caseNumber)')
-                ->setParameter('deputyFirstname', $inviteeDTO->firstname)
-                ->setParameter('deputyLastname', $inviteeDTO->lastname)
-                ->setParameter('caseNumber', $caseNumber)
-                ->getQuery()
-                ->getOneOrNullResult();
+            $result = $qb->getOneOrNullResult();
         } catch (NonUniqueResultException) {
             return null;
         }
