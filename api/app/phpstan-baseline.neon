@@ -221,21 +221,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Offset 'email' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Offset 'firstname' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Offset 'lastname' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|string given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -247,11 +232,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/DeputyController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/DeputyController.php
 
@@ -321,11 +301,6 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:fillAccountData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Ndr/AccountController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
@@ -391,16 +366,6 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/ExpenseController.php
@@ -463,11 +428,6 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Ndr/ExpenseController.php
 
 		-
@@ -541,11 +501,6 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 17
-			path: src/Controller/Ndr/NdrController.php
-
-		-
 			message: "#^Parameter \\#4 \\$ndrDocumentId of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
@@ -592,16 +547,6 @@ parameters:
 
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 2
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Offset 'ndr_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -656,21 +601,6 @@ parameters:
 			path: src/Controller/NoteController.php
 
 		-
-			message: "#^Offset 'category' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Offset 'content' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Offset 'title' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
 			message: "#^PHPDoc tag @var has invalid value \\(\\$note EntityDir\\\\Note \\$note\\)\\: Unexpected token \"\\$note\", expected type at offset 9$#"
 			count: 1
 			path: src/Controller/NoteController.php
@@ -682,11 +612,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$lastModifiedBy of method App\\\\Entity\\\\Note\\:\\:setLastModifiedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/NoteController.php
 
@@ -708,11 +633,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Controller\\\\PreRegistrationController\\:\\:verify\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
-			count: 3
 			path: src/Controller/PreRegistrationController.php
 
 		-
@@ -801,11 +721,6 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AccountController\\:\\:fillAccountData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/AccountController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\AccountController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/AccountController.php
@@ -832,11 +747,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
 
@@ -898,16 +808,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/AssetController.php
 
 		-
@@ -996,56 +896,6 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Offset 'address' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'address2' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'contact_name' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'country' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'county' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'explanation' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'postcode' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'relationship' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
 			message: "#^Parameter \\#1 \\$reasonForNoContacts of method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoContacts\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
@@ -1067,21 +917,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:upsertDecision\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
@@ -1196,26 +1031,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Offset 'file_name' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Offset 'is_report_pdf' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Offset 'row_limit' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Offset 'storage_reference' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^PHPDoc tag @var has invalid value \\(\\$document EntityDir\\\\Report\\\\Document\\)\\: Unexpected token \"\\$document\", expected type at offset 9$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
@@ -1301,11 +1116,6 @@ parameters:
 			path: src/Controller/Report/ExpenseController.php
 
 		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/ExpenseController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/GiftController.php
@@ -1366,18 +1176,8 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Parameter \\#2 \\$criteriaOrId of method App\\\\Controller\\\\RestController\\:\\:findEntityBy\\(\\) expects array\\|int, float\\|int\\|string given\\.$#"
 			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/GiftController.php
 
 		-
@@ -1426,16 +1226,6 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateInfo\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/LifestyleController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
@@ -1457,11 +1247,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
 
@@ -1538,21 +1323,6 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Offset 'amount' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Offset 'category' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 3
 			path: src/Controller/Report/MoneyTransactionController.php
 
 		-
@@ -1651,18 +1421,8 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
 			message: "#^Parameter \\#1 \\$date of method App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\:\\:setDate\\(\\) expects DateTime, DateTime\\|null given\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:fillData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
@@ -1716,16 +1476,6 @@ parameters:
 			path: src/Controller/Report/MoneyTransferController.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:fillEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransferController.php
@@ -1771,22 +1521,12 @@ parameters:
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
 			message: "#^Parameter \\#1 \\$profDeputyCostsHasPrevious of method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
@@ -1833,11 +1573,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$amountReceived of method App\\\\Entity\\\\Report\\\\ProfServiceFee\\:\\:setAmountReceived\\(\\) expects App\\\\Entity\\\\Report\\\\decimal, null given\\.$#"
 			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/ProfServiceFeeController.php
 
 		-
@@ -1996,51 +1731,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Offset 'answers' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'button_clicked' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'decision' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'due_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'end_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'is_submitted' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'start_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'un_submit_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'unsubmitted…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Parameter \\#1 \\$amount of method App\\\\Entity\\\\Report\\\\Debt\\:\\:setAmount\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -2093,11 +1783,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 31
 			path: src/Controller/Report/ReportController.php
 
 		-
@@ -2301,16 +1986,6 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateInfo\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects DateTime, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
@@ -2392,21 +2067,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\SatisfactionController\\:\\:publicAdd\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Offset 'comments' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Offset 'reportType' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Offset 'score' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/SatisfactionController.php
 
@@ -2506,23 +2166,8 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Offset 'coDeputyUid' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Offset 'existingDeputyAccou…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
 			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/SelfRegisterController.php
 
 		-
@@ -2548,16 +2193,6 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Offset 'content' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Offset 'enabled' does not exist on array\\|null\\.$#"
-			count: 2
 			path: src/Controller/SettingController.php
 
 		-
@@ -2773,16 +2408,6 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 3
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Offset 'password' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Offset 'updated_email' does not exist on array\\|null\\.$#"
-			count: 1
 			path: src/Controller/UserController.php
 
 		-
