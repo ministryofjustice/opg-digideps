@@ -109,7 +109,7 @@ class CourtOrderController extends AbstractController
             $data['role_name'] ?? User::ROLE_LAY_DEPUTY,
         );
 
-        $success = $this->courtOrderInviteService->invite($uid, $user, $inviteeDTO);
+        $success = $this->courtOrderInviteService->inviteLayDeputy($uid, $user, $inviteeDTO);
 
         return new JsonResponse(data: ['deputyInvitedSuccessfully' => $success], json: true);
     }

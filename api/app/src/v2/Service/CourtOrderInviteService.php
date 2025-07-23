@@ -19,7 +19,6 @@ use Random\RandomException;
  * Pre-requisites for successful invite:
  * - Court order must exist in court_order table
  * - Inviting deputy must have access to the court order
- * - Invited deputy must exist in pre_registration table (based on SELECT by email supplied by inviting deputy)
  *
  * Inputs (all are required to be non-null):
  * - UID of existing court order to invite deputy to
@@ -48,16 +47,26 @@ class CourtOrderInviteService
     }
 
     /**
-     * Invite the deputy represented by $invitedDeputyData to court order with UID $courtOrderUid, acting as the
-     * $invitingDeputy.
+     * Invite the Lay deputy represented by $invitedDeputyData to court order with UID $courtOrderUid, acting as the
+     * Lay deputy $invitingLayDeputy.
+     *
+     * This should not be used for PA/PRO invites as it requires a matching entry in the pre-reg table to make the
+     * invite.
      */
-    public function invite(string $courtOrderUid, User $invitingDeputy, InviteeDTO $invitedDeputyData): bool
+    public function inviteLayDeputy(string $courtOrderUid, User $invitingLayDeputy, InviteeDTO $invitedDeputyDTO): bool
     {
+        // check invited deputy is a Lay
+        if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
+            $this->logger->error("could not invite $invitedDeputyDTO->email as they are not a Lay deputy");
+
+            return false;
+        }
+
         // check the court order exists, and inviting deputy is a deputy on it
-        $courtOrder = $this->courtOrderService->getByUidAsUser($courtOrderUid, $invitingDeputy);
+        $courtOrder = $this->courtOrderService->getByUidAsUser($courtOrderUid, $invitingLayDeputy);
         if (is_null($courtOrder)) {
             $this->logger->error(
-                "could not invite $invitedDeputyData->email to court order $courtOrderUid: ".
+                "could not invite $invitedDeputyDTO->email to court order $courtOrderUid: ".
                 'either court order does not exist, or inviting deputy cannot access it'
             );
 
@@ -66,14 +75,11 @@ class CourtOrderInviteService
 
         // check invited deputy is in the prereg table and is associated with the court order's case number
         $caseNumber = $courtOrder->getClient()->getCaseNumber();
-        $preRegRecord = $this->preRegistrationRepository->findOneBy([
-            'email' => $invitedDeputyData->email,
-            'caseNumber' => $caseNumber,
-        ]);
+        $preRegRecord = $this->preRegistrationRepository->findInvitedLayDeputy($invitedDeputyDTO, $caseNumber);
 
         if (is_null($preRegRecord)) {
             $this->logger->error(
-                "Deputy with email $invitedDeputyData->email with access to case $caseNumber not found in pre-reg table"
+                "Deputy $invitedDeputyDTO->email with access to case $caseNumber not found in pre-reg table"
             );
 
             return false;
@@ -82,28 +88,28 @@ class CourtOrderInviteService
         // check prereg record has deputy UID
         $deputyUid = $preRegRecord->getDeputyUid();
         if (empty($deputyUid) || !is_string($deputyUid)) {
-            $this->logger->error("Deputy with email $invitedDeputyData->email has empty deputy UID in pre-reg table");
+            $this->logger->error("Deputy with email $invitedDeputyDTO->email has empty deputy UID in pre-reg table");
 
             return false;
         }
 
         // create user for invited deputy, or get existing user; if the latter, none of their data is updated
         try {
-            $invitedUser = $this->userService->getOrAddUser($invitedDeputyData, $invitingDeputy);
+            $invitedUser = $this->userService->getOrAddUser($invitedDeputyDTO, $invitingLayDeputy);
         } catch (RandomException $e) {
             $this->logger->error("Unable to invite deputy as registration token could not be created: {$e->getMessage()}");
 
             return false;
         }
 
-        // create deputy record if it doesn't exist, or get the existing deputy
+        // create deputy record if it doesn't exist, or get the existing deputy; if the latter, none of their data is updated
         $invitedDeputy = new Deputy();
-        $invitedDeputy->setFirstname($invitedDeputyData->firstname);
-        $invitedDeputy->setLastname($invitedDeputyData->lastname);
-        $invitedDeputy->setEmail1($invitedDeputyData->email);
+        $invitedDeputy->setFirstname($invitedDeputyDTO->firstname);
+        $invitedDeputy->setLastname($invitedDeputyDTO->lastname);
+        $invitedDeputy->setEmail1($invitedDeputyDTO->email);
         $invitedDeputy->setDeputyUid($deputyUid);
 
-        $deputy = $this->deputyService->addDeputy($invitedDeputy, $invitedUser);
+        $deputy = $this->deputyService->getOrAddDeputy($invitedDeputy, $invitedUser);
 
         // associate deputy with court order, ignoring any existing duplicates
         $this->courtOrderService->associateDeputyWithCourtOrder($deputy, $courtOrder, logDuplicateError: false);
