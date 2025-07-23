@@ -79,7 +79,7 @@ class CourtOrderController extends AbstractController
      */
     #[Route('/{uid}/lay-deputy-invite', requirements: ['uid' => '\w+'], methods: ['POST'])]
     #[Security('is_granted("ROLE_DEPUTY")')]
-    public function inviteLayDeputyAction(Request $request, string $uid): JsonResponse
+    public function layDeputyInviteAction(Request $request, string $uid): JsonResponse
     {
         try {
             $data = $this->formatter->deserializeBodyContent($request, [
