@@ -16,6 +16,7 @@ use App\v2\DTO\InviteeDto;
 use App\v2\Service\CourtOrderInviteService;
 use App\v2\Service\CourtOrderService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -55,7 +56,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $invited = $this->sut->inviteLayDeputy('1122334455', $invitingUser, $inviteeDTO);
 
         self::assertFalse($invited->success);
-        self::assertStringContainsString('they are not a Lay deputy', $invited->outcome);
+        self::assertStringContainsString('invited deputy is not a Lay deputy', $invited->outcome);
     }
 
     public function testInviteLayDeputyNoAccessToCourtOrder(): void
@@ -76,6 +77,32 @@ class CourtOrderInviteServiceTest extends TestCase
 
         self::assertFalse($invited->success);
         self::assertStringContainsString('either court order does not exist, or inviting deputy cannot access it', $invited->outcome);
+    }
+
+    public function testInviteLayDeputyCourtOrderClientHasNoCaseNumber(): void
+    {
+        $courtOrderUid = '91853764';
+
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
+
+        $invitingUser = self::createMock(User::class);
+        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
+
+        $mockCourtOrder = self::createMock(CourtOrder::class);
+        $mockClient = self::createMock(Client::class);
+
+        $this->mockCourtOrderService->expects(self::once())
+            ->method('getByUidAsUser')
+            ->with($courtOrderUid, $invitingUser)
+            ->willReturn($mockCourtOrder);
+
+        $mockCourtOrder->expects(self::once())->method('getClient')->willReturn($mockClient);
+        $mockClient->expects(self::once())->method('getCaseNumber')->willReturn(null);
+
+        $invited = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
+
+        self::assertFalse($invited->success);
+        self::assertStringContainsString('could not find case number for court order', $invited->outcome);
     }
 
     public function testInviteLayDeputyMissingPreRegRecord(): void
@@ -143,6 +170,55 @@ class CourtOrderInviteServiceTest extends TestCase
 
         self::assertFalse($result->success);
         self::assertStringContainsString('empty deputy UID in pre-reg table', $result->outcome);
+    }
+
+    public function testInviteLayDeputyDatabaseFail(): void
+    {
+        $courtOrderUid = '91853764';
+        $caseNumber = '1245674332';
+        $deputyUid = '12345678';
+
+        $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
+
+        $invitingUser = self::createMock(User::class);
+        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
+
+        $mockCourtOrder = self::createMock(CourtOrder::class);
+        $mockClient = self::createMock(Client::class);
+        $mockPreregistration = self::createMock(PreRegistration::class);
+
+        $this->mockCourtOrderService->expects(self::once())
+            ->method('getByUidAsUser')
+            ->with($courtOrderUid, $invitingUser)
+            ->willReturn($mockCourtOrder);
+
+        $mockCourtOrder->expects(self::once())->method('getClient')->willReturn($mockClient);
+        $mockClient->expects(self::once())->method('getCaseNumber')->willReturn($caseNumber);
+
+        $this->mockPreRegistrationRepository->expects(self::once())
+            ->method('findInvitedLayDeputy')
+            ->with($inviteeDTO, $caseNumber)
+            ->willReturn($mockPreregistration);
+
+        $mockPreregistration->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
+
+        $this->mockCourtOrderService->expects(self::once())
+            ->method('getByUidAsUser')
+            ->with($courtOrderUid, $invitingUser)
+            ->willReturn($mockCourtOrder);
+
+        $this->mockEntityManager->expects(self::once())->method('beginTransaction');
+        $this->mockEntityManager->expects(self::once())->method('rollback');
+
+        $this->mockUserService->expects(self::once())
+            ->method('getOrAddUser')
+            ->with($inviteeDTO, $invitingUser)
+            ->willThrowException(new ORMException('something bad happened on the way to the database'));
+
+        $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
+
+        self::assertFalse($result->success);
+        self::assertStringContainsString('unexpected error inserting data', $result->outcome);
     }
 
     public function testInviteLayDeputy(): void
