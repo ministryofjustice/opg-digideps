@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration;
 
+use App\Entity as EntityDir;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
