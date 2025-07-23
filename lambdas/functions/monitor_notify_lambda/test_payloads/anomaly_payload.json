@@ -1,0 +1,6 @@
+{
+  "scheduled-event-detail": {
+    "job-name": "example_job_name",
+    "channel-identifier": "scheduled-jobs"
+  }
+}
