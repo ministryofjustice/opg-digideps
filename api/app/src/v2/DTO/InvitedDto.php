@@ -13,15 +13,15 @@ class InvitedDto
         public readonly string $courtOrderUid,
         public readonly int $invitingUserId,
         public bool $success = false,
-        public ?string $outcome = null,
+        public ?string $message = null,
         public ?string $invitedDeputyUid = null,
         public ?int $invitedUserId = null,
     ) {
     }
 
-    public function setOutcome(string $outcome): static
+    public function setMessage(string $message): static
     {
-        $this->outcome = $outcome;
+        $this->message = $message;
 
         return $this;
     }

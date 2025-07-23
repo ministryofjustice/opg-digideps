@@ -60,13 +60,13 @@ class CourtOrderInviteService
 
         // check invited deputy is a Lay
         if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
-            return $invitationResult->setOutcome("$errorPrefix invited deputy is not a Lay deputy");
+            return $invitationResult->setMessage("$errorPrefix invited deputy is not a Lay deputy");
         }
 
         // check the court order exists, and inviting deputy is a deputy on it
         $courtOrder = $this->courtOrderService->getByUidAsUser($courtOrderUid, $invitingLayDeputy);
         if (is_null($courtOrder)) {
-            return $invitationResult->setOutcome(
+            return $invitationResult->setMessage(
                 "$errorPrefix either court order does not exist, or inviting deputy cannot access it"
             );
         }
@@ -74,19 +74,19 @@ class CourtOrderInviteService
         // check invited deputy is in the prereg table and is associated with the court order's case number
         $caseNumber = $courtOrder->getClient()->getCaseNumber();
         if (is_null($caseNumber)) {
-            return $invitationResult->setOutcome("$errorPrefix could not find case number for court order");
+            return $invitationResult->setMessage("$errorPrefix could not find case number for court order");
         }
 
         $preRegRecord = $this->preRegistrationRepository->findInvitedLayDeputy($invitedDeputyDTO, $caseNumber);
 
         if (is_null($preRegRecord)) {
-            return $invitationResult->setOutcome("$errorPrefix no record in pre-reg table");
+            return $invitationResult->setMessage("$errorPrefix no record in pre-reg table");
         }
 
         // check prereg record has a deputy UID set
         $deputyUid = $preRegRecord->getDeputyUid();
         if (empty($deputyUid) || !is_string($deputyUid)) {
-            return $invitationResult->setOutcome("$errorPrefix empty deputy UID in pre-reg table");
+            return $invitationResult->setMessage("$errorPrefix empty deputy UID in pre-reg table");
         }
 
         // candidate deputy: will only be created if a deputy with this UID does not exist
@@ -112,7 +112,7 @@ class CourtOrderInviteService
             // not ideal, but Doctrine doesn't tell us which exceptions it might throw, so we have to catch them all
             $this->entityManager->rollback();
 
-            return $invitationResult->setOutcome("$errorPrefix unexpected error inserting data: {$e->getMessage()}");
+            return $invitationResult->setMessage("$errorPrefix unexpected error inserting data: {$e->getMessage()}");
         }
 
         $this->entityManager->commit();
