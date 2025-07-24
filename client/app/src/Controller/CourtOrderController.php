@@ -12,6 +12,8 @@ use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\CourtOrderService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -85,14 +87,18 @@ class CourtOrderController extends AbstractController
      */
     #[Route(path: '/{uid}/invite', name: 'courtorder_invite', requirements: ['uid' => '\d+'], methods: ['GET', 'POST'])]
     #[Template('@App/CourtOrder/invite.html.twig')]
-    public function inviteLayDeputy(string $uid): array
+    public function inviteLayDeputy(Request $request, string $uid): array|RedirectResponse
     {
         $invitedUser = new User();
         $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
+        $form->handleRequest($request);
 
-        return [
-            'form' => $form->createView(),
-            'backLink' => $this->generateUrl('courtorder_by_uid', ['uid' => $uid]),
-        ];
+        if (!($form->isSubmitted() && $form->isValid())) {
+            return ['form' => $form->createView()];
+        }
+
+        $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
+
+        return new RedirectResponse($this->generateUrl('courtorder_by_uid', ['uid' => $uid]));
     }
 }
