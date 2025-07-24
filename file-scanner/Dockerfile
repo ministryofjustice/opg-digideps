@@ -38,7 +38,7 @@ RUN sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf \
     && sed -i 's/^#Foreground .*$/Foreground true/g' /etc/clamav/freshclam.conf
 
 # Run initial ClamAV signature update
-RUN freshclam
+RUN freshclam --quiet
 
 COPY --from=build /go/src/clamav-rest/file-scanner /usr/bin/
 

@@ -66,7 +66,7 @@ locals {
   integration_tests_container = jsonencode(
     {
       name  = "integration-tests",
-      image = local.images.api,
+      image = local.images.api-devtools,
       logConfiguration = {
         logDriver = "awslogs",
         options = {

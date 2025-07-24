@@ -33,7 +33,6 @@ RUN composer dump-autoload --optimize
 FROM php:8.3.21-fpm-alpine3.21 AS application
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
 
 WORKDIR /var/www
 EXPOSE 80
@@ -92,8 +91,6 @@ RUN mkdir -p var/cache \
 # Stage 4a: runtime image (image without test dependencies)
 ##############################
 FROM application AS runtime
-ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
-ARG ENVIRONMENT=${ENVIRONMENT:-production}
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
 COPY --chown=www-data:www-data --from=composer-runtime /app/config config
