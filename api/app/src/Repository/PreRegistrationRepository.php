@@ -130,7 +130,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
      */
     public function findInvitedLayDeputy(InviteeDto $inviteeDTO, string $caseNumber): ?PreRegistration
     {
-        $qb = $this->getEntityManager()->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             ->select('p')
             ->from(PreRegistration::class, 'p')
             ->where('LOWER(p.deputyFirstname) = LOWER(:deputyFirstname)')
@@ -143,7 +143,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
 
         try {
             /** @var ?PreRegistration $result */
-            $result = $qb->getOneOrNullResult();
+            $result = $query->getOneOrNullResult();
         } catch (NonUniqueResultException) {
             return null;
         }
