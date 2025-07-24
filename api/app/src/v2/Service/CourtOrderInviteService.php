@@ -101,6 +101,7 @@ class CourtOrderInviteService
 
         try {
             // create user for invited deputy, or get existing user; if the latter, none of their data is updated
+            // (unless their registration token is null, in which case it is recreated)
             $persistedUser = $this->userService->getOrAddUser($invitedDeputyDTO, $invitingLayDeputy);
 
             // create deputy record if it doesn't exist, or get the existing deputy; if the latter, none of their data is updated
@@ -109,8 +110,6 @@ class CourtOrderInviteService
             // associate deputy with court order, ignoring any existing duplicates
             $this->courtOrderService->associateDeputyWithCourtOrder($persistedDeputy, $courtOrder, logDuplicateError: false);
         } catch (\Exception $e) {
-            // ^^^ catch all is not ideal, but Doctrine doesn't tell us which exceptions it might throw, so we have to
-            // catch them all just in case
             $this->entityManager->rollback();
 
             return $invitationResult->setMessage("$errorPrefix unexpected error inserting data: {$e->getMessage()}");

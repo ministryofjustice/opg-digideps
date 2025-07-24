@@ -16,10 +16,6 @@ class InvitedDto implements \JSONSerializable
         public ?string $message = null,
         public ?string $invitedDeputyUid = null,
         public ?int $invitedUserId = null,
-
-        // error code used to notify the front end about specific error messages which should be displayed,
-        // e.g. 422 if the email of the invited deputy already exists in the user table
-        public ?int $code = null,
     ) {
     }
 
@@ -42,7 +38,6 @@ class InvitedDto implements \JSONSerializable
                 'invitingUserId' => $this->invitingUserId,
                 'invitedUserId' => $this->invitedUserId,
                 'invitedDeputyUid' => $this->invitedDeputyUid,
-                'code' => $this->code,
             ],
         ];
     }
