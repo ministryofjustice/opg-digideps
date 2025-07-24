@@ -19,7 +19,7 @@ class BehatController extends AbstractController
     public function __construct(
         private KernelInterface $kernel,
         private string $symfonyEnvironment,
-        private string $workspace,
+        private bool $fixturesEnabled,
     ) {
     }
 
@@ -32,7 +32,7 @@ class BehatController extends AbstractController
     {
         if (
             'prod' === $this->symfonyEnvironment
-            && in_array(strtolower($this->workspace), ['production02', 'production', 'preproduction'], true)
+            && !$this->fixturesEnabled
         ) {
             throw $this->createNotFoundException();
         }
@@ -57,7 +57,7 @@ class BehatController extends AbstractController
     {
         if (
             'prod' === $this->symfonyEnvironment
-            && in_array(strtolower($this->workspace), ['production02', 'production', 'preproduction'], true)
+            && !$this->fixturesEnabled
         ) {
             throw $this->createNotFoundException();
         }

@@ -136,7 +136,7 @@ services:
       - redis-api
       - localstack
     environment:
-      APP_ENV: ${APP_ENV:-prod}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
       WORKSPACE: local
     env_file:
