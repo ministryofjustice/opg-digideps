@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-groupExists=$( (awslocal logs describe-log-groups | jq '.logGroups[] | select(.logGroupName == "audit-local")') )
+groupExists=$( (awslocal logs describe-log-groups --region eu-west-1 | jq '.logGroups[] | select(.logGroupName == "audit-local")') )
 
 #Create log group if it does not exist (stops ResourceAlreadyExists errors)
 if [ -z "$groupExists" ]
 then
-    awslocal logs create-log-group --log-group-name audit-local
+    awslocal logs create-log-group --log-group-name audit-local --region eu-west-1
 fi
 
 awslocal s3 mb s3://pa-uploads-local

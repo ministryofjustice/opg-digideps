@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Helpers;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
@@ -1394,5 +1395,22 @@ class FixtureHelper
         $courtOrderUid = '700000'.$faker->randomNumber(4);
 
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $ndr, $deputy);
+    }
+
+    public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy
+    {
+        $user = $this->userTestHelper::createUser();
+
+        $deputy = $this->deputyTestHelper::generateDeputy(user: $user);
+        $deputy->associateWithCourtOrder($courtOrder);
+
+        // if this is null, the user counts as "awaiting registration"
+        $user->setLastLoggedIn($lastLoggedIn);
+
+        $this->em->persist($user);
+        $this->em->persist($deputy);
+        $this->em->flush();
+
+        return $deputy;
     }
 }
