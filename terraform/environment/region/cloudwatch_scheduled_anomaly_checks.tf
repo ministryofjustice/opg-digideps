@@ -15,7 +15,7 @@ resource "aws_cloudwatch_event_target" "anomaly_detection" {
     {
       scheduled-event-detail = {
         job-name           = "anomaly_detection_check"
-        channel-identifier = "scheduled-jobs",
+        channel-identifier = "devs",
       }
     }
   )

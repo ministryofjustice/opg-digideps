@@ -15,6 +15,7 @@ resource "aws_lambda_function" "monitor_notify_lambda" {
   environment {
     variables = {
       PAUSE_NOTIFICATIONS = "0"
+      ENVIRONMENT         = var.account.name
     }
   }
   tracing_config {
@@ -89,6 +90,7 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
       "logs:StartQuery",
       "logs:StopQuery",
       "logs:GetQueryResults",
+      "logs:ListAnomalies"
     ]
     resources = ["*"]
   }
