@@ -1,3 +1,4 @@
+import os
 import boto3
 import logging
 from datetime import datetime, timedelta, timezone
@@ -14,6 +15,7 @@ def anomaly_detection_message(event):
         return ""
     severity_counts = get_severity_counts(anomaly_detections)
     details = get_anomalies_by_pattern_string(anomaly_detections)
+    environment = os.environ.get("ENVIRONMENT", "environment not set")
 
     with open("templates/anomaly_detection.txt", "r") as file:
         template_text = file.read()
@@ -22,6 +24,7 @@ def anomaly_detection_message(event):
         count_medium=severity_counts["MEDIUM"],
         count_high=severity_counts["HIGH"],
         details=details,
+        environment=environment,
     )
 
     payload = {"text": formatted_text, "channel": channel_identifier}
@@ -32,12 +35,6 @@ def anomaly_detection_message(event):
 def get_severity_counts(anomaly_detections):
     """
     Count how many anomalies exist for each severity level (priority).
-
-    Parameters:
-    - anomaly_detections: list of anomaly_detection dictionaries
-
-    Returns:
-    - dict: severity level counts, e.g. {'HIGH': 3, 'MEDIUM': 5}
     """
     counts = defaultdict(int)
 
@@ -53,12 +50,6 @@ def get_anomalies_by_pattern_string(anomaly_detections):
     """
     Returns a string block of anomaly details, grouped by patternString,
     with 2 newlines between each group.
-
-    Parameters:
-    - anomaly_detections: list of anomaly_detection dictionaries
-
-    Returns:
-    - str: formatted string block
     """
     blocks = []
 
@@ -84,7 +75,6 @@ def get_log_anomalies_detected():
 
         # Skip LOW priority anomalies
         if priority == "LOW":
-            print("low prio")
             continue
 
         try:
@@ -98,7 +88,6 @@ def get_log_anomalies_detected():
 
         # Skip anomalies not seen in the last 24 hours
         if first_seen_dt < cutoff_time:
-            print(f"{first_seen_dt} > {cutoff_time}")
             continue
 
         anomaly_detection = {
