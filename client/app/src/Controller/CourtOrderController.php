@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\User;
+use App\Form\CoDeputyInviteType;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\UserApi;
@@ -31,7 +33,7 @@ class CourtOrderController extends AbstractController
      */
     #[Route(path: '/{uid}', name: 'courtorder_by_uid', requirements: ['uid' => '\d+'], methods: ['GET'])]
     #[Template('@App/CourtOrder/index.html.twig')]
-    public function getOrderByUidAction(string $uid): array
+    public function getOrderByUid(string $uid): array
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -75,5 +77,22 @@ class CourtOrderController extends AbstractController
         }
 
         return ['courtOrders' => $results];
+    }
+
+    /**
+     * Invite or re-invite a co-deputy to collaborate on a court order. They must exist in the pre_registration table
+     * for the invite to be sent successfully.
+     */
+    #[Route(path: '/{uid}/invite', name: 'courtorder_invite', requirements: ['uid' => '\d+'], methods: ['GET', 'POST'])]
+    #[Template('@App/CourtOrder/invite.html.twig')]
+    public function inviteLayDeputy(string $uid): array
+    {
+        $invitedUser = new User();
+        $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
+
+        return [
+            'form' => $form->createView(),
+            'backLink' => $this->generateUrl('courtorder_by_uid', ['uid' => $uid]),
+        ];
     }
 }
