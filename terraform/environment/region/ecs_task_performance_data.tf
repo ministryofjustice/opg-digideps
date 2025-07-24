@@ -18,7 +18,7 @@ locals {
   performance_data_container = jsonencode(
     {
       name  = "performance-data",
-      image = local.images.api,
+      image = local.images.api-devtools,
       "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:satisfaction-performance-stats"],
       logConfiguration = {
         logDriver = "awslogs",

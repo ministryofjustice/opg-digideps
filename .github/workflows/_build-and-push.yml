@@ -52,7 +52,7 @@ jobs:
             platform: "arm64"
             runs_on: "ubuntu-24.04-arm"
 
-          - svc_name: "test"
+          - svc_name: "api-devtools"
             sub_folder: "."
             docker_file: "api/docker/app/Dockerfile"
             platform: "arm64"
@@ -137,10 +137,10 @@ jobs:
           TAG: ${{ inputs.tag }}
           TARGET_STAGE: ""
         run: |
-          if [ "${IMAGE_NAME}" = "test" ]; then
+          if [ "${IMAGE_NAME}" = "api-devtools" ]; then
             TARGET_STAGE="--target devtools"
           elif [ "${IMAGE_NAME}" = "api" ]; then
-            TARGET_STAGE="--target devtools"
+            TARGET_STAGE="--target runtime"
           fi
 
           if [ "${BRANCH_NAME}" == "main" ]; then
