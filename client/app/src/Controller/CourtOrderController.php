@@ -98,8 +98,12 @@ class CourtOrderController extends AbstractController
         /** @var User $invitingUser */
         $invitingUser = $this->getUser();
 
-        // TODO check response success/error codes etc. and add custom error messages to form if necessary
-        $this->courtOrderService->inviteLayDeputy($uid, $invitedUser, $invitingUser);
+        $result = $this->courtOrderService->inviteLayDeputy($uid, $invitedUser, $invitingUser);
+        if (!$result->success) {
+            $request->getSession()->getFlashBag()->add('error', 'Invitation to deputy could not be sent');
+
+            return new RedirectResponse($this->generateUrl('courtorder_by_uid', ['uid' => $uid]));
+        }
 
         $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
