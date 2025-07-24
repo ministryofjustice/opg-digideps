@@ -122,6 +122,11 @@ class Deputy implements DeputyInterface
     private $phoneAlternative;
 
     /**
+     * @JMS\Type("App\Entity\User")
+     */
+    public ?User $user = null;
+
+    /**
      * @return int
      */
     public function getId()
@@ -465,5 +470,14 @@ class Deputy implements DeputyInterface
         $this->phoneAlternative = trim($phoneAlternative);
 
         return $this;
+    }
+
+    public function getLastLoggedIn(): ?\DateTime
+    {
+        if (is_null($this->user)) {
+            return null;
+        }
+
+        return $this->user->getLastLoggedIn();
     }
 }

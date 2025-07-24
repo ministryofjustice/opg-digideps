@@ -5,37 +5,26 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingDeputyship;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\CSV\CSVChunkerFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\NotSupported;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\UnavailableStream;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipsCSVLoaderIntegrationTest extends KernelTestCase
+class DeputyshipsCSVLoaderIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManager $entityManager;
     private CSVChunkerFactory $chunkerFactory;
     private LoggerInterface $logger;
 
     protected function setUp(): void
     {
-        $container = self::bootKernel()->getContainer();
+        parent::setUp();
 
-        $this->entityManager = $container->get('doctrine')->getManager();
         $this->chunkerFactory = new CSVChunkerFactory();
         $this->logger = $this->createMock(LoggerInterface::class);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        (new ORMPurger($this->entityManager))->purge();
     }
 
     /**

@@ -14,6 +14,7 @@ class BehatController extends AbstractController
     public function __construct(
         private readonly UserApi $userApi,
         private readonly string $symfonyEnvironment,
+        private readonly string $workspace,
     ) {
     }
 
@@ -22,7 +23,10 @@ class BehatController extends AbstractController
      */
     public function getUserDetails(string $email): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (
+            'prod' === $this->symfonyEnvironment
+            && in_array(strtolower($this->workspace), ['production02', 'production', 'preproduction'], true)
+        ) {
             throw $this->createNotFoundException();
         }
 
