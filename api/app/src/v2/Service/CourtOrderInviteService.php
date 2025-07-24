@@ -109,7 +109,8 @@ class CourtOrderInviteService
             // associate deputy with court order, ignoring any existing duplicates
             $this->courtOrderService->associateDeputyWithCourtOrder($persistedDeputy, $courtOrder, logDuplicateError: false);
         } catch (\Exception $e) {
-            // not ideal, but Doctrine doesn't tell us which exceptions it might throw, so we have to catch them all
+            // ^^^ catch all is not ideal, but Doctrine doesn't tell us which exceptions it might throw, so we have to
+            // catch them all just in case
             $this->entityManager->rollback();
 
             return $invitationResult->setMessage("$errorPrefix unexpected error inserting data: {$e->getMessage()}");
