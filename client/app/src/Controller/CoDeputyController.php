@@ -39,7 +39,7 @@ class CoDeputyController extends AbstractController
     /**
      * For co-deputies to verify their details and complete registration.
      */
-    #[Route(path: '/codeputy/verification', name: 'codeputy_verification')]
+    #[Route(path: '/codeputy/verification', name: 'codep_verification')]
     #[Template('@App/CoDeputy/verification.html.twig')]
     public function verificationAction(Request $request, Redirector $redirector, ValidatorInterface $validator): array|RedirectResponse
     {
