@@ -52,6 +52,12 @@ jobs:
             platform: "arm64"
             runs_on: "ubuntu-24.04-arm"
 
+          - svc_name: "test"
+            sub_folder: "."
+            docker_file: "api/docker/app/Dockerfile"
+            platform: "arm64"
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "sync"
             sub_folder: "orchestration"
             docker_file: "Dockerfile"
@@ -130,11 +136,17 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
           TAG: ${{ inputs.tag }}
         run: |
+          if [ "${IMAGE_NAME}" = "test" ]; then
+            TARGET_STAGE="--target devtools"
+          elif [ "${IMAGE_NAME}" = "api" ]; then
+            TARGET_STAGE="--target devtools"
+          fi
+
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
             -f ${DOCKERFILE} \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} ${TARGET_STAGE}\
             --load \
             --build-arg PLATFORM=${PLATFORM} \
             --build-arg TAG=${TAG} \
@@ -146,7 +158,7 @@ jobs:
             -f ${DOCKERFILE} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} \
+            --platform linux/${PLATFORM} ${TARGET_STAGE}\
             --tag ${IMAGE_NAME}:latest \
             --load \
             --build-arg PLATFORM=${PLATFORM} \
