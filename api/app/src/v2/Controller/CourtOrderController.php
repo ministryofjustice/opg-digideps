@@ -61,7 +61,7 @@ class CourtOrderController extends AbstractController
 
         $ctx = SerializationContext::create()
             ->setGroups([
-                'court-order-full', 'client', 'deputy', 'report', 'ndr', 'report-submission',
+                'court-order-full', 'client', 'deputy', 'deputy-user', 'user', 'report', 'ndr', 'report-submission',
             ])
             ->setSerializeNull(true);
 
