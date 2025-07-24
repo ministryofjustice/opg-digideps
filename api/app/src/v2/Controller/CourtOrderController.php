@@ -113,6 +113,6 @@ class CourtOrderController extends AbstractController
             $this->logger->error($result->message);
         }
 
-        return new JsonResponse($result);
+        return new JsonResponse(data: json_encode($result), status: Response::HTTP_OK, json: true);
     }
 }
