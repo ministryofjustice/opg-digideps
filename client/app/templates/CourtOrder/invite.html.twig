@@ -1,0 +1,36 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "co-deputy" %}
+{% trans_default_domain translationDomain %}
+{% set page = "addCoDeputy" %}
+{% set transOptions = {
+    '%clientFirstName%': 'Client Firstname'
+} %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="govuk-body">{{ (page ~ '.intro') | trans(transOptions) }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {{ form_input(form.firstname, 'form.firstName') }}
+    {{ form_input(form.lastname, 'form.lastName') }}
+    {{ form_input(form.email,'form.email') }}
+
+    {{ form_submit(form.submit,'form.submit', {
+        'buttonClass': 'behat-link-send-invitation',
+        'labelText': (page ~ '.submitButton') | trans
+    }) }}
+
+    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link govuk-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -658,4 +658,9 @@ class Fixtures
 
         return $courtOrder;
     }
+
+    public function deleteUser(int $id): void
+    {
+        $this->em->remove($this->getRepo(User::class)->find($id));
+    }
 }

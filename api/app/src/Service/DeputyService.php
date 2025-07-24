@@ -16,26 +16,27 @@ class DeputyService
     private $em;
 
     public function __construct(
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ) {
         $this->deputyRepository = $em->getRepository(Deputy::class);
         $this->em = $em;
     }
 
     /**
-     * Adds a new deputy to the database if not already exists.
+     * Adds a new deputy to the database if it doesn't already exist, or retrieve any existing one.
+     * $userForDeputy becomes the user associated with the deputy.
      */
-    public function addDeputy(Deputy $deputyToAdd, User $currentUser)
+    public function getOrAddDeputy(Deputy $deputyToAdd, User $userForDeputy): Deputy
     {
         $existingDeputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputyToAdd->getDeputyUid()]);
         if ($existingDeputy) {
-            return $existingDeputy->getId();
+            return $existingDeputy;
         }
 
-        $deputyToAdd->setUser($currentUser);
+        $deputyToAdd->setUser($userForDeputy);
         $this->em->persist($deputyToAdd);
         $this->em->flush();
 
-        return $deputyToAdd->getId();
+        return $deputyToAdd;
     }
 }
