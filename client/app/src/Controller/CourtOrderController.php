@@ -37,8 +37,6 @@ class CourtOrderController extends AbstractController
     #[Template('@App/CourtOrder/index.html.twig')]
     public function getOrderByUid(string $uid): array
     {
-        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
         $courtOrder = $this->courtOrderService->getByUid($uid);
 
         /** @var Client $client */
