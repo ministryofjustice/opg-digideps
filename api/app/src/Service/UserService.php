@@ -142,6 +142,12 @@ class UserService
         $existingUser = $this->userRepository->findOneBy(['email' => $invitedDeputyData->email]);
 
         if (!is_null($existingUser)) {
+            if (is_null($existingUser->getRegistrationToken())) {
+                $existingUser->recreateRegistrationToken();
+                $this->em->persist($existingUser);
+                $this->em->flush();
+            }
+
             return $existingUser;
         }
 
@@ -152,5 +158,12 @@ class UserService
         $invitedUser->setRoleName($invitedDeputyData->roleName);
 
         return $this->addUser($invitingDeputy, $invitedUser, null);
+    }
+
+    public function recreateRegistrationToken(User $user): void
+    {
+        $user->recreateRegistrationToken();
+        $this->em->persist($user);
+        $this->em->flush();
     }
 }
