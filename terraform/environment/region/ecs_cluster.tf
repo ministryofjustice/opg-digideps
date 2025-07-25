@@ -202,6 +202,6 @@ locals {
     { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
     { name = "WORKSPACE", value = local.environment },
     { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
-    { name = "FIXTURES_ENABLED", value = var.account.fixtures_enabled }
+    { name = "FIXTURES_ENABLED", value = var.account.fixtures_enabled ? "true" : "false" }
   ]
 }
