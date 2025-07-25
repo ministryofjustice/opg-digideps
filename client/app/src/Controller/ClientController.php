@@ -42,7 +42,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Client/show.html.twig")
      */
-    public function showAction(Redirector $redirector)
+    public function showAction(Redirector $redirector): array|RedirectResponse
     {
         return $this->redirectToRoute('homepage');
     }
@@ -52,7 +52,7 @@ class ClientController extends AbstractController
      *
      * @Template("@App/Client/show.html.twig")
      */
-    public function showClientDetailsAction(Redirector $redirector, int $clientId)
+    public function showClientDetailsAction(Redirector $redirector, int $clientId): array|RedirectResponse
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -74,10 +74,8 @@ class ClientController extends AbstractController
      * @Route("/deputyship-details/your-client/edit", name="client_edit_deprecated")
      *
      * @Template("@App/Client/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request): RedirectResponse
     {
         return $this->redirectToRoute('homepage');
     }
@@ -86,12 +84,11 @@ class ClientController extends AbstractController
      * @Route("/deputyship-details/client/{clientId}/edit", name="client_edit")
      *
      * @Template("@App/Client/edit.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function editClientDetailsAction(Request $request, int $clientId)
+    public function editClientDetailsAction(Request $request, int $clientId): array|RedirectResponse
     {
         $from = $request->get('from');
+        /** @var Client|null $preUpdateClient */
         $preUpdateClient = $this->clientApi->getById($clientId);
 
         if (is_null($preUpdateClient)) {
@@ -136,11 +133,13 @@ class ClientController extends AbstractController
      * @Route("/client/add", name="client_add")
      *
      * @Template("@App/Client/add.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function addAction(Request $request, Redirector $redirector, TranslatorInterface $translator, LoggerInterface $logger)
-    {
+    public function addAction(
+        Request $request,
+        Redirector $redirector,
+        TranslatorInterface $translator,
+        LoggerInterface $logger
+    ): array|RedirectResponse {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
 
@@ -149,16 +148,18 @@ class ClientController extends AbstractController
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
-
+        /** @var Client|null $client */
         $client = $this->clientApi->getFirstClient();
         $existingClientId = 0;
         if (!empty($client)) {
             // update existing client
             $existingClientId = $client->getId();
+            /** @var Client $client */
             $client = $this->restClient->get('client/'.$client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $client_validated = true;
         } else {
             // new client
+            /** @var Client $client */
             $client = new Client();
             $client_validated = false;
         }
@@ -178,22 +179,23 @@ class ClientController extends AbstractController
                     $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
                 }
 
+                $client->setId($response['id']);
+
+                $report = new Report();
+                $report->setClient($client);
+                $this->restClient->post('report', $report);
+
+
                 /** @var User $currentUser */
                 $currentUser = $this->userApi->getUserWithData();
 
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
                 $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
 
-                $url = $currentUser->isNdrEnabled()
-                    ? $this->generateUrl('lay_home', ['clientId' => $response['id']])
-                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+                $event = new RegistrationSucceededEvent($currentUser);
+                $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
 
-                if ($currentUser->isNdrEnabled()) {
-                    $event = new RegistrationSucceededEvent($currentUser);
-
-                    $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
-                }
-
+                $url = $this->generateUrl('lay_home', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {

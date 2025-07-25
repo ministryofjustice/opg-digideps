@@ -6,6 +6,7 @@ namespace App\Tests\Behat\v2\Registration;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Tests\Behat\BehatException;
 use App\Tests\Behat\v2\Common\UserDetails;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 
@@ -88,14 +89,6 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_month', $regDetails['client']['courtDateMonth']);
         $this->fillInField('client_courtDate_year', $regDetails['client']['courtDateYear']);
         $this->pressButton('client_save');
-
-        $this->fillInField('report_startDate_day', $regDetails['report']['startDay']);
-        $this->fillInField('report_startDate_month', $regDetails['report']['startMonth']);
-        $this->fillInField('report_startDate_year', $regDetails['report']['startYear']);
-        $this->fillInField('report_endDate_day', $regDetails['report']['endDay']);
-        $this->fillInField('report_endDate_month', $regDetails['report']['endMonth']);
-        $this->fillInField('report_endDate_year', $regDetails['report']['endYear']);
-        $this->pressButton('report_save');
 
         $this->visitFrontendPath('/logout');
     }
@@ -188,8 +181,6 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillClientDetailsAndSubmit();
-
-        $this->fillInReportDetailsAndSubmit();
     }
 
     /**
@@ -344,8 +335,6 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2016');
         $this->pressButton('client_save');
-
-        $this->fillInReportDetailsAndSubmit();
     }
 
     /**
@@ -428,8 +417,6 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillClientDetailsAndSubmit();
-
-        $this->fillInReportDetailsAndSubmit();
     }
 
     /**
@@ -522,15 +509,17 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillClientDetailsAndSubmit();
-
-        $this->fillInReportDetailsAndSubmit();
     }
 
     private function setPasswordAndTickTAndCs(): void
     {
-        $this->fillInField('set_password_password_first', 'DigidepsPass1234');
-        $this->fillInField('set_password_password_second', 'DigidepsPass1234');
-        $this->checkOption('set_password_showTermsAndConditions');
+        try {
+            $this->fillInField('set_password_password_first', 'DigidepsPass1234');
+            $this->fillInField('set_password_password_second', 'DigidepsPass1234');
+            $this->checkOption('set_password_showTermsAndConditions');
+        } catch (\Exception $e) {
+            throw new BehatException(sprintf('Failed to find password fields, currently on page: %s', $this->getCurrentUrl()));
+        }
     }
 
     private function fillUserDetailsAndSubmit(): void
@@ -557,17 +546,6 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_month', '04');
         $this->fillInField('client_courtDate_year', '2023');
         $this->pressButton('client_save');
-    }
-
-    private function fillInReportDetailsAndSubmit(): void
-    {
-        $this->fillInField('report_startDate_day', '02');
-        $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2023');
-        $this->fillInField('report_endDate_day', '01');
-        $this->fillInField('report_endDate_month', '01');
-        $this->fillInField('report_endDate_year', '2024');
-        $this->pressButton('report_save');
     }
 
     /**
@@ -718,8 +696,6 @@ trait SelfRegistrationTrait
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2016');
         $this->pressButton('client_save');
-
-        $this->fillInReportDetailsAndSubmit();
     }
 
     /**
@@ -729,7 +705,11 @@ trait SelfRegistrationTrait
     {
         $matches = [];
         preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
-        $clientId = $matches[0];
+        $clientId = (int) $matches[0];
+
+        if (!is_int($clientId) || $clientId <= 0) {
+            throw new BehatException(sprintf('Client ID %s is not a valid integer, pulled from URL %s', $clientId, $this->getCurrentUrl()));
+        }
 
         $this->getCurrentUrl();
         $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
@@ -742,6 +722,7 @@ trait SelfRegistrationTrait
         $this->fillInField('co_deputy_invite_lastname', $coDeputyLastName);
         $this->fillInField('co_deputy_invite_email', $this->coDeputyEmail);
         $this->pressButton('co_deputy_invite_submit');
+        $this->assertPageContainsText('Deputy invitation has been sent');
     }
 
     /**
@@ -846,19 +827,6 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillClientDetailsAndSubmit();
-
-        $this->fillInInvalidReportDetailsAndSubmit();
-    }
-
-    private function fillInInvalidReportDetailsAndSubmit(): void
-    {
-        $this->fillInField('report_startDate_day', '01');
-        $this->fillInField('report_startDate_month', '01');
-        $this->fillInField('report_startDate_year', '2016');
-        $this->fillInField('report_endDate_day', '01');
-        $this->fillInField('report_endDate_month', '04');
-        $this->fillInField('report_endDate_year', '2017');
-        $this->pressButton('report_save');
     }
 
     /**
