@@ -196,7 +196,7 @@ locals {
           name  = "WORKSPACE",
           value = local.environment
         },
-        { name = "FIXTURES_ENABLED", value = var.account.fixtures_enabled ? "true" : "false" }
+        { name = "FIXTURES_ENABLED", value = tostring(var.account.fixtures_enabled) }
       ]
     }
   )
