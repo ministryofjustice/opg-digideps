@@ -53,7 +53,7 @@ class FixtureController extends AbstractController
         $this->userApi = $userApi;
         $this->deputyProvider = $deputyProvider;
         $this->symfonyEnvironment = $symfonyEnvironment;
-        $this->fixturesEnabled = $$fixturesEnabled;
+        $this->fixturesEnabled = $fixturesEnabled;
     }
 
     /**
