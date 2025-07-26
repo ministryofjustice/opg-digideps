@@ -66,7 +66,7 @@ locals {
   integration_tests_container = jsonencode(
     {
       name  = "integration-tests",
-      image = local.images.api,
+      image = local.images.api-devtools,
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -97,7 +97,7 @@ locals {
           valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn
         }
       ],
-      environment = concat(local.api_base_variables, local.api_service_variables, local.api_integration_test_variables)
+      environment = concat(local.api_base_variables, local.api_service_variables, local.api_integration_test_variables, local.api_testing_app_variables)
     }
   )
 }
