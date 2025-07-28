@@ -28,9 +28,6 @@ class InvitedDto implements \JSONSerializable
         return [
             'success' => $this->success,
             'data' => [
-                // success is repeated in the body so that callers also have access to it
-                // (the REST client only returns the data part of the response body)
-                'success' => $this->success,
                 'message' => $this->message,
                 'registrationToken' => $this->registrationToken,
             ],
