@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Repository\DeputyRepository;
@@ -38,5 +39,19 @@ class DeputyService
         $this->em->flush();
 
         return $deputyToAdd;
+    }
+
+    public function associateDeputyWithClient(Deputy $deputy, Client $client): void
+    {
+        $user = $deputy->getUser();
+
+        if (is_null($user)) {
+            throw new \ValueError('Could not associate deputy with client: deputy has no user');
+        }
+
+        $client->addUser($user);
+
+        $this->em->persist($client);
+        $this->em->flush();
     }
 }

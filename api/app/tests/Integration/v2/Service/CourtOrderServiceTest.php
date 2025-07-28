@@ -37,7 +37,7 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         $this->entityManager->persist($deputy);
         $this->entityManager->flush();
 
-        $success = $this->sut->associateDeputyWithCourtOrder($deputy, $courtOrder);
+        $success = $this->sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
         $this->assertFalse($success);
     }
 
@@ -48,7 +48,7 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
 
-        $success = $this->sut->associateDeputyWithCourtOrder($deputy, $courtOrder);
+        $success = $this->sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
         $this->assertTrue($success);
 
         $rel = $this->courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);

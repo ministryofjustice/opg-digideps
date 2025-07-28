@@ -159,11 +159,4 @@ class UserService
 
         return $this->addUser($invitingDeputy, $invitedUser, null);
     }
-
-    public function recreateRegistrationToken(User $user): void
-    {
-        $user->recreateRegistrationToken();
-        $this->em->persist($user);
-        $this->em->flush();
-    }
 }
