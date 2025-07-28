@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Form\CoDeputyInviteType;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\DeputyApi;
-use App\Service\Client\Internal\UserApi;
 use App\Service\CourtOrderService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class CourtOrderController extends AbstractController
 {
     public function __construct(
-        private readonly UserApi $userApi,
         private readonly CourtOrderService $courtOrderService,
         private readonly ClientApi $clientApi,
         private readonly DeputyApi $deputyApi,
