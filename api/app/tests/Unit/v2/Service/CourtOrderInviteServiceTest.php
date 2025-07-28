@@ -260,8 +260,12 @@ class CourtOrderInviteServiceTest extends TestCase
             ->willReturn($mockDeputy);
 
         $this->mockCourtOrderService->expects(self::once())
-            ->method('associateDeputyWithCourtOrder')
+            ->method('associateCourtOrderWithDeputy')
             ->with($mockDeputy, $mockCourtOrder, true);
+
+        $this->mockDeputyService->expects(self::once())
+            ->method('associateDeputyWithClient')
+            ->with($mockDeputy, $mockClient);
 
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 

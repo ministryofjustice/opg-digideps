@@ -87,7 +87,7 @@ class CourtOrderService
      * @return bool true if the association was made; false if the deputy or court order doesn't exist, or if they
      *              do and they are already associated
      */
-    public function associateDeputyWithCourtOrder(
+    public function associateCourtOrderWithDeputy(
         Deputy $deputy,
         CourtOrder $courtOrder,
         bool $isActive = true,

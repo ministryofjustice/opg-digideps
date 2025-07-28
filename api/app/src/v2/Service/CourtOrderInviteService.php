@@ -72,7 +72,9 @@ class CourtOrderInviteService
         }
 
         // check invited deputy is in the prereg table and is associated with the court order's case number
-        $caseNumber = $courtOrder->getClient()->getCaseNumber();
+        $client = $courtOrder->getClient();
+
+        $caseNumber = $client->getCaseNumber();
         if (is_null($caseNumber)) {
             return $invitationResult->setMessage("$errorPrefix could not find case number for court order");
         }
@@ -108,7 +110,10 @@ class CourtOrderInviteService
             $persistedDeputy = $this->deputyService->getOrAddDeputy($invitedLayDeputy, $persistedUser);
 
             // associate deputy with court order, ignoring any existing duplicates
-            $this->courtOrderService->associateDeputyWithCourtOrder($persistedDeputy, $courtOrder, logDuplicateError: false);
+            $this->courtOrderService->associateCourtOrderWithDeputy($persistedDeputy, $courtOrder, logDuplicateError: false);
+
+            // associate deputy with client; this is required so that client's data is accessible to the user
+            $this->deputyService->associateDeputyWithClient($persistedDeputy, $client);
         } catch (\Exception $e) {
             $this->entityManager->rollback();
 
