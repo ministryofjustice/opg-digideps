@@ -236,7 +236,7 @@ class ReportSubmission
     /**
      * @return ReportSubmission
      */
-    public function setArchivedBy(User $archivedBy = null)
+    public function setArchivedBy(?User $archivedBy = null)
     {
         $this->archivedBy = $archivedBy;
 

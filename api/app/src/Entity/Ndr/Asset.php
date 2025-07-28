@@ -135,11 +135,9 @@ abstract class Asset
     }
 
     /**
-     * @param Ndr $ndr
-     *
      * @return Asset
      */
-    public function setNdr(Ndr $ndr = null)
+    public function setNdr(?Ndr $ndr = null)
     {
         $this->ndr = $ndr;
 

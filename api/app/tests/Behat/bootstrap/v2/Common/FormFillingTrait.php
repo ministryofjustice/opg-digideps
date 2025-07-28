@@ -24,7 +24,7 @@ trait FormFillingTrait
      *                                     becomes £21.00). To override this, or add any other formatting, pass this
      *                                     argument tot he function
      */
-    public function fillInField(string $field, $value, string $formSectionName = null, string $formattedValue = null)
+    public function fillInField(string $field, $value, ?string $formSectionName = null, ?string $formattedValue = null)
     {
         if ($formSectionName) {
             $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value, $formattedValue);
@@ -41,7 +41,7 @@ trait FormFillingTrait
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
      */
-    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, string $formSectionName = null)
+    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, ?string $formSectionName = null)
     {
         $fullDate = '';
 
@@ -80,7 +80,7 @@ trait FormFillingTrait
     public function fillInSortCodeFields(
         string $fieldName,
         string $fullSortCode,
-        string $formSectionName = null
+        ?string $formSectionName = null
     ) {
         $sortCodeParts = explode('-', $fullSortCode);
 
@@ -108,7 +108,7 @@ trait FormFillingTrait
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
      */
-    public function fillInFieldTrackTotal(string $field, int $value, string $formSectionName = null)
+    public function fillInFieldTrackTotal(string $field, int $value, ?string $formSectionName = null)
     {
         $this->fillInField($field, $value, $formSectionName);
 
@@ -135,7 +135,7 @@ trait FormFillingTrait
      *
      *                                      Only provide this if you are asserting on the translation on the summary page.
      */
-    public function chooseOption(string $select, $option, string $formSectionName = null, string $translatedOption = null)
+    public function chooseOption(string $select, $option, ?string $formSectionName = null, ?string $translatedOption = null)
     {
         $this->selectOption($select, $option);
 
@@ -161,7 +161,7 @@ trait FormFillingTrait
      *
      *                                       Only provide this if you are asserting on the translation on the summary page.
      */
-    public function tickCheckbox(string $checkboxGroupName, $option, string $formSectionName = null, string $translatedOption = null)
+    public function tickCheckbox(string $checkboxGroupName, $option, ?string $formSectionName = null, ?string $translatedOption = null)
     {
         $this->checkOption($option);
 
@@ -251,7 +251,7 @@ trait FormFillingTrait
         }
     }
 
-    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, string $formattedValue = null)
+    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue = null)
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
 
@@ -285,7 +285,7 @@ trait FormFillingTrait
         string $fieldInAnswerGroupToRemove,
         string $formSectionName,
         bool $fullGroup = true,
-        string $removeButtonText = null
+        ?string $removeButtonText = null
     ) {
         $answers = $this->getSectionAnswers($formSectionName);
 
@@ -352,7 +352,7 @@ trait FormFillingTrait
      * @throws BehatException
      * @throws ElementNotFoundException
      */
-    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true, int $value = null): array
+    public function editFieldAnswerInSectionTrackTotal(NodeElement $summaryRowToEdit, string $fieldName, string $formSectionName, bool $fullGroup = true, ?int $value = null): array
     {
         $currentValueString = $summaryRowToEdit->find('xpath', '//td[contains(.,"£")] | //dd[contains(.,"£")]')->getText();
         $currentValueInt = intval(str_replace([',', '£'], '', $currentValueString));
@@ -410,7 +410,7 @@ trait FormFillingTrait
      *
      * @throws ElementNotFoundException
      */
-    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, string $translatedValue = null, bool $fullGroup = true)
+    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, ?string $translatedValue = null, bool $fullGroup = true)
     {
         $this->removeAnswerFromSection($selectName, $formSectionName, $fullGroup);
 

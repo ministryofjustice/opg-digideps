@@ -375,11 +375,9 @@ class BankAccount implements BankAccountInterface
     /**
      * Set report.
      *
-     * @param Report $report
-     *
      * @return BankAccount
      */
-    public function setReport(Report $report = null)
+    public function setReport(?Report $report = null)
     {
         $this->report = $report;
 
