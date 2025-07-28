@@ -13,7 +13,6 @@ class InviteResult
     public function __construct(
         public bool $success,
         public ?string $message = null,
-        public ?int $invitedUserId = null,
     ) {
     }
 }
