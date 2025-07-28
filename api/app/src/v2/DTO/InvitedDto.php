@@ -10,12 +10,9 @@ namespace App\v2\DTO;
 class InvitedDto implements \JSONSerializable
 {
     public function __construct(
-        public readonly string $courtOrderUid,
-        public readonly int $invitingUserId,
         public bool $success = false,
         public ?string $message = null,
-        public ?string $invitedDeputyUid = null,
-        public ?int $invitedUserId = null,
+        public ?string $registrationToken = null,
     ) {
     }
 
@@ -32,12 +29,10 @@ class InvitedDto implements \JSONSerializable
             'success' => $this->success,
             'data' => [
                 // success is repeated in the body so that callers also have access to it
+                // (the REST client only returns the data part of the response body)
                 'success' => $this->success,
                 'message' => $this->message,
-                'courtOrderUid' => $this->courtOrderUid,
-                'invitingUserId' => $this->invitingUserId,
-                'invitedUserId' => $this->invitedUserId,
-                'invitedDeputyUid' => $this->invitedDeputyUid,
+                'registrationToken' => $this->registrationToken,
             ],
         ];
     }

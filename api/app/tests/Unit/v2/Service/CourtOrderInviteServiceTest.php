@@ -51,7 +51,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope', User::ROLE_ORG_TEAM_MEMBER);
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
 
         $invited = $this->sut->inviteLayDeputy('1122334455', $invitingUser, $inviteeDTO);
 
@@ -66,7 +65,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('getByUidAsUser')
@@ -86,8 +84,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
-
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
 
@@ -113,8 +109,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
-
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
 
@@ -145,8 +139,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
-
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
         $mockPreRegistration = self::createMock(PreRegistration::class);
@@ -181,8 +173,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
-
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
         $mockPreregistration = self::createMock(PreRegistration::class);
@@ -230,8 +220,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
         $invitingUser = self::createMock(User::class);
-        $invitingUser->expects(self::once())->method('getId')->willReturn(1);
-
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
         $mockPreregistration = self::createMock(PreRegistration::class);
