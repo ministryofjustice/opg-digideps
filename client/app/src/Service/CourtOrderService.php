@@ -41,7 +41,6 @@ class CourtOrderService
             expectedResponseType: 'raw',
         );
 
-        // body contents are fields output in the 'data' property of the output from InvitedDTO::jsonSerialize
         $body = json_decode($stream->getContents(), associative: true);
 
         if (is_null($body) || !isset($body['success']) || !is_bool($body['success'])) {
@@ -54,7 +53,7 @@ class CourtOrderService
             );
         }
 
-        $success = $body['success'];
+        $success = $body['data']['success'];
 
         if ($success) {
             // construct a dummy user object to use for email parameters (the User object passed to this method is not
@@ -62,7 +61,7 @@ class CourtOrderService
             $newUser = new User();
             $newUser->setEmail($invitedUser->getEmail());
             $newUser->setRoleName(User::ROLE_LAY_DEPUTY);
-            $newUser->setRegistrationToken($body['registrationToken']);
+            $newUser->setRegistrationToken($body['data']['registrationToken']);
 
             // trigger the event which sends the activation email to the new co-deputy
             $coDeputyCreatedEvent = new CoDeputyCreatedEvent($newUser, $invitingUser);
@@ -71,7 +70,7 @@ class CourtOrderService
 
         return new InviteResult(
             success: $success,
-            message: $body['message'] ?? null,
+            message: $body['data']['message'] ?? null,
         );
     }
 }
