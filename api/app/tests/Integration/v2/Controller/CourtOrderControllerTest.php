@@ -7,41 +7,22 @@ namespace App\Tests\Integration\v2\Controller;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\User;
-use App\Service\JWT\JWTService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use App\Tests\Integration\Controller\AbstractTestController;
 use App\Tests\Integration\Controller\JsonHttpTestClient;
-use App\Tests\Integration\Fixtures;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CourtOrderControllerTest extends WebTestCase
+class CourtOrderControllerTest extends AbstractTestController
 {
     private static JsonHttpTestClient $client;
-    private static Fixtures $fixtures;
-    private static EntityManager $em;
-    private static ORMPurger $purger;
     private static FixtureHelper $fixtureHelper;
     private static ReportTestHelper $reportTestHelper;
-    private static string $deputySecret;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        $browser = static::createClient(['environment' => 'test', 'debug' => false]);
+        parent::setUp();
+
         $container = static::getContainer();
-
-        /** @var JWTService $jwtService */
-        $jwtService = $container->get('App\Service\JWT\JWTService');
-        self::$client = new JsonHttpTestClient($browser, $jwtService);
-
-        /** @var EntityManager $em */
-        $em = $container->get('em');
-
-        self::$em = $em;
-        self::$fixtures = new Fixtures(self::$em);
-
-        self::$purger = new ORMPurger($em, excluded: ['dd_user']);
 
         /** @var FixtureHelper $fixtureHelper */
         $fixtureHelper = $container->get(FixtureHelper::class);
@@ -49,12 +30,7 @@ class CourtOrderControllerTest extends WebTestCase
 
         self::$reportTestHelper = new ReportTestHelper();
 
-        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$purger->purge();
+        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
     }
 
     private function createDeputyForUser(User $user): Deputy
@@ -285,8 +261,7 @@ class CourtOrderControllerTest extends WebTestCase
         );
 
         // assertions
-        self::assertEquals($courtOrder->getCourtOrderUid(), $responseJson['courtOrderUid']);
-        self::assertEquals($invitedDeputy->getDeputyUid(), $responseJson['invitedDeputyUid']);
-        self::assertEquals($user->getId(), $responseJson['invitingUserId']);
+        self::assertEquals(true, $responseJson['data']['success']);
+        self::assertMatchesRegularExpression('/[0-9a-z]{40}/', $responseJson['data']['registrationToken']);
     }
 }
