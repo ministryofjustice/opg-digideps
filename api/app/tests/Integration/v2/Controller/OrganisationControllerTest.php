@@ -4,6 +4,7 @@ namespace App\Tests\Integration\v2\Controller;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Tests\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -583,7 +584,11 @@ class OrganisationControllerTest extends AbstractTestController
     public function removeUserActionAllowsUserRemoveFromTheirOrganisation()
     {
         $orgId = self::$orgs[0]->getId();
-        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+
+        /** @var UserRepository $repo */
+        $repo = self::fixtures()->getRepo(User::class);
+
+        $newUser = $repo->findOneByEmail('prof@example.org');
 
         self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
         self::fixtures()->flush()->clear();
