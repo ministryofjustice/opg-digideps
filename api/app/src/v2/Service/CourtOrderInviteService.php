@@ -55,7 +55,7 @@ class CourtOrderInviteService
      */
     public function inviteLayDeputy(string $courtOrderUid, User $invitingLayDeputy, InviteeDto $invitedDeputyDTO): InvitedDto
     {
-        $invitationResult = new InvitedDto($courtOrderUid, $invitingLayDeputy->getId());
+        $invitationResult = new InvitedDto();
         $errorPrefix = "Could not invite $invitedDeputyDTO->email to court order $courtOrderUid: ";
 
         // check invited deputy is a Lay
@@ -118,8 +118,8 @@ class CourtOrderInviteService
         $this->entityManager->commit();
 
         $invitationResult->success = true;
-        $invitationResult->invitedDeputyUid = $persistedDeputy->getDeputyUid();
-        $invitationResult->invitedUserId = $persistedUser->getId();
+        $invitationResult->registrationToken = $persistedUser->getRegistrationToken();
+        $invitationResult->message = 'Invitation sent successfully';
 
         return $invitationResult;
     }
