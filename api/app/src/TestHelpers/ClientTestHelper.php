@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ClientTestHelper extends TestCase
 {
@@ -19,7 +20,7 @@ class ClientTestHelper extends TestCase
     {
         $prophet = new Prophet();
         $report = $hasReports ? ($prophet->prophesize(Report::class))->reveal() : null;
-        
+
         /** @var ObjectProphecy<Client> $client */
         $client = $prophet->prophesize(Client::class);
         $client->getReports()->willReturn($report);
@@ -28,8 +29,12 @@ class ClientTestHelper extends TestCase
         return $client->reveal();
     }
 
-    public static function generateClient(EntityManager $em, User $user = null, Organisation $organisation = null, string $caseNumber = null)
-    {
+    public static function generateClient(
+        EntityManager $em,
+        ?User $user = null,
+        ?Organisation $organisation = null,
+        ?string $caseNumber = null
+    ) {
         $faker = Factory::create('en_GB');
 
         $client = (new Client())

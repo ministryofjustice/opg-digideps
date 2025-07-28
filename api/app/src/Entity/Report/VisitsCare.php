@@ -129,11 +129,9 @@ class VisitsCare
     /**
      * Set report.
      *
-     * @param Report $report
-     *
      * @return Contact
      */
-    public function setReport(Report $report = null)
+    public function setReport(?Report $report = null)
     {
         $this->report = $report;
 

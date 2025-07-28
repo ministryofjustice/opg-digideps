@@ -23,7 +23,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
-    public function __construct(UuidInterface $id = null)
+    public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
         $this->created = new \DateTime();
