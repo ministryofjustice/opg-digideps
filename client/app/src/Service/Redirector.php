@@ -82,7 +82,7 @@ class Redirector
 
         // none of these corrections apply to admin
         if (!$user->hasAdminRole()) {
-            if ($user->getIsCoDeputy()) {
+            if ($user->getIsCoDeputy() || User::CO_DEPUTY_INVITE === $user->getRegistrationRoute()) {
                 $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
 
                 // already verified - shouldn't be on verification page
