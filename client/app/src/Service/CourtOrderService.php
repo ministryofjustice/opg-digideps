@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Event\CoDeputyCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Model\InviteResult;
-use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
@@ -19,7 +18,6 @@ class CourtOrderService
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ObservableEventDispatcher $eventDispatcher,
-        private readonly UserApi $userApi,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -43,39 +41,37 @@ class CourtOrderService
             expectedResponseType: 'raw',
         );
 
+        // body contents are fields output in the 'data' property of the output from InvitedDTO::jsonSerialize
         $body = json_decode($stream->getContents(), associative: true);
 
-        $success = false;
-        $message = $invitedUserId = null;
-        if (!is_null($body) && isset($body['success']) && is_bool($body['success'])) {
-            $success = $body['success'];
-            $message = $body['data']['message'] ?? null;
-            $invitedUserId = $body['data']['invitedUserId'] ?? null;
+        if (is_null($body) || !isset($body['success']) || !is_bool($body['success'])) {
+            $message = 'Unable to send co-deputy invitation to user - malformed JSON or no `success` property set';
+            $this->logger->error($message);
+
+            return new InviteResult(
+                success: false,
+                message: $message,
+            );
         }
 
-        if (is_null($invitedUserId)) {
-            $success = false;
-            $message = 'Unable to find ID of user associated with invited deputy';
-        }
+        $success = $body['success'];
 
         if ($success) {
-            // fetch the user as saved to the db (the User object passed to this method is not persisted and
-            // doesn't have a registration token)
-            // TODO this doesn't work because the inviting deputy can't access the invited deputy's record
-            // TODO instead, include contact details in the API response and serialise to <client>\User
-            $persistedUser = $this->userApi->get($invitedUserId);
+            // construct a dummy user object to use for email parameters (the User object passed to this method is not
+            // persisted and doesn't have a registration token so we get the necessary data from the request+response)
+            $newUser = new User();
+            $newUser->setEmail($invitedUser->getEmail());
+            $newUser->setRoleName(User::ROLE_LAY_DEPUTY);
+            $newUser->setRegistrationToken($body['registrationToken']);
 
             // trigger the event which sends the activation email to the new co-deputy
-            $coDeputyCreatedEvent = new CoDeputyCreatedEvent($persistedUser, $invitingUser);
+            $coDeputyCreatedEvent = new CoDeputyCreatedEvent($newUser, $invitingUser);
             $this->eventDispatcher->dispatch($coDeputyCreatedEvent, CoDeputyCreatedEvent::NAME);
-        } else {
-            $this->logger->error("Unable to send co-deputy invitation to user - error was: $message");
         }
 
         return new InviteResult(
             success: $success,
-            message: $message,
-            invitedUserId: $invitedUserId,
+            message: $body['message'] ?? null,
         );
     }
 }
