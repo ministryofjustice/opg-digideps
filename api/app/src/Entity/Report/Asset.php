@@ -147,11 +147,9 @@ abstract class Asset
     /**
      * Set report and set to false the report.noAssetToAdd status.
      *
-     * @param Report $report
-     *
      * @return Asset
      */
-    public function setReport(Report $report = null)
+    public function setReport(?Report $report = null)
     {
         $this->report = $report;
 

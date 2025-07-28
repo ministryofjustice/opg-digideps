@@ -7266,16 +7266,6 @@ parameters:
 			path: src/Repository/NdrAssetRepository.php
 
 		-
-			message: "#^Instantiated class App\\\\Repository\\\\InvalidArgumentException not found\\.$#"
-			count: 1
-			path: src/Repository/NdrAssetRepository.php
-
-		-
-			message: "#^Throwing object of an unknown class App\\\\Repository\\\\InvalidArgumentException\\.$#"
-			count: 1
-			path: src/Repository/NdrAssetRepository.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\NdrBankAccountRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/NdrBankAccountRepository.php
@@ -8781,17 +8771,12 @@ parameters:
 			path: src/Service/Validator/RestArrayValidator.php
 
 		-
-			message: "#^Call to method getId\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\Client\\>\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
 		-
-			message: "#^Call to method getReports\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Call to method reveal\\(\\) on an unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
+			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\Client\\>\\:\\:getReports\\(\\)\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 
@@ -8807,11 +8792,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$client contains unknown class App\\\\TestHelpers\\\\ObjectProphecy\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
 

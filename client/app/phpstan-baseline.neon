@@ -981,22 +981,7 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:showAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:showClientDetailsAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: "#^Parameter \\#1 \\$client of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:create\\(\\) expects App\\\\Entity\\\\Client, mixed given\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Parameter \\#1 \\$preUpdateClient of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:update\\(\\) expects App\\\\Entity\\\\Client, mixed given\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
 
