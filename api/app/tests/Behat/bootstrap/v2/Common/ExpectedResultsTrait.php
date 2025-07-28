@@ -27,7 +27,7 @@ trait ExpectedResultsTrait
      * @throws BehatException
      */
     public function expectedResultsDisplayedSimplified(
-        string $sectionName = null,
+        ?string $sectionName = null,
         bool $partialMatch = false,
         bool $sectionsHaveTotals = false,
         bool $hasGrandTotal = true,

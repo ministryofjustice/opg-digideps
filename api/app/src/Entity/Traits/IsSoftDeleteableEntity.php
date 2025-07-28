@@ -23,7 +23,7 @@ trait IsSoftDeleteableEntity
      *
      * @return $this
      */
-    public function setDeletedAt(\DateTime $deletedAt = null)
+    public function setDeletedAt(?\DateTime $deletedAt = null)
     {
         $this->deletedAt = $deletedAt;
 

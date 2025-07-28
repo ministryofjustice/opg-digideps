@@ -33,11 +33,11 @@ use Doctrine\ORM\EntityManager;
 class ReportTestHelper
 {
     public static function generateReport(
-        EntityManager $em, 
-        Client $client = null, 
-        string $type = null,  
-        DateTime $startDate = null,
-        DateTime $endDate = null,
+        EntityManager $em,
+        ?Client $client = null,
+        ?string $type = null,
+        ?DateTime $startDate = null,
+        ?DateTime $endDate = null,
         bool $dateChecks = true
     ): Report {
         $client = $client ?: ClientTestHelper::generateClient($em);
