@@ -201,13 +201,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $registrationDate;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
-    private $registrationToken;
+    private ?string $registrationToken;
 
     /**
      * @var \DateTime
@@ -570,12 +568,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Set registrationToken.
-     *
-     * @param string $registrationToken
-     *
-     * @return User
      */
-    public function setRegistrationToken($registrationToken)
+    public function setRegistrationToken(?string $registrationToken): static
     {
         $this->registrationToken = $registrationToken;
 
@@ -584,10 +578,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get registrationToken.
-     *
-     * @return string
      */
-    public function getRegistrationToken()
+    public function getRegistrationToken(): ?string
     {
         return $this->registrationToken;
     }

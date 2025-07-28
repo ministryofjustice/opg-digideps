@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route(path: '/courtorder')]
@@ -97,13 +98,17 @@ class CourtOrderController extends AbstractController
         $invitingUser = $this->getUser();
 
         $result = $this->courtOrderService->inviteLayDeputy($uid, $invitedUser, $invitingUser);
+
+        /** @var Session $session */
+        $session = $request->getSession();
+
         if (!$result->success) {
-            $request->getSession()->getFlashBag()->add('error', 'Invitation to deputy could not be sent');
+            $session->getFlashBag()->add('error', 'Invitation to deputy could not be sent');
 
             return new RedirectResponse($this->generateUrl('courtorder_by_uid', ['uid' => $uid]));
         }
 
-        $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
+        $session->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
         return new RedirectResponse($this->generateUrl('courtorder_by_uid', ['uid' => $uid]));
     }
