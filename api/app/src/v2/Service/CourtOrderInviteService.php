@@ -28,6 +28,9 @@ use Doctrine\ORM\EntityManagerInterface;
  * Outputs:
  * - dd_user, deputy, and court_order_deputy records are present for the invited deputy (created if they don't exist)
  * - dd_user.registration_token is recreated for user associated with the invited deputy
+ * - deputy_case table entry is present for the invited deputy's user and the client on the court order (this is
+ * so that existing pages which rely on fetching client data continue to work, as this relationship is checked before
+ * allowing access to the API endpoints)
  *
  * Clarifications:
  * - did consider ignoring dd_user.role_name, but it's required for dd_user record (default = ROLE_LAY_DEPUTY)
