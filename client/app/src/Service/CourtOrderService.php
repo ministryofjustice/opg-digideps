@@ -41,6 +41,7 @@ class CourtOrderService
             expectedResponseType: 'raw',
         );
 
+        /** @var ?array $body */
         $body = json_decode($stream->getContents(), associative: true);
 
         if (is_null($body) || !isset($body['success']) || !is_bool($body['success'])) {

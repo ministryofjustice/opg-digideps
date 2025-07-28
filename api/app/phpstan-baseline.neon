@@ -2436,11 +2436,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Cannot access offset 'satisfaction' on mixed\\.$#"
 			count: 2
 			path: src/Controller/UserResearchController.php
