@@ -24,7 +24,7 @@ class ClientBenefitsCheckFactory
     ) {
     }
 
-    public function createFromFormData(array $formData, string $reportOrNdr, ClientBenefitsCheckInterface $existingEntity = null)
+    public function createFromFormData(array $formData, string $reportOrNdr, ?ClientBenefitsCheckInterface $existingEntity = null)
     {
         $clientBenefitsCheck = $this->hydrateClientBenefitsCheck($reportOrNdr, $formData, $existingEntity);
         $moneyTypes = $this->hydrateMoneyReceivedOnClientsBehalf($reportOrNdr, $formData, $clientBenefitsCheck);

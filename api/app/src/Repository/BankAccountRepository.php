@@ -16,7 +16,7 @@ class BankAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, BankAccount::class);
     }
 
-    public function getSumOfAccounts(string $deputyType = null, \DateTime $after = null): int
+    public function getSumOfAccounts(?string $deputyType = null, ?\DateTime $after = null): int
     {
         $query = $this
             ->getEntityManager()

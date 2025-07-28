@@ -24,7 +24,7 @@ trait FormFillingTrait
      *                                     becomes £21.00). To override this, or add any other formatting, pass this
      *                                     argument tot he function
      */
-    public function fillInField(string $field, $value, string $formSectionName = null, string $formattedValue = null)
+    public function fillInField(string $field, $value, ?string $formSectionName = null, ?string $formattedValue = null)
     {
         if ($formSectionName) {
             $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value, $formattedValue);
@@ -41,7 +41,7 @@ trait FormFillingTrait
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
      */
-    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, string $formSectionName = null)
+    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, ?string $formSectionName = null)
     {
         $fullDate = '';
 
