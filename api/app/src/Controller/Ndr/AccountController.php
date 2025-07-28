@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AccountController extends RestController
 {
@@ -18,8 +18,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/account', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addAccountAction(Request $request, $ndrId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function addAccount(Request $request, int $ndrId): array
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -39,8 +39,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/ndr/account/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Ndr\BankAccount
     {
         if ($request->query->has('groups')) {
             $this->formatter->setJmsSerialiserGroups($request->query->all('groups'));
@@ -55,10 +55,10 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/ndr/account/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function editAccountAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function editAccount(Request $request, int $id): int
     {
-        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
+        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -71,8 +71,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/ndr/account/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function accountDelete($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function accountDelete($id): array
     {
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
@@ -83,7 +83,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Ndr\BankAccount $account, array $data)
+    private function fillAccountData(EntityDir\Ndr\BankAccount $account, array $data): void
     {
         if (array_key_exists('account_type', $data)) {
             $account->setAccountType($data['account_type']);

@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AssetController extends RestController
 {
@@ -18,8 +18,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById($ndrId, $assetId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(int $ndrId, int $assetId): EntityDir\Ndr\Asset
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -33,8 +33,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/asset', requirements: ['ndrId' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, $ndrId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, int $ndrId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -56,8 +56,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function edit(Request $request, $ndrId, $assetId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function edit(Request $request, int $ndrId, int $assetId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -75,8 +75,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function delete($ndrId, $assetId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function delete(int $ndrId, int $assetId): array
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -90,7 +90,7 @@ class AssetController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Ndr\Asset $asset, array $data)
+    private function updateEntityWithData(EntityDir\Ndr\Asset $asset, array $data): void
     {
         // common props
         $this->hydrateEntityWithArrayData($asset, $data, [
