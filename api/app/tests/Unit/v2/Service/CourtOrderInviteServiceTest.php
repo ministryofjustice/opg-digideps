@@ -169,6 +169,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';
         $deputyUid = '12345678';
+        $clientId = 1;
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
@@ -200,9 +201,13 @@ class CourtOrderInviteServiceTest extends TestCase
         $this->mockEntityManager->expects(self::once())->method('beginTransaction');
         $this->mockEntityManager->expects(self::once())->method('rollback');
 
+        $mockClient->expects(self::once())
+            ->method('getId')
+            ->willReturn($clientId);
+
         $this->mockUserService->expects(self::once())
             ->method('getOrAddUser')
-            ->with($inviteeDTO, $invitingUser)
+            ->with($inviteeDTO, $invitingUser, $deputyUid, $clientId)
             ->willThrowException(new ORMException('something bad happened on the way to the database'));
 
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
@@ -216,6 +221,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $courtOrderUid = '91853764';
         $caseNumber = '1245674332';
         $deputyUid = '12345678';
+        $clientId = 2;
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
@@ -249,9 +255,13 @@ class CourtOrderInviteServiceTest extends TestCase
         $this->mockEntityManager->expects(self::once())->method('beginTransaction');
         $this->mockEntityManager->expects(self::once())->method('commit');
 
+        $mockClient->expects(self::once())
+            ->method('getId')
+            ->willReturn($clientId);
+
         $this->mockUserService->expects(self::once())
             ->method('getOrAddUser')
-            ->with($inviteeDTO, $invitingUser)
+            ->with($inviteeDTO, $invitingUser, $deputyUid, $clientId)
             ->willReturn($mockInvitedUser);
 
         $this->mockDeputyService->expects(self::once())
@@ -262,10 +272,6 @@ class CourtOrderInviteServiceTest extends TestCase
         $this->mockCourtOrderService->expects(self::once())
             ->method('associateCourtOrderWithDeputy')
             ->with($mockDeputy, $mockCourtOrder, true);
-
-        $this->mockDeputyService->expects(self::once())
-            ->method('associateDeputyWithClient')
-            ->with($mockDeputy, $mockClient);
 
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 

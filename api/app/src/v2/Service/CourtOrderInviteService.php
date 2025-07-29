@@ -105,18 +105,21 @@ class CourtOrderInviteService
         $this->entityManager->beginTransaction();
 
         try {
-            // create user for invited deputy, or get existing user; if the latter, none of their data is updated
-            // (unless their registration token is null, in which case it is recreated)
-            $persistedUser = $this->userService->getOrAddUser($invitedDeputyDTO, $invitingLayDeputy, intval($deputyUid));
+            // create user for invited deputy, or get existing user; if the latter, if their registration token is null,
+            // it is recreated; this also associates the user with the client, which gives the invited deputy
+            // access to the client's details
+            $persistedUser = $this->userService->getOrAddUser(
+                $invitedDeputyDTO,
+                $invitingLayDeputy,
+                intval($deputyUid),
+                $client->getId()
+            );
 
             // create deputy record if it doesn't exist, or get the existing deputy; if the latter, none of their data is updated
             $persistedDeputy = $this->deputyService->getOrAddDeputy($invitedLayDeputy, $persistedUser);
 
             // associate deputy with court order, ignoring any existing duplicates
             $this->courtOrderService->associateCourtOrderWithDeputy($persistedDeputy, $courtOrder, logDuplicateError: false);
-
-            // associate deputy with client; this is required so that client's data is accessible to the invited user
-            $this->deputyService->associateDeputyWithClient($persistedDeputy, $client);
         } catch (\Exception $e) {
             $this->entityManager->rollback();
 
