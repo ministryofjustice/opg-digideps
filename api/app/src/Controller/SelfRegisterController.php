@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
+use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserRegistrationService;
@@ -103,12 +104,21 @@ class SelfRegisterController extends RestController
                 throw new \RuntimeException(json_encode($message) ?: '', 462);
             }
 
-            // check if it's the primary account for the co-deputy
+            // find existing users for this deputy UID, but only those who are not the registering user;
+            // we are safe to use the first matched co-deputy, as we checked above that there's only one
             $coDeputyUid = $matchedCodeputies[0]->getDeputyUid();
-            $existingDeputyAccounts = $this->em->getRepository(User::class)->findBy(['deputyUid' => $coDeputyUid]);
 
-            $existingDeputyCase = $this->em->getRepository(Client::class)->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid);
-            if (!empty($existingDeputyCase)) {
+            /** @var UserRepository $userRepo */
+            $userRepo = $this->em->getRepository(User::class);
+
+            $existingDeputyAccounts = $userRepo->findOtherAccounts($coDeputyUid, $selfRegisterData->getEmail());
+
+            // find whether any of the existing users (excluding the registering user) for this deputy UID are already
+            // associated with the case
+            $existingDeputyCases = $this->em->getRepository(Client::class)
+                ->findExistingDeputyCases($selfRegisterData->getCaseNumber(), $coDeputyUid, $selfRegisterData->getEmail());
+
+            if (!empty($existingDeputyCases)) {
                 $message = sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber());
                 throw new \RuntimeException(json_encode($message) ?: '', 463);
             }
