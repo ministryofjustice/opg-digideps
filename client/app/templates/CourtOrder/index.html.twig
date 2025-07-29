@@ -13,7 +13,7 @@
 
 {% block pageContent %}
     {% if courtOrderHasMultipleDeputies %}
-        {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
+        {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies, inviteUrl: inviteUrl} %}
     {% endif %}
 
     {% if courtOrder.ndr %}
