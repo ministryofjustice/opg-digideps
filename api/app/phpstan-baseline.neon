@@ -6666,11 +6666,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$deputyUid \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php

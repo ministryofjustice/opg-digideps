@@ -264,22 +264,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastLoggedIn;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
-    private $deputyNo;
+    private ?string $deputyNo = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['user'])]
-    private $deputyUid;
+    private ?int $deputyUid = null;
 
     /**
      * @var bool
@@ -800,14 +796,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return string
-     */
-    public function getDeputyNo()
-    {
-        return $this->deputyNo;
-    }
-
-    /**
      * convert 7 into 00000007.
      *
      * @return string
@@ -817,10 +805,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return str_pad($deputyNo, 8, '0', STR_PAD_LEFT);
     }
 
-    /**
-     * @param string $deputyNo
-     */
-    public function setDeputyNo($deputyNo)
+    public function getDeputyNo(): ?string
+    {
+        return $this->deputyNo;
+    }
+
+    public function setDeputyNo(?string $deputyNo)
     {
         $this->deputyNo = $deputyNo;
 
