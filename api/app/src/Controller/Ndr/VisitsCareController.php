@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class VisitsCareController extends RestController
 {
@@ -18,8 +18,8 @@ class VisitsCareController extends RestController
     }
 
     #[Route(path: '/ndr/visits-care', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addAction(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request): array
     {
         $visitsCare = new EntityDir\Ndr\VisitsCare();
         $data = $this->formatter->deserializeBodyContent($request);
@@ -38,8 +38,8 @@ class VisitsCareController extends RestController
     }
 
     #[Route(path: '/ndr/visits-care/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function update(Request $request, int $id): array
     {
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id);
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
@@ -56,8 +56,8 @@ class VisitsCareController extends RestController
      * @param int $ndrId
      */
     #[Route(path: '/ndr/{ndrId}/visits-care', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function findByNdrIdAction($ndrId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function findByNdrId($ndrId): EntityDir\Ndr\Ndr
     {
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($report);
@@ -71,8 +71,8 @@ class VisitsCareController extends RestController
      * @param int $id
      */
     #[Route(path: '/ndr/visits-care/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, $id): EntityDir\Ndr\VisitsCare
     {
         $serialiseGroups = $request->query->has('groups') ? $request->query->all('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
@@ -84,8 +84,8 @@ class VisitsCareController extends RestController
     }
 
     #[Route(path: '/ndr/visits-care/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteVisitsCare($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteVisitsCare($id): array
     {
         $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Ndr\VisitsCare */
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
@@ -96,10 +96,7 @@ class VisitsCareController extends RestController
         return [];
     }
 
-    /**
-     * @return EntityDir\Ndr\VisitsCare $report
-     */
-    private function updateEntity(array $data, EntityDir\Ndr\VisitsCare $visitsCare)
+    private function updateEntity(array $data, EntityDir\Ndr\VisitsCare $visitsCare): EntityDir\Ndr\VisitsCare
     {
         if (array_key_exists('plan_move_new_residence', $data)) {
             $visitsCare->setPlanMoveNewResidence($data['plan_move_new_residence']);
