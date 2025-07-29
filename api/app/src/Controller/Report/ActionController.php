@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ActionController extends RestController
 {
@@ -20,8 +20,8 @@ class ActionController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/action', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function update(Request $request, int $reportId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -42,12 +42,9 @@ class ActionController extends RestController
         return ['id' => $action->getId()];
     }
 
-    /**
-     * @param int $id
-     */
     #[Route(path: '/report/{reportId}/action', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\Action
     {
         $action = $this->findEntityBy(EntityDir\Report\Action::class, $id, 'Action with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
@@ -59,10 +56,7 @@ class ActionController extends RestController
         return $action;
     }
 
-    /**
-     * @return \App\Entity\Report\Report $report
-     */
-    private function updateEntity(array $data, EntityDir\Report\Action $action)
+    private function updateEntity(array $data, EntityDir\Report\Action $action): void
     {
         if (array_key_exists('do_you_expect_financial_decisions', $data)) {
             $action->setDoYouExpectFinancialDecisions($data['do_you_expect_financial_decisions']);
@@ -81,7 +75,5 @@ class ActionController extends RestController
         }
 
         $action->cleanUpUnusedData();
-
-        return $action;
     }
 }

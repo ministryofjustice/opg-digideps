@@ -7,13 +7,13 @@ use App\Entity as EntityDir;
 use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AccountController extends RestController
 {
-    private $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
+    private array $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -21,8 +21,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/account', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addAccountAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function addAccount(Request $request, int $reportId): array
     {
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -46,8 +46,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/report/account/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\BankAccount
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
@@ -60,8 +60,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/account/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function editAccountAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function editAccount(Request $request, int $id): EntityDir\Report\BankAccount
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $report = $account->getReport();
@@ -82,8 +82,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/account/{id}/dependent-records', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function accountDependentRecords($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function accountDependentRecords(int $id): array
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
@@ -124,8 +124,8 @@ class AccountController extends RestController
     }
 
     #[Route(path: '/account/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function accountDelete($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function accountDelete(int $id): array
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $report = $account->getReport();
@@ -139,7 +139,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Report\BankAccount $account, array $data)
+    private function fillAccountData(EntityDir\Report\BankAccount $account, array $data): void
     {
         // basicdata
         if (array_key_exists('account_type', $data)) {
