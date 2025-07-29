@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/report')]
 class ContactController extends RestController
@@ -21,8 +22,8 @@ class ContactController extends RestController
     }
 
     #[Route(path: '/contact/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\Contact
     {
         $serialisedGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['contact'];
@@ -35,8 +36,8 @@ class ContactController extends RestController
     }
 
     #[Route(path: '/contact/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteContact($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteContact(int $id): array
     {
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id, 'Contact not found');
         $report = $contact->getReport();
@@ -52,8 +53,8 @@ class ContactController extends RestController
     }
 
     #[Route(path: '/contact', methods: ['POST', 'PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function upsertContact(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function upsertContact(Request $request): array
     {
         $contactData = $this->formatter->deserializeBodyContent($request);
 
@@ -107,8 +108,8 @@ class ContactController extends RestController
     }
 
     #[Route(path: '/{id}/contacts', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getContacts($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getContacts(int $id): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($report);

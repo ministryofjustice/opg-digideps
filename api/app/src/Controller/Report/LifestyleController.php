@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/report')]
 class LifestyleController extends RestController
@@ -21,8 +21,8 @@ class LifestyleController extends RestController
     }
 
     #[Route(path: '/lifestyle', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addAction(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request): array
     {
         $lifestyle = new EntityDir\Report\Lifestyle();
         $data = $this->formatter->deserializeBodyContent($request);
@@ -43,8 +43,8 @@ class LifestyleController extends RestController
     }
 
     #[Route(path: '/lifestyle/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function update(Request $request, int $id): array
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id);
         $report = $lifestyle->getReport();
@@ -60,27 +60,19 @@ class LifestyleController extends RestController
         return ['id' => $lifestyle->getId()];
     }
 
-    /**
-     * @param int $reportId
-     */
     #[Route(path: '/{reportId}/lifestyle', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function findByReportIdAction($reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function findByReportId(int $reportId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $ret = $this->em->getRepository(EntityDir\Report\Lifestyle::class)->findByReport($report);
-
-        return $ret;
+        return $this->em->getRepository(EntityDir\Report\Lifestyle::class)->findByReport($report);
     }
 
-    /**
-     * @param int $id
-     */
     #[Route(path: '/lifestyle/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\Lifestyle
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['lifestyle'];
@@ -93,8 +85,8 @@ class LifestyleController extends RestController
     }
 
     #[Route(path: '/lifestyle/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteLifestyle($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteLifestyle(int $id): array
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'VisitsCare not found');
         $report = $lifestyle->getReport();
@@ -110,10 +102,7 @@ class LifestyleController extends RestController
         return [];
     }
 
-    /**
-     * @return \App\Entity\Report\Report $report
-     */
-    private function updateInfo(array $data, EntityDir\Report\Lifestyle $lifestyle)
+    private function updateInfo(array $data, EntityDir\Report\Lifestyle $lifestyle): void
     {
         if (array_key_exists('care_appointments', $data)) {
             $lifestyle->setCareAppointments($data['care_appointments']);
@@ -125,7 +114,5 @@ class LifestyleController extends RestController
             $lifestyle->setActivityDetailsYes('yes' === $yesNo ? $data['activity_details_yes'] : null);
             $lifestyle->setActivityDetailsNo('no' === $yesNo ? $data['activity_details_no'] : null);
         }
-
-        return $lifestyle;
     }
 }

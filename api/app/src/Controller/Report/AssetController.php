@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AssetController extends RestController
 {
@@ -20,8 +20,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $reportId, $assetId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $reportId, int $assetId): EntityDir\Report\Asset
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -37,8 +37,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/asset', requirements: ['reportId' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, int $reportId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -63,8 +63,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function edit(Request $request, $reportId, $assetId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function edit(Request $request, int $reportId, int $assetId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -84,8 +84,8 @@ class AssetController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function delete($reportId, $assetId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function delete(int $reportId, int $assetId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -102,7 +102,7 @@ class AssetController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Asset $asset, array $data)
+    private function updateEntityWithData(EntityDir\Report\Asset $asset, array $data): void
     {
         // common propertie
         $this->hydrateEntityWithArrayData($asset, $data, [
