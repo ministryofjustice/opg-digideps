@@ -54,7 +54,7 @@ class CourtOrderService
             );
         }
 
-        $success = $body['data']['success'];
+        $success = $body['success'];
 
         if ($success) {
             // construct a dummy user object to use for email parameters (the User object passed to this method is not
