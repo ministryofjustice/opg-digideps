@@ -183,6 +183,7 @@ class UserService
         $invitedUser->setDeputyUid($deputyUid);
         $invitedUser->setDeputyNo("$deputyUid");
         $invitedUser->setActive(true);
+        $invitedUser->setRegistrationRoute(User::CO_DEPUTY_INVITE);
 
         return $this->addUser($invitingDeputy, $invitedUser, $clientId);
     }
