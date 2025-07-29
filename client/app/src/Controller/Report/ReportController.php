@@ -210,6 +210,7 @@ class ReportController extends AbstractController
 
         $resultsArray = [
             'coDeputies' => $coDeputies,
+            'inviteUrl' => $this->generateUrl('add_co_deputy', ['clientId' => $clientId]),
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
         ];
 
