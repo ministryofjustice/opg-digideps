@@ -16,7 +16,7 @@
         {% include '@App/Ndr/Ndr/index.html.twig' %}
     {% else %}
         {% if clientHasCoDeputies %}
-            {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies} %}
+            {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies, inviteUrl: inviteUrl} %}
         {% endif %}
 
         {% if client.unsubmittedReport %}
