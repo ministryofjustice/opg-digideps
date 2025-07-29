@@ -59,7 +59,7 @@ class CourtOrderInviteService
     public function inviteLayDeputy(string $courtOrderUid, User $invitingLayDeputy, InviteeDto $invitedDeputyDTO): InvitedDto
     {
         $invitationResult = new InvitedDto();
-        $errorPrefix = "Could not invite $invitedDeputyDTO->email to court order $courtOrderUid: ";
+        $errorPrefix = "Could not invite $invitedDeputyDTO->email to court order $courtOrderUid:";
 
         // check invited deputy is a Lay
         if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
@@ -88,10 +88,10 @@ class CourtOrderInviteService
             return $invitationResult->setMessage("$errorPrefix no record in pre-reg table");
         }
 
-        // check prereg record has a deputy UID set
+        // check prereg record has a deputy UID set and that it is numeric
         $deputyUid = $preRegRecord->getDeputyUid();
-        if (empty($deputyUid) || !is_string($deputyUid)) {
-            return $invitationResult->setMessage("$errorPrefix empty deputy UID in pre-reg table");
+        if (empty($deputyUid) || !is_string($deputyUid) || 0 === intval($deputyUid)) {
+            return $invitationResult->setMessage("$errorPrefix empty or invalid deputy UID in pre-reg table");
         }
 
         // candidate deputy: will only be created if a deputy with this UID does not exist
@@ -107,7 +107,7 @@ class CourtOrderInviteService
         try {
             // create user for invited deputy, or get existing user; if the latter, none of their data is updated
             // (unless their registration token is null, in which case it is recreated)
-            $persistedUser = $this->userService->getOrAddUser($invitedDeputyDTO, $invitingLayDeputy);
+            $persistedUser = $this->userService->getOrAddUser($invitedDeputyDTO, $invitingLayDeputy, intval($deputyUid));
 
             // create deputy record if it doesn't exist, or get the existing deputy; if the latter, none of their data is updated
             $persistedDeputy = $this->deputyService->getOrAddDeputy($invitedLayDeputy, $persistedUser);

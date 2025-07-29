@@ -136,7 +136,7 @@ class UserService
     /**
      * @throws RandomException
      */
-    public function getOrAddUser(InviteeDto $invitedDeputyData, User $invitingDeputy): User
+    public function getOrAddUser(InviteeDto $invitedDeputyData, User $invitingDeputy, int $deputyUid): User
     {
         /** @var ?User $existingUser */
         $existingUser = $this->userRepository->findOneBy(['email' => $invitedDeputyData->email]);
@@ -156,6 +156,8 @@ class UserService
         $invitedUser->setFirstname($invitedDeputyData->firstname);
         $invitedUser->setLastname($invitedDeputyData->lastname);
         $invitedUser->setRoleName($invitedDeputyData->roleName);
+        $invitedUser->setDeputyUid($deputyUid);
+        $invitedUser->setDeputyNo("$deputyUid");
 
         return $this->addUser($invitingDeputy, $invitedUser, null);
     }

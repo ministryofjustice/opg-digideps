@@ -161,7 +161,7 @@ class CourtOrderInviteServiceTest extends TestCase
         $result = $this->sut->inviteLayDeputy('91853764', $invitingUser, $inviteeDTO);
 
         self::assertFalse($result->success);
-        self::assertStringContainsString('empty deputy UID in pre-reg table', $result->message);
+        self::assertStringContainsString('empty or invalid deputy UID in pre-reg table', $result->message);
     }
 
     public function testInviteLayDeputyDatabaseFail(): void
