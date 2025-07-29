@@ -271,47 +271,7 @@ parameters:
 			path: src/Controller/JWTController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:accountDelete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:accountDelete\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:addAccountAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:addAccountAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:editAccountAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:editAccountAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:fillAccountData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AccountController.php
 
@@ -331,66 +291,6 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:add\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:delete\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:delete\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:edit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:edit\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:edit\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getOneById\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:getOneById\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
@@ -404,66 +304,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:add\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:delete\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:delete\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:edit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:edit\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:edit\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:getOneById\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:getOneById\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
 
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
@@ -496,22 +336,7 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:getById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submit\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:update\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
@@ -561,37 +386,7 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:deleteVisitsCare\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:deleteVisitsCare\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:findByNdrIdAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:updateAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
