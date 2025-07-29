@@ -261,7 +261,7 @@ class CourtOrderControllerTest extends AbstractTestController
         );
 
         // assertions
-        self::assertEquals(true, $responseJson['data']['success']);
+        self::assertEquals(true, $responseJson['success']);
         self::assertMatchesRegularExpression('/[0-9a-z]{40}/', $responseJson['data']['registrationToken']);
     }
 }
