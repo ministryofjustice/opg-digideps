@@ -17,7 +17,7 @@ class DeputyService
 
     /**
      * Adds a new deputy to the database if it doesn't already exist, or retrieve any existing one.
-     * $userForDeputy becomes the user associated with the deputy.
+     * $userForDeputy becomes the user associated with the deputy if there is no existing deputy.
      */
     public function getOrAddDeputy(Deputy $deputyToAdd, User $userForDeputy): Deputy
     {
