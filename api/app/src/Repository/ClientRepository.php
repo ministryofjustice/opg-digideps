@@ -182,21 +182,31 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find existing deputy_case records.
+     * If $excludeEmail is supplied, only those which do NOT match $excludeEmail are included.
+     *
      * @return mixed|null
      */
-    public function findExistingDeputyCases(string $caseNumber, string $deputyNumber)
+    public function findExistingDeputyCases(string $caseNumber, string $deputyNumber, ?string $excludeEmail = null)
     {
         $deputyCaseQuery = '
                 SELECT dc.client_id, dc.user_id
                 FROM deputy_case dc
                 INNER JOIN client c ON dc.client_id = c.id
                 INNER JOIN dd_user du ON dc.user_id = du.id
-                WHERE LOWER(c.case_number) = LOWER(:case_number) AND LOWER(du.deputy_no) = LOWER(:deputy_no);
+                WHERE LOWER(c.case_number) = LOWER(:case_number) AND LOWER(du.deputy_no) = LOWER(:deputy_no)
         ';
+
+        $params = ['case_number' => $caseNumber, 'deputy_no' => $deputyNumber];
+
+        if (!is_null($excludeEmail)) {
+            $deputyCaseQuery .= ' AND du.email != :email';
+            $params['email'] = $excludeEmail;
+        }
 
         $conn = $this->getEntityManager()->getConnection();
         $statsStmt = $conn->prepare($deputyCaseQuery);
-        $result = $statsStmt->executeQuery(['case_number' => $caseNumber, 'deputy_no' => $deputyNumber]);
+        $result = $statsStmt->executeQuery($params);
         $deputyCaseResults = $result->fetchAllAssociative();
 
         return 0 === count($deputyCaseResults) ? null : $deputyCaseResults[0];
