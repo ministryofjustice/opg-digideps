@@ -47,7 +47,7 @@ class CourtOrderController extends AbstractController
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
-            'inviteLink' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
+            'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
         ];
 
         if (!empty($courtOrder->getNdr())) {
