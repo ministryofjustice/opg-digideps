@@ -115,7 +115,7 @@ class CourtOrderInviteService
             // associate deputy with court order, ignoring any existing duplicates
             $this->courtOrderService->associateCourtOrderWithDeputy($persistedDeputy, $courtOrder, logDuplicateError: false);
 
-            // associate deputy with client; this is required so that client's data is accessible to the user
+            // associate deputy with client; this is required so that client's data is accessible to the invited user
             $this->deputyService->associateDeputyWithClient($persistedDeputy, $client);
         } catch (\Exception $e) {
             $this->entityManager->rollback();

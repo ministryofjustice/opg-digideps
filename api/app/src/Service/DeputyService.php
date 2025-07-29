@@ -10,17 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyService
 {
-    /** @var DeputyRepository */
-    private $deputyRepository;
-
-    /** @var EntityManagerInterface */
-    private $em;
-
     public function __construct(
-        EntityManagerInterface $em,
+        private readonly DeputyRepository $deputyRepository,
+        private readonly EntityManagerInterface $em,
     ) {
-        $this->deputyRepository = $em->getRepository(Deputy::class);
-        $this->em = $em;
     }
 
     /**
@@ -41,6 +34,9 @@ class DeputyService
         return $deputyToAdd;
     }
 
+    /**
+     * Associate deputy with client, but only if the association doesn't already exist.
+     */
     public function associateDeputyWithClient(Deputy $deputy, Client $client): void
     {
         $user = $deputy->getUser();
@@ -49,9 +45,19 @@ class DeputyService
             throw new \ValueError('Could not associate deputy with client: deputy has no user');
         }
 
-        $client->addUser($user);
+        $exists = false;
+        $associatingDeputyUid = $deputy->getDeputyUid();
+        foreach ($client->getUsers() as $clientUser) {
+            if ($clientUser?->getDeputy()->getDeputyUid() === $associatingDeputyUid) {
+                $exists = true;
+                break;
+            }
+        }
 
-        $this->em->persist($client);
-        $this->em->flush();
+        if (!$exists) {
+            $client->addUser($user);
+            $this->em->persist($client);
+            $this->em->flush();
+        }
     }
 }
