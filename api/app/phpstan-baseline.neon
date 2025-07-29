@@ -8071,11 +8071,6 @@ parameters:
 			path: src/Service/DataImporter/CsvToArray.php
 
 		-
-			message: "#^Property App\\\\Service\\\\DeputyService\\:\\:\\$deputyRepository \\(App\\\\Repository\\\\DeputyRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Deputy\\>\\.$#"
-			count: 1
-			path: src/Service/DeputyService.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'Invalid Reference…' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
@@ -8721,16 +8716,6 @@ parameters:
 			path: src/Service/UserService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUserToUsersClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUserToUsersClients\\(\\) has parameter \\$userToAdd with no type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\UserService\\:\\:editUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/UserService.php
@@ -8747,11 +8732,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\UserService\\:\\:handleNdrStatusUpdate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: "#^Parameter \\#2 \\$clientId of method App\\\\Repository\\\\ClientRepository\\:\\:saveUserToClient\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Service/UserService.php
 

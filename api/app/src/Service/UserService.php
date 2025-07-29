@@ -25,7 +25,7 @@ class UserService
      *
      * @throws RandomException
      */
-    public function addUser(User $loggedInUser, User $userToAdd, ?int $clientId): User
+    public function addUser(User $loggedInUser, User $userToAdd, ?int $clientId = null): User
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
@@ -41,16 +41,16 @@ class UserService
         $this->em->persist($userToAdd);
         $this->em->flush();
 
-        if ($loggedInUser->isLayDeputy() && !is_null($clientId)) {
-            $this->addUserToUsersClients($userToAdd, $clientId);
-        }
+        $this->addUserToClient($loggedInUser, $userToAdd, $clientId);
 
         return $userToAdd;
     }
 
-    private function addUserToUsersClients($userToAdd, ?int $clientId)
+    private function addUserToClient(User $loggedInUser, User $userToAdd, ?int $clientId = null): void
     {
-        $this->clientRepository->saveUserToClient($userToAdd, $clientId);
+        if ($loggedInUser->isLayDeputy() && !is_null($clientId)) {
+            $this->clientRepository->saveUserToClient($userToAdd, $clientId);
+        }
     }
 
     /**
@@ -134,9 +134,11 @@ class UserService
     }
 
     /**
+     * Get or add a user. In either case, the user is set to active and associated with the given client.
+     *
      * @throws RandomException
      */
-    public function getOrAddUser(InviteeDto $invitedDeputyData, User $invitingDeputy, int $deputyUid): User
+    public function getOrAddUser(InviteeDto $invitedDeputyData, User $invitingDeputy, int $deputyUid, int $clientId): User
     {
         /** @var ?User $existingUser */
         $existingUser = $this->userRepository->findOneBy([
@@ -146,16 +148,28 @@ class UserService
         if (!is_null($existingUser)) {
             if (is_null($existingUser->getRegistrationToken())) {
                 $existingUser->recreateRegistrationToken();
-                $this->em->persist($existingUser);
-                $this->em->flush();
             }
+
+            $this->addUserToClient($invitingDeputy, $existingUser, $clientId);
+
+            // this user needs to be active, otherwise the invited deputy won't be able to use it to sign in
+            $existingUser->setActive(true);
+
+            $this->em->persist($existingUser);
+            $this->em->flush();
 
             return $existingUser;
         }
 
-        // check whether the deputy already has a user account, so we know whether this is a secondary account
+        // check whether the deputy already has an active primary user account, so we know whether this is a secondary
+        // user we're adding
         $isPrimary = true;
-        $existingUser = $this->userRepository->findOneBy(['deputyUid' => $deputyUid]);
+        $existingUser = $this->userRepository->findOneBy([
+            'deputyUid' => $deputyUid,
+            'active' => true,
+            'isPrimary' => true,
+        ]);
+
         if (!is_null($existingUser)) {
             $isPrimary = false;
         }
@@ -168,7 +182,8 @@ class UserService
         $invitedUser->setRoleName($invitedDeputyData->roleName);
         $invitedUser->setDeputyUid($deputyUid);
         $invitedUser->setDeputyNo("$deputyUid");
+        $invitedUser->setActive(true);
 
-        return $this->addUser($invitingDeputy, $invitedUser, null);
+        return $this->addUser($invitingDeputy, $invitedUser, $clientId);
     }
 }
