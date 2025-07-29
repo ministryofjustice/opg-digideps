@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Tests\Unit\Service;
 
 use App\Entity\Client;
 use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
-use DateTime;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Mockery\MockInterface;
@@ -27,7 +27,7 @@ class UserServiceTest extends TestCase
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new DateTime('2014-06-06'));
+        $client->setCourtDate(new \DateTime('2014-06-06'));
         $email = 'test@tester.co.uk';
 
         $this->em = m::mock(EntityManager::class);
