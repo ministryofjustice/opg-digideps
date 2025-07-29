@@ -139,7 +139,9 @@ class UserService
     public function getOrAddUser(InviteeDto $invitedDeputyData, User $invitingDeputy, int $deputyUid): User
     {
         /** @var ?User $existingUser */
-        $existingUser = $this->userRepository->findOneBy(['email' => $invitedDeputyData->email]);
+        $existingUser = $this->userRepository->findOneBy([
+            'email' => $invitedDeputyData->email,
+        ]);
 
         if (!is_null($existingUser)) {
             if (is_null($existingUser->getRegistrationToken())) {
@@ -151,7 +153,15 @@ class UserService
             return $existingUser;
         }
 
+        // check whether the deputy already has a user account, so we know whether this is a secondary account
+        $isPrimary = true;
+        $existingUser = $this->userRepository->findOneBy(['deputyUid' => $deputyUid]);
+        if (!is_null($existingUser)) {
+            $isPrimary = false;
+        }
+
         $invitedUser = new User();
+        $invitedUser->setIsPrimary($isPrimary);
         $invitedUser->setEmail($invitedDeputyData->email);
         $invitedUser->setFirstname($invitedDeputyData->firstname);
         $invitedUser->setLastname($invitedDeputyData->lastname);
