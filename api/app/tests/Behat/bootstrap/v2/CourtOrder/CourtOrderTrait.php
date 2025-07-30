@@ -352,4 +352,20 @@ trait CourtOrderTrait
         $this->fillInField('co_deputy_invite_email', $this->invitedDeputy['email']);
         $this->pressButton('co_deputy_invite_submit');
     }
+
+    /**
+     * @Given /^I should be on the page for the court order$/
+     */
+    public function iShouldBeOnCourtOrderPage(): void
+    {
+        $this->iAmOnPage('|/courtorder/'.$this->courtOrder->getCourtOrderUid().'$|');
+    }
+
+    /**
+     * @Given /^I visit the court order invite page$/
+     */
+    public function iVisitTheCourtOrderInvitePage(): void
+    {
+        $this->visit('/courtorder/'.$this->courtOrder->getCourtOrderUid().'/invite');
+    }
 }

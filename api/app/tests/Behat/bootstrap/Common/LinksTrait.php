@@ -28,7 +28,8 @@ trait LinksTrait
     }
 
     /**
-     * Click on element with attribute [behat-link=:link].
+     * Click on element(s) with class "behat-link-$link"; if $link is comma-separated values, each matching
+     * link is clicked.
      *
      * @When I click on ":link"
      */
@@ -45,6 +46,7 @@ trait LinksTrait
 
         // find link inside the region
         $linkSelector = self::behatElementToCssSelector($link, 'link');
+        error_log('==================== '.$linkSelector);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
         $count = count($linksElementsFound);
 
@@ -78,7 +80,7 @@ trait LinksTrait
     }
 
     /**
-     * Click on element with attribute [behat-link=:link].
+     * Click on a link with specified text inside the given region.
      *
      * @When I press :text in the :region region
      */
