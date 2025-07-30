@@ -6,13 +6,14 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
+use App\Exception\UnauthorisedException;
 use App\Repository\ReportSubmissionRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/report-submission')]
 class ReportSubmissionController extends RestController
@@ -42,14 +43,17 @@ class ReportSubmissionController extends RestController
         'synchronisation',
     ];
 
-    public function __construct(private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly AuthService $authService,
+        private readonly RestFormatter $formatter
+    ) {
         parent::__construct($em);
     }
 
     #[Route(path: '', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function getAll(Request $request)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function getAll(Request $request): array
     {
         /** @var ReportSubmissionRepository $repo */
         $repo = $this->em->getRepository(ReportSubmission::class);
@@ -70,8 +74,8 @@ class ReportSubmissionController extends RestController
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function getOneById(int $id): ?ReportSubmission
     {
         $ret = $this->em->getRepository(ReportSubmission::class)->findOneByIdUnfiltered($id);
 
@@ -85,10 +89,9 @@ class ReportSubmissionController extends RestController
      * return array of storage references, for admin area to delete if needed.
      */
     #[Route(path: '/{reportSubmissionId}', requirements: ['reportSubmissionId' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function update(Request $request, $reportSubmissionId)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function update(Request $request, int $reportSubmissionId): int
     {
-        /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(ReportSubmission::class, $reportSubmissionId);
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -108,7 +111,7 @@ class ReportSubmissionController extends RestController
      * User from the request.
      */
     #[Route(path: '/{reportSubmissionId}/update-uuid', requirements: ['reportSubmissionId' => '\d+'], methods: ['PUT'])]
-    public function updateUuid(Request $request, $reportSubmissionId)
+    public function updateUuid(Request $request, int $reportSubmissionId): int
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new UnauthorisedException('client secret not accepted.');
@@ -133,13 +136,14 @@ class ReportSubmissionController extends RestController
      * Called from ADMIN cron.
      */
     #[Route(path: '/old', methods: ['GET'])]
-    public function getOld(Request $request)
+    public function getOld(Request $request): array
     {
         if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
             throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
-        $repo = $this->em->getRepository(ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        /* @var $repo ReportSubmissionRepository */
+        $repo = $this->em->getRepository(ReportSubmission::class);
 
         $ret = $repo->findDownloadableOlderThan(new \DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
 
@@ -153,7 +157,7 @@ class ReportSubmissionController extends RestController
      * Called from ADMIN cron.
      */
     #[Route(path: '/{id}/set-undownloadable', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    public function setUndownloadable($id, Request $request)
+    public function setUndownloadable(int $id, Request $request)
     {
         if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
             throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
@@ -175,8 +179,8 @@ class ReportSubmissionController extends RestController
      * Queue submission documents which have been synced yet.
      */
     #[Route(path: '/{id}/queue-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function queueDocuments($id)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function queueDocuments(int $id): true
     {
         /** @var ReportSubmission $reportSubmission */
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
@@ -202,7 +206,7 @@ class ReportSubmissionController extends RestController
      * @throws \Exception
      */
     #[Route(path: '/pre-registration-data', name: 'pre_registration_data', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function getPreRegistrationData(Request $request): array
     {
         /* @var $repo EntityDir\Repository\ReportSubmissionRepository */

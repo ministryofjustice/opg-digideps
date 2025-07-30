@@ -8,9 +8,9 @@ use App\Repository\MoneyTransactionRepository;
 use App\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MoneyTransactionController extends RestController
 {
@@ -28,8 +28,8 @@ class MoneyTransactionController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addMoneyTransactionAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function addMoneyTransaction(Request $request, int $reportId): int
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -72,8 +72,8 @@ class MoneyTransactionController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction/{transactionId}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function updateMoneyTransaction(Request $request, int $reportId, int $transactionId): int
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -106,8 +106,8 @@ class MoneyTransactionController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction/{transactionId}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteMoneyTransactionAction($reportId, $transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteMoneyTransaction(int $reportId, int $transactionId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -126,8 +126,8 @@ class MoneyTransactionController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction/soft-delete/{transactionId}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function softDeleteMoneyTransactionAction($transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function softDeleteMoneyTransaction(int $transactionId): array
     {
         $filter = $this->em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(EntityDir\Report\MoneyTransaction::class);
@@ -146,8 +146,8 @@ class MoneyTransactionController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction/get-soft-delete', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getSoftDeletedMoneyTransactionItems($reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getSoftDeletedMoneyTransactionItems(int $reportId): array
     {
         $this->formatter->setJmsSerialiserGroups(['transaction']);
 

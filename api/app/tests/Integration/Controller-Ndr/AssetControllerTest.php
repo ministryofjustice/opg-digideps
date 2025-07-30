@@ -193,19 +193,16 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
     }
 
-    /**
-     * Run this last to avoid corrupting the data.
-     *
-     * @depends testgetAssets
-     */
     public function testDelete()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/asset/'.self::$asset1->getId();
+        $asset = self::fixtures()->createNdrAsset('other', self::$ndr1, ['setTitle' => 'asset1']);
+
+        $url = '/ndr/'.self::$ndr1->getId().'/asset/'.$asset->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Ndr\Asset')->find(self::$asset1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Ndr\Asset')->find($asset->getId()));
     }
 }
