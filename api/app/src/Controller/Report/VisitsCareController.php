@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/report')]
 class VisitsCareController extends RestController
@@ -21,8 +21,8 @@ class VisitsCareController extends RestController
     }
 
     #[Route(path: '/visits-care', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addAction(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request): array
     {
         $visitsCare = new EntityDir\Report\VisitsCare();
         $data = $this->formatter->deserializeBodyContent($request);
@@ -43,8 +43,8 @@ class VisitsCareController extends RestController
     }
 
     #[Route(path: '/visits-care/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function update(Request $request, int $id): array
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
         $report = $visitsCare->getReport();
@@ -60,29 +60,21 @@ class VisitsCareController extends RestController
         return ['id' => $visitsCare->getId()];
     }
 
-    /**
-     * @param int $reportId
-     */
     #[Route(path: '/{reportId}/visits-care', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function findByReportIdAction($reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function findByReportId(int $reportId): array
     {
         $this->formatter->setJmsSerialiserGroups(['visits-care']);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $ret = $this->em->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
-
-        return $ret;
+        return $this->em->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
     }
 
-    /**
-     * @param int $id
-     */
     #[Route(path: '/visits-care/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\VisitsCare
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['visits-care'];
@@ -95,8 +87,8 @@ class VisitsCareController extends RestController
     }
 
     #[Route(path: '/visits-care/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteVisitsCare($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteVisitsCare(int $id): array
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare not found');
         $report = $visitsCare->getReport();
@@ -110,10 +102,7 @@ class VisitsCareController extends RestController
         return [];
     }
 
-    /**
-     * @return \App\Entity\Report\Report $report
-     */
-    private function updateInfo(array $data, EntityDir\Report\VisitsCare $visitsCare)
+    private function updateInfo(array $data, EntityDir\Report\VisitsCare $visitsCare): void
     {
         if (array_key_exists('do_you_live_with_client', $data)) {
             $visitsCare->setDoYouLiveWithClient($data['do_you_live_with_client']);
@@ -146,7 +135,5 @@ class VisitsCareController extends RestController
                 $visitsCare->setWhenWasCarePlanLastReviewed(null);
             }
         }
-
-        return $visitsCare;
     }
 }
