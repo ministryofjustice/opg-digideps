@@ -46,7 +46,6 @@ trait LinksTrait
 
         // find link inside the region
         $linkSelector = self::behatElementToCssSelector($link, 'link');
-        error_log('==================== '.$linkSelector);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
         $count = count($linksElementsFound);
 
