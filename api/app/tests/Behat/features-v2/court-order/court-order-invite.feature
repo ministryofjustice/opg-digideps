@@ -5,8 +5,9 @@ Feature: Court order - sending invitations to other deputies
     Scenario: Deputy can invite a co-deputy present in the pre-reg table to a court order
         Given a Lay Deputy has not started a Pfa Low Assets report
         And I am associated with '1' 'pfa' court order(s)
-        When I invite a co-deputy to the court order
         And I visit the page of a court order that 'I am' associated with
+        And I click on "invite-codeputy-button"
+        When I invite a co-deputy to the court order
         Then I should be on the page for the court order
         And I should see that I am a registered deputy
         And I should see that the invited co-deputy is awaiting registration
