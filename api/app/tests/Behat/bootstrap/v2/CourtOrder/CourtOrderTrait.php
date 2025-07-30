@@ -24,6 +24,7 @@ trait CourtOrderTrait
     public array $courtOrders;
     public ClientApi $clientApi;
     private Deputy $coDeputy;
+    private array $invitedDeputy = [];
 
     private function getDeputyForLoggedInUser(): ?Deputy
     {
@@ -298,6 +299,16 @@ trait CourtOrderTrait
     }
 
     /**
+     * @Given /^I should see that the invited co-deputy is awaiting registration$/
+     */
+    public function iShouldSeeInvitedCoDeputyAwaitingRegistrationOnCourtOrder()
+    {
+        $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-awaiting-registration"]');
+        assertCount(1, $coDeputyNameElts);
+        assertStringContainsString($this->invitedDeputy['email'], $coDeputyNameElts[0]->getText());
+    }
+
+    /**
      * @Given /^I should see that the co-deputy is registered$/
      */
     public function iShouldSeeCoDeputyRegisteredOnCourtOrder()
@@ -316,5 +327,29 @@ trait CourtOrderTrait
         }
 
         assert($foundDeputy);
+    }
+
+    /**
+     * @Given /^I invite a co-deputy to the court order$/
+     */
+    public function iInviteACoDeputyToTheCourtOrder(): void
+    {
+        // add user to be invited to the pre-reg table, associated with the case number of the court order
+        $preregUser = $this->fixtureHelper->createPreRegistration(caseNumber: $this->courtOrder->getClient()->getCaseNumber());
+
+        $this->invitedDeputy = [
+            'email' => strtolower($preregUser->getDeputyFirstname()).'.'.strtolower($preregUser->getDeputySurname()).'@opg.gov.uk',
+            'firstname' => $preregUser->getDeputyFirstname(),
+            'lastname' => $preregUser->getDeputySurname(),
+        ];
+
+        // visit the court order invite page
+        $this->visit("/courtorder/{$this->courtOrder->getCourtOrderUid()}/invite");
+
+        // fill in invitee details and submit
+        $this->fillInField('co_deputy_invite_firstname', $this->invitedDeputy['firstname']);
+        $this->fillInField('co_deputy_invite_lastname', $this->invitedDeputy['lastname']);
+        $this->fillInField('co_deputy_invite_email', $this->invitedDeputy['email']);
+        $this->pressButton('co_deputy_invite_submit');
     }
 }
