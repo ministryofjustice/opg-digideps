@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfServiceFeeController extends RestController
 {
@@ -20,12 +20,11 @@ class ProfServiceFeeController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/prof-service-fee', methods: ['POST'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function addAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function add(Request $request, int $reportId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $profServiceFee = new EntityDir\Report\ProfServiceFeeCurrent($report);
@@ -44,10 +43,9 @@ class ProfServiceFeeController extends RestController
     }
 
     #[Route(path: '/prof-service-fee/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function updateAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function update(Request $request, int $id): array
     {
-        /** @var EntityDir\Report\ProfServiceFee $profServiceFee */
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id);
         $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
@@ -62,12 +60,9 @@ class ProfServiceFeeController extends RestController
         return ['id' => $profServiceFee->getId()];
     }
 
-    /**
-     * @return object|null
-     */
     #[Route(path: '/prof-service-fee/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\ProfServiceFee
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['prof_service_fee'];
@@ -80,8 +75,8 @@ class ProfServiceFeeController extends RestController
     }
 
     #[Route(path: '/prof-service-fee/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function deleteProfServiceFee($id)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function deleteProfServiceFee(int $id): array
     {
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service fee not found');
         $report = $profServiceFee->getReport();
@@ -96,10 +91,7 @@ class ProfServiceFeeController extends RestController
         return [];
     }
 
-    /**
-     * @return \App\Entity\Report\Report $report
-     */
-    private function updateEntity(array $data, EntityDir\Report\ProfServiceFee $profServiceFee)
+    private function updateEntity(array $data, EntityDir\Report\ProfServiceFee $profServiceFee): void
     {
         if (array_key_exists('assessed_or_fixed', $data)) {
             $profServiceFee->setAssessedOrFixed($data['assessed_or_fixed']);
@@ -132,7 +124,5 @@ class ProfServiceFeeController extends RestController
                 }
             }
         }
-
-        return $profServiceFee;
     }
 }
