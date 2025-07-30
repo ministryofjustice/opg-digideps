@@ -12,9 +12,7 @@
 {% block supportTitleBottom %}{{ reportType }}{% endblock %}
 
 {% block pageContent %}
-    {% if courtOrderHasMultipleDeputies %}
-        {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies, inviteUrl: inviteUrl} %}
-    {% endif %}
+    {% include '@App/Report/Report/_codeputies.html.twig' with {coDeputies: coDeputies, inviteUrl: inviteUrl} %}
 
     {% if courtOrder.ndr %}
         {% include '@App/Ndr/Ndr/index.html.twig' %}
