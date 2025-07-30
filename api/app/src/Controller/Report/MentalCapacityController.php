@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MentalCapacityController extends RestController
 {
@@ -20,8 +20,8 @@ class MentalCapacityController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/mental-capacity', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function update(Request $request, int $reportId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -42,12 +42,9 @@ class MentalCapacityController extends RestController
         return ['id' => $mc->getId()];
     }
 
-    /**
-     * @param int $id
-     */
     #[Route(path: '/report/{reportId}/mental-capacity', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\MentalCapacity
     {
         $mc = $this->findEntityBy(EntityDir\Report\MentalCapacity::class, $id, 'MentalCapacity with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
@@ -59,10 +56,7 @@ class MentalCapacityController extends RestController
         return $mc;
     }
 
-    /**
-     * @return \App\Entity\Report\Report $report
-     */
-    private function updateEntity(array $data, EntityDir\Report\MentalCapacity $mc)
+    private function updateEntity(array $data, EntityDir\Report\MentalCapacity $mc): EntityDir\Report\MentalCapacity
     {
         if (array_key_exists('has_capacity_changed', $data)) {
             $mc->setHasCapacityChanged($data['has_capacity_changed']);
