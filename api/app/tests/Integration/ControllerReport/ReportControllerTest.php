@@ -209,6 +209,8 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/'.self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenAdmin);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
     public function testGetByIdAuthPa()
