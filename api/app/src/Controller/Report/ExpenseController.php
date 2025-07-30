@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ExpenseController extends RestController
 {
@@ -20,8 +21,8 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $reportId, $expenseId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $reportId, int $expenseId): EntityDir\Report\Expense
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -37,8 +38,8 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/expense', requirements: ['reportId' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, int $reportId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -65,8 +66,8 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function edit(Request $request, $reportId, $expenseId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function edit(Request $request, int $reportId, int $expenseId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -86,8 +87,8 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function delete($reportId, $expenseId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function delete(int $reportId, int $expenseId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -103,8 +104,10 @@ class ExpenseController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Report $report, EntityDir\Report\Expense $expense, array $data)
-    {
+    private function updateEntityWithData(
+        EntityDir\Report\Report $report,
+        EntityDir\Report\Expense $expense, array $data
+    ): void {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [
             'amount' => 'setAmount',
