@@ -251,9 +251,12 @@ class FixtureHelper
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
         if (is_null($deputyObject)) {
-            $populateDeputyTable = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
-            $this->em->persist($populateDeputyTable);
+            $deputyObject = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $this->em->persist($deputyObject);
         }
+
+        $deputyObject->setUser($deputy);
+        $this->em->persist($deputyObject);
 
         $client->addReport($report);
         $report->setClient($client);
@@ -277,6 +280,8 @@ class FixtureHelper
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
+
+        $this->em->flush();
     }
 
     private function addReportsToClient(
