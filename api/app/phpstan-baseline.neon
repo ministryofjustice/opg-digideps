@@ -221,6 +221,21 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
+			message: "#^Offset 'email' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/CoDeputyController.php
+
+		-
+			message: "#^Offset 'firstname' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/CoDeputyController.php
+
+		-
+			message: "#^Offset 'lastname' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/CoDeputyController.php
+
+		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|string given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -232,6 +247,16 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Controller/DeputyController.php
+
+		-
+			message: "#^Parameter \\#2 \\$currentUser of method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
+			count: 1
+			path: src/Controller/DeputyController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/DeputyController.php
 
@@ -261,13 +286,33 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:fillAccountData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
+			path: src/Controller/Ndr/AccountController.php
+
+		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
 		-
+			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Ndr/AssetController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
+			path: src/Controller/Ndr/AssetController.php
+
+		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
+			path: src/Controller/Ndr/ExpenseController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/Ndr/ExpenseController.php
 
 		-
@@ -326,6 +371,11 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
+			count: 17
+			path: src/Controller/Ndr/NdrController.php
+
+		-
 			message: "#^Parameter \\#4 \\$ndrDocumentId of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
@@ -342,6 +392,16 @@ parameters:
 
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 2
+			path: src/Controller/Ndr/VisitsCareController.php
+
+		-
+			message: "#^Offset 'ndr_id' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Ndr/VisitsCareController.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -396,6 +456,21 @@ parameters:
 			path: src/Controller/NoteController.php
 
 		-
+			message: "#^Offset 'category' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: "#^Offset 'content' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: "#^Offset 'title' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
 			message: "#^PHPDoc tag @var has invalid value \\(\\$note EntityDir\\\\Note \\$note\\)\\: Unexpected token \"\\$note\", expected type at offset 9$#"
 			count: 1
 			path: src/Controller/NoteController.php
@@ -407,6 +482,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$lastModifiedBy of method App\\\\Entity\\\\Note\\:\\:setLastModifiedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/NoteController.php
 
@@ -431,6 +511,11 @@ parameters:
 			path: src/Controller/PreRegistrationController.php
 
 		-
+			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
+			count: 3
+			path: src/Controller/PreRegistrationController.php
+
+		-
 			message: "#^Parameter \\#1 \\$message of class RuntimeException constructor expects string, string\\|false given\\.$#"
 			count: 3
 			path: src/Controller/PreRegistrationController.php
@@ -451,61 +536,6 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:accountDelete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:accountDelete\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:accountDependentRecords\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:accountDependentRecords\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:addAccountAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:addAccountAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:editAccountAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:editAccountAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:fillAccountData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AccountController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AccountController.php
-
-		-
 			message: "#^Parameter \\#1 \\$bank of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setBank\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/AccountController.php
@@ -516,29 +546,9 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\AccountController\\:\\:\\$sectionIds has no type specified\\.$#"
-			count: 1
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AccountController\\:\\:fillAccountData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/Report/AccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateEntity\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns App\\\\Entity\\\\Report\\\\Action\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
@@ -546,108 +556,28 @@ parameters:
 			path: src/Controller/Report/ActionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:add\\(\\) has no return type specified\\.$#"
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ActionController.php
+
+		-
+			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/AssetController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:add\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:delete\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:delete\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:edit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:edit\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:edit\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:getOneById\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:getOneById\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ClientBenefitsCheckInterface\\:\\:getReport\\(\\)\\.$#"
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:getCorrectRepository\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:processEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:read\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:setJmsGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
+			path: src/Controller/Report/AssetController.php
 
 		-
 			message: "#^Parameter \\#1 \\$formData of method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) expects array, mixed given\\.$#"
 			count: 2
+			path: src/Controller/Report/ClientBenefitsCheckController.php
+
+		-
+			message: "#^Parameter \\#3 \\$existingEntity of method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface\\|null, object\\|null given\\.$#"
+			count: 1
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
@@ -656,37 +586,52 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:deleteContact\\(\\) has no return type specified\\.$#"
+			message: "#^Offset 'address' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:deleteContact\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Offset 'address2' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:getContacts\\(\\) has no return type specified\\.$#"
+			message: "#^Offset 'contact_name' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:getContacts\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Offset 'country' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
+			message: "#^Offset 'county' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Offset 'explanation' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ContactController\\:\\:upsertContact\\(\\) has no return type specified\\.$#"
+			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: "#^Offset 'postcode' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: "#^Offset 'relationship' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
 
@@ -696,24 +641,24 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:deleteDecision\\(\\) has no return type specified\\.$#"
+			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:deleteDecision\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:upsertDecision\\(\\) has no return type specified\\.$#"
+			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\|App\\\\Entity\\\\Report\\\\Report\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/DecisionController.php
+			path: src/Controller/Report/DocumentController.php
 
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Document\\>\\:\\:getQueuedDocumentsAndSetToInProgress\\(\\)\\.$#"
@@ -771,47 +716,7 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:add\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:add\\(\\) has parameter \\$reportType with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:getQueuedDocuments\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:overwriteReportPdf\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:overwriteReportPdf\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:overwriteReportPdf\\(\\) has parameter \\$reportType with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
 
@@ -826,8 +731,23 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$document EntityDir\\\\Report\\\\Document\\)\\: Unexpected token \"\\$document\", expected type at offset 9$#"
+			message: "#^Offset 'file_name' does not exist on array\\|null\\.$#"
+			count: 2
+			path: src/Controller/Report/DocumentController.php
+
+		-
+			message: "#^Offset 'is_report_pdf' does not exist on array\\|null\\.$#"
+			count: 2
+			path: src/Controller/Report/DocumentController.php
+
+		-
+			message: "#^Offset 'row_limit' does not exist on array\\|null\\.$#"
 			count: 1
+			path: src/Controller/Report/DocumentController.php
+
+		-
+			message: "#^Offset 'storage_reference' does not exist on array\\|null\\.$#"
+			count: 2
 			path: src/Controller/Report/DocumentController.php
 
 		-
@@ -851,122 +771,12 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
+			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/Report/ExpenseController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:add\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:delete\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:delete\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:edit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:edit\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:edit\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:getOneById\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:getOneById\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:add\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:delete\\(\\) has parameter \\$giftId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:delete\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:edit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:edit\\(\\) has parameter \\$giftId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:edit\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:getOneById\\(\\) has parameter \\$giftId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:getOneById\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) has no return type specified\\.$#"
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/GiftController.php
 
@@ -976,48 +786,23 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
+			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
+			path: src/Controller/Report/GiftController.php
+
+		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Lifestyle\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:addAction\\(\\) has no return type specified\\.$#"
+			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:deleteLifestyle\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:deleteLifestyle\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:findByReportIdAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateInfo\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns App\\\\Entity\\\\Report\\\\Lifestyle\\.$#"
-			count: 1
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateInfo\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/Report/LifestyleController.php
 
 		-
@@ -1042,6 +827,11 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Controller/Report/MentalCapacityController.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
 
@@ -1118,6 +908,21 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
+			path: src/Controller/Report/MoneyTransactionController.php
+
+		-
+			message: "#^Offset 'amount' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/MoneyTransactionController.php
+
+		-
+			message: "#^Offset 'category' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/MoneyTransactionController.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
+			count: 3
 			path: src/Controller/Report/MoneyTransactionController.php
 
 		-
@@ -1216,8 +1021,18 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
+			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/MoneyTransactionShortController.php
+
+		-
 			message: "#^Parameter \\#1 \\$date of method App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\:\\:setDate\\(\\) expects DateTime, DateTime\\|null given\\.$#"
 			count: 1
+			path: src/Controller/Report/MoneyTransactionShortController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:fillData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
@@ -1271,6 +1086,16 @@ parameters:
 			path: src/Controller/Report/MoneyTransferController.php
 
 		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
+			count: 2
+			path: src/Controller/Report/MoneyTransferController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:fillEntity\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
+			path: src/Controller/Report/MoneyTransferController.php
+
+		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransferController.php
@@ -1316,12 +1141,22 @@ parameters:
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: src/Controller/Report/ProfDeputyPrevCostController.php
+
+		-
 			message: "#^Parameter \\#1 \\$profDeputyCostsHasPrevious of method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Report/ProfDeputyPrevCostController.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
@@ -1368,6 +1203,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$amountReceived of method App\\\\Entity\\\\Report\\\\ProfServiceFee\\:\\:setAmountReceived\\(\\) expects App\\\\Entity\\\\Report\\\\decimal, null given\\.$#"
 			count: 1
+			path: src/Controller/Report/ProfServiceFeeController.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/Report/ProfServiceFeeController.php
 
 		-
@@ -1526,6 +1366,51 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
+			message: "#^Offset 'answers' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'button_clicked' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'decision' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'due_date' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'end_date' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'is_submitted' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'start_date' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'un_submit_date' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Offset 'unsubmitted…' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
 			message: "#^Parameter \\#1 \\$amount of method App\\\\Entity\\\\Report\\\\Debt\\:\\:setAmount\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -1578,6 +1463,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
+			count: 31
 			path: src/Controller/Report/ReportController.php
 
 		-
@@ -1781,6 +1671,16 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
+			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/Report/VisitsCareController.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateInfo\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
+			path: src/Controller/Report/VisitsCareController.php
+
+		-
 			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects DateTime, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
@@ -1817,6 +1717,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\RestController\\:\\:findEntityBy\\(\\) has parameter \\$errorMessage with no type specified\\.$#"
+			count: 1
+			path: src/Controller/RestController.php
+
+		-
+			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
@@ -1862,6 +1767,21 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\SatisfactionController\\:\\:publicAdd\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Controller/SatisfactionController.php
+
+		-
+			message: "#^Offset 'comments' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/SatisfactionController.php
+
+		-
+			message: "#^Offset 'reportType' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/SatisfactionController.php
+
+		-
+			message: "#^Offset 'score' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/SatisfactionController.php
 
@@ -1961,8 +1881,23 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
+			message: "#^Offset 'coDeputyUid' does not exist on array\\|null\\.$#"
+			count: 2
+			path: src/Controller/SelfRegisterController.php
+
+		-
+			message: "#^Offset 'existingDeputyAccou…' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/SelfRegisterController.php
+
+		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
 			count: 1
+			path: src/Controller/SelfRegisterController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/SelfRegisterController.php
 
 		-
@@ -1988,6 +1923,16 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
+			path: src/Controller/SettingController.php
+
+		-
+			message: "#^Offset 'content' does not exist on array\\|null\\.$#"
+			count: 2
+			path: src/Controller/SettingController.php
+
+		-
+			message: "#^Offset 'enabled' does not exist on array\\|null\\.$#"
+			count: 2
 			path: src/Controller/SettingController.php
 
 		-
@@ -2181,6 +2126,11 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
+			message: "#^Method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
 			message: "#^Method App\\\\Controller\\\\UserController\\:\\:recreateToken\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -2206,6 +2156,16 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
+			message: "#^Offset 'password' does not exist on array\\|null\\.$#"
+			count: 2
+			path: src/Controller/UserController.php
+
+		-
+			message: "#^Offset 'updated_email' does not exist on array\\|null\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
 			message: "#^PHPDoc tag @var for variable \\$loggedInUserTeams contains generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -2228,6 +2188,16 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$hashedPassword of method Symfony\\\\Component\\\\PasswordHasher\\\\PasswordHasherInterface\\:\\:verify\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
+			path: src/Controller/UserController.php
+
+		-
+			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
+			count: 2
+			path: src/Controller/UserController.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) expects array, array\\|null given\\.$#"
+			count: 2
 			path: src/Controller/UserController.php
 
 		-
@@ -6461,6 +6431,11 @@ parameters:
 			path: src/Entity/User.php
 
 		-
+			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$deputyUid \\(int\\) does not accept int\\|null\\.$#"
+			count: 1
+			path: src/Entity/User.php
+
+		-
 			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -7866,6 +7841,16 @@ parameters:
 			path: src/Service/DataImporter/CsvToArray.php
 
 		-
+			message: "#^Method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Service/DeputyService.php
+
+		-
+			message: "#^Property App\\\\Service\\\\DeputyService\\:\\:\\$deputyRepository \\(App\\\\Repository\\\\DeputyRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Deputy\\>\\.$#"
+			count: 1
+			path: src/Service/DeputyService.php
+
+		-
 			message: "#^Binary operation \"\\.\" between 'Invalid Reference…' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
@@ -8511,6 +8496,21 @@ parameters:
 			path: src/Service/UserService.php
 
 		-
+			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUser\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Service/UserService.php
+
+		-
+			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUserToUsersClients\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Service/UserService.php
+
+		-
+			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUserToUsersClients\\(\\) has parameter \\$userToAdd with no type specified\\.$#"
+			count: 1
+			path: src/Service/UserService.php
+
+		-
 			message: "#^Method App\\\\Service\\\\UserService\\:\\:editUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/UserService.php
@@ -8527,6 +8527,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\UserService\\:\\:handleNdrStatusUpdate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Service/UserService.php
+
+		-
+			message: "#^Parameter \\#2 \\$clientId of method App\\\\Repository\\\\ClientRepository\\:\\:saveUserToClient\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: src/Service/UserService.php
 
