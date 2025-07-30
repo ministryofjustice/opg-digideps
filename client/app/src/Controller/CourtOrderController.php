@@ -86,12 +86,17 @@ class CourtOrderController extends AbstractController
     #[Template('@App/CourtOrder/invite.html.twig')]
     public function inviteLayDeputy(Request $request, string $uid): array|RedirectResponse
     {
+        $thisPageLink = $this->generateUrl('courtorder_by_uid', ['uid' => $uid]);
+
         $invitedUser = new User();
         $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
         $form->handleRequest($request);
 
         if (!($form->isSubmitted() && $form->isValid())) {
-            return ['form' => $form->createView()];
+            return [
+                'form' => $form->createView(),
+                'backLink' => $thisPageLink,
+            ];
         }
 
         /** @var User $invitingUser */
@@ -105,11 +110,11 @@ class CourtOrderController extends AbstractController
         if (!$result->success) {
             $session->getFlashBag()->add('error', 'Invitation to deputy could not be sent');
 
-            return new RedirectResponse($this->generateUrl('courtorder_by_uid', ['uid' => $uid]));
+            return new RedirectResponse($thisPageLink);
         }
 
         $session->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
-        return new RedirectResponse($this->generateUrl('courtorder_by_uid', ['uid' => $uid]));
+        return new RedirectResponse($thisPageLink);
     }
 }
