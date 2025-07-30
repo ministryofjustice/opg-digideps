@@ -42,7 +42,6 @@ class CourtOrderController extends AbstractController
         $client = $this->clientApi->getById($courtOrder->getClient()->getId());
 
         $templateValues = [
-            'courtOrderHasMultipleDeputies' => count($courtOrder->getCoDeputies()) > 1,
             'coDeputies' => $courtOrder->getCoDeputies(),
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
