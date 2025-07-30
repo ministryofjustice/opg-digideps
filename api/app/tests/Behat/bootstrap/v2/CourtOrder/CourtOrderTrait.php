@@ -343,9 +343,6 @@ trait CourtOrderTrait
             'lastname' => $preregUser->getDeputySurname(),
         ];
 
-        // visit the court order invite page
-        $this->visit("/courtorder/{$this->courtOrder->getCourtOrderUid()}/invite");
-
         // fill in invitee details and submit
         $this->fillInField('co_deputy_invite_firstname', $this->invitedDeputy['firstname']);
         $this->fillInField('co_deputy_invite_lastname', $this->invitedDeputy['lastname']);
