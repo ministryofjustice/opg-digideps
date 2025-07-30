@@ -12,7 +12,6 @@ class AssetControllerTest extends AbstractTestController
     private static $client1;
     private static $ndr1;
     private static $asset1;
-    private static $assetp1;
     private static $deputy2;
     private static $client2;
     private static $ndr2;
@@ -30,21 +29,16 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        parent::setUpBeforeClass();
 
         // deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);
         self::$asset1 = self::fixtures()->createNdrAsset('other', self::$ndr1, ['setTitle' => 'asset1']);
-        self::$assetp1 = self::fixtures()->createNdrAsset('property', self::$ndr1, ['setAddress' => 'ha1']);
+        self::fixtures()->createNdrAsset('property', self::$ndr1, ['setAddress' => 'ha1']);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
@@ -53,6 +47,16 @@ class AssetControllerTest extends AbstractTestController
         self::$asset2 = self::fixtures()->createNdrAsset('other', self::$ndr2, ['setTitle' => 'asset2']);
 
         self::fixtures()->flush()->clear();
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
     public function testgetOneByIdAuth()
