@@ -1378,9 +1378,22 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA', string $clientLastname = 'Smith'): PreRegistration
-    {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientLastName' => $clientLastname];
+    public function createPreRegistration(
+        string $reportType = 'OPG102',
+        string $orderType = 'PFA',
+        string $clientLastname = 'Smith',
+        ?string $caseNumber = null,
+    ): PreRegistration {
+        if (is_null($caseNumber)) {
+            $caseNumber = ''.random_int(10000000, 99999999);
+        }
+
+        $data = [
+            'reportType' => $reportType,
+            'orderType' => $orderType,
+            'clientLastName' => $clientLastname,
+            'caseNumber' => $caseNumber,
+        ];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);
