@@ -28,7 +28,7 @@
     {% endif %}
 
     {% if step == 2 %}
-        <div class="govuk-form-group {% if not form.doesClientUndertakeSocialActivities.vars.valid %}error{% endif %}">
+        <div class="govuk-form-group {% if not form.doesClientUndertakeSocialActivities.vars.valid %}error{% endif %}" data-role="multitoggle-group">
             {{ form_checkbox_group(form.doesClientUndertakeSocialActivities, 'form.doesClientUndertakeSocialActivities', {
                 'useFormGroup': false,
                 'legendText' : 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, translationDomain),
