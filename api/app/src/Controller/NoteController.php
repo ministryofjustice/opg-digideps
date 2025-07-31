@@ -6,9 +6,9 @@ use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/note/')]
 class NoteController extends RestController
@@ -19,8 +19,8 @@ class NoteController extends RestController
     }
 
     #[Route(path: '{clientId}', requirements: ['clientId' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_ORG')")]
-    public function add(Request $request, $clientId)
+    #[IsGranted(attribute: 'ROLE_ORG')]
+    public function add(Request $request, int $clientId): array
     {
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
         $this->denyAccessIfClientDoesNotBelongToUser($client);
@@ -47,8 +47,8 @@ class NoteController extends RestController
      * Add "user" group if needed
      */
     #[Route(path: '{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ORG')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_ORG')]
+    public function getOneById(Request $request, int $id): EntityDir\Note
     {
         $serialisedGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['notes', 'user'];
@@ -65,8 +65,8 @@ class NoteController extends RestController
      * Only the creator can update the note.
      */
     #[Route(path: '{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_ORG')")]
-    public function updateNote(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_ORG')]
+    public function updateNote(Request $request, int $id): int
     {
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
 
@@ -87,19 +87,11 @@ class NoteController extends RestController
         return $note->getId();
     }
 
-    /**
-     * Delete note.
-     *
-     * @param int $id
-     *
-     * @return array
-     */
     #[Route(path: '{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_ORG')")]
-    public function delete($id, LoggerInterface $logger)
+    #[IsGranted(attribute: 'ROLE_ORG')]
+    public function delete(int $id, LoggerInterface $logger): array
     {
         try {
-            /** @var $note EntityDir\Note $note */
             $note = $this->findEntityBy(EntityDir\Note::class, $id);
 
             // enable if the check above is removed and the note is available for editing for the whole team

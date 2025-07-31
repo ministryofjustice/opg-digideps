@@ -7,9 +7,9 @@ use App\Service\CsvUploader;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/codeputy/')]
 class CoDeputyController extends RestController
@@ -20,21 +20,20 @@ class CoDeputyController extends RestController
     }
 
     #[Route(path: '{count}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function countMld(Request $request)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function countMld(): int
     {
         $qb = $this->em->createQueryBuilder()
             ->select('count(u.id)')
             ->from('App\Entity\User', 'u')
             ->where('u.coDeputyClientConfirmed = ?1')
             ->setParameter(1, true);
-
         return $qb->getQuery()->getSingleScalarResult();
     }
 
     #[Route(path: 'add/{clientId}', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, int $clientId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, int $clientId): User
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'email' => 'notEmpty',
@@ -60,8 +59,8 @@ class CoDeputyController extends RestController
     }
 
     #[Route(path: '{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function update(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function update(Request $request, $id): array
     {
         $user = $this->findEntityBy(User::class, $id, 'User not found'); /* @var $user User */
 
@@ -91,8 +90,8 @@ class CoDeputyController extends RestController
      * Borrows heavily from CasRecController:addBulk.
      */
     #[Route(path: '{mldupgrade}', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function upgradeToMld(Request $request)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function upgradeToMld(Request $request): array
     {
         $maxRecords = 10000;
 

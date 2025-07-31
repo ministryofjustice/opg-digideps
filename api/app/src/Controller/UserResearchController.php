@@ -9,11 +9,12 @@ use App\Repository\SatisfactionRepository;
 use App\Repository\UserResearchResponseRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserResearchController extends RestController
 {
@@ -28,8 +29,8 @@ class UserResearchController extends RestController
     }
 
     #[Route(path: '/user-research', name: 'create_user_research', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')")]
-    public function create(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ORG')"))]
+    public function create(Request $request): string
     {
         try {
             $formData = json_decode($request->getContent(), true);
@@ -50,8 +51,8 @@ class UserResearchController extends RestController
     }
 
     #[Route(path: '/user-research', name: 'get_user_research', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function getAll(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function getAll(Request $request): JsonResponse
     {
         try {
             $fromDateString = $request->get('fromDate', '');

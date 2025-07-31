@@ -96,46 +96,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:archiveAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:deleteAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:deleteAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:getAllAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:getAllClientsByDeputyUid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:unarchiveClientAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:updateDeputyAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\ClientController\\:\\:upsertAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 3
 			path: src/Controller/ClientController.php
@@ -196,27 +156,12 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:countMld\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:update\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:countMld\\(\\) should return int but returns bool\\|float\\|int\\|string\\|null\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
 		-
 			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:upgradeToMld\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
@@ -241,16 +186,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\DeputyController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/DeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/DeputyController.php
-
-		-
 			message: "#^Parameter \\#2 \\$currentUser of method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/DeputyController.php
@@ -259,11 +194,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/DeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:containerHealthAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
 
 		-
 			message: "#^Property App\\\\Controller\\\\JWTController\\:\\:\\$authService is never read, only written\\.$#"
@@ -421,36 +351,6 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:add\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:updateNote\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\NoteController\\:\\:updateNote\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 2
 			path: src/Controller/NoteController.php
@@ -467,11 +367,6 @@ parameters:
 
 		-
 			message: "#^Offset 'title' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$note EntityDir\\\\Note \\$note\\)\\: Unexpected token \"\\$note\", expected type at offset 9$#"
 			count: 1
 			path: src/Controller/NoteController.php
 
@@ -496,17 +391,7 @@ parameters:
 			path: src/Controller/PreRegistrationController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\PreRegistrationController\\:\\:clientHasCoDeputies\\(\\) should return array\\|Symfony\\\\Component\\\\HttpFoundation\\\\JsonResponse but returns bool\\.$#"
-			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\PreRegistrationController\\:\\:userCount\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\PreRegistrationController\\:\\:verify\\(\\) has no return type specified\\.$#"
+			message: "#^Method App\\\\Controller\\\\PreRegistrationController\\:\\:userCount\\(\\) should return int but returns bool\\|float\\|int\\|string\\|null\\.$#"
 			count: 1
 			path: src/Controller/PreRegistrationController.php
 
@@ -1281,21 +1166,6 @@ parameters:
 			path: src/Controller/SatisfactionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\SatisfactionController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SatisfactionController\\:\\:getSatisfactionData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SatisfactionController\\:\\:publicAdd\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
 			message: "#^Offset 'comments' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/SatisfactionController.php
@@ -1346,104 +1216,9 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Cannot call method setActive\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setCoDeputyClientConfirmed\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setDeputyNo\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setDeputyUid\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setIsPrimary\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setPreRegisterValidatedDate\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setRegistrationDate\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SelfRegisterController\\:\\:populateSelfReg\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SelfRegisterController\\:\\:register\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SelfRegisterController\\:\\:updateCoDeputyWithVerificationData\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SelfRegisterController\\:\\:updateCoDeputyWithVerificationData\\(\\) should return App\\\\Entity\\\\User but returns App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SelfRegisterController\\:\\:verifyCoDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Offset 'coDeputyUid' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Offset 'existingDeputyAccou…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
 			count: 2
 			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingController\\:\\:getSetting\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingController\\:\\:getSetting\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingController\\:\\:upsertSetting\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingController\\:\\:upsertSetting\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingController.php
 
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
@@ -1459,26 +1234,6 @@ parameters:
 			message: "#^Offset 'enabled' does not exist on array\\|null\\.$#"
 			count: 2
 			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\StatsController\\:\\:getActiveLays\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/StatsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\StatsController\\:\\:getAssetsTotalValueData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/StatsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\StatsController\\:\\:getImbalanceReport\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/StatsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\StatsController\\:\\:getMetric\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/StatsController.php
 
 		-
 			message: "#^Parameter \\#1 \\$date of method App\\\\Controller\\\\RestController\\:\\:convertDateStringToDateTime\\(\\) expects string, mixed given\\.$#"
@@ -1516,6 +1271,16 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
+			message: "#^Cannot call method getClients\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
+			message: "#^Cannot call method getFirstClient\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -1526,27 +1291,17 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
+			message: "#^Cannot call method getRoleName\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
+			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
 			message: "#^Expression in empty\\(\\) is not falsy\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:add\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:agreeTermsUse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:agreeTermsUse\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:changeEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
@@ -1556,68 +1311,13 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:changePassword\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:changePassword\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:clearRegistrationToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:clearRegistrationToken\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getAll\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getByToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getByToken\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneByFilter\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneByFilter\\(\\) has parameter \\$filter with no type specified\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneByFilter\\(\\) has parameter \\$what with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getRegToken\\(\\) has no return type specified\\.$#"
-			count: 1
+			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneByFilter\\(\\) should return App\\\\Entity\\\\User\\|null but returns mixed\\.$#"
+			count: 2
 			path: src/Controller/UserController.php
 
 		-
@@ -1626,52 +1326,7 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getTeamByUserId\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getUserTeamNames\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getUserTeamNames\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:isPasswordCorrect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:isPasswordCorrect\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:recreateToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:recreateToken\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getUserTeamNames\\(\\) should return App\\\\Entity\\\\User\\|null but returns object\\|null\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
@@ -1716,8 +1371,18 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
+			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:remove\\(\\) expects object, object\\|null given\\.$#"
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
 			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
 			count: 2
+			path: src/Controller/UserController.php
+
+		-
+			message: "#^Parameter \\#1 \\$token of method Symfony\\\\Component\\\\Security\\\\Core\\\\Authorization\\\\Voter\\\\Voter\\<string,App\\\\Entity\\\\User\\>\\:\\:vote\\(\\) expects Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null given\\.$#"
+			count: 1
 			path: src/Controller/UserController.php
 
 		-
@@ -1728,16 +1393,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'satisfaction' on mixed\\.$#"
 			count: 2
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserResearchController\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserResearchController\\:\\:getAll\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Controller/UserResearchController.php
 
 		-
