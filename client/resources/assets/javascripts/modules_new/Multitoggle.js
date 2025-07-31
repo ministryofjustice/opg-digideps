@@ -14,21 +14,34 @@ module.exports = {
       elt.classList.add('js-hidden')
     }
 
+    function setTogglableState (elt) {
+      const toggledElementsContainer = elt.closest('[data-role="multitoggle-group"]')
+
+      const onElt = toggledElementsContainer.querySelector('#' + elt.getAttribute('data-multitoggle-on'))
+      const offElt = toggledElementsContainer.querySelector('#' + elt.getAttribute('data-multitoggle-off'))
+
+      showElement(onElt)
+      hideElement(offElt)
+    }
+
+    // set initial state of togglable areas based on radio button checks
+    window.addEventListener('load', function () {
+      const selector = 'input[type="radio"][data-multitoggle-on],input[type="radio"][data-multitoggle-off]'
+      document.querySelectorAll(selector).forEach(function (elt) {
+        if (elt.checked) {
+          setTogglableState(elt)
+        }
+      })
+    })
+
+    // event handler for change events on radio buttons after page load;
     // the 'change' event only fires when a radio button is checked, not
     // when it is unchecked
     document.addEventListener('change', function (event) {
-      const elem = event.target
+      const elt = event.target
 
-      if (elem || elem.matches('input[type="radio"][data-multitoggle-on]')) {
-        const toggledElementsContainer = elem.closest('[data-role="multitoggle-group"]')
-
-        if (elem.checked) {
-          const onElt = toggledElementsContainer.querySelector('#' + elem.getAttribute('data-multitoggle-on'))
-          const offElt = toggledElementsContainer.querySelector('#' + elem.getAttribute('data-multitoggle-off'))
-
-          showElement(onElt)
-          hideElement(offElt)
-        }
+      if (elt && elt.matches('input[type="radio"][data-multitoggle-on]') && elt.checked) {
+        setTogglableState(elt)
       }
     })
   }
