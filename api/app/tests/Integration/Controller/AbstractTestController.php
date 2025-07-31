@@ -201,9 +201,9 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @return string token
      */
-    protected function loginAsDeputy()
+    protected function loginAsDeputy(string $email = 'deputy@example.org')
     {
-        return $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**

@@ -9,9 +9,9 @@ use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class NdrController extends RestController
 {
@@ -20,16 +20,12 @@ class NdrController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @param int $id
-     */
     #[Route(path: '/ndr/{id}', methods: ['GET'])]
-    public function getById(Request $request, $id)
+    public function getById(Request $request, int $id): EntityDir\Ndr\Ndr
     {
         $groups = $request->query->has('groups') ? $request->query->all('groups') : ['ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
 
-        /* @var $report EntityDir\Ndr\Ndr */
         $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
 
         if (!$this->isGranted(User::ROLE_ADMIN)) {
@@ -41,8 +37,8 @@ class NdrController extends RestController
     }
 
     #[Route(path: '/ndr/{id}/submit', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function submit(Request $request, $id, ReportService $reportService)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function submit(Request $request, $id, ReportService $reportService): array
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
         /* @var $ndr EntityDir\Ndr\Ndr */
@@ -87,7 +83,7 @@ class NdrController extends RestController
     }
 
     #[Route(path: '/ndr/{id}', methods: ['PUT'])]
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): array
     {
         /* @var $ndr EntityDir\Ndr\Ndr */
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');

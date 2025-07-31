@@ -95,20 +95,6 @@ trait ReportManagementTrait
                 $this->checkOption($inputs['incompleteSection']);
             }
 
-            if (isset($inputs['startDate'])) {
-                $date = new \DateTime($inputs['startDate']);
-                $this->fillField('manage_report_startDate_day', $date->format('d'));
-                $this->fillField('manage_report_startDate_month', $date->format('m'));
-                $this->fillField('manage_report_startDate_year', $date->format('Y'));
-            }
-
-            if (isset($inputs['endDate'])) {
-                $date = new \DateTime($inputs['endDate']);
-                $this->fillField('manage_report_endDate_day', $date->format('d'));
-                $this->fillField('manage_report_endDate_month', $date->format('m'));
-                $this->fillField('manage_report_endDate_year', $date->format('Y'));
-            }
-
             break; // Only expect one row in this table.
         }
 

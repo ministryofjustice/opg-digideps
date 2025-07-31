@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ExpenseController extends RestController
 {
@@ -18,8 +18,8 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById($ndrId, $expenseId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(int $ndrId, int $expenseId): EntityDir\Ndr\Expense
     {
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
@@ -33,12 +33,12 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/expense', requirements: ['ndrId' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, $ndrId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, int $ndrId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
@@ -57,8 +57,8 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function edit(Request $request, $ndrId, $expenseId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function edit(Request $request, int $ndrId, int $expenseId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -76,10 +76,10 @@ class ExpenseController extends RestController
     }
 
     #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function delete($ndrId, $expenseId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function delete(int $ndrId, int $expenseId): array
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
         $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
@@ -91,7 +91,7 @@ class ExpenseController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Ndr\Expense $expense, array $data)
+    private function updateEntityWithData(EntityDir\Ndr\Expense $expense, array $data): void
     {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [

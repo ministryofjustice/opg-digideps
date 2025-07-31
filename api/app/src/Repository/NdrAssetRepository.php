@@ -15,10 +15,13 @@ class NdrAssetRepository extends ServiceEntityRepository
         parent::__construct($registry, Asset::class);
     }
 
-    public function getSumOfAssets(string $assetType = AssetOther::class, \DateTime $after = null, array $excludeByClientId = []): int
-    {
+    public function getSumOfAssets(
+        string $assetType = AssetOther::class,
+        ?\DateTime $after = null,
+        array $excludeByClientId = []
+    ): int {
         if (!in_array($assetType, [AssetProperty::class, AssetOther::class])) {
-            throw new InvalidArgumentException('Only "AssetProperty" or "AssetOther" assets are supported');
+            throw new \InvalidArgumentException('Only "AssetProperty" or "AssetOther" assets are supported');
         }
 
         $selectQuery = AssetOther::class === $assetType ? 'SUM(a.value)' : 'SUM(a.value * (a.ownedPercentage / 100))';

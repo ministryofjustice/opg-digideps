@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\ControllerReport;
 
+use App\Entity\PreRegistration;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\ChecklistInformation;
 use App\Entity\Report\Document;
@@ -11,6 +12,7 @@ use App\Tests\Integration\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
 {
+    private static $preRegistration1;
     private static $deputy1;
     private static $client1;
     private static $report1;
@@ -53,6 +55,24 @@ class ReportControllerTest extends AbstractTestController
             self::$deputy1,
             ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
         );
+        self::$deputy1->addClient(self::$client1);
+        self::fixtures()->persist(self::$deputy1);
+
+        self::$preRegistration1 = new PreRegistration([
+            'Case' => self::$client1->getCaseNumber(),
+            'ClientSurname' => self::$client1->getLastName(),
+            'DeputyUid' => (string) self::$deputy1->getDeputyUid(),
+            'DeputyFirstname' => self::$deputy1->getFirstname(),
+            'DeputySurname' => self::$deputy1->getLastname(),
+            'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
+            'ReportType' => 'OPG102',
+            'MadeDate' => (new \DateTime('2016-01-01'))->format('Y-m-d'),
+            'OrderType' => 'pfa',
+            'CoDeputy' => false,
+            'Hybrid' => 'SINGLE',
+        ]);
+        self::$fixtures->persist(self::$preRegistration1);
+
         self::$clientEdit = self::fixtures()->createClient(
             self::$deputy1,
             ['setFirstname' => 'cEdit1', 'setLastname' => 'l1', 'setCaseNumber' => '010101010']
@@ -170,8 +190,6 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'client' => ['id' => self::$client1->getId()],
-                'start_date' => '2016-01-01',
-                'end_date' => '2016-12-31',
             ],
         ])['data']['report'];
 
@@ -182,7 +200,7 @@ class ReportControllerTest extends AbstractTestController
         /* @var $report Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2016-01-01', $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals('2016-12-31', $report->getEndDate()->format('Y-m-d'));
+        $this->assertEquals('2017-01-02', $report->getEndDate()->format('Y-m-d'));
 
         self::fixtures()->flush();
     }
@@ -191,6 +209,8 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/'.self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenAdmin);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
     public function testGetByIdAuthPa()
@@ -309,7 +329,7 @@ class ReportControllerTest extends AbstractTestController
             $this->assertArrayHasKey('state', $statusData[$key]);
             $this->assertArrayHasKey('nOfRecords', $statusData[$key]);
         }
-         
+
         $this->assertArrayHasKey('status', $statusData);
     }
 
@@ -449,7 +469,7 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('2016-01-01', $data['start_date']);
         $this->assertEquals('2016-11-30', $data['end_date']);
-        $this->assertEquals('2017-01-25', $data['due_date']);
+        $this->assertEquals('2016-12-21', $data['due_date']);
 
         // repeat test with new end date beyond 13th November 2019
         // assert put new end date

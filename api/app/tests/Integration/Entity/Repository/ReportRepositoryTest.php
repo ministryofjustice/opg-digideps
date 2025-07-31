@@ -19,6 +19,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
     private Checklist|array $queuedChecklists = [];
     public const QUERY_LIMIT = 2;
     private ReportRepository $sut;
+    private Fixtures $fixtures;
 
     public function setUp(): void
     {

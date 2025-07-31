@@ -234,7 +234,7 @@ trait MoneyInShortSectionTrait
      * @param int         $amount      amount for the one off payment
      * @param string|null $date        date the money came in (optional) format: DD/MM/YYYY
      */
-    private function addMoneyInPayment(string $description, int $amount, int $paymentCount, string $date = null)
+    private function addMoneyInPayment(string $description, int $amount, int $paymentCount, ?string $date = null)
     {
         $this->iAmOnMoneyInShortAddPage();
 

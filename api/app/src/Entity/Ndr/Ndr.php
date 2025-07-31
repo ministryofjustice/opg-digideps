@@ -337,7 +337,7 @@ class Ndr implements ReportInterface
     /**
      * @return \DateTime
      */
-    public static function getDueDateBasedOnStartDate(\DateTime $startDate = null)
+    public static function getDueDateBasedOnStartDate(?\DateTime $startDate = null)
     {
         if ($startDate) {
             $dueDate = clone $startDate;
@@ -355,7 +355,7 @@ class Ndr implements ReportInterface
         return $this->submitDate;
     }
 
-    public function setSubmitDate(\DateTime $submitDate = null)
+    public function setSubmitDate(?\DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
 

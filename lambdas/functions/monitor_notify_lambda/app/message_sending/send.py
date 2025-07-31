@@ -36,7 +36,6 @@ def send_message(payload):
         response_object["statusCode"] = 400
         response_object["body"] = "Invalid request - Not a valid slack alert"
         return response_object
-
     # Data for the message
     data = {"text": payload["text"]}
     # Send the POST request to the Slack webhook URL

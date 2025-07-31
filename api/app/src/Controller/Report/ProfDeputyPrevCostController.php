@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfDeputyPrevCostController extends RestController
 {
@@ -20,12 +20,11 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/prof-deputy-previous-cost', methods: ['POST'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function addAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function add(Request $request, int $reportId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         if (!array_key_exists('amount', $data)) {
@@ -45,10 +44,9 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     #[Route(path: '/prof-deputy-previous-cost/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function updateAction(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function update(Request $request, int $id): array
     {
-        /** @var EntityDir\Report\ProfDeputyPreviousCost $cost */
         $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id);
         $report = $cost->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
@@ -63,12 +61,9 @@ class ProfDeputyPrevCostController extends RestController
         return ['id' => $cost->getId()];
     }
 
-    /**
-     * @return object|null
-     */
     #[Route(path: '/prof-deputy-previous-cost/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\ProfDeputyPreviousCost
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['prof-deputy-costs-prev'];
@@ -81,8 +76,8 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/prof-deputy-previous-cost/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_PROF')")]
-    public function deleteProfDeputyPreviousCost($id)
+    #[IsGranted(attribute: 'ROLE_PROF')]
+    public function deleteProfDeputyPreviousCost(int $id): array
     {
         $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id, 'Prof Service fee not found');
         $report = $cost->getReport(); /* @var $report EntityDir\Report\Report */
@@ -103,10 +98,7 @@ class ProfDeputyPrevCostController extends RestController
         return [];
     }
 
-    /**
-     * @return \App\Entity\Report\Report $report
-     */
-    private function updateEntity(array $data, EntityDir\Report\ProfDeputyPreviousCost $cost)
+    private function updateEntity(array $data, EntityDir\Report\ProfDeputyPreviousCost $cost): EntityDir\Report\ProfDeputyPreviousCost
     {
         if (array_key_exists('start_date', $data)) {
             $cost->setStartDate(new \DateTime($data['start_date']));
