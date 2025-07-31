@@ -33,18 +33,22 @@
         <div class="govuk-radios {{ classes ?: '' }}{% if element|length < 3 and hasConditionals == false %}govuk-radios--inline{% endif %}" data-module="govuk-radios">
 
         {% for key,choiceElement in element %}
-
             {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}
             {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
             {% set description = items[key].description is defined ?  items[key].description : null %}
             {% set disabled = disabled or (items[key].disabled is defined and items[key].disabled) %}
             {% set conditional = items[key].conditional is defined ? items[key].conditional : '' %}
             {% set labelDataTarget = items[key].dataTarget is defined ? items[key].dataTarget : null %}
+            {% set multitoggleForRadio = multitoggle[key] is defined ? multitoggle[key] : null %}
 
             <div class="govuk-radios__item" {% if labelDataTarget %} data-target="{{ labelDataTarget }}"{% endif %}>
                 {% set attr = {'class': 'govuk-radios__input ' ~ elementClass} %}
                 {% if disabled %}
                     {% set attr = attr | merge({'disabled': 'disabled'}) %}
+                {% endif %}
+
+                {% if multitoggleForRadio %}
+                    {% set attr = attr | merge({'data-multitoggle-on': multitoggleForRadio['on'], 'data-multitoggle-off': multitoggleForRadio['off']}) %}
                 {% endif %}
 
                 {% if conditional %}
