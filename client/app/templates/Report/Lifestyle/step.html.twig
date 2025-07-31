@@ -36,9 +36,9 @@
                     isPageHeading: true,
                     caption: 'stepPage.supportTitle' | trans
                 },
-                'items': [
-                {'dataTarget': 'undertake-social-activities-yes-wrapper' },
-                {'dataTarget': 'undertake-social-activities-no-wrapper' }
+                multitoggle: [
+                    {'on': 'undertake-social-activities-yes-wrapper', 'off': 'undertake-social-activities-no-wrapper'},
+                    {'on': 'undertake-social-activities-no-wrapper', 'off': 'undertake-social-activities-yes-wrapper'}
                 ]
             }) }}
 
