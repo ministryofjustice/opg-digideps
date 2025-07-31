@@ -39,7 +39,6 @@ class FormFieldsExtension extends AbstractExtension
      * @DEPRECATED
      * Renders form input field.
      *
-     * @param mixed  $element
      * @param string $elementName
      * @param int    $transIndex
      */
@@ -58,7 +57,6 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * Renders form checkbox field.
      *
-     * @param mixed  $element
      * @param string $elementName
      * @param int    $transIndex
      */
@@ -129,6 +127,7 @@ class FormFieldsExtension extends AbstractExtension
             'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
             'translationDomain' => $domain,
+            'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
         ]);
     }
 
@@ -184,7 +183,6 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * Renders form select element.
      *
-     * @param mixed  $element
      * @param string $elementName
      * @param int    $transIndex
      */
@@ -280,14 +278,13 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed  $element
      * @param string $elementName used to pick the translation by appending ".label"
      * @param array  $vars        [buttonClass => additional class. "disabled" supported]
      */
     public function renderFormSubmit(
         $element,
         $elementName,
-        array $vars = []
+        array $vars = [],
     ) {
         $options = [
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
@@ -309,7 +306,6 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed       $element
      * @param string      $elementName        used to pick the translation by appending ".label"
      * @param array       $vars               [buttonClass => additional class. "disabled" supported]
      * @param string|null $gaTrackingCategory (required) Use the format {Page Title}:{Sub Section i.e. in a form} (sub section optional)
@@ -324,9 +320,9 @@ class FormFieldsExtension extends AbstractExtension
         $elementName,
         string $gaTrackingCategory,
         string $gaTrackingAction,
-        string $gaTrackingLabel = null,
+        ?string $gaTrackingLabel = null,
         ?int $gaTrackingValue = null,
-        array $vars = []
+        array $vars = [],
     ) {
         $vars['attr'] = $this->addGaAttrsToElementAttrs(
             $gaTrackingCategory,
@@ -347,7 +343,7 @@ class FormFieldsExtension extends AbstractExtension
         string $gaTrackingAction,
         string $gaTrackingLabel,
         ?int $gaTrackingValue,
-        ?array $attrs = []
+        ?array $attrs = [],
     ) {
         $attrs = is_null($attrs) ? [] : $attrs;
 
@@ -365,8 +361,6 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * get individual field errors and render them inside the field
      * Usage: {{ form_errors(element) }}.
-     *
-     * @param $element
      */
     public function renderFormErrors($element)
     {
