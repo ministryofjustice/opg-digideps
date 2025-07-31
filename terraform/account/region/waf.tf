@@ -352,7 +352,7 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
 
 # WAF Logs
 resource "aws_cloudwatch_query_definition" "ac1_blocked_by_rule" {
-  name            = "WAF: Blocked Requests by Rule"
+  name            = "WAF - Blocked Requests by Rule"
   log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
 
   query_string = <<QUERY
@@ -366,7 +366,7 @@ QUERY
 }
 
 resource "aws_cloudwatch_query_definition" "ac2_blocked_ips_with_reason" {
-  name            = "WAF: Blocked IPs with Reason"
+  name            = "WAF - Blocked IPs with Reason"
   log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
 
   query_string = <<QUERY
@@ -381,7 +381,7 @@ QUERY
 }
 
 resource "aws_cloudwatch_query_definition" "ac3_detailed_blocked_requests" {
-  name            = "WAF: Detailed Blocked Requests"
+  name            = "WAF - Detailed Blocked Requests"
   log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
 
   query_string = <<QUERY
