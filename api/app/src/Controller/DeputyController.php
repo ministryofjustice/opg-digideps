@@ -7,12 +7,11 @@ use App\Entity\User;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-// TODO
-// http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 #[Route(path: '/deputy')]
 class DeputyController extends RestController
 {
@@ -25,8 +24,8 @@ class DeputyController extends RestController
     }
 
     #[Route(path: '/add', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
-    public function add(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')"))]
+    public function add(Request $request): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
         $newDeputy = $this->populateDeputy(new Deputy(), $data);
@@ -42,7 +41,7 @@ class DeputyController extends RestController
      * call setters on User when $data contains values.
      * //TODO move to service.
      */
-    private function populateDeputy(Deputy $deputy, array $data)
+    private function populateDeputy(Deputy $deputy, array $data): Deputy
     {
         $this->hydrateEntityWithArrayData($deputy, $data, [
             'firstname' => 'setFirstname',
@@ -69,19 +68,14 @@ class DeputyController extends RestController
         return $deputy;
     }
 
-    /**
-     * @return object|null
-     */
     #[Route(path: '/{id}', name: 'deputy_find_by_id', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
-    public function findByIdAction(Request $request, int $id)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')"))]
+    public function findById(Request $request, int $id): Deputy
     {
         $serialisedGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['deputy'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $deputy = $this->findEntityBy(Deputy::class, $id);
-
-        return $deputy;
+        return $this->findEntityBy(Deputy::class, $id);
     }
 }
