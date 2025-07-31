@@ -4,20 +4,20 @@ set -e
 
 ATTEMPTS=0
 
-while curl -s http://localstack:4566/health | grep -v "\"initScripts\": \"initialized\""; do
-  printf 'localstack initialisation scripts are still running\n'
+while curl -s http://localstack:4566/_localstack/init | grep -v "\"stage\": \"READY\", \"name\": \"init.sh\", \"state\": \"SUCCESSFUL\"" ; do
+  printf 'integration tests pre-run check: localstack initialisation scripts are still running\n'
 
   ATTEMPTS=$((ATTEMPTS+1))
 
   if [[ "$ATTEMPTS" -eq 20 ]]; then
-      printf 'localstack failed to initialize\n'
+      printf 'integration tests pre-run check: localstack failed to initialize\n'
       exit 1
   fi
 
   sleep 1s
 done
 
-printf '\n---localstack initialized---\n\n'
+printf '\n---integration tests pre-run check complete: localstack initialized---\n\n'
 
 # Export unit test DB config so it can be used in tests
 export PGHOST=${DATABASE_HOSTNAME:=postgres}
@@ -83,7 +83,7 @@ case "$INTEGRATION_SELECTION" in
     printf '\n Running Stats Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running v2 Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
+    php vendor/bin/phpunit -c tests/Integration tests/Integration/v2 --coverage-php tests/coverage/v2.cov
 
     # generate HTML coverage report
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"

@@ -10,31 +10,32 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DocumentController extends RestController
 {
     public const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
     public const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
-    public const REPORT_PDF_FAILED_MESSAGE = 'Report PDF failed to sync';
     private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
-    public function __construct(private readonly EntityManagerInterface $em, private readonly AuthService $authService, private readonly RestFormatter $formatter, private readonly LoggerInterface $verboseLogger)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly AuthService $authService,
+        private readonly RestFormatter $formatter,
+        private readonly LoggerInterface $verboseLogger
+    ) {
         parent::__construct($em);
     }
 
     #[Route(path: '/document/{reportType}/{reportId}', requirements: ['reportId' => '\d+', 'reportType' => '(report|ndr)'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, $reportType, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, string $reportType, int $reportId): array
     {
         if ('report' === $reportType) {
-            /** @var EntityDir\Report\Report $report */
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         } else {
-            /** @var EntityDir\Report\Report $report */
             $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
         }
 
@@ -63,8 +64,8 @@ class DocumentController extends RestController
     }
 
     #[Route(path: '/document/{reportType}/{reportId}/overwrite', requirements: ['reportId' => '\d+', 'reportType' => '(report|ndr)'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function overwriteReportPdf(Request $request, $reportType, $reportId)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function overwriteReportPdf(Request $request, string $reportType, int $reportId): array
     {
         if ('report' === $reportType) {
             /** @var EntityDir\Report\Report $report */
@@ -113,14 +114,13 @@ class DocumentController extends RestController
      * GET document by id.
      */
     #[Route(path: '/document/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): Document
     {
         $serialisedGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['documents'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        /* @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(Document::class, $id);
 
         $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
@@ -131,16 +131,11 @@ class DocumentController extends RestController
     /**
      * Delete document.
      * Accessible only from deputy area.
-     *
-     * @param int $id
-     *
-     * @return array
      */
     #[Route(path: '/document/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function delete($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function delete(int $id): array
     {
-        /** @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(Document::class, $id);
         $report = $document->getReport();
 

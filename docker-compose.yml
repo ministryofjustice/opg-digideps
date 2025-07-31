@@ -183,7 +183,7 @@ services:
       - USE_SINGLE_REGION=1
       - DEBUG=1
     healthcheck:
-      test: bash /scripts/wait/healthcheck.sh
+      test: /scripts/wait/healthcheck.sh
       interval: 20s
       timeout: 30s
       retries: 50

@@ -1,26 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Repository;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\TestHelpers\ReportTestHelper;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Integration\ApiBaseTestCase;
 
-class ReportSubmissionRepositoryTest extends WebTestCase
+class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 {
-    private EntityManager $entityManager;
     private ReportSubmissionHelper $reportSubmissionHelper;
 
     public function setUp(): void
     {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        parent::setUp();
 
         $this->reportSubmissionHelper = (new ReportSubmissionHelper());
     }

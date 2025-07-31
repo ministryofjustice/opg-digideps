@@ -18,8 +18,11 @@ class AssetRepository extends ServiceEntityRepository
         parent::__construct($registry, Asset::class);
     }
 
-    public function getSumOfAssets(string $assetType = AssetOther::class, string $deputyType = null, \DateTime $after = null): int
-    {
+    public function getSumOfAssets(
+        string $assetType = AssetOther::class,
+        ?string $deputyType = null,
+        ?\DateTime $after = null
+    ): int {
         if (!in_array($assetType, [AssetProperty::class, AssetOther::class])) {
             throw new \InvalidArgumentException('Only "AssetProperty" or "AssetOther" assets are supported');
         }

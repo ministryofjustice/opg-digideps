@@ -183,7 +183,9 @@ trait AuthTrait
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        $this->em->refresh($user);
+        !is_null($user) ?
+            $this->em->refresh($user) :
+            throw new BehatException(sprintf('User with email %s not found', $email));
 
         if ('expired' === $token) {
             $user->setTokenDate(new \DateTime('-2hours'));

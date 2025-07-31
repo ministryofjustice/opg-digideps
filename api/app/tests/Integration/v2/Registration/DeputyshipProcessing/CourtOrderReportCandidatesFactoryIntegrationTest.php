@@ -9,35 +9,21 @@ use App\Entity\CourtOrder;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
+class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
 {
-    private EntityManager $em;
-    private ORMPurger $purger;
     private CourtOrderReportCandidatesFactory $sut;
 
     protected function setUp(): void
     {
-        $container = self::bootKernel()->getContainer();
-
-        $this->em = $container->get('doctrine')->getManager();
-
-        $this->purger = new ORMPurger($this->em);
+        parent::setUp();
 
         /** @var CourtOrderReportCandidatesFactory $sut */
-        $sut = $container->get(CourtOrderReportCandidatesFactory::class);
+        $sut = $this->container->get(CourtOrderReportCandidatesFactory::class);
         $this->sut = $sut;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->purger->purge();
     }
 
     // create a report which is not compatible with a deputyship (CSV row) due to type differences
@@ -133,15 +119,15 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->caseNumber = $caseNumber;
         $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
-        $this->em->persist($deputyship);
-        $this->em->flush();
+        $this->entityManager->persist($deputyship);
+        $this->entityManager->flush();
 
         // add client
         $client = new Client();
         $client->setCaseNumber($caseNumber);
 
-        $this->em->persist($client);
-        $this->em->flush();
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
 
         // add compatible report
         $report1 = new Report(
@@ -152,8 +138,8 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
             dateChecks: false
         );
 
-        $this->em->persist($report1);
-        $this->em->flush();
+        $this->entityManager->persist($report1);
+        $this->entityManager->flush();
 
         // add an incompatibly typed report (just to make sure we don't pick it up as compatible)
         $report2 = $this->createIncompatiblyTypedReport($client, $orderType);
@@ -161,9 +147,9 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         // add an incompatibly dated report (again, to make sure it's not picked up as a candidate)
         $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $madeDate);
 
-        $this->em->persist($report2);
-        $this->em->persist($report3);
-        $this->em->flush();
+        $this->entityManager->persist($report2);
+        $this->entityManager->persist($report3);
+        $this->entityManager->flush();
 
         // create compatible report candidates
         $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());
@@ -190,22 +176,22 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->caseNumber = $caseNumber;
         $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
-        $this->em->persist($deputyship);
-        $this->em->flush();
+        $this->entityManager->persist($deputyship);
+        $this->entityManager->flush();
 
         // add client
         $client = new Client();
         $client->setCaseNumber($caseNumber);
 
-        $this->em->persist($client);
-        $this->em->flush();
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
 
         // add NDR to client
         $ndr = new Ndr($client);
         $ndr->setStartDate($madeDate);
 
-        $this->em->persist($ndr);
-        $this->em->flush();
+        $this->entityManager->persist($ndr);
+        $this->entityManager->flush();
 
         // create NDR candidates
         $candidates = iterator_to_array($this->sut->createCompatibleNdrCandidates());
@@ -233,13 +219,13 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $deputyship->orderMadeDate = $orderMadeDate->format('Y-m-d');
         $deputyship->isHybrid = '0';
 
-        $this->em->persist($deputyship);
+        $this->entityManager->persist($deputyship);
 
         // add client
         $client = new Client();
         $client->setCaseNumber($deputyship->caseNumber);
 
-        $this->em->persist($client);
+        $this->entityManager->persist($client);
 
         // add compatible report
         $report = new Report(
@@ -250,7 +236,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
             dateChecks: false
         );
 
-        $this->em->persist($report);
+        $this->entityManager->persist($report);
 
         // create order and associate with report; this report is a potential candidate,
         // but should be ignored as a candidate because a relationship already exists
@@ -261,10 +247,10 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends KernelTestCase
         $courtOrder->setOrderMadeDate($orderMadeDate);
         $courtOrder->addReport($report);
 
-        $this->em->persist($courtOrder);
+        $this->entityManager->persist($courtOrder);
 
         // write everything to db
-        $this->em->flush();
+        $this->entityManager->flush();
 
         // create report candidates
         $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());

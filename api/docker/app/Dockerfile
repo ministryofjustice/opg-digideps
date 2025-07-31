@@ -27,10 +27,12 @@ RUN composer install --prefer-dist --no-interaction --no-scripts;
 RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 
+
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.3.21-fpm-alpine3.21 AS base
+FROM php:8.3.23-fpm-alpine3.22 AS base
+
 ARG PLATFORM=${PLATFORM:-amd64}
 
 WORKDIR /var/www
@@ -44,16 +46,23 @@ RUN apk --no-cache add \
     postgresql-client \
     openssl \
     su-exec \
-    php82-pecl-igbinary \
-    php82-pecl-redis \
-    autoconf \
-    build-base \
+    php83-pecl-igbinary  \
+    php83-pecl-redis \
     wget
 
 RUN docker-php-ext-install pdo pdo_pgsql opcache \
  && docker-php-ext-enable opcache
 
 # Install optional Xdebug or PCOV
+=======
+RUN apk update && apk upgrade
+# Install necessary PHP extensions
+RUN docker-php-ext-install pdo pdo_pgsql opcache
+RUN docker-php-ext-enable opcache
+# Install pcov for faster coverage tooling
+RUN apk add --no-cache autoconf build-base
+RUN pecl install pcov && docker-php-ext-enable pcov
+# Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
 RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
     apk add --update linux-headers && \

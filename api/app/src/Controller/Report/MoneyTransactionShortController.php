@@ -7,9 +7,9 @@ use App\Entity as EntityDir;
 use App\Repository\MoneyTransactionShortRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MoneyTransactionShortController extends RestController
 {
@@ -27,8 +27,8 @@ class MoneyTransactionShortController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction-short', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addMoneyTransactionAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function addMoneyTransaction(Request $request, int $reportId): int
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -55,8 +55,8 @@ class MoneyTransactionShortController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function updateMoneyTransaction(Request $request, int $reportId, int $transactionId): int
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -76,8 +76,8 @@ class MoneyTransactionShortController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteMoneyTransaction(int $reportId, int $transactionId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -98,8 +98,8 @@ class MoneyTransactionShortController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', requirements: ['reportId' => '\d+', 'transactionId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById($reportId, $transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(int $reportId, int $transactionId): EntityDir\Report\MoneyTransactionShort
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -112,7 +112,7 @@ class MoneyTransactionShortController extends RestController
         return $record;
     }
 
-    private function fillData(EntityDir\Report\MoneyTransactionShort $t, array $data)
+    private function fillData(EntityDir\Report\MoneyTransactionShort $t, array $data): void
     {
         $t->setDescription($data['description']);
         $t->setAmount($data['amount']);
@@ -123,8 +123,8 @@ class MoneyTransactionShortController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction-short/soft-delete/{transactionId}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function softDeleteMoneyTransactionShortAction($transactionId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function softDeleteMoneyTransactionShort(int $transactionId): array
     {
         $filter = $this->em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(EntityDir\Report\MoneyTransactionShort::class);
@@ -143,8 +143,8 @@ class MoneyTransactionShortController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transaction-short/get-soft-delete', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getSoftDeletedMoneyTransactionShortItems($reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getSoftDeletedMoneyTransactionShortItems(int $reportId): array
     {
         return $this->moneyTransactionShortRepository->retrieveSoftDeleted($reportId);
     }

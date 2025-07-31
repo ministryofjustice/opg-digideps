@@ -6,23 +6,23 @@ namespace App\Tests\Integration\Entity\Repository;
 
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Repository\UserResearchResponseRepository;
+use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserResearchResponseRepositoryTest extends KernelTestCase
+class UserResearchResponseRepositoryTest extends ApiBaseTestCase
 {
-    private EntityManagerInterface $em;
     private Fixtures $fixtures;
     private UserResearchResponseRepository $sut;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->fixtures = new Fixtures($this->em);
+        parent::setUp();
 
-        $this->sut = $this->em->getRepository(UserResearchResponse::class);
+        $this->fixtures = new Fixtures($this->entityManager);
+
+        /** @var UserResearchResponseRepository $sut */
+        $sut = $this->entityManager->getRepository(UserResearchResponse::class);
+        $this->sut = $sut;
     }
 
     // Not to be run in test suites as it takes forever - run this to generate large amounts of userResearchResponses
@@ -30,6 +30,6 @@ class UserResearchResponseRepositoryTest extends KernelTestCase
     public function canHandleLargeAmountsOfData()
     {
         $this->fixtures->createUserResearchResponse(2000);
-        $urs = $this->sut->getAllFilteredByDate(new \DateTime('-1 day'), new \DateTime());
+        $this->sut->getAllFilteredByDate(new \DateTime('-1 day'), new \DateTime());
     }
 }

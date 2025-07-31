@@ -12,15 +12,10 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\DocumentRepository;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Tests\Integration\ApiBaseTestCase;
 
-class DocumentRepositoryTest extends KernelTestCase
+class DocumentRepositoryTest extends ApiBaseTestCase
 {
-    /** @var EntityManager */
-    private $entityManager;
-
     /** @var DocumentRepository */
     private $documentRepository;
 
@@ -564,20 +559,5 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->secondJulyPm = clone $this->secondJulyAm->add(new \DateInterval('PT20H'));
         $this->thirdJulyAm = \DateTime::createFromFormat('d/m/Y', '03/07/2020', new \DateTimeZone('UTC'));
         $this->thirdJulyPm = clone $this->thirdJulyAm->add(new \DateInterval('PT20H'));
-    }
-
-    private function purgeDatabase()
-    {
-        $purger = new ORMPurger($this->entityManager);
-        $purger->purge();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        // doing this is recommended to avoid memory leaks
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

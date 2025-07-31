@@ -26,7 +26,7 @@ class JWTService
     ) {
     }
 
-    public function createNewJWT(User $user = null)
+    public function createNewJWT(?User $user = null)
     {
         $config = $this->initJWTConfig();
         $publicKey = $config->verificationKey()->contents();
