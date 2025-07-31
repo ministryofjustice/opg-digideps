@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MoneyTransferController extends RestController
 {
@@ -20,8 +20,8 @@ class MoneyTransferController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transfers', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addMoneyTransferAction(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function addMoneyTransfer(Request $request, int $reportId): int
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -55,8 +55,8 @@ class MoneyTransferController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transfers/{transferId}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function editMoneyTransferAction(Request $request, $reportId, $transferId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function editMoneyTransfer(Request $request, int $reportId, int $transferId): int
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -85,8 +85,8 @@ class MoneyTransferController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/money-transfers/{transferId}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteMoneyTransferAction(Request $request, $reportId, $transferId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteMoneyTransfer(int $reportId, int $transferId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -102,7 +102,7 @@ class MoneyTransferController extends RestController
         return [];
     }
 
-    private function fillEntity(EntityDir\Report\MoneyTransfer $transfer, array $data)
+    private function fillEntity(EntityDir\Report\MoneyTransfer $transfer, array $data): void
     {
         $amountCleaned = preg_replace('/[^\d\.]+/', '', $data['amount']); // 123,123.34 -> 123123.34
 

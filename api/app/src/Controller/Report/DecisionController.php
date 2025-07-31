@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/report')]
 class DecisionController extends RestController
@@ -23,8 +23,8 @@ class DecisionController extends RestController
     }
 
     #[Route(path: '/decision', methods: ['POST', 'PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function upsertDecision(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function upsertDecision(Request $request): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -69,12 +69,9 @@ class DecisionController extends RestController
         return ['id' => $decision->getId()];
     }
 
-    /**
-     * @param int $id
-     */
     #[Route(path: '/decision/{id}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $id): EntityDir\Report\Decision
     {
         $serialisedGroups = $request->query->has('groups') ? $request->query->all('groups') : ['decision'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
@@ -86,8 +83,8 @@ class DecisionController extends RestController
     }
 
     #[Route(path: '/decision/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function deleteDecision($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function deleteDecision(int $id): array
     {
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:'.$id.' not found');
         $report = $decision->getReport();

@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
+use App\Repository\PreRegistrationRepository;
 use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
@@ -15,16 +16,17 @@ use App\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/report')]
 class ReportController extends RestController
 {
-    /** @var array */
-    private $checklistGroups = [
+    private array $checklistGroups = [
         'report-id',
         'checklist',
         'user-name',
@@ -50,6 +52,7 @@ class ReportController extends RestController
         private readonly EntityManagerInterface $em,
         private readonly AuthService $authService,
         private readonly RestFormatter $formatter,
+        private readonly PreRegistrationRepository $preRegRepository,
     ) {
         parent::__construct($em);
     }
@@ -60,25 +63,36 @@ class ReportController extends RestController
      * Pa report are instead created via OrgService::createReport().
      */
     #[Route(path: '', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function addAction(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request): array
     {
         $reportData = $this->formatter->deserializeBodyContent($request);
 
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
         }
+        /** @var Client $client */
         $client = $this->findEntityBy(Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $this->formatter->validateArray($reportData, [
-            'start_date' => 'notEmpty',
-            'end_date' => 'notEmpty',
-        ]);
+        /** @var EntityDir\PreRegistration[] $preRegistrationRecord */
+        $preRegistrationRecord = $this->preRegRepository->findByCaseNumber($client->getCaseNumber());
+        $orderStartDate = $preRegistrationRecord[0]->getOrderDate();
+
+        if (is_null($orderStartDate)) {
+            throw new UnprocessableEntityHttpException(
+                sprintf(
+                    'OrderDate (made_date) is missing for Preregistration record: %s',
+                    $preRegistrationRecord[0]->getId()
+                )
+            );
+        }
+
+        $endDate = clone $orderStartDate;
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
+        $report = new Report($client, $reportType, $orderStartDate, $endDate->add(new \DateInterval('P12M1D')));
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
@@ -89,21 +103,15 @@ class ReportController extends RestController
         return ['report' => $report->getId()];
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Report
-     */
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
-    public function getById(Request $request, $id)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')"))]
+    public function getById(Request $request, int $id): Report
     {
         $groups = $request->query->has('groups')
             ? $request->query->all('groups') : ['report'];
 
         $this->formatter->setJmsSerialiserGroups($groups);
 
-        /* @var $report Report */
         if ($this->isGranted(User::ROLE_ADMIN)) {
             /** @var SoftDeleteableFilter $filter */
             $filter = $this->em->getFilters()->getFilter('softdeleteable');
@@ -120,11 +128,10 @@ class ReportController extends RestController
     }
 
     #[Route(path: '/{id}/submit', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function submit(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function submit(Request $request, int $id): ?int
     {
         $currentReport = $this->findEntityBy(Report::class, $id, 'Report not found');
-        /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -158,8 +165,8 @@ class ReportController extends RestController
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')")]
-    public function update(Request $request, $id)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')"))]
+    public function update(Request $request, int $id): array
     {
         /* @var $report Report */
         $report = $this->findEntityBy(Report::class, $id, 'Report not found');
@@ -535,8 +542,8 @@ class ReportController extends RestController
     }
 
     #[Route(path: '/{id}/unsubmit', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function unsubmit(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function unsubmit(Request $request, int $id): array
     {
         /** @var Report $report */
         $report = $this->findEntityBy(Report::class, $id, 'Report not found');
@@ -570,7 +577,7 @@ class ReportController extends RestController
      * @throws NonUniqueResultException
      */
     #[Route(path: '/get-all-by-user', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ORG')")]
+    #[IsGranted(attribute: 'ROLE_ORG')]
     public function getAllByUser(Request $request): array
     {
         /** @var User $user */
@@ -582,7 +589,7 @@ class ReportController extends RestController
     /**
      * @throws NonUniqueResultException
      */
-    private function getResponseByDeterminant(Request $request, $orgIdsOrUserId, int $determinant): array
+    private function getResponseByDeterminant(Request $request, int|array $orgIdsOrUserId, int $determinant): array
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -600,12 +607,9 @@ class ReportController extends RestController
     /**
      * Update users's reports cached status when not set
      * Flushes every 5 records to allow resuming in case of timeouts.
-     *
-     * @param int $userId
      */
-    private function updateReportStatusCache($userId)
+    private function updateReportStatusCache(int $userId): void
     {
-        /** @var ReportRepository $repo */
         $repo = $this->em->getRepository(Report::class);
 
         while (
@@ -662,7 +666,7 @@ class ReportController extends RestController
     /**
      * @throws \Exception
      */
-    private function getReportCountsByStatus(Request $request, $orgIdsOrUserId, int $determinant): array
+    private function getReportCountsByStatus(Request $request, int|array $orgIdsOrUserId, int $determinant): array
     {
         $counts = [
             Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $orgIdsOrUserId, $determinant, $request),
@@ -676,13 +680,9 @@ class ReportController extends RestController
     }
 
     /**
-     * @param int $id
-     *
-     * @return array|mixed|null
-     *
      * @throws NonUniqueResultException
      */
-    private function getCountOfReportsByStatus(string $status, $id, int $determinant, Request $request)
+    private function getCountOfReportsByStatus(string $status, int|array $id, int $determinant, Request $request): mixed
     {
         return $this
             ->repository
@@ -690,18 +690,14 @@ class ReportController extends RestController
     }
 
     /**
-     * @return array
-     *
      * @throws \Exception
      */
     #[Route(path: '/get-all-by-orgs', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ORG')")]
-    public function getAllByOrgs(Request $request)
+    #[IsGranted(attribute: 'ROLE_ORG')]
+    public function getAllByOrgs(Request $request): array
     {
         /** @var User $user */
         $user = $this->getUser();
-
-        /** @var array $organisationIds */
         $organisationIds = $user->getOrganisationIds();
 
         if (empty($organisationIds)) {
@@ -712,8 +708,8 @@ class ReportController extends RestController
     }
 
     #[Route(path: '/{id}/submit-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function submitDocuments($id)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function submitDocuments(int $id)
     {
         /* @var Report $currentReport */
         $currentReport = $this->findEntityBy(Report::class, $id, 'Report not found');
@@ -731,18 +727,16 @@ class ReportController extends RestController
      * Add a checklist for the report.
      */
     #[Route(path: '/{report_id}/checked', requirements: ['report_id' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function insertChecklist(Request $request, $report_id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function insertChecklist(Request $request, int $report_id): array
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        /** @var Report $report */
         $report = $this->findEntityBy(Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
-        /** @var EntityDir\Report\Checklist $checklist */
         $checklist = new EntityDir\Report\Checklist($report);
         $checklist = $this->populateChecklistEntity($checklist, $checklistData);
 
@@ -804,8 +798,8 @@ class ReportController extends RestController
      * Update a checklist for the report.
      */
     #[Route(path: '/{report_id}/checked', requirements: ['report_id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function updateChecklist(Request $request, $report_id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function updateChecklist(Request $request, int $report_id)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -843,24 +837,22 @@ class ReportController extends RestController
      * Get a checklist for the report.
      */
     #[Route(path: '/{report_id}/checklist', requirements: ['report_id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function getChecklist(Request $request, $report_id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function getChecklist(int $report_id)
     {
         $this->formatter->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
 
-        $checklist = $this->em
+        return $this->em
             ->getRepository(EntityDir\Report\ReviewChecklist::class)
             ->findOneBy(['report' => $report_id]);
-
-        return $checklist;
     }
 
     /**
      * Update a checklist for the report.
      */
     #[Route(path: '/{report_id}/checklist', requirements: ['report_id' => '\d+'], methods: ['POST', 'PUT'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function upsertChecklist(Request $request, $report_id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function upsertChecklist(Request $request, int $report_id)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -923,7 +915,7 @@ class ReportController extends RestController
         return $reports;
     }
 
-    #[Route(path: '/{reportId}/refresh-cache', methods: ['POST'], name: 'refresh_report_cache')]
+    #[Route(path: '/{reportId}/refresh-cache', name: 'refresh_report_cache', methods: ['POST'])]
     public function refreshReportCache(Request $request, int $reportId)
     {
         $groups = $request->query->has('groups')

@@ -1,0 +1,6 @@
+{
+  "scheduled-event-detail": {
+    "job-name": "anomaly_detection_check",
+    "channel-identifier": "devs"
+  }
+}

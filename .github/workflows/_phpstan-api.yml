@@ -50,3 +50,11 @@ jobs:
         id: api-phpstan
         run: |
           make phpstan-api
+
+
+          docker build \
+          -f api/docker/app/Dockerfile \
+          --build-arg LOCAL_RESOURCES=true \
+          --tag api-phpstan:latest \
+          --target devtools-admin \
+          --output type=docker .

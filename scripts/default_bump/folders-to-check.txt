@@ -1,0 +1,6 @@
+api/app/src
+api/app/config
+client/app/src
+client/app/config
+client/app/templates
+client/app/translations
