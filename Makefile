@@ -95,13 +95,13 @@ api-integration-tests-solo: reset-database-integration-tests ##@integration-test
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-unit-tests sh scripts/reset_db_structure.sh local
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
 
 reset-database: ##@database Resets the DB schema and runs migrations
-	docker compose run --rm api-unit-tests sh scripts/reset_db_structure.sh local
+	docker compose run --rm api-app sh scripts/reset_db_structure.sh local
 
 reset-fixtures: ##@database Resets the DB contents and reloads fixtures
-	docker compose run --rm api-unit-tests sh scripts/reset_db_fixtures.sh local
+	docker compose run --rm api-app sh scripts/reset_db_fixtures.sh local
 
 db-terminal: ##@database Login to the database via the terminal
 	docker compose exec -it postgres sh -c "psql -U api"

@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'showClient' %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans({'%client%': client.fullname}) }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.fullname}) }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsArray([

@@ -5,6 +5,7 @@ from message_generation.alarm import alarm_message
 from message_generation.github_actions import github_actions_message
 from message_generation.cloudwatch_business import cloudwatch_business_message
 from message_generation.cloudwatch import cloudwatch_message
+from message_generation.anomaly import anomaly_detection_message
 from message_sending.send import send_message
 
 # Create a logger instance
@@ -58,6 +59,8 @@ def generate_message(event):
         message = event["scheduled-event-detail"]
         if "business_functionality_" in message["job-name"]:
             payload = cloudwatch_business_message(message)
+        elif "anomaly_detection_" in message["job-name"]:
+            payload = anomaly_detection_message(message)
         else:
             payload = cloudwatch_message(message)
     else:

@@ -1,0 +1,8 @@
+:thinking_face: *Log Anomalies Detected In last 24 hours*
+
+Risk Medium: {count_medium}
+Risk High: {count_high}
+
+Link: https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:logs-anomalies
+
+{details}

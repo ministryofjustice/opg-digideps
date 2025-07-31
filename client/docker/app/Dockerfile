@@ -30,7 +30,6 @@ RUN composer dump-autoload --optimize
 # Stage 2: Base PHP + Shared Files
 ##############################
 FROM php:8.3.21-fpm-alpine3.21 AS base
-ARG PLATFORM=${PLATFORM:-amd64}
 WORKDIR /var/www
 ENV TIMEOUT=60
 

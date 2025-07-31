@@ -15,7 +15,7 @@ class NdrBankAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, BankAccount::class);
     }
 
-    public function getSumOfAccounts(\DateTime $after = null, array $excludeByClientId = []): int
+    public function getSumOfAccounts(?\DateTime $after = null, array $excludeByClientId = []): int
     {
         $query = $this
             ->getEntityManager()

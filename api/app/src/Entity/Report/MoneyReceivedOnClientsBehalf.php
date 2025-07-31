@@ -20,7 +20,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
-    public function __construct(UuidInterface $id = null)
+    public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
         $this->created = new \DateTime();
