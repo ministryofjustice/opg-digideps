@@ -358,7 +358,7 @@ resource "aws_cloudwatch_query_definition" "ac1_blocked_by_rule" {
   query_string = <<QUERY
 fields @message
 | filter @message like /"action":"BLOCK"/
-| parse @message /"labels":\\[\\{"name":"[^"]+:(?<category>[^"]+)"\\}/
+| parse @message /"labels":\[\{"name":"[^"]+:(?<category>[^"]+)"/
 | parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
 | stats count() as blocked_requests by coalesce(category, rule_id, "Unknown")
 | sort blocked_requests desc
@@ -373,7 +373,7 @@ resource "aws_cloudwatch_query_definition" "ac2_blocked_ips_with_reason" {
 fields @message
 | filter @message like /"action":"BLOCK"/
 | parse @message /"clientIp":"(?<client_ip>[^"]+)"/
-| parse @message /"labels":\\[\\{"name":"[^"]+:(?<category>[^"]+)"\\}/
+| parse @message /"labels":\[\{"name":"[^"]+:(?<category>[^"]+)"/
 | parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
 | stats count() as blocked_requests by client_ip, coalesce(category, rule_id, "Unknown") as reason
 | sort blocked_requests desc
