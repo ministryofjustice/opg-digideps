@@ -9,11 +9,9 @@ use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/pre-registration')]
 class PreRegistrationController extends RestController
@@ -26,14 +24,9 @@ class PreRegistrationController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @return array|JsonResponse
-     *
-     * @throws NonUniqueResultException
-     */
     #[Route(path: '/delete', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function delete(PreRegistrationRepository $preRegistrationRepository)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function delete(PreRegistrationRepository $preRegistrationRepository): array
     {
         $result = $preRegistrationRepository->deleteAll();
 
@@ -44,7 +37,7 @@ class PreRegistrationController extends RestController
      * Verify Deputy first and last names, Client last name, Postcode, and Case Number.
      */
     #[Route(path: '/verify', methods: ['POST'])]
-    public function verify(Request $request, PreRegistrationVerificationService $verificationService)
+    public function verify(Request $request, PreRegistrationVerificationService $verificationService): array
     {
         $clientData = $this->formatter->deserializeBodyContent($request);
         /** @var User $user */
@@ -99,8 +92,8 @@ class PreRegistrationController extends RestController
     }
 
     #[Route(path: '/count', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function userCount()
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function userCount(): int
     {
         $qb = $this->em->createQueryBuilder();
         $qb->select('count(p.id)');
@@ -109,11 +102,8 @@ class PreRegistrationController extends RestController
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * @return array|JsonResponse
-     */
     #[Route(path: '/clientHasCoDeputies/{caseNumber}', methods: ['GET'])]
-    public function clientHasCoDeputies(string $caseNumber)
+    public function clientHasCoDeputies(string $caseNumber): bool
     {
         return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
     }

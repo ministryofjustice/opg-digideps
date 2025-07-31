@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity as EntityDir;
+use App\Entity\Setting;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/setting')]
 class SettingController extends RestController
@@ -18,9 +19,9 @@ class SettingController extends RestController
     }
 
     #[Route(path: '/{id}', methods: ['GET'])]
-    public function getSetting(Request $request, $id)
+    public function getSetting(int $id): array|Setting
     {
-        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
+        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id);
 
         $this->formatter->setJmsSerialiserGroups(['setting']);
 
@@ -28,15 +29,15 @@ class SettingController extends RestController
     }
 
     #[Route(path: '/{id}', methods: ['PUT'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function upsertSetting(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function upsertSetting(Request $request, string $id): string
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'content' => 'notEmpty',
             'enabled' => 'mustExist',
         ]);
 
-        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id); /* @var $setting EntityDir\Setting */
+        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id);
         if ($setting) { // update
             $setting->setContent($data['content']);
             $setting->setEnabled($data['enabled']);
