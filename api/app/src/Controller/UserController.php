@@ -200,13 +200,13 @@ class UserController extends RestController
     public function getOneByFilter(Request $request, string $what, $filter): ?User
     {
         if ('email' == $what) {
-            /** @var User|null $user */
+            /** @var ?User $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
         } elseif ('case_number' == $what) {
-            /** @var Client|null $client */
+            /** @var ?Client $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
                 throw new \RuntimeException('Client not found', 404);
@@ -214,9 +214,10 @@ class UserController extends RestController
             if (empty($client->getUsers())) {
                 throw new \RuntimeException('Client has not users', 404);
             }
+            /** @var User $user */
             $user = $client->getUsers()[0];
         } elseif ('user_id' == $what) {
-            /** @var User|null $user */
+            /** @var ?User $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
                 throw new \RuntimeException('User not found', 419);
@@ -269,6 +270,7 @@ class UserController extends RestController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')"))]
     public function getUserTeamNames(string $email): ?User
     {
+        /** @var ?User $user */
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         $this->formatter->setJmsSerialiserGroups(['user-id', 'team-names']);
@@ -286,23 +288,38 @@ class UserController extends RestController
     #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
     public function delete(int $id): array
     {
+        /** @var ?User $deletee */
         $deletee = $this->userRepository->find($id);
+
         $token = $this->securityHelper->getToken();
+
+        if (is_null($token)) {
+            throw $this->createAccessDeniedException('Cannot delete, as no token could be retrieved');
+        }
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
         if (UserVoter::ACCESS_DENIED === $canDelete) {
-            $errMessage = sprintf('A %s cannot delete a %s', $token->getUser()->getRoleName(), $deletee->getRoleName());
+            /** @var ?User $user */
+            $user = $token->getUser();
+
+            if (is_null($user)) {
+                throw $this->createAccessDeniedException('Cannot delete user, as token has no associated user to do the deletion');
+            }
+
+            $errMessage = sprintf('A %s cannot delete a %s', $user->getRoleName(), $deletee?->getRoleName() ?? 'UNKNOWN');
             throw $this->createAccessDeniedException($errMessage);
         }
 
-        if ($deletee->getFirstClient()) {
-            $clients = $deletee->getClients();
-            $this->em->remove($clients[0]);
+        $firstClient = $deletee?->getFirstClient();
+        if (!is_null($firstClient)) {
+            $this->em->remove($firstClient);
         }
 
-        $this->em->remove($deletee);
-        $this->em->flush();
+        if (!is_null($deletee)) {
+            $this->em->remove($deletee);
+            $this->em->flush();
+        }
 
         return [];
     }
@@ -454,7 +471,7 @@ class UserController extends RestController
         $this->em->persist($user);
         $this->em->flush();
 
-        return $user->getRegistrationToken();
+        return $user->getRegistrationToken() ?? '';
     }
 
     /**
