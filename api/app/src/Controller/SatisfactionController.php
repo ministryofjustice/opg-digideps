@@ -2,16 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity as EntityDir;
 use App\Entity\Satisfaction;
 use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SatisfactionRepository;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/satisfaction')]
 class SatisfactionController extends RestController
@@ -21,10 +20,7 @@ class SatisfactionController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @return Satisfaction
-     */
-    private function addSatisfactionScore(string $satisfactionLevel, string $comments)
+    private function addSatisfactionScore(string $satisfactionLevel, string $comments): Satisfaction
     {
         $satisfaction = new Satisfaction();
         $satisfaction->setScore($satisfactionLevel);
@@ -36,10 +32,7 @@ class SatisfactionController extends RestController
         return $satisfaction;
     }
 
-    /**
-     * @return Satisfaction
-     */
-    private function updateSatisfactionScore(Satisfaction $satisfaction, string $satisfactionLevel, string $comments)
+    private function updateSatisfactionScore(Satisfaction $satisfaction, string $satisfactionLevel, string $comments): Satisfaction
     {
         $satisfaction->setScore($satisfactionLevel);
         $satisfaction->setComments($comments);
@@ -51,8 +44,8 @@ class SatisfactionController extends RestController
     }
 
     #[Route(path: '', methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request): int
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
@@ -90,8 +83,8 @@ class SatisfactionController extends RestController
     }
 
     #[Route(path: '/satisfaction_data', name: 'satisfaction_data', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function getSatisfactionData(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function getSatisfactionData(Request $request): array
     {
         /* @var $repo SatisfactionRepository */
         $repo = $this->em->getRepository(Satisfaction::class);
@@ -109,7 +102,7 @@ class SatisfactionController extends RestController
     }
 
     #[Route(path: '/public', methods: ['POST'])]
-    public function publicAdd(Request $request)
+    public function publicAdd(Request $request): int
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'score' => 'notEmpty',
