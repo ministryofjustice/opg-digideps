@@ -19,6 +19,7 @@ class BehatController extends AbstractController
     public function __construct(
         private KernelInterface $kernel,
         private string $symfonyEnvironment,
+        private bool $fixturesEnabled,
     ) {
     }
 
@@ -29,7 +30,10 @@ class BehatController extends AbstractController
      */
     public function runDocumentSyncCommand(): Response
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (
+            'prod' === $this->symfonyEnvironment
+            && !$this->fixturesEnabled
+        ) {
             throw $this->createNotFoundException();
         }
 
@@ -51,7 +55,10 @@ class BehatController extends AbstractController
      */
     public function runChecklistSyncCommand(): Response
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (
+            'prod' === $this->symfonyEnvironment
+            && !$this->fixturesEnabled
+        ) {
             throw $this->createNotFoundException();
         }
 

@@ -36,9 +36,9 @@ jobs:
           -f api/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-          --build-arg ENVIRONMENT=local \
+          --build-arg LOCAL_RESOURCES=true \
           --tag api-phpstan:latest \
-          --target ci-tests \
+          --target devtools-admin \
           --output type=docker .
 
       - name: Move cache
