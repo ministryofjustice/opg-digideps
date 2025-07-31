@@ -37,5 +37,5 @@ interface ReportInterface
      */
     public function setSubmitted($submitted);
 
-    public function setSubmitDate(\DateTime $submitDate = null);
+    public function setSubmitDate(?\DateTime $submitDate = null);
 }

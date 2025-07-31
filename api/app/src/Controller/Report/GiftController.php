@@ -6,9 +6,9 @@ use App\Controller\RestController;
 use App\Entity as EntityDir;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class GiftController extends RestController
 {
@@ -20,8 +20,8 @@ class GiftController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function getOneById(Request $request, $reportId, $giftId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getOneById(Request $request, int $reportId, int $giftId): EntityDir\Report\Gift
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -37,8 +37,8 @@ class GiftController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/gift', requirements: ['reportId' => '\d+'], methods: ['POST'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function add(Request $request, $reportId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function add(Request $request, int $reportId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -63,8 +63,8 @@ class GiftController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function edit(Request $request, $reportId, $giftId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function edit(Request $request, int $reportId, int $giftId): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
@@ -93,8 +93,8 @@ class GiftController extends RestController
     }
 
     #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_DEPUTY')")]
-    public function delete($reportId, $giftId)
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function delete(int $reportId, int $giftId): array
     {
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -110,7 +110,7 @@ class GiftController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Report $report, EntityDir\Report\Gift $gift, array $data)
+    private function updateEntityWithData(EntityDir\Report\Report $report, EntityDir\Report\Gift $gift, array $data): void
     {
         // common props
         $this->hydrateEntityWithArrayData($gift, $data, [
