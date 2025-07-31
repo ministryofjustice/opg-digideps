@@ -381,11 +381,6 @@ class UserController extends RestController
             throw $this->createAccessDeniedException($errMessage);
         }
 
-        if ($deletee->getFirstClient()) {
-            $clients = $deletee->getClients();
-            $this->em->remove($clients[0]);
-        }
-
         $this->em->remove($deletee);
         $this->em->flush();
 
