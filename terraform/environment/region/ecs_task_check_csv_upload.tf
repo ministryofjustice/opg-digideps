@@ -83,7 +83,7 @@ locals {
   check_csv_uploaded_container = jsonencode(
     {
       name    = "check-csv-uploaded",
-      image   = local.images.client,
+      image   = local.images.client-devtools,
       command = ["sh", "scripts/check-csv-uploaded.sh", "-d"],
       logConfiguration = {
         logDriver = "awslogs",

@@ -3,9 +3,10 @@ locals {
 
   images = {
     api              = "${data.aws_ecr_repository.images["api"].repository_url}:${var.docker_tag}"
-    api-webserver    = "${data.aws_ecr_repository.images["api-webserver"].repository_url}:${var.docker_tag}"
     api-devtools     = "${data.aws_ecr_repository.images["api-devtools"].repository_url}:${var.docker_tag}"
+    api-webserver    = "${data.aws_ecr_repository.images["api-webserver"].repository_url}:${var.docker_tag}"
     client           = "${data.aws_ecr_repository.images["client"].repository_url}:${var.docker_tag}"
+    client-devtools  = "${data.aws_ecr_repository.images["client-devtools"].repository_url}:${var.docker_tag}"
     client-webserver = "${data.aws_ecr_repository.images["client-webserver"].repository_url}:${local.client_web_tag}"
     orchestration    = "${data.aws_ecr_repository.images["sync"].repository_url}:${var.docker_tag}"
     htmltopdf        = "${data.aws_ecr_repository.images["htmltopdf"].repository_url}:${var.docker_tag}"
@@ -16,9 +17,10 @@ locals {
 
   repositories = [
     "api",
-    "api-webserver",
     "api-devtools",
+    "api-webserver",
     "client",
+    "client-devtools",
     "client-webserver",
     "dr-backup",
     "sync",

@@ -66,6 +66,7 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_ecr_repository.images["api-webserver"].arn,
       data.aws_ecr_repository.images["api-devtools"].arn,
       data.aws_ecr_repository.images["client"].arn,
+      data.aws_ecr_repository.images["client-devtools"].arn,
       data.aws_ecr_repository.images["client-webserver"].arn,
       data.aws_ecr_repository.images["sync"].arn,
       data.aws_ecr_repository.images["htmltopdf"].arn,

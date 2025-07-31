@@ -12,7 +12,7 @@ COPY api/app/config config
 COPY api/app/src src
 
 ##############################
-# Stage 1a: Composer Build NoDev Dependencies
+# Stage 1a: Composer Build with Dev Dependencies
 ##############################
 FROM composer AS composer-runtime
 RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts;
@@ -20,7 +20,7 @@ RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 
 ##############################
-# Stage 1b: Composer Build Dev
+# Stage 1b: Composer Build without Dev Dependencies
 ##############################
 FROM composer AS composer-devtools
 RUN composer install --prefer-dist --no-interaction --no-scripts;
@@ -88,7 +88,7 @@ RUN mkdir -p var/cache \
     && chown -R www-data /var/log/app
 
 ##############################
-# Stage 4a: runtime image (image without test dependencies)
+# Stage 3a: runtime image (image without test dependencies)
 ##############################
 FROM application AS runtime
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
@@ -110,13 +110,12 @@ USER www-data
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && ls -alt /var/www/var/cache \
-    && echo 'RUNNING: runtime' \
+    && echo 'Image Target: runtime' \
     && php-fpm"]
 
 
 ##############################
-# Stage 4b: devtools image (image with test dependencies)
+# Stage 3b: devtools image (image with test dependencies)
 ##############################
 FROM application AS devtools-base
 COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
@@ -138,7 +137,7 @@ RUN chmod 544 /var/www/tests/Behat/run-tests*.sh \
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 
 ##############################
-# Stage 4b-1: devtools image (image with test dependencies - not admin)
+# Stage 3b1: devtools image (image with test dependencies - not admin)
 ##############################
 FROM devtools-base AS devtools
 
@@ -152,12 +151,11 @@ USER www-data
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && ls -alt /var/www/var/cache \
-    && echo 'RUNNING: devtools' \
+    && echo 'Image Target: devtools' \
     && php-fpm"]
 
 ##############################
-# Stage 4b-2: devtools admin image (image with test dependencies - admin)
+# Stage 3b2: devtools admin image (image with test dependencies - admin)
 ##############################
 FROM devtools-base AS devtools-admin
 USER root
@@ -165,6 +163,5 @@ USER root
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && ls -alt /var/www/var/cache \
-    && echo 'RUNNING: devtools-admin' \
+    && echo 'Image Target: devtools-admin' \
     && php-fpm"]
