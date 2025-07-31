@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace App\v2\Tools\Controller;
 
-use App\Entity\Client;
 use App\Repository\ClientRepository;
-use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
 use App\v2\Controller\ControllerTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/tools')]
 class ToolsController extends AbstractController
@@ -22,21 +19,17 @@ class ToolsController extends AbstractController
     use ControllerTrait;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private ReportRepository $reportRepository,
-        private UserRepository $userRepository,
-        private ClientRepository $clientRepository,
+        private readonly EntityManagerInterface $em,
+        private readonly ClientRepository $clientRepository,
     ) {
     }
 
     /**
-     * @return JsonResponse
-     *
      * @throws \Exception
      */
     #[Route(path: '/reassign-reports', methods: ['POST'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function reassignReports(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function reassignReports(Request $request): JsonResponse
     {
         $fromRequest = json_decode($request->getContent(), true);
 
@@ -51,12 +44,10 @@ class ToolsController extends AbstractController
             return $this->buildErrorResponse('The client ids provided are the same!');
         }
 
-        /** @var Client $firstClient */
         if (null === $firstClient = $this->clientRepository->findByIdIncludingDischarged($firstClientId)) {
             return $this->buildErrorResponse(sprintf('First Client with id %s not found', $firstClientId));
         }
 
-        /** @var Client $secondClient */
         if (null === $secondClient = $this->clientRepository->findByIdIncludingDischarged($secondClientId)) {
             return $this->buildErrorResponse(sprintf('Second Client with id %s not found', $secondClientId));
         }

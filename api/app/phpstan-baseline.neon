@@ -341,16 +341,6 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects App\\\\Entity\\\\Ndr\\\\date, DateTime given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects App\\\\Entity\\\\Ndr\\\\date, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 2
 			path: src/Controller/NoteController.php
@@ -2956,11 +2946,6 @@ parameters:
 			path: src/Entity/Ndr/VisitsCare.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:getWhenWasCarePlanLastReviewed\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\date\\.$#"
-			count: 1
-			path: src/Entity/Ndr/VisitsCare.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:getWhoIsDoingTheCaring\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\type\\.$#"
 			count: 1
 			path: src/Entity/Ndr/VisitsCare.php
@@ -2991,11 +2976,6 @@ parameters:
 			path: src/Entity/Ndr/VisitsCare.php
 
 		-
-			message: "#^Parameter \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) has invalid type App\\\\Entity\\\\Ndr\\\\date\\.$#"
-			count: 1
-			path: src/Entity/Ndr/VisitsCare.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:\\$doesClientHaveACarePlan \\(App\\\\Entity\\\\Ndr\\\\type\\) does not accept string\\.$#"
 			count: 1
 			path: src/Entity/Ndr/VisitsCare.php
@@ -3007,11 +2987,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Ndr/VisitsCare.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed has unknown class App\\\\Entity\\\\Ndr\\\\date as its type\\.$#"
 			count: 1
 			path: src/Entity/Ndr/VisitsCare.php
 
@@ -8301,33 +8276,8 @@ parameters:
 			path: src/v2/Assembler/UserAssembler.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\DeputyController\\:\\:getByIdAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/DeputyController.php
-
-		-
 			message: "#^Cannot call method getOrganisations\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
 			count: 2
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getMemberById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getMembers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getUsers\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/v2/Controller/OrganisationController.php
 
 		-
@@ -8342,11 +8292,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:\\$verboseLogger is never read, only written\\.$#"
 			count: 1
 			path: src/v2/Controller/OrganisationController.php
 
@@ -8571,32 +8516,7 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:activateOrg\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\JsonResponse but return statement is missing\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:completeReportSectionsAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createAdmin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClient\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClientAndAttachToDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClientAndAttachToOrgs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -8621,37 +8541,12 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createNdr\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createOrgAndAttachParticipants\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createPreRegistration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createReport\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:deleteUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:getUserIDByEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -9036,11 +8931,6 @@ parameters:
 			path: src/v2/Registration/Controller/LayDeputyshipUploadController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Controller\\\\OrgDeputyshipController\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Controller/OrgDeputyshipController.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of method App\\\\v2\\\\Registration\\\\DeputyshipProcessing\\\\CSVDeputyshipProcessing\\:\\:orgProcessing\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/v2/Registration/Controller/OrgDeputyshipController.php
@@ -9373,26 +9263,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Tools\\\\Controller\\\\ToolsController\\:\\:\\$reportRepository is never read, only written\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Tools\\\\Controller\\\\ToolsController\\:\\:\\$userRepository is never read, only written\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Variable \\$firstClient in PHPDoc tag @var does not exist\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Variable \\$secondClient in PHPDoc tag @var does not exist\\.$#"
-			count: 1
 			path: src/v2/Tools/Controller/ToolsController.php
 
 		-
