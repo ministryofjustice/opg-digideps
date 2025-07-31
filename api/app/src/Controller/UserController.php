@@ -14,16 +14,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security as SecurityHelper;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-// TODO
-// http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 #[Route(path: '/user')]
 class UserController extends RestController
 {
@@ -43,8 +41,8 @@ class UserController extends RestController
     }
 
     #[Route(path: '', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")]
-    public function add(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')"))]
+    public function add(Request $request): User
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
@@ -53,9 +51,7 @@ class UserController extends RestController
             'lastname' => 'mustExist',
         ]);
 
-        /** @var User $newUser */
         $newUser = $this->populateUser(new User(), $data);
-
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
 
@@ -72,7 +68,7 @@ class UserController extends RestController
      * call setters on User when $data contains values.
      * //TODO move to service.
      */
-    private function populateUser(User $user, array $data)
+    private function populateUser(User $user, array $data): User
     {
         // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
         // Also. It'd be possible to differentiate when a NULL value is intentional or not
@@ -144,7 +140,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '/{id}', methods: ['PUT'])]
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): array
     {
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -162,7 +158,6 @@ class UserController extends RestController
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
 
-        /** @var User $originalUser */
         $originalUser = clone $requestedUser;
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -181,7 +176,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '/{id}/is-password-correct', methods: ['POST'])]
-    public function isPasswordCorrect(Request $request, $id)
+    public function isPasswordCorrect(Request $request, int $id): bool
     {
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -204,7 +199,7 @@ class UserController extends RestController
      * See RegistrationTokenAuthenticator for checks and how User is set in session.
      */
     #[Route(path: '/{id}/set-password', methods: ['PUT'])]
-    public function changePassword(Request $request, $id)
+    public function changePassword(Request $request, int $id): int
     {
         $data = $this->formatter->deserializeBodyContent($request, [
             'password' => 'notEmpty',
@@ -245,7 +240,7 @@ class UserController extends RestController
      * change email.
      */
     #[Route(path: '/{id}/update-email', methods: ['PUT'])]
-    public function changeEmail(Request $request, $id)
+    public function changeEmail(Request $request, $id): int
     {
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -269,13 +264,13 @@ class UserController extends RestController
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function getOneById(Request $request, $id)
+    public function getOneById(Request $request, int $id): ?User
     {
         return $this->getOneByFilter($request, 'user_id', $id);
     }
 
     #[Route(path: '/get-one-by/{what}/{filter}', requirements: ['what' => '(user_id|email|case_number)'], methods: ['GET'])]
-    public function getOneByFilter(Request $request, $what, $filter)
+    public function getOneByFilter(Request $request, string $what, $filter): ?User
     {
         if ('email' == $what) {
             /** @var User|null $user */
@@ -344,8 +339,8 @@ class UserController extends RestController
      * Returns empty if user doesn't exist.
      */
     #[Route(path: '/get-team-names-by-email/{email}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')")]
-    public function getUserTeamNames(Request $request, $email)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')"))]
+    public function getUserTeamNames(string $email): ?User
     {
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
@@ -365,13 +360,10 @@ class UserController extends RestController
      * @throws OptimisticLockException
      */
     #[Route(path: '/{id}', methods: ['DELETE'])]
-    #[Security("is_granted('ROLE_ADMIN_MANAGER')")]
-    public function delete($id)
+    #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
+    public function delete(int $id): array
     {
-        /** @var User $deletee */
         $deletee = $this->userRepository->find($id);
-
-        /** @var TokenInterface $token */
         $token = $this->securityHelper->getToken();
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
@@ -393,8 +385,8 @@ class UserController extends RestController
     }
 
     #[Route(path: '/get-all', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
-    public function getAll(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function getAll(Request $request): ?array
     {
         $this->formatter->setJmsSerialiserGroups(['user']);
 
@@ -405,7 +397,7 @@ class UserController extends RestController
      * Requires client secret.
      */
     #[Route(path: '/recreate-token/{email}', defaults: ['email' => 'none'], methods: ['PUT'])]
-    public function recreateToken(Request $request, $email)
+    public function recreateToken(Request $request, string $email): User
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -429,7 +421,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '/get-by-token/{token}', methods: ['GET'])]
-    public function getByToken(Request $request, $token)
+    public function getByToken(Request $request, string $token): User
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -449,7 +441,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '/agree-terms-use/{token}', methods: ['PUT'])]
-    public function agreeTermsUse(Request $request, $token)
+    public function agreeTermsUse(Request $request, string $token): int
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -471,7 +463,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '/clear-registration-token/{token}', methods: ['PUT'])]
-    public function clearRegistrationToken(Request $request, $token)
+    public function clearRegistrationToken(Request $request, string $token): int
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -493,8 +485,8 @@ class UserController extends RestController
     }
 
     #[Route(path: '/{id}/team', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_ORG')")]
-    public function getTeamByUserId(Request $request, $id)
+    #[IsGranted(attribute: 'ROLE_ORG')]
+    public function getTeamByUserId(Request $request, int $id)
     {
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -529,7 +521,7 @@ class UserController extends RestController
      * @throws \Exception
      */
     #[Route(path: '/get-reg-token', methods: ['GET'])]
-    public function getRegToken(Request $request)
+    public function getRegToken(): string
     {
         /** @var User $user */
         $user = $this->getUser();
