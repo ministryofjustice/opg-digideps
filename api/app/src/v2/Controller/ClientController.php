@@ -4,19 +4,17 @@ namespace App\v2\Controller;
 
 use App\Controller\RestController;
 use App\Entity\Client;
-use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\OrganisationAssembler;
 use App\v2\Transformer\ClientTransformer;
 use App\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/client')]
 class ClientController extends RestController
@@ -35,8 +33,8 @@ class ClientController extends RestController
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")]
-    public function getByIdAction(int $id): JsonResponse
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')"))]
+    public function getById(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
@@ -44,7 +42,6 @@ class ClientController extends RestController
 
         $dto = $this->clientAssembler->assembleFromArray($data);
 
-        $orgDto = null;
         $transformedOrg = null;
 
         if (isset($data['organisation'])) {
@@ -67,7 +64,7 @@ class ClientController extends RestController
     }
 
     #[Route(path: '/case-number/{caseNumber}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')")]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')"))]
     public function getByCaseNumber(string $caseNumber): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayByCaseNumber($caseNumber))) {

@@ -5,9 +5,9 @@ namespace App\v2\Registration\Controller;
 use App\Service\DataCompression;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/lay-deputyship')]
 class LayDeputyshipUploadController
@@ -19,17 +19,14 @@ class LayDeputyshipUploadController
     ) {
     }
 
-    /**
-     * @return array
-     */
     #[Route(path: '/upload', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function upload(Request $request)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function upload(Request $request): array
     {
         ini_set('memory_limit', '1024M');
 
         $this->logger->notice(
-            sprintf('Uploading chunk with Id: %s', 
+            sprintf('Uploading chunk with Id: %s',
             $request->headers->get('chunkId')
             )
         );

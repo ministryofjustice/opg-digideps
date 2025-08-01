@@ -12,12 +12,12 @@ use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Show court order data to deputies.
@@ -45,8 +45,8 @@ class CourtOrderController extends AbstractController
      * path on API = /v2/courtorder/<UID>
      */
     #[Route('/{uid}', requirements: ['uid' => '\w+'], methods: ['GET'])]
-    #[Security('is_granted("ROLE_DEPUTY")')]
-    public function getByUidAction(string $uid): JsonResponse
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getByUid(string $uid): JsonResponse
     {
         $user = $this->getUser();
 
@@ -80,7 +80,7 @@ class CourtOrderController extends AbstractController
      * path on API = /v2/courtorder/<UID>/lay-deputy-invite
      */
     #[Route('/{uid}/lay-deputy-invite', requirements: ['uid' => '\w+'], methods: ['POST'])]
-    #[Security('is_granted("ROLE_DEPUTY")')]
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function layDeputyInviteAction(Request $request, string $uid): JsonResponse
     {
         try {
