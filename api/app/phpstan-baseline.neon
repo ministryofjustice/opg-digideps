@@ -1326,16 +1326,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Cannot call method getClients\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getFirstClient\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
