@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity as EntityDir;
 use App\Exception\NotFound;
+use App\Model\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -15,9 +16,12 @@ abstract class RestController extends AbstractController
 
     /**
      * @template T of object
+     *
      * @param class-string<T> $entityClass
-     * @param array|int $criteriaOrId
+     * @param array|int       $criteriaOrId
+     *
      * @return T
+     *
      * @throws NotFound
      */
     protected function findEntityBy(string $entityClass, $criteriaOrId, $errorMessage = null): object
@@ -32,13 +36,9 @@ abstract class RestController extends AbstractController
         return $entity;
     }
 
-    protected function hydrateEntityWithArrayData($object, array $data, array $keySetters)
+    protected function hydrateEntityWithArrayData($object, array $data, array $keySetters): void
     {
-        foreach ($keySetters as $k => $setter) {
-            if (array_key_exists($k, $data)) {
-                $object->$setter($data[$k]);
-            }
-        }
+        Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }
 
     protected function denyAccessIfReportDoesNotBelongToUser(EntityDir\ReportInterface $report)

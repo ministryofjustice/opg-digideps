@@ -28,7 +28,11 @@ class CoDeputyController extends RestController
             ->from('App\Entity\User', 'u')
             ->where('u.coDeputyClientConfirmed = ?1')
             ->setParameter(1, true);
-        return $qb->getQuery()->getSingleScalarResult();
+
+        /** @var int $result */
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return $result;
     }
 
     #[Route(path: 'add/{clientId}', methods: ['POST'])]

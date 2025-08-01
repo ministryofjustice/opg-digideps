@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Deputy;
+use App\Entity\User;
 use App\Service\DeputyService;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,7 @@ class DeputyController extends RestController
     public function __construct(
         private readonly DeputyService $deputyService,
         private readonly RestFormatter $formatter,
-        protected readonly EntityManagerInterface $em
+        protected readonly EntityManagerInterface $em,
     ) {
         parent::__construct($em);
     }
@@ -28,10 +29,12 @@ class DeputyController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
         $newDeputy = $this->populateDeputy(new Deputy(), $data);
-        $currentUser = $this->getUser();
-        $deputyId = $this->deputyService->addDeputy($newDeputy, $currentUser);
 
-        return ['id' => $deputyId];
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $deputy = $this->deputyService->getOrAddDeputy($newDeputy, $currentUser);
+
+        return ['id' => $deputy->getId()];
     }
 
     /**
