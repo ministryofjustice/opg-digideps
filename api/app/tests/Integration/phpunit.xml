@@ -5,6 +5,9 @@
       <directory suffix=".php">../../src</directory>
     </include>
   </coverage>
+  <extensions>
+    <extension class="Ergebnis\PHPUnit\SlowTestDetector\Extension"/>
+  </extensions>
   <php>
     <server name="KERNEL_DIR" value="../../src"/>
     <server name="APP_ENV" value="test"/>
