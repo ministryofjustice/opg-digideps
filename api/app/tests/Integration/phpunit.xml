@@ -9,6 +9,9 @@
          colors="true"
          bootstrap="./bootstrap.php"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
+  <extensions>
+    <bootstrap class="Ergebnis\PHPUnit\SlowTestDetector\Extension"/>
+  </extensions>
   <php>
     <server name="KERNEL_DIR" value="../../src"/>
     <server name="APP_ENV" value="test"/>
