@@ -181,7 +181,7 @@ class ClientController extends AbstractController
 
                 $client->setId($response['id']);
 
-                if (is_null($client->getCurrentReport())) {
+                if (empty($client->getCurrentReport())) {
                     $report = new Report();
                     $report->setClient($client);
                     $this->restClient->post('report', $report);
