@@ -10,14 +10,11 @@ class ClientControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
-    private static $report1;
     private static $deputy2;
     private static $client2;
-    private static $report2;
     private static $deputy3;
     private static $deputy4;
     private static $coDeputy;
-    private static $coDeputyClient;
     private static $primaryUserAccount;
     private static $nonPrimaryUserAccount;
     private static $primaryAccountClient;
@@ -25,7 +22,6 @@ class ClientControllerTest extends AbstractTestController
     private static $primaryAccountDischargedClient;
     private static $tokenAdmin;
     private static $tokenDeputy;
-    private static $tokenMainDeputy;
     private static $tokenCoDeputy;
     private static $tokenMultiClientPrimaryDeputy;
     private static $tokenMultiClientNonPrimaryDeputy;
@@ -34,7 +30,6 @@ class ClientControllerTest extends AbstractTestController
 
     // pa
     private static $pa1;
-    private static $prof1;
     private static $pa1Client1;
     private static $pa1Client1Report1;
 
@@ -68,9 +63,16 @@ class ClientControllerTest extends AbstractTestController
         'date_of_birth' => '1947-1-31',
     ];
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         self::$fixtures::deleteReportsData(['client']);
 
@@ -79,7 +81,6 @@ class ClientControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenMultiClientPrimaryDeputy = $this->loginAsMultiClientPrimaryDeputy();
             self::$tokenMultiClientNonPrimaryDeputy = $this->loginAsMultiClientNonPrimaryDeputy();
-            self::$tokenMainDeputy = $this->loginAsMainDeputy();
             self::$tokenCoDeputy = $this->loginAsCoDeputy();
             self::$tokenPa = $this->loginAsPa();
             self::$tokenProf = $this->loginAsProf();
@@ -88,12 +89,11 @@ class ClientControllerTest extends AbstractTestController
         // deputy 1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::fixtures()->createReport(self::$client1);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
 
         // deputy 3
         self::$deputy3 = self::fixtures()->createDeputy();
@@ -101,7 +101,7 @@ class ClientControllerTest extends AbstractTestController
         // deputy 4 w/ Co-deputy (Deputy 5)
         self::$deputy4 = self::fixtures()->getRepo('User')->findOneByEmail('main-deputy@example.org');
         self::$coDeputy = self::fixtures()->getRepo('User')->findOneByEmail('co-deputy@example.org');
-        self::$coDeputyClient = self::fixtures()->createCoDeputyClient([self::$deputy4, self::$coDeputy], ['setFirstname' => 'coDeputyClient1']);
+        self::fixtures()->createCoDeputyClient([self::$deputy4, self::$coDeputy], ['setFirstname' => 'coDeputyClient1']);
 
         // multi-client deputy
         self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
@@ -115,9 +115,6 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
-
-        // prof
-        self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
         $org = self::fixtures()->createOrganisation('Example', ''.Uuid::uuid4().'example.org', true);
         self::fixtures()->flush();

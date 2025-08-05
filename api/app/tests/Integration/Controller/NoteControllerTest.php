@@ -28,17 +28,9 @@ class NoteControllerTest extends AbstractTestController
     private static $pa3;
     private static $pa3Client1;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-
-        if (null === self::$tokenAdmin) {
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenPa = $this->loginAsPa();
-            self::$tokenPa2 = $this->loginAsPaAdmin();
-            self::$tokenPa3 = $this->loginAsPaTeamMember();
-        }
+        parent::setUpBeforeClass();
 
         // deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -63,6 +55,19 @@ class NoteControllerTest extends AbstractTestController
         self::fixtures()->addUserToOrganisation(self::$pa2->getId(), $org->getId());
 
         self::fixtures()->flush()->clear();
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenPa = $this->loginAsPa();
+            self::$tokenPa2 = $this->loginAsPaAdmin();
+            self::$tokenPa3 = $this->loginAsPaTeamMember();
+        }
     }
 
     /**

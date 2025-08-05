@@ -33,9 +33,17 @@ class OrganisationControllerTest extends AbstractTestController
     /** @var string|null */
     private static $tokenDeputyInOrg;
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
+
         self::$fixtures::deleteReportsData(['organisation']);
 
         self::$orgs = self::fixtures()->createOrganisations(4);
