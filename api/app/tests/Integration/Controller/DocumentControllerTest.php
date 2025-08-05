@@ -38,24 +38,17 @@ class DocumentControllerTest extends AbstractTestController
     private static $reportSubmission1;
     private static $reportSubmission2;
 
+
     public static function setUpBeforeClass(): void
     {
-        parent::setUpBeforeClass();
-    }
-
-    /**
-     * clear fixtures.
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
+        // This is here to prevent the default setup until tests that fail with it are altered
     }
 
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
@@ -80,6 +73,13 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->repo = self::fixtures()->getRepo('Report\Document');
         self::$tokenDeputy = $this->loginAsDeputy();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     /** @test */
