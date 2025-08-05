@@ -7,29 +7,25 @@ use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
-use App\Tests\Integration\Fixtures;
 
 class DeputyControllerTest extends AbstractTestController
 {
     private static JsonHttpTestClient $client;
     private static FixtureHelper $fixtureHelper;
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
+        self::$fixtureHelper = static::getContainer()->get(FixtureHelper::class);;
+    }
+
     public function setUp(): void
     {
         parent::setup();
-
-        $container = static::getContainer();
-
-        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
-
-        /** @var FixtureHelper $fixtureHelper */
-        $fixtureHelper = $container->get(FixtureHelper::class);
-        self::$fixtureHelper = $fixtureHelper;
     }
 
-    /**
-     * clear fixtures.
-     */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();

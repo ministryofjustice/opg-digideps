@@ -8,6 +8,16 @@ use App\Entity\User;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to override to prevent the default setup until tests that fail with it are altered
+    }
+
+    public function setUp(): void
+    {
+        self::setupFixtures();
+    }
+
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
