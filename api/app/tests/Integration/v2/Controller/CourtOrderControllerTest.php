@@ -18,19 +18,15 @@ class CourtOrderControllerTest extends AbstractTestController
     private static FixtureHelper $fixtureHelper;
     private static ReportTestHelper $reportTestHelper;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         $container = static::getContainer();
 
-        /** @var FixtureHelper $fixtureHelper */
-        $fixtureHelper = $container->get(FixtureHelper::class);
-        self::$fixtureHelper = $fixtureHelper;
-
+        self::$fixtureHelper = $container->get(FixtureHelper::class);
         self::$reportTestHelper = new ReportTestHelper();
-
-        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
+        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
     }
 
     private function createDeputyForUser(User $user): Deputy
