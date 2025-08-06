@@ -498,7 +498,7 @@ class ReportController extends AbstractController
      *
      * @return array|RedirectResponse
      */
-    public function confirmDetailsAction($reportId)
+    public function confirmDetailsAction(int $reportId)
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
