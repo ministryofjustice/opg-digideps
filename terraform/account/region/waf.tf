@@ -400,3 +400,22 @@ fields @message
 | limit 100
 QUERY
 }
+
+resource "aws_cloudwatch_query_definition" "ac4_blocked_logged_in_uris" {
+  name            = "WAF - Blocked Logged-In URI Access"
+  log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
+
+  query_string = <<QUERY
+fields @message
+| filter @message like /"action":"BLOCK"/
+| parse @message /"clientIp":"(?<client_ip>[^"]+)"/
+| parse @message /"country":"(?<country>[^"]+)"/
+| parse @message /"uri":"(?<uri>[^"]+)"/
+| parse @message /"httpMethod":"(?<method>[^"]+)"/
+| parse @message /"User-Agent","value":"(?<user_agent>[^"]+)"/
+| parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
+| filter uri like /\\/client/ or uri like /\\/org/ or uri like /\\/choose-a-client/
+| stats count() as blocked_requests by client_ip, country, method, uri, user_agent, rule_id
+| sort blocked_requests desc
+QUERY
+}
