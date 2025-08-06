@@ -1,6 +1,13 @@
+page:
+  htmlTitle: "Report submission - Complete the deputy report | GOV.UK"
+  pageTitle: "Confirm your contact details"
+  contactDetailsIntro: "Please review and update any incorrect contact details before submitting the report"
+
 downloadAsPdf: Download report as PDF
 pdfDraftSentence: This is a PDF draft of your report. It has not been submitted to the OPG.
 supportTitleTop: "startYear to endYear report"
+
+goBack: Go back
 
 incomplete:
   backToEditingReport: Go back and edit the report
@@ -18,7 +25,9 @@ review:
   pageTitle: Check your report
   para1: Once you’ve submitted the report, you won’t be able to make any changes.
   para2: Before submitting please review all sections of the report in the PDF preview below. If you need to make changes you can go back and edit the report.
-  continueToDeclarationButton: Confirm contact details
+  continueToConfirmDetailsButton: Confirm contact details
+  continueToReportDeclarationButton: Continue to declaration
+  continueToDeclarationButton: Continue to declaration and submission
 
 submitted:
   htmlTitle: Submitted report - Complete the deputy report | GOV.UK

@@ -2,7 +2,6 @@
 {% set hideEditLink = hideEditLink | default(false) %}
 
 <div id="contact-details-container">
-    <h2 class="govuk-heading-s">{{ 'page.contactDetailsHeader' | trans }}</h2>
     <p class="govuk-body">{{ 'page.contactDetailsIntro' | trans }}</p>
 
     <table class="govuk-table">
@@ -44,4 +43,16 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="govuk-button-group">
+        <a class="govuk-button govuk-button--secondary" data-module="govuk-button"
+           href="{{ path("report_review" , {'reportId': report.id }) }}">
+            {{ 'goBack' | trans({},'report-display') }}
+        </a>
+
+        <a class="govuk-button" data-module="govuk-button"
+           href="{{ path("report_declaration" , {'reportId': report.id }) }}">
+            {{ 'review.continueToReportDeclarationButton' | trans({}, 'report-display') }}
+        </a>
+    </div>
 </div>
