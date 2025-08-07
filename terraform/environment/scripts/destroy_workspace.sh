@@ -20,7 +20,7 @@ if [ "$1" == "-h" ]; then
 fi
 
 workspace_name=$1
-reserved_workspaces="default production preproduction development integration training production02"
+reserved_workspaces="default development production preproduction development integration training production02"
 
 for workspace in $reserved_workspaces; do
   if [ "$workspace" == "$workspace_name" ]; then
