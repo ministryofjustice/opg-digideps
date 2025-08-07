@@ -545,10 +545,13 @@ trait ReportTrait
      */
     public function iContinueToDeclarationAndSubmission()
     {
-        $this->clickLink('Continue to declaration and submission');
         if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->clickLink('Continue to declaration and submission');
             $this->iAmOnNdrDeclarationPage();
         } else {
+            $this->clickLink('Confirm contact details');
+            $this->iAmOnReportConfirmDetailsPage();
+            $this->clickLink('Continue to declaration');
             $this->iAmOnReportDeclarationPage();
         }
     }
