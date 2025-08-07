@@ -61,8 +61,12 @@ trait ReportTrait
             }
         }
 
-        $this->clickLink('Confirm contact details');
-        $this->clickLink('Continue to declaration');
+        if ('ndr' == $ndrOrReport) {
+            $this->clickLink('Continue');
+        } else {
+            $this->clickLink('Confirm contact details');
+            $this->clickLink('Continue to declaration');
+        }
 
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
         $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
