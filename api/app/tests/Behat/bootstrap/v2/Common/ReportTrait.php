@@ -65,7 +65,15 @@ trait ReportTrait
             $this->clickLink('Continue');
         } else {
             $this->clickLink('Confirm contact details');
+            $this->iAmOnReportConfirmDetailsPage();
+            $this->clickLink('Go back');
+            $this->iAmOnReportReviewPage();
+            $this->clickLink('Confirm contact details');
             $this->clickLink('Continue to declaration');
+            $this->clickLink('Go back');
+            $this->iAmOnReportConfirmDetailsPage();
+            $this->clickLink('Continue to declaration');
+            $this->iAmOnReportDeclarationPage();
         }
 
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
