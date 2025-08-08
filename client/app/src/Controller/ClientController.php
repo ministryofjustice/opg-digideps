@@ -117,7 +117,7 @@ class ClientController extends AbstractController
             $activeReport = $postUpdateClient->getActiveReport();
 
             if ('declaration' === $from && $activeReport instanceof Report) {
-                return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $activeReport->getId()]));
+                return $this->redirect($this->generateUrl('report_confirm_details', ['reportId' => $activeReport->getId()]));
             }
 
             return $this->redirect($this->generateUrl('deputyship_details_clients'));
@@ -138,7 +138,7 @@ class ClientController extends AbstractController
         Request $request,
         Redirector $redirector,
         TranslatorInterface $translator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ): array|RedirectResponse {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -185,7 +185,6 @@ class ClientController extends AbstractController
                 $report->setClient($client);
                 $this->restClient->post('report', $report);
 
-
                 /** @var User $currentUser */
                 $currentUser = $this->userApi->getUserWithData();
 
@@ -196,6 +195,7 @@ class ClientController extends AbstractController
                 $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
 
                 $url = $this->generateUrl('lay_home', ['clientId' => $response['id']]);
+
                 return $this->redirect($url);
             } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {
