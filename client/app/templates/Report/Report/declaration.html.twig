@@ -62,7 +62,7 @@
 
         <a class="govuk-button govuk-button--secondary" data-module="govuk-button"
            href="{{ path("report_confirm_details" , {'reportId': report.id }) }}">
-            {{ 'goBack' | trans() }}
+            {{ 'goBack' | trans({},'common') }}
         </a>
 
         <div class="custom-submit">
