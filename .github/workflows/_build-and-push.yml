@@ -87,12 +87,12 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Trivy Secret Scan
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
+        uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4
         with:
-          scan-type: "fs"
-          scanners: "secret"
+          scan-type: fs
+          scanners: secret
           exit-code: 1
-          format: "table"
+          format: table
           timeout: 5m
           skip-files: |
             local-resources/local-load-balancer/certificates/nginx.key
