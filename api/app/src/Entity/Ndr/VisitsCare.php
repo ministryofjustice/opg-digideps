@@ -129,7 +129,7 @@ class VisitsCare
     private $doesClientHaveACarePlan;
 
     /**
-     * @var date
+     * @var \DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
@@ -317,18 +317,12 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * @return date
-     */
-    public function getWhenWasCarePlanLastReviewed()
+    public function getWhenWasCarePlanLastReviewed(): ?\DateTime
     {
         return $this->whenWasCarePlanLastReviewed;
     }
 
-    /**
-     * @param date $whenWasCarePlanLastReviewed
-     */
-    public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
+    public function setWhenWasCarePlanLastReviewed(?\DateTime $whenWasCarePlanLastReviewed)
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
     }

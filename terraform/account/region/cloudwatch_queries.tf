@@ -76,6 +76,52 @@ fields @timestamp, status, service_name, request_uri, upstream_response_time
 QUERY
 }
 
+resource "aws_cloudwatch_query_definition" "status_404" {
+  name            = "Analysis/Requests-With-404-Status"
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
+
+  query_string = <<QUERY
+# Purpose: 404 webserver responses
+# Usage: Look for unusual request_uris that get 404 along with IP address
+fields @timestamp, request_uri, status, real_forwarded_for
+| filter @logStream like 'front_web'
+| filter status = 404
+| sort @timestamp desc
+| limit 10000
+QUERY
+}
+
+resource "aws_cloudwatch_query_definition" "status_404_counts_per_10_mins" {
+  name            = "Analysis/Requests-With-404-Status-Counts"
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
+
+  query_string = <<QUERY
+# Purpose: 404 webserver responses counts
+# Usage: Look for unusually high counts of 404s in a 10 minute period
+fields @timestamp, request_uri, status, real_forwarded_for
+| filter @logStream like 'front_web'
+| filter status = 404
+| stats count() as count_404s by bin(10m) as ten_min_period
+| sort count_404s desc
+QUERY
+}
+
+resource "aws_cloudwatch_query_definition" "failed_logins_per_10_mins" {
+  name            = "Analysis/Failed-Login-Counts"
+  log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
+
+  query_string = <<QUERY
+# Purpose: Counts of failed logins per ten minute period
+# Usage: Look for unusually high counts of of failed logins suggesting brute force in a 10 minute period
+fields @timestamp, request_uri, status
+| filter @logStream like 'api_web'
+| filter request_uri like '/auth/login'
+| filter status > 399
+| stats count() as count_failed_logins by bin(10m) as ten_min_period
+| sort count_failed_logins desc
+QUERY
+}
+
 resource "aws_cloudwatch_query_definition" "critical" {
   name            = "Analysis/Critical-Level-Application-Errors"
   log_group_names = [local.default_insights_query_log_identifier[var.account.name]]
@@ -161,5 +207,76 @@ fields @timestamp, ServiceName, DesiredTaskCount, RunningTaskCount, PendingTaskC
 | filter PendingTaskCount > 0
 | sort @timestamp desc
 | limit 1000
+QUERY
+}
+
+# WAF Queries
+resource "aws_cloudwatch_query_definition" "ac1_blocked_by_rule" {
+  name            = "WAF/Blocked Requests by Rule"
+  log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
+
+  query_string = <<QUERY
+fields @message
+| filter @message like /"action":"BLOCK"/
+| parse @message /"labels":\[\{"name":"[^"]+:(?<category>[^"]+)"/
+| parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
+| stats count() as blocked_requests by coalesce(category, rule_id, "Unknown")
+| sort blocked_requests desc
+QUERY
+}
+
+resource "aws_cloudwatch_query_definition" "ac2_blocked_ips_with_reason" {
+  name            = "WAF/Blocked IPs with Reason"
+  log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
+
+  query_string = <<QUERY
+fields @message
+| filter @message like /"action":"BLOCK"/
+| parse @message /"clientIp":"(?<client_ip>[^"]+)"/
+| parse @message /"labels":\[\{"name":"[^"]+:(?<category>[^"]+)"/
+| parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
+| stats count() as blocked_requests by client_ip, coalesce(category, rule_id, "Unknown") as reason
+| sort blocked_requests desc
+QUERY
+}
+
+resource "aws_cloudwatch_query_definition" "ac3_detailed_blocked_requests" {
+  name            = "WAF/Detailed Blocked Requests"
+  log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
+
+  query_string = <<QUERY
+fields @message
+| filter @message like /"action":"BLOCK"/
+| parse @message /"clientIp":"(?<client_ip>[^"]+)"/
+| parse @message /"country":"(?<country>[^"]+)"/
+| parse @message /"uri":"(?<uri>[^"]+)"/
+| parse @message /"httpMethod":"(?<method>[^"]+)"/
+| parse @message /"args":"(?<args>[^"]+)"/
+| parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
+| parse @message /"host":"(?<host>[^"]+)"/
+| parse @message /"User-Agent","value":"(?<user_agent>[^"]+)"/
+| stats count() as blocked_requests by client_ip, country, method, uri, args, host, user_agent, rule_id
+| sort blocked_requests desc
+| limit 100
+QUERY
+}
+
+resource "aws_cloudwatch_query_definition" "ac4_blocked_logged_in_uris" {
+  name            = "WAF/Blocked Logged-In URI Access"
+  log_group_names = [aws_cloudwatch_log_group.waf_web_acl.name]
+
+  query_string = <<QUERY
+# Blocked requests to authenticated only URIs which may indicate logged in users
+fields @message
+| filter @message like /"action":"BLOCK"/
+| parse @message /"clientIp":"(?<client_ip>[^"]+)"/
+| parse @message /"country":"(?<country>[^"]+)"/
+| parse @message /"uri":"(?<uri>[^"]+)"/
+| parse @message /"httpMethod":"(?<method>[^"]+)"/
+| parse @message /"User-Agent","value":"(?<user_agent>[^"]+)"/
+| parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
+| filter uri like /\\/client/ or uri like /\\/org/ or uri like /\\/choose-a-client/
+| stats count() as blocked_requests by client_ip, country, method, uri, user_agent, rule_id
+| sort blocked_requests desc
 QUERY
 }

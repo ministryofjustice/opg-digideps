@@ -328,8 +328,12 @@ class UserControllerTest extends AbstractTestController
     {
         $deputy3 = self::fixtures()->createUser();
         $deputy3->setRoleName(User::ROLE_LAY_DEPUTY);
-
         self::fixtures()->flush();
+
+        $client = self::fixtures()->createClient();
+        $client->setUsers([$deputy3]);
+        self::fixtures()->flush();
+
         $userToDeleteId = $deputy3->getId();
 
         $url = '/user/'.$userToDeleteId;
@@ -340,6 +344,7 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         $this->assertTrue(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
+        $this->assertTrue(null === $client->getDeletedAt());
     }
 
     public function testDeleteNotPermittedForAdmin()

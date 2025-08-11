@@ -21,13 +21,14 @@ use App\Repository\UserRepository;
 use App\v2\Controller\ControllerTrait;
 use App\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/fixture')]
 class FixtureController extends AbstractController
@@ -35,30 +36,28 @@ class FixtureController extends AbstractController
     use ControllerTrait;
 
     public function __construct(
-        private EntityManagerInterface $em,
-        private ClientFactory $clientFactory,
-        private UserFactory $userFactory,
-        private OrganisationFactory $organisationFactory,
-        private ReportFactory $reportFactory,
-        private ReportRepository $reportRepository,
-        private ReportSection $reportSection,
-        private OrganisationRepository $organisationRepository,
-        private UserRepository $userRepository,
-        private NdrRepository $ndrRepository,
-        private PreRegistrationFactory $preRegistrationFactory,
-        private DeputyRepository $deputyRepository,
-        private string $symfonyEnvironment,
+        private readonly EntityManagerInterface $em,
+        private readonly ClientFactory $clientFactory,
+        private readonly UserFactory $userFactory,
+        private readonly OrganisationFactory $organisationFactory,
+        private readonly ReportFactory $reportFactory,
+        private readonly ReportRepository $reportRepository,
+        private readonly ReportSection $reportSection,
+        private readonly OrganisationRepository $organisationRepository,
+        private readonly UserRepository $userRepository,
+        private readonly NdrRepository $ndrRepository,
+        private readonly PreRegistrationFactory $preRegistrationFactory,
+        private readonly DeputyRepository $deputyRepository,
+        private readonly string $symfonyEnvironment,
     ) {
     }
 
     /**
-     * @return JsonResponse
-     *
      * @throws \Exception
      */
     #[Route(path: '/court-order', methods: ['POST'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function createCourtOrderAction(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function createCourtOrder(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -228,7 +227,7 @@ class FixtureController extends AbstractController
         return $deputy;
     }
 
-    private function createNdr(array $fromRequest, Client $client)
+    private function createNdr(array $fromRequest, Client $client): void
     {
         $ndr = new Ndr($client);
         $client->setNdr($ndr);
@@ -310,10 +309,7 @@ class FixtureController extends AbstractController
         $this->em->persist($organisation);
     }
 
-    /**
-     * @return Deputy
-     */
-    private function buildDeputy(User $deputy, array $fromRequest)
+    private function buildDeputy(User $deputy, array $fromRequest): Deputy
     {
         $deputy = (new Deputy())
             ->setFirstname($deputy->getFirstname())
@@ -330,13 +326,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @return JsonResponse
-     *
      * @throws \Exception
      */
     #[Route(path: '/complete-sections/{reportType}/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function completeReportSectionsAction(Request $request, string $reportType, $reportId)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function completeReportSections(Request $request, string $reportType, int $reportId): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -344,12 +338,12 @@ class FixtureController extends AbstractController
 
         $repository = 'ndr' === $reportType ? $this->ndrRepository : $this->reportRepository;
 
-        if (null === $report = $repository->find(intval($reportId))) {
+        if (null === $report = $repository->find($reportId)) {
             throw new NotFoundHttpException(sprintf('Report id %s not found', $reportId));
         }
 
         if (null === $sections = $request->query->get('sections')) {
-            return $this->buildSuccessResponse([], 'Nothing updated', Response::HTTP_OK);
+            return $this->buildSuccessResponse([], 'Nothing updated');
         }
 
         foreach (explode(',', $sections) as $section) {
@@ -362,12 +356,12 @@ class FixtureController extends AbstractController
 
         $this->em->flush();
 
-        return $this->buildSuccessResponse([], 'Report updated', Response::HTTP_OK);
+        return $this->buildSuccessResponse([], 'Report updated');
     }
 
     #[Route(path: '/createAdmin', methods: ['POST'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
-    public function createAdmin(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function createAdmin(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -391,8 +385,8 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/getUserIDByEmail/{email}', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")]
-    public function getUserIDByEmail(string $email)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function getUserIDByEmail(string $email): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -401,7 +395,7 @@ class FixtureController extends AbstractController
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         if (null !== $user) {
-            return $this->buildSuccessResponse(['id' => $user->getId()], 'User found', Response::HTTP_OK);
+            return $this->buildSuccessResponse(['id' => $user->getId()], 'User found');
         } else {
             return $this->buildNotFoundResponse("Could not find user with email address '$email'");
         }
@@ -411,8 +405,8 @@ class FixtureController extends AbstractController
      * Used for creating non-prof/pa users only as Org ID is required for those types.
      */
     #[Route(path: '/createUser', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
-    public function createUser(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createUser(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -434,15 +428,15 @@ class FixtureController extends AbstractController
         $this->em->persist($deputy);
         $this->em->flush();
 
-        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
     /**
      * Used for deleting users to clean up after tests.
      */
     #[Route(path: '/deleteUser', methods: ['POST'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function deleteUser(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function deleteUser(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -455,12 +449,12 @@ class FixtureController extends AbstractController
         $this->em->remove($user);
         $this->em->flush();
 
-        return $this->buildSuccessResponse($fromRequest, 'User deleted', Response::HTTP_OK);
+        return $this->buildSuccessResponse($fromRequest, 'User deleted');
     }
 
     #[Route(path: '/createClientAttachDeputy', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
-    public function createClientAndAttachToDeputy(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createClientAndAttachToDeputy(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -491,12 +485,12 @@ class FixtureController extends AbstractController
         $this->em->persist($deputy);
         $this->em->flush();
 
-        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
     #[Route(path: '/createClientAttachOrgs', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
-    public function createClientAndAttachToOrgs(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createClientAndAttachToOrgs(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -535,7 +529,7 @@ class FixtureController extends AbstractController
 
         $this->em->flush();
 
-        return $this->buildSuccessResponse($fromRequest, 'User created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
     private function createDeputyByExistingUser(string $userEmail)
@@ -567,8 +561,8 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/create-pre-registration', methods: ['POST'])]
-    #[Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")]
-    public function createPreRegistration(Request $request)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createPreRegistration(Request $request): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -618,15 +612,12 @@ class FixtureController extends AbstractController
 
         $this->em->flush();
 
-        return $this->buildSuccessResponse($data, 'PreRegistration rows created', Response::HTTP_OK);
+        return $this->buildSuccessResponse($data, 'PreRegistration rows created');
     }
 
-    /**
-     * @return JsonResponse
-     */
     #[Route(path: '/move-users-clients-to-users-org/{userEmail}', name: 'move_users_clients_to_org', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function moveUsersClientsToUsersOrg(string $userEmail)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function moveUsersClientsToUsersOrg(string $userEmail): JsonResponse
     {
         if ('prod' === $this->symfonyEnvironment) {
             throw $this->createNotFoundException();
@@ -652,15 +643,12 @@ class FixtureController extends AbstractController
 
         $this->em->flush();
 
-        return $this->buildSuccessResponse([json_encode($clients, JSON_PRETTY_PRINT)], 'Clients added to Users first Org', Response::HTTP_OK);
+        return $this->buildSuccessResponse([json_encode($clients, JSON_PRETTY_PRINT)], 'Clients added to Users first Org');
     }
 
-    /**
-     * @return JsonResponse
-     */
     #[Route(path: '/activateOrg/{orgName}', name: 'activate_org', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function activateOrg(string $orgName)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function activateOrg(string $orgName): JsonResponse
     {
         try {
             if ('prod' === $this->symfonyEnvironment) {
@@ -678,9 +666,9 @@ class FixtureController extends AbstractController
             $this->em->persist($org);
             $this->em->flush();
 
-            return $this->buildSuccessResponse([json_encode($org, JSON_PRETTY_PRINT)], "Org '$orgName' activated", Response::HTTP_OK);
+            return $this->buildSuccessResponse([json_encode($org, JSON_PRETTY_PRINT)], "Org '$orgName' activated");
         } catch (\Throwable $e) {
-            $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
+            return $this->buildErrorResponse(sprintf("Organisation '%s' could not be activated: %s", $orgName, $e->getMessage()));
         }
     }
 
