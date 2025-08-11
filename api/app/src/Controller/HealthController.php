@@ -12,13 +12,13 @@ class HealthController extends RestController
     public function __construct(
         private readonly string $symfonyEnvironment,
         private readonly LoggerInterface $logger,
-        private EntityManagerInterface $em
+        private readonly EntityManagerInterface $em
     ) {
         parent::__construct($em);
     }
 
     #[Route(path: '', name: 'health-check', methods: ['GET'])]
-    public function containerHealthAction()
+    public function containerHealth(): string
     {
         return 'ok';
     }
@@ -27,7 +27,7 @@ class HealthController extends RestController
      * @return array
      */
     #[Route(path: '/service', methods: ['GET'])]
-    public function serviceHealthAction()
+    public function serviceHealth(): array
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
 
@@ -39,9 +39,9 @@ class HealthController extends RestController
     }
 
     /**
-     * @return array [boolean healthy, error string]
+     * @return array{bool, string}
      */
-    private function dbInfo()
+    private function dbInfo(): array
     {
         try {
             $this->em->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();

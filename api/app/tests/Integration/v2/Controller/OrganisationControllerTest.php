@@ -384,7 +384,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         $response = self::$frameworkBundleClient->getResponse();
 
-        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode(), $response->getContent());
 
         $organisation = self::$em
             ->getRepository(Organisation::class)

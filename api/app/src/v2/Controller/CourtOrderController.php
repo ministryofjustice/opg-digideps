@@ -7,10 +7,10 @@ namespace App\v2\Controller;
 use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Show court order data to deputies.
@@ -35,8 +35,8 @@ class CourtOrderController extends AbstractController
      * path on API = /v2/courtorder/<UID>.
      */
     #[Route('/{uid}', requirements: ['uid' => '\w+'], methods: ['GET'])]
-    #[Security('is_granted("ROLE_DEPUTY")')]
-    public function getByUidAction(string $uid): JsonResponse
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
+    public function getByUid(string $uid): JsonResponse
     {
         $user = $this->getUser();
 

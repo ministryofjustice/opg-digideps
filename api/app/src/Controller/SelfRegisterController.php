@@ -23,7 +23,7 @@ class SelfRegisterController extends RestController
     }
 
     #[Route(path: '', methods: ['POST'])]
-    public function register(Request $request, UserRegistrationService $userRegistrationService)
+    public function register(Request $request, UserRegistrationService $userRegistrationService): User
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -70,7 +70,7 @@ class SelfRegisterController extends RestController
     }
 
     #[Route(path: '/verifycodeputy', methods: ['POST'])]
-    public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService)
+    public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService): array
     {
         if (!$this->authService->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
@@ -125,7 +125,7 @@ class SelfRegisterController extends RestController
     }
 
     #[Route(path: '/updatecodeputy/{userId}', requirements: ['userId' => '\d+'], methods: ['PUT'])]
-    public function updateCoDeputyWithVerificationData(Request $request, $userId): User
+    public function updateCoDeputyWithVerificationData(Request $request, int $userId): User
     {
         $user = $this->em->getRepository('App\Entity\User')->findOneBy(['id' => $userId]);
 
@@ -152,7 +152,7 @@ class SelfRegisterController extends RestController
         return $user;
     }
 
-    public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data)
+    public function populateSelfReg(SelfRegisterData $selfRegisterData, array $data): void
     {
         $this->hydrateEntityWithArrayData($selfRegisterData, $data, [
             'firstname' => 'setFirstname',
