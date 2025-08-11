@@ -41,7 +41,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnReportConfirmDetailsPage(): bool
     {
-        return $this->iAmOnPage('/report\/.*\/confirm-details$/');
+        return $this->iAmOnPage('/report\/\d+\/confirm-details$/');
     }
 
     /**
