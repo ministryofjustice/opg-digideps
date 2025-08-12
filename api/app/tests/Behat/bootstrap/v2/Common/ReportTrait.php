@@ -12,28 +12,11 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Given I follow the submission process to the declaration page
-     * @Given I should be able to submit the report
-     */
-    public function iSubmitTheReport()
-    {
-        [$ndrOrReport, $reportId] = $this->getCorrectReport('current');
-        $this->submitSteps($ndrOrReport, $reportId);
-    }
-
-    /**
-     * @Then I should be able to submit my previous report
-     */
-    public function iShouldBeAbleToSubmitMyPreviousReport()
-    {
-        [$ndrOrReport, $reportId] = $this->getCorrectReport('previous');
-        $this->submitSteps($ndrOrReport, $reportId);
-    }
-
-    /**
      * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
+     *
+     * @Given I follow the submission process to the declaration page for :currentOrPrevious report
      */
-    public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious)
+    public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious): void
     {
         [$ndrOrReport, $reportId] = $this->getCorrectReport($currentOrPrevious);
         $this->submitSteps($ndrOrReport, $reportId);
