@@ -101,7 +101,7 @@ jobs:
     uses: ./.github/workflows/_lint-terraform.yml
     needs:
       - workflow_variables
-      - trivy_secret_scannings
+      - trivy_secret_scanning
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
