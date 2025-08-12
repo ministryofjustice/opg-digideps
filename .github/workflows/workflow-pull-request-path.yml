@@ -101,6 +101,7 @@ jobs:
     uses: ./.github/workflows/_lint-terraform.yml
     needs:
       - workflow_variables
+      - trivy_secret_scannings
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -111,6 +112,7 @@ jobs:
     uses: ./.github/workflows/_test-js.yml
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   docker_build_scan_push:
     name: build, scan and push
@@ -118,6 +120,7 @@ jobs:
     needs:
       - workflow_variables
       - build_web_resources
+      - trivy_secret_scanning
     with:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -147,6 +150,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   api_integration_tests_2:
     name: api integration tests 2
@@ -156,6 +160,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   api_integration_tests_3:
     name: api integration tests 3
@@ -173,6 +178,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   client_unit_tests:
     name: client unit tests
@@ -180,12 +186,14 @@ jobs:
     needs:
       - workflow_variables
       - build_web_resources
+      - trivy_secret_scanning
 
   miscellaneous_tests:
     name: miscellaneous tests
     uses: ./.github/workflows/_tests-miscellaneous.yml
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   codecov:
     name: upload to codecov
@@ -224,7 +232,6 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
       - workflow_variables
-      - trivy_secret_scanning
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
