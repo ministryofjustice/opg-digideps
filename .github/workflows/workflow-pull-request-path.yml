@@ -133,6 +133,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   api_unit_tests:
     name: api unit tests
@@ -141,6 +142,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   api_integration_tests_1:
     name: api integration tests 1
@@ -170,6 +172,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
+      - trivy_secret_scanning
 
   client_phpstan:
     name: client phpstan
