@@ -20,10 +20,10 @@ use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class StatsController extends RestController
 {
@@ -42,8 +42,8 @@ class StatsController extends RestController
     }
 
     #[Route(path: '/stats', methods: ['GET'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
-    public function getMetric(Request $request)
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function getMetric(Request $request): array
     {
         $params = new StatsQueryParameters($request->query->all());
         $query = $this->QueryFactory->create($params);
@@ -52,8 +52,8 @@ class StatsController extends RestController
     }
 
     #[Route(path: 'stats/deputies/lay/active', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function getActiveLays(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function getActiveLays(Request $request): array
     {
         if ($this->authService->JWTIsValid($request)) {
             return $this->userRepository->findActiveLaysInLastYear();
@@ -63,7 +63,7 @@ class StatsController extends RestController
     }
 
     #[Route(path: 'stats/admins/report_data', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function getAdminUserAccountReportData(Request $request, RestFormatter $formatter): array
     {
         $serialisedGroups = $request->query->all('groups');
@@ -94,7 +94,7 @@ class StatsController extends RestController
     }
 
     #[Route(path: 'stats/admins/inactive_admin_users', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
     {
         $serialisedGroups = $request->query->all('groups');
@@ -111,8 +111,8 @@ class StatsController extends RestController
     }
 
     #[Route(path: 'stats/assets/total_values', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function getAssetsTotalValueData()
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function getAssetsTotalValueData(): JsonResponse
     {
         $ret = [
             'lays' => ['liquid' => 0, 'non-liquid' => 0],
@@ -153,7 +153,7 @@ class StatsController extends RestController
     }
 
     #[Route(path: 'stats/report/benefits-report-metrics', methods: ['GET', 'POST'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function getBenefitsReportMetrics(Request $request): array
     {
         $deputyType = $request->query->get('deputyType');
@@ -164,8 +164,8 @@ class StatsController extends RestController
     }
 
     #[Route(path: 'stats/report/imbalance', name: 'imbalance_report', methods: ['GET'])]
-    #[Security("is_granted('ROLE_SUPER_ADMIN')")]
-    public function getImbalanceReport(Request $request)
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function getImbalanceReport(Request $request): array
     {
         $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));
         $startDate instanceof \DateTime ? $startDate->setTime(0, 0, 1) : null;

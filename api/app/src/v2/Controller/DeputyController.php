@@ -28,7 +28,7 @@ class DeputyController extends AbstractController
     }
 
     #[Route(path: '/{id}', requirements:['id' => '\d+'], methods: ['GET'])]
-    public function getByIdAction($id): JsonResponse
+    public function getById(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->findUserArrayById($id))) {
             $this->buildNotFoundResponse(sprintf('Deputy id %s not found', $id));
