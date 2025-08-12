@@ -981,6 +981,11 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
+			message: "#^Expression in empty\\(\\) is not falsy\\.$#"
+			count: 1
+			path: src/Controller/ClientController.php
+
+		-
 			message: "#^Parameter \\#1 \\$client of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:create\\(\\) expects App\\\\Entity\\\\Client, mixed given\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php

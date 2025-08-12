@@ -24,6 +24,11 @@ on:
         required: false
         default: ""
         type: string
+      failure_reason:
+        description: "Reason for Failed Workflow. Will update Slack Message."
+        required: false
+        default: ""
+        type: string
 
 jobs:
   send-slack-notification:
@@ -53,12 +58,14 @@ jobs:
           BRANCH: ${{ inputs.branch }}
           SUCCESS: ${{ inputs.success }}
           SCHEDULED_TASK: ${{ inputs.scheduled_task }}
+          FAILURE_REASON: ${{ inputs.failure_reason }}
         run: |
           python ci_monitor_notify.py \
           --success "${SUCCESS}" \
           --commit_message "$(git log -1 --pretty=%B)" \
           --branch "${BRANCH}" \
-          --scheduled_task "${SCHEDULED_TASK}"
+          --scheduled_task "${SCHEDULED_TASK}" \
+          --failure_reason "${FAILURE_REASON}"
         working-directory: lambdas/functions/monitor_notify_lambda/app
 
       - name: Unset AWS variables
