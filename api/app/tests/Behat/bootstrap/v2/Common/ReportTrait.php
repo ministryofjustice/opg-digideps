@@ -12,7 +12,7 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Given I submit the report
+     * @Given I follow the submission process to the declaration page
      * @Given I should be able to submit the report
      */
     public function iSubmitTheReport()
@@ -47,7 +47,7 @@ trait ReportTrait
         ];
     }
 
-    private function submitSteps(string $ndrOrReport, int $reportId)
+    private function submitSteps(string $ndrOrReport, int $reportId): void
     {
         $this->visit("$ndrOrReport/$reportId/overview");
 
@@ -65,20 +65,50 @@ trait ReportTrait
             $this->clickLink('Continue');
         } else {
             $this->clickLink('Confirm contact details');
-            $this->iAmOnReportConfirmDetailsPage();
-            $this->clickLink('Go back');
-            $this->iAmOnReportReviewPage();
-            $this->clickLink('Confirm contact details');
             $this->clickLink('Continue to declaration');
-            $this->clickLink('Go back');
-            $this->iAmOnReportConfirmDetailsPage();
-            $this->clickLink('Continue to declaration');
-            $this->iAmOnReportDeclarationPage();
         }
+    }
+
+    /**
+     * @Given /^I fill in the declaration page and submit the report$/
+     */
+    public function iFillInTheDeclarationPageAndSubmitTheReport(): void
+    {
+        [$ndrOrReport] = $this->getCorrectReport('current');
 
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
         $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
         $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
+    }
+
+    /**
+     * @Then /^I can go back to the contact details page$/
+     */
+    public function iCanGoBackToTheContactDetailsPage()
+    {
+        $this->clickLink('Go back');
+        $this->iAmOnReportConfirmDetailsPage();
+        $this->assertPageContainsText('Confirm Your Contact Details');
+    }
+
+    /**
+     * @Given /^I can go back to the report review page$/
+     */
+    public function iCanGoBackToTheReportReviewPage()
+    {
+        $this->clickLink('Go back');
+        $this->iAmOnReportReviewPage();
+        $this->assertPageContainsText('Check your report');
+    }
+
+    /**
+     * @Given /^I can go back to the report overview page$/
+     */
+    public function iCanGoBackToTheReportOverviewPage()
+    {
+        $this->clickLink('Go back');
+        $this->iAmOnReportsOverviewPage();
+        $this->assertPageContainsText('Preview and check report');
     }
 
     /**
