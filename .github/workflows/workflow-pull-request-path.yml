@@ -88,6 +88,10 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           sync-labels: true
 
+  trivy_secret_scanning:
+    name: trivy secret scanning
+    uses: ./.github/workflows/_secret-scan-on-push.yml
+
   build_web_resources:
     name: build web resources
     uses: ./.github/workflows/_web-resources.yml
@@ -220,6 +224,7 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
       - workflow_variables
+      - trivy_secret_scanning
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
