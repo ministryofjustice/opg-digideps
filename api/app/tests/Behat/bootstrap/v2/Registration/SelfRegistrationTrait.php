@@ -892,7 +892,6 @@ trait SelfRegistrationTrait
      */
     public function reportStatusShouldBe(string $status)
     {
-        $this->iAmOnLayMainPage();
         $this->assertPageContainsText($status);
     }
 }
