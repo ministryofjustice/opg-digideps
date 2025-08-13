@@ -1,7 +1,5 @@
 {% extends '@App/Layouts/application.html.twig' %}
 
-{% import '@App/Macros/macros.html.twig' as macros %}
-
 {% set translationDomain = "report-display" %}
 {% trans_default_domain translationDomain %}
 
@@ -27,20 +25,6 @@
 {% block head %}
     {{ parent() }}
     <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}" rel="stylesheet" type="text/css">
-{% endblock %}
-
-{% block breadcrumbs %}
-    {% if report.submitted == true %}
-        {% if isLayDeputy %}
-            <a id="back-to-reports" href="{{ backLink }}"
-               class="govuk-link link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
-        {% else %}
-            <a id="back-to-client" href="{{ backLink }}"
-               class="govuk-link link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans({}, 'report-submitted') }}</a>
-        {% endif %}
-    {% else %}
-        {{ macros.breadcrumbs(report) }}
-    {% endif %}
 {% endblock %}
 
 {% block pageContent %}

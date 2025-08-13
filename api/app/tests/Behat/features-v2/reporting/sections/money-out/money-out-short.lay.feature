@@ -91,7 +91,8 @@ Feature: Money Out Short - Lay users
         Then I should see the expected money out section summary
         When I follow link back to report overview page
         Then I should see "money-out-short" as "money out"
-        Given I submit the report
+        Then I follow the submission process to the declaration page for "current" report
+        And I fill in the declaration page and submit the report
         Then my report should be submitted
 
     @lay-pfa-low-not-started

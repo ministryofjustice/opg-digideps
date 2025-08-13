@@ -492,6 +492,36 @@ class ReportController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/confirm-details", name="report_confirm_details")
+     *
+     * @Template("@App/Report/Report/confirm-details.html.twig")
+     *
+     * @return array|RedirectResponse
+     */
+    public function confirmDetailsAction(int $reportId)
+    {
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
+
+        // check status
+        $status = $report->getStatus();
+        if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
+            $message = $this->translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators');
+            throw new ReportNotSubmittableException($message);
+        }
+
+        $deputy = $report->getClient()->getDeputy();
+
+        if (is_null($deputy)) {
+            $deputy = $this->userApi->getUserWithData();
+        }
+
+        return [
+            'report' => $report,
+            'contactDetails' => $this->getAssociatedContactDetails($deputy, $report),
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      *
      * @Template("@App/Report/Report/declaration.html.twig")
@@ -507,12 +537,6 @@ class ReportController extends AbstractController
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
             $message = $this->translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators');
             throw new ReportNotSubmittableException($message);
-        }
-
-        $deputy = $report->getClient()->getDeputy();
-
-        if (is_null($deputy)) {
-            $deputy = $this->userApi->getUserWithData();
         }
 
         $form = $this->createForm(ReportDeclarationType::class, $report);
@@ -532,8 +556,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'client' => $report->getClient(),
-            'contactDetails' => $this->getAssociatedContactDetails($deputy, $report),
             'form' => $form->createView(),
         ];
     }

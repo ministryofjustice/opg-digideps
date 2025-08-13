@@ -1,9 +1,6 @@
 page:
   htmlTitle: "Report submission - Complete the deputy report | GOV.UK"
-  pageTitle: "Report submission"
-  contactDetailsHeader: "Contact details"
-  contactDetailsIntro: "Please review and update any incorrect contact details before submitting the report"
-  declarationSectionHeader: "Deputy's declaration"
+  pageTitle: "Deputy's declaration"
   declarationTerms01: "I confirm the information I have given in this report is true and correct to the best of my knowledge and belief."
   declarationTerms02: "I understand I have obligations to the Court of Protection and the Office of the Public Guardian, and that if I knowingly provide false or misleading information there may be legal consequences."
   declarationTerms03:
