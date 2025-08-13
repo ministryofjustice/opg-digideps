@@ -113,6 +113,9 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && /var/www/scripts/setup_application_sql_query.sh \
+    && echo $APP_DB_PASSWORD \
+    && unset APP_DB_PASSWORD \
+    && echo $APP_DB_PASSWORD \
     && echo 'Image Target: runtime' \
     && php-fpm"]
 
@@ -155,6 +158,9 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && /var/www/scripts/setup_application_sql_query.sh \
+    && echo $APP_DB_PASSWORD \
+    && unset APP_DB_PASSWORD \
+    && echo $APP_DB_PASSWORD \
     && echo 'Image Target: devtools' \
     && php-fpm"]
 
@@ -168,5 +174,8 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && /var/www/scripts/setup_application_sql_query.sh \
+    && echo $APP_DB_PASSWORD \
+    && unset APP_DB_PASSWORD \
+    && echo $APP_DB_PASSWORD \
     && echo 'Image Target: devtools-admin' \
     && php-fpm"]
