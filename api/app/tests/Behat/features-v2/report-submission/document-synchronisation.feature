@@ -7,7 +7,9 @@ Feature: Synchronising Documents with Sirius
         When I view the documents report section
         And I have documents to upload
         And I attach a supporting document "test-image.png" to the report
-        And I submit the report
+        Then I follow the submission process to the declaration page for current report
+        And I fill in the declaration page and submit the report
+        Then my report should be submitted
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
@@ -18,7 +20,9 @@ Feature: Synchronising Documents with Sirius
     @super-admin @ndr-completed
     Scenario: Submitting an NDR sets the synchronisation status of the report PDF to queued
         Given a Lay Deputy has a completed NDR report
-        And I submit the report
+        Then I follow the submission process to the declaration page for current report
+        And I fill in the declaration page and submit the report
+        Then my report should be submitted
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column

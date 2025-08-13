@@ -9,45 +9,9 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
-{% block breadcrumbs %}
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li>
-                {% if app.user.isDeputyOrg() %}
-                    <a href="{{ path('org_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
-                {% else %}
-                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}</a>
-                {% endif %}
-            </li>
-            <li>
-                <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                   class="behat-link-breadcrumbs-report-overview" data-action="report.overview">
-                    {% if app.user.isDeputyOrg() %}
-                        {{ 'clientProfile' | trans({}, 'common' ) }}
-                    {% else %}
-                        {{ 'deputyReportOverview' | trans({'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y')}, 'common' ) }}
-                    {% endif %}
-                </a>
-            </li>
-            <li>
-                <a href="{{ path('report_review', {'reportId': report.id}) }}"
-                   class="behat-link-breadcrumbs-report-review">
-                    {{ 'reviewReport' | trans({}, 'common' ) }}
-                </a>
-            </li>
-        </ol>
-    </div>
-{% endblock %}
-
 {% block pageContent %}
 
-    {% include '@App/Report/Report/_contact_details.html.twig' with {
-        'contactDetails': contactDetails,
-        'transDomain': translationDomain
-    } %}
-
     <div id="declaration-container">
-        <h2 class="govuk-heading-s">{{ 'page.declarationSectionHeader' | trans }}</h2>
         <div class="text">
             <p class="govuk-body">{{ 'page.declarationTerms01' | trans }}</p>
             <p class="govuk-body">{{ 'page.declarationTerms02' | trans }}</p>
@@ -95,6 +59,11 @@
         <div class="push--top">
             {{ macros.notification('important', 'unableToEditAfterSubmission' | trans) }}
         </div>
+
+        <a class="govuk-button govuk-button--secondary" data-module="govuk-button"
+           href="{{ path("report_confirm_details" , {'reportId': report.id }) }}">
+            {{ 'goBack' | trans({},'common') }}
+        </a>
 
         <div class="custom-submit">
             {{ form_submit(form.save,'save') }}

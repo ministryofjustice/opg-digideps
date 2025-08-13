@@ -291,7 +291,7 @@ trait ReportTrait
     /**
      * @Given /^I submit the report$/
      */
-    public function iSubmitTheReport()
+    public function iSubmitTheReport(): void
     {
         $reportType = self::$currentReportCache['reportType'];
         $reportId = self::$currentReportCache['reportId'];

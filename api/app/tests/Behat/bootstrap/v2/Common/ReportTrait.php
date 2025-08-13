@@ -12,28 +12,11 @@ trait ReportTrait
     public string $reportUrlPrefix = 'report';
 
     /**
-     * @Given I submit the report
-     * @Given I should be able to submit the report
-     */
-    public function iSubmitTheReport()
-    {
-        [$ndrOrReport, $reportId] = $this->getCorrectReport('current');
-        $this->submitSteps($ndrOrReport, $reportId);
-    }
-
-    /**
-     * @Then I should be able to submit my previous report
-     */
-    public function iShouldBeAbleToSubmitMyPreviousReport()
-    {
-        [$ndrOrReport, $reportId] = $this->getCorrectReport('previous');
-        $this->submitSteps($ndrOrReport, $reportId);
-    }
-
-    /**
      * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
+     *
+     * @Given I follow the submission process to the declaration page for :currentOrPrevious report
      */
-    public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious)
+    public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious): void
     {
         [$ndrOrReport, $reportId] = $this->getCorrectReport($currentOrPrevious);
         $this->submitSteps($ndrOrReport, $reportId);
@@ -47,7 +30,7 @@ trait ReportTrait
         ];
     }
 
-    private function submitSteps(string $ndrOrReport, int $reportId)
+    private function submitSteps(string $ndrOrReport, int $reportId): void
     {
         $this->visit("$ndrOrReport/$reportId/overview");
 
@@ -61,11 +44,54 @@ trait ReportTrait
             }
         }
 
-        $this->clickLink('Continue');
+        if ('ndr' == $ndrOrReport) {
+            $this->clickLink('Continue');
+        } else {
+            $this->clickLink('Confirm contact details');
+            $this->clickLink('Continue to declaration');
+        }
+    }
+
+    /**
+     * @Given /^I fill in the declaration page and submit the report$/
+     */
+    public function iFillInTheDeclarationPageAndSubmitTheReport(): void
+    {
+        [$ndrOrReport] = $this->getCorrectReport('current');
 
         $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
         $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
         $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
+    }
+
+    /**
+     * @Then /^I can go back to the contact details page$/
+     */
+    public function iCanGoBackToTheContactDetailsPage()
+    {
+        $this->clickLink('Go back');
+        $this->iAmOnReportConfirmDetailsPage();
+        $this->assertPageContainsText('Confirm Your Contact Details');
+    }
+
+    /**
+     * @Given /^I can go back to the report review page$/
+     */
+    public function iCanGoBackToTheReportReviewPage()
+    {
+        $this->clickLink('Go back');
+        $this->iAmOnReportReviewPage();
+        $this->assertPageContainsText('Check your report');
+    }
+
+    /**
+     * @Given /^I can go back to the report overview page$/
+     */
+    public function iCanGoBackToTheReportOverviewPage()
+    {
+        $this->clickLink('Go back');
+        $this->iAmOnReportsOverviewPage();
+        $this->assertPageContainsText('Preview and check report');
     }
 
     /**
@@ -544,10 +570,13 @@ trait ReportTrait
      */
     public function iContinueToDeclarationAndSubmission()
     {
-        $this->clickLink('Continue to declaration and submission');
         if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+            $this->clickLink('Continue to declaration and submission');
             $this->iAmOnNdrDeclarationPage();
         } else {
+            $this->clickLink('Confirm contact details');
+            $this->iAmOnReportConfirmDetailsPage();
+            $this->clickLink('Continue to declaration');
             $this->iAmOnReportDeclarationPage();
         }
     }

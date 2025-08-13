@@ -43,7 +43,8 @@
 
     <div class="push--bottom">
         {% if ndr.submitted == false %}
-            <p class="govuk-body">{{ (page ~ '.introPara') | trans() }}</p>
+            <p class="govuk-body">{{ (page ~ '.para1') | trans() }}</p>
+            <p class="govuk-body">{{ (page ~ '.para2') | trans() }}</p>
         {% endif %}
 
         {% include '@App/Ndr/Ndr/_review_buttons.html.twig' %}

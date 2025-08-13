@@ -16,8 +16,8 @@
             </a>
 
             <a class="govuk-button" data-module="govuk-button"
-               href="{{ path("report_declaration" , {'reportId': report.id }) }}">
-                {{ 'review.continueToDeclarationButton' | trans({}, 'report-display') }}
+               href="{{ path("report_confirm_details" , {'reportId': report.id }) }}">
+                {{ 'review.continueToConfirmDetailsButton' | trans() }}
             </a>
         {% endif %}
     </div>
