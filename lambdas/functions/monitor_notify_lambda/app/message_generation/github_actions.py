@@ -16,6 +16,7 @@ def github_actions_message(message):
     admin_url = message["AdminUrl"]
     commit_message = message["CommitMessage"]
     scheduled_task = message["ScheduledTask"]
+    failure_reason = message["FailureReason"]
 
     path_to_live = True if "Path to live" in workflow_name else False
 
@@ -38,6 +39,8 @@ def github_actions_message(message):
         with open("templates/github_actions.txt", "r") as file:
             template_text = file.read()
 
+        workflow_name = failure_reason if len(failure_reason) > 0 else workflow_name
+
         formatted_text = template_text.format(
             workflow_name=workflow_name,
             workflow_type=workflow_type,
@@ -52,6 +55,8 @@ def github_actions_message(message):
             commit_message=commit_message,
         )
 
-    payload = {"text": formatted_text, "channel": "default"}
+    channel = "team" if len(failure_reason) > 0 else "default"
+
+    payload = {"text": formatted_text, "channel": channel}
 
     return payload
