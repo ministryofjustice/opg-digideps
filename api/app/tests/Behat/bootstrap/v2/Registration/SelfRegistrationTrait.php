@@ -890,9 +890,8 @@ trait SelfRegistrationTrait
     /**
      * @Then the report status should be :status
      */
-    public function reportStatusShouldBe(string $status)
+    public function reportStatusShouldBe(string $status): void
     {
-        $this->iAmOnLayMainPage();
         $this->assertPageContainsText($status);
     }
 }
