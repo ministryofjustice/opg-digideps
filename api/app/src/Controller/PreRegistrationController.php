@@ -99,7 +99,10 @@ class PreRegistrationController extends RestController
         $qb->select('count(p.id)');
         $qb->from('App\Entity\PreRegistration', 'p');
 
-        return $qb->getQuery()->getSingleScalarResult();
+        /** @var int $result */
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return $result;
     }
 
     #[Route(path: '/clientHasCoDeputies/{caseNumber}', methods: ['GET'])]

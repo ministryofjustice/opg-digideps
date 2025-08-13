@@ -419,4 +419,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $query->getSingleResult();
     }
+
+    /**
+     * Find accounts with the deputy UID $deputyUid but with an email different from $excludeEmail.
+     *
+     * @return User[]
+     */
+    public function findOtherAccounts(mixed $deputyUid, ?string $excludeEmail = null): array
+    {
+        $qb = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.deputyUid = :deputyUid')
+            ->setParameter('deputyUid', $deputyUid);
+
+        if (!is_null($excludeEmail)) {
+            $qb = $qb->andWhere('u.email != :email')
+                ->setParameter('email', $excludeEmail);
+        }
+
+        /** @var User[] $result */
+        $result = $qb->getQuery()->getArrayResult();
+
+        return $result;
+    }
 }

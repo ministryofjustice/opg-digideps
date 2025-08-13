@@ -65,7 +65,7 @@ Feature: Court order page
         And I should see that the co-deputy is awaiting registration
 
     @lay-pfa-low-not-started @lay-pfa-court-order-co-deputy @lay-pfa-court-order-co-deputy-registered
-    Scenario: Court order with invited co-deputy who is awaiting registration
+    Scenario: Court order with invited co-deputy who has registered
         Given a Lay Deputy has not started a Pfa Low Assets report
         And I am associated with a 'pfa' court order
         And a registered co-deputy is associated with the court order
