@@ -40,7 +40,8 @@ data "aws_iam_policy_document" "api_permissions" {
     resources = [
       data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
       data.aws_secretsmanager_secret.public_jwt_key_base64.arn,
-      data.aws_secretsmanager_secret.database_password.arn
+      data.aws_secretsmanager_secret.database_password.arn,
+      data.aws_secretsmanager_secret.application_db_password.arn
     ]
   }
 
