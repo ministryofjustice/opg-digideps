@@ -33,7 +33,7 @@
     "webpack-cli": "^5.0.0"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^2.1.2",
+    "@ministryofjustice/frontend": "^3.7.2",
     "@testing-library/dom": "^9.2.0",
     "@testing-library/user-event": "^14.4.3",
     "govuk-frontend": "^5.4.0"

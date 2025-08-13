@@ -19,6 +19,12 @@ def main():
         default="",
         help="Name of scheduled task or blank if not scheduled",
     )
+    parser.add_argument(
+        "--failure_reason",
+        type=str,
+        default="",
+        help="Reason of Failure. Will Update Notifacation.",
+    )
     args = parser.parse_args()
 
     gh_server = str(os.getenv("GITHUB_SERVER_URL", ""))
@@ -49,6 +55,7 @@ def main():
             "AdminUrl": admin_url,
             "CommitMessage": args.commit_message,
             "ScheduledTask": args.scheduled_task,
+            "FailureReason": args.failure_reason,
         }
     }
 
