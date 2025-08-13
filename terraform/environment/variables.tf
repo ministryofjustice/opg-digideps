@@ -28,6 +28,7 @@ variable "accounts" {
       ga_gds                                 = string
       subdomain_enabled                      = bool
       is_production                          = number
+      fixtures_enabled                       = bool
       task_count                             = number
       scan_count                             = number
       app_env                                = string
