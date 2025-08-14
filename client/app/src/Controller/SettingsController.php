@@ -174,7 +174,7 @@ class SettingsController extends AbstractController
                 $this->addFlash('notice', 'Your account details have been updated');
 
                 if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
-                    $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
+                    $redirectRoute = $this->generateUrl('report_confirm_details', ['reportId' => $request->get('rid')]);
                 } elseif ($postUpdateDeputy->isDeputyPA() || $postUpdateDeputy->isDeputyProf()) {
                     $redirectRoute = $this->generateUrl('org_profile_show');
                 } else {

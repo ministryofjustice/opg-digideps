@@ -34,6 +34,7 @@ parameters:
   file_scanner_sslverify: "%env(bool:FILESCANNER_SSLVERIFY)%"
   pa_pro_report_csv_filename: "%env(PA_PRO_REPORT_CSV_FILENAME)%"
   lay_report_csv_filename: "%env(LAY_REPORT_CSV_FILENAME)%"
+  fixtures_enabled: "%env(bool:FIXTURES_ENABLED)%"
 EOF
 
 if [[ "$ENVIRONMENT" == "local" ]]; then

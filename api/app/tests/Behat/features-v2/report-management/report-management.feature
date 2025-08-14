@@ -117,4 +117,6 @@ Feature: Report Management (applies to all admin roles)
         Then the report details should be updated
         When the user I'm interacting with logs in to the frontend of the app
         Then I should see the report sections the admin ticked as incomplete labelled as changes needed
-        Then I should be able to submit my previous report
+        Then I follow the submission process to the declaration page for previous report
+        And I fill in the declaration page and submit the report
+        Then my report should be submitted

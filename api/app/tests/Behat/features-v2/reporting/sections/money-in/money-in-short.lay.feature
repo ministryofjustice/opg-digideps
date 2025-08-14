@@ -85,7 +85,12 @@ Feature: Money in Low Assets - Lay users
         Then I should see the expected money in section summary
         When I follow link back to report overview page
         Then I should see "money-in-short" as "money in"
-        Given I submit the report
+        Given I follow the submission process to the declaration page for current report
+        Then I can go back to the contact details page
+        And I can go back to the report review page
+        And I can go back to the report overview page
+        Then I follow the submission process to the declaration page for current report
+        And I fill in the declaration page and submit the report
         Then my report should be submitted
 
     @lay-pfa-low-not-started

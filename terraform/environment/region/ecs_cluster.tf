@@ -24,6 +24,20 @@ resource "aws_cloudwatch_log_group" "container_insights" {
 # Shared variables for tasks and services in cluster
 
 locals {
+  api_service_app_variables = [
+    {
+      name  = "APP_ENV",
+      value = var.account.app_env
+    }
+  ]
+
+  api_testing_app_variables = [
+    {
+      name  = "APP_ENV",
+      value = "dev"
+    }
+  ]
+
   api_base_variables = [
     {
       name  = "DATABASE_HOSTNAME",
@@ -67,10 +81,6 @@ locals {
     {
       name  = "FRONTEND_HOST",
       value = "https://${var.front_fully_qualified_domain_name}"
-    },
-    {
-      name  = "APP_ENV",
-      value = var.account.app_env
     },
     {
       name  = "JWT_HOST",
@@ -191,6 +201,7 @@ locals {
     { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
     { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
     { name = "WORKSPACE", value = local.environment },
-    { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" }
+    { name = "UPDATE_ADDRESS", value = "digideps+noop@digital.justice.gov.uk" },
+    { name = "FIXTURES_ENABLED", value = tostring(var.account.fixtures_enabled) }
   ]
 }
