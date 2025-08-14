@@ -199,8 +199,8 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->getReportById($reportId);
         /* @var $report Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
-        $this->assertEquals('2025-01-01', $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals('2026-01-02', $report->getEndDate()->format('Y-m-d'));
+        $this->assertEquals('2016-01-01', $report->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2017-01-02', $report->getEndDate()->format('Y-m-d'));
 
         self::fixtures()->flush();
     }
