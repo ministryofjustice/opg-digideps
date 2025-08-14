@@ -37,6 +37,14 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
+     * @Then I should be on the confirm your details page
+     */
+    public function iAmOnReportConfirmDetailsPage(): bool
+    {
+        return $this->iAmOnPage('/report\/\d+\/confirm-details$/');
+    }
+
+    /**
      * @Then I should be on the report declaration page
      */
     public function iAmOnReportDeclarationPage(): bool

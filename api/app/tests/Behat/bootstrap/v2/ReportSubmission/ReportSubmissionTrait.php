@@ -418,6 +418,6 @@ trait ReportSubmissionTrait
         $this->em->persist($document);
         $this->em->flush();
 
-        $this->iSubmitTheReport();
+        $this->iSubmitCurrentOrPreviousTheReport('current');
     }
 }

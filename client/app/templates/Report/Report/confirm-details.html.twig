@@ -1,0 +1,17 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "report-display" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {% include '@App/Report/Report/_contact_details.html.twig' with {
+        'report' : report,
+        'contactDetails': contactDetails,
+        'transDomain': translationDomain
+    } %}
+
+{% endblock %}
