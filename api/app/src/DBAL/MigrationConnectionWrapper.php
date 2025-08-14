@@ -13,9 +13,9 @@ use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Events;
 
-class ConnectionWrapper extends Connection
+class MigrationConnectionWrapper extends Connection
 {
-    public const DATABASE_PASSWORD = 'APP_DB_PASSWORD';
+    public const DATABASE_PASSWORD = 'DATABASE_PASSWORD';
     public const SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
@@ -49,7 +49,7 @@ class ConnectionWrapper extends Connection
         }
 
         $db_password = getenv(self::DATABASE_PASSWORD);
-        $db_user = getenv('APP_DB_USERNAME');
+        $db_user = getenv('DATABASE_USERNAME');
         // Where password isn't in env var, set one (will be set with real secret when it connects).
         $this->params['password'] = (null == $db_password) ? 'initial_pw' : $db_password;
         $this->params['user'] = (null == $db_user) ? 'inital_user' : $db_user;
@@ -82,7 +82,7 @@ class ConnectionWrapper extends Connection
     protected function refreshPassword()
     {
         $secretPrefix = getenv(self::SECRETS_PREFIX);
-        $secretName = sprintf('%sapplication-db-password', $secretPrefix);
+        $secretName = sprintf('%sdatabase-password', $secretPrefix);
 
         // Use the Secrets Manager client to retrieve the secret value
         try {

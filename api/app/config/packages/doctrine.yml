@@ -7,8 +7,8 @@ doctrine:
                 host: "%database_host%"
                 port: "%database_port%"
                 dbname: "%database_name%"
-                user: "%database_user%"
-                password: "%database_password%"
+                user: "%database_application_user%"
+                password: "%database_application_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
                 server_version: 14.18
@@ -21,12 +21,26 @@ doctrine:
                 host: "%database_host%"
                 port: "%database_port%"
                 dbname: "%database_name%"
+                user: "%database_application_user%"
+                password: "%database_application_password%"
+                sslmode: "%database_ssl_mode%"
+                sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
+                server_version: 14.18
+                wrapper_class: App\DBAL\ConnectionWrapper
+                charset: UTF8
+                options:
+                    redis: "@snc_redis.default"
+            migrations:
+                driver: pdo_pgsql
+                host: "%database_host%"
+                port: "%database_port%"
+                dbname: "%database_name%"
                 user: "%database_user%"
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
                 server_version: 14.18
-                wrapper_class: App\DBAL\ConnectionWrapper
+                wrapper_class: App\DBAL\MigrationConnectionWrapper
                 charset: UTF8
                 options:
                     redis: "@snc_redis.default"
@@ -56,6 +70,18 @@ doctrine:
                 connection: ingestwriter
                 mappings:
                     ingestEntities:
+                        type: annotation
+                        dir: "%kernel.project_dir%/src/Entity"
+                        prefix: App\Entity
+                        is_bundle: false
+                filters:
+                    softdeleteable:
+                        class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                        enabled: true
+            migrations:
+                connection: migrations
+                mappings:
+                    commonEntities:
                         type: annotation
                         dir: "%kernel.project_dir%/src/Entity"
                         prefix: App\Entity

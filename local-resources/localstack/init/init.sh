@@ -38,6 +38,7 @@ awslocal ssm put-parameter --name "/local/parameter/document-sync-row-limit" --v
 
 awslocal secretsmanager create-secret --name "local/opg-response-slack-token" --secret-string "IAMAFAKETOKEN" --region eu-west-1
 awslocal secretsmanager create-secret --name "local/database-password" --secret-string "api" --region eu-west-1
+awslocal secretsmanager create-secret --name "local/application-db-password" --secret-string "apiapp" --region eu-west-1
 # 64444001 is client for Lay-OPG102-4 Client 1.
 awslocal secretsmanager create-secret --name "local/smoke-test-variables" --secret-string "{\"admin_user\":\"smoketestddadmin@smoketest.com\",\"admin_password\":\"DigidepsPass1234\",\"client\":\"64444001\",\"deputy_user\":\"lay-opg102-user-1@publicguardian.gov.uk\",\"deputy_password\":\"DigidepsPass1234\"}" --region eu-west-1
 

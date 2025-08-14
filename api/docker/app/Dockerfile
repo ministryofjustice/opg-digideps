@@ -110,12 +110,9 @@ RUN /harden.sh www-data && rm /harden.sh
 USER www-data
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+    && /var/www/scripts/setup_application_sql_query.sh \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && /var/www/scripts/setup_application_sql_query.sh \
-    && echo $APP_DB_PASSWORD \
-    && unset APP_DB_PASSWORD \
-    && echo $APP_DB_PASSWORD \
     && echo 'Image Target: runtime' \
     && php-fpm"]
 
@@ -155,12 +152,9 @@ RUN /harden.sh www-data && rm /harden.sh
 USER www-data
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+    && /var/www/scripts/setup_application_sql_query.sh \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && /var/www/scripts/setup_application_sql_query.sh \
-    && echo $APP_DB_PASSWORD \
-    && unset APP_DB_PASSWORD \
-    && echo $APP_DB_PASSWORD \
     && echo 'Image Target: devtools' \
     && php-fpm"]
 
@@ -171,11 +165,8 @@ FROM devtools-base AS devtools-admin
 USER root
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+    && /var/www/scripts/setup_application_sql_query.sh \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && /var/www/scripts/setup_application_sql_query.sh \
-    && echo $APP_DB_PASSWORD \
-    && unset APP_DB_PASSWORD \
-    && echo $APP_DB_PASSWORD \
     && echo 'Image Target: devtools-admin' \
     && php-fpm"]

@@ -1,10 +1,12 @@
 DO
 $$
 BEGIN
-
+password-string
   IF NOT EXISTS (SELECT * FROM pg_user WHERE usename = 'application') THEN
      CREATE USER "application" WITH LOGIN;
   END IF;
+
+  ALTER USER 'application' WITH PASSWORD 'password-string';
 
   IF EXISTS (SELECT * FROM pg_roles WHERE rolname = 'pg_read_all_data') THEN
      GRANT pg_read_all_data TO "application";

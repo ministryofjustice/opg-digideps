@@ -8,7 +8,7 @@ doctrine_migrations:
         "DoctrineMigrations": "%kernel.project_dir%/src/Migrations"
 
     # Entity manager to use for migrations. This overrides the "connection" setting.
-    em: default
+    em: migrations
 
     storage:
         # Default (SQL table) metadata storage configuration
