@@ -25,9 +25,16 @@ class ExpenseControllerTest extends AbstractTestController
     private static $tokenAdmin;
     private static $tokenDeputy;
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();

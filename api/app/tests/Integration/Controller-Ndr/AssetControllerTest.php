@@ -20,9 +20,11 @@ class AssetControllerTest extends AbstractTestController
     private static $tokenAdmin;
     private static $tokenDeputy;
 
-    /**
-     * clear fixtures.
-     */
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -33,6 +35,8 @@ class AssetControllerTest extends AbstractTestController
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();

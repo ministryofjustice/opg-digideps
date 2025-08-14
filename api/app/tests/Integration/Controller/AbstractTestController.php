@@ -20,37 +20,32 @@ abstract class AbstractTestController extends WebTestCase
     protected static KernelBrowser $frameworkBundleClient;
     protected static string|false $deputySecret;
     protected static string|false $adminSecret;
-    protected ?JWTService $jwtService;
+    protected static ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
     private ?ValidatorInterface $openapiValidator = null;
 
-    /**
-     * Create static client and fixtures.
-     */
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::setupFixtures();
+    }
+
+    public static function setupFixtures(): void
     {
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
-        // TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
         Fixtures::deleteReportsData();
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
-        /** @var EntityManager $em */
-        $em = static::getContainer()->get('em');
-        self::$em = $em;
-        self::$fixtures = new Fixtures($em);
+        self::$em = static::getContainer()->get('em');
+        self::$fixtures = new Fixtures(self::$em);
+        self::$em->clear();
 
-        /** @var JWTService $jwtService */
-        $jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
-        $this->jwtService = $jwtService;
-
-        $em->clear();
-
+        self::$jwtService = static::getContainer()->get(JWTService::class);
         self::$deputySecret = getenv('SECRETS_FRONT_KEY');
         self::$adminSecret = getenv('SECRETS_ADMIN_KEY');
-
-        unset($em);
     }
 
     public static function fixtures(): Fixtures
@@ -72,7 +67,7 @@ abstract class AbstractTestController extends WebTestCase
         }
 
         if ($withValidJwt) {
-            $headers['HTTP_JWT'] = $this->jwtService->createNewJWT();
+            $headers['HTTP_JWT'] = self::$jwtService->createNewJWT();
         }
 
         $rawData = null;
