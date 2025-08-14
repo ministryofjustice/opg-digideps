@@ -40,7 +40,7 @@ doctrine:
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
                 server_version: 14.18
-                wrapper_class: App\DBAL\MigrationConnectionWrapper
+                wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8
                 options:
                     redis: "@snc_redis.default"

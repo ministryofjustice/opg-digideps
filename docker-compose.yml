@@ -10,6 +10,15 @@ services:
     entrypoint: >
       sh -c "npm run build"
 
+  secret-server:
+    image: busybox
+    environment:
+      DB_PASSWORD: testing123
+    command: >
+      sh -c 'printf "HTTP/1.1 200 OK\r\n\r\n%s\r\n" "$$DB_PASSWORD" | nc -l -p 8876'
+    ports:
+      - "8876:8876"
+
   load-balancer:
     container_name: opg-digideps-loadbalancer
     build:
