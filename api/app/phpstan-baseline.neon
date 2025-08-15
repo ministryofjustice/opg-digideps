@@ -1031,11 +1031,6 @@ parameters:
 			path: src/DataFixtures/AbstractDataFixture.php
 
 		-
-			message: "#^Property App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/DataFixtures/AbstractDataFixture.php
-
-		-
 			message: "#^Method App\\\\DataFixtures\\\\AdminUserFixtures\\:\\:addUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/DataFixtures/AdminUserFixtures.php
