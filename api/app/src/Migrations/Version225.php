@@ -21,7 +21,7 @@ final class Version225 extends AbstractMigration
     {
         $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('UPDATE organisation SET name = \'Your Organisation\' WHERE starts_with(name, \'@\')');
+        $this->addSql('UPDATE organisation SET name = \'Your Organisation\' WHERE name NOT LIKE \'%@%\'');
     }
 
     public function down(Schema $schema): void
