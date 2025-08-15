@@ -4,21 +4,14 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
-use App\Entity\Organisation;
-use App\Repository\OrganisationRepository;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version225 extends AbstractMigration implements ContainerAwareInterface
+final class Version225 extends AbstractMigration
 {
-    use ContainerAwareTrait;
-
     public function getDescription(): string
     {
         return 'Change all Org names that do not contain an @ to "Your Organisation"';
@@ -27,25 +20,8 @@ final class Version225 extends AbstractMigration implements ContainerAwareInterf
     public function up(Schema $schema): void
     {
         $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
-    }
 
-    public function postUp(Schema $schema): void
-    {
-        /** @var EntityManager $em */
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
-        /** @var OrganisationRepository $orgRepo */
-        $orgRepo = $em->getRepository(Organisation::class);
-
-        foreach ($orgRepo->getOrgIdAndNames() as $key => $value) {
-            if (false !== strpos($value, '@')) {
-                $org = $orgRepo->find($key);
-                $org->setName('Your Organisation');
-                $em->persist($org);
-            }
-        }
-
-        $em->flush();
+        $this->addSql('UPDATE organisation SET name = \'Your Organisation\' WHERE starts_with(name, \'@\')');
     }
 
     public function down(Schema $schema): void
