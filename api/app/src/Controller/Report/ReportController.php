@@ -80,19 +80,21 @@ class ReportController extends RestController
         $orderStartDate = $preRegistrationRecord[0]->getOrderDate();
 
         if (is_null($orderStartDate)) {
-            throw new UnprocessableEntityHttpException(
-                sprintf(
-                    'OrderDate (made_date) is missing for Preregistration record: %s',
-                    $preRegistrationRecord[0]->getId()
-                )
-            );
+            throw new UnprocessableEntityHttpException(sprintf('OrderDate (made_date) is missing for Preregistration record: %s', $preRegistrationRecord[0]->getId()));
         }
 
-        $endDate = clone $orderStartDate;
+        $today = new \DateTime();
+        // Day and month from order made date combined with current year
+        $amendedOrderStartDate = new \DateTime(date('d M ', $orderStartDate->getTimestamp()).date('Y'));
+        if ($today < $amendedOrderStartDate) {
+            $amendedOrderStartDate->modify('-1 year');
+        }
+
+        $endDate = clone $amendedOrderStartDate;
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, $orderStartDate, $endDate->add(new \DateInterval('P12M1D')));
+        $report = new Report($client, $reportType, $amendedOrderStartDate, $endDate->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D')));
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
