@@ -84,6 +84,7 @@ class ReportController extends RestController
         }
 
         $today = new \DateTime();
+        // Day and month from order made date combined with current year
         $amendedOrderStartDate = new \DateTime(date('d M ', $orderStartDate->getTimestamp()).date('Y'));
         if ($today < $amendedOrderStartDate) {
             $amendedOrderStartDate->modify('-1 year');
