@@ -13,6 +13,7 @@ use App\Tests\Integration\Controller\AbstractTestController;
 class ReportControllerTest extends AbstractTestController
 {
     private static $preRegistration1;
+    private static $preRegistration3;
     private static $deputy1;
     private static $client1;
     private static $report1;
@@ -25,6 +26,7 @@ class ReportControllerTest extends AbstractTestController
     private static $tokenPa;
     private static $tokenPaAdmin;
     private static $tokenPaTeamMember;
+    private static $client3;
 
     // pa
     private static $pa1;
@@ -55,7 +57,12 @@ class ReportControllerTest extends AbstractTestController
             self::$deputy1,
             ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
         );
+        self::$client3 = self::fixtures()->createClient(
+            self::$deputy1,
+            ['setFirstname' => 'c3', 'setLastname' => 'l3', 'setCaseNumber' => '303030303']
+        );
         self::$deputy1->addClient(self::$client1);
+        self::$deputy1->addClient(self::$client3);
         self::fixtures()->persist(self::$deputy1);
 
         self::$preRegistration1 = new PreRegistration([
@@ -71,7 +78,23 @@ class ReportControllerTest extends AbstractTestController
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
         ]);
-        self::$fixtures->persist(self::$preRegistration1);
+
+        // New registration - no old submitted reports therefore report will start from current year
+        self::$preRegistration3 = new PreRegistration([
+            'Case' => self::$client3->getCaseNumber(),
+            'ClientSurname' => self::$client3->getLastName(),
+            'DeputyUid' => (string) self::$deputy1->getDeputyUid(),
+            'DeputyFirstname' => self::$deputy1->getFirstname(),
+            'DeputySurname' => self::$deputy1->getLastname(),
+            'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
+            'ReportType' => 'OPG102',
+            'MadeDate' => (new \DateTime('2017-01-01'))->format('Y-m-d'),
+            'OrderType' => 'pfa',
+            'CoDeputy' => false,
+            'Hybrid' => 'SINGLE',
+        ]);
+
+        self::$fixtures->persist(self::$preRegistration1, self::$preRegistration3);
 
         self::$clientEdit = self::fixtures()->createClient(
             self::$deputy1,
@@ -189,7 +212,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'client' => ['id' => self::$client1->getId()],
+                'client' => ['id' => self::$client3->getId()],
             ],
         ])['data']['report'];
 
@@ -198,9 +221,11 @@ class ReportControllerTest extends AbstractTestController
         // assert creation
         $report = self::fixtures()->getReportById($reportId);
         /* @var $report Report */
-        $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
-        $this->assertEquals('2016-01-01', $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals('2017-01-02', $report->getEndDate()->format('Y-m-d'));
+        $this->assertEquals(self::$client3->getId(), $report->getClient()->getId());
+
+        $currentYear = date('Y');
+        $this->assertEquals($currentYear.'-01-01', $report->getStartDate()->format('Y-m-d'));
+        $this->assertEquals($currentYear.'-12-31', $report->getEndDate()->format('Y-m-d'));
 
         self::fixtures()->flush();
     }
