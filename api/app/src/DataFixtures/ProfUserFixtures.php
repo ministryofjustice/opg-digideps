@@ -11,6 +11,7 @@ use App\Factory\OrganisationFactory;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ProfUserFixtures extends AbstractDataFixture
 {
@@ -143,10 +144,12 @@ class ProfUserFixtures extends AbstractDataFixture
     ];
 
     public function __construct(
+        KernelInterface $kernel,
         private readonly OrganisationRepository $orgRepository,
         private readonly OrganisationFactory $orgFactory,
-        private readonly DeputyRepository $deputyRepository
+        private readonly DeputyRepository $deputyRepository,
     ) {
+        parent::__construct($kernel);
     }
 
     public function doLoad(ObjectManager $manager)
