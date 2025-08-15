@@ -75,15 +75,6 @@ services:
         resource: "../src/v2/Registration/Controller"
         tags: [controller.service_arguments]
 
-    Doctrine\Migrations\Version\DbalMigrationFactory: ~
-    App\Migrations\Factory\MigrationFactoryDecorator:
-        decorates: Doctrine\Migrations\Version\DbalMigrationFactory
-        arguments:
-            [
-                '@App\Migrations\Factory\MigrationFactoryDecorator.inner',
-                "@service_container",
-            ]
-
     monolog.processor.add_request_id:
         class: App\Service\RequestIdLoggerProcessor
         arguments: ["@service_container"]
