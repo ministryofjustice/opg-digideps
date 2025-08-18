@@ -75,7 +75,8 @@ class ConnectionWrapper extends Connection
     protected function refreshPassword()
     {
         $secretPrefix = getenv(self::SECRETS_PREFIX);
-        $secretName = sprintf('%sapplication-db-password', $secretPrefix);
+
+        $secretSuffix = 'application' === $this->params['user'] ? 'application-db-password' : 'database-password';
 
         // Use the Secrets Manager client to retrieve the secret value
         try {
