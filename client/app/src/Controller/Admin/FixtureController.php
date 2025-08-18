@@ -77,10 +77,15 @@ class FixtureController extends AbstractController
      */
     public function layCourtOrdersAction(Request $request)
     {
+        file_put_contents('php://stderr', print_r(' LAY_FIXTURES ', true));
+        file_put_contents('php://stderr', print_r($this->symfonyEnvironment, true));
+        file_put_contents('php://stderr', print_r($this->fixturesEnabled, true));
+        file_put_contents('php://stderr', print_r(' LAY_FIXTURES_END ', true));
         if (
             'prod' === $this->symfonyEnvironment
             && !$this->fixturesEnabled
         ) {
+            file_put_contents('php://stderr', print_r(' LAY_FIXTURES_EXCEPTION ', true));
             throw $this->createNotFoundException();
         }
 
