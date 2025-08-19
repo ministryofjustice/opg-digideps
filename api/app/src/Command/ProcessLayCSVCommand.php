@@ -202,7 +202,8 @@ class ProcessLayCSVCommand extends Command
 
             // ensure that all active clients have at least one report associated with them,
             // to fix issues caused by partially-registered users (see DDLS-911)
-            $this->layRegistrationService->addMissingReports();
+            $numReportsAdded = $this->layRegistrationService->addMissingReports();
+            $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
 
             return true;
         }
