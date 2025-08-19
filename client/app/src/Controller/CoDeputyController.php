@@ -33,7 +33,7 @@ class CoDeputyController extends AbstractController
         private readonly RestClient $restClient,
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
-    ) {
+    ) {}
 
     /**
      * For co-deputies to verify their details and complete registration.

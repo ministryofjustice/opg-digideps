@@ -276,16 +276,6 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects App\\\\Entity\\\\Ndr\\\\date, DateTime given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects App\\\\Entity\\\\Ndr\\\\date, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 2
 			path: src/Controller/NoteController.php
@@ -466,97 +456,12 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateEntity\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns App\\\\Entity\\\\Report\\\\MentalCapacity\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyReceivedOnClientsBehalfController\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyReceivedOnClientsBehalfController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Query\\\\Filter\\\\SQLFilter\\:\\:disableForEntity\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:addMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:addMoneyTransactionAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:deleteMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:deleteMoneyTransactionAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:deleteMoneyTransactionAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:getSoftDeletedMoneyTransactionItems\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:getSoftDeletedMoneyTransactionItems\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:softDeleteMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:softDeleteMoneyTransactionAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:updateMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:updateMoneyTransactionAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionController\\:\\:updateMoneyTransactionAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransactionController.php
 
@@ -576,86 +481,6 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:addMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:addMoneyTransactionAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:deleteMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:deleteMoneyTransactionAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:deleteMoneyTransactionAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:fillData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:getOneById\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:getOneById\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:getSoftDeletedMoneyTransactionShortItems\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:getSoftDeletedMoneyTransactionShortItems\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:softDeleteMoneyTransactionShortAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:softDeleteMoneyTransactionShortAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:updateMoneyTransactionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:updateMoneyTransactionAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:updateMoneyTransactionAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransactionShortController.php
@@ -671,94 +496,9 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:addMoneyTransferAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:addMoneyTransferAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:deleteMoneyTransferAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:deleteMoneyTransferAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:deleteMoneyTransferAction\\(\\) has parameter \\$transferId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:editMoneyTransferAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:editMoneyTransferAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:editMoneyTransferAction\\(\\) has parameter \\$transferId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:fillEntity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:addAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:deleteProfDeputyPreviousCost\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:deleteProfDeputyPreviousCost\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:updateAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:updateEntity\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns App\\\\Entity\\\\Report\\\\ProfDeputyPreviousCost\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
 			message: "#^Parameter \\#1 \\$profDeputyCostsHasPrevious of method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) expects string, null given\\.$#"
@@ -769,46 +509,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:addAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:deleteProfServiceFee\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:deleteProfServiceFee\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:updateAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:updateEntity\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns App\\\\Entity\\\\Report\\\\ProfServiceFee\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
 
 		-
 			message: "#^Parameter \\#1 \\$amountReceived of method App\\\\Entity\\\\Report\\\\ProfServiceFee\\:\\:setAmountReceived\\(\\) expects App\\\\Entity\\\\Report\\\\decimal, null given\\.$#"
@@ -846,37 +546,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:getChecklist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:getChecklist\\(\\) has parameter \\$report_id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:getReportCountsByStatus\\(\\) has parameter \\$orgIdsOrUserId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:getResponseByDeterminant\\(\\) has parameter \\$orgIdsOrUserId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:insertChecklist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:insertChecklist\\(\\) has parameter \\$report_id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -901,42 +571,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:submit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:submit\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:submitDocuments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:submitDocuments\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:unsubmit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:unsubmit\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -946,22 +581,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:updateChecklist\\(\\) has parameter \\$report_id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:updateReportStatusCache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:upsertChecklist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:upsertChecklist\\(\\) has parameter \\$report_id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -1056,67 +676,7 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Instantiated class App\\\\Controller\\\\Report\\\\UnauthorisedException not found\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:getAll\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:getOld\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:getOneById\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:queueDocuments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:queueDocuments\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:setUndownloadable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:setUndownloadable\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:update\\(\\) has parameter \\$reportSubmissionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:updateUuid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportSubmissionController\\:\\:updateUuid\\(\\) has parameter \\$reportSubmissionId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
@@ -1176,52 +736,7 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: "#^Throwing object of an unknown class App\\\\Controller\\\\Report\\\\UnauthorisedException\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\VisitsCare\\>\\:\\:findByReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:deleteVisitsCare\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:deleteVisitsCare\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:findByReportIdAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:getOneById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateInfo\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns App\\\\Entity\\\\Report\\\\VisitsCare\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
 
@@ -2971,11 +2486,6 @@ parameters:
 			path: src/Entity/Ndr/VisitsCare.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:getWhenWasCarePlanLastReviewed\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\date\\.$#"
-			count: 1
-			path: src/Entity/Ndr/VisitsCare.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:getWhoIsDoingTheCaring\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\type\\.$#"
 			count: 1
 			path: src/Entity/Ndr/VisitsCare.php
@@ -3006,11 +2516,6 @@ parameters:
 			path: src/Entity/Ndr/VisitsCare.php
 
 		-
-			message: "#^Parameter \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) has invalid type App\\\\Entity\\\\Ndr\\\\date\\.$#"
-			count: 1
-			path: src/Entity/Ndr/VisitsCare.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:\\$doesClientHaveACarePlan \\(App\\\\Entity\\\\Ndr\\\\type\\) does not accept string\\.$#"
 			count: 1
 			path: src/Entity/Ndr/VisitsCare.php
@@ -3022,11 +2527,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Ndr/VisitsCare.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed has unknown class App\\\\Entity\\\\Ndr\\\\date as its type\\.$#"
 			count: 1
 			path: src/Entity/Ndr/VisitsCare.php
 
@@ -8281,33 +7781,13 @@ parameters:
 			path: src/v2/Assembler/UserAssembler.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\DeputyController\\:\\:getByIdAction\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Attribute class Sensio\\\\Bundle\\\\FrameworkExtraBundle\\\\Configuration\\\\Security does not exist\\.$#"
 			count: 1
-			path: src/v2/Controller/DeputyController.php
+			path: src/v2/Controller/CourtOrderController.php
 
 		-
 			message: "#^Cannot call method getOrganisations\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
 			count: 2
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getMemberById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getMembers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:getUsers\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/v2/Controller/OrganisationController.php
 
 		-
@@ -8322,11 +7802,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Controller/OrganisationController.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Controller\\\\OrganisationController\\:\\:\\$verboseLogger is never read, only written\\.$#"
 			count: 1
 			path: src/v2/Controller/OrganisationController.php
 
@@ -8551,32 +8026,7 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:activateOrg\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\JsonResponse but return statement is missing\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:completeReportSectionsAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createAdmin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClient\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClientAndAttachToDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClientAndAttachToOrgs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -8601,37 +8051,12 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createNdr\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createOrgAndAttachParticipants\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createPreRegistration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createReport\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:deleteUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:getUserIDByEmail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -9016,11 +8441,6 @@ parameters:
 			path: src/v2/Registration/Controller/LayDeputyshipUploadController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Controller\\\\OrgDeputyshipController\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Controller/OrgDeputyshipController.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of method App\\\\v2\\\\Registration\\\\DeputyshipProcessing\\\\CSVDeputyshipProcessing\\:\\:orgProcessing\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/v2/Registration/Controller/OrgDeputyshipController.php
@@ -9353,26 +8773,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Tools\\\\Controller\\\\ToolsController\\:\\:\\$reportRepository is never read, only written\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Property App\\\\v2\\\\Tools\\\\Controller\\\\ToolsController\\:\\:\\$userRepository is never read, only written\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Variable \\$firstClient in PHPDoc tag @var does not exist\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Variable \\$secondClient in PHPDoc tag @var does not exist\\.$#"
-			count: 1
 			path: src/v2/Tools/Controller/ToolsController.php
 
 		-
