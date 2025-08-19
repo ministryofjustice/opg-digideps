@@ -24,8 +24,10 @@ class LayRegistrationService
     /**
      * Find all clients with an entry in the pre_registration table but without a report.
      * Add a report to each of those clients using data from the pre_registration table.
+     *
+     * @return int number of reports which were added to clients
      */
-    public function addMissingReports(): void
+    public function addMissingReports(): int
     {
         $qb = $this->entityManager->createQueryBuilder();
 
@@ -78,5 +80,7 @@ class LayRegistrationService
 
         $this->entityManager->flush();
         $this->entityManager->clear();
+
+        return $numItemsPersisted;
     }
 }
