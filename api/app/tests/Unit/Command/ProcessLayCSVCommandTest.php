@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Command;
 use App\Command\ProcessLayCSVCommand;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
+use App\Service\LayRegistrationService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
@@ -30,6 +31,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
     private LoggerInterface|ObjectProphecy $logger;
     private ObjectProphecy|CSVDeputyshipProcessing $csvProcessing;
     private ObjectProphecy|PreRegistrationRepository $preReg;
+    private ObjectProphecy|LayRegistrationService $layRegistrationService;
     private MockInterface&CsvToArray $csvArray;
     private CommandTester $commandTester;
 
@@ -52,6 +54,7 @@ class ProcessLayCSVCommandTest extends KernelTestCase
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
+        $this->layRegistrationService = self::prophesize(LayRegistrationService::class);
 
         $this->csvArray = Mock::mock(CsvToArray::class);
 
@@ -60,7 +63,8 @@ class ProcessLayCSVCommandTest extends KernelTestCase
             $this->params->reveal(),
             $this->logger->reveal(),
             $this->csvProcessing->reveal(),
-            $this->preReg->reveal()
+            $this->preReg->reveal(),
+            $this->layRegistrationService->reveal()
         );
 
         $app->add($setUp);
@@ -123,7 +127,6 @@ class ProcessLayCSVCommandTest extends KernelTestCase
     {
         // Required so we can trigger missing column exception with bad file
         copy(dirname(dirname(__DIR__)).'/csv/layDeputyReport-bad.csv', '/tmp/layDeputyReport.csv');
-        $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
 
         $this->s3->getObject(Argument::any())
             ->shouldBeCalled()
