@@ -15,7 +15,6 @@ use Doctrine\DBAL\Events;
 
 class ConnectionWrapper extends Connection
 {
-    public const DATABASE_PASSWORD = 'DATABASE_PASSWORD';
     public const SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
@@ -48,10 +47,6 @@ class ConnectionWrapper extends Connection
             return false;
         }
 
-        $db_password = getenv(self::DATABASE_PASSWORD);
-        // Where password isn't in env var, set one (will be set with real secret when it connects).
-        $this->params['password'] = (null == $db_password) ? 'initial_pw' : $db_password;
-
         try {
             $this->_conn = $this->_driver->connect($this->params);
         } catch (Driver\Exception $e) {
@@ -80,7 +75,8 @@ class ConnectionWrapper extends Connection
     protected function refreshPassword()
     {
         $secretPrefix = getenv(self::SECRETS_PREFIX);
-        $secretName = sprintf('%sdatabase-password', $secretPrefix);
+
+        $secretSuffix = 'application' === $this->params['user'] ? 'application-db-password' : 'database-password';
 
         // Use the Secrets Manager client to retrieve the secret value
         try {
@@ -94,7 +90,6 @@ class ConnectionWrapper extends Connection
         // Subsequent connections will use new value stored in redis
         $secretValue = $result['SecretString'];
 
-        putenv(self::DATABASE_PASSWORD.'='.$secretValue);
         $this->params['password'] = $secretValue;
     }
 

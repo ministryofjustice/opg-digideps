@@ -40,6 +40,10 @@ locals {
         {
           name      = "SECRET",
           valueFrom = data.aws_secretsmanager_secret.api_secret.arn
+        },
+        {
+          name      = "APP_DB_PASSWORD",
+          valueFrom = data.aws_secretsmanager_secret.application_db_password.arn
         }
       ],
       environment = concat(local.api_base_variables, local.api_service_variables, local.api_testing_app_variables)

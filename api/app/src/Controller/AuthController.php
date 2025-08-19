@@ -26,7 +26,7 @@ class AuthController extends RestController
         private readonly string $workspace,
         EntityManagerInterface $em,
     ) {
-       parent::__construct($em);
+        parent::__construct($em);
     }
 
     /**
