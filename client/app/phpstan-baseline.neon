@@ -13131,127 +13131,12 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: "#^Cannot access property \\$vars on mixed\\.$#"
-			count: 2
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:getName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroup\\(\\) has parameter \\$elementName with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroup\\(\\) has parameter \\$transIndex with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroup\\(\\) has parameter \\$vars with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroupNew\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroupNew\\(\\) has parameter \\$elementName with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroupNew\\(\\) has parameter \\$transIndex with no type specified\\.$#"
 			count: 1
 			path: src/Twig/FormFieldsExtension.php
 
 		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroupNew\\(\\) has parameter \\$vars with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxInput\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormDropDown\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormErrors\\(\\) has parameter \\$element with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormErrorsList\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormInput\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormKnownDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormKnownDate\\(\\) has parameter \\$element with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormKnownDate\\(\\) has parameter \\$elementName with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormKnownDate\\(\\) has parameter \\$transIndex with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormSortCode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormSortCode\\(\\) has parameter \\$element with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormSortCode\\(\\) has parameter \\$elementName with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormSortCode\\(\\) has parameter \\$transIndex with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormSubmit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Twig/FormFieldsExtension.php
 
@@ -13271,18 +13156,8 @@ parameters:
 			path: src/Twig/FormFieldsExtension.php
 
 		-
-			message: "#^Parameter \\#1 \\$element of method App\\\\Twig\\\\FormFieldsExtension\\:\\:getFormComponentTwigVariables\\(\\) expects Symfony\\\\Component\\\\Form\\\\FormView, mixed given\\.$#"
-			count: 3
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: "#^Parameter \\#3 \\$gaTrackingLabel of method App\\\\Twig\\\\FormFieldsExtension\\:\\:addGaAttrsToElementAttrs\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Parameter \\#4 \\$transIndex of method App\\\\Twig\\\\FormFieldsExtension\\:\\:getFormComponentTwigVariables\\(\\) expects string\\|null, int\\|null given\\.$#"
-			count: 3
 			path: src/Twig/FormFieldsExtension.php
 
 		-

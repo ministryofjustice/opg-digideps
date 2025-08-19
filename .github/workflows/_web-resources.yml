@@ -31,18 +31,17 @@ jobs:
         run: |
           directory="client/resources/public/assets"
           if [ -d "$directory" ] && [ "$(ls -A "$directory")" ]; then
-            echo "directory_exists=$(echo true)" >> $GITHUB_OUTPUT
-          else
-            echo "directory_exists=$(echo false)" >> $GITHUB_OUTPUT
+            rm -Rf client/resources/public/assets
+            mkdir -p client/resources/public/assets
           fi
       - name: Build assets
-        if: steps.check-directory.outputs.directory_exists == 'false'
         run: |
           # Install NPM dependencies
           npm install
           npm run lint
           npm audit --production
-          #Build assets
+
+          # build assets
           NODE_ENV=production npm run build
         working-directory: client/resources
       - name: archive dist
