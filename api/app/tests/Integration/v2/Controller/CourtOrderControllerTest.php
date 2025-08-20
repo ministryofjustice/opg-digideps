@@ -5,23 +5,33 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Controller;
 
 use App\Entity\Deputy;
+use App\Entity\PreRegistration;
 use App\Entity\User;
-use App\Service\JWT\JWTService;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use App\Tests\Integration\Controller\AbstractTestController;
 use App\Tests\Integration\Controller\JsonHttpTestClient;
-use App\Tests\Integration\Fixtures;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CourtOrderControllerTest extends WebTestCase
+class CourtOrderControllerTest extends AbstractTestController
 {
     private static JsonHttpTestClient $client;
-    private static Fixtures $fixtures;
-    private static EntityManager $em;
     private static FixtureHelper $fixtureHelper;
     private static ReportTestHelper $reportTestHelper;
-    private static string $deputySecret;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $container = static::getContainer();
+
+        /** @var FixtureHelper $fixtureHelper */
+        $fixtureHelper = $container->get(FixtureHelper::class);
+        self::$fixtureHelper = $fixtureHelper;
+
+        self::$reportTestHelper = new ReportTestHelper();
+
+        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
+    }
 
     private function createDeputyForUser(User $user): Deputy
     {
@@ -39,28 +49,25 @@ class CourtOrderControllerTest extends WebTestCase
         return $deputy;
     }
 
-    public static function setUpBeforeClass(): void
+    // returns User $user (user for $deputy), CourtOrder $courtOrder (associated with $deputy), Deputy $deputy
+    private function addUserAndCourtOrderAndDeputy($emailAddress): array
     {
-        $browser = static::createClient(['environment' => 'test', 'debug' => false]);
-        $container = static::getContainer();
+        // add a court order, and make the user a deputy on it
+        $courtOrder = self::$fixtures->createCourtOrder(substr(''.hexdec(uniqid()), -8), 'pfa', 'ACTIVE');
 
-        /** @var JWTService $jwtService */
-        $jwtService = $container->get('App\Service\JWT\JWTService');
-        self::$client = new JsonHttpTestClient($browser, $jwtService);
+        $user = self::$fixtures->createUser([
+            'setEmail' => $emailAddress,
+            'setRoleName' => User::ROLE_LAY_DEPUTY,
+        ]);
+        self::$fixtureHelper->setPassword($user);
 
-        /** @var EntityManager $em */
-        $em = $container->get('em');
+        // associate deputy with court order
+        $deputy = $this->createDeputyForUser($user);
+        $deputy->associateWithCourtOrder($courtOrder);
 
-        self::$em = $em;
-        self::$fixtures = new Fixtures(self::$em);
+        self::$fixtures->persist($courtOrder, $user, $deputy)->flush();
 
-        /** @var FixtureHelper $fixtureHelper */
-        $fixtureHelper = $container->get(FixtureHelper::class);
-        self::$fixtureHelper = $fixtureHelper;
-
-        self::$reportTestHelper = new ReportTestHelper();
-
-        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
+        return [$user, $courtOrder];
     }
 
     public function testGetByUidActionNoAuthFail()
@@ -85,8 +92,6 @@ class CourtOrderControllerTest extends WebTestCase
             '/v2/courtorder/9292777777',
             ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
-
-        self::$fixtures->remove($user)->flush()->clear();
     }
 
     public function testGetByUidActionUserIsNotADeputyFail(): void
@@ -110,8 +115,6 @@ class CourtOrderControllerTest extends WebTestCase
             '/v2/courtorder/92954529292',
             ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
-
-        self::$fixtures->remove($user)->flush()->clear();
     }
 
     public function testGetByUidActionUserIsNotADeputyOnCourtOrderFail(): void
@@ -127,7 +130,7 @@ class CourtOrderControllerTest extends WebTestCase
             'setRoleName' => User::ROLE_LAY_DEPUTY,
         ]);
         self::$fixtureHelper->setPassword($user);
-        $deputy = $this->createDeputyForUser($user);
+        $this->createDeputyForUser($user);
 
         // log in, and fetch court order which exists but for which the logged-in user is not a deputy
         $token = self::$client->login('fail-not-deputy-on-court-order-test@opg.gov.uk', 'DigidepsPass1234', self::$deputySecret);
@@ -137,28 +140,11 @@ class CourtOrderControllerTest extends WebTestCase
             '/v2/courtorder/9292929292',
             ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
-
-        self::$fixtures->remove($user, $deputy)->flush()->clear();
     }
 
     public function testGetByUidActionSuccess(): void
     {
-        // add a court order, and make the user a deputy on it
-        $courtOrder = self::$fixtures->createCourtOrder('7747728317', 'pfa', 'ACTIVE');
-        self::$fixtures->persist($courtOrder);
-        self::$fixtures->flush();
-
-        $user = self::$fixtures->createUser([
-            'setEmail' => 'successful-court-order-test@opg.gov.uk',
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-        ]);
-        self::$fixtureHelper->setPassword($user);
-
-        // associate deputy with court order
-        $deputy = $this->createDeputyForUser($user);
-        $deputy->associateWithCourtOrder($courtOrder);
-
-        self::$fixtures->persist($deputy)->flush();
+        [$user, $courtOrder] = $this->addUserAndCourtOrderAndDeputy('successful-court-order-test@opg.gov.uk');
 
         // client
         $client = self::$fixtures->createClient($user);
@@ -204,8 +190,78 @@ class CourtOrderControllerTest extends WebTestCase
                 $this->assertNull($report['un_submit_date']);
             }
         }
+    }
 
-        // clean up
-        self::$fixtures->remove($user, $deputy, $courtOrder)->flush()->clear();
+    public function testInviteDeputyActionNoAuthFail()
+    {
+        $courtOrderUid = '7747628917';
+
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        self::$fixtures->persist($courtOrder)->flush();
+
+        self::$client->assertEndpointNeedsAuth('POST', "/v2/courtorder/$courtOrderUid/lay-deputy-invite");
+    }
+
+    public function testInviteLayDeputyActionInvalidPayloadFail()
+    {
+        [$user, $courtOrder] = $this->addUserAndCourtOrderAndDeputy('court-order-invite-deputy-payload-test@opg.gov.uk');
+
+        // login to get the token for API calls
+        $token = self::$client->login($user->getEmail(), 'DigidepsPass1234', self::$deputySecret);
+
+        // make the API call to associate a new co-deputy with the court order
+        $postData = [
+            'firstname' => 'Lobo',
+            'role_name' => User::ROLE_LAY_DEPUTY,
+        ];
+
+        $responseJson = self::$client->assertJsonRequest(
+            'POST',
+            "/v2/courtorder/{$courtOrder->getCourtOrderUid()}/lay-deputy-invite",
+            ['AuthToken' => $token, 'mustFail' => true, 'data' => $postData]
+        );
+
+        self::assertStringContainsString('invalid invitee details', $responseJson['message']);
+    }
+
+    public function testInviteLayDeputyActionSuccess()
+    {
+        // $deputy has access to court order; $user is the User entity for $invitingDeputy
+        [$user, $courtOrder] = $this->addUserAndCourtOrderAndDeputy('court-order-invite-deputy-test@opg.gov.uk');
+
+        // client
+        $client = self::$fixtures->createClient(settersMap: ['setCaseNumber' => '1122334455']);
+        $courtOrder->setClient($client);
+        self::$fixtures->persist($courtOrder)->flush();
+
+        // add pre-reg record for deputy to be invited
+        $invitedDeputy = new PreRegistration([
+            'Case' => $client->getCaseNumber(),
+            'DeputyFirstname' => 'Amz',
+            'DeputySurname' => 'Sloroz',
+            'DeputyUid' => '123415235',
+        ]);
+        self::$fixtures->persist($invitedDeputy)->flush();
+
+        // login to get the token for API calls
+        $token = self::$client->login($user->getEmail(), 'DigidepsPass1234', self::$deputySecret);
+
+        // make the API call to associate a new co-deputy with the court order
+        $postData = [
+            'email' => 'successful-court-order-invite-test@opg.gov.uk',
+            'firstname' => $invitedDeputy->getDeputyFirstname(),
+            'lastname' => $invitedDeputy->getDeputySurname(),
+            'role_name' => User::ROLE_LAY_DEPUTY,
+        ];
+
+        $responseJson = self::$client->assertJsonRequest(
+            'POST',
+            "/v2/courtorder/{$courtOrder->getCourtOrderUid()}/lay-deputy-invite",
+            ['AuthToken' => $token, 'mustSucceed' => true, 'data' => $postData]
+        );
+
+        // assertions
+        self::assertEquals(true, $responseJson['success']);
+        self::assertMatchesRegularExpression('/[0-9a-z]{40}/', $responseJson['data']['registrationToken']);
     }
 }
