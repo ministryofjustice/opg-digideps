@@ -32,7 +32,7 @@ RUN composer dump-autoload --optimize
 ##############################
 FROM php:8.3.23-fpm-alpine3.22 AS application
 
-ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
+ARG LOCAL_RESOURCES="false"
 
 WORKDIR /var/www
 EXPOSE 80
