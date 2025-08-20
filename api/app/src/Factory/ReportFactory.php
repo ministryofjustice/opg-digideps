@@ -25,7 +25,8 @@ class ReportFactory
         $determinedReportType = PreRegistration::getReportTypeByOrderType($typeOfReport, $orderType, $realm);
 
         $reportStartDate = clone $orderDate;
-        $reportEndDate = clone $reportStartDate;
+
+        $reportEndDate = clone $orderDate;
         $reportEndDate->add(new \DateInterval('P364D'));
 
         return new Report(
