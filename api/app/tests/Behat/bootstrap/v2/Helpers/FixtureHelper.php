@@ -251,9 +251,12 @@ class FixtureHelper
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
         if (is_null($deputyObject)) {
-            $populateDeputyTable = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
-            $this->em->persist($populateDeputyTable);
+            $deputyObject = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $this->em->persist($deputyObject);
         }
+
+        $deputyObject->setUser($deputy);
+        $this->em->persist($deputyObject);
 
         $client->addReport($report);
         $report->setClient($client);
@@ -277,6 +280,8 @@ class FixtureHelper
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
+
+        $this->em->flush();
     }
 
     private function addReportsToClient(
@@ -1373,9 +1378,22 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA', string $clientLastname = 'Smith'): PreRegistration
-    {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientLastName' => $clientLastname];
+    public function createPreRegistration(
+        string $reportType = 'OPG102',
+        string $orderType = 'PFA',
+        string $clientLastname = 'Smith',
+        ?string $caseNumber = null,
+    ): PreRegistration {
+        if (is_null($caseNumber)) {
+            $caseNumber = ''.random_int(10000000, 99999999);
+        }
+
+        $data = [
+            'reportType' => $reportType,
+            'orderType' => $orderType,
+            'clientLastName' => $clientLastname,
+            'caseNumber' => $caseNumber,
+        ];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);

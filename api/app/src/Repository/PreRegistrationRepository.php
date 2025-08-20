@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\PreRegistration;
+use App\v2\DTO\InviteeDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -118,5 +120,34 @@ class PreRegistrationRepository extends ServiceEntityRepository
         $stmt = $conn->executeQuery($newMultiClentsQuery);
 
         return $stmt->fetchAllAssociative();
+    }
+
+    /**
+     * Find a pre-reg record which matches firstname, lastname, and case number.
+     * Uses case-insensitive matching.
+     *
+     * @return ?PreRegistration null if no record or non-unique record found
+     */
+    public function findInvitedLayDeputy(InviteeDto $inviteeDTO, string $caseNumber): ?PreRegistration
+    {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('p')
+            ->from(PreRegistration::class, 'p')
+            ->where('LOWER(TRIM(p.deputyFirstname)) = :deputyFirstname')
+            ->andWhere('LOWER(TRIM(p.deputySurname)) = :deputyLastname')
+            ->andWhere('LOWER(TRIM(p.caseNumber)) = :caseNumber')
+            ->setParameter('deputyFirstname', strtolower(trim($inviteeDTO->firstname)))
+            ->setParameter('deputyLastname', strtolower(trim($inviteeDTO->lastname)))
+            ->setParameter('caseNumber', strtolower(trim($caseNumber)))
+            ->getQuery();
+
+        try {
+            /** @var ?PreRegistration $result */
+            $result = $query->getOneOrNullResult();
+        } catch (NonUniqueResultException) {
+            return null;
+        }
+
+        return $result;
     }
 }
