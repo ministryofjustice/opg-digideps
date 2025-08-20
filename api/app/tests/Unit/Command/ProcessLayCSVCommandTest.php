@@ -98,6 +98,10 @@ class ProcessLayCSVCommandTest extends KernelTestCase
                 'details' => [],
             ]);
 
+        $this->layRegistrationService->addMissingReports()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $this->commandTester->assertCommandIsSuccessful();
         $output = $this->commandTester->getDisplay();
