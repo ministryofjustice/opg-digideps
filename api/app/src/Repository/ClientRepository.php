@@ -248,4 +248,24 @@ class ClientRepository extends ServiceEntityRepository
 
         return $mapping;
     }
+
+    /**
+     * Find all clients that do not have a report.
+     *
+     * @return Client[] of case numbers for clients without a report
+     */
+    public function findClientsWithoutAReport(): array
+    {
+        /** @var Client[] $caseNumbersWithoutAReport */
+        $caseNumbersWithoutAReport = $this->_em->createQueryBuilder()
+            ->select('c')
+            ->from(Client::class, 'c')
+            ->where('c.archivedAt IS NULL')
+            ->andWhere('c.deletedAt IS NULL')
+            ->andWhere('c.reports IS EMPTY')
+            ->getQuery()
+            ->getResult();
+
+        return $caseNumbersWithoutAReport;
+    }
 }
