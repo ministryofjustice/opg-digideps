@@ -27,7 +27,7 @@ class LayRegistrationService
      *
      * @return int number of reports which were added to clients
      */
-    public function addMissingReports(): int
+    public function addMissingReports(int $batchSize = 50): int
     {
         $qb = $this->entityManager->createQueryBuilder();
 
@@ -49,7 +49,6 @@ class LayRegistrationService
             ->getArrayResult();
 
         // add reports to clients without them
-        $batchSize = 50;
         $numItemsPersisted = 0;
 
         foreach ($missingReports as $missingReport) {
