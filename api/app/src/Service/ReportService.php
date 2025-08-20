@@ -18,6 +18,7 @@ use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
+use App\Factory\ReportFactory;
 use App\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -28,6 +29,7 @@ class ReportService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
+        private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
     ) {
         /** @var PreRegistrationRepository $preRegistrationRepository */
@@ -418,5 +420,53 @@ class ReportService
         $endOfToday = new \DateTime('today midnight');
 
         return $endDate < $endOfToday;
+    }
+
+    /**
+     * Work out which reports are required for the client by looking up related rows in the pre-reg table.
+     * Note that this only creates the report objects, but doesn't persist them.
+     * If a client is dual, we create both reports; if hybrid, we only create one.
+     *
+     * @return Report[]
+     */
+    public function createRequiredReports(Client $client): array
+    {
+        $preRegs = $this->preRegistrationRepository->findByCaseNumber($client->getCaseNumber());
+
+        if (count($preRegs) < 1) {
+            return [];
+        }
+
+        $pfa = null;
+        $hw = null;
+        $required = [];
+
+        foreach ($preRegs as $preReg) {
+            $report = $this->reportFactory->create(
+                $client,
+                $preReg->getTypeOfReport(),
+                $preReg->getOrderType(),
+                $preReg->getOrderDate(),
+            );
+
+            // if the report created for this pre-reg row is a hybrid, we just want this report and no others
+            if ($report->isHybrid()) {
+                return [$report];
+            }
+
+            // screen out duplicates if there are multiple rows for pfa and/or hw reports for this client,
+            // so we get 2 reports max. (one pfa, one hw)
+            if (is_null($pfa) && $report->isPfa()) {
+                $pfa = $report;
+                $required[] = $report;
+            }
+
+            if (is_null($hw) && $report->isHw()) {
+                $hw = $report;
+                $required[] = $report;
+            }
+        }
+
+        return $required;
     }
 }

@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Factory\ReportFactory;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
 
 class LayRegistrationService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ClientRepository $clientRepository,
-        private readonly ReportFactory $reportFactory,
+        private readonly ReportService $reportService,
     ) {
     }
 
@@ -29,51 +24,24 @@ class LayRegistrationService
      */
     public function addMissingReports(int $batchSize = 50): int
     {
-        $qb = $this->entityManager->createQueryBuilder();
+        $clientsWithoutAReport = $this->clientRepository->findClientsWithoutAReport();
 
-        // find all reports which are missing
-        $missingReports = $qb->select(
-            'c.id AS clientId',
-            'pr.typeOfReport',
-            'pr.orderType',
-            'pr.orderDate',
-        )
-            ->distinct()
-            ->from(PreRegistration::class, 'pr')
-            ->innerJoin(Client::class, 'c', Join::WITH, 'pr.caseNumber = c.caseNumber')
-            ->leftJoin(Report::class, 'r', Join::WITH, 'c.id = r.client')
-            ->where('r.id IS NULL')
-            ->andWhere('c.archivedAt IS NULL')
-            ->andWhere('c.deletedAt IS NULL')
-            ->getQuery()
-            ->getArrayResult();
-
-        // add reports to clients without them
+        // for each of those clients, decide which type of report to add and create it
         $numItemsPersisted = 0;
+        foreach ($clientsWithoutAReport as $client) {
+            // work out which type(s) of report to create based on comparing/aggregating the pre-reg rows
+            // for this client's case number
+            $reportsToAdd = $this->reportService->createRequiredReports($client);
 
-        foreach ($missingReports as $missingReport) {
-            /** @var ?Client $client */
-            $client = $this->clientRepository->find($missingReport['clientId']);
+            foreach ($reportsToAdd as $reportToAdd) {
+                $this->entityManager->persist($reportToAdd);
 
-            // this shouldn't happen, as we just queried for the client IDs we are now looking up
-            if (is_null($client)) {
-                continue;
-            }
+                ++$numItemsPersisted;
 
-            $report = $this->reportFactory->create(
-                $client,
-                $missingReport['typeOfReport'],
-                $missingReport['orderType'],
-                $missingReport['orderDate']
-            );
-
-            $this->entityManager->persist($report);
-
-            ++$numItemsPersisted;
-
-            if (0 === $numItemsPersisted % $batchSize) {
-                $this->entityManager->flush();
-                $this->entityManager->clear();
+                if (0 === $numItemsPersisted % $batchSize) {
+                    $this->entityManager->flush();
+                    $this->entityManager->clear();
+                }
             }
         }
 
