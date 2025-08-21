@@ -39,7 +39,7 @@ class DeputyshipProcessingLookupCacheTest extends TestCase
         $this->sut->getCourtOrderStatusForUid('111111111');
 
         static::expectException(\RuntimeException::class);
-        $this->sut->getClientIdForCasenumber('41443433434');
+        $this->sut->getClientIdForCaseNumber('41443433434');
 
         static::expectException(\RuntimeException::class);
         $this->sut->getDeputyIdForUid('112214555');
@@ -94,8 +94,8 @@ class DeputyshipProcessingLookupCacheTest extends TestCase
         static::assertTrue($expected);
 
         // test getters
-        static::assertEquals(2, $this->sut->getClientIdForCasenumber('88888888'));
-        static::assertNull($this->sut->getClientIdForCasenumber('345234341'));
+        static::assertEquals(2, $this->sut->getClientIdForCaseNumber('88888888'));
+        static::assertNull($this->sut->getClientIdForCaseNumber('345234341'));
 
         static::assertEquals(1, $this->sut->getDeputyIdForUid('999999999'));
         static::assertNull($this->sut->getDeputyIdForUid('1145443545'));
