@@ -9,6 +9,18 @@ use ReflectionObject;
 
 class HealthControllerTest extends AbstractTestController
 {
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to override to prevent the default setup until tests that fail with it are altered
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::setupFixtures();
+    }
+
     public function testContainerHealthOk()
     {
         $ret = $this->assertJsonRequest('GET', '/health-check', [

@@ -14,19 +14,16 @@ class PreRegistrationControllerTest extends AbstractTestController
     private static string $tokenPa;
     private ?PreRegistration $c1;
 
-    /**
-     * clear fixtures.
-     */
-    public static function tearDownAfterClass(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
+        // This is here to override to prevent the default setup until tests that fail with it are altered
     }
 
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -49,6 +46,13 @@ class PreRegistrationControllerTest extends AbstractTestController
         ];
 
         $this->c1 = new PreRegistration($data);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     public function testDeleteHasRoleProtections()

@@ -11,6 +11,16 @@ class CoDeputyControllerTest extends AbstractTestController
     private static $coDeputy;
     private static $coDeputyClient;
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$coDeputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$coDeputyClient = self::fixtures()->createCoDeputyClient([self::$coDeputy], ['setFirstname' => 'coDeputyClient']);
+
+        self::fixtures()->flush()->clear();
+    }
+
     public function setUp(): void
     {
         parent::setUp();
@@ -19,11 +29,6 @@ class CoDeputyControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenCoDeputy = $this->loginAsCoDeputy();
         }
-
-        self::$coDeputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$coDeputyClient = self::fixtures()->createCoDeputyClient([self::$coDeputy], ['setFirstname' => 'coDeputyClient']);
-
-        self::fixtures()->flush()->clear();
     }
 
     /**
