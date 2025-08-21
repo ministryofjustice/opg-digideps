@@ -427,6 +427,9 @@ class ReportService
      * Note that this only creates the report objects, but doesn't persist them.
      * If a client is dual, we create both reports; if hybrid, we only create one.
      *
+     * Note this doesn't check whether reports of the appropriate type already exist, and is intended for use
+     * with clients who have *no* reports.
+     *
      * @return Report[]
      */
     public function createRequiredReports(Client $client): array
