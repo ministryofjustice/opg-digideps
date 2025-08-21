@@ -37,7 +37,7 @@ class CourtOrderAndDeputyCandidatesFactory
     {
         $existingCourtOrderId = $this->deputyshipLookupCache->getCourtOrderIdForUid($csvDeputyship->orderUid);
         $existingDeputyId = $this->deputyshipLookupCache->getDeputyIdForUid($csvDeputyship->deputyUid);
-        $existingClientId = $this->deputyshipLookupCache->getClientIdForCasenumber($csvDeputyship->caseNumber);
+        $existingClientId = $this->deputyshipLookupCache->getClientIdForCaseNumber($csvDeputyship->caseNumber);
         $needsNewCourtOrder = (is_null($existingCourtOrderId) && !is_null($existingClientId));
 
         $candidates = [];
