@@ -16,6 +16,11 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class ClientTestHelper extends TestCase
 {
+    public static function create(): self
+    {
+        return new ClientTestHelper('ClientTestHelper');
+    }
+
     public static function createClientMock(int $id, bool $hasReports)
     {
         $prophet = new Prophet();
@@ -48,7 +53,7 @@ class ClientTestHelper extends TestCase
             ->setPostcode($faker->postcode());
 
         if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
-            return $client->addUser($user ?: (new UserTestHelper())->createAndPersistUser($em));
+            return $client->addUser($user ?: (UserTestHelper::create())->createAndPersistUser($em));
         }
 
         if ($organisation) {

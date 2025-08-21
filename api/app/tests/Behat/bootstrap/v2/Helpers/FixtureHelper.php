@@ -48,9 +48,9 @@ class FixtureHelper
         private PreRegistrationFactory $preRegistrationFactory,
         private S3ClientInterface $s3Client,
     ) {
-        $this->userTestHelper = new UserTestHelper();
+        $this->userTestHelper = UserTestHelper::create();
         $this->reportTestHelper = new ReportTestHelper();
-        $this->clientTestHelper = new ClientTestHelper();
+        $this->clientTestHelper = ClientTestHelper::create();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
         $this->courtOrderTestHelper = new CourtOrderTestHelper();

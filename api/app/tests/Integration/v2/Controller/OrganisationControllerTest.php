@@ -283,10 +283,7 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    /**
-     * @return array
-     */
-    public function getBadRequestData()
+    public static function getBadRequestData(): array
     {
         return [
             ['data' => '{"name": "Org Name", "email_identifier": "unique_id"}'],

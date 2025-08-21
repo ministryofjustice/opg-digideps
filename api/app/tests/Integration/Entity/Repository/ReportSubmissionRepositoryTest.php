@@ -54,7 +54,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         self::assertEquals($shouldArchive, $submission->getArchived());
     }
 
-    public function updateArchivedStatusDataProvider()
+    public static function updateArchivedStatusDataProvider(): array
     {
         return [
             'One synced document' => [false, [Document::SYNC_STATUS_SUCCESS], true],

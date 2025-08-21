@@ -121,7 +121,7 @@ class UserResearchControllerTest extends AbstractTestController
         $em = static::getContainer()->get('em');
 
         $report = (new ReportTestHelper())->generateReport($em);
-        $client = (new ClientTestHelper())->generateClient($em);
+        $client = (ClientTestHelper::create())->generateClient($em);
 
         $report->setClient($client);
 
@@ -149,10 +149,7 @@ class UserResearchControllerTest extends AbstractTestController
         ]);
     }
 
-    /**
-     * @return array
-     */
-    public function getInvalidInputs()
+    public static function getInvalidInputs(): array
     {
         return [
             [

@@ -28,7 +28,7 @@ class PaFeesExpensesReportUpdateHandlerTest extends TestCase
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
-            ->setMethods(['updateSectionsStatusCache'])
+            ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
         $this->em = $this->getMockBuilder(EntityManager::class)
@@ -37,7 +37,7 @@ class PaFeesExpensesReportUpdateHandlerTest extends TestCase
 
         $this->reportRepo = $this->getMockBuilder(ReportRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['addFeesToReportIfMissing'])
+            ->onlyMethods(['addFeesToReportIfMissing'])
             ->getMock();
 
         $this->em->expects($this->any())

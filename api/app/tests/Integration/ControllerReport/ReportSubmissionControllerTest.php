@@ -194,10 +194,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getDateRangeThresholds()
+    public static function getDateRangeThresholds(): array
     {
         return [
             [

@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class PreRegistrationTest extends TestCase
 {
-    public function getReportTypeByOrderTypeProvider()
+    public static function getReportTypeByOrderTypeProvider(): array
     {
         // follow order in https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
         return [

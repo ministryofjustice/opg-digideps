@@ -79,7 +79,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::assertCount($expectedErrors, $actualUploadResults['errors']['messages'], 'errors count was unexpected');
     }
 
-    public function uploadProvider()
+    public static function uploadProvider(): array
     {
         return [
             '3 valid Org Deputyships' => [
@@ -103,7 +103,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, self::$frameworkBundleClient->getResponse()->getStatusCode());
     }
 
-    public function invalidPayloadProvider()
+    public static function invalidPayloadProvider(): array
     {
         return [
             'Too many records' => [OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(10001, 0)],

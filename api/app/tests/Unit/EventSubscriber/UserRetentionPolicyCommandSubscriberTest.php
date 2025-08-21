@@ -52,7 +52,7 @@ class UserRetentionPolicyCommandSubscriberTest extends KernelTestCase
         ));
 
         $trigger = 'A_TRIGGER';
-        $user = new UserTestHelper();
+        $user = UserTestHelper::create();
         $deletedAdminUser = $user->createUser(null, User::ROLE_ADMIN_MANAGER);
         $deletedAdminUser->setId(1);
         $deletedAdminUser->setLastLoggedIn(new \DateTime('-25 months'));

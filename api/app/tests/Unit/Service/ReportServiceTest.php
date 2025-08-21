@@ -443,7 +443,7 @@ class ReportServiceTest extends TestCase
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
 
-    public function getReportTypeBasedOnSiriusProvider()
+    public static function getReportTypeBasedOnSiriusProvider(): array
     {
         $lay = (new User())->setRoleName(User::ROLE_LAY_DEPUTY);
         $prof = (new User())->setRoleName(User::ROLE_PROF_ADMIN);

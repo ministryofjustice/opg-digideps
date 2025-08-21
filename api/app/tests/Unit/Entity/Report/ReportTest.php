@@ -390,7 +390,7 @@ class ReportTest extends KernelTestCase
         );
     }
 
-    public function reportTypeTranslationKeyProvider()
+    public static function reportTypeTranslationKeyProvider(): array
     {
         return [
             // Lay deputies
@@ -442,7 +442,7 @@ class ReportTest extends KernelTestCase
         }
     }
 
-    public function reportTypesWithEndDateProvider()
+    public static function reportTypesWithEndDateProvider(): array
     {
         return [
             // lay post (21 days)
@@ -452,7 +452,7 @@ class ReportTest extends KernelTestCase
         ];
     }
 
-    public function layReportTypesProvider()
+    public static function layReportTypesProvider(): array
     {
         return [
             // Lay deputies
@@ -535,7 +535,7 @@ class ReportTest extends KernelTestCase
         );
     }
 
-    public function benefitsCheckSectionRequiredProvider(): array
+    public static function benefitsCheckSectionRequiredProvider(): array
     {
         $featureFlagDate = new \DateTimeImmutable('01/01/2021');
         $unsubmitDate = new \DateTime();

@@ -8,25 +8,21 @@ use App\Entity\Report\Report;
 use App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 {
-    /** @var DeputyCostsEstimateReportUpdateHandler */
-    private $sut;
-
-    /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject */
-    private $em;
-
-    /** @var Report|\PHPUnit_Framework_MockObject_MockObject */
-    private $report;
+    private DeputyCostsEstimateReportUpdateHandler $sut;
+    private EntityManager|MockObject $em;
+    private Report|MockObject $report;
 
     public function setUp(): void
     {
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
-            ->setMethods(['updateSectionsStatusCache'])
+            ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
         $this->em = $this->getMockBuilder(EntityManager::class)
@@ -36,7 +32,8 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->sut = new DeputyCostsEstimateReportUpdateHandler($this->em);
     }
 
-    /** @dataProvider costEstimateDataProvider
+    /**
+     * @dataProvider costEstimateDataProvider
      */
     public function testUpdatesSingularFields($field, $data, $expected)
     {
@@ -45,7 +42,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo($field, $expected);
     }
 
-    public function costEstimateDataProvider()
+    public static function costEstimateDataProvider(): array
     {
         return [
             ['profDeputyCostsEstimateHowCharged', ['prof_deputy_costs_estimate_how_charged' => 'new-value'], 'new-value'],
@@ -100,10 +97,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->invokeHandler($data);
     }
 
-    /**
-     * @return array
-     */
-    public function getInvalidCostEstimateInputs()
+    public static function getInvalidCostEstimateInputs(): array
     {
         return [
             [['prof_deputy_estimate_costs' => [['amount' => '21', 'has_more_details' => false, 'more_details' => null]]]],
