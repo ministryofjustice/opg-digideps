@@ -18,10 +18,14 @@ class ReportFactory
     public function create(
         Client $client,
         string $typeOfReport,
-        string $orderType,
+        ?string $orderType,
         \DateTime $orderDate,
         string $realm = PreRegistration::REALM_LAY): Report
     {
+        if (is_null($orderType)) {
+            $orderType = '';
+        }
+
         $determinedReportType = PreRegistration::getReportTypeByOrderType($typeOfReport, $orderType, $realm);
 
         $reportStartDate = clone $orderDate;

@@ -345,7 +345,7 @@ class ReportService
 
         return PreRegistration::getReportTypeByOrderType(
             $preRegistration->getTypeOfReport(),
-            $preRegistration->getOrderType(),
+            $preRegistration->getOrderType() ?? '',
             PreRegistration::REALM_LAY
         );
     }
@@ -445,12 +445,16 @@ class ReportService
         $required = [];
 
         foreach ($preRegs as $preReg) {
-            $report = $this->reportFactory->create(
-                $client,
-                $preReg->getTypeOfReport(),
-                $preReg->getOrderType(),
-                $preReg->getOrderDate(),
-            );
+            // verify that we have all the necessary data to make the report from the pre-reg row; if not, skip it
+            $typeOfReport = $preReg->getTypeOfReport();
+            $orderType = $preReg->getOrderType();
+            $orderDate = $preReg->getOrderDate();
+
+            if (is_null($typeOfReport) || is_null($orderType) || is_null($orderDate)) {
+                continue;
+            }
+
+            $report = $this->reportFactory->create($client, $typeOfReport, $orderType, $orderDate);
 
             // if the report created for this pre-reg row is a hybrid, we just want this report and no others
             if ($report->isHybrid()) {
