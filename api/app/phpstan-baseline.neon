@@ -1031,11 +1031,6 @@ parameters:
 			path: src/DataFixtures/AbstractDataFixture.php
 
 		-
-			message: "#^Property App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/DataFixtures/AbstractDataFixture.php
-
-		-
 			message: "#^Method App\\\\DataFixtures\\\\AdminUserFixtures\\:\\:addUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/DataFixtures/AdminUserFixtures.php
@@ -5549,21 +5544,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, mixed given\\.$#"
 			count: 1
 			path: src/Logger/OpgLineFormatter.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Migrations/Version225.php
-
-		-
-			message: "#^Cannot call method setName\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Migrations/Version225.php
-
-		-
-			message: "#^Parameter \\#1 \\$entity of method Doctrine\\\\ORM\\\\EntityManager\\:\\:persist\\(\\) expects object, object\\|null given\\.$#"
-			count: 1
-			path: src/Migrations/Version225.php
 
 		-
 			message: "#^Class App\\\\Repository\\\\AssetRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"

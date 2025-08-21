@@ -5,12 +5,18 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixtureInterface
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
-    {
+    public function __construct(
+        readonly KernelInterface $kernel,
+        private readonly ParameterBagInterface $params,
+        private readonly UserPasswordHasherInterface $passwordHasher
+    ) {
+        parent::__construct($kernel);
     }
 
     public function doLoad(ObjectManager $manager)
@@ -19,7 +25,7 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
         $userRepository = $manager->getRepository(User::class);
         $users = $userRepository->findAll();
 
-        $password = $this->container->getParameter('fixtures')['account_password'];
+        $password = $this->params->get('fixtures')['account_password'];
 
         $passwordHash = null;
         foreach ($users as $user) {
