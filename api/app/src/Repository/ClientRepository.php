@@ -248,8 +248,8 @@ class ClientRepository extends ServiceEntityRepository
      */
     public function findClientsWithoutAReport(): array
     {
-        /** @var Client[] $caseNumbersWithoutAReport */
-        $caseNumbersWithoutAReport = $this->_em->createQueryBuilder()
+        /** @var Client[] $clientsWithoutAReport */
+        $clientsWithoutAReport = $this->_em->createQueryBuilder()
             ->select('c')
             ->from(Client::class, 'c')
             ->where('c.archivedAt IS NULL')
@@ -258,6 +258,6 @@ class ClientRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
-        return $caseNumbersWithoutAReport;
+        return $clientsWithoutAReport;
     }
 }
