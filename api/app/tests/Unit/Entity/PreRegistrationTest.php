@@ -37,4 +37,11 @@ class PreRegistrationTest extends TestCase
     {
         $this->assertEquals($expectedType, PreRegistration::getReportTypeByOrderType($reportType, $orderType, $realm));
     }
+
+    public function testGetReportTypeByOrderTypeInvalidOrderType(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+
+        PreRegistration::getReportTypeByOrderType('invalid order type', 'pfa', PreRegistration::REALM_LAY);
+    }
 }
