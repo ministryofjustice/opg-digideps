@@ -9341,21 +9341,6 @@ parameters:
 			path: src/EventSubscriber/RegistrationFailedSubscriber.php
 
 		-
-			message: "#^Method App\\\\EventSubscriber\\\\RegistrationSucceededSubscriber\\:\\:logAdminEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/EventSubscriber/RegistrationSucceededSubscriber.php
-
-		-
-			message: "#^Method App\\\\EventSubscriber\\\\RegistrationSucceededSubscriber\\:\\:logDeputyEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/EventSubscriber/RegistrationSucceededSubscriber.php
-
-		-
-			message: "#^Method App\\\\EventSubscriber\\\\RegistrationSucceededSubscriber\\:\\:updateRegistrationProps\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/EventSubscriber/RegistrationSucceededSubscriber.php
-
-		-
 			message: "#^Method App\\\\EventSubscriber\\\\ReportSubmittedSubscriber\\:\\:logResubmittedReport\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/EventSubscriber/ReportSubmittedSubscriber.php
@@ -11014,16 +10999,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$streams of method App\\\\Service\\\\Audit\\\\AwsAuditLogHandler\\:\\:extractExistingStreamNames\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Service/Audit/AwsAuditLogHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Service/Audit/LocalAuditLogHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Service/Audit/LocalAuditLogHandler.php
 
 		-
 			message: "#^Cannot access offset 'errors' on mixed\\.$#"
