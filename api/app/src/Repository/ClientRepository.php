@@ -223,7 +223,8 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get mapping from client case numbers to client IDs, but only including active (not archived or deleted) clients.
+     * Get mapping from client case numbers (lowercased) to client IDs, but only including active
+     * (not archived or deleted) clients.
      *
      * @return array<string, int>
      */
@@ -235,7 +236,14 @@ class ClientRepository extends ServiceEntityRepository
 
         /** @var Client $client */
         foreach ($clients as $client) {
-            $mapping[$client->getCaseNumber()] = $client->getId();
+            $caseNumber = $client->getCaseNumber();
+
+            // ignore any clients without a case number
+            if (is_null($caseNumber)) {
+                continue;
+            }
+
+            $mapping[strtolower($caseNumber)] = $client->getId();
         }
 
         return $mapping;

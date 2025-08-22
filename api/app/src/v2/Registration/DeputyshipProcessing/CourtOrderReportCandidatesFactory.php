@@ -50,7 +50,7 @@ class CourtOrderReportCandidatesFactory
                         )
                     ) AS report_type_is_compatible
                 FROM staging.deputyship d
-                INNER JOIN client c ON d.case_number = c.case_number
+                INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
                 INNER JOIN report r ON c.id = r.client_id
                 WHERE r.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
             ) compat
@@ -73,7 +73,7 @@ class CourtOrderReportCandidatesFactory
             d.order_uid AS court_order_uid,
             odr.id AS ndr_id
         FROM staging.deputyship d
-        INNER JOIN client c ON d.case_number = c.case_number
+        INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
         INNER JOIN odr ON c.id = odr.client_id
         WHERE d.order_type = 'pfa'
         AND d.deputy_type = 'LAY'
