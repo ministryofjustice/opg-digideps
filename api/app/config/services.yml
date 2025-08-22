@@ -449,5 +449,5 @@ services:
     App\v2\Service\DeputyshipCandidatesConverter:
         public: true
 
-    App\v2\Registration\DeputyshipProcessing\DeputyCaseCandidatesFactory:
+    App\Service\DeputyCaseService:
         public: true
