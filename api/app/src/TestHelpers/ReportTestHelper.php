@@ -32,6 +32,11 @@ use Doctrine\ORM\EntityManager;
 
 class ReportTestHelper
 {
+    public static function create(): self
+    {
+        return new ReportTestHelper();
+    }
+
     public static function generateReport(
         EntityManager $em,
         ?Client $client = null,

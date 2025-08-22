@@ -29,7 +29,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived($isArchived);
 
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = ReportTestHelper::create();
 
         $docs = array_map(function ($status) use ($reportHelper) {
             $report = $reportHelper->generateReport($this->entityManager);
@@ -69,7 +69,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived(false);
 
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = ReportTestHelper::create();
 
         $statuses = [null, null];
         $docs = array_map(function ($status) use ($reportHelper) {

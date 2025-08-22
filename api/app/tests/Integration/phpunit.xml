@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         convertErrorsToExceptions="false"
-         convertNoticesToExceptions="false"
-         convertWarningsToExceptions="false"
+         cacheDirectory="../../build/.phpunit.api-integration.cache"
          stopOnError="true"
          stopOnFailure="false"
          stopOnRisky="false"
@@ -10,12 +8,7 @@
          backupGlobals="false"
          colors="true"
          bootstrap="./bootstrap.php"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">../../src</directory>
-    </include>
-  </coverage>
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
   <php>
     <server name="KERNEL_DIR" value="../../src"/>
     <server name="APP_ENV" value="test"/>
@@ -25,4 +18,9 @@
     <env name="KERNEL_CLASS" value="App\Kernel"/>
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
   </php>
+  <source>
+    <include>
+      <directory suffix=".php">../../src</directory>
+    </include>
+  </source>
 </phpunit>

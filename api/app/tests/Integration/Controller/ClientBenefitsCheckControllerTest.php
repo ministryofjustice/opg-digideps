@@ -150,7 +150,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
     private function prepareReport(bool $withClientBenefitsCheck = false)
     {
-        $reportTestHelper = new ReportTestHelper();
+        $reportTestHelper = ReportTestHelper::create();
         $em = static::getContainer()->get('em');
 
         $report = $reportTestHelper->generateReport($em);

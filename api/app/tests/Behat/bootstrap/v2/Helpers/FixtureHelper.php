@@ -49,7 +49,7 @@ class FixtureHelper
         private S3ClientInterface $s3Client,
     ) {
         $this->userTestHelper = UserTestHelper::create();
-        $this->reportTestHelper = new ReportTestHelper();
+        $this->reportTestHelper = ReportTestHelper::create();
         $this->clientTestHelper = ClientTestHelper::create();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
