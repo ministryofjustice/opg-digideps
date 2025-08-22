@@ -9,6 +9,7 @@ use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Service\DeputyCaseService;
 use App\Tests\Integration\ApiBaseTestCase;
+use Doctrine\DBAL\Exception;
 
 class DeputyCaseServiceIntegrationTest extends ApiBaseTestCase
 {
@@ -23,6 +24,9 @@ class DeputyCaseServiceIntegrationTest extends ApiBaseTestCase
         $this->sut = $sut;
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCreate(): void
     {
         $caseNumber = '93015923';
@@ -54,13 +58,17 @@ class DeputyCaseServiceIntegrationTest extends ApiBaseTestCase
 
         $this->entityManager->flush();
 
-        // we should get a candidate deputy_case for this client and dd_user pair
-        $candidates = iterator_to_array($this->sut->addMissingDeputyCaseAssociations());
+        // we should add a deputy_case for this client and dd_user pair
+        $numAdded = $this->sut->addMissingDeputyCaseAssociations();
 
-        self::assertCount(1, $candidates);
+        self::assertEquals(1, $numAdded);
 
-        $candidate = $candidates[0];
-        self::assertEquals($user->getId(), $candidate['user_id']);
-        self::assertEquals($client->getId(), $candidate['client_id']);
+        // check for the association in the db
+        $client = $this->entityManager->getRepository(Client::class)->find($client->getId());
+        self::assertNotNull($client);
+
+        $associatedUsers = $client->getUsers();
+        self::assertCount(1, $associatedUsers);
+        self::assertEquals($user->getEmail(), $associatedUsers[0]->getEmail());
     }
 }
