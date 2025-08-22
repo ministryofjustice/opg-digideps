@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\File\Storage\S3Storage;
+use App\Service\LayRegistrationService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
@@ -70,6 +71,7 @@ class ProcessLayCSVCommand extends Command
         private readonly LoggerInterface $verboseLogger,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly PreRegistrationRepository $preReg,
+        private readonly LayRegistrationService $layRegistrationService,
     ) {
         parent::__construct();
     }
@@ -197,6 +199,11 @@ class ProcessLayCSVCommand extends Command
             if (0 == $result['new-clients-found']) {
                 $this->verboseLogger->notice('No new multiclients were found, so none were added');
             }
+
+            // ensure that all active clients have at least one report associated with them,
+            // to fix issues caused by partially-registered users (see DDLS-911)
+            $numReportsAdded = $this->layRegistrationService->addMissingReports();
+            $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
 
             return true;
         }
