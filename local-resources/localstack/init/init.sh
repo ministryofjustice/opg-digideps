@@ -28,13 +28,13 @@ awslocal s3api put-bucket-policy \
     --policy '{ "Statement": [ { "Sid": "DenyUnEncryptedObjectUploads", "Effect": "Deny", "Principal": { "AWS": "*" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:eu-west-1::opg-performance-data/*", "Condition":  { "StringNotEquals": { "s3:x-amz-server-side-encryption": "AES256" } } }, { "Sid": "DenyUnEncryptedObjectUploads", "Effect": "Deny", "Principal": { "AWS": "*" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:eu-west-1::opg-performance-data/*", "Condition":  { "Bool": { "aws:SecureTransport": false } } } ] }' \
     --bucket "opg-performance-data"
 
-awslocal ssm put-parameter --name "/local/flag/checklist-sync" --value "1" --type String --overwrite
-awslocal ssm put-parameter --name "/local/flag/document-sync" --value "1" --type String --overwrite
-awslocal ssm put-parameter --name "/local/flag/paper-reports" --value "0" --type String --overwrite
+awslocal ssm put-parameter --region eu-west-1 --name "/local/flag/checklist-sync" --value "1" --type String --overwrite
+awslocal ssm put-parameter --region eu-west-1 --name "/local/flag/document-sync" --value "1" --type String --overwrite
+awslocal ssm put-parameter --region eu-west-1 --name "/local/flag/paper-reports" --value "0" --type String --overwrite
 
-awslocal ssm put-parameter --name "/local/parameter/checklist-sync-row-limit" --value "100" --type String --overwrite
-awslocal ssm put-parameter --name "/local/parameter/document-sync-interval-minutes" --value "4" --type String --overwrite
-awslocal ssm put-parameter --name "/local/parameter/document-sync-row-limit" --value "100" --type String --overwrite
+awslocal ssm put-parameter --region eu-west-1 --name "/local/parameter/checklist-sync-row-limit" --value "100" --type String --overwrite
+awslocal ssm put-parameter --region eu-west-1 --name "/local/parameter/document-sync-interval-minutes" --value "4" --type String --overwrite
+awslocal ssm put-parameter --region eu-west-1 --name "/local/parameter/document-sync-row-limit" --value "100" --type String --overwrite
 
 awslocal secretsmanager create-secret --name "local/opg-response-slack-token" --secret-string "IAMAFAKETOKEN" --region eu-west-1
 awslocal secretsmanager create-secret --name "local/database-password" --secret-string "api" --region eu-west-1

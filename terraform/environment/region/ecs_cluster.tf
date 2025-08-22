@@ -74,6 +74,10 @@ locals {
     {
       name  = "APP_DB_USERNAME",
       value = "application"
+    },
+    {
+      name  = "FIXTURES_ENABLED",
+      value = tostring(var.account.fixtures_enabled)
     }
   ]
 
