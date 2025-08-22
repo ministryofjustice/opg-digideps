@@ -80,4 +80,14 @@ class StagingSelectedCandidateFactory
 
         return $changes;
     }
+
+    public function createDeputyCaseCandidate(int $userId, int $clientId): StagingSelectedCandidate
+    {
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertDeputyCase);
+
+        $changes->userId = $userId;
+        $changes->clientId = $clientId;
+
+        return $changes;
+    }
 }
