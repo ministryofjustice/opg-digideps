@@ -6,10 +6,12 @@ namespace App\Command;
 
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
+use App\Service\DeputyCaseService;
 use App\Service\File\Storage\S3Storage;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -70,6 +72,7 @@ class ProcessLayCSVCommand extends Command
         private readonly LoggerInterface $verboseLogger,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly PreRegistrationRepository $preReg,
+        private readonly DeputyCaseService $deputyCaseService,
     ) {
         parent::__construct();
     }
@@ -179,12 +182,15 @@ class ProcessLayCSVCommand extends Command
         if (is_array($data)) {
             $chunks = array_chunk($data, self::CHUNK_SIZE);
 
+            // lay CSV baseline processing
             foreach ($chunks as $index => $chunk) {
                 $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
 
                 $result = $this->csvProcessing->layProcessing($chunk, $index);
                 $this->storeOutput($result);
             }
+
+            // additional multi-client processing
             $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
             $result = $this->csvProcessing->layProcessingHandleNewMultiClients($multiclientApplyDbChanges);
 
@@ -196,6 +202,15 @@ class ProcessLayCSVCommand extends Command
 
             if (0 == $result['new-clients-found']) {
                 $this->verboseLogger->notice('No new multiclients were found, so none were added');
+            }
+
+            // additional deputy_case association patching
+            $this->verboseLogger->notice('Fixing missing deputy_case associations');
+            try {
+                $numDeputyCaseAssociationsAdded = $this->deputyCaseService->addMissingDeputyCaseAssociations();
+                $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
+            } catch (Exception $e) {
+                $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
             }
 
             return true;

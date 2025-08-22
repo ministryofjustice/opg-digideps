@@ -213,9 +213,6 @@ services:
       - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
       - "%env(AUDIT_LOG_GROUP_NAME)%"
 
-  App\Service\Audit\LocalAuditLogHandler:
-    class: App\Service\Audit\LocalAuditLogHandler
-
   App\Twig\AssetsExtension:
     public: false
     arguments: ["%kernel.project_dir%"]

@@ -5,9 +5,11 @@ namespace App\Service\Audit;
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
 use Aws\Result;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
-class AwsAuditLogHandler extends AbstractAuditLogHandler
+class AwsAuditLogHandler extends AbstractProcessingHandler
 {
     /** @var CloudWatchLogsClient */
     private $client;
@@ -16,7 +18,6 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
     private $group;
 
     /**
-     * @param $group
      * @param int  $level
      * @param bool $bubble
      */
@@ -28,25 +29,22 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         parent::__construct($level, $bubble);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function write(array $entry): void
+    protected function write(array $record): void
     {
-        if (!$this->shallHandle($entry)) {
+        if (!$this->shallHandle($record)) {
             return;
         }
 
-        $stream = $entry['context']['event'];
+        $stream = $record['context']['event'];
         $sequenceToken = $this->initialize($stream);
-        $entry = $this->formatEntry($entry);
+        $record = $this->formatEntry($record);
 
         // send items, retry once with a fresh sequence token
         try {
-            $this->send($entry, $stream, $sequenceToken);
+            $this->send($record, $stream, $sequenceToken);
         } catch (CloudWatchLogsException $e) {
             if ('InvalidSequenceTokenException' === $e->getAwsErrorCode()) {
-                $this->send($entry, $stream, $e->get('expectedSequenceToken'));
+                $this->send($record, $stream, $e->get('expectedSequenceToken'));
             }
 
             throw $e;
@@ -75,6 +73,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         } else {
             return $existingStreams[0]['uploadSequenceToken'];
         }
+
         return null;
     }
 
@@ -125,6 +124,19 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         }
 
         $this->client->putLogEvents($data);
+    }
+
+    private function shallHandle(array $record): bool
+    {
+        return
+            isset($record['context']['event'])
+            && isset($record['context']['type'])
+            && 'audit' === $record['context']['type'];
+    }
+
+    protected function getDefaultFormatter(): JsonFormatter
+    {
+        return new JsonFormatter();
     }
 
     public function getLogEventsByLogStream(string $streamName, int $logStartTime, int $logEndTime, string $groupName): Result

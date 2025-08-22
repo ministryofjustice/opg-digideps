@@ -448,3 +448,6 @@ services:
 
     App\v2\Service\DeputyshipCandidatesConverter:
         public: true
+
+    App\Service\DeputyCaseService:
+        public: true
