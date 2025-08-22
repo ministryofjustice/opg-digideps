@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Service;
 
 use App\Entity\Client;
-use App\Entity\StagingDeputyship;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Service\DeputyCaseService;
 use App\Tests\Integration\ApiBaseTestCase;
@@ -25,17 +25,13 @@ class DeputyCaseServiceIntegrationTest extends ApiBaseTestCase
 
     public function testCreate(): void
     {
-        $courtOrderUid = '71112223';
         $caseNumber = '93015923';
         $deputyUid = '89893420';
 
-        // row in staging.deputyship associating deputy UID with case number
-        $deputyship = new StagingDeputyship();
-        $deputyship->orderUid = $courtOrderUid;
-        $deputyship->caseNumber = $caseNumber;
-        $deputyship->deputyUid = $deputyUid;
+        // row in pre-reg table associating deputy UID with case number
+        $preReg = new PreRegistration(['Case' => $caseNumber, 'DeputyUid' => $deputyUid]);
 
-        $this->entityManager->persist($deputyship);
+        $this->entityManager->persist($preReg);
 
         // client with same case number
         $client = new Client();
@@ -50,6 +46,8 @@ class DeputyCaseServiceIntegrationTest extends ApiBaseTestCase
             ->setFirstname('Bill')
             ->setLastname('Sykes')
             ->setPassword('')
+            ->setIsPrimary(true)
+            ->setActive(true)
             ->setEmail('bill.sykes-deputy-case-candidate@opg.gov.uk');
 
         $this->entityManager->persist($user);
@@ -62,7 +60,6 @@ class DeputyCaseServiceIntegrationTest extends ApiBaseTestCase
         self::assertCount(1, $candidates);
 
         $candidate = $candidates[0];
-        self::assertEquals($courtOrderUid, $candidate['order_uid']);
         self::assertEquals($user->getId(), $candidate['user_id']);
         self::assertEquals($client->getId(), $candidate['client_id']);
     }
