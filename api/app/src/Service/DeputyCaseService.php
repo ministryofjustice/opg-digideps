@@ -19,18 +19,20 @@ class DeputyCaseService
     // ignore archived and deleted clients: we don't need to associate them with deputies.
     /** @var string */
     private const DEPUTY_CASE_CANDIDATES_QUERY = <<<SQL
-        SELECT d.order_uid AS order_uid, c.id AS client_id, ddu.id AS user_id
-        FROM staging.deputyship d
+        SELECT c.id AS client_id, ddu.id AS user_id
+        FROM pre_registration p
         INNER JOIN client c
-        ON LOWER(d.case_number) = LOWER(c.case_number)
+        ON LOWER(p.client_case_number) = LOWER(c.case_number)
         INNER JOIN dd_user ddu
-        ON ddu.deputy_uid::varchar = d.deputy_uid
+        ON ddu.deputy_uid::varchar = p.deputy_uid
         LEFT JOIN deputy_case dc
         ON dc.client_id = c.id AND dc.user_id = ddu.id
         WHERE dc.client_id IS NULL
         AND dc.user_id IS NULL
         AND c.archived_at IS NULL
-        AND c.deleted_at IS NULL;
+        AND c.deleted_at IS NULL
+        AND ddu.is_primary IS true
+        AND ddu.active IS true;
     SQL;
 
     public function __construct(
