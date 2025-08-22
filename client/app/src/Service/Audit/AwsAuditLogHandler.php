@@ -134,7 +134,7 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
             && 'audit' === $record['context']['type'];
     }
 
-    private function getDefaultFormatter(): JsonFormatter
+    protected function getDefaultFormatter(): JsonFormatter
     {
         return new JsonFormatter();
     }
