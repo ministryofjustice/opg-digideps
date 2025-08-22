@@ -25,7 +25,3 @@ services:
 
     App\Tests\Behat\:
         resource: "../tests/Behat/bootstrap/*"
-
-    App\Tests\Behat\v2\Helpers\FixtureHelper:
-        arguments:
-            $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
