@@ -24,7 +24,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
-            ->setMethods(['updateSectionsStatusCache'])
+            ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
         $this->em = $this->getMockBuilder(EntityManager::class)
@@ -43,7 +43,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo($field, $expected);
     }
 
-    public function costDataProvider()
+    public static function costDataProvider(): array
     {
         return [
             ['profDeputyCostsHowCharged', ['prof_deputy_costs_how_charged' => 'new-value'], 'new-value'],

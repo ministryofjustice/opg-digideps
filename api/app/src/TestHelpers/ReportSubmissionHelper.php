@@ -22,7 +22,7 @@ class ReportSubmissionHelper extends KernelTestCase
         $client = new Client();
         $report = (new ReportTestHelper())->generateReport($em, $client, null, new \DateTime());
         $client->addReport($report);
-        $user = (new UserTestHelper())->createAndPersistUser($em, $client);
+        $user = (UserTestHelper::create())->createAndPersistUser($em, $client);
         $reportSubmission = (new ReportSubmission($report, $user))->setCreatedOn(new \DateTime());
 
         $em->persist($client);

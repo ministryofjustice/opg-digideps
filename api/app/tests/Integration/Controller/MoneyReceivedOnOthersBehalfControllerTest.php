@@ -87,8 +87,8 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
         $em = static::getContainer()->get('em');
         $reportTestHelper = new ReportTestHelper();
 
-        $user = (new UserTestHelper())->createAndPersistUser($em);
-        $client = (new ClientTestHelper())->generateClient($em);
+        $user = (UserTestHelper::create())->createAndPersistUser($em);
+        $client = (ClientTestHelper::create())->generateClient($em);
 
         $report = 'ndr' === $reportOrNdr ? $reportTestHelper->generateNdr($em, $user, $client) : $reportTestHelper->generateReport($em);
         $report->setClient($client);

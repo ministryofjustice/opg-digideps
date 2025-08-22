@@ -136,7 +136,7 @@ trait CourtOrderTrait
         if ('I am' === $arg1) {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrder->getCourtOrderUid()));
         } else {
-            $clientTestHelper = new ClientTestHelper();
+            $clientTestHelper = ClientTestHelper::create();
             $deputyTestHelper = new DeputyTestHelper();
 
             $client = $clientTestHelper->generateClient($this->em);

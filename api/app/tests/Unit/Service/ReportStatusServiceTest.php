@@ -18,6 +18,7 @@ use App\Entity\Report\Report;
 use App\Entity\Report\VisitsCare;
 use App\Service\ReportStatusService as StatusService;
 use Mockery as m;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -25,8 +26,7 @@ class ReportStatusServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var Report|\PHPUnit_Framework_MockObject_MockObject */
-    private $report;
+    private Report&MockObject $report;
 
     /**
      * @test
@@ -154,7 +154,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
     }
 
-    public function lifestyleProvider()
+    public static function lifestyleProvider(): array
     {
         $empty = m::mock(VisitsCare::class, [
             'getCareAppointments' => null,
@@ -231,7 +231,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getMoneyOutState()['state']);
     }
 
-    public function moneyInShortProvider()
+    public static function moneyInShortProvider(): array
     {
         $cat = m::mock(MoneyShortCategory::class);
         $t = m::mock(MoneyTransactionShort::class);
@@ -257,7 +257,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getMoneyInShortState()['state']);
     }
 
-    public function moneyOutShortProvider()
+    public static function moneyOutShortProvider(): array
     {
         $cat = m::mock(MoneyShortCategory::class);
         $t = m::mock(MoneyTransactionShort::class);
@@ -297,7 +297,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getExpensesState()['state']);
     }
 
-    public function paFeesExpensesProvider()
+    public static function paFeesExpensesProvider(): array
     {
         return [
             [['paFeesExpensesNotStarted' => true], StatusService::STATE_NOT_STARTED],
@@ -320,7 +320,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
     }
 
-    public function profDeputyCostsProvider()
+    public static function profDeputyCostsProvider(): array
     {
         $otherCostsSubmitted = [
             'hasProfDeputyOtherCosts' => true,
@@ -437,7 +437,7 @@ class ReportStatusServiceTest extends TestCase
     {
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
-            ->setMethods(['hasSection'])
+            ->onlyMethods(['hasSection'])
             ->getMock();
 
         $this->report
@@ -448,10 +448,7 @@ class ReportStatusServiceTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getProfDeputyCostsEstimateStateVariations()
+    public static function getProfDeputyCostsEstimateStateVariations(): array
     {
         return [
             [
@@ -529,7 +526,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
-    public function profCurrentFeesProvider()
+    public static function profCurrentFeesProvider(): array
     {
         $debt = m::mock(Debt::class);
 
@@ -649,7 +646,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals('readyToSubmit', $object->getStatus());
     }
 
-    public function decisionsProvider()
+    public static function decisionsProvider()
     {
         $decision = m::mock(Decision::class);
         $mcEmpty = m::mock(MentalCapacity::class, [
@@ -678,7 +675,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function contactsProvider()
+    public static function contactsProvider()
     {
         $contact = m::mock(Contact::class);
 
@@ -690,7 +687,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function visitsCareProvider()
+    public static function visitsCareProvider(): array
     {
         $empty = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient' => null,
@@ -718,7 +715,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function actionsProvider()
+    public static function actionsProvider(): array
     {
         $empty = m::mock(Action::class, [
             'getDoYouExpectFinancialDecisions' => null,
@@ -742,7 +739,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function otherInfoProvider()
+    public static function otherInfoProvider(): array
     {
         return [
             [[], StatusService::STATE_NOT_STARTED],
@@ -750,7 +747,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function giftsProvider()
+    public static function giftsProvider(): array
     {
         return [
             [['giftsSectionCompleted' => false], StatusService::STATE_NOT_STARTED],
@@ -758,7 +755,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function documentsProvider()
+    public static function documentsProvider(): array
     {
         $document = m::mock(Document::class);
 
@@ -770,7 +767,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function balanceProvider()
+    public static function balanceProvider(): array
     {
         // if any of the dependend section is not completed, status should be not-started
         $allComplete = [
@@ -798,7 +795,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function bankAccountProvider()
+    public static function bankAccountProvider(): array
     {
         $account = m::mock(Account::class);
 
@@ -809,7 +806,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function expensesProvider()
+    public static function expensesProvider(): array
     {
         $expense = m::mock(Expense::class);
 
@@ -819,7 +816,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function assetsProvider()
+    public static function assetsProvider(): array
     {
         $asset = m::mock(Asset::class);
 
@@ -831,7 +828,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function debtsProvider()
+    public static function debtsProvider(): array
     {
         $debt = m::mock(Debt::class);
 
@@ -845,7 +842,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function moneyTransferProvider()
+    public static function moneyTransferProvider(): array
     {
         $account1 = m::mock(Account::class);
         $account2 = m::mock(Account::class);
@@ -861,7 +858,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function moneyInProvider()
+    public static function moneyInProvider(): array
     {
         return [
             [['hasMoneyIn' => false], StatusService::STATE_NOT_STARTED],
@@ -869,7 +866,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function moneyOutProvider()
+    public static function moneyOutProvider(): array
     {
         return [
             [['hasMoneyOut' => false], StatusService::STATE_NOT_STARTED],

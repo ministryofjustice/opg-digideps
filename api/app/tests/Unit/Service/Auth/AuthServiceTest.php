@@ -91,7 +91,7 @@ class AuthServiceTest extends TestCase
         );
     }
 
-    public function isSecretValidProvider()
+    public static function isSecretValidProvider(): array
     {
         return [
             ['layDeputySecret', true],
@@ -164,7 +164,7 @@ class AuthServiceTest extends TestCase
         $this->assertEquals(null, $this->authService->getUserByToken('wrongtoken'));
     }
 
-    public function isSecretValidForUserProvider()
+    public static function isSecretValidForUserProvider(): array
     {
         return [
             ['layDeputySecret', 'ROLE_LAY_DEPUTY', true],
@@ -218,7 +218,7 @@ class AuthServiceTest extends TestCase
         $this->assertEquals(false, $this->authService->JWTIsValid($request));
     }
 
-    public function JWTValidFailureProvider()
+    public static function JWTValidFailureProvider(): array
     {
         $requestNoHeader = new Request();
 

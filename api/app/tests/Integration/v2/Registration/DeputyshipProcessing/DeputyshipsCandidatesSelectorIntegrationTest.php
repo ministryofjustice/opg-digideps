@@ -119,7 +119,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $deputy->setDeputyUid('700761111004');
         $this->entityManager->persist($deputy);
 
-        $client = (new ClientTestHelper())->generateClient($this->entityManager, null, null, '61111002');
+        $client = (ClientTestHelper::create())->generateClient($this->entityManager, null, null, '61111002');
         $report = (new ReportTestHelper())->generateReport($this->entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
 
         $client->addReport($report);

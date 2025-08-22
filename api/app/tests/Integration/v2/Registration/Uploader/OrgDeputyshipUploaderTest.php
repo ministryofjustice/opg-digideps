@@ -577,7 +577,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         }
     }
 
-    public function errorProvider()
+    public static function errorProvider(): array
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 

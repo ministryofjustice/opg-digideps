@@ -24,7 +24,7 @@ class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
         $this->sut = $sut;
     }
 
-    protected function dryRunTestCases(): array
+    protected static function dryRunTestCases(): array
     {
         return [
             [true],

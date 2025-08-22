@@ -226,7 +226,7 @@ class DocumentControllerTest extends AbstractTestController
         self::assertEquals($error, $response['data']['synchronisation_error']);
     }
 
-    public function statusProvider()
+    public static function statusProvider(): array
     {
         return [
             'Permanent error' => [Document::SYNC_STATUS_PERMANENT_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR, 'Permanent error occurred'],

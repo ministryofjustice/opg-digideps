@@ -14,7 +14,7 @@ class UserRetentionPolicyCommandEventTest extends TestCase
      */
     public function eventIsInitialisedCorrectly()
     {
-        $deletedAdminUser = new UserTestHelper();
+        $deletedAdminUser = UserTestHelper::create();
         $user = $deletedAdminUser->createUser(null, User::ROLE_ADMIN_MANAGER)
             ->setLastLoggedIn(new \DateTime('-36 months'));
         $trigger = 'A_TRIGGER';

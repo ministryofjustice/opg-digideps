@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 {
-    /** @var SiriusToLayDeputyshipDtoAssembler */
-    private $sut;
+    private SiriusToLayDeputyshipDtoAssembler $sut;
 
     protected function setUp(): void
     {
@@ -31,7 +30,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->sut->assembleFromArray($input);
     }
 
-    public function getMissingDataVariations(): array
+    public static function getMissingDataVariations(): array
     {
         return [
             ['Case'],
@@ -98,7 +97,7 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals(true, $result->getIsCoDeputy());
     }
 
-    public function getReportTypeToCorrefExpectation()
+    public static function getReportTypeToCorrefExpectation(): array
     {
         return [
             ['reportType' => 'OPG102'],

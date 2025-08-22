@@ -184,10 +184,8 @@ class ToolsControllerTest extends AbstractTestController
 
     /**
      * Provides the content of the POST request, the expected status code and the expected response message.
-     *
-     * @return array
      */
-    public function invalidPostDataProvider()
+    public static function invalidPostDataProvider(): array
     {
         return [
             [

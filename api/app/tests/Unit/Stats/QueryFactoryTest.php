@@ -11,10 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class QueryFactoryTest extends TestCase
 {
-    /**
-     * @var QueryFactory
-     */
-    public $factory;
+    public QueryFactory $factory;
 
     public function setUp(): void
     {
@@ -22,10 +19,7 @@ class QueryFactoryTest extends TestCase
         $this->factory = new QueryFactory($em);
     }
 
-    /**
-     * Provider of metric names.
-     */
-    public function metricNameProvider()
+    public static function metricNameProvider(): array
     {
         return [['satisfaction'], ['reportsSubmitted'], ['clients'], ['registeredDeputies']];
     }

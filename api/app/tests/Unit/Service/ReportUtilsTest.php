@@ -49,10 +49,8 @@ class ReportUtilsTest extends TestCase
 
     /**
      * Data provider for reporting periods, end date and expected start date.
-     *
-     * @return array
      */
-    public function reportPeriodDateProvider()
+    public static function reportPeriodDateProvider(): array
     {
         return [
             ['2010-01-01', '2009-01-02'],
@@ -119,7 +117,7 @@ class ReportUtilsTest extends TestCase
         self::assertEquals($expectedPaddedNumber, $sut->padCasRecNumber($number));
     }
 
-    public function numberProvider()
+    public static function numberProvider(): array
     {
         return [
             '1 character' => ['1', '00000001'],

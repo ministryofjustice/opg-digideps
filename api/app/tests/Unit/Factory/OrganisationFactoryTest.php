@@ -40,7 +40,7 @@ class OrganisationFactoryTest extends TestCase
         $this->assertTrue($organisation->isActivated());
     }
 
-    public function getEmailVariations(): array
+    public static function getEmailVariations(): array
     {
         return [
             ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com'],
@@ -87,7 +87,7 @@ class OrganisationFactoryTest extends TestCase
         $this->factory->createFromEmailIdentifier($name, $emailIdentifier);
     }
 
-    public function getInvalidEmailInputs(): array
+    public static function getInvalidEmailInputs(): array
     {
         return [
             ['name' => '', 'emailIdentifier' => 'test.com'],
@@ -96,7 +96,7 @@ class OrganisationFactoryTest extends TestCase
         ];
     }
 
-    public function getInvalidEmailIdentifierInputs(): array
+    public static function getInvalidEmailIdentifierInputs(): array
     {
         return [
             ['name' => '', 'emailIdentifier' => 'f@test.com'],

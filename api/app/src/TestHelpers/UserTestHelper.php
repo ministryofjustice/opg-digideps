@@ -14,9 +14,14 @@ use Prophecy\Prophet;
 
 class UserTestHelper extends TestCase
 {
+    public static function create(): self
+    {
+        return new UserTestHelper('UserTestHelper');
+    }
+
     public static function createUserMock(string $roleName, bool $hasReports, bool $hasClients, int $id)
     {
-        $clientTestHelper = new ClientTestHelper();
+        $clientTestHelper = ClientTestHelper::create();
 
         $clients = $hasClients ? [$clientTestHelper->createClientMock(1, $hasReports)] : null;
 

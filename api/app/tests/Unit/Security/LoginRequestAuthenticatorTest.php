@@ -69,7 +69,7 @@ class LoginRequestAuthenticatorTest extends TestCase
         self::assertEquals($expectedIsSupported, $this->sut->supports($request));
     }
 
-    public function requestProvider()
+    public static function requestProvider(): array
     {
         return [
             'Valid request' => [
@@ -240,7 +240,7 @@ class LoginRequestAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    public function loginDetailsProvider()
+    public static function loginDetailsProvider(): array
     {
         return [
             'Valid keys, empty password' => [['email' => 'a@b.com', 'password' => '']],
