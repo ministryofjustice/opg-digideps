@@ -81,9 +81,9 @@ class StagingSelectedCandidateFactory
         return $changes;
     }
 
-    public function createDeputyCaseCandidate(int $userId, int $clientId): StagingSelectedCandidate
+    public function createDeputyCaseCandidate(string $orderUid, int $userId, int $clientId): StagingSelectedCandidate
     {
-        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertDeputyCase);
+        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertDeputyCase, $orderUid);
 
         $changes->userId = $userId;
         $changes->clientId = $clientId;
