@@ -675,7 +675,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public static function contactsProvider()
+    public static function contactsProvider(): array
     {
         $contact = m::mock(Contact::class);
 

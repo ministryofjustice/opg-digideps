@@ -7,9 +7,8 @@ namespace App\TestHelpers;
 use App\Entity\Client;
 use App\Entity\Report\ReportSubmission;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ReportSubmissionHelper extends KernelTestCase
+class ReportSubmissionHelper
 {
     /**
      * @return ReportSubmission

@@ -93,7 +93,7 @@ class SatisfactionControllerTest extends AbstractTestController
 
     private function prepareReport()
     {
-        $reportTestHelper = new ReportTestHelper();
+        $reportTestHelper = ReportTestHelper::create();
         $em = static::getContainer()->get('em');
 
         $report = $reportTestHelper->generateReport($em);

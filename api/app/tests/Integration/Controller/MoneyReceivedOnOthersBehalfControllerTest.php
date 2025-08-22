@@ -85,7 +85,7 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
     private function prepareReport(string $reportOrNdr, bool $withClientBenefitsCheck = false)
     {
         $em = static::getContainer()->get('em');
-        $reportTestHelper = new ReportTestHelper();
+        $reportTestHelper = ReportTestHelper::create();
 
         $user = (UserTestHelper::create())->createAndPersistUser($em);
         $client = (ClientTestHelper::create())->generateClient($em);
