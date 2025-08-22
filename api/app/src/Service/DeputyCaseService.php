@@ -25,7 +25,10 @@ class DeputyCaseService
         ON LOWER(d.case_number) = LOWER(c.case_number)
         INNER JOIN dd_user ddu
         ON ddu.deputy_uid::varchar = d.deputy_uid
-        WHERE (c.id, ddu.id) NOT IN (SELECT client_id, deputy_id FROM deputy_case)
+        LEFT JOIN deputy_case dc
+        ON dc.client_id = c.id AND dc.user_id = ddu.id
+        WHERE dc.client_id IS NULL
+        AND dc.user_id IS NULL
         AND c.archived_at IS NULL
         AND c.deleted_at IS NULL;
     SQL;
