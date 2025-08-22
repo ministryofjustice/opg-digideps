@@ -14,8 +14,8 @@ use PHPUnit\Framework\TestCase;
 class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 {
     private DeputyCostsEstimateReportUpdateHandler $sut;
-    private EntityManager|MockObject $em;
-    private Report|MockObject $report;
+    private EntityManager&MockObject $em;
+    private Report&MockObject $report;
 
     public function setUp(): void
     {

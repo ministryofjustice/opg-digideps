@@ -7236,31 +7236,6 @@ parameters:
 			path: src/Service/Validator/RestArrayValidator.php
 
 		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\Client\\>\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\Client\\>\\:\\:getReports\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:createClientMock\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:createValidCaseNumber\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
 			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/TestHelpers/ClientTestHelper.php
@@ -7554,31 +7529,6 @@ parameters:
 			message: "#^Parameter \\#4 \\$amount of class App\\\\Entity\\\\Report\\\\Debt constructor expects string\\|null, float given\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getClients\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getRoleName\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:hasReports\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\UserTestHelper\\:\\:createUserMock\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|null given\\.$#"

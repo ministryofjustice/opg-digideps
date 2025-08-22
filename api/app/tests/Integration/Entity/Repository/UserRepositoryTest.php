@@ -80,7 +80,7 @@ class UserRepositoryTest extends ApiBaseTestCase
     public function testFindActiveLaysInLastYear()
     {
         $userHelper = UserTestHelper::create();
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = ReportTestHelper::create();
         $clientHelper = ClientTestHelper::create();
 
         $clientOne = $clientHelper->generateClient($this->entityManager);

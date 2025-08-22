@@ -120,8 +120,8 @@ class UserResearchControllerTest extends AbstractTestController
     {
         $em = static::getContainer()->get('em');
 
-        $report = (new ReportTestHelper())->generateReport($em);
-        $client = (ClientTestHelper::create())->generateClient($em);
+        $report = ReportTestHelper::create()->generateReport($em);
+        $client = ClientTestHelper::create()->generateClient($em);
 
         $report->setClient($client);
 

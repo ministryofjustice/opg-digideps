@@ -521,7 +521,7 @@ class ReportTest extends KernelTestCase
         ?\DateTime $unsubmitDate,
         bool $expectedResult
     ) {
-        $reportTestHelper = new ReportTestHelper();
+        $reportTestHelper = ReportTestHelper::create();
 
         $report = $reportTestHelper->generateReport($this->em)
             ->setDueDate($dueDate)
