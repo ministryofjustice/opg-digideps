@@ -58,10 +58,10 @@ class DeputyCaseService
         $numAdded = 0;
         foreach ($missingAssociations as $missingAssociation) {
             // fetch the user and the client records
-            /** @var User $user */
+            /** @var ?User $user */
             $user = $this->userRepository->find($missingAssociation['user_id']);
 
-            /** @var Client $client */
+            /** @var ?Client $client */
             $client = $this->clientRepository->find($missingAssociation['client_id']);
 
             // we ignore null values for $user and $client, as we are querying for objects we just looked up;
