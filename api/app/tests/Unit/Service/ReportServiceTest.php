@@ -503,7 +503,7 @@ class ReportServiceTest extends TestCase
     }
 
     // pre-reg entries for cases which will result in required reports being created
-    private function preRegEntriesForRequiredReports(): array
+    private static function preRegEntriesForRequiredReports(): array
     {
         $now = (new \DateTime())->format('Y-m-d');
 
