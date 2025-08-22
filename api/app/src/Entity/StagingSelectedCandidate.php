@@ -44,9 +44,9 @@ class StagingSelectedCandidate
     public DeputyshipCandidateAction $action;
 
     /**
-     * @ORM\Column(name="order_uid", type="string", length=30, nullable=true)
+     * @ORM\Column(name="order_uid", type="string", length=30)
      */
-    public ?string $orderUid;
+    public string $orderUid;
 
     /**
      * @ORM\Column(name="deputy_uid", type="string", length=30, nullable=true)
@@ -113,7 +113,7 @@ class StagingSelectedCandidate
      */
     public ?int $userId = null;
 
-    public function __construct(DeputyshipCandidateAction $action, ?string $orderUid = null)
+    public function __construct(DeputyshipCandidateAction $action, string $orderUid)
     {
         $this->action = $action;
         $this->orderUid = $orderUid;
