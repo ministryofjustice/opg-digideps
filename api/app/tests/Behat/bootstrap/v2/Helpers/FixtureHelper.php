@@ -34,7 +34,6 @@ class FixtureHelper
     private OrganisationTestHelper $organisationTestHelper;
     private DeputyTestHelper $deputyTestHelper;
     private CourtOrderTestHelper $courtOrderTestHelper;
-    private bool $fixturesEnabled;
 
     private string $testRunId = '';
     private string $orgName = 'Test Org';
@@ -48,7 +47,7 @@ class FixtureHelper
         private string $symfonyEnvironment,
         private PreRegistrationFactory $preRegistrationFactory,
         private S3ClientInterface $s3Client,
-        bool $fixturesEnabled,
+        private readonly bool $fixturesEnabled,
     ) {
         $this->userTestHelper = new UserTestHelper();
         $this->reportTestHelper = new ReportTestHelper();
@@ -56,7 +55,6 @@ class FixtureHelper
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
         $this->courtOrderTestHelper = new CourtOrderTestHelper();
-        $this->fixturesEnabled = $fixturesEnabled;
     }
 
     public static function buildUserDetails(User $user)

@@ -21,6 +21,7 @@ parameters:
   s3_sirius_bucket: "%env(S3_SIRIUS_BUCKET)%"
   pa_pro_report_csv_filename: "%env(PA_PRO_REPORT_CSV_FILENAME)%"
   lay_report_csv_filename: "%env(LAY_REPORT_CSV_FILENAME)%"
+  fixtures_enabled: "%env(bool:FIXTURES_ENABLED)%"
 EOF
 
 if [[ "$LOCAL_RESOURCES" == "true" ]]; then

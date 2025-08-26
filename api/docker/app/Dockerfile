@@ -68,6 +68,7 @@ RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
     apk del linux-headers; \
   fi
 
+COPY --chown=www-data:www-data api/app/config config
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
@@ -77,6 +78,8 @@ COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
 COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+RUN cat /var/www/config/services.yml
 
 RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
@@ -95,7 +98,6 @@ RUN mkdir -p var/cache \
 FROM application AS runtime
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
-COPY --chown=www-data:www-data --from=composer-runtime /app/config config
 COPY --chown=www-data:www-data --from=composer-runtime /app/src src
 COPY --chown=www-data:www-data --from=composer-runtime /app/composer.lock composer.lock
 
@@ -122,7 +124,6 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 FROM application AS devtools-base
 COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-devtools /app/app app
-COPY --chown=www-data:www-data --from=composer-devtools /app/config config
 COPY --chown=www-data:www-data --from=composer-devtools /app/src src
 COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/tests tests
@@ -160,6 +161,7 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 # Stage 3b2: devtools admin image (image with test dependencies - admin)
 ##############################
 FROM devtools-base AS devtools-admin
+
 USER root
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
