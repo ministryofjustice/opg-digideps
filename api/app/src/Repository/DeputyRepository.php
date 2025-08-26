@@ -58,6 +58,7 @@ class DeputyRepository extends ServiceEntityRepository
             INNER JOIN report re ON cr.report_id = re.id
             WHERE d.deputy_uid = :deputyUid
             AND r.id = re.id
+            AND co.status = 'ACTIVE'
         ) AS "courtOrderUid",
         r.type AS "type"
         FROM report r
