@@ -45,6 +45,7 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug.
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}

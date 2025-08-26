@@ -5,7 +5,7 @@ services:
 
         bind:
             $fixtureParams: "%fixtures%"
-            $fixturesEnabled: "%fixtures_enabled%"
+            $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
             $symfonyEnvironment: "%kernel.environment%"
 
     App\Tests\Behat\:
