@@ -333,6 +333,8 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
     command: sleep infinity
 
   api-integration-tests:
@@ -364,6 +366,8 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
 
   end-to-end-tests:
     build:

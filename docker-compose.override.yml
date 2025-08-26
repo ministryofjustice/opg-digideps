@@ -92,6 +92,8 @@ services:
       - ./api/app/src:/var/www/src
       - ./api/app/tests:/var/www/tests
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
 
   api-integration-tests:
     volumes:
@@ -101,6 +103,9 @@ services:
       - ./api/app/src:/var/www/src
       - ./api/app/tests:/var/www/tests
       - ./api/app/scripts:/var/www/scripts
+      - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
 
   end-to-end-tests:
     volumes:

@@ -25,7 +25,7 @@ class CourtOrderControllerTest extends AbstractTestController
         $container = static::getContainer();
 
         self::$fixtureHelper = $container->get(FixtureHelper::class);
-        self::$reportTestHelper = new ReportTestHelper();
+        self::$reportTestHelper = ReportTestHelper::create();
         self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
     }
 
