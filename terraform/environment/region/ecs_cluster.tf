@@ -70,11 +70,7 @@ locals {
     {
       name  = "SESSION_PREFIX",
       value = "dd_api"
-    },
-    {
-      name  = "APP_DB_USERNAME",
-      value = "application"
-    },
+    }
   ]
 
   api_service_variables = [
