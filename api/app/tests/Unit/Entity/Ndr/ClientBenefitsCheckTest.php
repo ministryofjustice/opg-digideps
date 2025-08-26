@@ -27,7 +27,7 @@ class ClientBenefitsCheckTest extends TestCase
         self::assertEquals($expectedExplanation, $sut->getNeverCheckedExplanation());
     }
 
-    public function whenCheckedProvider()
+    public static function whenCheckedProvider(): array
     {
         return [
             'haveChecked' => [ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED, null],
@@ -54,7 +54,7 @@ class ClientBenefitsCheckTest extends TestCase
         self::assertEquals($expectedExplanation, $sut->getDontKnowMoneyExplanation());
     }
 
-    public function otherMoneyProvider()
+    public static function otherMoneyProvider(): array
     {
         return [
             'no' => [ClientBenefitsCheck::OTHER_MONEY_NO, null],
@@ -78,7 +78,7 @@ class ClientBenefitsCheckTest extends TestCase
         self::assertEquals($expectedDateLastChecked, $sut->getDateLastCheckedEntitlement());
     }
 
-    public function dateCheckedProvider()
+    public static function dateCheckedProvider(): array
     {
         $now = new \DateTime();
         $sut = (new ClientBenefitsCheck())

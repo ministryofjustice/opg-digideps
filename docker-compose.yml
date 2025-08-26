@@ -89,7 +89,7 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
-      target: runtime
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
@@ -101,7 +101,7 @@ services:
       - localstack
       - mock-notify-api
     environment:
-      APP_ENV: ${APP_ENV:-prod}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
     env_file:
       - ./client/app/frontend.env
@@ -334,6 +334,8 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
     command: sleep infinity
 
   api-integration-tests:
@@ -365,6 +367,8 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
 
   end-to-end-tests:
     build:

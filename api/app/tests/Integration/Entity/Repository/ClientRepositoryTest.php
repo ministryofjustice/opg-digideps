@@ -28,8 +28,8 @@ class ClientRepositoryTest extends ApiBaseTestCase
 
     public function testgetAllClientsAndReportsByDeputyUid()
     {
-        $userHelper = new UserTestHelper();
-        $clientHelper = new ClientTestHelper();
+        $userHelper = UserTestHelper::create();
+        $clientHelper = ClientTestHelper::create();
 
         $clientOne = $clientHelper->generateClient($this->entityManager);
         $activeUserOne = $userHelper->createAndPersistUser($this->entityManager, $clientOne);

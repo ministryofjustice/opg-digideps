@@ -29,7 +29,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived($isArchived);
 
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = ReportTestHelper::create();
 
         $docs = array_map(function ($status) use ($reportHelper) {
             $report = $reportHelper->generateReport($this->entityManager);
@@ -54,7 +54,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         self::assertEquals($shouldArchive, $submission->getArchived());
     }
 
-    public function updateArchivedStatusDataProvider()
+    public static function updateArchivedStatusDataProvider(): array
     {
         return [
             'One synced document' => [false, [Document::SYNC_STATUS_SUCCESS], true],
@@ -69,7 +69,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived(false);
 
-        $reportHelper = new ReportTestHelper();
+        $reportHelper = ReportTestHelper::create();
 
         $statuses = [null, null];
         $docs = array_map(function ($status) use ($reportHelper) {

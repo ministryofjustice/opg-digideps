@@ -27,11 +27,11 @@ class UserVoterTest extends KernelTestCase
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
 
-    public function deleteUserProvider()
+    public static function deleteUserProvider(): array
     {
-        $userTestHelper = new UserTestHelper();
-        $clientTestHelp = new ClientTestHelper();
-        $reportTestHelper = new ReportTestHelper();
+        $userTestHelper = UserTestHelper::create();
+        $clientTestHelp = ClientTestHelper::create();
+        $reportTestHelper = ReportTestHelper::create();
 
         self::bootKernel();
         $em = static::getContainer()->get('em');
@@ -266,12 +266,12 @@ class UserVoterTest extends KernelTestCase
         self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::ADD_USER]));
     }
 
-    public function addEditUserProvider()
+    public static function addEditUserProvider(): array
     {
         self::bootKernel();
         $em = static::getContainer()->get('em');
 
-        $userTestHelper = new UserTestHelper();
+        $userTestHelper = UserTestHelper::create();
 
         $admin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
         $admin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);

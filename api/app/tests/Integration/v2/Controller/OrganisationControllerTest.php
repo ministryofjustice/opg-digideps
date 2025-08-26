@@ -4,6 +4,7 @@ namespace App\Tests\Integration\v2\Controller;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Tests\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,9 +34,17 @@ class OrganisationControllerTest extends AbstractTestController
     /** @var string|null */
     private static $tokenDeputyInOrg;
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
+
         self::$fixtures::deleteReportsData(['organisation']);
 
         self::$orgs = self::fixtures()->createOrganisations(4);
@@ -274,10 +283,7 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    /**
-     * @return array
-     */
-    public function getBadRequestData()
+    public static function getBadRequestData(): array
     {
         return [
             ['data' => '{"name": "Org Name", "email_identifier": "unique_id"}'],
@@ -583,7 +589,11 @@ class OrganisationControllerTest extends AbstractTestController
     public function removeUserActionAllowsUserRemoveFromTheirOrganisation()
     {
         $orgId = self::$orgs[0]->getId();
-        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+
+        /** @var UserRepository $repo */
+        $repo = self::fixtures()->getRepo(User::class);
+
+        $newUser = $repo->findOneByEmail('prof@example.org');
 
         self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
         self::fixtures()->flush()->clear();

@@ -275,10 +275,10 @@ class ClientVoterTest extends KernelTestCase
         self::assertEquals($expectedPermission, $sut->vote($token, $client, [ClientVoter::DELETE]));
     }
 
-    public function deleteClientProvider()
+    public static function deleteClientProvider(): array
     {
-        $userTestHelper = new UserTestHelper();
-        $clientTestHelp = new ClientTestHelper();
+        $userTestHelper = UserTestHelper::create();
+        $clientTestHelp = ClientTestHelper::create();
 
         $kernel = self::bootKernel();
         $em = static::getContainer()->get('em');

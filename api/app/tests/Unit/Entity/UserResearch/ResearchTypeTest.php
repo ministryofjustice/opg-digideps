@@ -29,7 +29,7 @@ class ResearchTypeTest extends TestCase
         self::assertEquals($expectedInPersonValue, $researchType->getInPerson());
     }
 
-    public function propertyProvider()
+    public static function propertyProvider(): array
     {
         return [
             'all set' => [['surveys', 'videoCall', 'phone', 'inPerson'], true, true, true, true],

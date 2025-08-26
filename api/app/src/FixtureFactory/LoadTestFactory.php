@@ -22,9 +22,9 @@ class LoadTestFactory
     {
         $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
 
-        $userTestHelper = new UserTestHelper();
+        $userTestHelper = UserTestHelper::create();
         $reportTestHelper = new ReportTestHelper();
-        $clientTestHelper = new ClientTestHelper();
+        $clientTestHelper = ClientTestHelper::create();
 
         foreach (range(1, $recordsToMake) as $index) {
             $user = $userTestHelper->createUser(null)

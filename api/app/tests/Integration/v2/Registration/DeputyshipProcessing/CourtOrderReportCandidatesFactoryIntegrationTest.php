@@ -66,7 +66,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         );
     }
 
-    private function compatibleReportDataProvider(): array
+    private static function compatibleReportDataProvider(): array
     {
         return [
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102'],

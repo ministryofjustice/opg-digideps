@@ -60,10 +60,7 @@ class OrganisationTransformerTest extends TestCase
         $userTransformer
             ->expects($this->exactly(2))
             ->method('transform')
-            ->withConsecutive(
-                [$this->isInstanceOf(UserDto::class), ['clients']],
-                [$this->isInstanceOf(UserDto::class), ['clients']]
-            )
+            ->with($this->isInstanceOf(UserDto::class), ['clients'])
             ->willReturnOnConsecutiveCalls(
                 ['user_one' => 'transformed'],
                 ['user_two' => 'transformed']

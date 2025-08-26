@@ -6,6 +6,14 @@ addCoDeputy:
     first name, last name and email address.
   submitButton: Send invitation
 
+addCoDeputyCourtOrder:
+  htmlTitle: Invite deputy - Complete the deputy report | GOV.UK
+  pageTitle: Invite deputy
+  intro: |
+    Invite other people named on the court order to view and edit %clientFirstName%'s reports. All we need is their
+    first name, last name and email address.
+  submitButton: Send invitation
+
 reinviteDeputy:
   htmlTitle: Reinvite deputy - Complete the deputy report | GOV.UK
   pageTitle: Reinvite deputy

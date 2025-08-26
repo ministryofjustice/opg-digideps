@@ -93,11 +93,11 @@ class SatisfactionControllerTest extends AbstractTestController
 
     private function prepareReport()
     {
-        $reportTestHelper = new ReportTestHelper();
+        $reportTestHelper = ReportTestHelper::create();
         $em = static::getContainer()->get('em');
 
         $report = $reportTestHelper->generateReport($em);
-        $client = (new ClientTestHelper())->generateClient($em);
+        $client = (ClientTestHelper::create())->generateClient($em);
 
         $report->setClient($client);
 
@@ -138,10 +138,7 @@ class SatisfactionControllerTest extends AbstractTestController
         ]);
     }
 
-    /**
-     * @return array
-     */
-    public function getInvalidInputs()
+    public static function getInvalidInputs(): array
     {
         return [
             ['url' => '/satisfaction', 'data' => ['score' => 1]],
@@ -181,10 +178,7 @@ class SatisfactionControllerTest extends AbstractTestController
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getValidInputs()
+    public static function getValidInputs(): array
     {
         return [
             ['url' => '/satisfaction', 'data' => ['score' => 4, 'reportType' => 'foo', 'comments' => 'a comment']],

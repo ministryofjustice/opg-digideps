@@ -105,7 +105,7 @@ class OrganisationRestHandlerTest extends TestCase
         $this->sut->create($data);
     }
 
-    public function missingData()
+    public static function missingData(): array
     {
         return [
             'Null name' => [['name' => null, 'email_identifier' => 'abc.com', 'is_activated' => true]],

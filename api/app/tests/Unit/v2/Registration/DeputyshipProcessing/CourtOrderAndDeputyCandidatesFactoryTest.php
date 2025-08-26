@@ -66,7 +66,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $this->deputyshipLookupCache
             ->expects($this->once())
-            ->method('getClientIdForCasenumber')
+            ->method('getClientIdForCaseNumber')
             ->with('1234567T')
             ->willReturn($existingClientId);
 
@@ -107,7 +107,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $this->deputyshipLookupCache
             ->expects($this->once())
-            ->method('getClientIdForCasenumber')
+            ->method('getClientIdForCaseNumber')
             ->with('12345678')
             ->willReturn($existingClientId);
 

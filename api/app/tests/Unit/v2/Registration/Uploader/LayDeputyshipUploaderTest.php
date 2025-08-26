@@ -159,7 +159,7 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $this->assertEquals($expectedNewReportType, $activeReport->getType());
     }
 
-    public function reportTypeProvider()
+    public static function reportTypeProvider(): array
     {
         return [
             'Changes to 102' => ['103', 'OPG102', '102', false, '12345678'],

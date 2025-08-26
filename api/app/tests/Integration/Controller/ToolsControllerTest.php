@@ -28,9 +28,16 @@ class ToolsControllerTest extends AbstractTestController
     private ?array $headersSuperAdmin = [];
     private ?array $headersDeputy = [];
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -177,10 +184,8 @@ class ToolsControllerTest extends AbstractTestController
 
     /**
      * Provides the content of the POST request, the expected status code and the expected response message.
-     *
-     * @return array
      */
-    public function invalidPostDataProvider()
+    public static function invalidPostDataProvider(): array
     {
         return [
             [

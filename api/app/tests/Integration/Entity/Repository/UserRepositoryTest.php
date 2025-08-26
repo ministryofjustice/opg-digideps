@@ -79,9 +79,9 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testFindActiveLaysInLastYear()
     {
-        $userHelper = new UserTestHelper();
-        $reportHelper = new ReportTestHelper();
-        $clientHelper = new ClientTestHelper();
+        $userHelper = UserTestHelper::create();
+        $reportHelper = ReportTestHelper::create();
+        $clientHelper = ClientTestHelper::create();
 
         $clientOne = $clientHelper->generateClient($this->entityManager);
         $activeUserOne = $userHelper->createAndPersistUser($this->entityManager, $clientOne);
@@ -128,7 +128,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testGetAllAdminAccounts()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
         $usersToAdd = [];
         $usersToAdd[] = $adminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $adminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
@@ -156,7 +156,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testGetAllAdminAccountsCreatedButNotActivatedWithin()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
         $usersToAdd = [];
         $usersToAdd[] = $adminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $superAdminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
@@ -195,7 +195,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testGetAllActivatedAdminAccounts()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
         $usersToAdd = [];
         $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $activeSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
@@ -229,7 +229,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testGetAllAdminAccountsNotUsedWithin()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
         $usersToAdd = [];
         $usersToAdd[] = $loggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $loggedInSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
@@ -263,7 +263,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testGetAllAdminAccountsUsedWithin()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
         $usersToAdd = [];
         $usersToAdd[] = $loggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $loggedInSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
@@ -297,7 +297,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testGetAllAdminUserAccountsNotUsedWithin()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
         $usersToAdd = [];
         $usersToAdd[] = $notRecentlyLoggedInAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $notRecentlyLoggedInSuperAdminManagerUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
@@ -334,7 +334,7 @@ class UserRepositoryTest extends ApiBaseTestCase
 
     public function testInactiveAdminUsersAreDeleted()
     {
-        $userHelper = new UserTestHelper();
+        $userHelper = UserTestHelper::create();
 
         $usersToAdd = [];
         $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)

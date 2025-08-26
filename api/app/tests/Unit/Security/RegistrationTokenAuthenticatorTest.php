@@ -62,7 +62,7 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         self::assertEquals($expectedIsSupported, $this->sut->supports($request));
     }
 
-    public function loginRouteRequestProvider(): array
+    public static function loginRouteRequestProvider(): array
     {
         return [
             'Valid request - login route' => [
@@ -123,7 +123,7 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         self::assertEquals(false, $this->sut->supports($request));
     }
 
-    public function setFirstPasswordRouteRequestProvider(): array
+    public static function setFirstPasswordRouteRequestProvider(): array
     {
         return [
             'Valid uri, valid method, missing token from body' => [

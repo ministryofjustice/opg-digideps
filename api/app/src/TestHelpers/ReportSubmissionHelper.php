@@ -7,9 +7,8 @@ namespace App\TestHelpers;
 use App\Entity\Client;
 use App\Entity\Report\ReportSubmission;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ReportSubmissionHelper extends KernelTestCase
+class ReportSubmissionHelper
 {
     /**
      * @return ReportSubmission
@@ -22,7 +21,7 @@ class ReportSubmissionHelper extends KernelTestCase
         $client = new Client();
         $report = (new ReportTestHelper())->generateReport($em, $client, null, new \DateTime());
         $client->addReport($report);
-        $user = (new UserTestHelper())->createAndPersistUser($em, $client);
+        $user = (UserTestHelper::create())->createAndPersistUser($em, $client);
         $reportSubmission = (new ReportSubmission($report, $user))->setCreatedOn(new \DateTime());
 
         $em->persist($client);

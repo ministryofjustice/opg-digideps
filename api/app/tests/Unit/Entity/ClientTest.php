@@ -41,7 +41,7 @@ class ClientTest extends TestCase
     /**
      * Data provider, expected reporting start date from a given court date.
      */
-    public function courtDateExpectedStartDateProvider()
+    public static function courtDateExpectedStartDateProvider(): array
     {
         return [
             [new \DateTime('2000-01-01'), 2019, new \DateTime('2018-01-01')],
@@ -64,7 +64,7 @@ class ClientTest extends TestCase
     /**
      * Data provider, expected reporting end date from a given court date.
      */
-    public function courtDateExpectedEndDateProvider()
+    public static function courtDateExpectedEndDateProvider(): array
     {
         return [
             [new \DateTime('2000-01-01'), 2019, new \DateTime('2018-12-31')],
