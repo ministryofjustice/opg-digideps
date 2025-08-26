@@ -102,7 +102,7 @@ class DeputyRepositoryTest extends ApiBaseTestCase
 
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
 
-        self::assertCount(0, $results);
+        self::assertEquals(null, $results);
     }
 
     public function testFindReportsInfoByUidIsNull()
