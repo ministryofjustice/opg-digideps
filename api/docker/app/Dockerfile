@@ -79,8 +79,6 @@ COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-RUN cat /var/www/config/services.yml
-
 RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 

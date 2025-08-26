@@ -46,7 +46,7 @@ jobs:
           -f client/docker/app/Dockerfile \
           --cache-from=type=local,src=/tmp/.buildx-cache \
           --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-          --build-arg ENVIRONMENT=local \
+          --build-arg LOCAL_RESOURCES=true \
           --tag frontend-unit-tests:latest \
           --target devtools-admin \
           --output type=docker .
