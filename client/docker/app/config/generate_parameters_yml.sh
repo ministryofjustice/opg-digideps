@@ -37,7 +37,7 @@ parameters:
   fixtures_enabled: "%env(bool:FIXTURES_ENABLED)%"
 EOF
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   session_cookie_secure: false
 EOF
@@ -47,7 +47,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   s3_client_params:
     version: "latest"
@@ -68,7 +68,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   secrets_manager_client_params:
     version: "latest"
@@ -88,7 +88,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   ssm_client_params:
     version: "latest"
@@ -108,7 +108,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   cloudwatch_logs_client_params:
     version: "latest"
