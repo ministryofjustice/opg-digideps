@@ -7,8 +7,11 @@ use App\Entity\Client;
 use App\Entity\Ndr\Traits as NdrTraits;
 use App\Entity\ReportInterface;
 use App\Entity\Satisfaction;
+use App\Entity\User;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -50,15 +53,13 @@ class Ndr implements ReportInterface
     private $id;
 
     /**
-     * @var Client
-     *
      * @JMS\Groups({"ndr-client"})
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Client", inversedBy="ndr")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $client;
+    private Client $client;
 
     /**
      * @var VisitsCare
@@ -118,7 +119,7 @@ class Ndr implements ReportInterface
     private $hasDebts;
 
     /**
-     * @var AssetInterface[]
+     * @var Collection<int, Asset>|Asset[]
      *
      * @JMS\Groups({"ndr-asset"})
      *
@@ -126,7 +127,7 @@ class Ndr implements ReportInterface
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
-    private $assets;
+    private Collection|array $assets;
 
     /**
      * @var bool
@@ -140,15 +141,13 @@ class Ndr implements ReportInterface
     private $noAssetToAdd;
 
     /**
-     * @var bool
-     *
      * @JMS\Groups({"ndr"})
      *
      * @JMS\Type("boolean")
      *
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
-    private $submitted;
+    private ?bool $submitted = null;
 
     /**
      * @var \DateTime
@@ -164,8 +163,6 @@ class Ndr implements ReportInterface
     private $startDate;
 
     /**
-     * @var \DateTime
-     *
      * @JMS\Groups({"ndr"})
      *
      * @JMS\Accessor(getter="getSubmitDate")
@@ -174,18 +171,16 @@ class Ndr implements ReportInterface
      *
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
-    private $submitDate;
+    private ?DateTimeInterface $submitDate = null;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr"})
      *
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
-    private $agreedBehalfDeputy;
+    private ?string $agreedBehalfDeputy;
 
     /**
      * @var string
@@ -199,8 +194,6 @@ class Ndr implements ReportInterface
     private $agreedBehalfDeputyExplanation;
 
     /**
-     * @var User
-     *
      * @JMS\Groups({"report-submitted-by"})
      *
      * @JMS\Type("App\Entity\User")
@@ -209,7 +202,7 @@ class Ndr implements ReportInterface
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $submittedBy;
+    private ?User $submittedBy = null;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="ndr", cascade={"persist", "remove"})
@@ -262,10 +255,7 @@ class Ndr implements ReportInterface
         $this->id = $id;
     }
 
-    /**
-     * @return Client
-     */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
@@ -291,20 +281,12 @@ class Ndr implements ReportInterface
         $this->visitsCare = $visitsCare;
     }
 
-    /**
-     * @return bool
-     */
-    public function getSubmitted()
+    public function getSubmitted(): ?bool
     {
         return $this->submitted;
     }
 
-    /**
-     * @param bool $submitted
-     *
-     * @return self
-     */
-    public function setSubmitted($submitted)
+    public function setSubmitted(?bool $submitted): static
     {
         $this->submitted = $submitted;
 
@@ -347,15 +329,12 @@ class Ndr implements ReportInterface
         }
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getSubmitDate()
+    public function getSubmitDate(): ?DateTimeInterface
     {
         return $this->submitDate;
     }
 
-    public function setSubmitDate(?\DateTime $submitDate = null)
+    public function setSubmitDate(?DateTimeInterface $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
@@ -363,9 +342,9 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return BankAccount[]
+     * @return Collection<int, BankAccount>|BankAccount[]
      */
-    public function getBankAccounts()
+    public function getBankAccounts(): Collection|array
     {
         return $this->bankAccounts;
     }
@@ -503,11 +482,9 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * Get assets.
-     *
-     * @return AssetInterface[]
+     * @return Collection<int, Asset>|Asset[]
      */
-    public function getAssets()
+    public function getAssets(): Collection|array
     {
         return $this->assets;
     }
@@ -536,10 +513,7 @@ class Ndr implements ReportInterface
         return $this->noAssetToAdd;
     }
 
-    /**
-     * @return string
-     */
-    public function getAgreedBehalfDeputy()
+    public function getAgreedBehalfDeputy(): ?string
     {
         return $this->agreedBehalfDeputy;
     }
@@ -614,10 +588,8 @@ class Ndr implements ReportInterface
 
     /**
      * NDR financial summary, contains bank accounts and balance information.
-     *
-     * @return array
      */
-    public function getFinancialSummary()
+    public function getFinancialSummary(): array
     {
         $accounts = [];
 
@@ -682,12 +654,7 @@ class Ndr implements ReportInterface
         return $this->submittedBy;
     }
 
-    /**
-     * @param mixed $submittedBy
-     *
-     * @return Report
-     */
-    public function setSubmittedBy($submittedBy)
+    public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
 

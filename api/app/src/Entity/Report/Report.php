@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -238,8 +239,6 @@ class Report implements ReportInterface
     private $type;
 
     /**
-     * @var int
-     *
      * @JMS\Groups({"report-client"})
      *
      * @JMS\Type("App\Entity\Client")
@@ -248,7 +247,7 @@ class Report implements ReportInterface
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $client;
+    private Client $client;
 
     /**
      * @var VisitsCare
@@ -341,8 +340,6 @@ class Report implements ReportInterface
     private $endDate;
 
     /**
-     * @var \DateTime
-     *
      * @JMS\Groups({"report"})
      *
      * @JMS\Accessor(getter="getSubmitDate")
@@ -351,7 +348,7 @@ class Report implements ReportInterface
      *
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
-    private $submitDate;
+    private ?DateTimeInterface $submitDate = null;
 
     /**
      * @var \DateTime
@@ -367,19 +364,15 @@ class Report implements ReportInterface
     private $unSubmitDate;
 
     /**
-     * @var bool whether the report is submitted or not
-     *
      * @JMS\Groups({"report"})
      *
      * @JMS\Type("boolean")
      *
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
-    private $submitted;
+    private ?bool $submitted = null;
 
     /**
-     * @var User
-     *
      * @JMS\Groups({"report-submitted-by"})
      *
      * @JMS\Type("App\Entity\User")
@@ -388,7 +381,7 @@ class Report implements ReportInterface
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $submittedBy;
+    private ?User $submittedBy = null;
 
     /**
      * @deprecated client shouldn't need this anymore
@@ -804,24 +797,14 @@ class Report implements ReportInterface
             && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
-    /**
-     * Set submitDate.
-     *
-     * @return Report
-     */
-    public function setSubmitDate(?\DateTime $submitDate = null)
+    public function setSubmitDate(?DateTimeInterface $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    /**
-     * Get submitDate.
-     *
-     * @return \DateTime
-     */
-    public function getSubmitDate()
+    public function getSubmitDate(): ?DateTimeInterface
     {
         return $this->submitDate;
     }
@@ -846,26 +829,14 @@ class Report implements ReportInterface
         return $this;
     }
 
-    /**
-     * Set submitted.
-     *
-     * @param bool $submitted
-     *
-     * @return Report
-     */
-    public function setSubmitted($submitted)
+    public function setSubmitted(?bool $submitted): static
     {
         $this->submitted = $submitted;
 
         return $this;
     }
 
-    /**
-     * Get submitted.
-     *
-     * @return bool
-     */
-    public function getSubmitted()
+    public function getSubmitted(): ?bool
     {
         return $this->submitted;
     }
@@ -875,34 +846,21 @@ class Report implements ReportInterface
         return $this->submittedBy;
     }
 
-    /**
-     * @return Report
-     */
-    public function setSubmittedBy($submittedBy)
+    public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
 
         return $this;
     }
 
-    /**
-     * Set client.
-     *
-     * @return Report
-     */
-    public function setClient(?Client $client = null)
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
         return $this;
     }
 
-    /**
-     * Get client.
-     *
-     * @return Client
-     */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
@@ -1011,7 +969,7 @@ class Report implements ReportInterface
         return in_array($user->getId(), $this->getClient()->getUserIds());
     }
 
-    public function getAgreedBehalfDeputy()
+    public function getAgreedBehalfDeputy(): ?string
     {
         return $this->agreedBehalfDeputy;
     }
@@ -1379,10 +1337,8 @@ class Report implements ReportInterface
 
     /**
      * Report financial summary, contains bank accounts and balance information.
-     *
-     * @return array
      */
-    public function getFinancialSummary()
+    public function getFinancialSummary(): array
     {
         $accounts = [];
         $openingBalanceTotal = 0;
