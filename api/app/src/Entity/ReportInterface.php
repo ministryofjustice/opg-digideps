@@ -2,40 +2,37 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
+use Doctrine\Common\Collections\Collection;
+
 interface ReportInterface
 {
-    /**
-     * @return Client
-     */
-    public function getClient();
+    public function getClient(): Client;
 
     public function getFinancialSummary();
 
+    /**
+     * @param string[] $sectionIds
+     */
     public function updateSectionsStatusCache(array $sectionIds);
 
-    public function getSubmitted();
+    public function getSubmitted(): ?bool;
 
     /**
-     * @return AssetInterface[]
+     * @return Collection<int, AssetInterface>|AssetInterface[]
      */
-    public function getAssets();
+    public function getAssets(): Collection|array;
 
     /**
-     * @return BankAccountInterface[]
+     * @return Collection<int, BankAccountInterface>|BankAccountInterface[]
      */
-    public function getBankAccounts();
+    public function getBankAccounts(): Collection|array;
 
-    /**
-     * @return string
-     */
-    public function getAgreedBehalfDeputy();
+    public function getAgreedBehalfDeputy(): ?string;
 
-    public function setSubmittedBy($user);
+    public function setSubmittedBy(?User $submittedBy): static;
 
-    /**
-     * @param bool $submitted
-     */
-    public function setSubmitted($submitted);
+    public function setSubmitted(?bool $submitted): static;
 
-    public function setSubmitDate(?\DateTime $submitDate = null);
+    public function setSubmitDate(?DateTimeInterface $submitDate = null): static;
 }

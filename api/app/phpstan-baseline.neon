@@ -2051,11 +2051,6 @@ parameters:
 			path: src/Entity/Ndr/Ndr.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\AssetInterface\\:\\:getValueTotal\\(\\)\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
 			message: "#^Cannot call method add\\(\\) on array\\<App\\\\Entity\\\\Ndr\\\\Debt\\>\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
@@ -2116,7 +2111,7 @@ parameters:
 			path: src/Entity/Ndr/Ndr.php
 
 		-
-			message: "#^Cannot call method removeElement\\(\\) on array\\<App\\\\Entity\\\\AssetInterface\\>\\.$#"
+			message: "#^Cannot call method removeElement\\(\\) on array\\|\\(Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, App\\\\Entity\\\\Ndr\\\\Asset\\>&iterable\\<App\\\\Entity\\\\Ndr\\\\Asset\\>\\)\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -2147,6 +2142,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:getBalanceOnCourtOrderDateTotal\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\decimal\\.$#"
+			count: 1
+			path: src/Entity/Ndr/Ndr.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:getBalanceOnCourtOrderDateTotal\\(\\) should return App\\\\Entity\\\\Ndr\\\\decimal but returns \\(float\\|int\\)\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -2256,21 +2256,6 @@ parameters:
 			path: src/Entity/Ndr/Ndr.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setSubmitDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setSubmittedBy\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\Report\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setSubmittedBy\\(\\) should return App\\\\Entity\\\\Ndr\\\\Report but returns \\$this\\(App\\\\Entity\\\\Ndr\\\\Ndr\\)\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setVisitsCare\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
@@ -2287,16 +2272,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\$stateBenefits of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:addStateBenefits\\(\\) has invalid type App\\\\Entity\\\\Ndr\\\\Traits\\\\IncomeBenefit\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$assets \\(array\\<App\\\\Entity\\\\AssetInterface\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$assets \\(array\\<App\\\\Entity\\\\AssetInterface\\>\\) does not accept array\\<App\\\\Entity\\\\AssetInterface\\|App\\\\Entity\\\\Ndr\\\\Asset\\>\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -2342,21 +2317,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$stateBenefits \\(array\\<App\\\\Entity\\\\Ndr\\\\StateBenefit\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$submitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$submittedBy \\(App\\\\Entity\\\\Ndr\\\\User\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$submittedBy has unknown class App\\\\Entity\\\\Ndr\\\\User as its type\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -3841,11 +3801,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\AssetInterface\\:\\:getValueTotal\\(\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Call to an undefined method Traversable\\<\\(int\\|string\\), mixed\\>\\:\\:uasort\\(\\)\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -3926,11 +3881,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\BankAccount\\>\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Debt\\>\\.$#"
 			count: 2
 			path: src/Entity/Report/Report.php
@@ -3971,6 +3921,11 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+			message: "#^Cannot call method filter\\(\\) on array\\|\\(Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, App\\\\Entity\\\\BankAccountInterface\\>&iterable\\<App\\\\Entity\\\\BankAccountInterface\\>\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
 			message: "#^Cannot call method filter\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -3987,11 +3942,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getFinancialSummary\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on int\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4032,6 +3982,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method removeElement\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Decision\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method removeElement\\(\\) on array\\|\\(Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, App\\\\Entity\\\\BankAccountInterface\\>&iterable\\<App\\\\Entity\\\\BankAccountInterface\\>\\)\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4112,11 +4067,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getCalculatedBalance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getClient\\(\\) should return App\\\\Entity\\\\Client but returns int\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4571,11 +4521,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setSubmittedBy\\(\\) has parameter \\$submittedBy with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setType\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4621,22 +4566,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$bankAccounts has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$checklist \\(App\\\\Entity\\\\Report\\\\Checklist\\) does not accept null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$client \\(int\\) does not accept App\\\\Entity\\\\Client\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$client \\(int\\) does not accept App\\\\Entity\\\\Client\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4826,11 +4756,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$submitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unSubmitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4852,11 +4777,6 @@ parameters:
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between null and float will always evaluate to false\\.$#"
-			count: 2
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between null and string will always evaluate to false\\.$#"
 			count: 2
 			path: src/Entity/Report/Report.php
 
@@ -4991,31 +4911,6 @@ parameters:
 			path: src/Entity/ReportInterface.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:getSubmitted\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmitDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmitted\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) has parameter \\$user with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:updateSectionsStatusCache\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/ReportInterface.php
@@ -5024,11 +4919,6 @@ parameters:
 			message: "#^Property App\\\\Entity\\\\Satisfaction\\:\\:\\$comments \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Entity/Satisfaction.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with DateTime will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/User.php
 
 		-
 			message: "#^Cannot call method first\\(\\) on array\\<App\\\\Entity\\\\Client\\>\\.$#"
@@ -5141,7 +5031,7 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(App\\\\Entity\\\\Report\\\\Report\\)\\: true given\\.$#"
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(App\\\\Entity\\\\Report\\\\Report\\)\\: bool given\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -7251,6 +7141,11 @@ parameters:
 			path: src/TestHelpers/OrganisationTestHelper.php
 
 		-
+			message: "#^Cannot call method modify\\(\\) on DateTimeInterface\\|null\\.$#"
+			count: 1
+			path: src/TestHelpers/ReportSubmissionHelper.php
+
+		-
 			message: "#^Method App\\\\TestHelpers\\\\ReportSubmissionHelper\\:\\:generateAndPersistSubmittedReportSubmission\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportSubmissionHelper.php
@@ -7417,7 +7312,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
@@ -7512,6 +7407,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, App\\\\Entity\\\\ReportInterface given\\.$#"
+			count: 1
+			path: src/TestHelpers/ReportTestHelper.php
+
+		-
+			message: "#^Parameter \\#1 \\$submittedBy of method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) expects App\\\\Entity\\\\User\\|null, mixed given\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 

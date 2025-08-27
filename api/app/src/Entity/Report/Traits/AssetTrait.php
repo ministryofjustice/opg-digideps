@@ -5,6 +5,7 @@ namespace App\Entity\Report\Traits;
 use App\Entity\AssetInterface;
 use App\Entity\Report\Asset;
 use App\Entity\Report\Report;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -53,11 +54,9 @@ trait AssetTrait
     }
 
     /**
-     * Get assets.
-     *
-     * @return AssetInterface[]
+     * @return Collection<int, AssetInterface>|AssetInterface[]
      */
-    public function getAssets()
+    public function getAssets(): Collection|array
     {
         return $this->assets;
     }
