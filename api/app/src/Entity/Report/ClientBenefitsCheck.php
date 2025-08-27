@@ -48,8 +48,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     /**
      * @ORM\Column(name="created_at", type="datetime",nullable=true)
      *
-     * @Gedmo\Timestampable(on="create")
-     *
      * @JMS\Groups({"client-benefits-check"})
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
