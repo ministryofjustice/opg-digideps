@@ -48,7 +48,7 @@ class FixtureController extends AbstractController
         private readonly NdrRepository $ndrRepository,
         private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly DeputyRepository $deputyRepository,
-        private readonly string $symfonyEnvironment,
+        private readonly bool $fixturesEnabled,
     ) {
     }
 
@@ -59,7 +59,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function createCourtOrder(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -332,7 +332,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function completeReportSections(Request $request, string $reportType, int $reportId): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -363,7 +363,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
     public function createAdmin(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -388,7 +388,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
     public function getUserIDByEmail(string $email): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -408,7 +408,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
     public function createUser(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -438,7 +438,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function deleteUser(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -456,7 +456,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
     public function createClientAndAttachToDeputy(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -492,7 +492,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
     public function createClientAndAttachToOrgs(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -564,7 +564,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
     public function createPreRegistration(Request $request): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -619,7 +619,7 @@ class FixtureController extends AbstractController
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function moveUsersClientsToUsersOrg(string $userEmail): JsonResponse
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -651,7 +651,7 @@ class FixtureController extends AbstractController
     public function activateOrg(string $orgName): JsonResponse
     {
         try {
-            if ('prod' === $this->symfonyEnvironment) {
+            if (!$this->fixturesEnabled) {
                 throw $this->createNotFoundException();
             }
 

@@ -44,7 +44,7 @@ services:
       $projectDir: "%kernel.project_dir%"
       $sessionPrefix: "%session_prefix%"
       $workspace: "%workspace%"
-      $fixturesEnabled: "%fixtures_enabled%"
+      $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
 
   predis:
     class: Predis\Client

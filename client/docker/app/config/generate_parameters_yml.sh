@@ -34,10 +34,9 @@ parameters:
   file_scanner_sslverify: "%env(bool:FILESCANNER_SSLVERIFY)%"
   pa_pro_report_csv_filename: "%env(PA_PRO_REPORT_CSV_FILENAME)%"
   lay_report_csv_filename: "%env(LAY_REPORT_CSV_FILENAME)%"
-  fixtures_enabled: "%env(bool:FIXTURES_ENABLED)%"
 EOF
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   session_cookie_secure: false
 EOF
@@ -47,7 +46,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   s3_client_params:
     version: "latest"
@@ -68,7 +67,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   secrets_manager_client_params:
     version: "latest"
@@ -88,7 +87,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   ssm_client_params:
     version: "latest"
@@ -108,7 +107,7 @@ cat <<EOF >> parameters.yml
 EOF
 fi
 
-if [[ "$ENVIRONMENT" == "local" ]]; then
+if [[ "$LOCAL_RESOURCES" == "true" ]]; then
 cat <<EOF >> parameters.yml
   cloudwatch_logs_client_params:
     version: "latest"
