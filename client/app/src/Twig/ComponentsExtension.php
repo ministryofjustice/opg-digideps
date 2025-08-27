@@ -241,7 +241,7 @@ class ComponentsExtension extends AbstractExtension
         ]);
     }
 
-    public function progressBarReportSubmission(Environment $env, $selectedStepId): void
+    public function progressBarReportSubmission(Environment $env, string $selectedStepId): void
     {
         $availableStepIds = ['review_report', 'report_confirm_details', 'report_declaration'];
 
@@ -263,7 +263,7 @@ class ComponentsExtension extends AbstractExtension
         return 'components_extension';
     }
 
-    private function getProgressSteps($selectedStepId, array $availableStepIds): array
+    private function getProgressSteps(string $selectedStepId, array $availableStepIds): array
     {
         $progressSteps = [];
         $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
@@ -272,7 +272,7 @@ class ComponentsExtension extends AbstractExtension
             $progressSteps[$availableStepId] = [
                 'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
                     .(($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
-                    .(($currentStepNumber == $selectedStepNumber - 1) ? ' opg-progress-bar__item--previous ' : ''),
+                    .(($currentStepNumber == intval($selectedStepNumber) - 1) ? ' opg-progress-bar__item--previous ' : ''),
             ];
         }
 
