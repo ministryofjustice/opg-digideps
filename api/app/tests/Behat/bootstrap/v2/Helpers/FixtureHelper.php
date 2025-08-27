@@ -219,10 +219,7 @@ class FixtureHelper
     public function createAndPersistUser(
         string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
     ) {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -1225,10 +1222,7 @@ class FixtureHelper
 
     private function createOrganisation(string $testRunId, string $emailIdentifier)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -1292,10 +1286,7 @@ class FixtureHelper
         bool $isPrimary = true,
         ?int $deputyUid = null,
     ) {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -1317,10 +1308,7 @@ class FixtureHelper
 
     private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
         $this->testRunId = $testRunId;
@@ -1346,10 +1334,7 @@ class FixtureHelper
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
     ) {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 

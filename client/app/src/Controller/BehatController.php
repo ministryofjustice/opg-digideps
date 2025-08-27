@@ -23,10 +23,7 @@ class BehatController extends AbstractController
      */
     public function getUserDetails(string $email): JsonResponse
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
