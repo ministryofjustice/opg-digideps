@@ -2,28 +2,17 @@
 
 namespace App\Entity\Ndr;
 
+use App\Repository\NdrAssetRepository;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Asset.
- *
- * @ORM\Table(name="odr_asset")
- *
- * @ORM\Entity(repositoryClass="App\Repository\NdrAssetRepository")
- *
- * @ORM\InheritanceType("SINGLE_TABLE")
- *
- * @ORM\DiscriminatorColumn(name="type", type="string")
- *
- * @ORM\DiscriminatorMap({
- *      "property"  = "App\Entity\Ndr\AssetProperty",
- *      "other"     = "App\Entity\Ndr\AssetOther"
- * })
- *
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'odr_asset')]
+#[ORM\Entity(repositoryClass: NdrAssetRepository::class)]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['property' => 'App\Entity\Ndr\AssetProperty', 'other' => 'App\Entity\Ndr\AssetOther'])]
+#[ORM\HasLifecycleCallbacks]
 abstract class Asset
 {
     use CreateUpdateTimestamps;
@@ -34,15 +23,11 @@ abstract class Asset
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"ndr-asset"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="odr_asset_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'odr_asset_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -51,18 +36,15 @@ abstract class Asset
      * @JMS\Groups({"ndr-asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'asset_value', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $value;
 
     /**
      * @var Ndr
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="assets")
-     *
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'odr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class, inversedBy: 'assets')]
     private $ndr;
 
     /**

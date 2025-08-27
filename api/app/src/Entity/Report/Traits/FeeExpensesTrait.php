@@ -14,11 +14,9 @@ trait FeeExpensesTrait
      * @var Fee[]
      *
      * @JMS\Groups({"fee"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: Fee::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $fees;
 
     /**
@@ -27,9 +25,8 @@ trait FeeExpensesTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"fee"})
-     *
-     * @ORM\Column(name="reason_for_no_fees", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'reason_for_no_fees', type: 'text', nullable: true)]
     private $reasonForNoFees;
 
     /**
@@ -38,9 +35,8 @@ trait FeeExpensesTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"expenses"})
-     *
-     * @ORM\Column(name="paid_for_anything", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'paid_for_anything', type: 'string', length: 3, nullable: true)]
     private $paidForAnything;
 
     /**
@@ -54,10 +50,10 @@ trait FeeExpensesTrait
      *
      * @JMS\Groups({"expenses"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
      *
      * @var Expense[]
      */
+    #[ORM\OneToMany(targetEntity: Expense::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $expenses;
 
     /**

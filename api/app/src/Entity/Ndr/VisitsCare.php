@@ -2,14 +2,13 @@
 
 namespace App\Entity\Ndr;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="odr_visits_care")
- */
+
+#[ORM\Table(name: 'odr_visits_care')]
+#[ORM\Entity]
 class VisitsCare
 {
     /**
@@ -18,24 +17,18 @@ class VisitsCare
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="odr_visits_care_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'odr_visits_care_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Ndr
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="visitsCare")
-     *
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'odr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: Ndr::class, inversedBy: 'visitsCare')]
     private $ndr;
 
     /**
@@ -44,9 +37,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="plan_move_residence", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'plan_move_residence', type: 'string', length: 4, nullable: true)]
     private $planMoveNewResidence;
 
     /**
@@ -55,9 +47,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="plan_move_residence_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'plan_move_residence_details', type: 'text', nullable: true)]
     private $planMoveNewResidenceDetails;
 
     /**
@@ -66,9 +57,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="do_you_live_with_client", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'do_you_live_with_client', type: 'string', length: 4, nullable: true)]
     private $doYouLiveWithClient;
 
     /**
@@ -77,9 +67,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'how_often_contact_client', type: 'text', nullable: true)]
     private $howOftenDoYouContactClient;
 
     /**
@@ -88,9 +77,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column( name="does_client_receive_paid_care", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'does_client_receive_paid_care', type: 'text', nullable: true)]
     private $doesClientReceivePaidCare;
 
     /**
@@ -99,9 +87,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="how_is_care_funded", length=255, type="string", nullable=true)
      */
+    #[ORM\Column(name: 'how_is_care_funded', length: 255, type: 'string', nullable: true)]
     private $howIsCareFunded;
 
     /**
@@ -110,9 +97,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column( name="who_is_doing_the_caring", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'who_is_doing_the_caring', type: 'text', nullable: true)]
     private $whoIsDoingTheCaring;
 
     /**
@@ -123,20 +109,18 @@ class VisitsCare
      * @JMS\Groups({"visits-care"})
      *
      * @JMS\SerializedName("does_client_have_a_care_plan")
-     *
-     * @ORM\Column( name="does_client_have_a_care_plan", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'does_client_have_a_care_plan', type: 'string', length: 4, nullable: true)]
     private $doesClientHaveACarePlan;
 
     /**
-     * @var \DateTime|null
+     * @var DateTime|null
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="when_was_care_plan_last_reviewed", type="date", nullable=true, options={ "default": null })
      */
+    #[ORM\Column(name: 'when_was_care_plan_last_reviewed', type: 'date', nullable: true, options: ['default' => null])]
     private $whenWasCarePlanLastReviewed;
 
     /**
@@ -317,12 +301,12 @@ class VisitsCare
         return $this;
     }
 
-    public function getWhenWasCarePlanLastReviewed(): ?\DateTime
+    public function getWhenWasCarePlanLastReviewed(): ?DateTime
     {
         return $this->whenWasCarePlanLastReviewed;
     }
 
-    public function setWhenWasCarePlanLastReviewed(?\DateTime $whenWasCarePlanLastReviewed)
+    public function setWhenWasCarePlanLastReviewed(?DateTime $whenWasCarePlanLastReviewed)
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
     }

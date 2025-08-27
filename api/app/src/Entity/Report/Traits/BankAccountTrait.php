@@ -17,11 +17,9 @@ trait BankAccountTrait
      * @JMS\Groups({"account"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\BankAccount>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\BankAccount", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: BankAccount::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection|array $bankAccounts;
 
     /**

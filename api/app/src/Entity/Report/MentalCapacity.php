@@ -5,11 +5,9 @@ namespace App\Entity\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="mental_capacity")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'mental_capacity')]
+#[ORM\Entity]
 class MentalCapacity
 {
     public const CAPACITY_CHANGED = 'changed';
@@ -19,24 +17,18 @@ class MentalCapacity
      * @var int
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="mental_capacity_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'mental_capacity_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="mentalCapacity")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'mentalCapacity')]
     private $report;
 
     /**
@@ -45,9 +37,8 @@ class MentalCapacity
      * @JMS\Type("string")
      *
      * @JMS\Groups({"mental-capacity"})
-     *
-     * @ORM\Column(name="has_capacity_changed", type="string", length=25, nullable=true)
      */
+    #[ORM\Column(name: 'has_capacity_changed', type: 'string', length: 25, nullable: true)]
     private $hasCapacityChanged;
 
     /**
@@ -56,9 +47,8 @@ class MentalCapacity
      * @JMS\Type("string")
      *
      * @JMS\Groups({"mental-capacity"})
-     *
-     * @ORM\Column(name="has_capacity_changed_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'has_capacity_changed_details', type: 'text', nullable: true)]
     private $hasCapacityChangedDetails;
 
     /**
@@ -67,9 +57,8 @@ class MentalCapacity
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"mental-capacity"})
-     *
-     * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'mental_assessment_date', type: 'date', nullable: true)]
     private $mentalAssessmentDate;
 
     public function __construct(Report $report)

@@ -2,60 +2,53 @@
 
 namespace App\Entity\Traits;
 
+use DateTimeInterface;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 trait CreateUpdateTimestamps
 {
-    /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     */
-    private ?\DateTimeInterface $createdAt = null;
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    private ?DateTimeInterface $createdAt = null;
 
-    /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
-    private ?\DateTimeInterface $updatedAt = null;
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
+    private ?DateTimeInterface $updatedAt = null;
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeInterface $timestamp): self
+    public function setCreatedAt(?DateTimeInterface $timestamp): self
     {
         $this->createdAt = $timestamp;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $timestamp): self
+    public function setUpdatedAt(?DateTimeInterface $timestamp): self
     {
         $this->updatedAt = $timestamp;
 
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreatedAtAutomatically()
     {
         if (null === $this->getCreatedAt()) {
-            $this->setCreatedAt(new \DateTime());
+            $this->setCreatedAt(new DateTime());
         }
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedAtAutomatically()
     {
-        $this->setUpdatedAt(new \DateTime());
+        $this->setUpdatedAt(new DateTime());
     }
 }

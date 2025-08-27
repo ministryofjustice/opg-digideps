@@ -5,40 +5,34 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="setting")
- */
+
+#[ORM\Table(name: 'setting')]
+#[ORM\Entity]
 class Setting
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="id", type="string", length=64, nullable=false)
-     *
-     * @ORM\Id
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['setting'])]
+    #[ORM\Column(name: 'id', type: 'string', length: 64, nullable: false)]
+    #[ORM\Id]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="content", type="text", nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['setting'])]
+    #[ORM\Column(name: 'content', type: 'text', nullable: false)]
     private $content;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['setting'])]
+    #[ORM\Column(name: 'enabled', type: 'boolean', nullable: false)]
     private $enabled;
 
     /**

@@ -15,9 +15,8 @@ trait GiftsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="gifts_exist", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'gifts_exist', type: 'string', length: 3, nullable: true)]
     private $giftsExist;
 
     /**
@@ -26,9 +25,8 @@ trait GiftsTrait
      * @JMS\Type("ArrayCollection<App\Entity\Report\Gift>")
      *
      * @JMS\Groups({"gifts"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(targetEntity: Gift::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $gifts;
 
     /**

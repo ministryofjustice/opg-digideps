@@ -6,18 +6,10 @@ use App\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Checklist.
- *
- * @ORM\Table(name="checklist_information",
- *     indexes={
- *
- *     @ORM\Index(name="ix_checklist_information_checklist_id", columns={"checklist_id"}),
- *     @ORM\Index(name="ix_checklist_information_created_by", columns={"created_by"})
- *     })
- *
- * @ORM\Entity()
- */
+#[ORM\Table(name: 'checklist_information')]
+#[ORM\Index(name: 'ix_checklist_information_checklist_id', columns: ['checklist_id'])]
+#[ORM\Index(name: 'ix_checklist_information_created_by', columns: ['created_by'])]
+#[ORM\Entity]
 class ChecklistInformation
 {
     use CreationAudit;
@@ -28,15 +20,11 @@ class ChecklistInformation
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"checklist-information"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'checklist_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -45,20 +33,17 @@ class ChecklistInformation
      * @JMS\Type("App\Entity\Report\Checklist")
      *
      * @JMS\Groups({"checklist-information-checklist"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Checklist", inversedBy="checklistInformation", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE", nullable=false   )
      */
+    #[ORM\JoinColumn(name: 'checklist_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Checklist::class, inversedBy: 'checklistInformation', cascade: ['persist'])]
     private $checklist;
 
     /**
      * @var string
      *
      * @JMS\Groups({"checklist-information"})
-     *
-     * @ORM\Column(name="information", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'information', type: 'text', nullable: false)]
     private $information;
 
     public function __construct(Checklist $checklist, $information)

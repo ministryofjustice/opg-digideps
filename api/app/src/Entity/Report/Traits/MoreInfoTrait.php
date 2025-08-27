@@ -3,6 +3,7 @@
 namespace App\Entity\Report\Traits;
 
 use App\Entity\Ndr\Ndr;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 trait MoreInfoTrait
@@ -13,9 +14,8 @@ trait MoreInfoTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"action-more-info"})
-     *
-     * @ORM\Column(name="action_more_info", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'action_more_info', type: 'string', length: 3, nullable: true)]
     private $actionMoreInfo;
 
     /**
@@ -24,9 +24,8 @@ trait MoreInfoTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"action-more-info"})
-     *
-     * @ORM\Column(name="action_more_info_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'action_more_info_details', type: 'text', nullable: true)]
     private $actionMoreInfoDetails;
 
     /**

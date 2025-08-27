@@ -2,17 +2,16 @@
 
 namespace App\Entity\Report;
 
+use InvalidArgumentException;
 use App\Entity\AssetInterface;
 use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- *
- * @ORM\HasLifecycleCallbacks
- */
+
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class AssetProperty extends Asset implements AssetInterface
 {
     public const OCCUPANTS_OTHER = 'other';
@@ -25,9 +24,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
     private $address;
 
     /**
@@ -36,9 +34,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private $address2;
 
     /**
@@ -47,9 +44,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="county", type="string", length=75, nullable=true)
      */
+    #[ORM\Column(name: 'county', type: 'string', length: 75, nullable: true)]
     private $county;
 
     /**
@@ -58,9 +54,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @var string
-     *
-     * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
     private $postcode;
 
     /**
@@ -69,9 +64,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="occupants", type="string", length=550)
      */
+    #[ORM\Column(name: 'occupants', type: 'string', length: 550)]
     private $occupants;
 
     /**
@@ -80,9 +74,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="owned", type="string", length=15)
      */
+    #[ORM\Column(name: 'owned', type: 'string', length: 15)]
     private $owned;
 
     /**
@@ -91,18 +84,16 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("float")
-     *
-     * @ORM\Column(name="owned_percentage", type="decimal", precision=14, scale=2)
      */
+    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2)]
     private $ownedPercentage;
 
     /**
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="is_subject_equity_rel", type="string", length=4)
      */
+    #[ORM\Column(name: 'is_subject_equity_rel', type: 'string', length: 4)]
     private $isSubjectToEquityRelease;
 
     /**
@@ -111,9 +102,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="has_mortgage", type="string", length=4)
      */
+    #[ORM\Column(name: 'has_mortgage', type: 'string', length: 4)]
     private $hasMortgage;
 
     /**
@@ -122,9 +112,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="mortgage_outstanding", type="decimal", precision=14, scale=2)
      */
+    #[ORM\Column(name: 'mortgage_outstanding', type: 'decimal', precision: 14, scale: 2)]
     private $mortgageOutstandingAmount;
 
     /**
@@ -133,9 +122,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="has_charges", type="string", length=4)
      */
+    #[ORM\Column(name: 'has_charges', type: 'string', length: 4)]
     private $hasCharges;
 
     /**
@@ -144,20 +132,18 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="is_rented_out", type="string", length=4)
      */
+    #[ORM\Column(name: 'is_rented_out', type: 'string', length: 4)]
     private $isRentedOut;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'rent_agreement_end_date', type: 'datetime', nullable: true)]
     private $rentAgreementEndDate;
 
     /**
@@ -166,9 +152,8 @@ class AssetProperty extends Asset implements AssetInterface
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("float")
-     *
-     * @ORM\Column(name="rent_income_month", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'rent_income_month', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $rentIncomeMonth;
 
     /**
@@ -315,7 +300,7 @@ class AssetProperty extends Asset implements AssetInterface
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
-            throw new \InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
+            throw new InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
         }
 
         $this->owned = $owned;
@@ -388,11 +373,9 @@ class AssetProperty extends Asset implements AssetInterface
         return parent::getValueTotal();
     }
 
-    /**
-     * @ORM\PrePersist
-     *
-     * @ORM\PreUpdate
-     */
+    
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function deleteUnusedData()
     {
         if ('no' === $this->getIsRentedOut()) {

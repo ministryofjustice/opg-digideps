@@ -5,35 +5,26 @@ namespace App\Entity\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="action")
- *
- * @ORM\Entity
- */
+#[ORM\Table(name: 'action')]
+#[ORM\Entity]
 class Action
 {
     /**
      * @var int
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="action_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'action_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="action")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'action')]
     private $report;
 
     /**
@@ -42,9 +33,8 @@ class Action
      * @JMS\Type("string")
      *
      * @JMS\Groups({"action"})
-     *
-     * @ORM\Column(name="do_you_expect_decisions", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'do_you_expect_decisions', type: 'string', length: 4, nullable: true)]
     private $doYouExpectFinancialDecisions;
 
     /**
@@ -53,9 +43,8 @@ class Action
      * @JMS\Type("string")
      *
      * @JMS\Groups({"action"})
-     *
-     * @ORM\Column(name="do_you_expect_decisions_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'do_you_expect_decisions_details', type: 'text', nullable: true)]
     private $doYouExpectFinancialDecisionsDetails;
 
     /**
@@ -64,9 +53,8 @@ class Action
      * @JMS\Type("string")
      *
      * @JMS\Groups({"action"})
-     *
-     * @ORM\Column( name="do_you_have_concerns", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'do_you_have_concerns', type: 'string', length: 4, nullable: true)]
     private $doYouHaveConcerns;
 
     /**
@@ -75,9 +63,8 @@ class Action
      * @JMS\Type("string")
      *
      * @JMS\Groups({"action"})
-     *
-     * @ORM\Column( name="do_you_have_concerns_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'do_you_have_concerns_details', type: 'text', nullable: true)]
     private $doYouHaveConcernsDetails;
 
     public function __construct(Report $report)

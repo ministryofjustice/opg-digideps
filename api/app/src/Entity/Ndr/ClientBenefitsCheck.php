@@ -16,117 +16,106 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Table(name="odr_client_benefits_check")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'odr_client_benefits_check')]
+#[ORM\Entity]
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
     public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
-        $this->created = new \DateTime();
+        $this->created = new DateTime();
         $this->typesOfMoneyReceivedOnClientsBehalf = new ArrayCollection();
     }
 
     /**
-     * @ORM\Id
      *
-     * @ORM\Column(name="id", type="uuid")
      *
-     * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      *
      * @JMS\Groups({"client-benefits-check"})
      *
      * @JMS\Type("string")
      */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface $id;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime",nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      *
      * @JMS\Groups({"client-benefits-check"})
-     *
      * @JMS\Type("DateTime<'Y-m-d'>")
      */
-    private \DateTime $created;
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    private DateTime $created;
 
-    /**
-     * @ORM\OneToOne (targetEntity="App\Entity\Ndr\Ndr", inversedBy="clientBenefitsCheck")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
+
+    #[ORM\JoinColumn(name: 'ndr_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
+    #[ORM\OneToOne(targetEntity: Ndr::class, inversedBy: 'clientBenefitsCheck')]
     private ?Ndr $report;
 
     /**
      * @var string one of either [haveChecked, currentlyChecking, neverChecked]
      *
-     * @ORM\Column(name="when_last_checked_entitlement", type="string", nullable=false)
      *
      * @JMS\Groups({"client-benefits-check"})
-     *
      * @JMS\Type("string")
      */
+    #[ORM\Column(name: 'when_last_checked_entitlement', type: 'string', nullable: false)]
     private $whenLastCheckedEntitlement;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="date_last_checked_entitlement", type="datetime", nullable=true)
      *
      * @JMS\Groups({"client-benefits-check"})
-     *
      * @JMS\Type("DateTime<'Y-m-d'>")
      */
+    #[ORM\Column(name: 'date_last_checked_entitlement', type: 'datetime', nullable: true)]
     private $dateLastCheckedEntitlement;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="never_checked_explanation", type="text", nullable=true)
      *
      * @JMS\Groups({"client-benefits-check"})
-     *
      * @JMS\Type("string")
      */
+    #[ORM\Column(name: 'never_checked_explanation', type: 'text', nullable: true)]
     private $neverCheckedExplanation;
 
     /**
      * @var string one of either [yes, no, doNotKnow]
      *
-     * @ORM\Column(name="do_others_receive_money_on_clients_behalf", type="string", nullable=true)
      *
      * @JMS\Groups({"client-benefits-check"})
-     *
      * @JMS\Type("string")
      */
+    #[ORM\Column(name: 'do_others_receive_money_on_clients_behalf', type: 'string', nullable: true)]
     private $doOthersReceiveMoneyOnClientsBehalf;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="dont_know_money_explanation", type="text", nullable=true)
      *
      * @JMS\Groups({"client-benefits-check"})
-     *
      * @JMS\Type("string")
      */
+    #[ORM\Column(name: 'dont_know_money_explanation', type: 'text', nullable: true)]
     private $dontKnowMoneyExplanation;
 
     /**
-     * @ORM\OneToMany(targetEntity="MoneyReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
      *
      * @JMS\Groups({"client-benefits-check"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Ndr\MoneyReceivedOnClientsBehalf>")
-     *
-     * @OrderBy({"created" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: MoneyReceivedOnClientsBehalf::class, mappedBy: 'clientBenefitsCheck', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    #[OrderBy(['created' => 'ASC'])]
     private $typesOfMoneyReceivedOnClientsBehalf;
 
     public function getId(): UuidInterface
@@ -199,24 +188,24 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): ClientBenefitsCheck
+    public function setCreated(DateTime $created): ClientBenefitsCheck
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getDateLastCheckedEntitlement(): ?\DateTime
+    public function getDateLastCheckedEntitlement(): ?DateTime
     {
         return $this->dateLastCheckedEntitlement;
     }
 
-    public function setDateLastCheckedEntitlement(?\DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
+    public function setDateLastCheckedEntitlement(?DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
     {
         $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
 

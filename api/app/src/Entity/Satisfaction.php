@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\SatisfactionRepository;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\UserResearch\UserResearchResponse;
@@ -12,95 +13,74 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * User satisfaction scores.
- *
- * @ORM\Table(name="satisfaction")
- *
- * @ORM\Entity()
- * @ORM\Entity(repositoryClass="App\Repository\SatisfactionRepository")
- */
+#[ORM\Table(name: 'satisfaction')]
+#[ORM\Entity(repositoryClass: SatisfactionRepository::class)]
 class Satisfaction
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="satisfaction_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['satisfaction'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'satisfaction_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var int
-     *
-     * @ORM\Column(type="integer")
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['satisfaction'])]
+    #[ORM\Column(type: 'integer')]
     private $score;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", name="comments", length=1200, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['satisfaction'])]
+    #[ORM\Column(type: 'string', name: 'comments', length: 1200, nullable: true)]
     private $comments;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", name="deputy_role", length=50, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['satisfaction'])]
+    #[ORM\Column(type: 'string', name: 'deputy_role', length: 50, nullable: true)]
     private $deputyrole;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", name="report_type", length=9, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['satisfaction'])]
+    #[ORM\Column(type: 'string', name: 'report_type', length: 9, nullable: true)]
     private $reporttype;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime")
-     *
      * @Gedmo\Timestampable(on="create")
      */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['satisfaction'])]
-    private \DateTime $created;
+    #[ORM\Column(name: 'created_at', type: 'datetime')]
+    private DateTime $created;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
-     */
     #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\OneToOne(targetEntity: UserResearchResponse::class, mappedBy: 'satisfaction', cascade: ['persist', 'remove'])]
     private UserResearchResponse $userResearchResponse;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
-     */
     #[JMS\Type('App\Entity\Report\Report')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'satisfaction', cascade: ['persist'])]
     private ?Report $report = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="satisfaction", cascade={"persist"})
-     */
     #[JMS\Type('App\Entity\Ndr\Ndr')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\OneToOne(targetEntity: Ndr::class, inversedBy: 'satisfaction', cascade: ['persist'])]
     private ?Ndr $ndr = null;
 
     public function getId(): int
@@ -169,12 +149,12 @@ class Satisfaction
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): Satisfaction
+    public function setCreated(DateTime $created): Satisfaction
     {
         $this->created = $created;
 

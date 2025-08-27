@@ -6,11 +6,9 @@ use App\Entity\Traits\DebtTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="odr_debt")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'odr_debt')]
+#[ORM\Entity]
 class Debt
 {
     use DebtTrait;
@@ -32,33 +30,26 @@ class Debt
      * @var int
      *
      * @JMS\Groups({"ndr-debt"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="debt_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'debt_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Ndr
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="debts")
-     *
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'odr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class, inversedBy: 'debts')]
     private $ndr;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-debt"})
-     *
-     * @ORM\Column(name="debt_type_id", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'debt_type_id', type: 'string', nullable: false)]
     private $debtTypeId;
 
     /**
@@ -67,9 +58,8 @@ class Debt
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr-debt"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
@@ -78,18 +68,16 @@ class Debt
      * @JMS\Groups({"ndr-debt"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'has_more_details', type: 'boolean', nullable: false)]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-debt"})
-     *
-     * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
     private $moreDetails;
 
     /**

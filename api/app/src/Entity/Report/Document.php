@@ -2,26 +2,18 @@
 
 namespace App\Entity\Report;
 
+use App\Repository\DocumentRepository;
 use App\Entity\Ndr\Ndr;
 use App\Entity\SynchronisableInterface;
 use App\Entity\SynchronisableTrait;
 use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Documents.
- *
- * @ORM\Table(name="document",
- *     indexes={
- *
- *     @ORM\Index(name="ix_document_report_id", columns={"report_id"}),
- *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
- *     })
- *
- * @ORM\Entity(repositoryClass="App\Repository\DocumentRepository")
- */
+#[ORM\Table(name: 'document')]
+#[ORM\Index(name: 'ix_document_report_id', columns: ['report_id'])]
+#[ORM\Index(name: 'ix_document_created_by', columns: ['created_by'])]
+#[ORM\Entity(repositoryClass: DocumentRepository::class)]
 class Document implements SynchronisableInterface
 {
     use CreationAudit;
@@ -33,15 +25,11 @@ class Document implements SynchronisableInterface
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"documents", "document-id"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -50,9 +38,8 @@ class Document implements SynchronisableInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"documents"})
-     *
-     * @ORM\Column(name="filename", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'filename', type: 'string', length: 255, nullable: false)]
     private $fileName;
 
     /**
@@ -63,9 +50,8 @@ class Document implements SynchronisableInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"document-storage-reference", "documents"})
-     *
-     * @ORM\Column(name="storage_reference", type="string", length=512, nullable=true)
      */
+    #[ORM\Column(name: 'storage_reference', type: 'string', length: 512, nullable: true)]
     private $storageReference;
 
     /**
@@ -74,9 +60,8 @@ class Document implements SynchronisableInterface
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"documents"})
-     *
-     * @ORM\Column(name="is_report_pdf", type="boolean", options={ "default": false}, nullable=false)
      */
+    #[ORM\Column(name: 'is_report_pdf', type: 'boolean', options: ['default' => false], nullable: false)]
     private $isReportPdf;
 
     /**
@@ -85,11 +70,9 @@ class Document implements SynchronisableInterface
      * @JMS\Groups({"document-report"})
      *
      * @JMS\Type("App\Entity\Report\Report")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="documents")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'documents')]
     private $report;
 
     /**
@@ -98,11 +81,9 @@ class Document implements SynchronisableInterface
      * @JMS\Groups({"document-report"})
      *
      * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'ndr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class)]
     private $ndr;
 
     /**
@@ -111,11 +92,9 @@ class Document implements SynchronisableInterface
      * @JMS\Type("App\Entity\Report\ReportSubmission")
      *
      * @JMS\Groups({"document-report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: ReportSubmission::class, inversedBy: 'documents', cascade: ['persist'])]
     private $reportSubmission;
 
     /**
@@ -124,9 +103,8 @@ class Document implements SynchronisableInterface
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"synchronisation"})
-     *
-     * @ORM\Column(name="sync_attempts", type="integer", nullable=false, options={"default": 0})
      */
+    #[ORM\Column(name: 'sync_attempts', type: 'integer', nullable: false, options: ['default' => 0])]
     protected $syncAttempts = 0;
 
     /**

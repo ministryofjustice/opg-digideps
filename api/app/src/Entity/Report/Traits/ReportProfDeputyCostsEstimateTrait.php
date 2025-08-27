@@ -4,6 +4,7 @@ namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\ProfDeputyEstimateCost;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportProfDeputyCostsEstimateTrait
@@ -14,9 +15,8 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-deputy-costs-estimate-how-charged"})
-     *
-     * @ORM\Column(name="prof_dc_estimate_hc", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_estimate_hc', type: 'string', length: 10, nullable: true)]
     private $profDeputyCostsEstimateHowCharged;
 
     /**
@@ -25,29 +25,25 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>")
      *
      * @JMS\Groups({"prof-deputy-estimate-costs"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: ProfDeputyEstimateCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyEstimateCosts;
 
     /**
      * @var string
      *
      * @JMS\Groups({"prof-deputy-costs-estimate-more-info"})
-     *
-     * @ORM\Column(name="prof_dc_estimate_more_info", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_estimate_more_info', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsEstimateHasMoreInfo;
 
     /**
      * @var string
      *
      * @JMS\Groups({"prof-deputy-costs-estimate-more-info"})
-     *
-     * @ORM\Column(name="prof_dc_estimate_more_info_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_estimate_more_info_details', type: 'text', nullable: true)]
     private $profDeputyCostsEstimateMoreInfoDetails;
 
     /**
@@ -58,9 +54,8 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Groups({"prof-deputy-estimate-management-costs"})
      *
      * @JMS\SerializedName("prof_deputy_management_cost_amount")
-     *
-     * @ORM\Column(name="prof_dc_estimate_management_cost", type="float", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_estimate_management_cost', type: 'float', precision: 14, scale: 2, nullable: true)]
     private $profDeputyCostsEstimateManagementCostAmount;
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\UserResearch;
 
+use App\Repository\UserResearchResponseRepository;
 use App\Entity\Satisfaction;
 use App\Entity\User;
 use DateTime;
@@ -14,72 +15,68 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UserResearchResponseRepository")
- *
- * @ORM\Table(name="user_research_response")
- */
+
+#[ORM\Table(name: 'user_research_response')]
+#[ORM\Entity(repositoryClass: UserResearchResponseRepository::class)]
 class UserResearchResponse
 {
     public function __construct(?UuidInterface $id = null)
     {
         $this->id = $id ?? Uuid::uuid4();
-        $this->created = new \DateTime();
+        $this->created = new DateTime();
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist"}, orphanRemoval=true)
      *
-     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @JMS\Type("App\Entity\UserResearch\ResearchType")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: ResearchType::class, inversedBy: 'userResearchResponse', cascade: ['persist'], orphanRemoval: true)]
     private ResearchType $researchType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
      *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userResearchResponse', cascade: ['persist'])]
     private User $user;
 
     /**
-     * @ORM\Id
      *
-     * @ORM\Column(name="id", type="uuid")
      *
-     * @ORM\GeneratedValue(strategy="NONE")
      *
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      *
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface $id;
 
     /**
-     * @ORM\Column(name="deputyship_length", type="string")
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\Column(name: 'deputyship_length', type: 'string')]
     private string $deputyshipLength;
 
     /**
-     * @ORM\Column(name="has_access_to_video_call_device", type="boolean")
      *
      * @JMS\Type("boolean")
-     *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\Column(name: 'has_access_to_video_call_device', type: 'boolean')]
     private bool $hasAccessToVideoCallDevice;
 
     /**
@@ -87,19 +84,18 @@ class UserResearchResponse
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      *
-     * @ORM\Column(name="created_at", type="datetime",nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      */
-    private \DateTime $created;
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    private DateTime $created;
 
     /**
      * @JMS\Type("App\Entity\Satisfaction")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
+    #[ORM\OneToOne(targetEntity: Satisfaction::class, inversedBy: 'userResearchResponse', cascade: ['persist', 'remove'])]
     private Satisfaction $satisfaction;
 
     public function getDeputyshipLength(): string
@@ -162,12 +158,12 @@ class UserResearchResponse
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): UserResearchResponse
+    public function setCreated(DateTime $created): UserResearchResponse
     {
         $this->created = $created;
 
