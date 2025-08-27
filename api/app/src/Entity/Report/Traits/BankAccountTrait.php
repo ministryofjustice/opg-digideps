@@ -2,8 +2,10 @@
 
 namespace App\Entity\Report\Traits;
 
+use App\Entity\BankAccountInterface;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\Report;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -18,7 +20,7 @@ trait BankAccountTrait
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
-    private $bankAccounts;
+    private Collection|array $bankAccounts;
 
     /**
      * Add accounts.
@@ -41,19 +43,17 @@ trait BankAccountTrait
     }
 
     /**
-     * Get accounts.
-     *
-     * @return BankAccount[]
+     * @return Collection<int, BankAccountInterface>|BankAccountInterface[]
      */
-    public function getBankAccounts()
+    public function getBankAccounts(): Collection|array
     {
         return $this->bankAccounts;
     }
 
     /**
-     * @return BankAccount[]
+     * @return Collection<int, BankAccountInterface>|BankAccountInterface[]
      */
-    public function getBankAccountsIncomplete()
+    public function getBankAccountsIncomplete(): Collection|array
     {
         return $this->getBankAccounts()->filter(function ($b) {
             return null == $b->getClosingBalance();
