@@ -76,6 +76,35 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         self::assertEquals($report->getType(), $results[0]['report']['type']);
     }
 
+    public function testFindReportsInfoByUidWithClosedCourtOrder()
+    {
+        $deputyUid = 7000000022;
+        $courtOrderUid = '7100000081';
+
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid");
+        $client = ClientTestHelper::generateClient(em: $this->entityManager);
+        $user = UserTestHelper::createAndPersistUser(em: $this->entityManager, client: $client, deputyUid: $deputyUid);
+        $report = ReportTestHelper::generateReport(em: $this->entityManager, client: $client);
+        $courtOrder = CourtOrderTestHelper::generateCourtOrder(
+            em: $this->entityManager,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            status: 'CLOSED',
+            report: $report,
+            deputy: $deputy,
+        );
+
+        $deputy->setUser(user: $user);
+        $client->setDeputy(deputy: $deputy);
+
+        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->flush();
+
+        $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
+
+        self::assertEquals(null, $results);
+    }
+
     public function testFindReportsInfoByUidIsNull()
     {
         $deputyUid = 70000022;
