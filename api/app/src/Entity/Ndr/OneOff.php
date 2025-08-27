@@ -5,11 +5,9 @@ namespace App\Entity\Ndr;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="odr_income_one_off")
- */
+
+#[ORM\Table(name: 'odr_income_one_off')]
+#[ORM\Entity]
 class OneOff
 {
     public static $oneOffKeys = [
@@ -27,33 +25,26 @@ class OneOff
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"one-off"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="odr_oneoff_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'odr_oneoff_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Ndr
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="oneOff")
-     *
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'odr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class, inversedBy: 'oneOff')]
     private $ndr;
 
     /**
      * @var string
      *
      * @JMS\Groups({"one-off"})
-     *
-     * @ORM\Column(name="type_id", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'type_id', type: 'string', nullable: false)]
     private $typeId;
 
     /**
@@ -62,27 +53,24 @@ class OneOff
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"one-off"})
-     *
-     * @ORM\Column(name="present", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'present', type: 'boolean', nullable: true)]
     private $present;
 
     /**
      * @var string
      *
      * @JMS\Groups({"one-off"})
-     *
-     * @ORM\Column(name="has_more_details", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'has_more_details', type: 'string', nullable: false)]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
      * @JMS\Groups({"one-off"})
-     *
-     * @ORM\Column(name="more_details", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'more_details', type: 'string', nullable: true)]
     private $moreDetails;
 
     /**

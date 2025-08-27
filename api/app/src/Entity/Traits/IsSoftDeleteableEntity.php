@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,12 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 trait IsSoftDeleteableEntity
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"client", "transactionSoftDelete"})
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
     protected $deletedAt;
 
     /**
@@ -23,7 +24,7 @@ trait IsSoftDeleteableEntity
      *
      * @return $this
      */
-    public function setDeletedAt(?\DateTime $deletedAt = null)
+    public function setDeletedAt(?DateTime $deletedAt = null)
     {
         $this->deletedAt = $deletedAt;
 
@@ -33,7 +34,7 @@ trait IsSoftDeleteableEntity
     /**
      * Returns deletedAt.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDeletedAt()
     {

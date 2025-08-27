@@ -2,28 +2,17 @@
 
 namespace App\Entity\Report;
 
+use App\Repository\AssetRepository;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Asset.
- *
- * @ORM\Table(name="asset")
- *
- * @ORM\Entity(repositoryClass="App\Repository\AssetRepository")
- *
- * @ORM\InheritanceType("SINGLE_TABLE")
- *
- * @ORM\DiscriminatorColumn(name="type", type="string")
- *
- * @ORM\DiscriminatorMap({
- *      "property"  = "App\Entity\Report\AssetProperty",
- *      "other"     = "App\Entity\Report\AssetOther"
- * })
- *
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table(name: 'asset')]
+#[ORM\Entity(repositoryClass: AssetRepository::class)]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['property' => 'App\Entity\Report\AssetProperty', 'other' => 'App\Entity\Report\AssetOther'])]
+#[ORM\HasLifecycleCallbacks]
 abstract class Asset
 {
     use CreateUpdateTimestamps;
@@ -34,15 +23,11 @@ abstract class Asset
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="asset_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'asset_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -51,18 +36,15 @@ abstract class Asset
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'asset_value', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $value;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="assets")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'assets')]
     private $report;
 
     /**

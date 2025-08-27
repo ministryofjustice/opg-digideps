@@ -14,9 +14,8 @@ trait BalanceTrait
      * @JMS\Groups({"balance"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'balance_mismatch_explanation', type: 'text', nullable: true)]
     private $balanceMismatchExplanation;
 
     /**

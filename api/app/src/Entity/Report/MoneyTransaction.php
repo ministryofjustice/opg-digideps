@@ -9,10 +9,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ORM\Table(name="money_transaction")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- * @ORM\Entity
  */
+#[ORM\Table(name: 'money_transaction')]
+#[ORM\Entity]
 class MoneyTransaction implements MoneyTransactionInterface
 {
     use HasBankAccountTrait;
@@ -123,20 +123,19 @@ class MoneyTransaction implements MoneyTransactionInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="transaction_id_seq", allocationSize=1, initialValue=1)
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'transaction_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransactions")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyTransactions')]
     private $report;
 
     /**
@@ -146,8 +145,8 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     * @ORM\Column(name="category", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'category', type: 'string', length: 255, nullable: false)]
     private $category;
 
     /**
@@ -155,16 +154,16 @@ class MoneyTransaction implements MoneyTransactionInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: false)]
     private $amount;
 
     /**
      * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
-     * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private $description;
 
     /**
@@ -172,9 +171,8 @@ class MoneyTransaction implements MoneyTransactionInterface
      * Remove when DDPB-1852 is fully released.
      *
      * @var string
-     *
-     * @ORM\Column(name="meta", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'meta', type: 'text', nullable: true)]
     private $meta;
 
     /**

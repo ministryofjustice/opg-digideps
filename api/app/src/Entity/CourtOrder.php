@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Repository\CourtOrderRepository;
+use DateTime;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
@@ -12,96 +14,75 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Court Orders for clients.
- *
- * @ORM\Table(name="court_order")
- *
- * @ORM\Entity(repositoryClass="App\Repository\CourtOrderRepository")
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'court_order')]
+#[ORM\Entity(repositoryClass: CourtOrderRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CourtOrder
 {
     use CreateUpdateTimestamps;
 
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
-     */
+
     #[JMS\Type('integer')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'court_order_id_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
-    /**
-     * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'court_order_uid', type: 'string', length: 36, nullable: false, unique: true)]
     private string $courtOrderUid;
 
     /**
      * e.g. "pfa" or "hw".
-     *
-     * @ORM\Column(name="order_type", type="string", length=10, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Column(name: 'order_type', type: 'string', length: 10, nullable: false)]
     private string $orderType;
 
-    /**
-     * @ORM\Column(name="status", type="string", length=10, nullable=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Column(name: 'status', type: 'string', length: 10, nullable: false)]
     private string $status;
 
-    /**
-     * @ORM\Column(name="order_made_date", type="datetime", nullable=false)
-     */
     #[JMS\Type('datetime')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
-    private \DateTime $orderMadeDate;
+    #[ORM\Column(name: 'order_made_date', type: 'datetime', nullable: false)]
+    private DateTime $orderMadeDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-     */
+
     #[JMS\Type(Client::class)]
     #[JMS\Groups(['court-order-full'])]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'courtOrders')]
     private Client $client;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"}, fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+
     #[JMS\Type(Ndr::class)]
     #[JMS\Groups(['court-order-full'])]
+    #[ORM\JoinColumn(name: 'ndr_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class, cascade: ['persist'], fetch: 'EAGER')]
     private ?Ndr $ndr = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
-     * @ORM\JoinTable(name="court_order_report",
-     *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
-     *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
-     *     )
      *
      * @var Collection<int, Report>
      */
     #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
     #[JMS\Groups(['court-order-full'])]
+    #[ORM\JoinTable(name: 'court_order_report')]
+    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: Report::class, inversedBy: 'courtOrders', fetch: 'EXTRA_LAZY', cascade: ['persist'])]
     private Collection $reports;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
-     */
     #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
+    #[ORM\OneToMany(targetEntity: CourtOrderDeputy::class, mappedBy: 'courtOrder', fetch: 'EXTRA_LAZY', cascade: ['persist'])]
     private Collection $courtOrderDeputyRelationships;
 
     public function __construct()
@@ -191,12 +172,12 @@ class CourtOrder
         return $this;
     }
 
-    public function getOrderMadeDate(): \DateTime
+    public function getOrderMadeDate(): DateTime
     {
         return $this->orderMadeDate;
     }
 
-    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    public function setOrderMadeDate(DateTime $orderMadeDate): CourtOrder
     {
         $this->orderMadeDate = $orderMadeDate;
 

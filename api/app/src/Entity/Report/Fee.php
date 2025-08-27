@@ -5,11 +5,9 @@ namespace App\Entity\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="fee")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'fee')]
+#[ORM\Entity]
 class Fee
 {
     /**
@@ -34,33 +32,26 @@ class Fee
      * @var int
      *
      * @JMS\Groups({"fee"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="fee_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'fee_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="fees")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'fees')]
     private $report;
 
     /**
      * @var string a value in self:$feeTypeIds
      *
      * @JMS\Groups({"fee"})
-     *
-     * @ORM\Column(name="fee_type_id", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'fee_type_id', type: 'string', nullable: false)]
     private $feeTypeId;
 
     /**
@@ -69,18 +60,16 @@ class Fee
      * @JMS\Type("string")
      *
      * @JMS\Groups({"fee"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var string
      *
      * @JMS\Groups({"fee"})
-     *
-     * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
     private $moreDetails;
 
     /**

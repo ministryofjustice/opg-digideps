@@ -4,7 +4,6 @@ namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\ProfServiceFee;
 use App\Entity\Report\ProfServiceFeeCurrent;
-use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -14,11 +13,9 @@ trait ProfServiceFeesTrait
      * @var ProfServiceFee[]
      *
      * @JMS\Groups({"report-prof-service-fees"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfServiceFee", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: ProfServiceFee::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profServiceFees;
 
     public function addProfServiceFee(ProfServiceFee $profServiceFee)

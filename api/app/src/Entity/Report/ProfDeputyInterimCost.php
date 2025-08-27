@@ -8,11 +8,9 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * MoneyTransfer.
- *
- * @ORM\Table(name="prof_deputy_interim_cost")
- *
- * @ORM\Entity
  */
+#[ORM\Table(name: 'prof_deputy_interim_cost')]
+#[ORM\Entity]
 class ProfDeputyInterimCost
 {
     /**
@@ -21,35 +19,28 @@ class ProfDeputyInterimCost
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"prof-deputy-costs-interim"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="prof_deputy_interim_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'prof_deputy_interim_cost_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profDeputyInterimCosts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyInterimCosts')]
     private $report;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"prof-deputy-costs-interim"})
-     *
-     * @ORM\Column(name="date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'date', type: 'datetime', nullable: true)]
     private $date;
 
     /**
@@ -58,9 +49,8 @@ class ProfDeputyInterimCost
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-deputy-costs-interim"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
@@ -68,7 +58,7 @@ class ProfDeputyInterimCost
      *
      * @param string $amount
      */
-    public function __construct(Report $report, \DateTime $date, $amount)
+    public function __construct(Report $report, DateTime $date, $amount)
     {
         $this->report = $report;
         $this->date = $date;
@@ -92,7 +82,7 @@ class ProfDeputyInterimCost
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDate()
     {
@@ -100,7 +90,7 @@ class ProfDeputyInterimCost
     }
 
     /**
-     * @param \DateTime $date
+     * @param DateTime $date
      */
     public function setDate($date)
     {

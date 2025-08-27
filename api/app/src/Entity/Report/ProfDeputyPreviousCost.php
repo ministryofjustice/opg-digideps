@@ -8,11 +8,9 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * MoneyTransfer.
- *
- * @ORM\Table(name="prof_deputy_prev_cost")
- *
- * @ORM\Entity
  */
+#[ORM\Table(name: 'prof_deputy_prev_cost')]
+#[ORM\Entity]
 class ProfDeputyPreviousCost
 {
     /**
@@ -21,46 +19,38 @@ class ProfDeputyPreviousCost
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="prof_deputy_prev_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'prof_deputy_prev_cost_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profDeputyPreviousCosts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyPreviousCosts')]
     private $report;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
     private $startDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
     private $endDate;
 
     /**
@@ -69,9 +59,8 @@ class ProfDeputyPreviousCost
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
@@ -102,7 +91,7 @@ class ProfDeputyPreviousCost
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -110,7 +99,7 @@ class ProfDeputyPreviousCost
     }
 
     /**
-     * @param \DateTime $startDate
+     * @param DateTime $startDate
      *
      * @return ProfDeputyPreviousCost
      */
@@ -122,7 +111,7 @@ class ProfDeputyPreviousCost
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getEndDate()
     {
@@ -130,7 +119,7 @@ class ProfDeputyPreviousCost
     }
 
     /**
-     * @param \DateTime $endDate
+     * @param DateTime $endDate
      *
      * @return ProfDeputyPreviousCost
      */

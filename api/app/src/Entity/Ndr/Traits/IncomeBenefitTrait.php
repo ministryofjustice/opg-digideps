@@ -1,16 +1,11 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: elvis
- * Date: 08/08/2016
- * Time: 15:46.
- */
-
 namespace App\Entity\Ndr\Traits;
 
 use App\Entity\Ndr\OneOff;
 use App\Entity\Ndr\StateBenefit;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 trait IncomeBenefitTrait
 {
@@ -18,11 +13,9 @@ trait IncomeBenefitTrait
      * @var StateBenefit[]
      *
      * @JMS\Groups({"state-benefits"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\StateBenefit", mappedBy="ndr")
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: StateBenefit::class, mappedBy: 'ndr')]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $stateBenefits;
 
     /**
@@ -31,9 +24,8 @@ trait IncomeBenefitTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"pension"})
-     *
-     * @ORM\Column(name="receive_state_pension", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'receive_state_pension', type: 'text', nullable: true)]
     private $receiveStatePension;
 
     /**
@@ -42,9 +34,8 @@ trait IncomeBenefitTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"pension"})
-     *
-     * @ORM\Column(name="receive_other_income", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'receive_other_income', type: 'text', nullable: true)]
     private $receiveOtherIncome;
 
     /**
@@ -53,9 +44,8 @@ trait IncomeBenefitTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"pension"})
-     *
-     * @ORM\Column(name="receive_other_income_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'receive_other_income_details', type: 'text', nullable: true)]
     private $receiveOtherIncomeDetails;
 
     /**
@@ -64,9 +54,8 @@ trait IncomeBenefitTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"damages"})
-     *
-     * @ORM\Column(name="expect_compensation_damages", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'expect_compensation_damages', type: 'text', nullable: true)]
     private $expectCompensationDamages;
 
     /**
@@ -75,20 +64,17 @@ trait IncomeBenefitTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"damages"})
-     *
-     * @ORM\Column(name="expect_compensation_damages_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'expect_compensation_damages_details', type: 'text', nullable: true)]
     private $expectCompensationDamagesDetails;
 
     /**
      * @var OneOff[]
      *
      * @JMS\Groups({"one-off"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\OneOff", mappedBy="ndr")
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: OneOff::class, mappedBy: 'ndr')]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $oneOff;
 
     /**

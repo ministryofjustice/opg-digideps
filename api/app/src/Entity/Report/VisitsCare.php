@@ -2,14 +2,13 @@
 
 namespace App\Entity\Report;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="safeguarding")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'safeguarding')]
+#[ORM\Entity]
 class VisitsCare
 {
     /**
@@ -18,22 +17,16 @@ class VisitsCare
      * @JMS\Groups({"visits-care"})
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="safeguarding_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'safeguarding_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="visitsCare")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'visitsCare')]
     private $report;
 
     /**
@@ -42,9 +35,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="do_you_live_with_client", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'do_you_live_with_client', type: 'string', length: 4, nullable: true)]
     private $doYouLiveWithClient;
 
     /**
@@ -53,9 +45,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'how_often_contact_client', type: 'text', nullable: true)]
     private $howOftenDoYouContactClient;
 
     /**
@@ -64,9 +55,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column( name="does_client_receive_paid_care", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'does_client_receive_paid_care', type: 'text', nullable: true)]
     private $doesClientReceivePaidCare;
 
     /**
@@ -75,9 +65,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="how_is_care_funded", length=255, type="string", nullable=true)
      */
+    #[ORM\Column(name: 'how_is_care_funded', length: 255, type: 'string', nullable: true)]
     private $howIsCareFunded;
 
     /**
@@ -86,9 +75,8 @@ class VisitsCare
      * @JMS\Type("string")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column( name="who_is_doing_the_caring", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'who_is_doing_the_caring', type: 'text', nullable: true)]
     private $whoIsDoingTheCaring;
 
     /**
@@ -100,9 +88,8 @@ class VisitsCare
      * Setting this due to JMS bug that returned a name of does_client_have_acare_plan
      *
      * @JMS\SerializedName("does_client_have_a_care_plan")
-     *
-     * @ORM\Column( name="does_client_have_a_care_plan", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'does_client_have_a_care_plan', type: 'string', length: 4, nullable: true)]
     private $doesClientHaveACarePlan;
 
     /**
@@ -111,9 +98,8 @@ class VisitsCare
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"visits-care"})
-     *
-     * @ORM\Column(name="when_was_care_plan_last_reviewed", type="date", nullable=true, options={ "default": null })
      */
+    #[ORM\Column(name: 'when_was_care_plan_last_reviewed', type: 'date', nullable: true, options: ['default' => null])]
     private $whenWasCarePlanLastReviewed;
 
     /**
@@ -247,7 +233,7 @@ class VisitsCare
     /**
      * Set whenWasCarePlanLastReviewed.
      *
-     * @param \DateTime $whenWasCarePlanLastReviewed
+     * @param DateTime $whenWasCarePlanLastReviewed
      *
      * @return Report
      */
@@ -261,7 +247,7 @@ class VisitsCare
     /**
      * Get whenWasCarePlanLastReviewed.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getWhenWasCarePlanLastReviewed()
     {

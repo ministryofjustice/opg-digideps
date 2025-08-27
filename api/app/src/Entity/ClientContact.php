@@ -7,16 +7,10 @@ use App\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="client_contact",
- *     indexes={
- *
- *     @ORM\Index(name="ix_clientcontact_client_id", columns={"client_id"}),
- *     @ORM\Index(name="ix_clientcontact_created_by", columns={"created_by"})
- *     })
- *
- * @ORM\Entity(repositoryClass="App\Repository\ClientContactRepository")
- */
+#[ORM\Table(name: 'client_contact')]
+#[ORM\Index(name: 'ix_clientcontact_client_id', columns: ['client_id'])]
+#[ORM\Index(name: 'ix_clientcontact_created_by', columns: ['created_by'])]
+#[ORM\Entity]
 class ClientContact
 {
     use CreationAudit;
@@ -24,53 +18,45 @@ class ClientContact
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'firstname', type: 'string', length: 100, nullable: false)]
     private $firstName;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'lastname', type: 'string', length: 100, nullable: false)]
     private $lastName;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'job_title', type: 'string', length: 150, nullable: true)]
     private $jobTitle;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
     private $phone;
 
     /**
@@ -79,31 +65,27 @@ class ClientContact
      * The following is changed to unique=false, as the migration was missing,
      * and prod data contains duplicate, making it impossible to add the
      * migration now, unless the data is cleaned
-     * 
-     * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'email', type: 'string', length: 60, nullable: true, unique: false)]
     private $email;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="org_name", type="string", length=150, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
+    #[ORM\Column(name: 'org_name', type: 'string', length: 150, nullable: true)]
     private $orgName;
 
     /**
      * @var Client
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="clientContacts")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     #[JMS\Type('App\Entity\Client')]
     #[JMS\Groups(['clientcontact-client'])]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'clientContacts')]
     private $client;
 
     /**

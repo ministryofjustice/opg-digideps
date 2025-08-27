@@ -5,26 +5,20 @@ namespace App\Entity\Ndr;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="odr_expense")
- */
+
+#[ORM\Table(name: 'odr_expense')]
+#[ORM\Entity]
 class Expense
 {
     /**
      * @var int
      *
      * @JMS\Groups({"ndr-expenses"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="odr_expense_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'odr_expense_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -33,9 +27,8 @@ class Expense
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr-expenses"})
-     *
-     * @ORM\Column(name="explanation", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'explanation', type: 'text', nullable: false)]
     private $explanation;
 
     /**
@@ -45,19 +38,17 @@ class Expense
      *
      * @JMS\Groups({"ndr-expenses"})
      *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var Ndr
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="expenses")
-     *
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'odr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class, inversedBy: 'expenses')]
     private $ndr;
 
     /**

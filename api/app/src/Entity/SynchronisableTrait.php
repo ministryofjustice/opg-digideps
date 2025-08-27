@@ -4,47 +4,44 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use InvalidArgumentException;
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 trait SynchronisableTrait
 {
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="synchronisation_status", type="string", options={"default": null}, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'synchronisation_status', type: 'string', options: ['default' => null], nullable: true)]
     protected $synchronisationStatus;
 
     /**
      * @var DateTime|null
-     *
-     * @ORM\Column(name="synchronisation_time", type="datetime", options={"default": null}, nullable=true)
      */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'synchronisation_time', type: 'datetime', options: ['default' => null], nullable: true)]
     protected $synchronisationTime;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="synchronisation_error", type="text", length=65535, options={"default": null}, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'synchronisation_error', type: 'text', length: 65535, options: ['default' => null], nullable: true)]
     protected $synchronisationError;
 
     /**
      * @var User|null
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     *
-     * @ORM\JoinColumn(name="synchronised_by", referencedColumnName="id", onDelete="SET NULL")
      */
     #[JMS\Type('App\Entity\User')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\JoinColumn(name: 'synchronised_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $synchronisedBy;
 
     public function getSynchronisationStatus(): ?string
@@ -66,7 +63,7 @@ trait SynchronisableTrait
             self::SYNC_STATUS_PERMANENT_ERROR,
             ])
         ) {
-            throw new \InvalidArgumentException('Invalid synchronisation status');
+            throw new InvalidArgumentException('Invalid synchronisation status');
         }
 
         $this->synchronisationStatus = $status;

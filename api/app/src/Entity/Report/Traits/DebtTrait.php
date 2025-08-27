@@ -12,11 +12,9 @@ trait DebtTrait
      * @var Debt[]
      *
      * @JMS\Groups({"debt"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Debt", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: Debt::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $debts;
 
     /**
@@ -26,10 +24,10 @@ trait DebtTrait
      *
      * @JMS\Groups({"debt"})
      *
-     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'has_debts', type: 'string', length: 5, nullable: true)]
     private $hasDebts;
 
     /**
@@ -38,9 +36,8 @@ trait DebtTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"debt-management"})
-     *
-     * @ORM\Column( name="debt_management", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'debt_management', type: 'text', nullable: true)]
     private $debtManagement;
 
     /**

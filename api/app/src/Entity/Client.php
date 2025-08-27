@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\ClientRepository;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
@@ -15,24 +16,13 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Client.
- *
- * @ORM\Table(
- *     name="client",
- *     indexes={
- *
- *       @ORM\Index(name="case_number_idx", columns={"case_number"}),
- *       @ORM\Index(name="archived_at_idx", columns={"archived_at"})
- *     },
- *     options={"collate":"utf8_general_ci", "charset":"utf8"}
- *     )
- *
- * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
- *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
+#[ORM\Index(name: 'case_number_idx', columns: ['case_number'])]
+#[ORM\Index(name: 'archived_at_idx', columns: ['archived_at'])]
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Client implements ClientInterface
 {
     use CreateUpdateTimestamps;
@@ -40,183 +30,149 @@ class Client implements ClientInterface
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="client_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Groups(['related', 'basic', 'client', 'client-id'])]
     #[JMS\Type('integer')]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'client_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
-     *
-     * @ORM\JoinTable(name="deputy_case",
-     *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
-     *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
-     *     )
-     */
+
     #[JMS\Groups(['client-users'])]
     #[JMS\Type('ArrayCollection<App\Entity\User>')]
+    #[ORM\JoinTable(name: 'deputy_case')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'clients', fetch: 'EXTRA_LAZY')]
     private $users;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"submitDate"="DESC"})
-     */
+
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['submitDate' => 'DESC'])]
     private $reports;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", mappedBy="client", cascade={"persist", "remove"})
-     **/
     #[JMS\Groups(['basic', 'client-ndr', 'ndr_id'])]
     #[JMS\Type('App\Entity\Ndr\Ndr')]
+    #[ORM\OneToOne(targetEntity: Ndr::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     private $ndr;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-case-number', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'case_number', type: 'string', length: 20, nullable: true)]
     private $caseNumber;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-email'])]
+    #[ORM\Column(name: 'email', type: 'string', length: 60, nullable: true, unique: false)]
     private $email;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
     private $phone;
 
-    /**
-     * @ORM\Column(name="address", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
     private ?string $address = null;
 
-    /**
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private ?string $address2 = null;
 
-    /**
-     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address3', type: 'string', length: 200, nullable: true)]
     private ?string $address3 = null;
 
-    /**
-     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address4', type: 'string', length: 200, nullable: true)]
     private ?string $address4 = null;
 
-    /**
-     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address5', type: 'string', length: 200, nullable: true)]
     private ?string $address5 = null;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
     private $postcode;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'country', type: 'string', length: 10, nullable: true)]
     private $country;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'firstname', type: 'string', length: 50, nullable: true)]
     private $firstname;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'lastname', type: 'string', length: 50, nullable: true)]
     private $lastname;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="court_date", type="date", nullable=true)
+     * @var DateTime|null
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['client', 'client-court-date', 'checklist-information'])]
+    #[ORM\Column(name: 'court_date', type: 'date', nullable: true)]
     private $courtDate;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_of_birth", type="date", nullable=true)
+     * @var DateTime|null
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'date_of_birth', type: 'date', nullable: true)]
     private $dateOfBirth;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"createdOn"="DESC"})
      */
     #[JMS\Type('ArrayCollection<App\Entity\Note>')]
     #[JMS\Groups(['client-notes'])]
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdOn' => 'DESC'])]
     private $notes;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"lastName"="ASC"})
      */
     #[JMS\Type('ArrayCollection<App\Entity\ClientContact>')]
     #[JMS\Groups(['client-clientcontacts'])]
+    #[ORM\OneToMany(targetEntity: ClientContact::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lastName' => 'ASC'])]
     private $clientContacts;
 
     /**
@@ -224,41 +180,35 @@ class Client implements ClientInterface
      * Loaded from the CSV upload.
      *
      * @var Deputy|null
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
     #[JMS\Groups(['report-submitted-by', 'client-deputy'])]
     #[JMS\Type('App\Entity\Deputy')]
+    #[ORM\JoinColumn(name: 'deputy_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: Deputy::class, inversedBy: 'clients', fetch: 'EAGER')]
     private $deputy;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"createdAt"="DESC"})
      */
     #[JMS\Type('ArrayCollection<App\Entity\CourtOrder>')]
+    #[ORM\OneToMany(targetEntity: CourtOrder::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private $courtOrders;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="archived_at", type="datetime", nullable=true)
+     * @var DateTime|null
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'archived_at', type: 'datetime', nullable: true)]
     private $archivedAt;
 
     /**
      * @var Organisation|null
-     *
-     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
      */
     #[JMS\Type('App\Entity\Organisation')]
     #[JMS\Groups(['client-organisations'])]
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'clients')]
     private $organisation;
 
     public function __construct()
@@ -428,7 +378,7 @@ class Client implements ClientInterface
      *
      * @return Client
      */
-    public function setCourtDate(?\DateTime $courtDate = null)
+    public function setCourtDate(?DateTime $courtDate = null)
     {
         $this->courtDate = $courtDate;
 
@@ -438,7 +388,7 @@ class Client implements ClientInterface
     /**
      * Get courtDate.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getCourtDate()
     {
@@ -553,7 +503,7 @@ class Client implements ClientInterface
     /**
      * Get report by end date.
      */
-    public function getReportByEndDate(\DateTime $endDate): ?Report
+    public function getReportByEndDate(DateTime $endDate): ?Report
     {
         $report = $this->reports->filter(function ($report) use ($endDate) {
             return $endDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
@@ -724,7 +674,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return \DateTime|null $dateOfBirth
+     * @return DateTime|null $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -734,7 +684,7 @@ class Client implements ClientInterface
     /**
      * @return $this
      */
-    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
 
@@ -839,7 +789,7 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report Start date based on the Court date.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -872,7 +822,7 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report End date based on the Court date.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -880,7 +830,7 @@ class Client implements ClientInterface
     #[JMS\Groups(['checklist-information'])]
     public function getExpectedReportEndDate($year = null)
     {
-        if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
+        if (!($this->getExpectedReportStartDate($year) instanceof DateTime)) {
             return null;
         }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate($year);
@@ -888,13 +838,13 @@ class Client implements ClientInterface
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    public function setArchivedAt(?\DateTime $archivedAt = null)
+    public function setArchivedAt(?DateTime $archivedAt = null)
     {
         $this->archivedAt = $archivedAt;
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getArchivedAt()
     {
@@ -930,7 +880,7 @@ class Client implements ClientInterface
     /**
      * Get Active From date == earliest report start date for this client.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
@@ -939,7 +889,7 @@ class Client implements ClientInterface
     public function getActiveFrom()
     {
         $reports = $this->getReports();
-        $earliest = new \DateTime('now');
+        $earliest = new DateTime('now');
         foreach ($reports as $report) {
             if ($report->getStartDate() < $earliest) {
                 $earliest = $report->getStartDate();

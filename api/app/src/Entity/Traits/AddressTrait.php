@@ -2,69 +2,65 @@
 
 namespace App\Entity\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
+
 trait AddressTrait
 {
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address1', type: 'string', length: 200, nullable: true)]
     private ?string $address1 = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private ?string $address2 = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address3', type: 'string', length: 200, nullable: true)]
     private ?string $address3 = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address4', type: 'string', length: 200, nullable: true)]
     private ?string $address4 = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address5', type: 'string', length: 200, nullable: true)]
     private ?string $address5 = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'address_postcode', type: 'string', length: 10, nullable: true)]
     private ?string $addressPostcode = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"user", "team", "report-submitted-by"})
-     *
-     * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'address_country', type: 'string', length: 10, nullable: true)]
     private ?string $addressCountry = null;
 
     public function getAddress1(): ?string

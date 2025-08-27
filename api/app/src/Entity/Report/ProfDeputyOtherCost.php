@@ -5,44 +5,35 @@ namespace App\Entity\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="prof_deputy_other_cost")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'prof_deputy_other_cost')]
+#[ORM\Entity]
 class ProfDeputyOtherCost
 {
     /**
      * @var int
      *
      * @JMS\Groups({"prof-deputy-other-costs"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="prof_other_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'prof_other_cost_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profDeputyOtherCosts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyOtherCosts')]
     private $report;
 
     /**
      * @var string a value in self:$profDeputyOtherCostTypeIds
      *
      * @JMS\Groups({"prof-deputy-other-costs"})
-     *
-     * @ORM\Column(name="prof_deputy_other_cost_type_id", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'prof_deputy_other_cost_type_id', type: 'string', nullable: false)]
     private $profDeputyOtherCostTypeId;
 
     /**
@@ -51,9 +42,8 @@ class ProfDeputyOtherCost
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-deputy-other-costs"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
@@ -62,18 +52,16 @@ class ProfDeputyOtherCost
      * @JMS\Groups({"prof-deputy-other-costs"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'has_more_details', type: 'boolean', nullable: false)]
     private $hasMoreDetails;
 
     /**
      * @var string
      *
      * @JMS\Groups({"prof-deputy-other-costs"})
-     *
-     * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
     private $moreDetails;
 
     /**

@@ -2,24 +2,17 @@
 
 namespace App\Entity;
 
+use App\Repository\NoteRepository;
 use App\Entity\Traits\CreationAudit;
 use App\Entity\Traits\ModifyAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Notes.
- *
- * @ORM\Table(name="note",
- *     indexes={
- *
- *     @ORM\Index(name="ix_note_client_id", columns={"client_id"}),
- *     @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
- *     @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
- *     })
- *
- * @ORM\Entity(repositoryClass="App\Repository\NoteRepository")
- */
+#[ORM\Table(name: 'note')]
+#[ORM\Index(name: 'ix_note_client_id', columns: ['client_id'])]
+#[ORM\Index(name: 'ix_note_created_by', columns: ['created_by'])]
+#[ORM\Index(name: 'ix_note_last_modified_by', columns: ['last_modified_by'])]
+#[ORM\Entity(repositoryClass: NoteRepository::class)]
 class Note
 {
     use CreationAudit;
@@ -44,55 +37,46 @@ class Note
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['notes'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="category", type="string", length=100, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['notes'])]
+    #[ORM\Column(name: 'category', type: 'string', length: 100, nullable: true)]
     private $category;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=150, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['notes'])]
+    #[ORM\Column(name: 'title', type: 'string', length: 150, nullable: false)]
     private $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="content", type="text", nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['notes'])]
+    #[ORM\Column(name: 'content', type: 'text', nullable: true)]
     private $content;
 
     /**
      * @var Client
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="notes")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     #[JMS\Groups(['note-client'])]
     #[JMS\Type('App\Entity\Client')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'notes')]
     private $client;
 
     /**

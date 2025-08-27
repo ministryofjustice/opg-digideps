@@ -5,11 +5,9 @@ namespace App\Entity\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="lifestyle")
- *
- * @ORM\Entity
- */
+
+#[ORM\Table(name: 'lifestyle')]
+#[ORM\Entity]
 class Lifestyle
 {
     /**
@@ -18,22 +16,16 @@ class Lifestyle
      * @JMS\Groups({"lifestyle"})
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="lifestyle_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'lifestyle_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="lifestyle")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'lifestyle')]
     private $report;
 
     /**
@@ -42,9 +34,8 @@ class Lifestyle
      * @JMS\Type("string")
      *
      * @JMS\Groups({"lifestyle"})
-     *
-     * @ORM\Column(name="care_appointments", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'care_appointments', type: 'text', nullable: true)]
     private $careAppointments;
 
     /**
@@ -53,9 +44,8 @@ class Lifestyle
      * @JMS\Type("string")
      *
      * @JMS\Groups({"lifestyle"})
-     *
-     * @ORM\Column( name="does_client_undertake_social_activities", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'does_client_undertake_social_activities', type: 'string', length: 4, nullable: true)]
     private $doesClientUndertakeSocialActivities;
 
     /**
@@ -64,9 +54,8 @@ class Lifestyle
      * @JMS\Type("string")
      *
      * @JMS\Groups({"lifestyle"})
-     *
-     * @ORM\Column( name="activity_details_yes", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'activity_details_yes', type: 'text', nullable: true)]
     private $activityDetailsYes;
 
     /**
@@ -75,9 +64,8 @@ class Lifestyle
      * @JMS\Type("string")
      *
      * @JMS\Groups({"lifestyle"})
-     *
-     * @ORM\Column( name="activity_details_no", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'activity_details_no', type: 'text', nullable: true)]
     private $activityDetailsNo;
 
     /**

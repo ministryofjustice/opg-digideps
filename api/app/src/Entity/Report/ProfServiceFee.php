@@ -2,22 +2,16 @@
 
 namespace App\Entity\Report;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="prof_service_fee")
- *
- * @ORM\InheritanceType("SINGLE_TABLE")
- *
- * @ORM\DiscriminatorColumn(name="fee_type_id", type="string")
- *
- * @ORM\DiscriminatorMap({
- *      "current"  = "App\Entity\Report\ProfServiceFeeCurrent",
- * })
- */
+
+#[ORM\Table(name: 'prof_service_fee')]
+#[ORM\Entity]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'fee_type_id', type: 'string')]
+#[ORM\DiscriminatorMap(['current' => 'App\Entity\Report\ProfServiceFeeCurrent'])]
 abstract class ProfServiceFee
 {
     public const TYPE_ASSESSED_FEE = 'assessed';
@@ -33,24 +27,18 @@ abstract class ProfServiceFee
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="fee_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'fee_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profServiceFees")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profServiceFees')]
     private $report;
 
     /**
@@ -59,9 +47,8 @@ abstract class ProfServiceFee
      * @var string fixed|assessed
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="assessed_or_fixed", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'assessed_or_fixed', type: 'string', nullable: true)]
     private $assessedOrFixed;
 
     /**
@@ -77,9 +64,8 @@ abstract class ProfServiceFee
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="other_fee_details", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'other_fee_details', type: 'string', nullable: true)]
     private $otherFeeDetails;
 
     /**
@@ -88,9 +74,8 @@ abstract class ProfServiceFee
      * @var string a value in self:$serviceTypeIds
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="service_type_id", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'service_type_id', type: 'string', nullable: false)]
     private $serviceTypeId;
 
     /**
@@ -99,9 +84,8 @@ abstract class ProfServiceFee
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="amount_charged", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount_charged', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amountCharged;
 
     /**
@@ -110,9 +94,8 @@ abstract class ProfServiceFee
      * @var string yes|no
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="payment_received", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'payment_received', type: 'string', nullable: true)]
     private $paymentReceived;
 
     /**
@@ -121,20 +104,18 @@ abstract class ProfServiceFee
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="amount_received", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount_received', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amountReceived;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
      * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="payment_received_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'payment_received_date', type: 'datetime', nullable: true)]
     private $paymentReceivedDate;
 
     public function __construct(Report $report)

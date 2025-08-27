@@ -8,13 +8,10 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Contacts.
- *
- * @ORM\Table(name="contact")
- *
- * @ORM\Entity
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'contact')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Contact
 {
     use CreateUpdateTimestamps;
@@ -25,15 +22,11 @@ class Contact
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="contact_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'contact_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -42,9 +35,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="contact_name", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'contact_name', type: 'string', length: 255, nullable: true)]
     private $contactName;
 
     /**
@@ -53,9 +45,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
     private $address;
 
     /**
@@ -64,9 +55,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private $address2;
 
     /**
@@ -75,9 +65,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="county", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'county', type: 'string', length: 200, nullable: true)]
     private $county;
 
     /**
@@ -86,9 +75,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
     private $postcode;
 
     /**
@@ -97,9 +85,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'country', type: 'string', length: 10, nullable: true)]
     private $country;
 
     /**
@@ -108,9 +95,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="explanation", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'explanation', type: 'text', nullable: true)]
     private $explanation;
 
     /**
@@ -119,9 +105,8 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="relationship", type="string", length=100, nullable=true)
      */
+    #[ORM\Column(name: 'relationship', type: 'string', length: 100, nullable: true)]
     private $relationship;
 
     /**
@@ -130,18 +115,15 @@ class Contact
      * @JMS\Type("string")
      *
      * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="phone1", type="string", length=20, nullable=true)
      */
+    #[ORM\Column(name: 'phone1', type: 'string', length: 20, nullable: true)]
     private $phone1;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="contacts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'contacts')]
     private $report;
 
     /**

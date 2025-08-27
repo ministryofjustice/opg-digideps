@@ -15,9 +15,8 @@ trait ExpensesTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr-expenses"})
-     *
-     * @ORM\Column(name="paid_for_anything", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'paid_for_anything', type: 'string', length: 3, nullable: true)]
     private $paidForAnything;
 
     /**
@@ -25,10 +24,9 @@ trait ExpensesTrait
      *
      * @JMS\Groups({"ndr-expenses"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Expense", mappedBy="ndr", cascade={"persist"})
-     *
      * @var Expense[]
      */
+    #[ORM\OneToMany(targetEntity: Expense::class, mappedBy: 'ndr', cascade: ['persist'])]
     private $expenses;
 
     /**

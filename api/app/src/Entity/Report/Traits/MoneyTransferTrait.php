@@ -13,9 +13,8 @@ trait MoneyTransferTrait
      * @JMS\Groups({"money-transfer"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyTransfer>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: MoneyTransfer::class, mappedBy: 'report', cascade: ['persist'])]
     private $moneyTransfers;
 
     /**
@@ -24,9 +23,8 @@ trait MoneyTransferTrait
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"report", "money-transfer"})
-     *
-     * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[ORM\Column(name: 'no_transfers_to_add', type: 'boolean', options: ['default' => false], nullable: true)]
     private $noTransfersToAdd;
 
     /**

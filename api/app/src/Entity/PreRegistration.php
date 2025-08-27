@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\PreRegistrationRepository;
+use Exception;
+use UnexpectedValueException;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use DateTime;
@@ -11,13 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Table(name="pre_registration", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- *
- * @ORM\Entity(repositoryClass="App\Repository\PreRegistrationRepository")
- *
- * @ORM\HasLifecycleCallbacks()
- */
+
+#[ORM\Table(name: 'pre_registration')]
+#[ORM\Index(name: 'updated_at_idx', columns: ['updated_at'])]
+#[ORM\Entity(repositoryClass: PreRegistrationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class PreRegistration
 {
     use CreateUpdateTimestamps;
@@ -52,7 +53,7 @@ class PreRegistration
         $this->deputyPostCode = $row['DeputyPostcode'] ?? null;
         $this->typeOfReport = $row['ReportType'] ?? null;
         $this->ndr = isset($row['NDR']) ? 'yes' === $row['NDR'] : null;
-        $this->orderDate = isset($row['MadeDate']) ? new \DateTime($row['MadeDate']) : null;
+        $this->orderDate = isset($row['MadeDate']) ? new DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
         $this->hybrid = $row['Hybrid'] ?? null;
@@ -60,162 +61,110 @@ class PreRegistration
         $this->updatedAt = null;
     }
 
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="pre_registration_id_seq", allocationSize=1, initialValue=1)
-     */
+    
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'pre_registration_id_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
-    /**
-     * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
-     */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_case_number', type: 'string', length: 20, nullable: false)]
     private string $caseNumber;
 
-    /**
-     * @ORM\Column(name="client_firstname", type="string", length=100, nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_firstname', type: 'string', length: 100, nullable: true)]
     private ?string $clientFirstname;
 
-    /**
-     * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
-     */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_lastname', type: 'string', length: 50, nullable: false)]
     private string $clientLastname;
 
-    /**
-     * @ORM\Column(name="client_address_1", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_address_1', type: 'string', nullable: true)]
     private ?string $clientAddress1;
 
-    /**
-     * @ORM\Column(name="client_address_2", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_address_2', type: 'string', nullable: true)]
     private ?string $clientAddress2;
 
-    /**
-     * @ORM\Column(name="client_address_3", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_address_3', type: 'string', nullable: true)]
     private ?string $clientAddress3;
 
-    /**
-     * @ORM\Column(name="client_address_4", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_address_4', type: 'string', nullable: true)]
     private ?string $clientAddress4;
 
-    /**
-     * @ORM\Column(name="client_address_5", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_address_5', type: 'string', nullable: true)]
     private ?string $clientAddress5;
 
-    /**
-     * @ORM\Column(name="client_postcode", type="string", length=20, nullable=true)
-     */
     #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_postcode', type: 'string', length: 20, nullable: true)]
     private ?string $clientPostcode;
 
-    /**
-     * @ORM\Column(name="deputy_uid", type="string", length=100, nullable=false)
-     */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_uid', type: 'string', length: 100, nullable: false)]
     private string $deputyUid;
 
-    /**
-     * @ORM\Column(name="deputy_firstname", type="string", length=100, nullable=true)
-     */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_firstname', type: 'string', length: 100, nullable: true)]
     private string $deputyFirstname;
 
-    /**
-     * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
-     */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_lastname', type: 'string', length: 100, nullable: true)]
     private string $deputySurname;
 
-    /**
-     * @ORM\Column(name="deputy_address_1", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_address_1', type: 'string', nullable: true)]
     private ?string $deputyAddress1;
 
-    /**
-     * @ORM\Column(name="deputy_address_2", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_address_2', type: 'string', nullable: true)]
     private ?string $deputyAddress2;
 
-    /**
-     * @ORM\Column(name="deputy_address_3", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_address_3', type: 'string', nullable: true)]
     private ?string $deputyAddress3;
 
-    /**
-     * @ORM\Column(name="deputy_address_4", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_address_4', type: 'string', nullable: true)]
     private ?string $deputyAddress4;
 
-    /**
-     * @ORM\Column(name="deputy_address_5", type="string", nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_address_5', type: 'string', nullable: true)]
     private ?string $deputyAddress5;
 
-    /**
-     * @ORM\Column(name="deputy_postcode", type="string", length=20, nullable=true)
-     */
     #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'deputy_postcode', type: 'string', length: 20, nullable: true)]
     private ?string $deputyPostCode;
 
-    /**
-     * @ORM\Column(name="type_of_report", type="string", length=10, nullable=true)
-     */
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'type_of_report', type: 'string', length: 10, nullable: true)]
     private ?string $typeOfReport;
 
-    /**
-     * @ORM\Column(name="ndr", type="boolean", nullable=true)
-     */
     #[JMS\Type('bool')]
+    #[ORM\Column(name: 'ndr', type: 'boolean', nullable: true)]
     private ?bool $ndr;
 
-    /**
-     * @ORM\Column(name="order_date", type="datetime", nullable=true)
-     */
-    private ?\DateTime $orderDate;
+    #[ORM\Column(name: 'order_date', type: 'datetime', nullable: true)]
+    private ?DateTime $orderDate;
 
-    /**
-     * @ORM\Column(name="order_type", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'order_type', type: 'string', nullable: true)]
     private ?string $orderType;
 
-    /**
-     * @ORM\Column(name="hybrid", type="string", length=12, nullable=true)
-     */
+    #[ORM\Column(name: 'hybrid', type: 'string', length: 12, nullable: true)]
     private ?string $hybrid;
 
-    /**
-     * @ORM\Column(name="is_co_deputy", type="boolean", nullable=true)
-     */
+    #[ORM\Column(name: 'is_co_deputy', type: 'boolean', nullable: true)]
     private ?bool $isCoDeputy;
 
     public static function getReportTypeByOrderType(string $reportType, string $orderType, string $realm): string
@@ -234,12 +183,12 @@ class PreRegistration
             self::REALM_LAY => $fullReportType,
             self::REALM_PA => sprintf('%s-6', $fullReportType),
             self::REALM_PROF => sprintf('%s-5', $fullReportType),
-            default => throw new \Exception(__METHOD__.': realm not recognised to determine report type'),
+            default => throw new Exception(__METHOD__.': realm not recognised to determine report type'),
         };
 
         if (!in_array($fullReportType, [...Report::getAllLayTypes(), ...Report::getAllPaTypes(), ...Report::getAllProfTypes()])) {
             $message = sprintf('Translated report type "%s" is not recognised', $fullReportType);
-            throw new \UnexpectedValueException($message);
+            throw new UnexpectedValueException($message);
         }
 
         return $fullReportType;
@@ -378,12 +327,12 @@ class PreRegistration
         return $this->typeOfReport;
     }
 
-    public function getOrderDate(): ?\DateTime
+    public function getOrderDate(): ?DateTime
     {
         return $this->orderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate): self
+    public function setOrderDate(DateTime $orderDate): self
     {
         $this->orderDate = $orderDate;
 

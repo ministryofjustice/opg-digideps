@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use DateTime;
 use App\Entity\ReportInterface;
 use App\Entity\Traits\ModifyAudit;
 use App\Entity\User;
@@ -10,11 +11,9 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Checklist.
- *
- * @ORM\Table(name="review_checklist")
- *
- * @ORM\Entity()
  */
+#[ORM\Table(name: 'review_checklist')]
+#[ORM\Entity]
 class ReviewChecklist
 {
     use ModifyAudit;
@@ -25,57 +24,49 @@ class ReviewChecklist
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"checklist"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'checklist_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @JMS\Type("App\Entity\Report\Report")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="checklist")
      *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *
      * @JMS\Groups({"checklist"})
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: false)]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'checklist')]
     private $report;
 
     /**
      * @var array
      *
      * @JMS\Groups({"checklist"})
-     *
-     * @ORM\Column(name="answers", type="json", nullable=true)
      */
+    #[ORM\Column(name: 'answers', type: 'json', nullable: true)]
     private $answers;
 
     /**
      * @var string
      *
      * @JMS\Groups({"checklist"})
-     *
-     * @ORM\Column(name="decision", type="string", length=30, nullable=true)
      */
+    #[ORM\Column(name: 'decision', type: 'string', length: 30, nullable: true)]
     private $decision;
 
     /**
-     * @var \App\Entity\User
+     * @var User
      *
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"checklist"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     protected $submittedBy;
 
     /**
@@ -84,9 +75,8 @@ class ReviewChecklist
      * @JMS\Type("DateTime")
      *
      * @JMS\Groups({"checklist"})
-     *
-     * @ORM\Column(type="datetime", name="submitted_on", nullable=true)
      */
+    #[ORM\Column(type: 'datetime', name: 'submitted_on', nullable: true)]
     protected $submittedOn;
 
     public function __construct(ReportInterface $report)
@@ -168,7 +158,7 @@ class ReviewChecklist
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getSubmittedBy(): ?User
     {
@@ -186,9 +176,9 @@ class ReviewChecklist
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getSubmittedOn(): ?\DateTime
+    public function getSubmittedOn(): ?DateTime
     {
         return $this->submittedOn;
     }
@@ -196,7 +186,7 @@ class ReviewChecklist
     /**
      * @return $this
      */
-    public function setSubmittedOn(\DateTime $submittedOn)
+    public function setSubmittedOn(DateTime $submittedOn)
     {
         $this->submittedOn = $submittedOn;
 

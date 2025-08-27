@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use App\Repository\ReportSubmissionRepository;
 use App\Entity\Ndr\Ndr;
 use App\Entity\ReportInterface;
 use App\Entity\Traits\CreationAudit;
@@ -10,15 +11,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="report_submission",
- *     indexes={
- *
- *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
- *  })
- *
- * @ORM\Entity(repositoryClass="App\Repository\ReportSubmissionRepository")
- */
+
+#[ORM\Table(name: 'report_submission')]
+#[ORM\Index(name: 'rs_created_on_idx', columns: ['created_on'])]
+#[ORM\Entity(repositoryClass: ReportSubmissionRepository::class)]
 class ReportSubmission
 {
     // createdBy is the user who submitted the report
@@ -32,15 +28,11 @@ class ReportSubmission
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"report-submission", "report-submission-id"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="report_submission_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'report_submission_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -49,11 +41,9 @@ class ReportSubmission
      * @JMS\Type("App\Entity\Report\Report")
      *
      * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="reportSubmissions")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'reportSubmissions')]
     private $report;
 
     /**
@@ -62,11 +52,9 @@ class ReportSubmission
      * @JMS\Type("App\Entity\Ndr\Ndr")
      *
      * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'ndr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class)]
     private $ndr;
 
     /**
@@ -75,13 +63,10 @@ class ReportSubmission
      * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
      * @JMS\Groups({"report-submission", "report-submission-documents"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission")
-     *
-     * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @ORM\OrderBy({"createdBy"="ASC"})
      */
+    #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'reportSubmission')]
+    #[ORM\OrderBy(['createdBy' => 'ASC'])]
     private $documents;
 
     /**
@@ -90,9 +75,8 @@ class ReportSubmission
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
      */
+    #[ORM\Column(name: 'archived', type: 'boolean', options: ['default' => false], nullable: false)]
     private $archived = false;
 
     /**
@@ -101,11 +85,9 @@ class ReportSubmission
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'archived_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     private $archivedBy;
 
     /**
@@ -114,9 +96,8 @@ class ReportSubmission
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
      */
+    #[ORM\Column(name: 'downloadable', type: 'boolean', options: ['default' => true], nullable: false)]
     private $downloadable;
 
     /**
@@ -125,9 +106,8 @@ class ReportSubmission
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-submission", "report-submission-uuid"})
-     *
-     * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
      */
+    #[ORM\Column(name: 'opg_uuid', type: 'string', length: 36, nullable: true)]
     private $uuid;
 
     /**

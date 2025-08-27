@@ -2,6 +2,12 @@
 
 namespace App\Entity\Report;
 
+use App\Repository\ReportRepository;
+use App\Entity\CourtOrder;
+use InvalidArgumentException;
+use DateTimeZone;
+use RuntimeException;
+use DateInterval;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
@@ -16,24 +22,14 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use phpDocumentor\Reflection\Types\This;
 
-/**
- * Reports.
- *
- * @ORM\Table(name="report",
- *     indexes={
- *
- *     @ORM\Index(name="end_date_idx", columns={"end_date"}),
- *     @ORM\Index(name="submit_date_idx", columns={"submit_date"}),
- *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
- *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
- *  })
- *
- * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
- *
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'report')]
+#[ORM\Index(name: 'end_date_idx', columns: ['end_date'])]
+#[ORM\Index(name: 'submit_date_idx', columns: ['submit_date'])]
+#[ORM\Index(name: 'submitted_idx', columns: ['submitted'])]
+#[ORM\Index(name: 'report_status_cached_idx', columns: ['report_status_cached'])]
+#[ORM\Entity(repositoryClass: ReportRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Report implements ReportInterface
 {
     use CreateUpdateTimestamps;
@@ -216,15 +212,11 @@ class Report implements ReportInterface
      * @JMS\Groups({"report", "report-id"})
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="report_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'report_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -233,20 +225,17 @@ class Report implements ReportInterface
      * @JMS\Groups({"report", "report-type", "deputy-court-order-basic"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
+    #[ORM\Column(name: 'type', type: 'string', length: 10, nullable: false)]
     private $type;
 
     /**
      * @JMS\Groups({"report-client"})
      *
      * @JMS\Type("App\Entity\Client")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="reports")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'reports')]
     private Client $client;
 
     /**
@@ -255,9 +244,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"visits-care"})
      *
      * @JMS\Type("App\Entity\Report\VisitsCare")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\VisitsCare", mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
+    #[ORM\OneToOne(targetEntity: VisitsCare::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private $visitsCare;
 
     /**
@@ -266,9 +254,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"lifestyle"})
      *
      * @JMS\Type("App\Entity\Report\Lifestyle")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Lifestyle", mappedBy="report", cascade={"persist", "remove"})
      **/
+    #[ORM\OneToOne(targetEntity: Lifestyle::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $lifestyle;
 
     /**
@@ -277,9 +264,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"action"})
      *
      * @JMS\Type("App\Entity\Report\Action")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Action", mappedBy="report", cascade={"persist", "remove"})
      **/
+    #[ORM\OneToOne(targetEntity: Action::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $action;
 
     /**
@@ -288,9 +274,8 @@ class Report implements ReportInterface
      * @JMS\Groups({ "mental-capacity"})
      *
      * @JMS\Type("App\Entity\Report\MentalCapacity")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity", mappedBy="report", cascade={"persist", "remove"})
      **/
+    #[ORM\OneToOne(targetEntity: MentalCapacity::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $mentalCapacity;
 
     /**
@@ -299,44 +284,40 @@ class Report implements ReportInterface
      * @JMS\Groups({"client-benefits-check"})
      *
      * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
      **/
+    #[ORM\OneToOne(targetEntity: ClientBenefitsCheck::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $clientBenefitsCheck;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @ORM\Column(name="start_date", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
     private $startDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @ORM\Column(name="due_date", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'due_date', type: 'date', nullable: true)]
     private $dueDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"report", "report-period"})
      *
      * @JMS\Accessor(getter="getEndDate")
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @ORM\Column(name="end_date", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]
     private $endDate;
 
     /**
@@ -345,42 +326,37 @@ class Report implements ReportInterface
      * @JMS\Accessor(getter="getSubmitDate")
      *
      * @JMS\Type("DateTime")
-     *
-     * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'submit_date', type: 'datetime', nullable: true)]
     private ?DateTimeInterface $submitDate = null;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Accessor(getter="getUnSubmitDate")
      *
      * @JMS\Groups({"report"})
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'un_submit_date', type: 'datetime', nullable: true)]
     private $unSubmitDate;
 
     /**
      * @JMS\Groups({"report"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'submitted', type: 'boolean', nullable: true)]
     private ?bool $submitted = null;
 
     /**
      * @JMS\Groups({"report-submitted-by"})
      *
      * @JMS\Type("App\Entity\User")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     *
-     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $submittedBy = null;
 
     /**
@@ -391,9 +367,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"report"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
+    #[ORM\Column(name: 'report_seen', type: 'boolean', options: ['default' => true])]
     private $reportSeen;
 
     /**
@@ -402,9 +377,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report"})
-     *
-     * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
+    #[ORM\Column(name: 'agreed_behalf_deputy', type: 'string', length: 50, nullable: true)]
     private $agreedBehalfDeputy;
 
     /**
@@ -413,9 +387,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report"})
-     *
-     * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'agreed_behalf_deputy_explanation', type: 'text', nullable: true)]
     private $agreedBehalfDeputyExplanation;
 
     /**
@@ -424,20 +397,17 @@ class Report implements ReportInterface
      * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
      * @JMS\Groups({"report-documents"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
-     *
-     * @ORM\OrderBy({"createdOn"="DESC", "fileName"="ASC"})
      */
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    #[ORM\OrderBy(['createdOn' => 'DESC', 'fileName' => 'ASC'])]
     private $documents;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\ReportSubmission>")
      *
      * @JMS\Groups({"document-sync"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
+    #[ORM\OneToMany(targetEntity: ReportSubmission::class, mappedBy: 'report', fetch: 'EXTRA_LAZY')]
     private $reportSubmissions;
 
     /**
@@ -446,9 +416,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"report", "wish-to-provide-documentation"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="wish_to_provide_documentation", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'wish_to_provide_documentation', type: 'string', nullable: true)]
     private $wishToProvideDocumentation;
 
     /**
@@ -457,9 +426,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "current-prof-payments-received"})
-     *
-     * @ORM\Column(name="current_prof_payments_received", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'current_prof_payments_received', type: 'string', nullable: true)]
     private $currentProfPaymentsReceived;
 
     /**
@@ -468,9 +436,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     *
-     * @ORM\Column(name="previous_prof_fees_estimate_given", length=3, type="string", nullable=true)
      */
+    #[ORM\Column(name: 'previous_prof_fees_estimate_given', length: 3, type: 'string', nullable: true)]
     private $previousProfFeesEstimateGiven;
 
     /**
@@ -479,9 +446,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     *
-     * @ORM\Column(name="prof_fees_estimate_scco_reason", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'prof_fees_estimate_scco_reason', type: 'text', nullable: true)]
     private $profFeesEstimateSccoReason;
 
     /**
@@ -490,18 +456,17 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "significantDecisionsMade"})
-     *
-     * @ORM\Column(name="significant_decisions_made", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'significant_decisions_made', type: 'text', nullable: true)]
     private $significantDecisionsMade;
 
     /**
      * @JMS\Groups({"report"})
      *
-     * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
      *
      * @JMS\Type("string")
      */
+    #[ORM\Column(name: 'unsubmitted_sections_list', type: 'text', nullable: true)]
     private ?string $unsubmittedSectionsList;
 
     /**
@@ -510,9 +475,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"report", "report-checklist"})
      *
      * @JMS\Type("App\Entity\Report\Checklist")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[ORM\OneToOne(targetEntity: Checklist::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $checklist;
 
     /**
@@ -521,18 +485,16 @@ class Report implements ReportInterface
      * @JMS\Groups({"report", "report-checklist"})
      *
      * @JMS\Type("App\Entity\Report\ReviewChecklist")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[ORM\OneToOne(targetEntity: ReviewChecklist::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $reviewChecklist;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="report", cascade={"persist", "remove"})
      *
      * @JMS\Type("App\Entity\Satisfaction")
-     *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\OneToOne(targetEntity: Satisfaction::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private Satisfaction $satisfaction;
 
     /**
@@ -541,9 +503,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "doesMoneyInExist"})
-     *
-     * @ORM\Column(name="money_in_exists", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'money_in_exists', type: 'text', nullable: true)]
     private $moneyInExists;
 
     /**
@@ -552,9 +513,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "reasonForNoMoneyIn"})
-     *
-     * @ORM\Column(name="reason_for_no_money_in", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'reason_for_no_money_in', type: 'text', nullable: true)]
     private $reasonForNoMoneyIn;
 
     /**
@@ -563,9 +523,8 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "doesMoneyOutExist"})
-     *
-     * @ORM\Column(name="money_out_exists", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'money_out_exists', type: 'text', nullable: true)]
     private $moneyOutExists;
 
     /**
@@ -574,41 +533,39 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report", "reasonForNoMoneyOut"})
-     *
-     * @ORM\Column(name="reason_for_no_money_out", type="text", nullable=true)
      **/
+    #[ORM\Column(name: 'reason_for_no_money_out', type: 'text', nullable: true)]
     private $reasonForNoMoneyOut;
 
     /**
      * @JMS\Groups({"report-with-court-orders"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\CourtOrder", mappedBy="reports", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
+    #[ORM\ManyToMany(targetEntity: CourtOrder::class, mappedBy: 'reports', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private $courtOrders;
 
     private array $excludeSections = [];
-    private ?\DateTime $benefitsSectionReleaseDate = null;
+    private ?DateTime $benefitsSectionReleaseDate = null;
 
     /**
      * Report constructor.
      *
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, $type, DateTime $startDate, DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::allRolesAllReportTypes())) {
-            throw new \InvalidArgumentException("$type not a valid report type");
+            throw new InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
         $this->client = $client;
-        $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
-        $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->startDate = new DateTime($startDate->format('Y-m-d'), new DateTimeZone('Europe/London'));
+        $this->endDate = new DateTime($endDate->format('Y-m-d'), new DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
+            throw new RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
@@ -622,7 +579,7 @@ class Report implements ReportInterface
             $expectedStartDate->modify('+1 day');
             $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
             if (0 !== $daysDiff) {
-                throw new \RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
+                throw new RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
             }
         }
 
@@ -685,9 +642,9 @@ class Report implements ReportInterface
     {
         $this->dueDate = clone $this->endDate;
         if ($this->isLayReport()) {
-            $this->dueDate->add(new \DateInterval('P21D'));
+            $this->dueDate->add(new DateInterval('P21D'));
         } else {
-            $this->dueDate->add(new \DateInterval('P56D'));
+            $this->dueDate->add(new DateInterval('P56D'));
         }
     }
 
@@ -747,7 +704,7 @@ class Report implements ReportInterface
      *
      * @return Report
      */
-    public function setStartDate(\DateTime $startDate)
+    public function setStartDate(DateTime $startDate)
     {
         $this->startDate = $startDate;
 
@@ -757,7 +714,7 @@ class Report implements ReportInterface
     /**
      * Get startDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -769,7 +726,7 @@ class Report implements ReportInterface
      *
      * @return Report
      */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(DateTime $endDate)
     {
         $this->endDate = $endDate;
 
@@ -779,7 +736,7 @@ class Report implements ReportInterface
     /**
      * Get endDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getEndDate()
     {
@@ -810,7 +767,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getUnSubmitDate()
     {
@@ -818,7 +775,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \DateTime|null $unSubmitDate
+     * @param DateTime|null $unSubmitDate
      *
      * @return Report
      */
@@ -979,7 +936,7 @@ class Report implements ReportInterface
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
         if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;
@@ -1014,7 +971,7 @@ class Report implements ReportInterface
     /**
      * @return Report
      */
-    public function setDueDate(\DateTime $dueDate)
+    public function setDueDate(DateTime $dueDate)
     {
         $this->dueDate = $dueDate;
 
@@ -1022,7 +979,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDueDate()
     {
@@ -1484,12 +1441,12 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public function getBenefitsSectionReleaseDate(): ?\DateTime
+    public function getBenefitsSectionReleaseDate(): ?DateTime
     {
-        return $this->benefitsSectionReleaseDate ?: new \DateTime('16-03-2022 00:00:00');
+        return $this->benefitsSectionReleaseDate ?: new DateTime('16-03-2022 00:00:00');
     }
 
-    public function setBenefitsSectionReleaseDate(?\DateTime $benefitsSectionReleaseDate): Report
+    public function setBenefitsSectionReleaseDate(?DateTime $benefitsSectionReleaseDate): Report
     {
         $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
 

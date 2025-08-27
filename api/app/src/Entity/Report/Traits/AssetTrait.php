@@ -17,9 +17,8 @@ trait AssetTrait
      * @JMS\Groups({"asset"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Asset>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(targetEntity: Asset::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $assets;
 
     /**
@@ -28,9 +27,8 @@ trait AssetTrait
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"report"})
-     *
-     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[ORM\Column(name: 'no_asset_to_add', type: 'boolean', options: ['default' => false], nullable: true)]
     private $noAssetToAdd;
 
     /**

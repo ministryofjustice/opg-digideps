@@ -2,6 +2,8 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -13,35 +15,33 @@ trait ModifyAudit
     /**
      * Last modified by.
      *
-     * @var \App\Entity\User
+     * @var User
      *
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"last-modified"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'last_modified_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     protected $lastModifiedBy;
 
     /**
      * Last modified on.
      *
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime")
      *
      * @JMS\Groups({"last-modified"})
      *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      *
      * @Gedmo\Timestampable(on="update")
      */
+    #[ORM\Column(type: 'datetime', name: 'last_modified_on', nullable: true)]
     protected $lastModifiedOn;
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getLastModifiedBy()
     {
@@ -49,7 +49,7 @@ trait ModifyAudit
     }
 
     /**
-     * @param \App\Entity\User $lastModifiedBy
+     * @param User $lastModifiedBy
      *
      * @return $this
      */
@@ -61,7 +61,7 @@ trait ModifyAudit
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastModifiedOn()
     {
@@ -69,7 +69,7 @@ trait ModifyAudit
     }
 
     /**
-     * @param \DateTime $lastModifiedOn
+     * @param DateTime $lastModifiedOn
      *
      * @return $this
      */

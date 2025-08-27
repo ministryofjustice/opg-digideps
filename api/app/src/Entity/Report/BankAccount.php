@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report;
 
+use DateTime;
 use App\Entity\BankAccountInterface;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,13 +10,10 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Account.
- *
- * @ORM\Table(name="account")
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'account')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class BankAccount implements BankAccountInterface
 {
     use CreateUpdateTimestamps;
@@ -60,51 +58,43 @@ class BankAccount implements BankAccountInterface
      * @var int
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="account_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'account_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
+    #[ORM\Column(name: 'bank_name', type: 'string', length: 500, nullable: true)]
     private $bank;
 
     /**
      * @var string
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
+    #[ORM\Column(name: 'account_type', type: 'string', length: 125, nullable: true)]
     private $accountType;
 
     /**
      * @var string
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
+    #[ORM\Column(name: 'sort_code', type: 'string', length: 6, nullable: true)]
     private $sortCode;
 
     /**
      * @var string
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'account_number', type: 'string', length: 4, nullable: true)]
     private $accountNumber;
 
     /**
@@ -113,9 +103,8 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'opening_balance', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $openingBalance;
 
     /**
@@ -124,9 +113,8 @@ class BankAccount implements BankAccountInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'closing_balance', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $closingBalance;
 
     /**
@@ -135,18 +123,15 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"account"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="is_closed", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[ORM\Column(name: 'is_closed', type: 'boolean', options: ['default' => false], nullable: true)]
     private $isClosed;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="bankAccounts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'bankAccounts')]
     private $report;
 
     /**
@@ -155,9 +140,8 @@ class BankAccount implements BankAccountInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'is_joint_account', type: 'string', length: 3, nullable: true)]
     private $isJointAccount;
 
     /**
@@ -166,9 +150,8 @@ class BankAccount implements BankAccountInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"account"})
-     *
-     * @ORM\Column(name="meta", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'meta', type: 'text', nullable: true)]
     private $meta;
 
     /**
@@ -176,7 +159,7 @@ class BankAccount implements BankAccountInterface
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
         $this->isClosed = false;
     }
 
