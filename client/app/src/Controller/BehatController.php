@@ -13,7 +13,6 @@ class BehatController extends AbstractController
 {
     public function __construct(
         private readonly UserApi $userApi,
-        private readonly string $symfonyEnvironment,
         private readonly bool $fixturesEnabled,
     ) {
     }

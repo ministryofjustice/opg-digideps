@@ -18,7 +18,6 @@ class BehatController extends AbstractController
 {
     public function __construct(
         private KernelInterface $kernel,
-        private string $symfonyEnvironment,
         private bool $fixturesEnabled,
     ) {
     }

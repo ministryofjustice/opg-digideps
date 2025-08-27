@@ -48,7 +48,6 @@ class FixtureController extends AbstractController
         private readonly NdrRepository $ndrRepository,
         private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly DeputyRepository $deputyRepository,
-        private readonly string $symfonyEnvironment,
         private readonly bool $fixturesEnabled,
     ) {
     }

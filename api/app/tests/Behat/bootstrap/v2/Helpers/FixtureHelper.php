@@ -44,7 +44,6 @@ class FixtureHelper
         private EntityManagerInterface $em,
         private array $fixtureParams,
         private UserPasswordHasherInterface $hasher,
-        private string $symfonyEnvironment,
         private PreRegistrationFactory $preRegistrationFactory,
         private S3ClientInterface $s3Client,
         private readonly bool $fixturesEnabled,

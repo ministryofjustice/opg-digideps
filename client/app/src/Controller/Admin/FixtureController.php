@@ -33,7 +33,6 @@ class FixtureController extends AbstractController
     private ReportApi $reportApi;
     private UserApi $userApi;
     private DeputyProvider $deputyProvider;
-    private string $symfonyEnvironment;
     private bool $fixturesEnabled;
 
     public function __construct(
@@ -43,7 +42,6 @@ class FixtureController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         DeputyProvider $deputyProvider,
-        string $symfonyEnvironment,
         bool $fixturesEnabled,
     ) {
         $this->twig = $twig;
@@ -52,7 +50,6 @@ class FixtureController extends AbstractController
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
         $this->deputyProvider = $deputyProvider;
-        $this->symfonyEnvironment = $symfonyEnvironment;
         $this->fixturesEnabled = $fixturesEnabled;
     }
 
