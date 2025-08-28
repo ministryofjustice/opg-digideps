@@ -1,23 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity\Report;
 
-use App\Entity\Report\Asset;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
 use PHPUnit\Framework\TestCase;
 
-class AssetTest extends TestCase
+final class AssetTest extends TestCase
 {
-    /**
-     * @var Asset
-     */
-    protected $object;
-
-    /**
-     * @var AssetProperty
-     */
-    protected $property;
+    private AssetOther $object;
+    private AssetProperty $property;
 
     protected function setUp(): void
     {
@@ -25,7 +19,7 @@ class AssetTest extends TestCase
         $this->property = new AssetProperty();
     }
 
-    public function testSetterGetters()
+    public function testSetterGetters(): void
     {
         //        $this->assertEquals('123456', $this->object->setExplanation('123456')->getExplanation());
         $this->assertEquals('123456', $this->object->setTitle('123456')->getTitle());
@@ -34,7 +28,7 @@ class AssetTest extends TestCase
         $this->assertEquals('123456', $this->property->setOccupants('123456')->getOccupants());
     }
 
-    public function testgetValueTotal()
+    public function testgetValueTotal(): void
     {
         $this->object->setValue(1.2);
         $this->assertEquals(1.2, $this->object->getValueTotal());
