@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Repository;
 
 use App\Entity\ClientInterface;
@@ -17,7 +19,7 @@ use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 
-class ReportRepositoryTest extends TestCase
+final class ReportRepositoryTest extends TestCase
 {
     private ReportRepository $sut;
     private EntityRepository|MockInterface $mockReport;
@@ -46,7 +48,7 @@ class ReportRepositoryTest extends TestCase
     /**
      * @throws ORMException
      */
-    public function testAddFeesToReportIfMissingForNonPAUser()
+    public function testAddFeesToReportIfMissingForNonPAUser(): void
     {
         $this->mockReport->shouldReceive('isPAReport')->andReturn(false);
 
@@ -56,7 +58,7 @@ class ReportRepositoryTest extends TestCase
     /**
      * @throws ORMException
      */
-    public function testAddFeesToReportIfMissingForPAUserWithFeesMissing()
+    public function testAddFeesToReportIfMissingForPAUserWithFeesMissing(): void
     {
         $this->mockReport->shouldReceive('getFees')->andReturn([]);
 
@@ -72,7 +74,7 @@ class ReportRepositoryTest extends TestCase
     /**
      * @throws ORMException
      */
-    public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing()
+    public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing(): void
     {
         $this->mockReport->shouldReceive('getFees')->andReturn(['foo']);
 
