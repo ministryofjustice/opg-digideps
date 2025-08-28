@@ -46,7 +46,7 @@ class Ndr implements ReportInterface
      *
      * @JMS\Groups({"report-submitted-by"})
      *
-     * @var User
+     * @var User|null
      */
     private $submittedBy;
 
@@ -314,7 +314,7 @@ class Ndr implements ReportInterface
         return $this->submittedBy;
     }
 
-    public function setSubmittedBy(?User $submittedBy): static
+    public function setSubmittedBy(?User $submittedBy): self
     {
         $this->submittedBy = $submittedBy;
 
