@@ -5,6 +5,7 @@ namespace App\Entity\Ndr;
 use App\Entity\Client;
 use App\Entity\Ndr\Traits as NdrTraits;
 use App\Entity\ReportInterface;
+use App\Entity\User;
 use App\Service\NdrStatusService;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
@@ -39,6 +40,15 @@ class Ndr implements ReportInterface
      * @var bool
      */
     private $submitted;
+
+    /**
+     * @JMS\Type("App\Entity\User")
+     *
+     * @JMS\Groups({"report-submitted-by"})
+     *
+     * @var User
+     */
+    private $submittedBy;
 
     /**
      * @var \DateTime
@@ -295,6 +305,18 @@ class Ndr implements ReportInterface
     public function setSubmitted($submitted)
     {
         $this->submitted = $submitted;
+
+        return $this;
+    }
+
+    public function getSubmittedBy(): ?User
+    {
+        return $this->submittedBy;
+    }
+
+    public function setSubmittedBy(?User $submittedBy): static
+    {
+        $this->submittedBy = $submittedBy;
 
         return $this;
     }
