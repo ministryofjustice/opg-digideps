@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DigidepsTests\Logger;
 
+use DateTime;
 use App\Logger\OpgLineFormatter;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
-class OpgLineFormatterTest extends TestCase
+final class OpgLineFormatterTest extends TestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = new OpgLineFormatter();
 
         $record = [
-            'datetime' => new \DateTime('2024-06-10 12:00:00'),
+            'datetime' => new DateTime('2024-06-10 12:00:00'),
             'level' => Logger::INFO,
             'level_name' => 'INFO',
             'message' => 'This is a test message',
