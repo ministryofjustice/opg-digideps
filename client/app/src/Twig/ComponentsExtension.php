@@ -42,6 +42,7 @@ class ComponentsExtension extends AbstractExtension
     {
         return [
             new TwigFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
+            new TwigFunction('progress_bar_report_submission', [$this, 'progressBarReportSubmission'], ['needs_environment' => true]),
             new TwigFunction('accordionLinks', [$this, 'renderAccordionLinks']),
             new TwigFunction('section_link_params', function ($report, $sectionId, $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
@@ -220,7 +221,7 @@ class ComponentsExtension extends AbstractExtension
         return $ret;
     }
 
-    public function progressBarRegistration(Environment $env, User $user, $selectedStepId)
+    public function progressBarRegistration(Environment $env, User $user, $selectedStepId): void
     {
         if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN_MANAGER])) {
             $availableStepIds = ['password', 'user_details'];
@@ -232,19 +233,23 @@ class ComponentsExtension extends AbstractExtension
             $availableStepIds = ['password', 'user_details', 'client_details'];
         }
 
-        $progressSteps = [];
-        $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
-        // set classes and labels from translation
-        foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
-            $progressSteps[$availableStepId] = [
-                'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
-                    .(($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
-                    .(($currentStepNumber == $selectedStepNumber - 1) ? ' opg-progress-bar__item--previous ' : ''),
-            ];
-        }
+        $progressSteps = $this->getProgressSteps($selectedStepId, $availableStepIds);
 
         echo $env->render('@App/Components/Navigation/_progress-indicator.html.twig', [
             'progressSteps' => $progressSteps,
+            'progressBar' => 'registrationProgressBar',
+        ]);
+    }
+
+    public function progressBarReportSubmission(Environment $env, string $selectedStepId): void
+    {
+        $availableStepIds = ['review_report', 'report_confirm_details', 'report_declaration'];
+
+        $progressSteps = $this->getProgressSteps($selectedStepId, $availableStepIds);
+
+        echo $env->render('@App/Components/Navigation/_progress-indicator.html.twig', [
+            'progressSteps' => $progressSteps,
+            'progressBar' => 'reportSubmissionProgressBar',
         ]);
     }
 
@@ -256,5 +261,21 @@ class ComponentsExtension extends AbstractExtension
     public function getName()
     {
         return 'components_extension';
+    }
+
+    private function getProgressSteps(string $selectedStepId, array $availableStepIds): array
+    {
+        $progressSteps = [];
+        $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
+        // set classes and labels from translation
+        foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
+            $progressSteps[$availableStepId] = [
+                'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
+                    .(($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
+                    .(($currentStepNumber == intval($selectedStepNumber) - 1) ? ' opg-progress-bar__item--previous ' : ''),
+            ];
+        }
+
+        return $progressSteps;
     }
 }

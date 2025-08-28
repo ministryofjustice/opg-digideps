@@ -6,6 +6,10 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
+{% block progressBar %}
+    {{ progress_bar_report_submission('report_confirm_details') }}
+{% endblock %}
+
 {% block pageContent %}
 
     {% include '@App/Report/Report/_contact_details.html.twig' with {
