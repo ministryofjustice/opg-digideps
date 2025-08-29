@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Factory;
 
+use DateTime;
+use PHPUnit\Framework\Attributes\Test;
+use ReflectionClass;
 use App\Entity\Client;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
@@ -18,7 +21,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-class ClientBenefitsCheckFactoryTest extends TestCase
+final class ClientBenefitsCheckFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -45,15 +48,15 @@ class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $this->reportId = 1436;
         $this->id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
-        $this->created = (new \DateTime())->format('Y-m-d');
+        $this->created = (new DateTime())->format('Y-m-d');
         $this->whenLastCheckedEntitlement = 'haveChecked';
-        $this->dateLastCheckedEntitlement = (new \DateTime())->format('Y-m-d');
+        $this->dateLastCheckedEntitlement = (new DateTime())->format('Y-m-d');
         $this->neverCheckedExplanation = null;
         $this->doOthersReceiveMoneyOnClientsBehalf = 'yes';
         $this->dontKnowMoneyExplanation = null;
 
         $this->moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $this->moneyCreated = (new \DateTime())->format('Y-m-d');
+        $this->moneyCreated = (new DateTime())->format('Y-m-d');
         $this->moneyClientBenefitsCheck = null;
         $this->moneyType = 'Universal Credit';
         $this->moneyAmount = 100.5;
@@ -61,13 +64,13 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         $this->whoReceivedMoney = 'Some organisation';
     }
 
-    /** @test */
-    public function createFromFormDataExistingEntity()
+    #[Test]
+    public function createFromFormDataExistingEntity(): void
     {
         $existingEntity = true;
         $validData = $this->generateValidFormData($existingEntity);
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
@@ -137,22 +140,22 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         ];
     }
 
-    private function set($entity, $value, $propertyName = 'id')
+    private function set(Report $entity, ?int $value, $propertyName = 'id'): void
     {
-        $class = new \ReflectionClass($entity);
+        $class = new ReflectionClass($entity);
         $property = $class->getProperty($propertyName);
         $property->setAccessible(true);
 
         $property->setValue($entity, $value);
     }
 
-    /** @test */
-    public function createFromFormDataNewEntity()
+    #[Test]
+    public function createFromFormDataNewEntity(): void
     {
         $existingEntity = false;
         $validData = $this->generateValidFormData($existingEntity);
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
@@ -189,12 +192,12 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals($this->moneyAmount, $money->getAmount());
     }
 
-    /** @test */
-    public function createFromFormDataExistingEntityNonYesDoOthersGetMoneyRemovesAllMoneyTypes()
+    #[Test]
+    public function createFromFormDataExistingEntityNonYesDoOthersGetMoneyRemovesAllMoneyTypes(): void
     {
         $validData = $this->generateValidFormDataRemoveMoneys();
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
@@ -205,7 +208,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
 
         $existingMoney = (new MoneyReceivedOnClientsBehalf())
             ->setId(Uuid::fromString($this->moneyId))
-            ->setCreated(new \DateTime($this->moneyCreated))
+            ->setCreated(new DateTime($this->moneyCreated))
             ->setAmount($this->moneyAmount)
             ->setMoneyType($this->moneyType);
 
@@ -232,7 +235,7 @@ class ClientBenefitsCheckFactoryTest extends TestCase
         self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count());
     }
 
-    private function generateValidFormDataRemoveMoneys()
+    private function generateValidFormDataRemoveMoneys(): array
     {
         $data = $this->generateValidFormData(true);
         $data['do_others_receive_money_on_clients_behalf'] = 'no';

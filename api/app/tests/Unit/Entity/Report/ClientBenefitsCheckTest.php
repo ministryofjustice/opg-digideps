@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity\Report;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
 use App\Entity\Report\ClientBenefitsCheck;
 use PHPUnit\Framework\TestCase;
 
-class ClientBenefitsCheckTest extends TestCase
+final class ClientBenefitsCheckTest extends TestCase
 {
-    /**
-     * @test
-     *
-     * @dataProvider whenCheckedProvider
-     */
+    #[DataProvider('whenCheckedProvider')]
+    #[Test]
     public function setWhenLastCheckedEntitlementSetsNeverCheckedNullWhenValueIsNotNeverChecked(
         string $whenChecked,
         ?string $expectedExplanation
-    ) {
+    ): void {
         $sut = (new ClientBenefitsCheck())
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED)
             ->setNeverCheckedExplanation('An explanation');
@@ -36,15 +36,13 @@ class ClientBenefitsCheckTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider otherMoneyProvider
-     */
+
+    #[DataProvider('otherMoneyProvider')]
+    #[Test]
     public function setDoOthersReceiveMoneyOnClientsBehalfSetsDontKnowNullWhenValueIsNotDontKnow(
         string $otherMoneyReceived,
         ?string $expectedExplanation
-    ) {
+    ): void {
         $sut = (new ClientBenefitsCheck())
             ->setDoOthersReceiveMoneyOnClientsBehalf(ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW)
             ->setDontKnowMoneyExplanation('Another explanation');
@@ -63,16 +61,14 @@ class ClientBenefitsCheckTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider dateCheckedProvider
-     */
+
+    #[DataProvider('dateCheckedProvider')]
+    #[Test]
     public function setWhenLastCheckedEntitlementSetsDateNullWhenValueIsNotHaveChecked(
         string $whenChecked,
         ClientBenefitsCheck $sut,
-        ?\DateTime $expectedDateLastChecked
-    ) {
+        ?DateTime $expectedDateLastChecked
+    ): void {
         $sut->setWhenLastCheckedEntitlement($whenChecked);
 
         self::assertEquals($expectedDateLastChecked, $sut->getDateLastCheckedEntitlement());
@@ -80,7 +76,7 @@ class ClientBenefitsCheckTest extends TestCase
 
     public static function dateCheckedProvider(): array
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         $sut = (new ClientBenefitsCheck())
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement($now);
