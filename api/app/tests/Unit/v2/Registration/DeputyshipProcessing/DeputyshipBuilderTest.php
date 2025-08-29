@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use ArrayIterator;
+use stdClass;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Service\DeputyshipCandidatesConverter;
 use PHPUnit\Framework\TestCase;
 
-class DeputyshipBuilderTest extends TestCase
+final class DeputyshipBuilderTest extends TestCase
 {
     private DeputyshipCandidatesConverter $mockConverter;
     private DeputyshipBuilder $sut;
@@ -23,7 +25,7 @@ class DeputyshipBuilderTest extends TestCase
 
     public function testBuildNoCandidatesFail(): void
     {
-        $candidates = new \ArrayIterator([]);
+        $candidates = new ArrayIterator([]);
 
         $results = iterator_to_array($this->sut->build($candidates));
 
@@ -46,7 +48,7 @@ class DeputyshipBuilderTest extends TestCase
         $candidateOrder2_2 = ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid2];
 
         // candidates are pre-sorted by court order UID
-        $candidates = new \ArrayIterator([
+        $candidates = new ArrayIterator([
             $candidateOrder1_1,
             $candidateOrder1_2,
             $candidateOrder1_3,
@@ -54,14 +56,14 @@ class DeputyshipBuilderTest extends TestCase
             $candidateOrder2_2,
         ]);
 
-        $caller = new \stdClass();
+        $caller = new stdClass();
         $caller->counter = 0;
 
         // two groups should be passed to the converter
         $uidsExpected = [$orderUid1, $orderUid2];
         $this->mockConverter->expects($this->exactly(2))
             ->method('convert')
-            ->willReturnCallback(function ($calledWith) use ($uidsExpected, $caller) {
+            ->willReturnCallback(function ($calledWith) use ($uidsExpected, $caller): DeputyshipBuilderResult {
                 $this->assertEquals($uidsExpected[$caller->counter], $calledWith->orderUid);
                 ++$caller->counter;
 

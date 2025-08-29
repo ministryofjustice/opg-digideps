@@ -20,7 +20,7 @@ use Doctrine\ORM\Exception\ORMException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class CourtOrderInviteServiceTest extends TestCase
+final class CourtOrderInviteServiceTest extends TestCase
 {
     private PreRegistrationRepository&MockObject $mockPreRegistrationRepository;
     private CourtOrderService&MockObject $mockCourtOrderService;
