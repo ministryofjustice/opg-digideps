@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\BruteForce;
 
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
@@ -10,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/PredisMock.php';
 
-class AttemptsIncrementalWaitingCheckerTest extends TestCase
+final class AttemptsIncrementalWaitingCheckerTest extends TestCase
 {
     private PredisMock $redis;
     private AttemptsIncrementalWaitingChecker $object;
@@ -39,7 +41,7 @@ class AttemptsIncrementalWaitingCheckerTest extends TestCase
     //    }
     //
 
-    public function testMaxAttemptsReached()
+    public function testMaxAttemptsReached(): void
     {
         $this->object->overrideTimestamp(9990 + 0);
 
@@ -70,22 +72,22 @@ class AttemptsIncrementalWaitingCheckerTest extends TestCase
         $this->assertAccessible();
     }
 
-    private function attempt()
+    private function attempt(): void
     {
         $this->object->registerAttempt($this->key);
     }
 
-    private function assertFrozen()
+    private function assertFrozen(): void
     {
         $this->assertTrue($this->object->isFrozen($this->key));
     }
 
-    private function assertAccessible()
+    private function assertAccessible(): void
     {
         $this->assertFalse($this->object->isFrozen($this->key));
     }
 
-    public function testResetAttempts()
+    public function testResetAttempts(): void
     {
         $this->object->overrideTimestamp(0);
 

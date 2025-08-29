@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
+use ArrayIterator;
+use DateTimeImmutable;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
@@ -12,7 +14,7 @@ use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class DeputyshipsIngestResultRecorderTest extends TestCase
+final class DeputyshipsIngestResultRecorderTest extends TestCase
 {
     private LoggerInterface $mockLogger;
     private DeputyshipsIngestResultRecorder $sut;
@@ -36,7 +38,7 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
     public function testRecordDeputyshipCandidatesResultExceptionFail(): void
     {
         $exception = new Exception('Database connection failed');
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 0, $exception);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 0, $exception);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $result = $this->sut->result();
@@ -49,7 +51,7 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
     {
         $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/deputyships.csv', true, 10));
 
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 20, null);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database '.
@@ -85,8 +87,8 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function testStartAndEndDateAndTimings(): void
     {
-        $start = new \DateTimeImmutable('2025-05-21 23:59:00');
-        $end = new \DateTimeImmutable('2025-05-22 01:05:10');
+        $start = new DateTimeImmutable('2025-05-21 23:59:00');
+        $end = new DateTimeImmutable('2025-05-22 01:05:10');
 
         $this->sut->recordStart($start);
         $this->sut->recordEnd($end);
@@ -104,7 +106,7 @@ class DeputyshipsIngestResultRecorderTest extends TestCase
 
         // logger should only log at warning level
         $this->mockLogger->expects($this->once())->method('warning')->willReturnCallback(
-            function (string $message) {
+            function (string $message): void {
                 self::assertStringContainsString('failed to load deputyships CSV from', $message);
             }
         );

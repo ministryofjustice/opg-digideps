@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
+use Exception;
 use App\Entity\PreRegistration;
 use App\Service\DateTimeProvider;
 use App\v2\Registration\DTO\LayDeputyshipDto;
@@ -12,16 +18,15 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PreRegistrationFactoryTest extends TestCase
+final class PreRegistrationFactoryTest extends TestCase
 {
-    /** @var PreRegistrationFactory */
-    private $factory;
+    private PreRegistrationFactory $factory;
 
     /** @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-    private $validator;
+    private MockObject $validator;
 
     /** @var DateTimeProvider|\PHPUnit_Framework_MockObject_MockObject */
-    private $dateTimeProvider;
+    private MockObject $dateTimeProvider;
 
     protected function setUp(): void
     {
@@ -31,10 +36,8 @@ class PreRegistrationFactoryTest extends TestCase
         $this->factory = new PreRegistrationFactory($this->validator, $this->dateTimeProvider);
     }
 
-    /**
-     * @test
-     */
-    public function throwsExceptionIfCreatesInvalidEntity()
+    #[Test]
+    public function throwsExceptionIfCreatesInvalidEntity(): void
     {
         $this->expectException(PreRegistrationCreationException::class);
         $constraintList = new ConstraintViolationList([
@@ -50,10 +53,8 @@ class PreRegistrationFactoryTest extends TestCase
         $this->factory->createFromDto($this->buildLayDeputyshipDto());
     }
 
-    /**
-     * @test
-     */
-    public function returnsAValidHydratedCasRecEntity()
+    #[Test]
+    public function returnsAValidHydratedCasRecEntity(): void
     {
         $this->validator
             ->expects($this->once())
@@ -82,7 +83,7 @@ class PreRegistrationFactoryTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildLayDeputyshipDto(): LayDeputyshipDto
     {
@@ -108,7 +109,7 @@ class PreRegistrationFactoryTest extends TestCase
             ->setTypeOfReport('type')
             ->setIsNdrEnabled(true)
             ->setOrderType('pfa')
-            ->setOrderDate(new \DateTime('2011-06-14'))
+            ->setOrderDate(new DateTime('2011-06-14'))
             ->setIsCoDeputy(false)
             ->setHybrid('hybrid');
     }

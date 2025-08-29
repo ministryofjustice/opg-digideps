@@ -13,7 +13,7 @@ use App\v2\Service\DeputyshipCandidatesConverter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class DeputyshipCandidateConverterTest extends TestCase
+final class DeputyshipCandidateConverterTest extends TestCase
 {
     private DeputyshipProcessingRawDbAccess&MockObject $mockDbAccess;
     private DeputyshipCandidatesConverter $sut;

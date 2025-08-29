@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service;
 
 use App\Service\RequestIdLoggerProcessor;
 use Mockery as m;
-use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RequestIdLoggerProcessorTest extends TestCase
+final class RequestIdLoggerProcessorTest extends TestCase
 {
     private Container $container;
     private RequestStack $reqStack;
@@ -26,14 +27,14 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
 
-    public function testProcessRecordNoReqStack()
+    public function testProcessRecordNoReqStack(): void
     {
         $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
-    public function testProcessRecordHasNoRequest()
+    public function testProcessRecordHasNoRequest(): void
     {
         $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(null);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
@@ -41,7 +42,7 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
-    public function testProcessRecordHasNoRequestId()
+    public function testProcessRecordHasNoRequestId(): void
     {
         $request = new Request();
         $request->headers = new ParameterBag();
@@ -53,7 +54,7 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
-    public function testProcessRecordHasRequestId()
+    public function testProcessRecordHasRequestId(): void
     {
         $request = new Request();
         $request->headers = new ParameterBag();

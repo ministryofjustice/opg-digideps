@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\Formatter;
 
+use PHPUnit\Framework\Attributes\Test;
 use App\EventListener\RestInputOuputFormatter;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Validator\RestArrayValidator;
@@ -13,7 +14,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 
-class RestFormatterTest extends TestCase
+final class RestFormatterTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -32,8 +33,8 @@ class RestFormatterTest extends TestCase
         );
     }
 
-    /** @test */
-    public function deserializeBodyContent()
+    #[Test]
+    public function deserializeBodyContent(): void
     {
         $incomingRequest = new Request();
         $expectedContentArray = ['aKey' => 'some data'];
@@ -51,8 +52,8 @@ class RestFormatterTest extends TestCase
         self::assertEquals($expectedContentArray, $actualContentArray);
     }
 
-    /** @test */
-    public function setJmsSerialiserGroups()
+    #[Test]
+    public function setJmsSerialiserGroups(): void
     {
         $serialiserGroups = ['group1', 'group2'];
 
@@ -63,8 +64,8 @@ class RestFormatterTest extends TestCase
         $this->sut->setJmsSerialiserGroups($serialiserGroups);
     }
 
-    /** @test */
-    public function validateArray()
+    #[Test]
+    public function validateArray(): void
     {
         $data = ['some' => 'data'];
         $assertions = ['some' => 'assertions'];

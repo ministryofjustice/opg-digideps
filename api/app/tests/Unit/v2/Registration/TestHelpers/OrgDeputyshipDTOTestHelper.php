@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\TestHelpers;
 
+use DateTimeImmutable;
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -22,7 +24,7 @@ use Faker\Provider\en_GB\Address;
 
 class OrgDeputyshipDTOTestHelper
 {
-    public static function generateSiriusOrgDeputyshipCompressedJson(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipCompressedJson(int $validCount, int $invalidCount): string
     {
         $deputyships = [];
 
@@ -41,13 +43,10 @@ class OrgDeputyshipDTOTestHelper
         return base64_encode(gzcompress(json_encode($deputyships), 9));
     }
 
-    /**
-     * @return array
-     */
-    public static function generateValidSiriusOrgDeputyshipArray()
+    public static function generateValidSiriusOrgDeputyshipArray(): array
     {
         $faker = Factory::create();
-        $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
         $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
@@ -92,7 +91,7 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return OrgDeputyshipDto[]
      */
-    public static function generateSiriusOrgDeputyshipDtos(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipDtos(int $validCount, int $invalidCount): array
     {
         $json = self::generateSiriusOrgDeputyshipDecompressedJson($validCount, $invalidCount);
         $dtos = [];
@@ -140,7 +139,7 @@ class OrgDeputyshipDTOTestHelper
         return $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber()) instanceof Client;
     }
 
-    public static function clientAndOrgAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, OrganisationRepository $orgRepo)
+    public static function clientAndOrgAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, OrganisationRepository $orgRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
 
@@ -150,7 +149,7 @@ class OrgDeputyshipDTOTestHelper
         return $org->getClients()->contains($client) && $client->getOrganisation() === $org;
     }
 
-    public static function clientAndDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo)
+    public static function clientAndDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $deputy = $deputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
@@ -158,7 +157,7 @@ class OrgDeputyshipDTOTestHelper
         return $client->getDeputy() === $deputy;
     }
 
-    public static function clientAndDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo)
+    public static function clientAndDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $deputy = $deputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
@@ -166,24 +165,21 @@ class OrgDeputyshipDTOTestHelper
         return !($client->getDeputy() === $deputy);
     }
 
-    public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo)
+    public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($caseNumber);
 
         return $client->getReports()->first()->getType() == $reportType;
     }
 
-    public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo)
+    public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo): bool
     {
         $report = $reportRepo->findOneBy(['client' => $client]);
 
         return $report->getType() !== $oldReportType;
     }
 
-    /**
-     * @return Deputy
-     */
-    public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Deputy
     {
         $deputy = (new Deputy())
             ->setEmail1($dto->getDeputyEmail())
@@ -248,7 +244,7 @@ class OrgDeputyshipDTOTestHelper
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new \DateTime())
+            ->setCourtDate(new DateTime())
             ->addUser($layDeputy);
 
         $em->persist($layDeputy);
@@ -264,8 +260,8 @@ class OrgDeputyshipDTOTestHelper
         string $reportType = '103-5',
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31'
-    ) {
-        $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
+    ): Report {
+        $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
         $client->addReport($report);
 
         $em->persist($report);

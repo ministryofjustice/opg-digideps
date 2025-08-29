@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use InvalidArgumentException;
 use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use PHPUnit\Framework\TestCase;
 
-class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
+final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 {
     private SiriusToLayDeputyshipDtoAssembler $sut;
 
@@ -15,17 +20,14 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->sut = new SiriusToLayDeputyshipDtoAssembler();
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getMissingDataVariations
-     */
-    public function assembleFromArrayThrowsExceptionIfGivenIncompleteData($itemToRemove): void
+    #[DataProvider('getMissingDataVariations')]
+    #[Test]
+    public function assembleFromArrayThrowsExceptionIfGivenIncompleteData(string $itemToRemove): void
     {
         $input = $this->getInput();
         unset($input[$itemToRemove]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->sut->assembleFromArray($input);
     }
@@ -47,24 +49,19 @@ class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function assembleFromArrayThrowsExceptionIfGivenInvalidReportType(): void
     {
         $input = $this->getInput();
         $input['ReportType'] = 'invalidReportType';
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->sut->assembleFromArray($input);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getReportTypeToCorrefExpectation
-     */
-    public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto($reportType): void
+    #[DataProvider('getReportTypeToCorrefExpectation')]
+    #[Test]
+    public function assembleFromArrayAssemblesAndReturnsALayDeputyshipDto(string $reportType): void
     {
         $input = $this->getInput();
         $input['ReportType'] = $reportType;

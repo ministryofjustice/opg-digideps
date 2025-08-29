@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
+use PHPUnit\Framework\Attributes\Test;
+use Exception;
 use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
 use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
@@ -9,7 +13,7 @@ use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
+final class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
 {
     private LayDeputyshipDtoCollectionAssembler $sut;
     private LayDeputyshipDtoAssemblerInterface&MockObject $layDeputyshipDtoAssembler;
@@ -25,7 +29,7 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
         $this->sut = new LayDeputyshipDtoCollectionAssembler($this->layDeputyshipDtoAssembler);
     }
 
-    /** @test */
+    #[Test]
     public function assembleFromArrayAssemblesACollectionAndReturnsIt(): void
     {
         $input = [
@@ -45,10 +49,10 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
             ->willReturnCallback(
-                fn ($param) =>
+                fn ($param): LayDeputyshipDto =>
                 match ($param) {
                     ['alpha' => 'alpha-data'], ['beta' => 'beta-data'] => new LayDeputyshipDto(),
-                    default => throw new \Exception('Did not expect input ' . print_r($param, true)),
+                    default => throw new Exception('Did not expect input ' . print_r($param, true)),
                 }
             );
     }
@@ -59,7 +63,7 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
         $this->assertEquals(2, $this->result['collection']->count());
     }
 
-    /** @test */
+    #[Test]
     public function assembleFromDoesNotAddInvalidNodesToItsCollection(): void
     {
         $input = [
@@ -72,11 +76,11 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
             ->willReturnCallback(
-                fn ($param) =>
+                fn ($param): ?LayDeputyshipDto =>
                     match ($param) {
                         ['alpha' => 'not-valid-enough-to-create-a-DTO'] => null,
                         ['beta' => 'beta-data'] => new LayDeputyshipDto(),
-                        default => throw new \Exception('Did not expect input ' . print_r($param, true)),
+                        default => throw new Exception('Did not expect input ' . print_r($param, true)),
                 }
             );
 

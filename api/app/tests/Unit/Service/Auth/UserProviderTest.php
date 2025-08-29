@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\Auth;
 
+use Mockery;
+use RuntimeException;
 use App\Repository\UserRepository;
 use App\Security\RedisUserProvider;
 use Mockery\MockInterface;
@@ -10,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Symfony\Bridge\Monolog\Logger;
 
-class UserProviderTest extends TestCase
+final class UserProviderTest extends TestCase
 {
     private UserRepository|MockInterface $repo;
     private Client|MockInterface $redis;
@@ -27,27 +31,27 @@ class UserProviderTest extends TestCase
         $this->userProvider = new RedisUserProvider($this->redis, $this->logger, $options, $this->repo, 'testing');
     }
 
-    public function testloadUserByUsernameRedisNotFound()
+    public function testloadUserByUsernameRedisNotFound(): void
     {
         $this->redis->shouldReceive('get')->with('token')->andReturn(null);
-        $this->logger->shouldReceive('warning')->with(\Mockery::pattern('/Token.*not.*found/'));
-        $this->expectException(\RuntimeException::class);
+        $this->logger->shouldReceive('warning')->with(Mockery::pattern('/Token.*not.*found/'));
+        $this->expectException(RuntimeException::class);
 
         $this->userProvider->loadUserByUsername('token');
     }
 
-    public function testloadUserByUsernameDbNotFound()
+    public function testloadUserByUsernameDbNotFound(): void
     {
         $this->redis->shouldReceive('get')->with('token')->andReturn(1);
         $this->repo->shouldReceive('find')->with(1)->andReturn(null);
 
-        $this->logger->shouldReceive('warning')->with(\Mockery::pattern('/not found/'));
-        $this->expectException(\RuntimeException::class);
+        $this->logger->shouldReceive('warning')->with(Mockery::pattern('/not found/'));
+        $this->expectException(RuntimeException::class);
 
         $this->userProvider->loadUserByUsername('token');
     }
 
-    public function testloadUserByUsernameFound()
+    public function testloadUserByUsernameFound(): void
     {
         $user = m::mock('App\Entity\User');
 
@@ -60,7 +64,7 @@ class UserProviderTest extends TestCase
         $this->assertEquals($user, $this->userProvider->loadUserByUsername('token'));
     }
 
-    public function testsupportsClass()
+    public function testsupportsClass(): void
     {
         $user = m::mock('App\Entity\User');
 
@@ -69,7 +73,7 @@ class UserProviderTest extends TestCase
         $this->assertTrue($this->userProvider->supportsClass('App\Entity\User'));
     }
 
-    public function testgenerateRandomTokenAndStore()
+    public function testgenerateRandomTokenAndStore(): void
     {
         $user = m::stub('App\Entity\User', [
             'getId' => 123,
@@ -77,8 +81,8 @@ class UserProviderTest extends TestCase
 
         $tokenMatchPattern = '/^testing_123_[0-9a-f]{5,40}[\d]{1,}/';
 
-        $this->redis->shouldReceive('set')->with(\Mockery::pattern($tokenMatchPattern), 123)->atLeast(1);
-        $this->redis->shouldReceive('expire')->with(\Mockery::pattern($tokenMatchPattern), 7)->atLeast(1);
+        $this->redis->shouldReceive('set')->with(Mockery::pattern($tokenMatchPattern), 123)->atLeast(1);
+        $this->redis->shouldReceive('expire')->with(Mockery::pattern($tokenMatchPattern), 7)->atLeast(1);
 
         $token = $this->userProvider->generateRandomTokenAndStore($user);
         $this->assertMatchesRegularExpression($tokenMatchPattern, $token);
@@ -87,7 +91,7 @@ class UserProviderTest extends TestCase
         $this->assertNotEquals($token, $token2, 'token must generate a new value when called for the 2nd time');
     }
 
-    public function testremoveToken()
+    public function testremoveToken(): void
     {
         $this->redis->shouldReceive('set')->with('token', null)->once()->andReturn('redisReturn');
 

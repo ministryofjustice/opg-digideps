@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service\Audit;
 
+use PHPUnit\Framework\Attributes\Test;
 use App\Service\Time\DateTimeProvider;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class AuditEventsTest extends TestCase
+final class AuditEventsTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -24,9 +25,7 @@ class AuditEventsTest extends TestCase
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function clientArchived(): void
     {
         $expected = [

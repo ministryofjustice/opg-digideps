@@ -1,27 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\RestHandler\Report;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use DateTime;
+use DateTimeZone;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
-class DeputyCostsReportUpdateHandlerTest extends TestCase
+final class DeputyCostsReportUpdateHandlerTest extends TestCase
 {
-    /** @var DeputyCostsReportUpdateHandler */
-    private $sut;
-
-    /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject */
-    private $em;
-
-    /** @var Report|\PHPUnit_Framework_MockObject_MockObject */
-    private $report;
+    private DeputyCostsReportUpdateHandler $sut;
+    private EntityManager&MockObject $em;
+    private Report&MockObject $report;
 
     public function setUp(): void
     {
-        $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $date = new DateTime('now', new DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])
@@ -34,9 +35,8 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->sut = new DeputyCostsReportUpdateHandler($this->em);
     }
 
-    /** @dataProvider costDataProvider
-     */
-    public function testUpdatesSingularFields($field, $data, $expected)
+    #[DataProvider('costDataProvider')]
+    public function testUpdatesSingularFields(string $field, array $data, string $expected): void
     {
         $this->ensureSectionStatusCacheWillBeUpdated();
         $this->invokeHandler($data);
@@ -50,7 +50,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         ];
     }
 
-    public function testResetsInterimCostsWhenFixedCostIsSet()
+    public function testResetsInterimCostsWhenFixedCostIsSet(): void
     {
         $data['prof_deputy_costs_how_charged'] = 'fixed';
 
@@ -60,7 +60,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertTrue($this->report->getProfDeputyInterimCosts()->isEmpty());
     }
 
-    public function testSetFixedCostIsNullWhenHasInterimIsSet()
+    public function testSetFixedCostIsNullWhenHasInterimIsSet(): void
     {
         $data['prof_deputy_costs_how_charged'] = 'both';
 
@@ -72,7 +72,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertNull($this->report->getProfDeputyFixedCost());
     }
 
-    public function testInterimCostsAreRemovedWhenNoInterimAnswered()
+    public function testInterimCostsAreRemovedWhenNoInterimAnswered(): void
     {
         $data['prof_deputy_costs_has_interim'] = 'no';
 
@@ -81,7 +81,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertTrue($this->report->getProfDeputyInterimCosts()->isEmpty());
     }
 
-    public function testInterimCostsAdded()
+    public function testInterimCostsAdded(): void
     {
         $data['prof_deputy_costs_has_interim'] = 'yes';
         $data['prof_deputy_interim_costs'] = $this->generateValidInterimCosts();
@@ -105,7 +105,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
     //        $this->assertCount(3, $this->report->getProfDeputyInterimCosts());
     //    }
 
-    public function testUpdateFixedCostAmount()
+    public function testUpdateFixedCostAmount(): void
     {
         $data['prof_deputy_fixed_cost'] = '234.56';
 
@@ -114,7 +114,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo('profDeputyFixedCost', '234.56');
     }
 
-    public function testUpdateCostAmountToScco()
+    public function testUpdateCostAmountToScco(): void
     {
         $data['prof_deputy_costs_reason_beyond_estimate'] = 'some reason';
 
@@ -123,7 +123,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsReasonBeyondEstimate', 'some reason');
     }
 
-    private function generateValidInterimCosts()
+    private function generateValidInterimCosts(): array
     {
         return [
             ['amount' => '21', 'date' => '2012-01-05'],
@@ -132,7 +132,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         ];
     }
 
-    public function testUpdatesExistingOrCreatesNewProfDeputyInterimCost()
+    public function testUpdatesExistingOrCreatesNewProfDeputyInterimCost(): void
     {
         $data['prof_deputy_interim_costs'] = [
             ['amount' => '30.32', 'date' => '01/01/2012'],
@@ -147,7 +147,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertNewProfDeputyInterimCostIsCreated();
     }
 
-    private function ensureSectionStatusCacheWillBeUpdated()
+    private function ensureSectionStatusCacheWillBeUpdated(): void
     {
         $this
             ->report
@@ -156,7 +156,7 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
             ->with([Report::SECTION_PROF_DEPUTY_COSTS]);
     }
 
-    private function ensureEachProfDeputyCostWillBePersisted($count)
+    private function ensureEachProfDeputyCostWillBePersisted(int $count): void
     {
         $this
             ->em
@@ -164,18 +164,18 @@ class DeputyCostsReportUpdateHandlerTest extends TestCase
             ->method('persist');
     }
 
-    private function invokeHandler(array $data)
+    private function invokeHandler(array $data): void
     {
         $this->sut->handle($this->report, $data);
     }
 
-    private function assertReportFieldValueIsEqualTo($field, $expected)
+    private function assertReportFieldValueIsEqualTo(string $field, string $expected): void
     {
         $getter = sprintf('get%s', ucfirst($field));
         $this->assertEquals($expected, $this->report->$getter());
     }
 
-    private function assertNewProfDeputyInterimCostIsCreated()
+    private function assertNewProfDeputyInterimCostIsCreated(): void
     {
         $profDeputyCost = $this->report->getProfDeputyInterimCosts()->first();
         $this->assertSame($this->report, $profDeputyCost->getReport());

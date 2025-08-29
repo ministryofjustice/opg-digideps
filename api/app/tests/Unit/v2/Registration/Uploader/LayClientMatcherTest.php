@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
@@ -13,7 +14,7 @@ use App\v2\Registration\Uploader\LayClientMatcher;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
-class LayClientMatcherTest extends TestCase
+final class LayClientMatcherTest extends TestCase
 {
     private EntityManagerInterface $em;
     private LayClientMatcher $sut;
@@ -33,7 +34,7 @@ class LayClientMatcherTest extends TestCase
         $dto->setHybrid(null);
 
         $client = new Client();
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($client, '102', new DateTime(), new DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);
@@ -81,7 +82,7 @@ class LayClientMatcherTest extends TestCase
         $dto->setCaseNumber('1234567T');
 
         $client = new Client();
-        $client->setDeletedAt(new \DateTime());
+        $client->setDeletedAt(new DateTime());
 
         $clientRepository = $this->createMock(ClientRepository::class);
         $clientRepository->expects($this->once())
@@ -109,7 +110,7 @@ class LayClientMatcherTest extends TestCase
         $dto->setHybrid(null);
 
         $client = new Client();
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($client, '102', new DateTime(), new DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);
@@ -138,7 +139,7 @@ class LayClientMatcherTest extends TestCase
         $dto->setHybrid('HYBRID');
 
         $client = new Client();
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($client, '102', new DateTime(), new DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);

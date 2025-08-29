@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\Auth;
 
+use InvalidArgumentException;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\JWT\JWTService;
@@ -13,14 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
-class AuthServiceTest extends TestCase
+final class AuthServiceTest extends TestCase
 {
-    /**
-     * @var AuthService
-     */
-    private $authService;
+    private AuthService $authService;
 
-    private $clientPermissions = [
+    private array $clientPermissions = [
         'frontend' => [
             'ROLE_DEPUTY',
         ],
@@ -29,30 +32,11 @@ class AuthServiceTest extends TestCase
         ],
     ];
 
-    /**
-     * @var RoleHierarchy
-     */
-    private $roleHierarchy;
-
-    /**
-     * @var Mockery\MockInterface
-     */
-    private $userRepo;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Symfony\Bridge\Monolog\Logger
-     */
-    private $logger;
-
-    /**
-     * @var Mockery\MockInterface
-     */
-    private $passwordHasher;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JWTService
-     */
-    private $JWTService;
+    private RoleHierarchy $roleHierarchy;
+    private MockInterface|UserRepository $userRepo;
+    private MockInterface|LoggerInterface $logger;
+    private MockInterface|UserPasswordHasherInterface $passwordHasher;
+    private MockInterface|JWTService $JWTService;
 
     public function setUp(): void
     {
@@ -78,9 +62,9 @@ class AuthServiceTest extends TestCase
         );
     }
 
-    public function testMissingSecrets()
+    public function testMissingSecrets(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->authService = new AuthService($this->logger,
             $this->userRepo,
@@ -99,15 +83,11 @@ class AuthServiceTest extends TestCase
             ['LAYDEPUTYSECRET-deputy ', false],
             ['123', false],
             [null, false],
-            [0, false],
-            [false, false],
         ];
     }
 
-    /**
-     * @dataProvider isSecretValidProvider
-     */
-    public function testisSecretValid($clientSecret, $expectedValidity)
+    #[DataProvider('isSecretValidProvider')]
+    public function testisSecretValid(?string $clientSecret, bool $expectedValidity): void
     {
         $request = new Request();
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
@@ -115,15 +95,15 @@ class AuthServiceTest extends TestCase
         $this->assertEquals($expectedValidity, $this->authService->isSecretValid($request));
     }
 
-    public function testgetUserByEmailAndPasswordUserNotFound()
+    public function testgetUserByEmailAndPasswordUserNotFound(): void
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/not found/'))->once();
+        $this->logger->shouldReceive('info')->with(Mockery::pattern('/not found/'))->once();
 
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-    public function testgetUserByEmailAndPasswordMismatchPassword()
+    public function testgetUserByEmailAndPasswordMismatchPassword(): void
     {
         $user = m::stub('App\Entity\User', [
                 'getSalt' => 'salt',
@@ -133,12 +113,12 @@ class AuthServiceTest extends TestCase
 
         $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(false);
 
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/password mismatch/'))->once();
+        $this->logger->shouldReceive('info')->with(Mockery::pattern('/password mismatch/'))->once();
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-    public function testgetUserByEmailAndPasswordCorrect()
+    public function testgetUserByEmailAndPasswordCorrect(): void
     {
         $user = m::stub('App\Entity\User', [
                 'getSalt' => 'salt',
@@ -151,7 +131,7 @@ class AuthServiceTest extends TestCase
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-    public function testgetUserByToken()
+    public function testgetUserByToken(): void
     {
         $user = m::mock('App\Entity\User');
 
@@ -179,17 +159,14 @@ class AuthServiceTest extends TestCase
             ['adminSecret', null, false],
             ['layDeputySecretNoPermissions', '', false],
             ['layDeputySecretNoPermissions', null, false],
-            ['layDeputySecretNoPermissions', false, false],
             ['layDeputySecretWrongFormat', '', false],
             [null, null, false],
             [null, 'ROLE_LAY_DEPUTY', false],
         ];
     }
 
-    /**
-     * @dataProvider isSecretValidForUserProvider
-     */
-    public function testisSecretValidForRole($clientSecret, $role, $expectedResult)
+    #[DataProvider('isSecretValidForUserProvider')]
+    public function testisSecretValidForRole(?string $clientSecret, ?string $role, bool $expectedResult): void
     {
         $request = new Request();
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
@@ -197,8 +174,8 @@ class AuthServiceTest extends TestCase
         $this->assertEquals($expectedResult, $this->authService->isSecretValidForRole($role, $request));
     }
 
-    /** @test */
-    public function jWTIsValid()
+    #[Test]
+    public function jWTIsValid(): void
     {
         $this->JWTService->shouldReceive('verify')->with('not-a.real-jwt')->andReturn(true);
 
@@ -208,12 +185,9 @@ class AuthServiceTest extends TestCase
         $this->assertEquals(true, $this->authService->JWTIsValid($request));
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider JWTValidFailureProvider
-     */
-    public function jWTIsValidFailures(Request $request)
+    #[DataProvider('JWTValidFailureProvider')]
+    #[Test]
+    public function jWTIsValidFailures(Request $request): void
     {
         $this->assertEquals(false, $this->authService->JWTIsValid($request));
     }

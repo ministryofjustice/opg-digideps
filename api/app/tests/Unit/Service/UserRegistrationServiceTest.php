@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
+use RuntimeException;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
@@ -15,12 +20,9 @@ use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class UserRegistrationServiceTest extends TestCase
+final class UserRegistrationServiceTest extends TestCase
 {
-    /**
-     * @var UserRegistrationService
-     */
-    private $userRegistrationService;
+    private UserRegistrationService $userRegistrationService;
 
     public function setUp(): void
     {
@@ -38,10 +40,8 @@ class UserRegistrationServiceTest extends TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
     }
 
-    /**
-     * @test
-     */
-    public function renderRegistrationHtmlEmail()
+    #[Test]
+    public function renderRegistrationHtmlEmail(): void
     {
         $data = new SelfRegisterData();
 
@@ -62,10 +62,10 @@ class UserRegistrationServiceTest extends TestCase
         $mockClient = m::mock(Client::class)
             ->shouldIgnoreMissing(true)
             ->makePartial()
-            ->shouldReceive('getCourtDate')->andReturn(new \DateTime('2015-05-04'))
+            ->shouldReceive('getCourtDate')->andReturn(new DateTime('2015-05-04'))
             ->getMock();
 
-        $datetime = new \DateTime('2015-05-04');
+        $datetime = new DateTime('2015-05-04');
         $mockClient->shouldIgnoreMissing(true)
             ->shouldReceive('getCourtDate')->andReturn($datetime)
             ->getMock();
@@ -107,10 +107,10 @@ class UserRegistrationServiceTest extends TestCase
         $selfRegisteredUser = $this->userRegistrationService->selfRegisterUser($data);
 
         self::assertEquals(User::SELF_REGISTER, $selfRegisteredUser->getRegistrationRoute());
-        self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof \DateTime);
+        self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof DateTime);
     }
 
-    public function testUserCannotRegisterIfClientExistsWithDeputies()
+    public function testUserCannotRegisterIfClientExistsWithDeputies(): void
     {
         $data = new SelfRegisterData();
         $data->setFirstname('Zac');
@@ -142,14 +142,14 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
-        self::expectException(\RuntimeException::class);
+        self::expectException(RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
-    public function testUserCannotRegisterIfClientExistsWithDeputiesCaseNumberWithT()
+    public function testUserCannotRegisterIfClientExistsWithDeputiesCaseNumberWithT(): void
     {
         $data = new SelfRegisterData();
         $data->setFirstname('Zac');
@@ -181,14 +181,14 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
-        self::expectException(\RuntimeException::class);
+        self::expectException(RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 1234123t already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
-    public function testUserCannotRegisterIfOrganisationExists()
+    public function testUserCannotRegisterIfOrganisationExists(): void
     {
         $data = new SelfRegisterData();
         $data->setFirstname('Zac');
@@ -220,7 +220,7 @@ class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
-        self::expectException(\RuntimeException::class);
+        self::expectException(RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);

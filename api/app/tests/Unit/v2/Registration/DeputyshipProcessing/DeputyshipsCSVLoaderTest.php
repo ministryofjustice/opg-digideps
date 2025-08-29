@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
+use ArrayIterator;
+use stdClass;
 use App\Entity\StagingDeputyship;
 use App\v2\CSV\CSVChunker;
 use App\v2\CSV\CSVChunkerFactory;
@@ -15,7 +17,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class DeputyshipsCSVLoaderTest extends TestCase
+final class DeputyshipsCSVLoaderTest extends TestCase
 {
     private EntityManager|MockObject $mockEm;
     private CSVChunkerFactory|MockObject $mockCSVChunkerFactory;
@@ -55,15 +57,15 @@ class DeputyshipsCSVLoaderTest extends TestCase
         $sd1 = new StagingDeputyship();
         $sd2 = new StagingDeputyship();
         $sd3 = new StagingDeputyship();
-        $records = new \ArrayIterator([$sd1, $sd2, $sd3]);
+        $records = new ArrayIterator([$sd1, $sd2, $sd3]);
 
         $mockChunker = $this->createMock(CSVChunker::class);
 
         // work-around for the removal of willReturnConsecutive from phpunit...
-        $caller = new \stdClass();
+        $caller = new stdClass();
         $caller->callNumber = 1;
 
-        $mockChunker->method('getChunk')->willReturnCallback(function () use ($records, $caller) {
+        $mockChunker->method('getChunk')->willReturnCallback(function () use ($records, $caller): ?array {
             if ($caller->callNumber > count($records)) {
                 return null;
             }
@@ -88,7 +90,7 @@ class DeputyshipsCSVLoaderTest extends TestCase
         // chunker returns three chunks, then null
         $this->mockEm->expects($this->exactly(3))
             ->method('persist')
-            ->willReturnCallback(function ($record) use ($records) {
+            ->willReturnCallback(function ($record) use ($records): void {
                 $validValues = array_merge(iterator_to_array($records), [null]);
                 $this->assertContains($record, $validValues);
             });

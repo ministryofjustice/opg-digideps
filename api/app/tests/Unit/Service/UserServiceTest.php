@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service;
 
+use DateTime;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Repository\ClientRepository;
@@ -17,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\isInstanceOf;
 
-class UserServiceTest extends TestCase
+final class UserServiceTest extends TestCase
 {
     private User $user;
     private EntityManager&MockInterface $em;
@@ -33,7 +37,7 @@ class UserServiceTest extends TestCase
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new \DateTime('2014-06-06'));
+        $client->setCourtDate(new DateTime('2014-06-06'));
 
         $email = 'test@tester.co.uk';
 
@@ -56,10 +60,8 @@ class UserServiceTest extends TestCase
 
     /**
      * Provides logged-in user role and expected registration route that should be set.
-     *
-     * @return array
      */
-    public static function setRoleForLoggedInUser()
+    public static function setRoleForLoggedInUser(): array
     {
         return [
             [User::ROLE_LAY_DEPUTY, User::CO_DEPUTY_INVITE, 100],
@@ -68,10 +70,8 @@ class UserServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider setRoleForLoggedInUser
-     */
-    public function testRegistrationRoute($role, $expectedRoute, $clientId)
+    #[DataProvider('setRoleForLoggedInUser')]
+    public function testRegistrationRoute(string $role, string $expectedRoute, ?int $clientId): void
     {
         $loggedInUser = $this->user;
         $loggedInUser->setRoleName($role);
