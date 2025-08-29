@@ -27,7 +27,7 @@
             <dt class="label">{{ 'declarationTime' | trans }}</dt>
             <dd class="value">{{ndr.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{ndr.submitDate | date("d/m/Y") }}</dd>
             <dt class="label">{{ 'submittedBy' | trans }}</dt>
-            <dd class="value" id="statusDeputyName">{{ app.user.fullname }}</dd>
+            <dd class="value" id="statusDeputyName">{{ submittedBy.fullname }}</dd>
         </dl>
     </div>
 </div>
