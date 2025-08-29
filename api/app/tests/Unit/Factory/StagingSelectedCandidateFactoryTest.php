@@ -9,7 +9,7 @@ use App\Entity\StagingDeputyship;
 use App\Factory\StagingSelectedCandidateFactory;
 use PHPUnit\Framework\TestCase;
 
-class StagingSelectedCandidateFactoryTest extends TestCase
+final class StagingSelectedCandidateFactoryTest extends TestCase
 {
     private StagingSelectedCandidateFactory $factory;
     private StagingDeputyship $csvDeputyShipRow;
@@ -26,7 +26,7 @@ class StagingSelectedCandidateFactoryTest extends TestCase
         $this->csvDeputyShipRow->deputyUid = '700761111002';
     }
 
-    public function testCreateInsertOrderCandidate()
+    public function testCreateInsertOrderCandidate(): void
     {
         $mockClient = $this->createMock(Client::class);
         $mockClient

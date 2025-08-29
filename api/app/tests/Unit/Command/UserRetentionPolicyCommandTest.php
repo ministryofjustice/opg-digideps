@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Command;
 
+use DateTime;
 use App\Command\UserRetentionPolicyCommand;
 use App\Entity\User;
 use App\Event\UserRetentionPolicyCommandEvent;
@@ -14,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class UserRetentionPolicyCommandTest extends KernelTestCase
+final class UserRetentionPolicyCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
@@ -44,10 +47,7 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    /**
-     * @test
-     */
-    public function testOutputWithNoInactiveAdminUsers()
+    public function testOutputWithNoInactiveAdminUsers(): void
     {
         $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
             ->shouldBeCalled()
@@ -61,15 +61,12 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->assertEquals(0, $result);
     }
 
-    /**
-     * @test
-     */
-    public function testExecuteWithInactiveAdminUser()
+    public function testExecuteWithInactiveAdminUser(): void
     {
         $user = new User();
         $user->setRoleName(User::ROLE_ADMIN);
         $user->setId(1);
-        $user->setLastLoggedIn(new \DateTime('-36 months'));
+        $user->setLastLoggedIn(new DateTime('-36 months'));
 
         $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
             ->shouldBeCalled()
@@ -91,30 +88,27 @@ class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->assertEquals(0, $result);
     }
 
-    /**
-     * @test
-     */
-    public function testExecuteWithInactiveAdminUsers()
+    public function testExecuteWithInactiveAdminUsers(): void
     {
         $inactiveAdminUser = new User();
         $inactiveAdminUser->setRoleName(User::ROLE_ADMIN);
         $inactiveAdminUser->setId(1);
-        $inactiveAdminUser->setLastLoggedIn(new \DateTime('-36 months'));
+        $inactiveAdminUser->setLastLoggedIn(new DateTime('-36 months'));
 
         $inactiveAdminManagerUser = new User();
         $inactiveAdminManagerUser->setRoleName(User::ROLE_ADMIN_MANAGER);
         $inactiveAdminManagerUser->setId(2);
-        $inactiveAdminManagerUser->setLastLoggedIn(new \DateTime('-30 months'));
+        $inactiveAdminManagerUser->setLastLoggedIn(new DateTime('-30 months'));
 
         $activeSuperAdmin = new User();
         $activeSuperAdmin->setRoleName(User::ROLE_SUPER_ADMIN);
         $activeSuperAdmin->setId(3);
-        $activeSuperAdmin->setLastLoggedIn(new \DateTime('-2 months'));
+        $activeSuperAdmin->setLastLoggedIn(new DateTime('-2 months'));
 
         $inactiveSuperAdminProtected = new User();
         $inactiveSuperAdminProtected->setRoleName(User::ROLE_SUPER_ADMIN);
         $inactiveSuperAdminProtected->setId(4);
-        $inactiveSuperAdminProtected->setLastLoggedIn(new \DateTime('-26 months'));
+        $inactiveSuperAdminProtected->setLastLoggedIn(new DateTime('-26 months'));
 
         $expectedInactiveAdminUsersReturned = [
             $inactiveAdminUser,

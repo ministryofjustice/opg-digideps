@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Factory;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use InvalidArgumentException;
 use App\Entity\Organisation;
 use App\Factory\OrganisationFactory;
 use PHPUnit\Framework\TestCase;
 
-class OrganisationFactoryTest extends TestCase
+final class OrganisationFactoryTest extends TestCase
 {
-    /** @var OrganisationFactory */
-    private $factory;
+    private OrganisationFactory $factory;
 
     /** @var string[] */
-    private $sharedDomains;
+    private array $sharedDomains;
 
     protected function setUp(): void
     {
@@ -23,15 +25,12 @@ class OrganisationFactoryTest extends TestCase
         $this->factory = new OrganisationFactory($this->sharedDomains);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getEmailVariations
-     */
+    #[DataProvider('getEmailVariations')]
+    #[Test]
     public function createFromFullEmailDeterminesEmailIdentiferFromTheFullGivenEmail(
         string $fullEmail,
         string $expectedEmailIdentifier
-    ) {
+    ): void {
         $organisation = $this->factory->createFromFullEmail('Foo Inc.', $fullEmail, true);
 
         $this->assertInstanceOf(Organisation::class, $organisation);
@@ -52,10 +51,8 @@ class OrganisationFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function createFromEmailIdentifierCreatesOrganisationUsingGivenArgAsEmailIdentifier()
+    #[Test]
+    public function createFromEmailIdentifierCreatesOrganisationUsingGivenArgAsEmailIdentifier(): void
     {
         $organisation = $this->factory->createFromEmailIdentifier('Foo Corp', 'Foo.Com', false);
 
@@ -65,25 +62,19 @@ class OrganisationFactoryTest extends TestCase
         $this->assertFalse($organisation->isActivated());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getInvalidEmailInputs
-     */
-    public function createFromFullEmailThrowsExceptionIfGivenBadData($name, $emailIdentifier)
+    #[DataProvider('getInvalidEmailInputs')]
+    #[Test]
+    public function createFromFullEmailThrowsExceptionIfGivenBadData(string $name, string $emailIdentifier): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->factory->createFromFullEmail($name, $emailIdentifier);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getInvalidEmailIdentifierInputs
-     */
-    public function createFromEmailIdentifierThrowsExceptionIfGivenBadData($name, $emailIdentifier)
+    #[DataProvider('getInvalidEmailIdentifierInputs')]
+    #[Test]
+    public function createFromEmailIdentifierThrowsExceptionIfGivenBadData(string $name, string $emailIdentifier): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->factory->createFromEmailIdentifier($name, $emailIdentifier);
     }
 
