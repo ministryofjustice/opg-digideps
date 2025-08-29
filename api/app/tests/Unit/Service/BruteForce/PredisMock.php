@@ -1,37 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\BruteForce;
 
+use Predis\Client;
+use InvalidArgumentException;
+
 // create a simple predis Mock to just return keys
-class PredisMock extends \Predis\Client
+class PredisMock extends Client
 {
     private $data;
-    private $time;
 
     public function __construct()
     {
-        $this->time = 0;
     }
 
-    public function set($id, $value)
+    public function set($key, $value): void
     {
-        $this->data[$id] = $value;
+        $this->data[$key] = $value;
     }
 
-    public function get($id)
+    public function get($key)
     {
-        return isset($this->data[$id]) ? $this->data[$id] : null;
+        return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
-    public function expire($id, $timeout)
+    public function expire($key, $seconds): void
     {
-        if (!isset($this->data[$id])) {
-            throw new \InvalidArgumentException("key $id not set");
+        if (!isset($this->data[$key])) {
+            throw new InvalidArgumentException("key $key not set");
         }
     }
 
     public function __call($commandID, $arguments)
     {
-        throw new \InvalidArgumentException("PredisMock: Method $commandID not implemented");
+        throw new InvalidArgumentException("PredisMock: Method $commandID not implemented");
     }
 }
