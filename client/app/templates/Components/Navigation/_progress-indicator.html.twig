@@ -2,7 +2,7 @@
 <ol class="opg-progress-bar">
     {% for stepId, stepOptions in progressSteps %}
         <li class="opg-progress-bar__item {{ stepOptions.class }}">
-            {{ ('registrationProgressBar.' ~ stepId ~ '.label') | trans({}, 'common') }}
+            {{ (progressBar ~ '.' ~ stepId ~ '.label') | trans({}, 'common') }}
         </li>
     {% endfor %}
 </ol>

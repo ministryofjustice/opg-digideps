@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Security;
 
+use DateTime;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Security\OrganisationVoter;
@@ -13,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
-class OrganisationVoterTest extends KernelTestCase
+final class OrganisationVoterTest extends KernelTestCase
 {
     use ProphecyTrait;
 
@@ -33,7 +34,7 @@ class OrganisationVoterTest extends KernelTestCase
         $this->sut = new OrganisationVoter($this->security->reveal());
     }
 
-    public function testOrganisationContainsLoggedInUser()
+    public function testOrganisationContainsLoggedInUser(): void
     {
         $this->subject->addUser($this->user);
 
@@ -46,7 +47,7 @@ class OrganisationVoterTest extends KernelTestCase
         self::assertEquals($this->sut::ACCESS_GRANTED, $voteResult);
     }
 
-    public function testOrganisationDoesNotContainsLoggedInUser()
+    public function testOrganisationDoesNotContainsLoggedInUser(): void
     {
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($this->user);
@@ -57,7 +58,7 @@ class OrganisationVoterTest extends KernelTestCase
         self::assertEquals($this->sut::ACCESS_DENIED, $voteResult);
     }
 
-    public function testUnrecognisedAttribute()
+    public function testUnrecognisedAttribute(): void
     {
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($this->user);
@@ -68,9 +69,9 @@ class OrganisationVoterTest extends KernelTestCase
         self::assertEquals($this->sut::ACCESS_ABSTAIN, $voteResult);
     }
 
-    public function testSubjectIsNotOrganisation()
+    public function testSubjectIsNotOrganisation(): void
     {
-        $subject = new \DateTime();
+        $subject = new DateTime();
 
         $token = self::prophesize(TokenInterface::class);
 

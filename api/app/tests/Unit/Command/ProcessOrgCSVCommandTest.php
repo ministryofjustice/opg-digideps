@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity\Command;
 
+use RuntimeException;
 use App\Command\ProcessOrgCSVCommand;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
@@ -20,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ProcessOrgCSVCommandTest extends KernelTestCase
+final class ProcessOrgCSVCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
@@ -132,7 +135,7 @@ class ProcessOrgCSVCommandTest extends KernelTestCase
     {
         // Required so we can trigger missing column exception with bad file
         copy(dirname(dirname(__DIR__)).'/csv/paProDeputyReport-bad.csv', '/tmp/paProDeputyReport.csv');
-        $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
+        $mockError = new RuntimeException('Invalid file. Cannot find expected header');
 
         $this->csvArray->shouldReceive(
             'setExpectedColumns->setUnexpectedColumns->getData'

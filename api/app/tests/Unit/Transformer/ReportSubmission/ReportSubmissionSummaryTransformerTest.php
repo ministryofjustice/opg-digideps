@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Transformer\ReportSubmission;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
@@ -12,19 +16,12 @@ use App\Service\DateTimeProvider;
 use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use PHPUnit\Framework\TestCase;
 
-class ReportSubmissionSummaryTransformerTest extends TestCase
+final class ReportSubmissionSummaryTransformerTest extends TestCase
 {
-    /** @var ReportSubmissionSummaryTransformer */
-    private $sut;
-
-    /** @var DateTimeProvider|\PHPUnit_Framework_MockObject_MockObject */
-    private $dateTimeProvider;
-
-    /** @var ReportSubmission|\PHPUnit_Framework_MockObject_MockObject */
-    private $reportSubmission;
-
-    /** @var array */
-    private $result;
+    private ReportSubmissionSummaryTransformer $sut;
+    private DateTimeProvider&MockObject $dateTimeProvider;
+    private ReportSubmission&MockObject $reportSubmission;
+    private array $result;
 
     public function setUp(): void
     {
@@ -32,10 +29,10 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $this->sut = new ReportSubmissionSummaryTransformer($this->dateTimeProvider);
 
-        $this->dateTimeProvider->method('getDateTime')->willReturn(new \DateTime('2013-01-01'));
+        $this->dateTimeProvider->method('getDateTime')->willReturn(new DateTime('2013-01-01'));
     }
 
-    public function testIgnoresRowsWithoutAreportOrNdr()
+    public function testIgnoresRowsWithoutAreportOrNdr(): void
     {
         $this->ensureReportSubmissionIsMissingReportAndNdr();
 
@@ -44,7 +41,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->assertResultDoesNotContainDataRows();
     }
 
-    private function ensureReportSubmissionIsMissingReportAndNdr()
+    private function ensureReportSubmissionIsMissingReportAndNdr(): void
     {
         $this->reportSubmission = $this
             ->getMockBuilder(ReportSubmission::class)
@@ -62,22 +59,22 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
             ->willReturn(null);
     }
 
-    private function assertResultDoesNotContainDataRows()
+    private function assertResultDoesNotContainDataRows(): void
     {
         $this->assertCount(0, $this->result);
     }
 
-    public function testTransformsAReportSubmission()
+    public function testTransformsAReportSubmission(): void
     {
-        $scanDate = new \DateTime('2013-01-01');
+        $scanDate = new DateTime('2013-01-01');
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
 
         $ndrReportSubmission = $this->buildReportSubmissionWith([
             'id' => 1,
             'report_type' => Ndr::class,
-            'created_on' => new \DateTime('2012-01-01'),
+            'created_on' => new DateTime('2012-01-01'),
             'report' => [
-                'client' => ['case_number' => 132],
+                'client' => ['case_number' => '132'],
             ],
             'documents' => [
                 ['filename' => 'NDR-report.pdf', 'is_report_pdf' => true],
@@ -87,9 +84,9 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 2,
             'report_type' => Report::class,
-            'created_on' => new \DateTime('2012-01-02'),
+            'created_on' => new DateTime('2012-01-02'),
             'report' => [
-                'client' => ['case_number' => 133],
+                'client' => ['case_number' => '133'],
             ],
             'documents' => [
                 ['filename' => 'full-report-transactions.pdf.csv', 'is_report_pdf' => true],
@@ -123,17 +120,17 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->assertRowsContain($expectedRows);
     }
 
-    public function testReturnsNullDocumentIdIfReportDocumentNotFound()
+    public function testReturnsNullDocumentIdIfReportDocumentNotFound(): void
     {
-        $scanDate = new \DateTime('2013-01-01');
+        $scanDate = new DateTime('2013-01-01');
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 3,
             'report_type' => Report::class,
-            'created_on' => new \DateTime('2012-01-01'),
+            'created_on' => new DateTime('2012-01-01'),
             'report' => [
-                'client' => ['case_number' => 132],
+                'client' => ['case_number' => '132'],
             ],
             'documents' => [
                 ['filename' => 'full-report.pdf.csv', 'is_report_pdf' => true],
@@ -156,10 +153,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->assertRowsContain($expectedRows);
     }
 
-    /**
-     * @return ReportSubmission
-     */
-    private function buildReportSubmissionWith(array $data)
+    private function buildReportSubmissionWith(array $data): ReportSubmission
     {
         $report = $this->buildReportOfType($data['report_type'], $data['report']);
         $reportSubmission = new ReportSubmission($report, new User());
@@ -174,10 +168,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         return $reportSubmission;
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function buildReportOfType($type, array $data)
+    private function buildReportOfType(string $type, array $data): MockObject
     {
         $report = $this
             ->getMockBuilder($type)
@@ -190,10 +181,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         return $report;
     }
 
-    /**
-     * @return Document
-     */
-    private function buildDocumentWith($document)
+    private function buildDocumentWith(array $document): Document
     {
         $report = $this->getMockBuilder(Report::class)->disableOriginalConstructor()->getMock();
 
@@ -202,14 +190,14 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
             ->setIsReportPdf($document['is_report_pdf']);
     }
 
-    private function assertRowsContain(array $expectedRows)
+    private function assertRowsContain(array $expectedRows): void
     {
         foreach ($expectedRows as $index => $expectedRow) {
             $this->assertResultContainsRow($expectedRow, $index);
         }
     }
 
-    private function assertResultContainsRow($expectedRow, $row)
+    private function assertResultContainsRow(array $expectedRow, int|string $row): void
     {
         $this->assertEquals($expectedRow['id'], $this->result[$row]['id']);
         $this->assertEquals($expectedRow['case_number'], $this->result[$row]['case_number']);

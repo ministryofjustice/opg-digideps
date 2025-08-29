@@ -27,6 +27,10 @@
     <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
+{% block progressBar %}
+    {{ progress_bar_report_submission('review_report') }}
+{% endblock %}
+
 {% block pageContent %}
 
     <div class="push--bottom">

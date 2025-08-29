@@ -13081,11 +13081,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: "#^Method App\\\\Twig\\\\ComponentsExtension\\:\\:progressBarRegistration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/ComponentsExtension.php
-
-		-
 			message: "#^Method App\\\\Twig\\\\ComponentsExtension\\:\\:progressBarRegistration\\(\\) has parameter \\$selectedStepId with no type specified\\.$#"
 			count: 1
 			path: src/Twig/ComponentsExtension.php

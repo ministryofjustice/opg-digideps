@@ -175,6 +175,14 @@ registrationProgressBar:
   codep_verify:
     label: Enter your information
 
+reportSubmissionProgressBar:
+  review_report:
+    label: Check your report
+  report_confirm_details:
+    label: Confirm contact details
+  report_declaration:
+    label: Deputy's declaration
+
 # Summary page
 weHaveListed: We've listed your saved answers below.
 checkCorrect: Check they're correct and edit them where necessary.

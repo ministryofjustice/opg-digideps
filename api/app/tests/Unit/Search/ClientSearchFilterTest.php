@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Search;
 
+use PHPUnit\Framework\Attributes\Test;
 use App\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,21 +13,14 @@ use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class ClientSearchFilterTest extends TestCase
+final class ClientSearchFilterTest extends TestCase
 {
-    /** @var EntityManagerInterface|MockObject */
-    private $em;
+    private EntityManagerInterface&MockObject $em;
+    private QueryBuilder $qb;
+    private ClientSearchFilter $sut;
 
-    /** @var QueryBuilder */
-    private $qb;
-
-    /** @var ClientSearchFilter */
-    private $sut;
-
-    /**
-     * @test
-     */
-    public function handleSearchTermFilterAddsCaseNumberFilterIfGivenCaseNumber()
+    #[Test]
+    public function handleSearchTermFilterAddsCaseNumberFilterIfGivenCaseNumber(): void
     {
         $this
             ->initEntityManager()
@@ -34,10 +30,8 @@ class ClientSearchFilterTest extends TestCase
             ->assertQueryParametersEqual([['name' => 'cn', 'value' => '12345678']]);
     }
 
-    /**
-     * @test
-     */
-    public function handleSearchTermFilterAddsBroadNameFilterIfGivenSingleSearchTerm()
+    #[Test]
+    public function handleSearchTermFilterAddsBroadNameFilterIfGivenSingleSearchTerm(): void
     {
         $this
             ->initEntityManager()
@@ -47,10 +41,8 @@ class ClientSearchFilterTest extends TestCase
             ->assertQueryParametersEqual([['name' => 'qLike', 'value' => '%john%']]);
     }
 
-    /**
-     * @test
-     */
-    public function handleSearchTermFilterAddsExactNameFilterIfGivenDoubleSearchTerm()
+    #[Test]
+    public function handleSearchTermFilterAddsExactNameFilterIfGivenDoubleSearchTerm(): void
     {
         $this
             ->initEntityManager()

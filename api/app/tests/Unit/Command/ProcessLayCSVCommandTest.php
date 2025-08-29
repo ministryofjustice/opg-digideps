@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Command;
 
 use App\Command\ProcessLayCSVCommand;
@@ -20,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ProcessLayCSVCommandTest extends KernelTestCase
+final class ProcessLayCSVCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
@@ -123,7 +125,6 @@ class ProcessLayCSVCommandTest extends KernelTestCase
     {
         // Required so we can trigger missing column exception with bad file
         copy(dirname(dirname(__DIR__)).'/csv/layDeputyReport-bad.csv', '/tmp/layDeputyReport.csv');
-        $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
 
         $this->s3->getObject(Argument::any())
             ->shouldBeCalled()
