@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\Client;
-use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Factory\ReportFactory;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +24,7 @@ class LayDeputyshipProcessor
         private readonly EntityManagerInterface $em,
         private readonly ClientAssembler $clientAssembler,
         private readonly LayClientMatcher $clientMatcher,
+        private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -61,8 +62,12 @@ class LayDeputyshipProcessor
             $user = $this->findUser($layDeputyshipDto->getDeputyUid());
             $client->addUser($user);
 
-            $report = $this->handleNewReport($layDeputyshipDto, $client);
-            $report->setClient($client);
+            $report = $this->reportFactory->create(
+                $client,
+                $layDeputyshipDto->getTypeOfReport(),
+                $layDeputyshipDto->getOrderType(),
+                $layDeputyshipDto->getOrderDate()
+            );
 
             if ($multiclientApplyDbChanges) {
                 $this->em->persist($report);
@@ -144,24 +149,6 @@ class LayDeputyshipProcessor
         }
 
         return $client;
-    }
-
-    // we only call this if we created a new client; otherwise we are reusing an existing client and report
-    private function handleNewReport(LayDeputyshipDto $dto, Client $newClient): Report
-    {
-        $determinedReportType = PreRegistration::getReportTypeByOrderType($dto->getTypeOfReport(), $dto->getOrderType(), PreRegistration::REALM_LAY);
-
-        $reportStartDate = clone $dto->getOrderDate();
-        $reportEndDate = clone $reportStartDate;
-        $reportEndDate->add(new \DateInterval('P364D'));
-
-        return new Report(
-            $newClient,
-            $determinedReportType,
-            $reportStartDate,
-            $reportEndDate,
-            false
-        );
     }
 
     // note that the reportId and clientId will be null if this is a dry run (database changes are not applied)
