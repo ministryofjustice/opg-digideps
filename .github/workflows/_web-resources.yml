@@ -36,13 +36,14 @@ jobs:
             echo "directory_exists=$(echo false)" >> $GITHUB_OUTPUT
           fi
       - name: Build assets
+        if: steps.check-directory.outputs.directory_exists == 'false'
         run: |
           # Install NPM dependencies
           npm install
           npm run lint
           npm audit --production
 
-          # build assets
+          #Build assets
           NODE_ENV=production npm run build
         working-directory: client/resources
       - name: archive dist
