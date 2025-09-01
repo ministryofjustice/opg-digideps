@@ -28,7 +28,9 @@
 {% endblock %}
 
 {% block progressBar %}
-    {{ progress_bar_report_submission('review_report') }}
+    {% if report.submitted == false %}
+        {{ progress_bar_report_submission('review_report') }}
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}

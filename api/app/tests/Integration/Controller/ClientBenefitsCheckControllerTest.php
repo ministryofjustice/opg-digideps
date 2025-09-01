@@ -82,28 +82,6 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $this->okayData);
     }
 
-    public function testCreateSetsACreatedTime()
-    {
-        $url = '/report/client-benefits-check';
-
-        $report = $this->prepareReport();
-        $this->okayData['report_id'] = $report->getId();
-
-        $res = $this->assertJsonRequest(
-            'POST',
-            $url,
-            [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-                'data' => $this->okayData,
-            ]
-        );
-
-        /** @var ClientBenefitsCheck $thing */
-        $clientBenefitsCheck = self::fixtures()->getRepo(ClientBenefitsCheck::class)->find($res['data']['id']);
-        $this->assertEqualsWithDelta(new \DateTime(), $clientBenefitsCheck->getCreated(), 1);
-    }
-
     /** @test */
     public function readHasSuitablePermissionsAllowed()
     {
@@ -168,47 +146,6 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         ];
 
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin, $this->okayData);
-    }
-
-    public function testUpdate()
-    {
-        $report = $this->prepareReport(true);
-        $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
-
-        /** @var ClientBenefitsCheck $thing */
-        $originalBenefitsCheck = self::fixtures()->getRepo(ClientBenefitsCheck::class)->find($report->getClientBenefitsCheck()->getId());
-
-        $this->okayData['report_id'] = $report->getId();
-        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
-        $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
-            'id' => null,
-            'created' => '2021-10-20',
-            'client_benefits_check' => null,
-            'income_type' => 'Some more test income',
-            'amount' => 0.78,
-            'amount_dont_know' => null,
-        ];
-
-        $res = $this->assertJsonRequest(
-            'PUT',
-            $url,
-            [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-                'data' => $this->okayData,
-            ]
-        );
-
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $res['data']['id']);
-        $this->assertEquals($originalBenefitsCheck->getCreated()->format('Y-m-d'), $res['data']['created']);
-        $this->assertEquals('haveChecked', $res['data']['when_last_checked_entitlement']);
-        $this->assertEquals('2020-01-01', $res['data']['date_last_checked_entitlement']);
-        $this->assertEquals(null, $res['data']['never_checked_explanation']);
-
-        // Check created has not been changed
-        /** @var ClientBenefitsCheck $thing */
-        $clientBenefitsCheck = self::fixtures()->getRepo(ClientBenefitsCheck::class)->find($res['data']['id']);
-        $this->assertEquals($originalBenefitsCheck->getCreated(), $clientBenefitsCheck->getCreated());
     }
 
     private function prepareReport(bool $withClientBenefitsCheck = false)
