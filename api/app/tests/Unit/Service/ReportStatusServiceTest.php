@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
 use App\Entity\Asset;
 use App\Entity\Client;
 use App\Entity\Contact;
@@ -22,27 +27,21 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class ReportStatusServiceTest extends TestCase
+final class ReportStatusServiceTest extends TestCase
 {
     use ProphecyTrait;
 
     private Report&MockObject $report;
 
-    /**
-     * @test
-     *
-     * @dataProvider decisionsProvider
-     */
-    public function decisions($mocks, $state)
+    #[DataProvider('decisionsProvider')]
+    #[Test]
+    public function decisions(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDecisionsState()['state']);
     }
 
-    /**
-     * @return Report mock
-     */
-    private function getReportMocked(array $reportMethods = [], $hasBalance = true)
+    private function getReportMocked(array $reportMethods = [], $hasBalance = true): Report
     {
         $report = m::mock(Report::class, $reportMethods + [
                 'getSectionStatusesCached' => [],
@@ -132,23 +131,17 @@ class ReportStatusServiceTest extends TestCase
         return $report;
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider contactsProvider
-     */
-    public function contacts($mocks, $state)
+    #[DataProvider('contactsProvider')]
+    #[Test]
+    public function contacts(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getContactsState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider visitsCareProvider
-     */
-    public function visitsCare($mocks, $state)
+    #[DataProvider('visitsCareProvider')]
+    #[Test]
+    public function visitsCare(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
@@ -176,56 +169,41 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider lifestyleProvider
-     */
-    public function lifestyle($mocks, $state)
+    #[DataProvider('lifestyleProvider')]
+    #[Test]
+    public function lifestyle(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getLifestyleState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider bankAccountProvider
-     */
-    public function bankAccount($mocks, $state)
+    #[DataProvider('bankAccountProvider')]
+    #[Test]
+    public function bankAccount(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getBankAccountsState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider moneyTransferProvider
-     */
-    public function moneyTransfer($mocks, $state)
+    #[DataProvider('moneyTransferProvider')]
+    #[Test]
+    public function moneyTransfer(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyTransferState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider moneyInProvider
-     */
-    public function moneyIn($mocks, $state)
+    #[DataProvider('moneyInProvider')]
+    #[Test]
+    public function moneyIn(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyInState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider moneyOutProvider
-     */
-    public function moneyOut($mocks, $state)
+    #[DataProvider('moneyOutProvider')]
+    #[Test]
+    public function moneyOut(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyOutState()['state']);
@@ -246,12 +224,9 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider moneyInShortProvider
-     */
-    public function moneyInShort($mocks, $state)
+    #[DataProvider('moneyInShortProvider')]
+    #[Test]
+    public function moneyInShort(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyInShortState()['state']);
@@ -272,23 +247,17 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider moneyOutShortProvider
-     */
-    public function moneyOutShort($mocks, $state)
+    #[DataProvider('moneyOutShortProvider')]
+    #[Test]
+    public function moneyOutShort(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyOutShortState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider expensesProvider
-     */
-    public function expenses($mocks, $state)
+    #[DataProvider('expensesProvider')]
+    #[Test]
+    public function expenses(array $mocks, string $state): void
     {
         $report = $this->getReportMocked($mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
@@ -306,12 +275,9 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider paFeesExpensesProvider
-     */
-    public function paFeeExpenses($mocks, $state)
+    #[DataProvider('paFeesExpensesProvider')]
+    #[Test]
+    public function paFeeExpenses(array $mocks, string $state): void
     {
         $report = $this->getReportMocked(['has106Flag' => true] + $mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(true);
@@ -380,12 +346,9 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider profDeputyCostsProvider
-     */
-    public function profDeputyCosts($mocks, $state)
+    #[DataProvider('profDeputyCostsProvider')]
+    #[Test]
+    public function profDeputyCosts(array $mocks, string $state): void
     {
         $report = $this->getReportMocked([] + $mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_DEPUTY_COSTS)->andReturn(true);
@@ -394,12 +357,9 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider getProfDeputyCostsEstimateStateVariations
-     */
-    public function getProfDeputyCostsEstimateStateReturnsCurrentState($howCharged, $hasMoreInfo, $expectedStatus)
+    #[DataProvider('getProfDeputyCostsEstimateStateVariations')]
+    #[Test]
+    public function getProfDeputyCostsEstimateStateReturnsCurrentState(?string $howCharged, ?string $hasMoreInfo, string $expectedStatus): void
     {
         $this
             ->initReport()
@@ -410,33 +370,24 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($expectedStatus, $sut->getProfDeputyCostsEstimateState()['state']);
     }
 
-    /**
-     * @return $this
-     */
-    private function setProfDeputyCostsEstimateHasMoreInfo($value)
+    private function setProfDeputyCostsEstimateHasMoreInfo(?string $value): static
     {
         $this->report->setProfDeputyCostsEstimateHasMoreInfo($value);
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function setProfDeputyCostsEstimateHowCharged($value)
+    private function setProfDeputyCostsEstimateHowCharged(?string $value): static
     {
         $this->report->setProfDeputyCostsEstimateHowCharged($value);
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function initReport()
+    private function initReport(): static
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
+            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime()])
             ->onlyMethods(['hasSection'])
             ->getMock();
 
@@ -484,43 +435,32 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider giftsProvider
-     */
-    public function gifts($mocks, $state)
+    #[DataProvider('giftsProvider')]
+    #[Test]
+    public function gifts(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getGiftsState()['state']);
     }
 
-    /**
-     * @dataProvider documentsProvider
-     */
-    public function testGetDocumentState($mocks, $state)
+    #[DataProvider('documentsProvider')]
+    public function testGetDocumentState(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDocumentsState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider assetsProvider
-     */
-    public function assets($mocks, $state)
+    #[DataProvider('assetsProvider')]
+    #[Test]
+    public function assets(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getAssetsState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider debtsProvider
-     */
-    public function debts($mocks, $state)
+    #[DataProvider('debtsProvider')]
+    #[Test]
+    public function debts(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDebtsState()['state']);
@@ -537,12 +477,9 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider profCurrentFeesProvider
-     */
-    public function profCurrentFeesState($mocks, $state)
+    #[DataProvider('profCurrentFeesProvider')]
+    #[Test]
+    public function profCurrentFeesState(array $mocks, string $state): void
     {
         $report = $this->getReportMocked($mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_CURRENT_FEES)->andReturn(true);
@@ -551,12 +488,9 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getProfCurrentFeesState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider balanceProvider
-     */
-    public function balance($mocks, $state)
+    #[DataProvider('balanceProvider')]
+    #[Test]
+    public function balance(array $mocks, string $state): void
     {
         $report = $this->getReportMocked($mocks);
         // never happening with any report, but simpler to test them in a fake report type with both
@@ -567,29 +501,23 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getBalanceState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider actionsProvider
-     */
-    public function actions($mocks, $state)
+    #[DataProvider('actionsProvider')]
+    #[Test]
+    public function actions(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getActionsState()['state']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider otherInfoProvider
-     */
-    public function otherinfo($mocks, $state)
+    #[DataProvider('otherInfoProvider')]
+    #[Test]
+    public function otherinfo(array $mocks, string $state): void
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
-    public function testGetRemainingSectionsAndStatus()
+    public function testGetRemainingSectionsAndStatus(): void
     {
         $this->markTestSkipped('not easily testable after use of cache');
         $mocksCompletingReport = ['getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE]
@@ -646,7 +574,7 @@ class ReportStatusServiceTest extends TestCase
         $this->assertEquals('readyToSubmit', $object->getStatus());
     }
 
-    public static function decisionsProvider()
+    public static function decisionsProvider(): array
     {
         $decision = m::mock(Decision::class);
         $mcEmpty = m::mock(MentalCapacity::class, [
@@ -659,7 +587,7 @@ class ReportStatusServiceTest extends TestCase
         ]);
         $mcComplete = m::mock(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
-            'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
+            'getMentalAssessmentDate' => new DateTime('2016-01-01'),
         ]);
 
         return [
@@ -874,7 +802,7 @@ class ReportStatusServiceTest extends TestCase
         ];
     }
 
-    public function testGetStatusReadyToSubmit()
+    public function testGetStatusReadyToSubmit(): void
     {
         $report = $this->prophesize(Report::class);
 
@@ -890,7 +818,7 @@ class ReportStatusServiceTest extends TestCase
         self::assertEquals(Report::STATUS_READY_TO_SUBMIT, $status);
     }
 
-    public function testGetStatusNotFinished()
+    public function testGetStatusNotFinished(): void
     {
         $report = $this->prophesize(Report::class);
 
@@ -906,7 +834,7 @@ class ReportStatusServiceTest extends TestCase
         self::assertEquals(Report::STATUS_NOT_FINISHED, $status);
     }
 
-    public function testGetStatusNotStarted()
+    public function testGetStatusNotStarted(): void
     {
         $report = $this->prophesize(Report::class);
 
@@ -919,7 +847,7 @@ class ReportStatusServiceTest extends TestCase
         self::assertEquals(Report::STATUS_NOT_STARTED, $status);
     }
 
-    public function testGetStatusIgnoringDueDateReadyToSubmit()
+    public function testGetStatusIgnoringDueDateReadyToSubmit(): void
     {
         $report = $this->prophesize(Report::class);
 

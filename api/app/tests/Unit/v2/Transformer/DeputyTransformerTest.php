@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Transformer;
 
+use PHPUnit\Framework\Attributes\Test;
 use App\v2\DTO\DeputyDto;
 use App\v2\Transformer\DeputyTransformer;
 use PHPUnit\Framework\TestCase;
 
-class DeputyTransformerTest extends TestCase
+final class DeputyTransformerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function transformsADeputyDto()
+    #[Test]
+    public function transformsADeputyDto(): void
     {
         $dto = (new DeputyDto())
             ->setId(4)

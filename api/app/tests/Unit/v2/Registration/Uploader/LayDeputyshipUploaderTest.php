@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
+use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use DateTime;
 use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
@@ -20,10 +26,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class LayDeputyshipUploaderTest extends KernelTestCase
+final class LayDeputyshipUploaderTest extends KernelTestCase
 {
-    protected EntityManager|MockObject $em;
-    protected ReportRepository|MockObject $reportRepository;
+    private EntityManager|MockObject $em;
+    private ReportRepository|MockObject $reportRepository;
     private PreRegistrationFactory|MockObject $factory;
     private SiriusToLayDeputyshipDtoAssembler|MockObject $layDeputyAssembler;
     private LayDeputyshipProcessor|MockObject $layDeputyProcessor;
@@ -50,12 +56,10 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function throwsExceptionIfDataSetTooLarge()
+    #[Test]
+    public function throwsExceptionIfDataSetTooLarge(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; ++$i) {
@@ -65,10 +69,8 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $this->sut->upload($collection);
     }
 
-    /**
-     * @test
-     */
-    public function persistsAnEntryForEachValidDeputyship()
+    #[Test]
+    public function persistsAnEntryForEachValidDeputyship(): void
     {
         $collection = new LayDeputyshipDtoCollection();
 
@@ -95,17 +97,14 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $this->assertCount(0, $return['errors']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider reportTypeProvider
-     */
+    #[DataProvider('reportTypeProvider')]
+    #[Test]
     public function updatesReportTypeOfActiveReportsIfRequired(
         string $currentReportType,
         string $preRegistrationNewReportType,
         string $expectedNewReportType,
         bool $isDualCase,
-        ?string $deputyUid)
+        ?string $deputyUid): void
     {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
@@ -146,7 +145,7 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         }
 
         // $existingClient = (new Client())->setCaseNumber('case-1');
-        $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
+        $activeReport = new Report($existingClient, $currentReportType, new DateTime(), new DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')
@@ -173,10 +172,8 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function ignoresDeputyshipsWithInvalidDeputyshipData()
+    #[Test]
+    public function ignoresDeputyshipsWithInvalidDeputyshipData(): void
     {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
@@ -196,7 +193,7 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $this->assertEquals('ERROR IN LINE: Unable to create PreRegistration entity', $return['errors'][0]);
     }
 
-    private function buildLayDeputyshipDto($count): LayDeputyshipDto
+    private function buildLayDeputyshipDto(int $count): LayDeputyshipDto
     {
         return (new LayDeputyshipDto())
             ->setCaseNumber('case-'.$count)
@@ -212,10 +209,8 @@ class LayDeputyshipUploaderTest extends KernelTestCase
             ->willReturn([]);
     }
 
-    /**
-     * @test
-     */
-    public function testHandleNewMultiClientsNoNewClientsToAdd()
+    #[Test]
+    public function testHandleNewMultiClientsNoNewClientsToAdd(): void
     {
         $mockPreRegistrationRepo = $this->createMock(PreRegistrationRepository::class);
 
@@ -239,10 +234,8 @@ class LayDeputyshipUploaderTest extends KernelTestCase
         $this->assertEquals([], $actual['errors']);
     }
 
-    /**
-     * @test
-     */
-    public function testHandleNewMultiClients()
+    #[Test]
+    public function testHandleNewMultiClients(): void
     {
         $case1 = ['Case' => '11111111'];
         $case2 = ['Case' => '22222222'];
@@ -260,13 +253,13 @@ class LayDeputyshipUploaderTest extends KernelTestCase
 
         $this->layDeputyAssembler->expects($this->exactly(3))
             ->method('assembleFromArray')
-            ->willReturnCallback(function ($case) {
+            ->willReturnCallback(function (array $case): LayDeputyshipDto {
                 return (new LayDeputyshipDto())->setCaseNumber($case['Case']);
             });
 
         $this->layDeputyProcessor->expects($this->exactly(3))
             ->method('processLayDeputyship')
-            ->willReturnCallback(function (LayDeputyshipDto $dto) use ($case1, $case2, $case3) {
+            ->willReturnCallback(function (LayDeputyshipDto $dto) use ($case1, $case2, $case3): ?array {
                 if ($dto->getCaseNumber() === $case1['Case']) {
                     return [
                         'entityDetails' => ['clientCaseNumber' => '11111111'],
