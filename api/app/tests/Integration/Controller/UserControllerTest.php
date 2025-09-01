@@ -609,17 +609,17 @@ class UserControllerTest extends AbstractTestController
     {
         $deputyUid = 8364689421;
 
-        self::fixtures()->createUser([
-            'setDeputyUid' => $deputyUid,
-            'setEmail' => 'mrfake1@fakeland.fake',
-            'setIsPrimary' => true,
-        ]);
+        self::fixtures()->createUser(
+            email: 'mrfake1@fakeland.fake',
+            deputyUid: $deputyUid,
+            isPrimary: true
+        );
 
-        self::fixtures()->createUser([
-            'setDeputyUid' => $deputyUid,
-            'setEmail' => 'mrfake2@fakeland.fake',
-            'setIsPrimary' => true,
-        ]);
+        self::fixtures()->createUser(
+            email: 'mrfake2@fakeland.fake',
+            deputyUid: $deputyUid,
+            isPrimary: true
+        );
 
         self::fixtures()->flush()->clear();
 
@@ -639,11 +639,11 @@ class UserControllerTest extends AbstractTestController
         $deputyUid = 9975467801;
         $expectedEmail = 'fakenotrealperson@fake.fake';
 
-        self::fixtures()->createUser([
-            'setDeputyUid' => $deputyUid,
-            'setEmail' => $expectedEmail,
-            'setIsPrimary' => true,
-        ]);
+        self::fixtures()->createUser(
+            email: $expectedEmail,
+            deputyUid: $deputyUid,
+            isPrimary: true
+        );
 
         self::fixtures()->flush()->clear();
 
