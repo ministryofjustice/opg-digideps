@@ -31,8 +31,9 @@ jobs:
         run: |
           directory="client/resources/public/assets"
           if [ -d "$directory" ] && [ "$(ls -A "$directory")" ]; then
-            rm -Rf client/resources/public/assets
-            mkdir -p client/resources/public/assets
+            echo "directory_exists=$(echo true)" >> $GITHUB_OUTPUT
+          else
+            echo "directory_exists=$(echo false)" >> $GITHUB_OUTPUT
           fi
       - name: Build assets
         run: |
