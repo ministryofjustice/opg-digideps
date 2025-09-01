@@ -21,6 +21,7 @@ use App\Entity\Ndr\BankAccount as NdrBankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Factory\ReportFactory;
 use App\Repository\DocumentRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Service\ReportService;
@@ -51,6 +52,8 @@ final class ReportServiceTest extends TestCase
     private MockInterface|EntityManager $em;
     private Document $mockNdrDocument;
     private LoggerInterface&MockObject $mockLogger;
+    private ReportFactory&MockObject $mockReportFactory;
+    private PreRegistrationRepository|MockInterface $mockPreRegistrationRepository;
     private ReportService $sut;
 
     public function setUp(): void
@@ -84,13 +87,12 @@ final class ReportServiceTest extends TestCase
         $this->em = m::mock(EntityManager::class);
         $this->mockNdrDocument = (new Document($this->ndr))->setFileName('NdrRep-file2.pdf')->setId(999);
 
-        $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
+        $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) {
             switch ($arg) {
                 case PreRegistration::class:
-                    return m::mock(PreRegistrationRepository::class)->shouldReceive('findOneBy')
-                        ->with(['caseNumber' => $client->getCaseNumber()])
-                        ->andReturn(null)
-                        ->getMock();
+                    $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
+
+                    return $this->mockPreRegistrationRepository;
                 case Document::class:
                     return m::mock(DocumentRepository::class)
                         ->shouldReceive('find')
@@ -101,9 +103,16 @@ final class ReportServiceTest extends TestCase
             }
         });
 
+        $this->mockReportFactory = $this->createMock(ReportFactory::class);
+
         $this->mockLogger = $this->createMock(LoggerInterface::class);
 
-        $this->sut = new ReportService($this->em, $this->mockLogger);
+        $this->sut = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
+    }
+
+    public function tearDown(): void
+    {
+        m::close();
     }
 
     public function testSubmitInvalid(): void
@@ -118,7 +127,7 @@ final class ReportServiceTest extends TestCase
         $report = $this->report;
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -163,7 +172,7 @@ final class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
@@ -221,7 +230,8 @@ final class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -292,7 +302,8 @@ final class ReportServiceTest extends TestCase
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -322,7 +333,8 @@ final class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy(true);
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -440,7 +452,7 @@ final class ReportServiceTest extends TestCase
         $em = self::prophesize(EntityManagerInterface::class);
         $em->getRepository(PreRegistration::class)->willReturn($preRegistrationRepo->reveal());
 
-        $sut = new ReportService($em->reveal(), $this->mockLogger);
+        $sut = new ReportService($em->reveal(), $this->mockReportFactory, $this->mockLogger);
 
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
@@ -483,7 +495,7 @@ final class ReportServiceTest extends TestCase
         $user = $this->user->setActive(null);
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
@@ -496,8 +508,94 @@ final class ReportServiceTest extends TestCase
         $this->assertTrue($user->getActive());
     }
 
-    public function tearDown(): void
+    // pre-reg entries for cases which will result in required reports being created
+    private static function preRegEntriesForRequiredReports(): array
     {
-        m::close();
+        $now = (new \DateTime())->format('Y-m-d');
+
+        $pfa = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa', 'MadeDate' => $now]);
+        $hw = new PreRegistration(['ReportType' => 'OPG104', 'OrderType' => 'hw', 'MadeDate' => $now]);
+        $hybrid = new PreRegistration(['ReportType' => 'OPG102', 'OrderType' => 'hw', 'MadeDate' => $now]);
+
+        return [
+            // pfa report only
+            [
+                'preRegRows' => [$pfa], 'reportsCreated' => 1, 'expectedReportTypes' => ['103'],
+            ],
+
+            // hw report only
+            [
+                'preRegRows' => [$hw], 'reportsCreated' => 1, 'expectedReportTypes' => ['104'],
+            ],
+
+            // hybrid report only
+            [
+                'preRegRows' => [$hybrid], 'reportsCreated' => 1, 'expectedReportTypes' => ['102-4'],
+            ],
+
+            // pfa+hw reports
+            [
+                'preRegRows' => [$pfa, $hw], 'reportsCreated' => 2, 'expectedReportTypes' => ['103', '104'],
+            ],
+
+            // multiple rows (check we only get one pfa and one hw report)
+            [
+                'preRegRows' => [$pfa, $hw, $pfa, $hw], 'reportsCreated' => 4, 'expectedReportTypes' => ['103', '104'],
+            ],
+
+            // multiple rows (check we only get one hybrid report)
+            [
+                'preRegRows' => [$pfa, $hw, $hybrid, $pfa, $hw], 'reportsCreated' => 3, 'expectedReportTypes' => ['102-4'],
+            ],
+        ];
+    }
+
+    /**
+     * @param PreRegistration[] $preRegRows
+     * @param string[]          $expectedReportTypes
+     *
+     * @dataProvider preRegEntriesForRequiredReports
+     */
+    public function testCreateRequiredReports(array $preRegRows, int $reportsCreated, array $expectedReportTypes): void
+    {
+        $mockClient = self::createMock(Client::class);
+        $mockClient->expects(self::once())
+            ->method('getCaseNumber')
+            ->willReturn('92345678');
+
+        $this->mockPreRegistrationRepository->expects(self::once())
+            ->method('findByCaseNumber')
+            ->willReturn($preRegRows);
+
+        $this->mockReportFactory->expects(self::exactly($reportsCreated))
+            ->method('create')
+            ->with($mockClient, $this->isType('string'), $this->isType('string'), $this->isInstanceOf(\DateTime::class))
+            ->willReturnCallback(function (Client $client, string $typeOfReport, string $orderType) {
+                $stub = self::createStub(Report::class);
+
+                $reportType = str_replace('OPG', '', $typeOfReport);
+
+                if ('OPG102' === $typeOfReport || 'OPG103' === $typeOfReport) {
+                    if ('hw' === $orderType) {
+                        $stub->method('isHybrid')->willReturn(true);
+                        $stub->method('isPfa')->willReturn(false);
+                        $reportType .= '-4';
+                    } else {
+                        $stub->method('isHybrid')->willReturn(false);
+                        $stub->method('isPfa')->willReturn(true);
+                    }
+                } elseif ('OPG104' === $typeOfReport) {
+                    $stub->method('isHw')->willReturn(true);
+                }
+
+                $stub->method('getType')->willReturn($reportType);
+
+                return $stub;
+            });
+
+        $reports = $this->sut->createRequiredReports($mockClient);
+
+        self::assertCount(count($expectedReportTypes), $reports);
+        self::assertEquals($expectedReportTypes, array_map(function (Report $report) { return $report->getType(); }, $reports));
     }
 }
