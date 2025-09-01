@@ -22,6 +22,8 @@ import EnableJavascript from './modules_new/EnableJavascript'
 import FormSingleSubmit from './modules_new/FormSingleSubmit'
 
 window.addEventListener('DOMContentLoaded', () => {
+  window.alert('CHANGES HAVE BEEN MADE TO JS')
+
   // Session Timeout
   SessionTimeout()
 
