@@ -1573,4 +1573,46 @@ class Report implements ReportInterface
 
         return $this;
     }
+
+    public function isHybrid(): bool
+    {
+        return in_array(
+            $this->type,
+            [
+                self::LAY_COMBINED_LOW_ASSETS_TYPE,
+                self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                self::PA_COMBINED_LOW_ASSETS_TYPE,
+                self::PA_COMBINED_HIGH_ASSETS_TYPE,
+                self::PROF_COMBINED_LOW_ASSETS_TYPE,
+                self::PROF_COMBINED_HIGH_ASSETS_TYPE,
+            ]
+        );
+    }
+
+    public function isPfa(): bool
+    {
+        return in_array(
+            $this->type,
+            [
+                self::LAY_PFA_LOW_ASSETS_TYPE,
+                self::LAY_PFA_HIGH_ASSETS_TYPE,
+                self::PA_PFA_LOW_ASSETS_TYPE,
+                self::PA_PFA_HIGH_ASSETS_TYPE,
+                self::PROF_PFA_LOW_ASSETS_TYPE,
+                self::PROF_PFA_HIGH_ASSETS_TYPE,
+            ],
+        );
+    }
+
+    public function isHw(): bool
+    {
+        return in_array(
+            $this->type,
+            [
+                self::LAY_HW_TYPE,
+                self::PA_HW_TYPE,
+                self::PA_HW_TYPE,
+            ]
+        );
+    }
 }

@@ -2576,11 +2576,6 @@ parameters:
 			path: src/Entity/PreRegistration.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\PreRegistration\\:\\:\\$orderType \\(string\\|null\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Entity/PreRegistration.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Action\\:\\:cleanUpUnusedData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Action.php
@@ -5706,11 +5701,6 @@ parameters:
 			path: src/Repository/PreRegistrationRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:findByCaseNumber\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/PreRegistrationRepository.php
-
-		-
 			message: "#^Cannot access offset 'checklist_id' on mixed\\.$#"
 			count: 1
 			path: src/Repository/ReportRepository.php
@@ -6687,11 +6677,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$reportType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
 
@@ -8366,11 +8351,6 @@ parameters:
 			path: src/v2/Registration/Uploader/LayDeputyshipProcessor.php
 
 		-
-			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipProcessor.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\PreRegistration\\>\\:\\:getNewClientsForExistingDeputiesArray\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
@@ -8407,11 +8387,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 

@@ -423,12 +423,12 @@ class PreRegistration
         return $this;
     }
 
-    public function getOrderType(): mixed
+    public function getOrderType(): ?string
     {
         return $this->orderType;
     }
 
-    public function setOrderType(mixed $orderType): self
+    public function setOrderType(?string $orderType): self
     {
         $this->orderType = $orderType;
 

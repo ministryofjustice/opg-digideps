@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Model;
 
+use RuntimeException;
 use App\Model\DeputyshipProcessingLookupCache;
 use App\Repository\ClientRepository;
 use App\Repository\CourtOrderRepository;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 
-class DeputyshipProcessingLookupCacheTest extends TestCase
+final class DeputyshipProcessingLookupCacheTest extends TestCase
 {
     private CourtOrderRepository $courtOrderRepository;
     private DeputyRepository $deputyRepository;
@@ -35,16 +36,16 @@ class DeputyshipProcessingLookupCacheTest extends TestCase
 
     public function testGettersBeforeInitFail(): void
     {
-        static::expectException(\RuntimeException::class);
+        static::expectException(RuntimeException::class);
         $this->sut->getCourtOrderStatusForUid('111111111');
 
-        static::expectException(\RuntimeException::class);
+        static::expectException(RuntimeException::class);
         $this->sut->getClientIdForCaseNumber('41443433434');
 
-        static::expectException(\RuntimeException::class);
+        static::expectException(RuntimeException::class);
         $this->sut->getDeputyIdForUid('112214555');
 
-        static::expectException(\RuntimeException::class);
+        static::expectException(RuntimeException::class);
         $this->sut->getCourtOrderStatusForUid('4324234234');
     }
 

@@ -9,6 +9,10 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
+{% block progressBar %}
+    {{ progress_bar_report_submission('report_declaration') }}
+{% endblock %}
+
 {% block pageContent %}
 
     <div id="declaration-container">

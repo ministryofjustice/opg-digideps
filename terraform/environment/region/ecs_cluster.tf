@@ -70,6 +70,10 @@ locals {
     {
       name  = "SESSION_PREFIX",
       value = "dd_api"
+    },
+    {
+      name  = "FIXTURES_ENABLED",
+      value = tostring(var.account.fixtures_enabled)
     }
   ]
 

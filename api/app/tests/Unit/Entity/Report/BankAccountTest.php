@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity\Report;
 
 use App\Entity\Report\BankAccount;
 use PHPUnit\Framework\TestCase;
 
-class BankAccountTest extends TestCase
+final class BankAccountTest extends TestCase
 {
-    public function testSetterGetters()
+    public function testSetterGetters(): void
     {
         $account = new BankAccount();
         $this->assertEquals('123456', $account->setAccountNumber('123456')->getAccountNumber());

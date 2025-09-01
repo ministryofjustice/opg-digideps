@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DigidepsTests\Logger;
 
+use DateTime;
 use App\Logger\OpgJsonFormatter;
 use PHPUnit\Framework\TestCase;
 
-class OpgJsonFormatterTest extends TestCase
+final class OpgJsonFormatterTest extends TestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = new OpgJsonFormatter();
 
@@ -17,7 +20,7 @@ class OpgJsonFormatterTest extends TestCase
 
         // Create a sample log record
         $record = [
-            'datetime' => new \DateTime('2024-06-10 12:00:00'),
+            'datetime' => new DateTime('2024-06-10 12:00:00'),
             'level_name' => 'INFO',
             'message' => 'This is a test message',
         ];

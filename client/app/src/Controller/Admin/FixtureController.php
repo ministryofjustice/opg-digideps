@@ -33,7 +33,6 @@ class FixtureController extends AbstractController
     private ReportApi $reportApi;
     private UserApi $userApi;
     private DeputyProvider $deputyProvider;
-    private string $symfonyEnvironment;
     private bool $fixturesEnabled;
 
     public function __construct(
@@ -43,7 +42,6 @@ class FixtureController extends AbstractController
         ReportApi $reportApi,
         UserApi $userApi,
         DeputyProvider $deputyProvider,
-        string $symfonyEnvironment,
         bool $fixturesEnabled,
     ) {
         $this->twig = $twig;
@@ -52,7 +50,6 @@ class FixtureController extends AbstractController
         $this->reportApi = $reportApi;
         $this->userApi = $userApi;
         $this->deputyProvider = $deputyProvider;
-        $this->symfonyEnvironment = $symfonyEnvironment;
         $this->fixturesEnabled = $fixturesEnabled;
     }
 
@@ -77,10 +74,7 @@ class FixtureController extends AbstractController
      */
     public function layCourtOrdersAction(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -161,10 +155,7 @@ class FixtureController extends AbstractController
      */
     public function orgCourtOrdersAction(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -250,10 +241,7 @@ class FixtureController extends AbstractController
      */
     public function completeReportSectionsAction(Request $request, string $reportType, $reportId): JsonResponse
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -273,10 +261,7 @@ class FixtureController extends AbstractController
      */
     public function createAdmin(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -300,10 +285,7 @@ class FixtureController extends AbstractController
      */
     public function getUserIDByEmail(string $email)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -326,10 +308,7 @@ class FixtureController extends AbstractController
      */
     public function createUser(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -355,10 +334,7 @@ class FixtureController extends AbstractController
      */
     public function deleteUser(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -380,10 +356,7 @@ class FixtureController extends AbstractController
      */
     public function createClientAndAttachToDeputy(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -418,10 +391,7 @@ class FixtureController extends AbstractController
      */
     public function createClientAndAttachToOrg(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -455,10 +425,7 @@ class FixtureController extends AbstractController
      */
     public function getUserRegistrationToken(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -479,10 +446,7 @@ class FixtureController extends AbstractController
      */
     public function createPreRegistration(Request $request)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -521,10 +485,7 @@ class FixtureController extends AbstractController
      */
     public function unsubmitReport(int $reportId)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -549,10 +510,7 @@ class FixtureController extends AbstractController
      */
     public function moveUsersClientsToUsersOrg(string $userEmail)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
@@ -581,10 +539,7 @@ class FixtureController extends AbstractController
      */
     public function activateOrg(string $orgName)
     {
-        if (
-            'prod' === $this->symfonyEnvironment
-            && !$this->fixturesEnabled
-        ) {
+        if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 

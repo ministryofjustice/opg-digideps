@@ -68,6 +68,7 @@ RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
     apk del linux-headers; \
   fi
 
+COPY --chown=www-data:www-data api/app/config config
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
 COPY --chown=www-data:www-data api/app/api.env api.env
@@ -95,7 +96,6 @@ RUN mkdir -p var/cache \
 FROM application AS runtime
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
-COPY --chown=www-data:www-data --from=composer-runtime /app/config config
 COPY --chown=www-data:www-data --from=composer-runtime /app/src src
 COPY --chown=www-data:www-data --from=composer-runtime /app/composer.lock composer.lock
 
@@ -122,7 +122,6 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 FROM application AS devtools-base
 COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-devtools /app/app app
-COPY --chown=www-data:www-data --from=composer-devtools /app/config config
 COPY --chown=www-data:www-data --from=composer-devtools /app/src src
 COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/tests tests
@@ -160,6 +159,7 @@ CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_POR
 # Stage 3b2: devtools admin image (image with test dependencies - admin)
 ##############################
 FROM devtools-base AS devtools-admin
+
 USER root
 
 CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \

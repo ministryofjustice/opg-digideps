@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity\UserResearch;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use RuntimeException;
 use App\Entity\UserResearch\ResearchType;
 use PHPUnit\Framework\TestCase;
 
-class ResearchTypeTest extends TestCase
+final class ResearchTypeTest extends TestCase
 {
-    /**
-     * @dataProvider propertyProvider
-     *
-     * @test
-     */
+    
+    #[DataProvider('propertyProvider')]
+    #[Test]
     public function constructSetsPropertiesBasedOnFormResponses(
         array $formResponses,
         ?bool $expectedSurveysValue,
         ?bool $expectedVideoCallValue,
         ?bool $expectedPhoneValue,
         ?bool $expectedInPersonValue
-    ) {
+    ): void {
         $researchType = new ResearchType($formResponses);
 
         self::assertEquals($expectedSurveysValue, $researchType->getSurveys());
@@ -40,10 +41,10 @@ class ResearchTypeTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function constructNoPropertiesThrowsException()
+    #[Test]
+    public function constructNoPropertiesThrowsException(): void
     {
-        self::expectException(\RuntimeException::class);
+        self::expectException(RuntimeException::class);
         new ResearchType([]);
     }
 }

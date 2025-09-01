@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
-class PreRegistrationTest extends TestCase
+final class PreRegistrationTest extends TestCase
 {
     public static function getReportTypeByOrderTypeProvider(): array
     {
@@ -30,11 +33,16 @@ class PreRegistrationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getReportTypeByOrderTypeProvider
-     */
-    public function testGetReportTypeByOrderType($reportType, $orderType, $realm, $expectedType)
+    #[DataProvider('getReportTypeByOrderTypeProvider')]
+    public function testGetReportTypeByOrderType(string $reportType, string $orderType, string $realm, string $expectedType): void
     {
         $this->assertEquals($expectedType, PreRegistration::getReportTypeByOrderType($reportType, $orderType, $realm));
+    }
+
+    public function testGetReportTypeByOrderTypeInvalidOrderType(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+
+        PreRegistration::getReportTypeByOrderType('invalid order type', 'pfa', PreRegistration::REALM_LAY);
     }
 }
