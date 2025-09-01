@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\Uploader;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -20,7 +21,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class LayDeputyshipProcessorTest extends TestCase
+final class LayDeputyshipProcessorTest extends TestCase
 {
     private EntityManagerInterface $mockEm;
     private ClientAssembler $mockClientAssembler;
@@ -52,7 +53,7 @@ class LayDeputyshipProcessorTest extends TestCase
     /*
      * Unable to find the user to associate the client with -> error
      */
-    public function testProcessRowNoUserException()
+    public function testProcessRowNoUserException(): void
     {
         // Expectations
         $layDeputyshipDto = new LayDeputyshipDto();
@@ -79,10 +80,10 @@ class LayDeputyshipProcessorTest extends TestCase
     }
 
     // matching client and report -> possible co-deputy, so do nothing
-    public function testProcessRowMatchingClientAndReport()
+    public function testProcessRowMatchingClientAndReport(): void
     {
         // Expectations
-        $orderDate = new \DateTime('2025-02-14');
+        $orderDate = new DateTime('2025-02-14');
 
         $layDeputyshipDto = new LayDeputyshipDto();
         $layDeputyshipDto->setDeputyUid('222222222')
@@ -97,7 +98,7 @@ class LayDeputyshipProcessorTest extends TestCase
         $existingClient = $this->createMock(Client::class);
 
         $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
-        $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
+        $existingReport = new $mockReportClass($existingClient, '102', new DateTime(), new DateTime(), false);
         $existingReport->expects($this->once())->method('getId')->willReturn(1);
 
         $clientMatch = new ClientMatch(
@@ -126,10 +127,10 @@ class LayDeputyshipProcessorTest extends TestCase
     }
 
     // no matching client -> create a new client and report
-    public function testProcessRowNoMatchingClient()
+    public function testProcessRowNoMatchingClient(): void
     {
         // Expectations
-        $orderDate = new \DateTime('2025-02-14');
+        $orderDate = new DateTime('2025-02-14');
 
         $layDeputyshipDto = new LayDeputyshipDto();
         $layDeputyshipDto->setDeputyUid('222222222')

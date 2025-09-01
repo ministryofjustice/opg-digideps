@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\CSV;
 
+use ArrayIterator;
 use App\v2\CSV\CSVChunker;
 use PHPUnit\Framework\TestCase;
 
-class CSVChunkerTest extends TestCase
+final class CSVChunkerTest extends TestCase
 {
     public function testGetChunkReturnsMultipleChunks(): void
     {
@@ -21,7 +22,7 @@ class CSVChunkerTest extends TestCase
 
         $chunkSize = 2;
 
-        $iterator = new \ArrayIterator($csvData);
+        $iterator = new ArrayIterator($csvData);
         $chunker = new CSVChunker($iterator, $chunkSize);
 
         $this->assertEquals([['row1'], ['row2']], $chunker->getChunk());
@@ -40,7 +41,7 @@ class CSVChunkerTest extends TestCase
 
         $chunkSize = 1;
 
-        $iterator = new \ArrayIterator($csvData);
+        $iterator = new ArrayIterator($csvData);
         $chunker = new CSVChunker($iterator, $chunkSize);
 
         $this->assertEquals([['row1']], $chunker->getChunk());
@@ -59,7 +60,7 @@ class CSVChunkerTest extends TestCase
 
         $chunkSize = 5;
 
-        $iterator = new \ArrayIterator($csvData);
+        $iterator = new ArrayIterator($csvData);
         $chunker = new CSVChunker($iterator, $chunkSize);
 
         $this->assertEquals([['row1'], ['row2'], ['row3']], $chunker->getChunk());
