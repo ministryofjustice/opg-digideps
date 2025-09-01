@@ -2,7 +2,8 @@
 
 namespace App\Entity\Ndr;
 
-use App\Entity\AssetInterface;
+use App\Repository\NdrRepository;
+use InvalidArgumentException;
 use App\Entity\Client;
 use App\Entity\Ndr\Traits as NdrTraits;
 use App\Entity\ReportInterface;
@@ -15,16 +16,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="odr",
- *     indexes={
- *
- *     @ORM\Index(name="odr_submitted_idx", columns={"submitted"}),
- *     @ORM\Index(name="odr_submit_date_idx", columns={"submit_date"})
- *  })
- *
- * @ORM\Entity(repositoryClass="App\Repository\NdrRepository")
- */
+
+#[ORM\Table(name: 'odr')]
+#[ORM\Index(name: 'odr_submitted_idx', columns: ['submitted'])]
+#[ORM\Index(name: 'odr_submit_date_idx', columns: ['submit_date'])]
+#[ORM\Entity(repositoryClass: NdrRepository::class)]
 class Ndr implements ReportInterface
 {
     use NdrTraits\IncomeBenefitTrait;
@@ -41,24 +37,18 @@ class Ndr implements ReportInterface
      * @JMS\Groups({"ndr", "ndr_id"})
      *
      * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="odr_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'odr_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @JMS\Groups({"ndr-client"})
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Client", inversedBy="ndr")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: Client::class, inversedBy: 'ndr')]
     private Client $client;
 
     /**
@@ -67,9 +57,8 @@ class Ndr implements ReportInterface
      * @JMS\Groups({"ndr"})
      *
      * @JMS\Type("App\Entity\Ndr\VisitsCare")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\VisitsCare", mappedBy="ndr", cascade={"persist", "remove"})
      **/
+    #[ORM\OneToOne(targetEntity: VisitsCare::class, mappedBy: 'ndr', cascade: ['persist', 'remove'])]
     private $visitsCare;
 
     /**
@@ -78,20 +67,17 @@ class Ndr implements ReportInterface
      * @JMS\Groups({"ndr-account"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Ndr\BankAccount>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(targetEntity: BankAccount::class, mappedBy: 'ndr', cascade: ['persist', 'remove'])]
     private $bankAccounts;
 
     /**
      * @var Debt[]
      *
      * @JMS\Groups({"ndr-debt"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Debt", mappedBy="ndr", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: Debt::class, mappedBy: 'ndr', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $debts;
 
     /**
@@ -100,9 +86,8 @@ class Ndr implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr-debt-management"})
-     *
-     * @ORM\Column( name="debt_management", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'debt_management', type: 'text', nullable: true)]
     private $debtManagement;
 
     /**
@@ -112,10 +97,10 @@ class Ndr implements ReportInterface
      *
      * @JMS\Groups({"ndr-debt"})
      *
-     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'has_debts', type: 'string', length: 5, nullable: true)]
     private $hasDebts;
 
     /**
@@ -124,9 +109,8 @@ class Ndr implements ReportInterface
      * @JMS\Groups({"ndr-asset"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Ndr\Asset>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(targetEntity: Asset::class, mappedBy: 'ndr', cascade: ['persist', 'remove'])]
     private Collection|array $assets;
 
     /**
@@ -135,31 +119,28 @@ class Ndr implements ReportInterface
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"ndr"})
-     *
-     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[ORM\Column(name: 'no_asset_to_add', type: 'boolean', options: ['default' => false], nullable: true)]
     private $noAssetToAdd;
 
     /**
      * @JMS\Groups({"ndr"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'submitted', type: 'boolean', nullable: true)]
     private ?bool $submitted = null;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Groups({"ndr"})
      *
      * @JMS\Accessor(getter="getStartDate")
      *
      * @JMS\Type("DateTime")
-     *
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
     private $startDate;
 
     /**
@@ -168,18 +149,16 @@ class Ndr implements ReportInterface
      * @JMS\Accessor(getter="getSubmitDate")
      *
      * @JMS\Type("DateTime")
-     *
-     * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'submit_date', type: 'datetime', nullable: true)]
     private ?DateTimeInterface $submitDate = null;
 
     /**
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr"})
-     *
-     * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
+    #[ORM\Column(name: 'agreed_behalf_deputy', type: 'string', length: 50, nullable: true)]
     private ?string $agreedBehalfDeputy;
 
     /**
@@ -188,29 +167,25 @@ class Ndr implements ReportInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr"})
-     *
-     * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'agreed_behalf_deputy_explanation', type: 'text', nullable: true)]
     private $agreedBehalfDeputyExplanation;
 
     /**
      * @JMS\Groups({"report-submitted-by"})
      *
      * @JMS\Type("App\Entity\User")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     *
-     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $submittedBy = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="ndr", cascade={"persist", "remove"})
      *
      * @JMS\Type("App\Entity\Satisfaction")
-     *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
+    #[ORM\OneToOne(targetEntity: Satisfaction::class, mappedBy: 'ndr', cascade: ['persist', 'remove'])]
     private Satisfaction $satisfaction;
 
     /**
@@ -219,9 +194,8 @@ class Ndr implements ReportInterface
      * @JMS\Groups({"client-benefits-check"})
      *
      * @JMS\Type("App\Entity\Ndr\ClientBenefitsCheck")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
      **/
+    #[ORM\OneToOne(targetEntity: ClientBenefitsCheck::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $clientBenefitsCheck;
 
     /**
@@ -230,7 +204,7 @@ class Ndr implements ReportInterface
     public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->startDate = new \DateTime();
+        $this->startDate = new DateTime();
         $this->bankAccounts = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->assets = new ArrayCollection();
@@ -294,7 +268,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getStartDate()
     {
@@ -302,7 +276,7 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @param \DateTime $startDate
+     * @param DateTime $startDate
      */
     public function setStartDate($startDate)
     {
@@ -317,9 +291,9 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public static function getDueDateBasedOnStartDate(?\DateTime $startDate = null)
+    public static function getDueDateBasedOnStartDate(?DateTime $startDate = null)
     {
         if ($startDate) {
             $dueDate = clone $startDate;
@@ -527,7 +501,7 @@ class Ndr implements ReportInterface
     {
         $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         if ($agreedBehalfDeputy && !in_array($agreedBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__." {$agreedBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new InvalidArgumentException(__METHOD__." {$agreedBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;

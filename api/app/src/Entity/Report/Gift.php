@@ -6,11 +6,9 @@ use App\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="gift")
- */
+
+#[ORM\Table(name: 'gift')]
+#[ORM\Entity]
 class Gift
 {
     use HasBankAccountTrait;
@@ -19,15 +17,11 @@ class Gift
      * @var int
      *
      * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="gift_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'gift_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -36,9 +30,8 @@ class Gift
      * @JMS\Type("string")
      *
      * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="explanation", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'explanation', type: 'text', nullable: false)]
     private $explanation;
 
     /**
@@ -48,19 +41,17 @@ class Gift
      *
      * @JMS\Groups({"gifts"})
      *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="gifts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'gifts')]
     private $report;
 
     /**

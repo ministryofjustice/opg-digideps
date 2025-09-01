@@ -7,25 +7,23 @@ use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\MoneyTransactionShortIn;
 use App\Entity\Report\MoneyTransactionShortOut;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 trait MoneyShortTrait
 {
     /**
      * @var MoneyShortCategory[]
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: MoneyShortCategory::class, mappedBy: 'report', cascade: ['persist'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $moneyShortCategories;
 
     /**
      * @var MoneyTransactionShort[]
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: MoneyTransactionShort::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $moneyTransactionsShort;
 
     /**
@@ -34,9 +32,8 @@ trait MoneyShortTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"moneyShortCategoriesIn"})
-     *
-     * @ORM\Column(name="money_transactions_short_in_exist", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'money_transactions_short_in_exist', type: 'string', length: 3, nullable: true)]
     private $moneyTransactionsShortInExist;
 
     /**
@@ -45,9 +42,8 @@ trait MoneyShortTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="money_transactions_short_out_exist", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'money_transactions_short_out_exist', type: 'string', length: 3, nullable: true)]
     private $moneyTransactionsShortOutExist;
 
     /**
@@ -73,7 +69,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesInPresent()
     {
@@ -97,7 +93,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOutPresent()
     {
@@ -127,7 +123,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyTransactionShort[]
+     * @return MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShort()
     {

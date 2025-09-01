@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Report\Decision;
 use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,9 +16,8 @@ trait DecisionTrait
      * @JMS\Groups({"decision"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Decision>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(targetEntity: Decision::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $decisions;
 
     /**
@@ -26,15 +26,14 @@ trait DecisionTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report","decision"})
-     *
-     * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
+    #[ORM\Column(name: 'reason_for_no_decisions', type: 'text', nullable: true)]
     private $reasonForNoDecisions;
 
     /**
      * Get decisions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDecisions()
     {

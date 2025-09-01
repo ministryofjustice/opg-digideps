@@ -2,9 +2,11 @@
 
 namespace App\Entity\Report\Traits;
 
+use App\Entity\Report\ProfDeputyPreviousCost;
 use App\Entity\Report\ProfDeputyInterimCost;
 use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportProfDeputyCostsTrait
@@ -15,9 +17,8 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"prof-deputy-costs-how-charged"})
-     *
-     * @ORM\Column(name="prof_dc_how_charged", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_how_charged', type: 'string', length: 10, nullable: true)]
     private $profDeputyCostsHowCharged;
 
     /**
@@ -26,20 +27,17 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="prof_dc_has_previous", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_has_previous', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsHasPrevious;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyPreviousCost>")
      *
      * @JMS\Groups({"report-prof-deputy-costs-prev"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: ProfDeputyPreviousCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyPreviousCosts;
 
     /**
@@ -48,20 +46,17 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-prof-deputy-costs-interim"})
-     *
-     * @ORM\Column(name="prof_dc_has_interim", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_has_interim', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsHasInterim;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyInterimCost>")
      *
      * @JMS\Groups({"report-prof-deputy-costs-interim"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: ProfDeputyInterimCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyInterimCosts;
 
     /**
@@ -70,9 +65,8 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-prof-deputy-fixed-cost"})
-     *
-     * @ORM\Column(name="prof_dc_fixed_cost_amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_fixed_cost_amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $profDeputyFixedCost;
 
     /**
@@ -81,9 +75,8 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-prof-deputy-costs-scco"})
-     *
-     * @ORM\Column(name="prof_dc_scco_amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_scco_amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $profDeputyCostsAmountToScco;
 
     /**
@@ -92,20 +85,17 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-prof-deputy-costs-scco"})
-     *
-     * @ORM\Column(name="prof_dc_scco_reason_beyond_estimate", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'prof_dc_scco_reason_beyond_estimate', type: 'text', nullable: true)]
     private $profDeputyCostsReasonBeyondEstimate;
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyOtherCost>")
      *
      * @JMS\Groups({"prof-deputy-other-costs"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: ProfDeputyOtherCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyOtherCosts;
 
     /**

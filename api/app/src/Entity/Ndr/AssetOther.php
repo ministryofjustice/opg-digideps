@@ -2,32 +2,29 @@
 
 namespace App\Entity\Ndr;
 
+use DateTime;
 use App\Entity\AssetInterface;
 use App\Entity\Report\AssetOther as ReportAssetOther;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class AssetOther extends Asset implements AssetInterface
 {
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-asset"})
-     *
-     * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 100, nullable: true)]
     private $title;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-asset"})
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private $description;
 
     /**
@@ -36,9 +33,8 @@ class AssetOther extends Asset implements AssetInterface
      * @JMS\Type("DateTime")
      *
      * @JMS\Groups({"ndr-asset"})
-     *
-     * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'valuation_date', type: 'date', nullable: true)]
     private $valuationDate;
 
     /**
@@ -68,7 +64,7 @@ class AssetOther extends Asset implements AssetInterface
     /**
      * Set valuationDate.
      *
-     * @param \DateTime $valuationDate
+     * @param DateTime $valuationDate
      *
      * @return Asset
      */
@@ -82,7 +78,7 @@ class AssetOther extends Asset implements AssetInterface
     /**
      * Get valuationDate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getValuationDate()
     {

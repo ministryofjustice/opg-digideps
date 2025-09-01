@@ -4,9 +4,7 @@ namespace App\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class MoneyTransactionShortIn extends MoneyTransactionShort
 {
     public function getType()

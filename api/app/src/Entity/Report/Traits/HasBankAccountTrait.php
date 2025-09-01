@@ -3,6 +3,7 @@
 namespace App\Entity\Report\Traits;
 
 use App\Entity\Report\BankAccount;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 trait HasBankAccountTrait
@@ -15,11 +16,9 @@ trait HasBankAccountTrait
      * @JMS\SerializedName("bankAccount")
      *
      * @JMS\Type("App\Entity\Report\BankAccount")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
-     *
-     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'bank_account_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: BankAccount::class)]
     private $bankAccount;
 
     /**

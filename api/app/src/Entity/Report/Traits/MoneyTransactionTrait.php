@@ -2,8 +2,11 @@
 
 namespace App\Entity\Report\Traits;
 
+use InvalidArgumentException;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\MoneyTransactionInterface;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 trait MoneyTransactionTrait
 {
@@ -11,11 +14,9 @@ trait MoneyTransactionTrait
      * @var MoneyTransaction[]
      *
      * @JMS\Groups({"transaction"})
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
      */
+    #[ORM\OneToMany(targetEntity: MoneyTransaction::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $moneyTransactions;
 
     /**
@@ -109,7 +110,7 @@ trait MoneyTransactionTrait
     private function getMoneyTransactionsTotal($type)
     {
         if (!in_array($type, ['in', 'out'])) {
-            throw new \InvalidArgumentException('invalid type');
+            throw new InvalidArgumentException('invalid type');
         }
 
         $ret = 0;

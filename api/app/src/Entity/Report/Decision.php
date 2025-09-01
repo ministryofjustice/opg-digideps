@@ -8,13 +8,10 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Decisions.
- *
- * @ORM\Table(name="decision")
- *
- * @ORM\Entity
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'decision')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Decision
 {
     use CreateUpdateTimestamps;
@@ -22,18 +19,18 @@ class Decision
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
      *
-     * @ORM\Id
      *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @ORM\SequenceGenerator(sequenceName="decision_id_seq", allocationSize=1, initialValue=1)
      *
      * @JMS\Groups({"decision"})
      *
      * @JMS\Type("integer")
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'decision_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -42,9 +39,8 @@ class Decision
      * @JMS\Groups({"decision"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(type="text")
      */
+    #[ORM\Column(type: 'text')]
     private $description;
 
     /**
@@ -53,9 +49,8 @@ class Decision
      * @JMS\Groups({"decision"})
      *
      * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="client_involved_boolean", type="boolean")
      */
+    #[ORM\Column(name: 'client_involved_boolean', type: 'boolean')]
     private $clientInvolvedBoolean;
 
     /**
@@ -64,18 +59,15 @@ class Decision
      * @JMS\Groups({"decision"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="client_involved_details", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'client_involved_details', type: 'text', nullable: true)]
     private $clientInvolvedDetails;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="decisions")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'decisions')]
     private $report;
 
     /**

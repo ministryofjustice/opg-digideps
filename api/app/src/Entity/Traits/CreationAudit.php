@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use DateTime;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -14,35 +15,33 @@ trait CreationAudit
     /**
      * Created by.
      *
-     * @var \App\Entity\User
+     * @var User
      *
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"notes", "documents", "report-submission", "checklist-information"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     protected $createdBy;
 
     /**
      * Created on.
      *
-     * @var \DateTime
+     * @var DateTime
      *
      * @JMS\Type("DateTime")
      *
      * @JMS\Groups({"notes", "documents", "checklist-information"})
      *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      */
+    #[ORM\Column(type: 'datetime', name: 'created_on', nullable: true)]
     protected $createdOn;
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getCreatedBy()
     {
@@ -60,7 +59,7 @@ trait CreationAudit
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedOn()
     {
@@ -70,7 +69,7 @@ trait CreationAudit
     /**
      * @return $this
      */
-    public function setCreatedOn(\DateTime $createdOn)
+    public function setCreatedOn(DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
 

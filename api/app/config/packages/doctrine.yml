@@ -43,7 +43,7 @@ doctrine:
                 auto_mapping: true
                 mappings:
                     commonEntities:
-                        type: annotation
+                        type: attribute
                         dir: "%kernel.project_dir%/src/Entity"
                         prefix: App\Entity
                         is_bundle: false
@@ -56,7 +56,7 @@ doctrine:
                 connection: ingestwriter
                 mappings:
                     ingestEntities:
-                        type: annotation
+                        type: attribute
                         dir: "%kernel.project_dir%/src/Entity"
                         prefix: App\Entity
                         is_bundle: false

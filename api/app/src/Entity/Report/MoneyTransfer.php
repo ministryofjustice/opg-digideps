@@ -7,33 +7,27 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * MoneyTransfer.
- *
- * @ORM\Table(name="money_transfer")
- *
- * @ORM\Entity
  */
+#[ORM\Table(name: 'money_transfer')]
+#[ORM\Entity]
 class MoneyTransfer
 {
     /**
      * @var int
      *
      * @JMS\Groups({"money-transfer"})
-     *
-     * @ORM\Column(name="id", type="integer")
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var string
      *
      * @JMS\Groups({"money-transfer"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
@@ -42,11 +36,9 @@ class MoneyTransfer
      * @JMS\Groups({"account"})
      *
      * @JMS\SerializedName("accountFrom")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
-     *
-     * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'from_account_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: BankAccount::class)]
     private $from;
 
     /**
@@ -55,29 +47,24 @@ class MoneyTransfer
      * @JMS\Groups({"account"})
      *
      * @JMS\SerializedName("accountTo")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
-     *
-     * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'to_account_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: BankAccount::class)]
     private $to;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransfers")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyTransfers')]
     private $report;
 
     /**
      * @var string
      *
      * @JMS\Groups({"money-transfer"})
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private $description;
 
     /**

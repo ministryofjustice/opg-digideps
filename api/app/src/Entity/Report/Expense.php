@@ -10,11 +10,9 @@ use JMS\Serializer\Annotation as JMS;
  * Used for both
  * - Lay deputy expenses
  * - PA Fees outside practice direction.
- *
- * @ORM\Entity()
- *
- * @ORM\Table(name="expense")
  */
+#[ORM\Table(name: 'expense')]
+#[ORM\Entity]
 class Expense
 {
     use HasBankAccountTrait;
@@ -23,15 +21,11 @@ class Expense
      * @var int
      *
      * @JMS\Groups({"expenses"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="expense_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'expense_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
@@ -40,9 +34,8 @@ class Expense
      * @JMS\Type("string")
      *
      * @JMS\Groups({"expenses"})
-     *
-     * @ORM\Column(name="explanation", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'explanation', type: 'text', nullable: false)]
     private $explanation;
 
     /**
@@ -52,19 +45,17 @@ class Expense
      *
      * @JMS\Groups({"expenses"})
      *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
      */
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="expenses")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'expenses')]
     private $report;
 
     /**

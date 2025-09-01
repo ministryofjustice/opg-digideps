@@ -4796,11 +4796,6 @@ parameters:
 			path: src/Entity/Report/ReportSubmission.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:getSubmittedOn\\(\\) should return DateTime\\|null but returns App\\\\Entity\\\\Report\\\\DateTime\\.$#"
-			count: 1
-			path: src/Entity/Report/ReviewChecklist.php
-
-		-
 			message: "#^PHPDoc tag @return with type string is incompatible with native type array\\.$#"
 			count: 1
 			path: src/Entity/Report/ReviewChecklist.php
@@ -4816,22 +4811,7 @@ parameters:
 			path: src/Entity/Report/ReviewChecklist.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:\\$submittedOn \\(App\\\\Entity\\\\Report\\\\DateTime\\) does not accept DateTime\\.$#"
-			count: 1
-			path: src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:\\$submittedOn has unknown class App\\\\Entity\\\\Report\\\\DateTime as its type\\.$#"
-			count: 1
-			path: src/Entity/Report/ReviewChecklist.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:getHowOftenDoYouContactClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:getWhenWasCarePlanLastReviewed\\(\\) should return DateTime but returns App\\\\Entity\\\\Report\\\\DateTime\\.$#"
 			count: 1
 			path: src/Entity/Report/VisitsCare.php
 
@@ -4887,16 +4867,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$report has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed \\(App\\\\Entity\\\\Report\\\\DateTime\\) does not accept DateTime\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed has unknown class App\\\\Entity\\\\Report\\\\DateTime as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/VisitsCare.php
 

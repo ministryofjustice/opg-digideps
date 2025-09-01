@@ -2,6 +2,7 @@
 
 namespace App\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Report\Contact;
 use App\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,9 +14,8 @@ trait ContactTrait
      * @JMS\Groups({"contact"})
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Contact>")
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private $contacts;
 
     /**
@@ -24,9 +24,8 @@ trait ContactTrait
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report"})
-     *
-     * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'reason_for_no_contacts', type: 'text', nullable: true)]
     private $reasonForNoContacts;
 
     /**
@@ -52,7 +51,7 @@ trait ContactTrait
     /**
      * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getContacts()
     {

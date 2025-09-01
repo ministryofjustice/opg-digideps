@@ -5,11 +5,9 @@ namespace App\Entity\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="money_short_category")
- */
+
+#[ORM\Table(name: 'money_short_category')]
+#[ORM\Entity]
 class MoneyShortCategory
 {
     /**
@@ -49,33 +47,26 @@ class MoneyShortCategory
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="money_short_category_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'money_short_category_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyShortCategories")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyShortCategories')]
     private $report;
 
     /**
      * @var string
      *
      * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="type_id", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'type_id', type: 'string', nullable: false)]
     private $typeId;
 
     /**
@@ -84,9 +75,8 @@ class MoneyShortCategory
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="present", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'present', type: 'boolean', nullable: true)]
     private $present;
 
     /**

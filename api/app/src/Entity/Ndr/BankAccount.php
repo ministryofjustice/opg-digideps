@@ -2,6 +2,8 @@
 
 namespace App\Entity\Ndr;
 
+use App\Repository\NdrBankAccountRepository;
+use DateTime;
 use App\Entity\BankAccountInterface;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,13 +11,10 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Account.
- *
- * @ORM\Table(name="odr_account")
- *
- * @ORM\Entity(repositoryClass="App\Repository\NdrBankAccountRepository")
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'odr_account')]
+#[ORM\Entity(repositoryClass: NdrBankAccountRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class BankAccount implements BankAccountInterface
 {
     use CreateUpdateTimestamps;
@@ -60,51 +59,43 @@ class BankAccount implements BankAccountInterface
      * @var int
      *
      * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="odr_account_id_seq", allocationSize=1, initialValue=1)
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'odr_account_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
+    #[ORM\Column(name: 'bank_name', type: 'string', length: 500, nullable: true)]
     private $bank;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
+    #[ORM\Column(name: 'account_type', type: 'string', length: 125, nullable: true)]
     private $accountType;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
+    #[ORM\Column(name: 'sort_code', type: 'string', length: 6, nullable: true)]
     private $sortCode;
 
     /**
      * @var string
      *
      * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
+    #[ORM\Column(name: 'account_number', type: 'string', length: 4, nullable: true)]
     private $accountNumber;
 
     /**
@@ -113,20 +104,17 @@ class BankAccount implements BankAccountInterface
      * @JMS\Groups({"ndr-account"})
      *
      * @JMS\Type("string")
-     *
-     * @ORM\Column(name="balance_on_cod", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[ORM\Column(name: 'balance_on_cod', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $balanceOnCourtOrderDate;
 
     /**
      * @var Ndr
      *
      * @JMS\Groups({"bank-acccount-ndr"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="bankAccounts")
-     *
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'odr_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Ndr::class, inversedBy: 'bankAccounts')]
     private $ndr;
 
     /**
@@ -135,9 +123,8 @@ class BankAccount implements BankAccountInterface
      * @JMS\Type("string")
      *
      * @JMS\Groups({"ndr-account"})
-     *
-     * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
+    #[ORM\Column(name: 'is_joint_account', type: 'string', length: 3, nullable: true)]
     private $isJointAccount;
 
     /**
@@ -145,7 +132,7 @@ class BankAccount implements BankAccountInterface
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     /**
@@ -285,7 +272,7 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
