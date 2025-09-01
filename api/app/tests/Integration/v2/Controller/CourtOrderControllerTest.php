@@ -51,10 +51,7 @@ class CourtOrderControllerTest extends AbstractTestController
         // add a court order, and make the user a deputy on it
         $courtOrder = self::$fixtures->createCourtOrder(substr(''.hexdec(uniqid()), -8), 'pfa', 'ACTIVE');
 
-        $user = self::$fixtures->createUser([
-            'setEmail' => $emailAddress,
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-        ]);
+        $user = self::$fixtures->createUser($emailAddress, User::ROLE_LAY_DEPUTY);
         self::$fixtureHelper->setPassword($user);
 
         // associate deputy with court order
@@ -73,10 +70,7 @@ class CourtOrderControllerTest extends AbstractTestController
 
     public function testGetByUidActionCourtOrderNotFoundFail(): void
     {
-        $user = self::$fixtures->createUser([
-            'setEmail' => 'fail-not-found-court-order-test@opg.gov.uk',
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-        ]);
+        $user = self::$fixtures->createUser('fail-not-found-court-order-test@opg.gov.uk', User::ROLE_LAY_DEPUTY);
         self::$fixtureHelper->setPassword($user);
 
         // log in and fetch court order which doesn't exist
@@ -98,10 +92,7 @@ class CourtOrderControllerTest extends AbstractTestController
         self::$fixtures->flush();
 
         // log in, and fetch court order which exists, but user has no deputy record
-        $user = self::$fixtures->createUser([
-            'setEmail' => 'fail-user-not-deputy-court-order-test@opg.gov.uk',
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-        ]);
+        $user = self::$fixtures->createUser('fail-user-not-deputy-court-order-test@opg.gov.uk', User::ROLE_LAY_DEPUTY);
         self::$fixtureHelper->setPassword($user);
 
         $token = self::$client->login('fail-user-not-deputy-court-order-test@opg.gov.uk', 'DigidepsPass1234', self::$deputySecret);
@@ -121,10 +112,7 @@ class CourtOrderControllerTest extends AbstractTestController
         self::$fixtures->flush();
 
         // create a deputy for the user, so they have a valid deputy record, but don't associate with court order
-        $user = self::$fixtures->createUser([
-            'setEmail' => 'fail-not-deputy-on-court-order-test@opg.gov.uk',
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-        ]);
+        $user = self::$fixtures->createUser('fail-not-deputy-on-court-order-test@opg.gov.uk', User::ROLE_LAY_DEPUTY);
         self::$fixtureHelper->setPassword($user);
         $this->createDeputyForUser($user);
 

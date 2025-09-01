@@ -52,21 +52,26 @@ class Fixtures
         return "export PGHOST={$pgHost}; export PGPASSWORD={$pgPass}; export PGDATABASE=digideps_unit_test; export PGUSER={$pgUser};";
     }
 
-    /**
-     * @return User
-     */
-    public function createUser(array $settersMap = [])
-    {
-        // add clent, cot, report, needed for assets
+    public function createUser(
+        ?string $email = null,
+        ?string $roleName = null,
+        ?\DateTime $registrationDate = null,
+        ?string $phoneMain = null,
+        ?int $deputyUid = null,
+        ?bool $isPrimary = null,
+    ): User {
         $user = new User();
         $user->setEmail('temp'.microtime(true).rand(100, 99999).'@temp.com');
         $user->setPassword('temp@temp.com');
         $user->setFirstname('name'.time());
         $user->setLastname('surname'.time());
 
-        foreach ($settersMap as $k => $v) {
-            $user->$k($v);
-        }
+        if ($email) { $user->setEmail($email); }
+        if ($roleName) { $user->setRoleName($roleName); }
+        if ($registrationDate) { $user->setRegistrationDate($registrationDate); }
+        if ($phoneMain) { $user->setPhoneMain($phoneMain); }
+        if ($deputyUid) { $user->setDeputyUid($deputyUid); }
+        if ($isPrimary) { $user->setIsPrimary($isPrimary); }
 
         $this->em->persist($user);
 
@@ -179,7 +184,11 @@ class Fixtures
     public function createReportSubmission(?Report $report = null, ?User $user = null)
     {
         if (is_null($user)) {
-            $user = $this->createUser(['setRoleName' => User::ROLE_LAY_DEPUTY, 'setRegistrationDate' => new \DateTime(), 'setPhoneMain' => '01211234567']);
+            $user = $this->createUser(
+                roleName: User::ROLE_LAY_DEPUTY,
+                registrationDate: new \DateTime(),
+                phoneMain: '01211234567'
+            );
         }
 
         if (is_null($report)) {
