@@ -122,7 +122,7 @@ class NdrController extends AbstractController
      */
     public function reviewAction(int $ndrId)
     {
-        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
+        $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id', 'report-submitted-by']));
 
         $clientId = $ndr->getClient()->getId();
         $client = $this->clientApi->getById($clientId);
