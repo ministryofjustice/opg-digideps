@@ -10,7 +10,7 @@ use App\Tests\Integration\Fixtures;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
 
-class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
+final class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
 {
     private Fixtures $fixtures;
     private DeputyshipProcessingRawDbAccess $sut;
