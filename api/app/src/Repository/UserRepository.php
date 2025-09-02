@@ -3,9 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\Deputy;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -441,6 +444,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         /** @var User[] $result */
         $result = $qb->getQuery()->getArrayResult();
+
+        return $result;
+    }
+
+    /**
+     * Find lay deputy users whose deputy UID is in the pre_registration table but who are not associated with a deputy.
+     *
+     * @return User[]
+     */
+    public function findUsersWithoutDeputies(): array
+    {
+        $query = $this->createQueryBuilder('u')
+            ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
+            ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
+            ->where('u.active = true')
+            ->andWhere('d.id IS NULL')
+            ->getQuery();
+
+        /** @var User[] $result */
+        $result = $query->getResult();
 
         return $result;
     }
