@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Service\Stats\Query\RespondentsQuery;
 use App\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RespondentsQueryTest extends WebTestCase
+final class RespondentsQueryTest extends WebTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
+    private static EntityManager $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -41,7 +44,7 @@ class RespondentsQueryTest extends WebTestCase
         self::$em->flush();
     }
 
-    public function testReturnsNumberOfRespondents()
+    public function testReturnsNumberOfRespondents(): void
     {
         $query = new RespondentsQuery($this::$em);
 
@@ -53,7 +56,7 @@ class RespondentsQueryTest extends WebTestCase
         $this->assertEquals(2, $result[0]['amount']);
     }
 
-    private static function givenSatisfactionScoreForReportOfTypeAndRole($score, $reportType = null, $deputyType = null)
+    private static function givenSatisfactionScoreForReportOfTypeAndRole(int $score, $reportType = null, $deputyType = null): void
     {
         $satisfaction = (new Satisfaction())
             ->setScore($score);
@@ -64,8 +67,8 @@ class RespondentsQueryTest extends WebTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new \DateTime('2019-08-01'),
-                new \DateTime('2020-08-01')
+                new DateTime('2019-08-01'),
+                new DateTime('2020-08-01')
             );
             self::$em->persist($client);
             self::$em->persist($report);

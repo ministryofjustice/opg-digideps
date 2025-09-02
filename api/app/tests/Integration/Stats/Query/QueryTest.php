@@ -1,7 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Metrics;
 
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\Attributes\Test;
+use Exception;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use App\Entity\User;
 use App\Service\Stats\Query\Query;
 use App\Service\Stats\StatsQueryParameters;
@@ -32,12 +39,9 @@ class UsersQuery extends Query
     }
 }
 
-class QueryTest extends WebTestCase
+final class QueryTest extends WebTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    protected static $em;
+    private static EntityManager $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -48,7 +52,7 @@ class QueryTest extends WebTestCase
             ->getManager();
     }
 
-    public function addUserWithRegistrationDate($date)
+    public function addUserWithRegistrationDate($date): User
     {
         $id = mt_rand();
         $user = new User();
@@ -56,19 +60,17 @@ class QueryTest extends WebTestCase
         $user->setLastname('Lastname');
         $user->setEmail("metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
-        $user->setRegistrationDate(new \DateTime($date));
+        $user->setRegistrationDate(new DateTime($date));
         self::$em->persist($user);
         self::$em->flush();
 
         return $user;
     }
 
-    /**
-     * @test
-     */
-    public function identifiesUnsupportedDimensions()
+    #[Test]
+    public function identifiesUnsupportedDimensions(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $query = new UsersQuery($this::$em);
 
         $query->execute(new StatsQueryParameters([
@@ -77,12 +79,10 @@ class QueryTest extends WebTestCase
         ]));
     }
 
-    /**
-     * @test
-     *
-     * @doesNotPerformAssertions
-     */
-    public function identifiesSupportedDimensions()
+
+    #[Test]
+    #[DoesNotPerformAssertions]
+    public function identifiesSupportedDimensions(): void
     {
         $query = new UsersQuery($this::$em);
 
@@ -92,10 +92,8 @@ class QueryTest extends WebTestCase
         ]));
     }
 
-    /**
-     * @test
-     */
-    public function returnsArrayOfDimensions()
+    #[Test]
+    public function returnsArrayOfDimensions(): void
     {
         $query = new UsersQuery($this::$em);
 
@@ -114,10 +112,8 @@ class QueryTest extends WebTestCase
         $this->assertArrayHasKey('ndrEnabled', $result[0]);
     }
 
-    /**
-     * @test
-     */
-    public function returnsValueIfNoDimension()
+    #[Test]
+    public function returnsValueIfNoDimension(): void
     {
         $query = new UsersQuery($this::$em);
 
@@ -130,10 +126,8 @@ class QueryTest extends WebTestCase
         $this->assertArrayHasKey('amount', $result[0]);
     }
 
-    /**
-     * @test
-     */
-    public function adheresToDateRange()
+    #[Test]
+    public function adheresToDateRange(): void
     {
         $query = new UsersQuery($this::$em);
 
@@ -149,10 +143,8 @@ class QueryTest extends WebTestCase
         $this->assertEquals(1, $result[0]['amount']);
     }
 
-    /**
-     * @test
-     */
-    public function includesDataFromBothEndDays()
+    #[Test]
+    public function includesDataFromBothEndDays(): void
     {
         $query = new UsersQuery($this::$em);
 
@@ -173,10 +165,8 @@ class QueryTest extends WebTestCase
         $this->assertEquals(1, $result2[0]['amount']);
     }
 
-    /**
-     * @test
-     */
-    public function ignoresDateRangeIfMetricNotConstrainedByDate()
+    #[Test]
+    public function ignoresDateRangeIfMetricNotConstrainedByDate(): void
     {
         $query = new UsersQuery($this::$em);
 

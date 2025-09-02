@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Service\Stats\Query\ClientsQuery;
 use App\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ClientsQueryTest extends WebTestCase
+final class ClientsQueryTest extends WebTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
+    private static EntityManager $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -37,7 +40,7 @@ class ClientsQueryTest extends WebTestCase
         self::$em->flush();
     }
 
-    public function testReturnsTotalClientsByDeputyType()
+    public function testReturnsTotalClientsByDeputyType(): void
     {
         $query = new ClientsQuery($this::$em);
 
@@ -65,7 +68,7 @@ class ClientsQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsTotalClientByReportType()
+    public function testReturnsTotalClientByReportType(): void
     {
         $query = new ClientsQuery($this::$em);
 
@@ -102,7 +105,7 @@ class ClientsQueryTest extends WebTestCase
         }
     }
 
-    private static function givenClientWithReportsOfType(array $reportTypes)
+    private static function givenClientWithReportsOfType(array $reportTypes): void
     {
         $client = new Client();
         foreach ($reportTypes as $reportType) {
@@ -112,8 +115,8 @@ class ClientsQueryTest extends WebTestCase
                 $report = new Report(
                     $client,
                     $reportType,
-                    new \DateTime('2019-08-01'),
-                    new \DateTime('2020-08-01')
+                    new DateTime('2019-08-01'),
+                    new DateTime('2020-08-01')
                 );
             }
 
