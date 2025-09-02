@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Deputy;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Model\Hydrator;
 use App\Repository\DeputyRepository;
@@ -34,8 +35,12 @@ class DeputyService
         return $deputyToAdd;
     }
 
-    public function populateDeputy($deputy, $data): Deputy
+    public function populateDeputy(array $data, ?Deputy $deputy = null): Deputy
     {
+        if (is_null($deputy)) {
+            $deputy = new Deputy();
+        }
+
         Hydrator::hydrateEntityWithArrayData($deputy, $data, [
             'firstname' => 'setFirstname',
             'lastname' => 'setLastname',
@@ -57,6 +62,28 @@ class DeputyService
         if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
             $deputy->setDeputyUid($data['deputy_uid']);
         }
+
+        return $deputy;
+    }
+
+    public function createDeputyFromPreRegistration(PreRegistration $preReg): Deputy
+    {
+        $data = [
+            'firstname' => $preReg->getDeputyFirstname(),
+            'lastname' => $preReg->getDeputySurname(),
+            'address1' => $preReg->getDeputyAddress1(),
+            'address2' => $preReg->getDeputyAddress2(),
+            'address3' => $preReg->getDeputyAddress3(),
+            'address4' => $preReg->getDeputyAddress4(),
+            'address5' => $preReg->getDeputyAddress5(),
+            'address_postcode' => $preReg->getDeputyPostcode(),
+            'deputy_uid' => $preReg->getDeputyUid(),
+        ];
+
+        $deputy = $this->populateDeputy($data);
+
+        $this->em->persist($deputy);
+        $this->em->flush();
 
         return $deputy;
     }
