@@ -14,7 +14,7 @@ use League\Csv\Reader;
 use League\Csv\UnavailableStream;
 use Psr\Log\LoggerInterface;
 
-class DeputyshipsCSVLoaderIntegrationTest extends ApiBaseTestCase
+final class DeputyshipsCSVLoaderIntegrationTest extends ApiBaseTestCase
 {
     private CSVChunkerFactory $chunkerFactory;
     private LoggerInterface $logger;

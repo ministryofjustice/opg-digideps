@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use DateTime;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\StagingDeputyship;
@@ -14,7 +15,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
-class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
+final class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
 {
     private DeputyshipsCandidatesSelector $sut;
 
@@ -40,7 +41,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType('pfa');
         $courtOrder->setStatus('OPEN');
-        $courtOrder->setOrderMadeDate(new \DateTime('2018-01-21'));
+        $courtOrder->setOrderMadeDate(new DateTime('2018-01-21'));
 
         $this->entityManager->persist($courtOrder);
         $this->entityManager->flush();
@@ -58,7 +59,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType('hw');
         $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
+        $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
 
         $this->entityManager->persist($courtOrder);
 
@@ -89,7 +90,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType('hw');
         $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
+        $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
         $this->entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
@@ -120,7 +121,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $this->entityManager->persist($deputy);
 
         $client = ClientTestHelper::create()->generateClient($this->entityManager, null, null, '61111002');
-        $report = ReportTestHelper::create()->generateReport($this->entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
+        $report = ReportTestHelper::create()->generateReport($this->entityManager, $client, '104', new DateTime('2019-01-21'), new DateTime('2020-01-21'));
 
         $client->addReport($report);
         $report->setClient($client);
