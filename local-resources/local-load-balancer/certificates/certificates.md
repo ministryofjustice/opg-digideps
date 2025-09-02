@@ -1,5 +1,5 @@
 To create your self signed certificates, make sure you are in the certificates directory
-(/docker/local-load-balancer/certificates) and then run the below specified commands :
+(local-resources/local-load-balancer/certificates) and then run these commands:
 
 ```
 openssl genpkey -algorithm RSA -out nginx.key
