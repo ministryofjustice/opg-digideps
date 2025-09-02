@@ -39,12 +39,12 @@ class LayRegistrationService
                 ++$numReportsPersisted;
 
                 if (0 === $numReportsPersisted % $batchSize) {
+                    $this->entityManager->persist($client);
                     $this->entityManager->flush();
                 }
             }
 
             $this->entityManager->persist($client);
-
             $this->entityManager->flush();
             $this->entityManager->clear();
         }
