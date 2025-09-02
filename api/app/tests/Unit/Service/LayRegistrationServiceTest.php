@@ -61,17 +61,21 @@ class LayRegistrationServiceTest extends TestCase
                 return [self::createMock(Report::class)];
             });
 
-        $this->mockEntityManager->expects($this->exactly(3))
+        // persists = 1 for each report and one for each client = 6
+        $this->mockEntityManager->expects($this->exactly(6))
             ->method('persist')
-            ->with(isInstanceOf(Report::class));
+            ->willReturnCallback(function ($entity) {
+                self::assertTrue(is_a($entity, Report::class) || is_a($entity, Client::class));
+            });
 
-        $this->mockEntityManager->expects($this->exactly(2))
+        // flushes = 1 for each of the 2 batches of reports, and 1 for each client = 5
+        $this->mockEntityManager->expects($this->exactly(5))
             ->method('flush');
 
-        $this->mockEntityManager->expects($this->exactly(2))
+        // clear = 1 (after all flushes and persists have been done)
+        $this->mockEntityManager->expects($this->once())
             ->method('clear');
 
-        // batch size of 2 will cause two flushes and two clears, as we are going to get 3 reports for the 3 clients
         $numReports = $this->sut->addMissingReports(batchSize: 2);
 
         self::assertEquals(3, $numReports);
