@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\v2\DTO\InviteeDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -153,6 +155,23 @@ class PreRegistrationRepository extends ServiceEntityRepository
         } catch (NonUniqueResultException) {
             return null;
         }
+
+        return $result;
+    }
+
+    /**
+     * Find rows in the pre_registration table where the deputy UID does not appear in the deputy table.
+     *
+     * @return PreRegistration[]
+     */
+    public function findWithoutDeputies(): array
+    {
+        /** @var PreRegistration[] $result */
+        $result = $this->createQueryBuilder('pr')
+            ->leftJoin(Deputy::class, 'd', Join::WITH, 'pr.deputyUid = d.deputyUid')
+            ->where('d.id IS NULL')
+            ->getQuery()
+            ->getResult();
 
         return $result;
     }
