@@ -618,7 +618,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = end(self::$orgs)->getId();
 
         for ($x = 0; $x < 10; ++$x) {
-            $newUser = self::fixtures()->createUser(['setRoleName' => User::ROLE_PROF]);
+            $newUser = self::fixtures()->createUser(roleName:  User::ROLE_PROF);
 
             self::fixtures()->flush()->clear();
 
