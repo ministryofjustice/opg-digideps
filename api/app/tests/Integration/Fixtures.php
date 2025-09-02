@@ -7,6 +7,7 @@ use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
@@ -66,12 +67,24 @@ class Fixtures
         $user->setFirstname('name'.time());
         $user->setLastname('surname'.time());
 
-        if ($email) { $user->setEmail($email); }
-        if ($roleName) { $user->setRoleName($roleName); }
-        if ($registrationDate) { $user->setRegistrationDate($registrationDate); }
-        if ($phoneMain) { $user->setPhoneMain($phoneMain); }
-        if ($deputyUid) { $user->setDeputyUid($deputyUid); }
-        if ($isPrimary) { $user->setIsPrimary($isPrimary); }
+        if ($email) {
+            $user->setEmail($email);
+        }
+        if ($roleName) {
+            $user->setRoleName($roleName);
+        }
+        if ($registrationDate) {
+            $user->setRegistrationDate($registrationDate);
+        }
+        if ($phoneMain) {
+            $user->setPhoneMain($phoneMain);
+        }
+        if ($deputyUid) {
+            $user->setDeputyUid($deputyUid);
+        }
+        if ($isPrimary) {
+            $user->setIsPrimary($isPrimary);
+        }
 
         $this->em->persist($user);
 
@@ -671,5 +684,25 @@ class Fixtures
     public function deleteUser(int $id): void
     {
         $this->em->remove($this->getRepo(User::class)->find($id));
+    }
+
+    public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?\DateTime $madeDate = null): PreRegistration
+    {
+        if (is_null($madeDate)) {
+            $madeDate = new \DateTime();
+        }
+
+        $now = $madeDate->format('Y-m-d');
+
+        $preReg = new PreRegistration([
+            'Case' => $caseNumber,
+            'ReportType' => $reportType,
+            'MadeDate' => $now,
+            'OrderType' => $orderType,
+        ]);
+
+        $this->em->persist($preReg);
+
+        return $preReg;
     }
 }
