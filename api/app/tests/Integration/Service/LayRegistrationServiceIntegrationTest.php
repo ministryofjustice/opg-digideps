@@ -62,4 +62,26 @@ class LayRegistrationServiceIntegrationTest extends ApiBaseTestCase
         self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $reports[0]->getType());
         self::assertTrue($reports[0]->isHybrid());
     }
+
+    // this is to test that batching of persists and flushes works correctly
+    public function testAddMissingReportsMultipleClients(): void
+    {
+        $clients = [];
+        for ($i = 0; $i < 10; ++$i) {
+            $caseNumber = "9933442$i";
+            $clients[] = $this->addClient($caseNumber);
+            $this->fixtures->createPreRegistration($caseNumber, 'OPG104', 'hw');
+        }
+
+        $this->entityManager->flush();
+
+        $reportsAdded = $this->sut->addMissingReports(batchSize: 3);
+
+        self::assertEquals(10, $reportsAdded);
+
+        foreach ($clients as $client) {
+            $reports = $this->clientRepo->find($client->getId())->getReports();
+            self::assertCount(1, $reports);
+        }
+    }
 }
