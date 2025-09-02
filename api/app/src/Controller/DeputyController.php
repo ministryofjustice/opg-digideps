@@ -28,7 +28,7 @@ class DeputyController extends RestController
     public function add(Request $request): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
-        $newDeputy = $this->deputyService->populateDeputy(new Deputy(), $data);
+        $newDeputy = $this->deputyService->populateDeputy($data);
 
         /** @var User $currentUser */
         $currentUser = $this->getUser();
