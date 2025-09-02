@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use App\Service\ReportUtils;
 use PHPUnit\Framework\TestCase;
 
-class ReportUtilsTest extends TestCase
+final class ReportUtilsTest extends TestCase
 {
-    public static function parseDateProvider()
+    public static function parseDateProvider(): array
     {
         return [
             // d-M-y 20xx
@@ -82,23 +87,19 @@ class ReportUtilsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider reportPeriodDateProvider
-     */
-    public function testGenerateStartDateFromEndDate($endDate, $expectedStartDate)
+    #[DataProvider('reportPeriodDateProvider')]
+    public function testGenerateStartDateFromEndDate(string $endDate, string $expectedStartDate): void
     {
         $sut = new ReportUtils();
 
-        $endDate = new \DateTime($endDate);
+        $endDate = new DateTime($endDate);
         $startDate = $sut->generateReportStartDateFromEndDate($endDate);
 
         $this->assertEquals($expectedStartDate, $startDate->format('Y-m-d'));
     }
 
-    /**
-     * @dataProvider parseDateProvider
-     */
-    public function testparseDate($in, $expectedYmd, $century)
+    #[DataProvider('parseDateProvider')]
+    public function testparseDate(string $in, string|bool $expectedYmd, string $century): void
     {
         $sut = new ReportUtils();
         $actual = $sut->parseCsvDate($in, $century);
@@ -106,12 +107,9 @@ class ReportUtilsTest extends TestCase
         $this->assertEquals($expectedYmd, $actual ? $actual->format('Y-m-d') : $actual);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider numberProvider
-     */
-    public function padCasRecNumber(string $number, $expectedPaddedNumber)
+    #[DataProvider('numberProvider')]
+    #[Test]
+    public function padCasRecNumber(string $number, string $expectedPaddedNumber): void
     {
         $sut = new ReportUtils();
         self::assertEquals($expectedPaddedNumber, $sut->padCasRecNumber($number));

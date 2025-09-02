@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\BruteForce;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use MockeryStub as m;
 use PHPUnit\Framework\TestCase;
@@ -10,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/PredisMock.php';
 
-class AttemptsInTimeCheckerTest extends TestCase
+final class AttemptsInTimeCheckerTest extends TestCase
 {
     private PredisMock $redis;
     private AttemptsInTimeChecker $object;
@@ -23,7 +26,7 @@ class AttemptsInTimeCheckerTest extends TestCase
         $this->key = 'key';
     }
 
-    public static function attempts()
+    public static function attempts(): array
     {
         return [
                 [[], [0 => false, 100 => false, 1000 => false]],
@@ -38,10 +41,8 @@ class AttemptsInTimeCheckerTest extends TestCase
             ];
     }
 
-    /**
-     * @dataProvider attempts
-     */
-    public function testMaxAttemptsReached(array $triggers, array $attemptsTimeStampToExpected)
+    #[DataProvider('attempts')]
+    public function testMaxAttemptsReached(array $triggers, array $attemptsTimeStampToExpected): void
     {
         foreach ($triggers as $trigger) {
             list($maxAttempts, $interval) = $trigger;
@@ -54,7 +55,7 @@ class AttemptsInTimeCheckerTest extends TestCase
         }
     }
 
-    public function testResetAttempts()
+    public function testResetAttempts(): void
     {
         $this->object->addTrigger(1, 10);
 

@@ -13,7 +13,7 @@ use App\Repository\CourtOrderDeputyRepository;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use PHPUnit\Framework\TestCase;
 
-class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
+final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 {
     private CourtOrderDeputyRepository $courtOrderDeputyRepository;
     private DeputyshipProcessingLookupCache $deputyshipLookupCache;
@@ -33,7 +33,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         );
     }
 
-    public function testCacheLookupTables()
+    public function testCacheLookupTables(): void
     {
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -42,7 +42,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $this->sut->cacheLookupTables();
     }
 
-    public function testCreateInsertNewCourtOrder()
+    public function testCreateInsertNewCourtOrder(): void
     {
         $stagingDeputyship = new StagingDeputyship();
         $stagingDeputyship->orderUid = '700000001101';
@@ -81,7 +81,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $this->assertEquals([$expectedCandidate], $actualCandidates);
     }
 
-    public function testCreateInsertNewCourtOrderAndDeputyRelationship()
+    public function testCreateInsertNewCourtOrderAndDeputyRelationship(): void
     {
         $stagingDeputyship = new StagingDeputyship();
         $stagingDeputyship->orderUid = '700000001102';
@@ -128,7 +128,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $this->assertEquals([$expectedCourtOrderCandidate, $expectedCourtOrderDeputyCandidate], $actualCandidates);
     }
 
-    public function testCreateUpdateCourtOrderStatus()
+    public function testCreateUpdateCourtOrderStatus(): void
     {
         $stagingDeputyship = new StagingDeputyship();
         $stagingDeputyship->orderUid = '700000001103';
@@ -163,7 +163,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $this->assertEquals([$expectedCandidate], $actualCandidates);
     }
 
-    public function testCreateNoCourtOrderUpdateWhenStatusSame()
+    public function testCreateNoCourtOrderUpdateWhenStatusSame(): void
     {
         $stagingDeputyship = new StagingDeputyship();
         $stagingDeputyship->orderUid = '700000001104';
@@ -195,7 +195,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $this->assertEquals([], $actualCandidates);
     }
 
-    public function testCreateInsertNewCourtOrderDeputyRelationship()
+    public function testCreateInsertNewCourtOrderDeputyRelationship(): void
     {
         $stagingDeputyship = new StagingDeputyship();
         $stagingDeputyship->orderUid = '700000001105';
@@ -237,7 +237,7 @@ class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $this->assertEquals([$expectedCandidate], $actualCandidates);
     }
 
-    public function testCreateUpdateCourtOrderDeputyRelationship()
+    public function testCreateUpdateCourtOrderDeputyRelationship(): void
     {
         $stagingDeputyship = new StagingDeputyship();
         $stagingDeputyship->orderUid = '700000001106';

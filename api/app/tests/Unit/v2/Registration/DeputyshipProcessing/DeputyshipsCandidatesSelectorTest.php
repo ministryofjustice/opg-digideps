@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
+use ArrayIterator;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Repository\StagingDeputyshipRepository;
@@ -19,7 +20,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class DeputyshipsCandidatesSelectorTest extends TestCase
+final class DeputyshipsCandidatesSelectorTest extends TestCase
 {
     private EntityManagerInterface&MockObject $mockEntityManager;
     private StagingDeputyshipRepository&MockObject $mockStagingDeputyshipRepository;
@@ -98,7 +99,7 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockStagingDeputyshipRepository
             ->expects($this->once())
             ->method('findAllPaged')
-            ->willReturn(new \ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
+            ->willReturn(new ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->once())
@@ -118,12 +119,12 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
             ->method('createCompatibleReportCandidates')
-            ->willReturn(new \ArrayIterator([$mockCandidate4]));
+            ->willReturn(new ArrayIterator([$mockCandidate4]));
 
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
             ->method('createCompatibleNdrCandidates')
-            ->willReturn(new \ArrayIterator([$mockCandidate5]));
+            ->willReturn(new ArrayIterator([$mockCandidate5]));
 
         $mockCandidates = [
             $mockCandidate1,
@@ -136,13 +137,13 @@ class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockEntityManager
             ->expects($this->exactly(5))
             ->method('persist')
-            ->willReturnCallback(function ($entity) use ($mockCandidates) {
+            ->willReturnCallback(function ($entity) use ($mockCandidates): void {
                 self::assertContains($entity, $mockCandidates);
             });
 
         $this->mockStagingSelectedCandidateRepository->expects($this->once())
             ->method('getDistinctOrderedCandidates')
-            ->willReturn(new \ArrayIterator($mockCandidates));
+            ->willReturn(new ArrayIterator($mockCandidates));
 
         $result = $this->sut->select();
 

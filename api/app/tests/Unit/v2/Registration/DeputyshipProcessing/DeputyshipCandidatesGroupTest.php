@@ -7,7 +7,7 @@ namespace App\v2\Registration\DeputyshipProcessing;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\TestCase;
 
-class DeputyshipCandidatesGroupTest extends TestCase
+final class DeputyshipCandidatesGroupTest extends TestCase
 {
     public function testDeputyshipCandidatesGroup(): void
     {
