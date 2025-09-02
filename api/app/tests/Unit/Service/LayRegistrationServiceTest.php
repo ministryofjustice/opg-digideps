@@ -60,8 +60,8 @@ class LayRegistrationServiceTest extends TestCase
                 return [self::createMock(Report::class)];
             });
 
-        // persists = 1 for each report and one for each client = 6
-        $this->mockEntityManager->expects($this->exactly(6))
+        // persists = 1 for each report, 1 for each of the three clients, 1 client for the first batch = 7
+        $this->mockEntityManager->expects($this->exactly(7))
             ->method('persist')
             ->willReturnCallback(function ($entity) {
                 self::assertTrue(is_a($entity, Report::class) || is_a($entity, Client::class));
