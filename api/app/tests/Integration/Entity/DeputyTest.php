@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Entity;
 
+use DateTime;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Repository\DeputyRepository;
@@ -10,7 +13,7 @@ use App\Tests\Integration\ApiBaseTestCase;
 use Faker\Factory;
 use Faker\Generator;
 
-class DeputyTest extends ApiBaseTestCase
+final class DeputyTest extends ApiBaseTestCase
 {
     private Generator $faker;
     private DeputyRepository $deputyRepository;
@@ -29,7 +32,7 @@ class DeputyTest extends ApiBaseTestCase
 
     public function testGetCourtOrdersWithStatus(): void
     {
-        $fakeUid = $this->faker->unique()->randomNumber(8);
+        $fakeUid = strval($this->faker->unique()->randomNumber(8));
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy();
@@ -40,7 +43,7 @@ class DeputyTest extends ApiBaseTestCase
             ->setCourtOrderUid($fakeUid)
             ->setOrderType('hybrid')
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new \DateTime('2020-06-14'));
+            ->setOrderMadeDate(new DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 
@@ -69,8 +72,8 @@ class DeputyTest extends ApiBaseTestCase
      */
     public function testCascadeDeleteCourtOrderDeputy(): void
     {
-        $fakeCourtOrderUid = $this->faker->unique()->randomNumber(8);
-        $fakeDeputyUid = $this->faker->unique()->randomNumber(8);
+        $fakeCourtOrderUid = strval($this->faker->unique()->randomNumber(8));
+        $fakeDeputyUid = strval($this->faker->unique()->randomNumber(8));
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy(deputyUid: $fakeDeputyUid);
@@ -81,7 +84,7 @@ class DeputyTest extends ApiBaseTestCase
             ->setCourtOrderUid($fakeCourtOrderUid)
             ->setOrderType('hybrid')
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new \DateTime('2020-06-14'));
+            ->setOrderMadeDate(new DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 

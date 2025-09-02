@@ -14,7 +14,7 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
 
-class DeputyRepositoryTest extends ApiBaseTestCase
+final class DeputyRepositoryTest extends ApiBaseTestCase
 {
     private static DeputyRepository $sut;
     private static Fixtures $fixtures;
@@ -30,7 +30,7 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         self::$sut = $sut;
     }
 
-    public function testFindReportsInfoByUid()
+    public function testFindReportsInfoByUid(): void
     {
         $deputyUid = 7000000021;
         $courtOrderUid = '7100000080';
@@ -76,7 +76,7 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         self::assertEquals($report->getType(), $results[0]['report']['type']);
     }
 
-    public function testFindReportsInfoByUidWithClosedCourtOrder()
+    public function testFindReportsInfoByUidWithClosedCourtOrder(): void
     {
         $deputyUid = 7000000022;
         $courtOrderUid = '7100000081';
@@ -105,7 +105,7 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         self::assertEquals(null, $results);
     }
 
-    public function testFindReportsInfoByUidIsNull()
+    public function testFindReportsInfoByUidIsNull(): void
     {
         $deputyUid = 70000022;
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);

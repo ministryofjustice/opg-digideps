@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Entity\Repository;
 
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Repository\OrganisationRepository;
@@ -12,7 +14,7 @@ use App\Tests\Integration\Fixtures;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class OrganisationRepositoryTest extends ApiBaseTestCase
+final class OrganisationRepositoryTest extends ApiBaseTestCase
 {
     use ProphecyTrait;
 
@@ -35,8 +37,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         $this->purgeDatabase();
     }
 
-    /** @test */
-    public function testGetAllArray()
+    #[Test]
+    public function testGetAllArray(): void
     {
         $this->fixtures->createOrganisations(5);
         $this->entityManager->flush();
@@ -44,8 +46,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertCount(5, $this->sut->getAllArray());
     }
 
-    /** @test */
-    public function testGetNonDeletedArray()
+    #[Test]
+    public function testGetNonDeletedArray(): void
     {
         $orgs = $this->fixtures->createOrganisations(5);
         $this->entityManager->flush();
@@ -60,8 +62,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertCount(4, $nonDeletedOrgs);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesNoEntitiesInOrgReturnsFalse()
+    #[Test]
+    public function testHasActiveEntitiesNoEntitiesInOrgReturnsFalse(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $this->entityManager->flush();
@@ -70,12 +72,12 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertFalse($result);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesSoftDeletedClientInOrgReturnsFalse()
+    #[Test]
+    public function testHasActiveEntitiesSoftDeletedClientInOrgReturnsFalse(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
@@ -84,12 +86,12 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertFalse($result);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesArchivedClientInOrgReturnsFalse()
+    #[Test]
+    public function testHasActiveEntitiesArchivedClientInOrgReturnsFalse(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
@@ -98,13 +100,13 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertFalse($result);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesArchivedAndSoftDeletedClientsInOrgReturnsFalse()
+    #[Test]
+    public function testHasActiveEntitiesArchivedAndSoftDeletedClientsInOrgReturnsFalse(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
@@ -114,14 +116,14 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertFalse($result);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesArchivedAndSoftDeletedAndActiveClientsInOrgReturnsTrue()
+    #[Test]
+    public function testHasActiveEntitiesArchivedAndSoftDeletedAndActiveClientsInOrgReturnsTrue(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
         $clientActive = $this->fixtures->createClient($user);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientActive->getId(), $orgs[0]->getId());
@@ -132,13 +134,13 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertTrue($result);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesArchivedAndSoftDeletedClientsAndUserInOrgReturnsTrue()
+    #[Test]
+    public function testHasActiveEntitiesArchivedAndSoftDeletedClientsAndUserInOrgReturnsTrue(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addUserToOrganisation($user->getId(), $orgs[0]->getId());
@@ -149,8 +151,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertTrue($result);
     }
 
-    /** @test */
-    public function testHasActiveEntitiesActiveClientAndUserInOrgReturnsTrue()
+    #[Test]
+    public function testHasActiveEntitiesActiveClientAndUserInOrgReturnsTrue(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
@@ -164,8 +166,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         self::assertTrue($result);
     }
 
-    /** @test */
-    public function testFindByEmailIdentifier()
+    #[Test]
+    public function testFindByEmailIdentifier(): void
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $this->entityManager->flush();

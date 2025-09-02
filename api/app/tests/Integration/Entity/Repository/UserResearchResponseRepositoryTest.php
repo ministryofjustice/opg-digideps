@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Entity\Repository;
 
+use DateTime;
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Repository\UserResearchResponseRepository;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
 
 /** TODO - Refactor to move data generation out of the integration tests, DDLS-955 */
-class UserResearchResponseRepositoryTest extends ApiBaseTestCase
+final class UserResearchResponseRepositoryTest extends ApiBaseTestCase
 {
     private Fixtures $fixtures;
     private UserResearchResponseRepository $sut;
@@ -26,7 +27,7 @@ class UserResearchResponseRepositoryTest extends ApiBaseTestCase
         $this->sut = $sut;
     }
 
-    public function testToAvoidWarning()
+    public function testToAvoidWarning(): void
     {
         // PHPUnit 10 will fail the test suite if the class performs no tests
         $this->expectNotToPerformAssertions();
@@ -34,9 +35,9 @@ class UserResearchResponseRepositoryTest extends ApiBaseTestCase
 
     // Not to be run in test suites as it takes forever - run this to generate large amounts of userResearchResponses
     // for manual testing
-    public function canHandleLargeAmountsOfData()
+    public function canHandleLargeAmountsOfData(): void
     {
         $this->fixtures->createUserResearchResponse(2000);
-        $this->sut->getAllFilteredByDate(new \DateTime('-1 day'), new \DateTime());
+        $this->sut->getAllFilteredByDate(new DateTime('-1 day'), new DateTime());
     }
 }

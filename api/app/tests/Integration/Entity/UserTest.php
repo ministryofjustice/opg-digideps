@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Entity;
 
+use DateTime;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\Tests\Integration\ApiBaseTestCase;
 
 /**
  * User Entity test.
  */
-class UserTest extends ApiBaseTestCase
+final class UserTest extends ApiBaseTestCase
 {
-    public function testGetNumberOfSubmittedReports()
+    public function testGetNumberOfSubmittedReports(): void
     {
         $this->purgeDatabase();
 
@@ -20,7 +23,7 @@ class UserTest extends ApiBaseTestCase
         foreach (range(1, 2) as $ignored) {
             $submittedSubmissions[] = $submissionHelper->generateAndPersistSubmittedReportSubmission(
                 $this->entityManager,
-                new \DateTime()
+                new DateTime()
             );
         }
 

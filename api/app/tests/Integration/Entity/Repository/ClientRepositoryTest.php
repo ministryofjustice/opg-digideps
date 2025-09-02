@@ -10,7 +10,7 @@ use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiBaseTestCase;
 
-class ClientRepositoryTest extends ApiBaseTestCase
+final class ClientRepositoryTest extends ApiBaseTestCase
 {
     private ClientRepository $sut;
 
@@ -26,7 +26,7 @@ class ClientRepositoryTest extends ApiBaseTestCase
         $this->purgeDatabase();
     }
 
-    public function testgetAllClientsAndReportsByDeputyUid()
+    public function testgetAllClientsAndReportsByDeputyUid(): void
     {
         $userHelper = UserTestHelper::create();
         $clientHelper = ClientTestHelper::create();

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use DateTime;
+use DateTimeZone;
+use PHPUnit\Framework\Attributes\Test;
+use DateInterval;
 use App\Entity\Client;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
@@ -12,30 +16,24 @@ use App\Entity\User;
 use App\Repository\ChecklistRepository;
 use App\Tests\Integration\ApiBaseTestCase;
 
-class ChecklistRepositoryTest extends ApiBaseTestCase
+final class ChecklistRepositoryTest extends ApiBaseTestCase
 {
-    /** @var ChecklistRepository */
-    private $checklistRepository;
-
-    /** @var \DateTime */
-    private $firstJulyAm;
+    private ChecklistRepository $checklistRepository;
+    private DateTime $firstJulyAm;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->checklistRepository = $this->entityManager
-            ->getRepository(Checklist::class);
+        $this->checklistRepository = $this->entityManager->getRepository(Checklist::class);
 
         $this->purgeDatabase();
 
-        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
+        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
     }
 
-    /**
-     * @test
-     */
-    public function getResubmittableErrorChecklistsAndSetToQueuedTest()
+    #[Test]
+    public function getResubmittableErrorChecklistsAndSetToQueuedTest(): void
     {
         $correctError = 'Foo 500 Internal Server Error Bar';
         $incorrectError = 'some error';
@@ -55,7 +53,7 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
         self::assertEquals(Checklist::SYNC_STATUS_PERMANENT_ERROR, $checklistPermanentWrongError->getSynchronisationStatus());
     }
 
-    private function createAndSubmitReportWithChecklist($status, $error)
+    private function createAndSubmitReportWithChecklist(string $status, string $error): array
     {
         // Create Client
         $client = (new Client())->setCaseNumber('abc-123');
@@ -66,7 +64,7 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
             $client,
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
             $this->firstJulyAm,
-            $this->firstJulyAm->add(new \DateInterval('P364D'))
+            $this->firstJulyAm->add(new DateInterval('P364D'))
         )
         );
         $this->entityManager->persist($report);
@@ -89,14 +87,14 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
         return [$client, $report, $reportSubmission, $checklist];
     }
 
-    private function generateAndPersistUser()
+    private function generateAndPersistUser(): User
     {
         $user = (new User())
             ->setFirstname('Test')
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new \DateTime())->getTimestamp();
+        $datePostFix = (string) (new DateTime())->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         $this->entityManager->persist($user);
