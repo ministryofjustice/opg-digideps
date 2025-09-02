@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\DBAL;
 
+use Exception;
 use App\DBAL\ConnectionWrapper;
 use Aws\SecretsManager\SecretsManagerClient;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 
-class ConnectionWrapperTest extends TestCase
+final class ConnectionWrapperTest extends TestCase
 {
     private ?ConnectionWrapper $connection;
 
@@ -31,7 +34,7 @@ class ConnectionWrapperTest extends TestCase
         $this->connection = new ConnectionWrapper($dbParams, $pdo->getDriver(), $config);
     }
 
-    public function testConnect()
+    public function testConnect(): void
     {
         // Connect to a real (not mocked) DB and Secret Manager
         $result = $this->connection->connect();
@@ -39,7 +42,7 @@ class ConnectionWrapperTest extends TestCase
         $this->assertTrue($this->connection->isConnected());
     }
 
-    public function testChangePasswordAndConnect()
+    public function testChangePasswordAndConnect(): void
     {
         // Connect to a real (not mocked) DB, Redis and Secret Manager after changing the DB password
         $secretName = 'local/database-password';
@@ -56,7 +59,7 @@ class ConnectionWrapperTest extends TestCase
         $this->assertTrue($this->connection->isConnected());
     }
 
-    private function updateLocalstackSecret(string $secretName, string $newPassword)
+    private function updateLocalstackSecret(string $secretName, string $newPassword): void
     {
         // Use the Secrets Manager client to update the secret value in localstack
         $secretClient = new SecretsManagerClient([
@@ -71,7 +74,7 @@ class ConnectionWrapperTest extends TestCase
         ]);
     }
 
-    private function updatePostgresMasterPassword(string $oldPassword, string $newPassword)
+    private function updatePostgresMasterPassword(string $oldPassword, string $newPassword): void
     {
         // Update the PostgreSQL master password
         $dbParams = [
@@ -100,7 +103,7 @@ class ConnectionWrapperTest extends TestCase
             $newPassword = 'changedpw';
             $this->updateLocalstackSecret($secretName, $oldPassword);
             $this->updatePostgresMasterPassword($newPassword, $oldPassword);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing: this is expected to fail if previous test has failed
         }
     }
