@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Security;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
@@ -17,24 +19,16 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 
-class ClientVoterTest extends KernelTestCase
+final class ClientVoterTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    /** @var ClientVoter */
-    private $voter;
+    private ClientVoter $voter;
+    private Security|MockObject $security;
+    private TokenInterface|MockObject $token;
+    private User $user;
 
-    /** @var Security|MockObject */
-    private $security;
-
-    /** @var TokenInterface|MockObject */
-    private $token;
-
-    /** @var User */
-    private $user;
-
-    /** @var int */
-    private $decision;
+    private ?int $decision = null;
 
     public function setUp(): void
     {
@@ -44,10 +38,8 @@ class ClientVoterTest extends KernelTestCase
         $this->voter = new ClientVoter($this->security);
     }
 
-    /**
-     * @test
-     */
-    public function deniesAccessToUnauthenticaatedUsers()
+    #[Test]
+    public function deniesAccessToUnauthenticaatedUsers(): void
     {
         $this
             ->ensureUserIsNotLoggedIn()
@@ -74,10 +66,8 @@ class ClientVoterTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function grantsAccessToAdminUsers()
+    #[Test]
+    public function grantsAccessToAdminUsers(): void
     {
         $this
             ->ensureUserIsLoggedInWithRole('ROLE_ADMIN')
@@ -99,10 +89,8 @@ class ClientVoterTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function grantsAccessToLayUsersIfClientBelongsToThem()
+    #[Test]
+    public function grantsAccessToLayUsersIfClientBelongsToThem(): void
     {
         $client = new Client();
 
@@ -120,10 +108,8 @@ class ClientVoterTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function deniesAccessToLayUsersIfClientDoesNotBelongToThem()
+    #[Test]
+    public function deniesAccessToLayUsersIfClientDoesNotBelongToThem(): void
     {
         $client = new Client();
 
@@ -159,10 +145,8 @@ class ClientVoterTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function grantsAccessToNonLayUsersIfClientBelongsToUsersActivatedOrganisation()
+    #[Test]
+    public function grantsAccessToNonLayUsersIfClientBelongsToUsersActivatedOrganisation(): void
     {
         $client = new Client();
         $organisation = new Organisation();
@@ -183,10 +167,8 @@ class ClientVoterTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function deniesAccessToNonLayUsersIfClientBelongsToADifferentActivatedOrganisation()
+    #[Test]
+    public function deniesAccessToNonLayUsersIfClientBelongsToADifferentActivatedOrganisation(): void
     {
         $client = new Client();
         $organisation = new Organisation();
@@ -208,10 +190,8 @@ class ClientVoterTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function deniesAccessToNonLayUsersIfClientBelongsToUsersInactiveOrganisationButDoesNotBelongToUser()
+    #[Test]
+    public function deniesAccessToNonLayUsersIfClientBelongsToUsersInactiveOrganisationButDoesNotBelongToUser(): void
     {
         $client = new Client();
         $organisation = new Organisation();
@@ -224,10 +204,8 @@ class ClientVoterTest extends KernelTestCase
             ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
     }
 
-    /**
-     * @test
-     */
-    public function deniesAccessToNonLayUsersIfClientBelongsActiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation()
+    #[Test]
+    public function deniesAccessToNonLayUsersIfClientBelongsActiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation(): void
     {
         $client = new Client();
         $organisation = new Organisation();
@@ -241,10 +219,8 @@ class ClientVoterTest extends KernelTestCase
             ->assertDecisionIs(ClientVoter::ACCESS_DENIED);
     }
 
-    /**
-     * @test
-     */
-    public function allowsAccessToNonLayUsersIfClientBelongsToInactiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation()
+    #[Test]
+    public function allowsAccessToNonLayUsersIfClientBelongsToInactiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation(): void
     {
         $client = new Client();
         $organisation = new Organisation();
@@ -258,12 +234,10 @@ class ClientVoterTest extends KernelTestCase
             ->assertDecisionIs(ClientVoter::ACCESS_GRANTED);
     }
 
-    /**
-     * @dataProvider deleteClientProvider
-     *
-     * @test
-     */
-    public function determineDeletePermission(User $user, Client $client, int $expectedPermission)
+
+    #[DataProvider('deleteClientProvider')]
+    #[Test]
+    public function determineDeletePermission(User $user, Client $client, int $expectedPermission): void
     {
         $security = self::prophesize(Security::class);
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use App\Entity\User;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
@@ -11,14 +13,11 @@ use App\TestHelpers\UserTestHelper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class UserVoterTest extends KernelTestCase
+final class UserVoterTest extends KernelTestCase
 {
-    /**
-     * @dataProvider deleteUserProvider
-     *
-     * @test
-     */
-    public function determineDeletePermission(User $deletor, User $deletee, int $expectedPermission)
+    #[DataProvider('deleteUserProvider')]
+    #[Test]
+    public function determineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
         $sut = new UserVoter();
 
@@ -250,12 +249,10 @@ class UserVoterTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider addEditUserProvider
-     *
-     * @test
-     */
-    public function determineAddEditPermission(User $editor, User $editee, int $expectedPermission)
+
+    #[DataProvider('addEditUserProvider')]
+    #[Test]
+    public function determineAddEditPermission(User $editor, User $editee, int $expectedPermission): void
     {
         /** @var UserVoter $sut */
         $sut = new UserVoter();
