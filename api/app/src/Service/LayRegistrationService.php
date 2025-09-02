@@ -44,11 +44,10 @@ class LayRegistrationService
             }
 
             $this->entityManager->persist($client);
-            $this->entityManager->flush();
-        }
 
-        $this->entityManager->flush();
-        $this->entityManager->clear();
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+        }
 
         return $numReportsPersisted;
     }
