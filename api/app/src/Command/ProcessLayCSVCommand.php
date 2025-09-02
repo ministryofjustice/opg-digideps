@@ -12,7 +12,6 @@ use App\Service\LayRegistrationService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -208,15 +207,20 @@ class ProcessLayCSVCommand extends Command
 
             // ensure that all active clients have at least one report associated with them,
             // to fix issues caused by partially-registered users (see DDLS-911)
-            $numReportsAdded = $this->layRegistrationService->addMissingReports();
-            $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
+            $this->verboseLogger->notice('Adding missing reports to clients');
+            try {
+                $numReportsAdded = $this->layRegistrationService->addMissingReports();
+                $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
+            } catch (\Exception $e) {
+                $this->verboseLogger->error('Error encountered while adding missing reports: '.$e->getMessage());
+            }
 
-            // additional deputy_case association patching
+            // additional deputy_case association patching (see DDLS-907)
             $this->verboseLogger->notice('Fixing missing deputy_case associations');
             try {
                 $numDeputyCaseAssociationsAdded = $this->deputyCaseService->addMissingDeputyCaseAssociations();
                 $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
             }
 
