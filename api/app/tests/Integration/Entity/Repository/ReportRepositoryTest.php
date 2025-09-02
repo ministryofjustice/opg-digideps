@@ -131,7 +131,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $org = $this->fixtures->createOrganisations(1);
 
         // create clients and add to org
-        $user = $this->fixtures->createUser()->setRoleName(User::ROLE_PROF);
+        $user = $this->fixtures->createUser(roleName: User::ROLE_PROF);
 
         $client1 = $this->fixtures->createClient($user);
         $client2 = $this->fixtures->createClient($user);
