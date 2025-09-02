@@ -10,8 +10,8 @@ use Monolog\Logger;
 class AwsAuditLogHandler extends AbstractAuditLogHandler
 {
     /**
-     * @param int  $level
-     * @param bool $bubble
+     * @param int    $level
+     * @param bool   $bubble
      * @param string $group
      */
     public function __construct(private readonly CloudWatchLogsClient $client, private $group, $level = Logger::NOTICE, $bubble = true)
@@ -19,22 +19,22 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $entry): void
+    protected function write(array $record): void
     {
-        if (!$this->shallHandle($entry)) {
+        if (!$this->shallHandle($record)) {
             return;
         }
 
-        $stream = $entry['context']['event'];
+        $stream = $record['context']['event'];
         $sequenceToken = $this->initialize($stream);
-        $entry = $this->formatEntry($entry);
+        $record = $this->formatEntry($record);
 
         // send items, retry once with a fresh sequence token
         try {
-            $this->send($entry, $stream, $sequenceToken);
+            $this->send($record, $stream, $sequenceToken);
         } catch (CloudWatchLogsException $e) {
             if ('InvalidSequenceTokenException' === $e->getAwsErrorCode()) {
-                $this->send($entry, $stream, $e->get('expectedSequenceToken'));
+                $this->send($record, $stream, $e->get('expectedSequenceToken'));
             }
 
             throw $e;

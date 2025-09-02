@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  * Does no validation, has no de-duplication, and has no foreign keys.
  * It has a unique key, but only because Doctrine demands one.
  *
- * Column names in the database still match the column names in the CSV, as we do no
+ * Column names in the database mostly match the column names in the deputyship CSV, as we do no
  * transformation/translation when dumping data into this table.
  *
  * @ORM\Table(name="selectedCandidates", schema="staging")
@@ -39,14 +39,14 @@ class StagingSelectedCandidate
     public ?int $id = null;
 
     /**
-     * @ORM\Column(name="order_uid", type="string", length=30)
-     */
-    public string $orderUid;
-
-    /**
      * @ORM\Column(name="action", enumType="App\v2\Registration\Enum\DeputyshipCandidateAction", length=30)
      */
     public DeputyshipCandidateAction $action;
+
+    /**
+     * @ORM\Column(name="order_uid", type="string", length=30)
+     */
+    public string $orderUid;
 
     /**
      * @ORM\Column(name="deputy_uid", type="string", length=30, nullable=true)
@@ -84,27 +84,27 @@ class StagingSelectedCandidate
     public ?bool $deputyStatusOnOrder = null;
 
     /**
-     * @ORM\Column(name="order_id", type="integer",nullable=true)
+     * @ORM\Column(name="order_id", type="integer", nullable=true)
      */
     public ?int $orderId = null;
 
     /**
-     * @ORM\Column(name="client_id", type="integer",nullable=true)
+     * @ORM\Column(name="client_id", type="integer", nullable=true)
      */
     public ?int $clientId = null;
 
     /**
-     * @ORM\Column(name="report_id", type="integer",nullable=true)
+     * @ORM\Column(name="report_id", type="integer", nullable=true)
      */
     public ?int $reportId = null;
 
     /**
-     * @ORM\Column(name="deputy_id", type="integer",nullable=true)
+     * @ORM\Column(name="deputy_id", type="integer", nullable=true)
      */
     public ?int $deputyId = null;
 
     /**
-     * @ORM\Column(name="ndr_id", type="integer",nullable=true)
+     * @ORM\Column(name="ndr_id", type="integer", nullable=true)
      */
     public ?int $ndrId = null;
 

@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Command;
 use App\Command\ProcessLayCSVCommand;
 use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
+use App\Service\DeputyCaseService;
 use App\Service\LayRegistrationService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\Result;
@@ -34,6 +35,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
     private ObjectProphecy|CSVDeputyshipProcessing $csvProcessing;
     private ObjectProphecy|PreRegistrationRepository $preReg;
     private ObjectProphecy|LayRegistrationService $layRegistrationService;
+    private ObjectProphecy|LayRegistrationService $deputyCaseService;
     private MockInterface&CsvToArray $csvArray;
     private CommandTester $commandTester;
 
@@ -57,6 +59,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
         $this->layRegistrationService = self::prophesize(LayRegistrationService::class);
+        $this->deputyCaseService = self::prophesize(DeputyCaseService::class);
 
         $this->csvArray = Mock::mock(CsvToArray::class);
 
@@ -66,7 +69,8 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             $this->logger->reveal(),
             $this->csvProcessing->reveal(),
             $this->preReg->reveal(),
-            $this->layRegistrationService->reveal()
+            $this->layRegistrationService->reveal(),
+            $this->deputyCaseService->reveal(),
         );
 
         $app->add($setUp);
@@ -101,6 +105,10 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             ]);
 
         $this->layRegistrationService->addMissingReports()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $this->deputyCaseService->addMissingDeputyCaseAssociations()
             ->shouldBeCalled()
             ->willReturn(0);
 
