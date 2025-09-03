@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Deputy;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Repository\DeputyRepository;
 use App\Repository\PreRegistrationRepository;
@@ -27,14 +29,6 @@ class UserDeputyService
      */
     public function addMissingUserDeputies(): int
     {
-        // find pre-reg rows whose deputy UIDs aren't in the deputy table
-        $preRegs = $this->preRegistrationRepository->findWithoutDeputies();
-
-        // add deputy records for those UIDs, using pre-reg data
-        foreach ($preRegs as $preReg) {
-            $this->deputyService->createDeputyFromPreRegistration($preReg);
-        }
-
         // find users who have no deputy associated with them (but whose deputy UID is in the pre-reg table)
         $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
 
@@ -47,17 +41,31 @@ class UserDeputyService
         /** @var User $user */
         foreach ($usersWithoutDeputies as $user) {
             $deputyUid = "{$user->getDeputyUid()}";
+            $deputy = null;
 
-            // this shouldn't happen, but better to be careful
-            if (!array_key_exists($deputyUid, $deputyUidsToIds)) {
-                continue;
+            // get or create the deputy
+            if (array_key_exists($deputyUid, $deputyUidsToIds)) {
+                /** @var ?Deputy $deputy */
+                $deputy = $this->deputyRepository->find($deputyUidsToIds[$deputyUid]);
+            } else {
+                // get pre-reg row for this deputy UID
+                /** @var ?PreRegistration $preReg */
+                $preReg = $this->preRegistrationRepository->findOneBy(['deputyUid' => $deputyUid]);
+
+                // create the deputy from the pre-reg row and user data; NB if $preReg is null, deputy will remain null
+                $deputy = $this->deputyService->createDeputyFromPreRegistration($preReg, ['email' => $user->getEmail()]);
+
+                if (!is_null($deputy)) {
+                    $this->deputyRepository->save($deputy);
+                }
             }
 
-            $deputy = $this->deputyRepository->find($deputyUidsToIds[$deputyUid]);
-            $user->setDeputy($deputy);
-            $this->userRepository->save($user);
+            if (!is_null($deputy)) {
+                $user->setDeputy($deputy);
+                $this->userRepository->save($user);
 
-            ++$numAssociations;
+                ++$numAssociations;
+            }
         }
 
         return $numAssociations;
