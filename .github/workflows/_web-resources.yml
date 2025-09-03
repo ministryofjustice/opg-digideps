@@ -42,7 +42,6 @@ jobs:
           npm install
           npm run lint
           npm audit --production
-
           #Build assets
           NODE_ENV=production npm run build
         working-directory: client/resources
