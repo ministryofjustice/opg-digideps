@@ -686,7 +686,7 @@ class Fixtures
         $this->em->remove($this->getRepo(User::class)->find($id));
     }
 
-    public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?\DateTime $madeDate = null): PreRegistration
+    public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?string $deputyUid = null, ?\DateTime $madeDate = null): PreRegistration
     {
         if (is_null($madeDate)) {
             $madeDate = new \DateTime();
@@ -694,15 +694,17 @@ class Fixtures
 
         $now = $madeDate->format('Y-m-d');
 
-        $preReg = new PreRegistration([
+        $data = [
             'Case' => $caseNumber,
             'ReportType' => $reportType,
             'MadeDate' => $now,
             'OrderType' => $orderType,
-        ]);
+        ];
 
-        $this->em->persist($preReg);
+        if (!is_null($deputyUid)) {
+            $data['DeputyUid'] = $deputyUid;
+        }
 
-        return $preReg;
+        return new PreRegistration($data);
     }
 }
