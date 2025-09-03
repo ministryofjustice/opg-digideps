@@ -218,6 +218,7 @@ class ProcessLayCSVCommand extends Command
             $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
         } catch (\Exception $e) {
             $this->verboseLogger->error('Error encountered while adding missing reports: '.$e->getMessage());
+            $this->verboseLogger->error($e->getTraceAsString());
         }
 
         // additional deputy_case association patching (see DDLS-907)
@@ -227,6 +228,7 @@ class ProcessLayCSVCommand extends Command
             $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
         } catch (\Exception $e) {
             $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
+            $this->verboseLogger->error($e->getTraceAsString());
         }
 
         return true;
