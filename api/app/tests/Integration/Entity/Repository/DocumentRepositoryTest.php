@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use DateTime;
+use DateInterval;
+use DateTimeZone;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
@@ -19,7 +22,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
     /** @var DocumentRepository */
     private $documentRepository;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     private $firstJulyAm;
     private $firstJulyPm;
     private $secondJulyAm;
@@ -67,12 +70,12 @@ class DocumentRepositoryTest extends ApiBaseTestCase
 
         $reportPdfDocInProgressNow->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
         $supportingDocInProgressNow->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
-        $currentDateTime = new \DateTime('now');
+        $currentDateTime = new DateTime('now');
         $reportSubmissionNow->setCreatedOn($currentDateTime);
 
         $reportPdfDocInProgressOld->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
         $supportingDocInProgressOld->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
-        $lastYearDateTime = new \DateTime('now -1 year');
+        $lastYearDateTime = new DateTime('now -1 year');
         $reportSubmissionOld->setCreatedOn($lastYearDateTime);
 
         $this->entityManager->persist($reportPdfDocValid);
@@ -129,7 +132,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
      */
     public function logFailedDocuments()
     {
-        $currentDateTime = new \DateTime(); // Current date and time
+        $currentDateTime = new DateTime(); // Current date and time
         $tomorrow = $currentDateTime->modify('+1 day');
 
         // Tomorrow shouldn't count. Archived shouldn't count.
@@ -160,7 +163,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         ], $result);
     }
 
-    private function createAndSubmitReportWithSupportingDoc(\DateTime $submittedOn)
+    private function createAndSubmitReportWithSupportingDoc(DateTime $submittedOn)
     {
         $client = $this->generateAndPersistClient('abc-123');
         $report = $this->generateAndPersistReport($client, false);
@@ -192,7 +195,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
                 $client,
                 Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
                 $this->firstJulyAm,
-                $this->firstJulyAm->add(new \DateInterval('P364D'))
+                $this->firstJulyAm->add(new DateInterval('P364D'))
             )
             );
         }
@@ -202,7 +205,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         return $report;
     }
 
-    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, \DateTime $createdOn, bool $isResubmission)
+    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission)
     {
         $fileName = $isReportPdf ? 'report' : 'supporting-document';
         $storageRef = $isReportPdf ? 'storage-ref-report' : 'storage-ref-supporting-document';
@@ -222,7 +225,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         return $doc;
     }
 
-    private function submitReport(ReportInterface $report, \DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument)
+    private function submitReport(ReportInterface $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument)
     {
         $report->setSubmitDate($submittedOn);
         $reportSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
@@ -243,7 +246,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         return $reportSubmission;
     }
 
-    private function generateAndPersistReportSubmission(ReportInterface $report, \DateTime $createdOn)
+    private function generateAndPersistReportSubmission(ReportInterface $report, DateTime $createdOn)
     {
         $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
 
@@ -259,7 +262,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new \DateTime())->getTimestamp();
+        $datePostFix = (string) (new DateTime())->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         $this->entityManager->persist($user);
@@ -370,7 +373,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals($additionalSubmission->getId(), $documents[$additionalSupportingDoc->getId()]['report_submission_id']);
     }
 
-    private function createAndSubmitAdditionalDocuments(ReportInterface $report, \DateTime $submittedOn)
+    private function createAndSubmitAdditionalDocuments(ReportInterface $report, DateTime $submittedOn)
     {
         $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
         $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
@@ -404,7 +407,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals($reportResubmission->getId(), $documents[$resubmissionSupportingDoc->getId()]['report_submission_id']);
     }
 
-    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, \DateTime $submittedOn)
+    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, DateTime $submittedOn)
     {
         $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);
         $resubmissionSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->secondJulyAm, true);
@@ -553,11 +556,11 @@ class DocumentRepositoryTest extends ApiBaseTestCase
 
         $this->purgeDatabase();
 
-        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
-        $this->firstJulyPm = clone $this->firstJulyAm->add(new \DateInterval('PT20H'));
-        $this->secondJulyAm = \DateTime::createFromFormat('d/m/Y', '02/07/2020', new \DateTimeZone('UTC'));
-        $this->secondJulyPm = clone $this->secondJulyAm->add(new \DateInterval('PT20H'));
-        $this->thirdJulyAm = \DateTime::createFromFormat('d/m/Y', '03/07/2020', new \DateTimeZone('UTC'));
-        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new \DateInterval('PT20H'));
+        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
+        $this->firstJulyPm = clone $this->firstJulyAm->add(new DateInterval('PT20H'));
+        $this->secondJulyAm = DateTime::createFromFormat('d/m/Y', '02/07/2020', new DateTimeZone('UTC'));
+        $this->secondJulyPm = clone $this->secondJulyAm->add(new DateInterval('PT20H'));
+        $this->thirdJulyAm = DateTime::createFromFormat('d/m/Y', '03/07/2020', new DateTimeZone('UTC'));
+        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new DateInterval('PT20H'));
     }
 }

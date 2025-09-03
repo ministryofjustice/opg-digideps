@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Entity\Repository;
 
+use DateTime;
 use App\Entity\Organisation;
 use App\Entity\User;
 use App\Repository\OrganisationRepository;
@@ -75,7 +76,7 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
@@ -89,7 +90,7 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
@@ -103,8 +104,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientDeleted->getId(), $orgs[0]->getId());
@@ -120,8 +121,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
         $clientActive = $this->fixtures->createClient($user);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addClientToOrganisation($clientActive->getId(), $orgs[0]->getId());
@@ -137,8 +138,8 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
     {
         $orgs = $this->fixtures->createOrganisations(1);
         $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
+        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
         $this->fixtures->addUserToOrganisation($user->getId(), $orgs[0]->getId());

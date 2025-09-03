@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
@@ -140,8 +141,8 @@ class SatisfactionQueryTest extends WebTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new \DateTime('2019-08-01'),
-                new \DateTime('2020-08-01')
+                new DateTime('2019-08-01'),
+                new DateTime('2020-08-01')
             );
             self::$em->persist($client);
             self::$em->persist($report);

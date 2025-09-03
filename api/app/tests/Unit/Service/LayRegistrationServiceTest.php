@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
+use stdClass;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
@@ -46,7 +47,7 @@ class LayRegistrationServiceTest extends TestCase
             ->method('findClientsWithoutAReport')
             ->willReturn($mockClients);
 
-        $counter = new \stdClass();
+        $counter = new stdClass();
         $counter->current = 0;
 
         $this->mockReportService->expects($this->exactly(3))

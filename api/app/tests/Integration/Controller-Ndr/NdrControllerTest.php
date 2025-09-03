@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Controller\Ndr;
 
-use App\Entity\Ndr\Ndr;
+use DateTime;
 use App\Entity\Report\ReportSubmission;
 use App\Tests\Integration\Controller\AbstractTestController;
 
@@ -33,7 +33,7 @@ class NdrControllerTest extends AbstractTestController
             self::$deputy1,
             [
                 'setFirstname' => 'c1',
-                'setCourtDate' => new \DateTime('2018-11-01'),
+                'setCourtDate' => new DateTime('2018-11-01'),
             ]
         );
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);

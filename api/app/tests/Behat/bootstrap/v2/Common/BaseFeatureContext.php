@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use Exception;
+use DateTime;
 use App\Entity\Client;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
@@ -146,7 +148,7 @@ class BaseFeatureContext extends MinkContext
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {
-            throw new \Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
+            throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
     }
 
@@ -670,7 +672,7 @@ class BaseFeatureContext extends MinkContext
         // Discharge client linked to primary account
         $primaryDischargedClientId = $primaryUserDetails->getClientId();
         $client = $this->em->getRepository(Client::class)->find($primaryDischargedClientId);
-        $client->setDeletedAt(new \DateTime('now'));
+        $client->setDeletedAt(new DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
 
@@ -691,7 +693,7 @@ class BaseFeatureContext extends MinkContext
         // Discharge client linked to secondary account
         $nonPrimaryDischargedClientId = $nonPrimaryUserDetails->getClientId();
         $client = $this->em->getRepository(Client::class)->find($nonPrimaryDischargedClientId);
-        $client->setDeletedAt(new \DateTime('now'));
+        $client->setDeletedAt(new DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
 

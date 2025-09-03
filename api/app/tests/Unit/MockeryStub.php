@@ -19,7 +19,7 @@ class MockeryStub extends Mockery
      */
     public static function stub(string $class, array $expectations = []): MockInterface
     {
-        if (in_array(Mockery\MockInterface::class, class_implements($class))) {
+        if (in_array(MockInterface::class, class_implements($class))) {
             $mock = $class; // already a mock
         } elseif (is_string($class)) {
             $mock = self::mock($class);

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Entity;
 
+use DateTime;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Repository\DeputyRepository;
@@ -40,7 +41,7 @@ class DeputyTest extends ApiBaseTestCase
             ->setCourtOrderUid($fakeUid)
             ->setOrderType('hybrid')
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new \DateTime('2020-06-14'));
+            ->setOrderMadeDate(new DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 
@@ -81,7 +82,7 @@ class DeputyTest extends ApiBaseTestCase
             ->setCourtOrderUid($fakeCourtOrderUid)
             ->setOrderType('hybrid')
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new \DateTime('2020-06-14'));
+            ->setOrderMadeDate(new DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 

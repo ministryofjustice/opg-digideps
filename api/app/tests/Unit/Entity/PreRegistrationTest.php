@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity;
 
+use UnexpectedValueException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
@@ -41,7 +42,7 @@ final class PreRegistrationTest extends TestCase
 
     public function testGetReportTypeByOrderTypeInvalidOrderType(): void
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
 
         PreRegistration::getReportTypeByOrderType('invalid order type', 'pfa', PreRegistration::REALM_LAY);
     }

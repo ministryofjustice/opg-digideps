@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use InvalidArgumentException;
+use RuntimeException;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 
@@ -58,7 +60,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $element->click();
@@ -116,7 +118,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $element->click();
@@ -150,7 +152,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $values = $element->findAll('css', 'option');
@@ -177,7 +179,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $values) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         foreach ($values as $value) {
@@ -201,7 +203,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $values) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $select = trim($values[$choiceNumber]->getAttribute('name'));
@@ -271,7 +273,7 @@ EOT;
             $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
 
             if (empty($elementsFound)) {
-                throw new \RuntimeException("Element $field not found");
+                throw new RuntimeException("Element $field not found");
             }
 
             $elementsFound[0]->setValue($value);

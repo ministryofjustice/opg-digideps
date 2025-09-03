@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\Uploader;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -235,7 +236,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
         $client->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $client->setCourtDate(new \DateTime());
+        $client->setCourtDate(new DateTime());
 
         $this->entityManager->persist($client);
         $this->entityManager->flush();
@@ -326,7 +327,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new \DateTime());
+        $originalClient->setCourtDate(new DateTime());
 
         $this->entityManager->persist($originalClient);
         $this->entityManager->flush();
@@ -375,7 +376,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new \DateTime());
+        $originalClient->setCourtDate(new DateTime());
 
         $this->entityManager->persist($originalClient);
         $this->entityManager->flush();
@@ -669,7 +670,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
 
         $client->setDeputy($deputy);
-        $client->setArchivedAt(new \DateTime());
+        $client->setArchivedAt(new DateTime());
 
         $this->entityManager->persist($client);
         $this->entityManager->flush();

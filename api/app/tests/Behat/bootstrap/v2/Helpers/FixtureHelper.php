@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Helpers;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -241,7 +242,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
     ) {
@@ -290,7 +291,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
     ) {
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
@@ -374,7 +375,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
@@ -1173,7 +1174,7 @@ class FixtureHelper
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
-        $startDate = new \DateTime($timeAgo);
+        $startDate = new DateTime($timeAgo);
         $deputies = [];
 
         $deputies[] = $this->createOrgUserClientDeputyAndReport(
@@ -1278,7 +1279,7 @@ class FixtureHelper
         $completed,
         $submitted,
         bool $ndr = false,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
@@ -1330,7 +1331,7 @@ class FixtureHelper
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
     ) {
         if (!$this->fixturesEnabled) {
@@ -1415,7 +1416,7 @@ class FixtureHelper
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $ndr, $deputy);
     }
 
-    public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy
+    public function createDeputyOnOrder(CourtOrder $courtOrder, ?DateTime $lastLoggedIn = null): Deputy
     {
         $user = $this->userTestHelper::createUser();
 

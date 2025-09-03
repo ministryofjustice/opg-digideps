@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Controller;
 
+use Exception;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
@@ -94,7 +95,7 @@ class JsonHttpTestClient
      *
      * @return mixed token
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function login(string $email, string $password, $clientSecret)
     {
