@@ -86,7 +86,8 @@ class UserRetentionPolicyCommand extends Command
             $this->eventDispatcher->dispatch($event, UserRetentionPolicyCommandEvent::NAME);
 
             $this->verboseLogger->notice(
-                sprintf('Deleted user account with id: %d at admin permission level due to 2 year expiry.',
+                sprintf(
+                    'Deleted user account with id: %d at admin permission level due to 2 year expiry.',
                     $user->getId()
                 )
             );

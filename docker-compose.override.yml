@@ -54,6 +54,7 @@ services:
       - ./api/app/src:/var/www/src
       - ./api/app/tests:/var/www/tests
       - ./api/app/api.env:/var/www/api.env
+      - ./api/app/phpcs.xml:/var/www/phpcs.xml
       - ./api/app/phpstan.neon:/var/www/phpstan.neon
       - ./api/app/phpstan-baseline.neon:/var/www/phpstan-baseline.neon
       - ./api/app/postgres.env:/var/www/postgres.env
