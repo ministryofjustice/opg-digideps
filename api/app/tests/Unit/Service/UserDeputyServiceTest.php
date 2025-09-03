@@ -6,7 +6,9 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
+use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
+use App\Repository\UserRepository;
 use App\Service\DeputyService;
 use App\Service\UserDeputyService;
 use PHPUnit\Framework\TestCase;
@@ -21,10 +23,12 @@ class UserDeputyServiceTest extends TestCase
     {
         $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
         $this->mockDeputyService = self::createMock(DeputyService::class);
+        $this->mockUserRepository = self::createMock(UserRepository::class);
 
         $this->sut = new UserDeputyService(
             $this->mockPreRegistrationRepository,
             $this->mockDeputyService,
+            $this->mockUserRepository,
         );
     }
 
@@ -37,6 +41,9 @@ class UserDeputyServiceTest extends TestCase
 
         $mockDeputy = self::createMock(Deputy::class);
 
+        $mockUser = self::createMock(User::class);
+        $users = [$mockUser];
+
         // expect pre-reg repo to provide list of rows where deputy UID is not in the deputy table
         $this->mockPreRegistrationRepository->expects($this->once())
             ->method('findWithoutDeputies')
@@ -48,9 +55,12 @@ class UserDeputyServiceTest extends TestCase
             ->with($mockPreReg)
             ->willReturn($mockDeputy);
 
-        // expect <repo or service> to provide list of users whose deputy UID is in pre_registration but who have no deputy
+        // expect user repo to provide list of users whose deputy UID is in pre-reg but who have no deputy
+        $this->mockUserRepository->expects($this->once())
+            ->method('findUsersWithoutDeputies')
+            ->willReturn($users);
 
-        // expect deputies to be associated with users
+        // TODO expect deputies to be associated with users
 
         $actual = $this->sut->addMissingUserDeputies();
 

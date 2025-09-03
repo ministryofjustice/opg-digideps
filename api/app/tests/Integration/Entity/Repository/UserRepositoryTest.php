@@ -403,7 +403,7 @@ class UserRepositoryTest extends ApiBaseTestCase
         $this->entityManager->flush();
 
         // test
-        $foundUsers = $this->sut->findUsersWithoutDeputies();
+        $foundUsers = iterator_to_array($this->sut->findUsersWithoutDeputies());
 
         self::assertCount(2, $foundUsers);
         self::assertContains($user1, $foundUsers);
