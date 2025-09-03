@@ -7,6 +7,7 @@ use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SatisfactionRepository;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -90,10 +91,10 @@ class SatisfactionController extends RestController
         $repo = $this->em->getRepository(Satisfaction::class);
 
         $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
-        $fromDate instanceof \DateTime ? $fromDate->setTime(0, 0, 1) : null;
+        $fromDate instanceof DateTime ? $fromDate->setTime(0, 0, 1) : null;
 
         $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
-        $toDate instanceof \DateTime ? $toDate->setTime(23, 59, 59) : null;
+        $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
 
         return $repo->findAllSatisfactionSubmissions(
             $fromDate,

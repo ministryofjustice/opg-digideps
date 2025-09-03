@@ -3,7 +3,9 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\MoneyTransaction;
+use App\Entity\Report\Report;
 use App\Repository\MoneyTransactionRepository;
 use App\Service\Formatter\RestFormatter;
 use DateTime;
@@ -15,8 +17,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MoneyTransactionController extends RestController
 {
     private array $sectionIds = [
-        EntityDir\Report\Report::SECTION_MONEY_IN,
-        EntityDir\Report\Report::SECTION_MONEY_OUT,
+        Report::SECTION_MONEY_IN,
+        Report::SECTION_MONEY_OUT,
     ];
 
     public function __construct(
@@ -31,7 +33,7 @@ class MoneyTransactionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function addMoneyTransaction(Request $request, int $reportId): int
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -39,7 +41,7 @@ class MoneyTransactionController extends RestController
            'amount' => 'notEmpty',
         ]);
 
-        $t = new EntityDir\Report\MoneyTransaction($report);
+        $t = new MoneyTransaction($report);
         $t->setCategory($data['category']);
         $t->setAmount($data['amount']);
         if (array_key_exists('description', $data)) {
@@ -50,14 +52,14 @@ class MoneyTransactionController extends RestController
         $t->setBankAccount(null);
         if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
             $bankAccount = $this->em->getRepository(
-                EntityDir\Report\BankAccount::class
+                BankAccount::class
             )->findOneBy(
                 [
                     'id' => $data['bank_account_id'],
                     'report' => $report->getId(),
                 ]
             );
-            if ($bankAccount instanceof EntityDir\Report\BankAccount) {
+            if ($bankAccount instanceof BankAccount) {
                 $t->setBankAccount($bankAccount);
             }
         }
@@ -75,10 +77,10 @@ class MoneyTransactionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function updateMoneyTransaction(Request $request, int $reportId, int $transactionId): int
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -92,7 +94,7 @@ class MoneyTransactionController extends RestController
 
         if (array_key_exists('bank_account_id', $data)) {
             if (is_numeric($data['bank_account_id'])) {
-                $t->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
+                $t->setBankAccount($this->findEntityBy(BankAccount::class, $data['bank_account_id']));
             } else {
                 $t->setBankAccount(null);
             }
@@ -109,10 +111,10 @@ class MoneyTransactionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteMoneyTransaction(int $reportId, int $transactionId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found');
+        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // Entity is soft-deletable, so set the DeletedAt to hard delete
@@ -130,9 +132,9 @@ class MoneyTransactionController extends RestController
     public function softDeleteMoneyTransaction(int $transactionId): array
     {
         $filter = $this->em->getFilters()->getFilter('softdeleteable');
-        $filter->disableForEntity(EntityDir\Report\MoneyTransaction::class);
+        $filter->disableForEntity(MoneyTransaction::class);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransaction::class, $transactionId, 'transaction not found');
+        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found');
 
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 

@@ -3,7 +3,9 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Expense;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ExpenseController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_DEPUTY_EXPENSES];
+    private array $sectionIds = [Report::SECTION_DEPUTY_EXPENSES];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -21,12 +23,12 @@ class ExpenseController extends RestController
 
     #[Route(path: '/report/{reportId}/expense/{expenseId}', requirements: ['reportId' => '\d+', 'expenseId' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $reportId, int $expenseId): EntityDir\Report\Expense
+    public function getOneById(Request $request, int $reportId, int $expenseId): Expense
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
+        $expense = $this->findEntityBy(Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -42,13 +44,13 @@ class ExpenseController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $expense = new EntityDir\Report\Expense($report);
+        $expense = new Expense($report);
 
         $this->updateEntityWithData($report, $expense, $data);
         $report->setPaidForAnything('yes');
@@ -70,10 +72,10 @@ class ExpenseController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
+        $expense = $this->findEntityBy(Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $this->updateEntityWithData($report, $expense, $data);
@@ -89,10 +91,10 @@ class ExpenseController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $reportId, int $expenseId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
+        $expense = $this->findEntityBy(Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
         $this->em->remove($expense);
         $this->em->flush();
@@ -104,8 +106,8 @@ class ExpenseController extends RestController
     }
 
     private function updateEntityWithData(
-        EntityDir\Report\Report $report,
-        EntityDir\Report\Expense $expense, array $data
+        Report $report,
+        Expense $expense, array $data
     ): void {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [
@@ -117,14 +119,14 @@ class ExpenseController extends RestController
         $expense->setBankAccount(null);
         if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
             $bankAccount = $this->em->getRepository(
-                EntityDir\Report\BankAccount::class
+                BankAccount::class
             )->findOneBy(
                 [
                     'id' => $data['bank_account_id'],
                     'report' => $report->getId(),
                 ]
             );
-            if ($bankAccount instanceof EntityDir\Report\BankAccount) {
+            if ($bankAccount instanceof BankAccount) {
                 $expense->setBankAccount($bankAccount);
             }
         }

@@ -3,7 +3,8 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\Decision;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/report')]
 class DecisionController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
+    private array $sectionIds = [Report::SECTION_DECISIONS];
 
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -32,16 +33,16 @@ class DecisionController extends RestController
             $this->formatter->validateArray($data, [
                 'id' => 'mustExist',
             ]);
-            $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $data['id'], 'Decision with not found');
+            $decision = $this->findEntityBy(Decision::class, $data['id'], 'Decision with not found');
             $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
             $report = $decision->getReport();
         } else {
             $this->formatter->validateArray($data, [
                 'report_id' => 'mustExist',
             ]);
-            $report = $this->findEntityBy(EntityDir\Report\Report::class, $data['report_id'], 'Report not found');
+            $report = $this->findEntityBy(Report::class, $data['report_id'], 'Report not found');
             $this->denyAccessIfReportDoesNotBelongToUser($report);
-            $decision = new EntityDir\Report\Decision();
+            $decision = new Decision();
             $decision->setReport($report);
 
             $this->em->persist($report);
@@ -71,12 +72,12 @@ class DecisionController extends RestController
 
     #[Route(path: '/decision/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $id): EntityDir\Report\Decision
+    public function getOneById(Request $request, int $id): Decision
     {
         $serialisedGroups = $request->query->has('groups') ? $request->query->all('groups') : ['decision'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:'.$id.' not found');
+        $decision = $this->findEntityBy(Decision::class, $id, 'Decision with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 
         return $decision;
@@ -86,7 +87,7 @@ class DecisionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteDecision(int $id): array
     {
-        $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:'.$id.' not found');
+        $decision = $this->findEntityBy(Decision::class, $id, 'Decision with id:'.$id.' not found');
         $report = $decision->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 
