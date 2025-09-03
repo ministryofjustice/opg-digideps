@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Repository\PreRegistrationRepository;
+use App\Repository\UserRepository;
 
 class UserDeputyService
 {
     public function __construct(
         private readonly PreRegistrationRepository $preRegistrationRepository,
         private readonly DeputyService $deputyService,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -28,7 +30,8 @@ class UserDeputyService
             $this->deputyService->createDeputyFromPreRegistration($preReg);
         }
 
-        // find users who have no deputy associated with them
+        // find users who have no deputy associated with them (but whose deputy UID is in the pre-reg table)
+        $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
 
         return 0;
     }
