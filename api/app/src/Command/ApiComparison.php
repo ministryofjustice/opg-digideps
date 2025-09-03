@@ -82,7 +82,7 @@ class ApiComparison extends Command
 
             return $arrayAssociative;
         } catch (\Doctrine\DBAL\Exception $e) {
-            throw new \RuntimeException('Database query failed: ' . $e->getMessage(), 0, $e);
+            throw new \RuntimeException('Database query failed: '.$e->getMessage(), 0, $e);
         } catch (\Throwable $t) {
             throw new \RuntimeException('Unexpected error during DB query: ' . $t->getMessage(), 0, $t);
         }
