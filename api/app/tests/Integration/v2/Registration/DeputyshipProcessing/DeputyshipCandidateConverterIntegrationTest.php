@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Tests\Integration\ApiBaseTestCase;
@@ -11,7 +12,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Service\DeputyshipCandidatesConverter;
 
-class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
+final class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
 {
     private DeputyshipCandidatesConverter $sut;
 
@@ -24,7 +25,7 @@ class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
         $this->sut = $sut;
     }
 
-    protected static function dryRunTestCases(): array
+    public static function dryRunTestCases(): array
     {
         return [
             [true],
@@ -32,9 +33,7 @@ class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider dryRunTestCases
-     */
+    #[DataProvider('dryRunTestCases')]
     public function testMultipleCourtOrdersWithSameNdr(bool $dryRun): void
     {
         $caseNumber = '1122334455';

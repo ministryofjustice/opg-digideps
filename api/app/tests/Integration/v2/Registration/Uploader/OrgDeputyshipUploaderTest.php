@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\Uploader;
 
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -22,7 +25,7 @@ use App\v2\Registration\Uploader\OrgDeputyshipUploader;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class OrgDeputyshipUploaderTest extends ApiBaseTestCase
+final class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 {
     private OrgDeputyshipUploader $sut;
     private DeputyRepository $deputyRepository;
@@ -62,8 +65,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $this->purgeDatabase();
     }
 
-    /** @test  */
-    public function uploadNewDeputiesAreCreated()
+    #[Test]
+    public function uploadNewDeputiesAreCreated(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -75,8 +78,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadExistingDeputiesAreNotProcessed()
+    #[Test]
+    public function uploadExistingDeputiesAreNotProcessed(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
@@ -88,8 +91,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
-    /** @test */
-    public function uploadDeputyWithSameDetailsButNewDeputyUidCreatesNewDeputy()
+    #[Test]
+    public function uploadDeputyWithSameDetailsButNewDeputyUidCreatesNewDeputy(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
@@ -105,8 +108,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
-    /** @test */
-    public function uploadExistingDeputiesWithNewAddressDetailsAreUpdated()
+    #[Test]
+    public function uploadExistingDeputiesWithNewAddressDetailsAreUpdated(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
@@ -122,8 +125,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
-    /** @test */
-    public function uploadNewOrganisationsAreCreated()
+    #[Test]
+    public function uploadNewOrganisationsAreCreated(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -137,8 +140,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadExistingOrganisationsAreNotProcessed()
+    #[Test]
+    public function uploadExistingOrganisationsAreNotProcessed(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -151,8 +154,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertTrue(empty($actualUploadResults['errors']['messages']));
     }
 
-    /** @test */
-    public function uploadNewClientsAreCreated()
+    #[Test]
+    public function uploadNewClientsAreCreated(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -194,9 +197,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     //            'Updated court date' => [new DateTime('Today'), new DateTime('Tomorrow')],
     //        ];
     //    }
-
-    /** @test */
-    public function uploadClientAndOrgAreAssociated()
+    #[Test]
+    public function uploadClientAndOrgAreAssociated(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -219,8 +221,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     }
 
     // Temporary test to ensure that we are not updating the client if court order made date has changed
-    /** @test  */
-    public function uploadClientAndDeputyAreNotAssociatedWhenClientHasNewCourtOrderMadeDate()
+    #[Test]
+    public function uploadClientAndDeputyAreNotAssociatedWhenClientHasNewCourtOrderMadeDate(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -235,7 +237,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
         $client->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $client->setCourtDate(new \DateTime());
+        $client->setCourtDate(new DateTime());
 
         $this->entityManager->persist($client);
         $this->entityManager->flush();
@@ -265,8 +267,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertEquals($originalDeputy->getDeputyUid(), $updatedClient->getDeputy()->getDeputyUid());
     }
 
-    /** @test  */
-    public function uploadClientAndDeputyAreAssociatedWhenClientHasSwitchedOrgsAndDeputyHasNotChangedAndMadeDateHasNotChanged()
+    #[Test]
+    public function uploadClientAndDeputyAreAssociatedWhenClientHasSwitchedOrgsAndDeputyHasNotChangedAndMadeDateHasNotChanged(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -312,8 +314,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertEquals($newOrgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
     }
 
-    /** @test  */
-    public function uploadClientAndDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndDeputyHasNotChangedAndMadeDateHasChanged()
+    #[Test]
+    public function uploadClientAndDeputyAreNotAssociatedWhenClientHasSwitchedOrgsAndDeputyHasNotChangedAndMadeDateHasChanged(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -326,7 +328,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new \DateTime());
+        $originalClient->setCourtDate(new DateTime());
 
         $this->entityManager->persist($originalClient);
         $this->entityManager->flush();
@@ -359,8 +361,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertEquals($originalOrgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
     }
 
-    /** @test  */
-    public function uploadClientAndDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndDeputyHasChangedAndMadeDateHasChanged()
+    #[Test]
+    public function uploadClientAndDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndDeputyHasChangedAndMadeDateHasChanged(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -375,7 +377,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new \DateTime());
+        $originalClient->setCourtDate(new DateTime());
 
         $this->entityManager->persist($originalClient);
         $this->entityManager->flush();
@@ -408,8 +410,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertEquals($orgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
     }
 
-    /** @test  */
-    public function uploadClientAndDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndDeputyHasChangedAndMadeDateNotChanged()
+    #[Test]
+    public function uploadClientAndDeputyAreAssociatedWhenClientHasNotSwitchedOrgsAndDeputyHasChangedAndMadeDateNotChanged(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -456,8 +458,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertEquals($orgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
     }
 
-    /** @test */
-    public function uploadReportsAreCreatedForNewClients()
+    #[Test]
+    public function uploadReportsAreCreatedForNewClients(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -472,8 +474,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadExistingReportTypeIsChangedIfTypeIsDifferent()
+    #[Test]
+    public function uploadExistingReportTypeIsChangedIfTypeIsDifferent(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $changedReportType = '102-5';
@@ -497,8 +499,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadExistingReportTypeIsChangedIfTypeIsDifferentAndDeputyUidMatchesForDualCase()
+    #[Test]
+    public function uploadExistingReportTypeIsChangedIfTypeIsDifferentAndDeputyUidMatchesForDualCase(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $changedReportType = '102-5';
@@ -526,8 +528,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadExistingReportTypeIsNotChangedIfTypeIsDifferentAndDeputyUidDoesNotMatchForDualCase()
+    #[Test]
+    public function uploadExistingReportTypeIsNotChangedIfTypeIsDifferentAndDeputyUidDoesNotMatchForDualCase(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $changedReportType = '102-5';
@@ -557,12 +559,10 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider errorProvider
-     */
-    public function uploadErrorsAreAddedToErrorArray(OrgDeputyshipDto $dto, array $expectedErrorStrings)
+    
+    #[DataProvider('errorProvider')]
+    #[Test]
+    public function uploadErrorsAreAddedToErrorArray(OrgDeputyshipDto $dto, array $expectedErrorStrings): void
     {
         $uploadResults = $this->sut->upload([$dto]);
 
@@ -592,8 +592,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         ];
     }
 
-    /** @test  */
-    public function uploadExistingClientsWithLayDeputiesThrowsAnError()
+    #[Test]
+    public function uploadExistingClientsWithLayDeputiesThrowsAnError(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         OrgDeputyshipDTOTestHelper::ensureClientInUploadExistsAndHasALayDeputy($deputyships[0], $this->entityManager);
@@ -608,8 +608,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadUploadingTheSameDtoASecondTimeDoesNotCreateDuplicates()
+    #[Test]
+    public function uploadUploadingTheSameDtoASecondTimeDoesNotCreateDuplicates(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -634,8 +634,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         }
     }
 
-    /** @test */
-    public function uploadExistingClientsWithMissingCourtDateHaveCourtDateAdded()
+    #[Test]
+    public function uploadExistingClientsWithMissingCourtDateHaveCourtDateAdded(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
@@ -660,8 +660,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadRowsWithArchivedClientsAreSkipped()
+    #[Test]
+    public function uploadRowsWithArchivedClientsAreSkipped(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
@@ -669,7 +669,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
 
         $client->setDeputy($deputy);
-        $client->setArchivedAt(new \DateTime());
+        $client->setArchivedAt(new DateTime());
 
         $this->entityManager->persist($client);
         $this->entityManager->flush();
@@ -703,8 +703,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadCaseNumberSearchIsNotCaseSensitive()
+    #[Test]
+    public function uploadCaseNumberSearchIsNotCaseSensitive(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
@@ -731,8 +731,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
     }
 
-    /** @test */
-    public function uploadOnlyUpdateDeputyNameAndAddressIfDTODeputyUidMatchesExistingDeputyUid()
+    #[Test]
+    public function uploadOnlyUpdateDeputyNameAndAddressIfDTODeputyUidMatchesExistingDeputyUid(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
@@ -771,8 +771,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertEquals('10 PretendVille Road', $updatedDeputy->getAddress1());
     }
 
-    /** @test */
-    public function uploadOnlyUpdateDeputyEmailIfDTODeputyUidMatchesExistingDeputyUid()
+    #[Test]
+    public function uploadOnlyUpdateDeputyEmailIfDTODeputyUidMatchesExistingDeputyUid(): void
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);

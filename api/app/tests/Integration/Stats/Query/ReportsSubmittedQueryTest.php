@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use Exception;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
@@ -10,10 +15,9 @@ use App\Service\Stats\Query\ReportsSubmittedQuery;
 use App\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ReportsSubmittedQueryTest extends WebTestCase
+final class ReportsSubmittedQueryTest extends WebTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
+    private static EntityManager $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -34,7 +38,7 @@ class ReportsSubmittedQueryTest extends WebTestCase
         self::$em->flush();
     }
 
-    public function testReturnsTotalReportsSubmittedByDeputyType()
+    public function testReturnsTotalReportsSubmittedByDeputyType(): void
     {
         $query = new ReportsSubmittedQuery($this::$em);
 
@@ -62,7 +66,7 @@ class ReportsSubmittedQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsTotalReportsSubmittedByReportType()
+    public function testReturnsTotalReportsSubmittedByReportType(): void
     {
         $query = new ReportsSubmittedQuery($this::$em);
 
@@ -100,19 +104,16 @@ class ReportsSubmittedQueryTest extends WebTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    private static function givenXreportSubmissionsOfTypeBelongToDeputy($numReports, $reportType, $deputyType)
+    private static function givenXreportSubmissionsOfTypeBelongToDeputy(string $numReports, string $reportType, string $deputyType): void
     {
         for ($i = 0; $i < $numReports; ++$i) {
             static::addSubmittedReportOfTypeToUser($reportType, static::createUserOfType($deputyType));
         }
     }
 
-    /**
-     * @return User
-     */
-    private static function createUserOfType($type)
+    private static function createUserOfType(string $type): User
     {
         $id = mt_rand();
         $user = (new User())
@@ -127,17 +128,17 @@ class ReportsSubmittedQueryTest extends WebTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    private static function addSubmittedReportOfTypeToUser($type, User $user)
+    private static function addSubmittedReportOfTypeToUser(string $type, User $user): void
     {
         $client = new Client();
 
         $report = new Report(
             $client,
             $type,
-            new \DateTime('2019-08-01'),
-            new \DateTime('2020-08-01')
+            new DateTime('2019-08-01'),
+            new DateTime('2020-08-01')
         );
 
         $submission = new ReportSubmission($report, $user);

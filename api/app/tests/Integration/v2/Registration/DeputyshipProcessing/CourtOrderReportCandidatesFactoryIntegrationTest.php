@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use DateTime;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Ndr\Ndr;
@@ -13,7 +15,7 @@ use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
-class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
+final class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
 {
     private CourtOrderReportCandidatesFactory $sut;
 
@@ -39,14 +41,14 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         return new Report(
             client: $client,
             type: $incompatibleReportType,
-            startDate: new \DateTime(),
-            endDate: new \DateTime(),
+            startDate: new DateTime(),
+            endDate: new DateTime(),
             dateChecks: false
         );
     }
 
     // create a report which is not compatible with a deputyship due to starting too early
-    private function createIncompatiblyDatedReport(Client $client, string $orderType, \DateTime $madeDate): Report
+    private function createIncompatiblyDatedReport(Client $client, string $orderType, DateTime $madeDate): Report
     {
         // make sure types are compatible
         $compatibleReportType = '102';
@@ -66,7 +68,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         );
     }
 
-    private static function compatibleReportDataProvider(): array
+    public static function compatibleReportDataProvider(): array
     {
         return [
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102'],
@@ -95,9 +97,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider compatibleReportDataProvider
-     */
+    #[DataProvider('compatibleReportDataProvider')]
     public function testCreateCompatibleReportCandidates(
         string $deputyType,
         string $orderType,
@@ -107,7 +107,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $deputyUid = '12121212';
         $caseNumber = '12345678';
         $orderUid = '66667777';
-        $madeDate = new \DateTime();
+        $madeDate = new DateTime();
 
         // add staging deputyship
         $deputyship = new StagingDeputyship();
@@ -165,7 +165,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
     {
         $caseNumber = '77677775';
         $orderUid = '88884444';
-        $madeDate = new \DateTime();
+        $madeDate = new DateTime();
 
         // add pfa/LAY staging deputyship
         $deputyship = new StagingDeputyship();
@@ -207,7 +207,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
     // not be selected as a candidate (see DDLS-797)
     public function testCreateCompatibleReportsDoesNotSuggestAlreadyRelated(): void
     {
-        $orderMadeDate = new \DateTime();
+        $orderMadeDate = new DateTime();
 
         // add pfa/LAY staging deputyship referencing an existing court order record
         $deputyship = new StagingDeputyship();

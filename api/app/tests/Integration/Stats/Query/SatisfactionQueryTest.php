@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Service\Stats\Query\SatisfactionQuery;
 use App\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class SatisfactionQueryTest extends WebTestCase
+final class SatisfactionQueryTest extends WebTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
+    private static EntityManager $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -52,7 +55,7 @@ class SatisfactionQueryTest extends WebTestCase
         self::$em->flush();
     }
 
-    public function testReturnsOverallSatisfaction()
+    public function testReturnsOverallSatisfaction(): void
     {
         $query = new SatisfactionQuery($this::$em);
 
@@ -64,7 +67,7 @@ class SatisfactionQueryTest extends WebTestCase
         $this->assertEquals(63, $result[0]['amount']);
     }
 
-    public function testReturnsSatisfactionAverageByDeputyType()
+    public function testReturnsSatisfactionAverageByDeputyType(): void
     {
         $query = new SatisfactionQuery($this::$em);
 
@@ -92,7 +95,7 @@ class SatisfactionQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsSatisfactionAverageByReportType()
+    public function testReturnsSatisfactionAverageByReportType(): void
     {
         $query = new SatisfactionQuery($this::$em);
 
@@ -129,7 +132,7 @@ class SatisfactionQueryTest extends WebTestCase
         }
     }
 
-    private static function givenSatisfactionScoreForReportOfTypeAndRole($score, $reportType = null, $deputyType = null)
+    private static function givenSatisfactionScoreForReportOfTypeAndRole(int $score, $reportType = null, $deputyType = null): void
     {
         $satisfaction = (new Satisfaction())
             ->setScore($score);
@@ -140,8 +143,8 @@ class SatisfactionQueryTest extends WebTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new \DateTime('2019-08-01'),
-                new \DateTime('2020-08-01')
+                new DateTime('2019-08-01'),
+                new DateTime('2020-08-01')
             );
             self::$em->persist($client);
             self::$em->persist($report);

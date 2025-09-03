@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Repository;
 
+use DateTime;
+use DateTimeZone;
+use DateInterval;
+use Exception;
 use App\Entity\Client;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
@@ -13,7 +19,7 @@ use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class ReportRepositoryTest extends ApiBaseTestCase
+final class ReportRepositoryTest extends ApiBaseTestCase
 {
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
@@ -35,7 +41,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function ensureChecklistsExistInDatabase(): ReportRepositoryTest
     {
@@ -80,7 +86,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildChecklistWithStatus(Client $client, ?string $status): Checklist
     {
@@ -97,12 +103,12 @@ class ReportRepositoryTest extends ApiBaseTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildReport(Client $client): Report
     {
-        $startDate = new \DateTime('now', new \DateTimeZone('UTC'));
-        $endDate = $startDate->add(new \DateInterval('P1D'));
+        $startDate = new DateTime('now', new DateTimeZone('UTC'));
+        $endDate = $startDate->add(new DateInterval('P1D'));
         $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);
 
         $user = (new User())
@@ -144,11 +150,11 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
 
         // create reports for clients
-        $report1 = $this->fixtures->createReport($client1)->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
-        $report2 = $this->fixtures->createReport($client2)->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
+        $report1 = $this->fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
+        $report2 = $this->fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
 
-        $dualReport1 = $this->fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
-        $dualReport2 = $this->fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
+        $dualReport1 = $this->fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
+        $dualReport2 = $this->fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
 
         $this->entityManager->flush();
 

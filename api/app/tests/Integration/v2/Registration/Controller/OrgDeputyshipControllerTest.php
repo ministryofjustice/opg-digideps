@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\Controller;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Tests\Integration\Controller\AbstractTestController;
 use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrgDeputyshipControllerTest extends AbstractTestController
+final class OrgDeputyshipControllerTest extends AbstractTestController
 {
     private static $tokenAdmin;
-    private $headers;
+    private array $headers;
 
     public function setUp(): void
     {
@@ -31,8 +33,8 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
-    public function create()
+    #[Test]
+    public function create(): void
     {
         $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 0);
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
@@ -43,7 +45,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertResponseHasArrayKeys(self::$frameworkBundleClient->getResponse());
     }
 
-    private function assertResponseHasArrayKeys(Response $response)
+    private function assertResponseHasArrayKeys(Response $response): void
     {
         $decodedResponseContent = json_decode($response->getContent(), true)['data'];
 
@@ -55,11 +57,8 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertArrayHasKey('reports', $decodedResponseContent['added']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider uploadProvider
-     */
+    #[DataProvider('uploadProvider')]
+    #[Test]
     public function uploadProvidesFeedbackOnEntitiesProcessed(
         string $deputyshipsJson,
         int $expectedClients,
@@ -67,7 +66,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         int $expectedReports,
         int $expectedOrganisations,
         int $expectedErrors,
-    ) {
+    ): void {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $deputyshipsJson);
 
         $actualUploadResults = json_decode(self::$frameworkBundleClient->getResponse()->getContent(), true)['data'];
@@ -91,12 +90,9 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         ];
     }
 
-    /**
-     * @dataProvider invalidPayloadProvider
-     *
-     * @test
-     */
-    public function createExceedingBatchSizeReturns413(string $dtoJson)
+    #[DataProvider('invalidPayloadProvider')]
+    #[Test]
+    public function createExceedingBatchSizeReturns413(string $dtoJson): void
     {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $dtoJson);
 

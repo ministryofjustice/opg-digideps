@@ -10,7 +10,7 @@ use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
 use App\v2\Service\CourtOrderService;
 
-class CourtOrderServiceTest extends ApiBaseTestCase
+final class CourtOrderServiceTest extends ApiBaseTestCase
 {
     private Fixtures $fixtures;
     private CourtOrderDeputyRepository $courtOrderDeputyRepository;

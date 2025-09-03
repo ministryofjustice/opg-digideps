@@ -9,7 +9,7 @@ use App\Model\QueryPager;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
-class QueryPagerIntegrationTest extends ApiBaseTestCase
+final class QueryPagerIntegrationTest extends ApiBaseTestCase
 {
     public function testGetRows(): void
     {

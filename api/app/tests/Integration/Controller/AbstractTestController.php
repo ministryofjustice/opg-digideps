@@ -281,19 +281,6 @@ abstract class AbstractTestController extends WebTestCase
         return $this->login('super_admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        // clean up vars
-        $reflectionObject = new \ReflectionObject($this);
-        foreach ($reflectionObject->getProperties() as $property) {
-            if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
-                $property->setValue($this, null);
-            }
-        }
-    }
-
     private function getOpenApiSpecification()
     {
         if (null === $this->openapiValidator) {

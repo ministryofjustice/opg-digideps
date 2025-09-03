@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Entity\Command;
 
 use App\Command\SatisfactionPerformanceStatsCommand;
@@ -7,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class SatisfactionPerformanceStatsCommandTest extends KernelTestCase
+final class SatisfactionPerformanceStatsCommandTest extends KernelTestCase
 {
     private CommandTester $commandTester;
 
@@ -20,7 +22,7 @@ class SatisfactionPerformanceStatsCommandTest extends KernelTestCase
         $this->commandTester = new CommandTester($command);
     }
 
-    public function testExecuteSuccessful()
+    public function testExecuteSuccessful(): void
     {
         $this->commandTester->execute([]);
         $output = $this->commandTester->getDisplay();

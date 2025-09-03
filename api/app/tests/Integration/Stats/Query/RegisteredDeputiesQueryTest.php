@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
 use App\Entity\User;
 use App\Service\Stats\Query\RegisteredDeputiesQuery;
 use App\Service\Stats\StatsQueryParameters;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RegisteredDeputiesQueryTest extends WebTestCase
+final class RegisteredDeputiesQueryTest extends WebTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
+    private static EntityManager $em;
 
     public static function setUpBeforeClass(): void
     {
@@ -37,7 +40,7 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         self::$em->flush();
     }
 
-    public function testReturnsDeputiesByType()
+    public function testReturnsDeputiesByType(): void
     {
         $query = new RegisteredDeputiesQuery($this::$em);
 
@@ -65,7 +68,7 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsDeputiesCollated()
+    public function testReturnsDeputiesCollated(): void
     {
         $query = new RegisteredDeputiesQuery($this::$em);
 
@@ -80,13 +83,13 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         $this->assertEquals(13, $result[0]['amount']);
     }
 
-    public function testAdheresToDates()
+    public function testAdheresToDates(): void
     {
         $query = new RegisteredDeputiesQuery($this::$em);
 
-        $twoWeeksAgo = (new \DateTime('-14 days'))->format('Y-m-d');
-        $oneWeeksAgo = (new \DateTime('-7 days'))->format('Y-m-d');
-        $today = (new \DateTime())->format('Y-m-d');
+        $twoWeeksAgo = (new DateTime('-14 days'))->format('Y-m-d');
+        $oneWeeksAgo = (new DateTime('-7 days'))->format('Y-m-d');
+        $today = (new DateTime())->format('Y-m-d');
 
         $resultOutOfRange = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies',
@@ -105,7 +108,7 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         $this->assertEquals(13, $resultInRange[0]['amount']);
     }
 
-    private static function givenUsersExistWithRole($count, $roleName)
+    private static function givenUsersExistWithRole(int $count, string $roleName): void
     {
         for ($i = 0; $i < $count; ++$i) {
             $id = md5(microtime());
@@ -113,7 +116,7 @@ class RegisteredDeputiesQueryTest extends WebTestCase
                 ->setFirstname('Test')
                 ->setLastname('User')
                 ->setEmail("test-user-$id@example.com")
-                ->setRegistrationDate(new \DateTime())
+                ->setRegistrationDate(new DateTime())
                 ->setRoleName($roleName);
 
             self::$em->persist($user);

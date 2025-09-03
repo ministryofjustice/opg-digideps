@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Controller;
 
+use DateTime;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\User;
@@ -12,7 +13,7 @@ use App\Tests\Behat\v2\Helpers\FixtureHelper;
 use App\Tests\Integration\Controller\AbstractTestController;
 use App\Tests\Integration\Controller\JsonHttpTestClient;
 
-class CourtOrderControllerTest extends AbstractTestController
+final class CourtOrderControllerTest extends AbstractTestController
 {
     private static JsonHttpTestClient $client;
     private static FixtureHelper $fixtureHelper;
@@ -46,7 +47,7 @@ class CourtOrderControllerTest extends AbstractTestController
     }
 
     // returns User $user (user for $deputy), CourtOrder $courtOrder (associated with $deputy), Deputy $deputy
-    private function addUserAndCourtOrderAndDeputy($emailAddress): array
+    private function addUserAndCourtOrderAndDeputy(string $emailAddress): array
     {
         // add a court order, and make the user a deputy on it
         $courtOrder = self::$fixtures->createCourtOrder(substr(''.hexdec(uniqid()), -8), 'pfa', 'ACTIVE');
@@ -63,7 +64,7 @@ class CourtOrderControllerTest extends AbstractTestController
         return [$user, $courtOrder];
     }
 
-    public function testGetByUidActionNoAuthFail()
+    public function testGetByUidActionNoAuthFail(): void
     {
         self::$client->assertEndpointNeedsAuth('GET', '/v2/courtorder/71101111');
     }
@@ -135,7 +136,7 @@ class CourtOrderControllerTest extends AbstractTestController
         self::$fixtures->persist($client)->flush();
 
         // add an unsubmitted (current) report to the court order
-        $startDate = new \DateTime();
+        $startDate = new DateTime();
         $report1 = self::$reportTestHelper->generateReport(self::$em, client: $client, startDate: $startDate);
         $courtOrder->addReport($report1);
         self::$fixtures->persist($courtOrder)->flush();
@@ -165,8 +166,8 @@ class CourtOrderControllerTest extends AbstractTestController
         foreach ($responseJson['data']['reports'] as $report) {
             if ($report['submitted']) {
                 // previous submitted report
-                $actualSubmitDate = new \DateTime($report['submit_date']);
-                $this->assertEquals($submitDate->format(\DateTime::ATOM), $actualSubmitDate->format(\DateTime::ATOM));
+                $actualSubmitDate = new DateTime($report['submit_date']);
+                $this->assertEquals($submitDate->format(DateTime::ATOM), $actualSubmitDate->format(DateTime::ATOM));
                 $this->assertNull($report['un_submit_date']);
             } else {
                 // current report => no submit date or unsubmit date
@@ -176,7 +177,7 @@ class CourtOrderControllerTest extends AbstractTestController
         }
     }
 
-    public function testInviteDeputyActionNoAuthFail()
+    public function testInviteDeputyActionNoAuthFail(): void
     {
         $courtOrderUid = '7747628917';
 
@@ -186,7 +187,7 @@ class CourtOrderControllerTest extends AbstractTestController
         self::$client->assertEndpointNeedsAuth('POST', "/v2/courtorder/$courtOrderUid/lay-deputy-invite");
     }
 
-    public function testInviteLayDeputyActionInvalidPayloadFail()
+    public function testInviteLayDeputyActionInvalidPayloadFail(): void
     {
         [$user, $courtOrder] = $this->addUserAndCourtOrderAndDeputy('court-order-invite-deputy-payload-test@opg.gov.uk');
 
@@ -208,7 +209,7 @@ class CourtOrderControllerTest extends AbstractTestController
         self::assertStringContainsString('invalid invitee details', $responseJson['message']);
     }
 
-    public function testInviteLayDeputyActionSuccess()
+    public function testInviteLayDeputyActionSuccess(): void
     {
         // $deputy has access to court order; $user is the User entity for $invitingDeputy
         [$user, $courtOrder] = $this->addUserAndCourtOrderAndDeputy('court-order-invite-deputy-test@opg.gov.uk');

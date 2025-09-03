@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Integration\ApiBaseTestCase;
 
-class ReportSubmissionRepositoryTest extends ApiBaseTestCase
+final class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 {
     private ReportSubmissionHelper $reportSubmissionHelper;
 
@@ -21,10 +24,8 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $this->reportSubmissionHelper = (new ReportSubmissionHelper());
     }
 
-    /**
-     * @dataProvider updateArchivedStatusDataProvider
-     */
-    public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
+    #[DataProvider('updateArchivedStatusDataProvider')]
+    public function testUpdateArchivedStatus(bool $isArchived, array $docStatuses, bool $shouldArchive): void
     {
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived($isArchived);
@@ -64,7 +65,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         ];
     }
 
-    public function testUpdateArchivedStatusManuallyArchived()
+    public function testUpdateArchivedStatusManuallyArchived(): void
     {
         $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
         $submission->setArchived(false);
@@ -94,11 +95,11 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         self::assertEquals(false, $submission->getArchived());
     }
 
-    /** @test */
-    public function findAllReportSubmissions()
+    #[Test]
+    public function findAllReportSubmissions(): void
     {
-        $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
+        $today = new DateTime();
+        $yesterday = new DateTime('-1 day');
 
         $createdReportSubmissions = [];
         foreach (range(1, 3) as $index) {
@@ -113,12 +114,12 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $this->assertEqualsCanonicalizing($createdReportSubmissions, $reportSubmissions);
     }
 
-    /** @test */
-    public function findAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided()
+    #[Test]
+    public function findAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided(): void
     {
-        $today = new \DateTime();
-        $todayOneHourAgo = new \DateTime('-1 hour');
-        $yesterday = new \DateTime('-1 day');
+        $today = new DateTime();
+        $todayOneHourAgo = new DateTime('-1 hour');
+        $yesterday = new DateTime('-1 day');
 
         $todaysReportSubmissions = [];
         foreach (range(1, 3) as $index) {
@@ -145,13 +146,13 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         }
     }
 
-    /** @test */
-    public function findAllReportSubmissionsRawSqlWithPeriodProvided()
+    #[Test]
+    public function findAllReportSubmissionsRawSqlWithPeriodProvided(): void
     {
-        $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
-        $threeDaysAgo = new \DateTime('-3 days');
-        $lastWeek = new \DateTime('-7 days');
+        $today = new DateTime();
+        $yesterday = new DateTime('-1 day');
+        $threeDaysAgo = new DateTime('-3 days');
+        $lastWeek = new DateTime('-7 days');
 
         $yesterdaysReportSubmissionsIds = [];
         foreach (range(1, 3) as $i) {

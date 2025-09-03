@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Entity\Command;
 
 use App\Command\IngestDeputyshipsCSVCommand;
@@ -15,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-class IngestDeputyshipsCSVCommandTest extends KernelTestCase
+final class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 {
     private string $csvFilename;
     private S3Client|MockObject $s3;
