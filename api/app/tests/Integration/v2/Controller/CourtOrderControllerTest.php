@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Controller;
 
+use DateTime;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\Entity\User;
@@ -135,7 +136,7 @@ class CourtOrderControllerTest extends AbstractTestController
         self::$fixtures->persist($client)->flush();
 
         // add an unsubmitted (current) report to the court order
-        $startDate = new \DateTime();
+        $startDate = new DateTime();
         $report1 = self::$reportTestHelper->generateReport(self::$em, client: $client, startDate: $startDate);
         $courtOrder->addReport($report1);
         self::$fixtures->persist($courtOrder)->flush();
@@ -165,8 +166,8 @@ class CourtOrderControllerTest extends AbstractTestController
         foreach ($responseJson['data']['reports'] as $report) {
             if ($report['submitted']) {
                 // previous submitted report
-                $actualSubmitDate = new \DateTime($report['submit_date']);
-                $this->assertEquals($submitDate->format(\DateTime::ATOM), $actualSubmitDate->format(\DateTime::ATOM));
+                $actualSubmitDate = new DateTime($report['submit_date']);
+                $this->assertEquals($submitDate->format(DateTime::ATOM), $actualSubmitDate->format(DateTime::ATOM));
                 $this->assertNull($report['un_submit_date']);
             } else {
                 // current report => no submit date or unsubmit date

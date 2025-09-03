@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\TestHelpers;
 
+use DateTimeImmutable;
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -47,7 +49,7 @@ class OrgDeputyshipDTOTestHelper
     public static function generateValidSiriusOrgDeputyshipArray()
     {
         $faker = Factory::create();
-        $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
         $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
@@ -248,7 +250,7 @@ class OrgDeputyshipDTOTestHelper
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new \DateTime())
+            ->setCourtDate(new DateTime())
             ->addUser($layDeputy);
 
         $em->persist($layDeputy);
@@ -265,7 +267,7 @@ class OrgDeputyshipDTOTestHelper
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31',
     ) {
-        $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
+        $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
         $client->addReport($report);
 
         $em->persist($report);

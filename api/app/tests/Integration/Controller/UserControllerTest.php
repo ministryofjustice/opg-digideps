@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\User;
 
 class UserControllerTest extends AbstractTestController
@@ -485,7 +486,7 @@ class UserControllerTest extends AbstractTestController
     {
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail($email);
         $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        $deputy->setTokenDate(new DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
         $url = '/user/recreate-token/'.$email;
@@ -509,7 +510,7 @@ class UserControllerTest extends AbstractTestController
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        $deputy->setTokenDate(new DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
         $this->assertJsonRequest('PUT', $url, [
@@ -520,7 +521,7 @@ class UserControllerTest extends AbstractTestController
         // refresh deputy from db and chack token has been reset
         $deputyRefreshed = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
-        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
+        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new DateTime())->format('%a'));
     }
 
     public function testGetByToken()

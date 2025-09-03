@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use DateTime;
+use DateTimeZone;
+use DateInterval;
 use App\Entity\Client;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
@@ -17,7 +20,7 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
     /** @var ChecklistRepository */
     private $checklistRepository;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     private $firstJulyAm;
 
     protected function setUp(): void
@@ -29,7 +32,7 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
 
         $this->purgeDatabase();
 
-        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
+        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
     }
 
     /**
@@ -66,7 +69,7 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
             $client,
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
             $this->firstJulyAm,
-            $this->firstJulyAm->add(new \DateInterval('P364D'))
+            $this->firstJulyAm->add(new DateInterval('P364D'))
         )
         );
         $this->entityManager->persist($report);
@@ -96,7 +99,7 @@ class ChecklistRepositoryTest extends ApiBaseTestCase
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new \DateTime())->getTimestamp();
+        $datePostFix = (string) (new DateTime())->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         $this->entityManager->persist($user);
