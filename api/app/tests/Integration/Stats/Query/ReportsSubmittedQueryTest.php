@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
+use Exception;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
@@ -100,7 +102,7 @@ class ReportsSubmittedQueryTest extends WebTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private static function givenXreportSubmissionsOfTypeBelongToDeputy($numReports, $reportType, $deputyType)
     {
@@ -127,7 +129,7 @@ class ReportsSubmittedQueryTest extends WebTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private static function addSubmittedReportOfTypeToUser($type, User $user)
     {
@@ -136,8 +138,8 @@ class ReportsSubmittedQueryTest extends WebTestCase
         $report = new Report(
             $client,
             $type,
-            new \DateTime('2019-08-01'),
-            new \DateTime('2020-08-01')
+            new DateTime('2019-08-01'),
+            new DateTime('2020-08-01')
         );
 
         $submission = new ReportSubmission($report, $user);

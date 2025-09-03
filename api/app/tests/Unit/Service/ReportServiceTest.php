@@ -511,7 +511,7 @@ final class ReportServiceTest extends TestCase
     // pre-reg entries for cases which will result in required reports being created
     private static function preRegEntriesForRequiredReports(): array
     {
-        $now = (new \DateTime())->format('Y-m-d');
+        $now = (new DateTime())->format('Y-m-d');
 
         $pfa = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa', 'MadeDate' => $now]);
         $hw = new PreRegistration(['ReportType' => 'OPG104', 'OrderType' => 'hw', 'MadeDate' => $now]);
@@ -569,7 +569,7 @@ final class ReportServiceTest extends TestCase
 
         $this->mockReportFactory->expects(self::exactly($reportsCreated))
             ->method('create')
-            ->with($mockClient, $this->isType('string'), $this->isType('string'), $this->isInstanceOf(\DateTime::class))
+            ->with($mockClient, $this->isType('string'), $this->isType('string'), $this->isInstanceOf(DateTime::class))
             ->willReturnCallback(function (Client $client, string $typeOfReport, string $orderType) {
                 $stub = self::createStub(Report::class);
 

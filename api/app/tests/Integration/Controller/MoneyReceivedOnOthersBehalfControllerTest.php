@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
 use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
@@ -98,15 +99,15 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
             $clientBenefitsCheck = 'ndr' === $reportOrNdr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
 
             $typeOfMoney
-                ->setCreated(new \DateTime())
+                ->setCreated(new DateTime())
                 ->setAmount(100.50)
                 ->setMoneyType('Universal Credit')
                 ->setWhoReceivedMoney('Some org');
 
             $clientBenefitsCheck->setReport($report)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
-                ->setDateLastCheckedEntitlement(new \DateTime())
-                ->setCreated(new \DateTime())
+                ->setDateLastCheckedEntitlement(new DateTime())
+                ->setCreated(new DateTime())
                 ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
                 ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfMoney)
             ;

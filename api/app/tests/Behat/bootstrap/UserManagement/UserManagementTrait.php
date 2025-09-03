@@ -2,6 +2,7 @@
 
 namespace App\Tests\Behat\UserManagement;
 
+use Exception;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Session;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,7 +50,7 @@ trait UserManagementTrait
         $session = $this->getSession();
 
         if (Response::HTTP_OK !== $session->getStatusCode()) {
-            throw new \Exception($session->getPage()->getContent());
+            throw new Exception($session->getPage()->getContent());
         }
 
         $id = $session->getPage()->getContent();
@@ -69,7 +70,7 @@ trait UserManagementTrait
         $session = $this->getSession();
 
         if (Response::HTTP_OK === $session->getStatusCode()) {
-            throw new \Exception("The user '$userEmail' should have been deleted but they still exist");
+            throw new Exception("The user '$userEmail' should have been deleted but they still exist");
         }
 
         $this->assertResponseStatus(Response::HTTP_NOT_FOUND);

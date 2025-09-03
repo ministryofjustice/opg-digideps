@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\Report\Checklist;
 
 class ChecklistControllerTest extends AbstractTestController
@@ -61,7 +62,7 @@ class ChecklistControllerTest extends AbstractTestController
 
         self::assertEquals(self::$checklist->getId(), $response['data']['id']);
         self::assertEquals(Checklist::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta((new \DateTime())->getTimestamp(), (new \DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta((new DateTime())->getTimestamp(), (new DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
     }
 
     /**

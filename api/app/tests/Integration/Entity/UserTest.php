@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Entity;
 
+use DateTime;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\Tests\Integration\ApiBaseTestCase;
 
@@ -20,7 +21,7 @@ class UserTest extends ApiBaseTestCase
         foreach (range(1, 2) as $ignored) {
             $submittedSubmissions[] = $submissionHelper->generateAndPersistSubmittedReportSubmission(
                 $this->entityManager,
-                new \DateTime()
+                new DateTime()
             );
         }
 

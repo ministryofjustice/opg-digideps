@@ -2,6 +2,7 @@
 
 namespace App\Tests\Behat;
 
+use RuntimeException;
 use Behat\Gherkin\Node\TableNode;
 
 /**
@@ -46,7 +47,7 @@ trait FormStepTrait
                 //                $this->theFollowingFieldsOnlyShouldHaveAnError(new TableNode($expectedErrors));
                 break;
             default:
-                throw new \RuntimeException("invalid value: only 'can|cannot' are acceoted");
+                throw new RuntimeException("invalid value: only 'can|cannot' are acceoted");
         }
     }
 
@@ -66,7 +67,7 @@ trait FormStepTrait
                 $this->fillField('add_another_addAnother_1', 'no');
                 break;
             default:
-                throw new \RuntimeException('invalid value');
+                throw new RuntimeException('invalid value');
         }
         $this->clickOnBehatLink('save-and-continue');
     }

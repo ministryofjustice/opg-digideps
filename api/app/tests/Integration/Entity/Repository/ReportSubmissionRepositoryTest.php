@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use DateTime;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\TestHelpers\ReportSubmissionHelper;
@@ -97,8 +98,8 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
     /** @test */
     public function findAllReportSubmissions()
     {
-        $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
+        $today = new DateTime();
+        $yesterday = new DateTime('-1 day');
 
         $createdReportSubmissions = [];
         foreach (range(1, 3) as $index) {
@@ -116,9 +117,9 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
     /** @test */
     public function findAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided()
     {
-        $today = new \DateTime();
-        $todayOneHourAgo = new \DateTime('-1 hour');
-        $yesterday = new \DateTime('-1 day');
+        $today = new DateTime();
+        $todayOneHourAgo = new DateTime('-1 hour');
+        $yesterday = new DateTime('-1 day');
 
         $todaysReportSubmissions = [];
         foreach (range(1, 3) as $index) {
@@ -148,10 +149,10 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
     /** @test */
     public function findAllReportSubmissionsRawSqlWithPeriodProvided()
     {
-        $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
-        $threeDaysAgo = new \DateTime('-3 days');
-        $lastWeek = new \DateTime('-7 days');
+        $today = new DateTime();
+        $yesterday = new DateTime('-1 day');
+        $threeDaysAgo = new DateTime('-3 days');
+        $lastWeek = new DateTime('-7 days');
 
         $yesterdaysReportSubmissionsIds = [];
         foreach (range(1, 3) as $i) {

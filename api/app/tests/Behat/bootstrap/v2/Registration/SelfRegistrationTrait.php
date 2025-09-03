@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
+use Exception;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
@@ -517,7 +518,7 @@ trait SelfRegistrationTrait
             $this->fillInField('set_password_password_first', 'DigidepsPass1234');
             $this->fillInField('set_password_password_second', 'DigidepsPass1234');
             $this->checkOption('set_password_showTermsAndConditions');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BehatException(sprintf('Failed to find password fields, currently on page: %s', $this->getCurrentUrl()));
         }
     }

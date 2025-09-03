@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -49,7 +50,7 @@ trait IngestTrait
         'sirius_case_numbers' => [],
     ];
 
-    private ?\DateTime $expectedClientCourtDate = null;
+    private ?DateTime $expectedClientCourtDate = null;
 
     private string $expectedDeputyName = '';
     private string $expectedDeputyAddress = '';
@@ -234,7 +235,7 @@ trait IngestTrait
 
         $csvRows = array_map('str_getcsv', file($csvFilePath));
 
-        array_walk($csvRows, function (&$a) use ($csvRows) {
+        array_walk($csvRows, function (&$a) use ($csvRows): void {
             $a = array_combine($csvRows[0], $a);
         });
         array_shift($csvRows); // remove column header

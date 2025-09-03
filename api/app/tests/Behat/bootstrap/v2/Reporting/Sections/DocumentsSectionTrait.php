@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Throwable;
 use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
 
@@ -198,7 +199,7 @@ trait DocumentsSectionTrait
     {
         try {
             $this->clickLink('Continue');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->clickLink('Continue to send documents');
         }
     }

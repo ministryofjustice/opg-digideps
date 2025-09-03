@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
@@ -263,7 +264,7 @@ trait CourtOrderTrait
     {
         // create deputy with a last_logged_in datetime, so they show as "registered",
         // and associate with the court order (mimicking what will happen when we eventually do this via ingest)
-        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new \DateTime());
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new DateTime());
     }
 
     /**
