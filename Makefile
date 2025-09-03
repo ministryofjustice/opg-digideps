@@ -139,6 +139,12 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 	  echo "$$c: debug disabled." ; \
 	done
 
+phpcs-api:
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/bin/phpcs
+
+phpcs-api-fix:
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/bin/phpcbf
+
 PHPSTAN-LEVEL := max
 phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
 	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(PHPSTAN-LEVEL)

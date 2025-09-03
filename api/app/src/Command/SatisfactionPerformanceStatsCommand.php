@@ -56,7 +56,7 @@ class SatisfactionPerformanceStatsCommand extends Command
 
             foreach ($satisfactionScoresResults[0] as $satisfactionScoreKey => $satisfactionScoreRow) {
                 $satisfactionScores[] = [
-                    '_timestamp' => $statsStartDate.'T00:00:00+00:00',
+                    '_timestamp' => $statsStartDate . 'T00:00:00+00:00',
                     'service' => 'deputy-reporting',
                     'channel' => 'digital',
                     'count' => intval($satisfactionScoreRow),
@@ -67,7 +67,7 @@ class SatisfactionPerformanceStatsCommand extends Command
 
             $satisfactionScoresJson = json_encode($satisfactionScores, JSON_PRETTY_PRINT);
 
-            $s3FileName = 'complete_the_deputy_report_'.$statsYear.'_'.$statsMonth.'.json';
+            $s3FileName = 'complete_the_deputy_report_' . $statsYear . '_' . $statsMonth . '.json';
 
             $this->s3SatisfactionDataStorage->store($s3FileName, $satisfactionScoresJson);
 

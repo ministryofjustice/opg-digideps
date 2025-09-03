@@ -84,7 +84,7 @@ class ApiComparison extends Command
         } catch (\Doctrine\DBAL\Exception $e) {
             throw new \RuntimeException('Database query failed: '.$e->getMessage(), 0, $e);
         } catch (\Throwable $t) {
-            throw new \RuntimeException('Unexpected error during DB query: '.$t->getMessage(), 0, $t);
+            throw new \RuntimeException('Unexpected error during DB query: ' . $t->getMessage(), 0, $t);
         }
     }
 
@@ -97,15 +97,15 @@ class ApiComparison extends Command
 
         try {
             $token = new UsernamePasswordToken($user, 'none', $user->getRoles());
-            $authToken = 'frontend_'.$user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+            $authToken = 'frontend_' . $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
         } catch (\Throwable $e) {
-            throw new \RuntimeException("Error generating auth token for user_id {$user_id}: ".$e->getMessage(), 0, $e);
+            throw new \RuntimeException("Error generating auth token for user_id {$user_id}: " . $e->getMessage(), 0, $e);
         }
 
         try {
             $this->redis->set($authToken, serialize($token));
         } catch (\Throwable $e) {
-            throw new \RuntimeException("Error setting redis record for user {$user_id}: ".$e->getMessage(), 0, $e);
+            throw new \RuntimeException("Error setting redis record for user {$user_id}: " . $e->getMessage(), 0, $e);
         }
 
         return $authToken;
@@ -121,11 +121,11 @@ class ApiComparison extends Command
         $legacyUrl = $this->injectIdsIntoRoute($legacyRoute, $ids);
         $newUrl = $this->injectIdsIntoRoute($newRoute, $ids);
 
-        $fullLegacyUrl = rtrim($baseUrl, '/').'/'.ltrim($legacyUrl, '/');
-        $fullNewUrl = rtrim($baseUrl, '/').'/'.ltrim($newUrl, '/');
+        $fullLegacyUrl = rtrim($baseUrl, '/') . '/' . ltrim($legacyUrl, '/');
+        $fullNewUrl = rtrim($baseUrl, '/') . '/' . ltrim($newUrl, '/');
 
         assert(
-            !str_contains($fullLegacyUrl, $legacyUrl.'//'),
+            !str_contains($fullLegacyUrl, $legacyUrl . '//'),
             sprintf('URL "%s" contains more than one slash after base URL', $fullLegacyUrl)
         );
 
@@ -165,7 +165,7 @@ class ApiComparison extends Command
         try {
             $extracted_ids = array_values(array_filter($row, fn ($key) => 'user_id' !== $key, ARRAY_FILTER_USE_KEY));
         } catch (\Throwable $e) {
-            throw new \RuntimeException('Error extracting ids from row: '.$e->getMessage(), 0, $e);
+            throw new \RuntimeException('Error extracting ids from row: ' . $e->getMessage(), 0, $e);
         }
 
         assert(count($extracted_ids) > 0, 'No ids other than user_id exist in row');
@@ -219,12 +219,12 @@ class ApiComparison extends Command
                 $isEqual = $comparer->compare($resultLegacy, $resultNew);
 
                 if (!$isEqual) {
-                    $output->writeln('<comment>Differences detected for user_id: </comment>'.$user_id);
+                    $output->writeln('<comment>Differences detected for user_id: </comment>' . $user_id);
                 } else {
-                    $output->writeln('<info>No differences found for user_id: </info>'.$user_id);
+                    $output->writeln('<info>No differences found for user_id: </info>' . $user_id);
                 }
             } catch (\Exception $e) {
-                $output->writeln('<error>'.$e->getMessage().'</error>');
+                $output->writeln('<error>' . $e->getMessage() . '</error>');
                 $failed = true;
                 continue;
             }
