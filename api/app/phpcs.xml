@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset>
+    <file>src/Command</file>
+
+    <rule ref="PSR12">
+        <exclude name="Generic.Files.LineLength" />
+    </rule>
+</ruleset>
