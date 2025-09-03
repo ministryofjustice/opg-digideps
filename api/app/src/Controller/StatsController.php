@@ -19,6 +19,7 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,7 +122,7 @@ class StatsController extends RestController
             'grandTotal' => 0,
         ];
 
-        $oneYearAgo = new \DateTime('-1 year');
+        $oneYearAgo = new DateTime('-1 year');
 
         $ret['lays']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'LAY', $oneYearAgo);
         $ret['profs']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'PROF', $oneYearAgo);
@@ -168,10 +169,10 @@ class StatsController extends RestController
     public function getImbalanceReport(Request $request): array
     {
         $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));
-        $startDate instanceof \DateTime ? $startDate->setTime(0, 0, 1) : null;
+        $startDate instanceof DateTime ? $startDate->setTime(0, 0, 1) : null;
 
         $endDate = $this->convertDateStringToDateTime($request->get('endDate', ''));
-        $endDate instanceof \DateTime ? $endDate->setTime(23, 59, 59) : null;
+        $endDate instanceof DateTime ? $endDate->setTime(23, 59, 59) : null;
 
         return $this->reportRepository->getAllReportedImbalanceMetrics($startDate, $endDate);
     }

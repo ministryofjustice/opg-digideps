@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity as EntityDir;
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
+use App\Entity\ReportInterface;
+use App\Entity\User;
 use App\Exception\NotFound;
 use App\Model\Hydrator;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class RestController extends AbstractController
@@ -41,7 +46,7 @@ abstract class RestController extends AbstractController
         Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }
 
-    protected function denyAccessIfReportDoesNotBelongToUser(EntityDir\ReportInterface $report)
+    protected function denyAccessIfReportDoesNotBelongToUser(ReportInterface $report)
     {
         if (!$this->isGranted('edit', $report->getClient())) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {
@@ -50,7 +55,7 @@ abstract class RestController extends AbstractController
         }
     }
 
-    protected function denyAccessIfNdrDoesNotBelongToUser(EntityDir\Ndr\Ndr $ndr)
+    protected function denyAccessIfNdrDoesNotBelongToUser(Ndr $ndr)
     {
         if (!$this->isGranted('edit', $ndr->getClient())) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($ndr->getClient()->getId())) {
@@ -62,7 +67,7 @@ abstract class RestController extends AbstractController
     /**
      * @param Client $client
      */
-    protected function denyAccessIfClientDoesNotBelongToUser(EntityDir\Client $client)
+    protected function denyAccessIfClientDoesNotBelongToUser(Client $client)
     {
         if (!$this->isGranted('edit', $client)) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
@@ -74,13 +79,13 @@ abstract class RestController extends AbstractController
     /**
      * @param array $date
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function convertDateStringToDateTime(string $date)
     {
-        return empty($date) ? null : new \DateTime($date);
+        return empty($date) ? null : new DateTime($date);
     }
 
     protected function checkIfUserHasAccessViaDeputyUid(int $clientId): bool
@@ -90,7 +95,7 @@ abstract class RestController extends AbstractController
         if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
             $deputyUid = $this->getUser()->getDeputyUid();
             if ($deputyUid) {
-                $deputyUidArray = $this->em->getRepository(EntityDir\User::class)->findDeputyUidsForClient($clientId);
+                $deputyUidArray = $this->em->getRepository(User::class)->findDeputyUidsForClient($clientId);
                 if (in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
                     $hasAccess = true;
                 }
