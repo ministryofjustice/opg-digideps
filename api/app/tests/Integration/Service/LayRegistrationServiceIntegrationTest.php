@@ -42,8 +42,11 @@ class LayRegistrationServiceIntegrationTest extends ApiBaseTestCase
         $caseNumber = '16368651';
 
         // pre-reg entries for hybrid report
-        $this->fixtures->createPreRegistration($caseNumber, 'OPG102', 'hw');
-        $this->fixtures->createPreRegistration($caseNumber, 'OPG102', 'pfa');
+        $preReg1 = $this->fixtures->createPreRegistration($caseNumber, 'OPG102', 'hw');
+        $this->entityManager->persist($preReg1);
+
+        $preReg2 = $this->fixtures->createPreRegistration($caseNumber, 'OPG102', 'pfa');
+        $this->entityManager->persist($preReg2);
 
         // client relating to those entries
         $client = $this->addClient($caseNumber);
@@ -70,7 +73,7 @@ class LayRegistrationServiceIntegrationTest extends ApiBaseTestCase
         for ($i = 0; $i < 10; ++$i) {
             $caseNumber = "9933442$i";
             $clients[] = $this->addClient($caseNumber);
-            $this->fixtures->createPreRegistration($caseNumber, 'OPG104', 'hw');
+            $this->entityManager->persist($this->fixtures->createPreRegistration($caseNumber, 'OPG104', 'hw'));
         }
 
         $this->entityManager->flush();
