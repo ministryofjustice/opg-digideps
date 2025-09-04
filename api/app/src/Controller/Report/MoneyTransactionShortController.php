@@ -3,9 +3,11 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\MoneyTransactionShort;
+use App\Entity\Report\Report;
 use App\Repository\MoneyTransactionShortRepository;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,8 +16,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MoneyTransactionShortController extends RestController
 {
     private $sectionIds = [
-        EntityDir\Report\Report::SECTION_MONEY_IN_SHORT,
-        EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT,
+        Report::SECTION_MONEY_IN_SHORT,
+        Report::SECTION_MONEY_OUT_SHORT,
     ];
 
     public function __construct(
@@ -30,7 +32,7 @@ class MoneyTransactionShortController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function addMoneyTransaction(Request $request, int $reportId): int
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -39,7 +41,7 @@ class MoneyTransactionShortController extends RestController
            'amount' => 'notEmpty',
         ]);
 
-        $t = EntityDir\Report\MoneyTransactionShort::factory($data['type'], $report);
+        $t = MoneyTransactionShort::factory($data['type'], $report);
         $this->fillData($t, $data);
 
         $this->em->persist($t);
@@ -58,10 +60,10 @@ class MoneyTransactionShortController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function updateMoneyTransaction(Request $request, int $reportId, int $transactionId): int
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -79,13 +81,13 @@ class MoneyTransactionShortController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteMoneyTransaction(int $reportId, int $transactionId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->setDeletedAt(new \DateTime());
+        $t->setDeletedAt(new DateTime());
         $this->em->flush();
 
         // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
@@ -99,12 +101,12 @@ class MoneyTransactionShortController extends RestController
 
     #[Route(path: '/report/{reportId}/money-transaction-short/{transactionId}', requirements: ['reportId' => '\d+', 'transactionId' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(int $reportId, int $transactionId): EntityDir\Report\MoneyTransactionShort
+    public function getOneById(int $reportId, int $transactionId): MoneyTransactionShort
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $record = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId);
+        $record = $this->findEntityBy(MoneyTransactionShort::class, $transactionId);
         $this->denyAccessIfReportDoesNotBelongToUser($record->getReport());
 
         $this->formatter->setJmsSerialiserGroups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut']);
@@ -112,13 +114,13 @@ class MoneyTransactionShortController extends RestController
         return $record;
     }
 
-    private function fillData(EntityDir\Report\MoneyTransactionShort $t, array $data): void
+    private function fillData(MoneyTransactionShort $t, array $data): void
     {
         $t->setDescription($data['description']);
         $t->setAmount($data['amount']);
 
         if (array_key_exists('date', $data)) {
-            $t->setDate($data['date'] ? new \DateTime($data['date']) : null);
+            $t->setDate($data['date'] ? new DateTime($data['date']) : null);
         }
     }
 
@@ -127,13 +129,13 @@ class MoneyTransactionShortController extends RestController
     public function softDeleteMoneyTransactionShort(int $transactionId): array
     {
         $filter = $this->em->getFilters()->getFilter('softdeleteable');
-        $filter->disableForEntity(EntityDir\Report\MoneyTransactionShort::class);
+        $filter->disableForEntity(MoneyTransactionShort::class);
 
-        $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found');
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found');
 
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new DateTime());
 
         $this->em->flush($t);
 

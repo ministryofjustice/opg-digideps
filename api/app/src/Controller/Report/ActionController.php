@@ -3,7 +3,8 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\Action;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ActionController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
+    private array $sectionIds = [Report::SECTION_ACTIONS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -23,12 +24,12 @@ class ActionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function update(Request $request, int $reportId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $action = $report->getAction();
         if (!$action) {
-            $action = new EntityDir\Report\Action($report);
+            $action = new Action($report);
             $this->em->persist($action);
         }
 
@@ -44,9 +45,9 @@ class ActionController extends RestController
 
     #[Route(path: '/report/{reportId}/action', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $id): EntityDir\Report\Action
+    public function getOneById(Request $request, int $id): Action
     {
-        $action = $this->findEntityBy(EntityDir\Report\Action::class, $id, 'Action with id:'.$id.' not found');
+        $action = $this->findEntityBy(Action::class, $id, 'Action with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -56,7 +57,7 @@ class ActionController extends RestController
         return $action;
     }
 
-    private function updateEntity(array $data, EntityDir\Report\Action $action): void
+    private function updateEntity(array $data, Action $action): void
     {
         if (array_key_exists('do_you_expect_financial_decisions', $data)) {
             $action->setDoYouExpectFinancialDecisions($data['do_you_expect_financial_decisions']);

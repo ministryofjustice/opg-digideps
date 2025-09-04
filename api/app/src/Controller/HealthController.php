@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PDOException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 #[Route(path: '/health-check')]
 class HealthController extends RestController
@@ -47,10 +49,10 @@ class HealthController extends RestController
             $this->em->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
 
             return [true, ''];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // customise error message if possible
             $returnMessage = 'Database generic error';
-            if ($e instanceof \PDOException && 7 === $e->getCode()) {
+            if ($e instanceof PDOException && 7 === $e->getCode()) {
                 $returnMessage = 'Database service not reachable ('.$e->getMessage().')';
             }
 

@@ -3,7 +3,8 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Ndr\Expense;
+use App\Entity\Ndr\Ndr;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,12 +20,12 @@ class ExpenseController extends RestController
 
     #[Route(path: '/ndr/{ndrId}/expense/{expenseId}', requirements: ['ndrId' => '\d+', 'expenseId' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(int $ndrId, int $expenseId): EntityDir\Ndr\Expense
+    public function getOneById(int $ndrId, int $expenseId): Expense
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
+        $expense = $this->findEntityBy(Expense::class, $expenseId);
         $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
 
         $this->formatter->setJmsSerialiserGroups(['ndr-expenses']);
@@ -38,13 +39,13 @@ class ExpenseController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $expense = new EntityDir\Ndr\Expense($ndr);
+        $expense = new Expense($ndr);
 
         $this->updateEntityWithData($expense, $data);
         $ndr->setPaidForAnything('yes');
@@ -62,10 +63,10 @@ class ExpenseController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
+        $expense = $this->findEntityBy(Expense::class, $expenseId);
         $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
 
         $this->updateEntityWithData($expense, $data);
@@ -79,10 +80,10 @@ class ExpenseController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $ndrId, int $expenseId): array
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
+        $expense = $this->findEntityBy(Expense::class, $expenseId);
         $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
         $this->em->remove($expense);
 
@@ -91,7 +92,7 @@ class ExpenseController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Ndr\Expense $expense, array $data): void
+    private function updateEntityWithData(Expense $expense, array $data): void
     {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [

@@ -3,8 +3,12 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\Asset;
+use App\Entity\Report\AssetOther;
+use App\Entity\Report\AssetProperty;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AssetController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
+    private array $sectionIds = [Report::SECTION_ASSETS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -21,12 +25,12 @@ class AssetController extends RestController
 
     #[Route(path: '/report/{reportId}/asset/{assetId}', requirements: ['reportId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $reportId, int $assetId): EntityDir\Report\Asset
+    public function getOneById(Request $request, int $reportId, int $assetId): Asset
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
+        $asset = $this->findEntityBy(Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -42,12 +46,12 @@ class AssetController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'type' => 'mustExist',
         ]);
-        $asset = EntityDir\Report\Asset::factory($data['type']);
+        $asset = Asset::factory($data['type']);
         $asset->setReport($report);
         $report->setNoAssetToAdd(false);
 
@@ -68,10 +72,10 @@ class AssetController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
+        $asset = $this->findEntityBy(Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->updateEntityWithData($asset, $data);
@@ -87,10 +91,10 @@ class AssetController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $reportId, int $assetId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
+        $asset = $this->findEntityBy(Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->em->remove($asset);
@@ -102,25 +106,25 @@ class AssetController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Asset $asset, array $data): void
+    private function updateEntityWithData(Asset $asset, array $data): void
     {
         // common propertie
         $this->hydrateEntityWithArrayData($asset, $data, [
             'value' => 'setValue',
         ]);
 
-        if ($asset instanceof EntityDir\Report\AssetOther) {
+        if ($asset instanceof AssetOther) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'title' => 'setTitle',
                 'description' => 'setDescription',
             ]);
 
             if (isset($data['valuation_date'])) {
-                $asset->setValuationDate(new \DateTime($data['valuation_date']));
+                $asset->setValuationDate(new DateTime($data['valuation_date']));
             }
         }
 
-        if ($asset instanceof EntityDir\Report\AssetProperty) {
+        if ($asset instanceof AssetProperty) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'address' => 'setAddress',
                 'address2' => 'setAddress2',
@@ -140,7 +144,7 @@ class AssetController extends RestController
             if (isset($data['rent_agreement_end_date'])) {
                 $value = isset($data['rent_agreement_end_date']['date'])
                     ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
-                $asset->setRentAgreementEndDate(new \DateTime($value));
+                $asset->setRentAgreementEndDate(new DateTime($value));
             }
         }
     }
