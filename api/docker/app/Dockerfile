@@ -125,6 +125,7 @@ COPY --chown=www-data:www-data --from=composer-devtools /app/app app
 COPY --chown=www-data:www-data --from=composer-devtools /app/src src
 COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/tests tests
+COPY --chown=www-data:www-data api/app/phpcs.xml .
 COPY --chown=www-data:www-data api/app/phpstan.neon .
 COPY --chown=www-data:www-data api/app/phpstan-baseline.neon .
 

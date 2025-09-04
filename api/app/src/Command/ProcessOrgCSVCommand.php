@@ -171,7 +171,7 @@ class ProcessOrgCSVCommand extends Command
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->verboseLogger->error($logMessage);
-            $this->cliOutput->writeln(self::JOB_NAME.' - failure - '.$logMessage);
+            $this->cliOutput->writeln(self::JOB_NAME . ' - failure - ' . $logMessage);
         }
 
         return [];
