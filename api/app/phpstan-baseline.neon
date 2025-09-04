@@ -786,17 +786,7 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^PHPDoc tag @param for parameter \\$client with type App\\\\Controller\\\\Client is not subtype of native type App\\\\Entity\\\\Client\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^PHPDoc tag @param for parameter \\$date with type array is incompatible with native type string\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^Parameter \\$client of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) has invalid type App\\\\Controller\\\\Client\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 

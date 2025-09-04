@@ -3,8 +3,10 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\VisitsCare;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,10 +23,10 @@ class VisitsCareController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function add(Request $request): array
     {
-        $visitsCare = new EntityDir\Ndr\VisitsCare();
+        $visitsCare = new VisitsCare();
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $data['ndr_id']);
+        $ndr = $this->findEntityBy(Ndr::class, $data['ndr_id']);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
         $visitsCare->setNdr($ndr);
@@ -41,7 +43,7 @@ class VisitsCareController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function update(Request $request, int $id): array
     {
-        $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id);
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id);
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -57,12 +59,12 @@ class VisitsCareController extends RestController
      */
     #[Route(path: '/ndr/{ndrId}/visits-care', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function findByNdrId($ndrId): EntityDir\Ndr\Ndr
+    public function findByNdrId($ndrId): Ndr
     {
-        $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $report = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($report);
 
-        $ret = $this->em->getRepository(EntityDir\Ndr\Ndr::class)->findByReport($report);
+        $ret = $this->em->getRepository(Ndr::class)->findByReport($report);
 
         return $ret;
     }
@@ -72,12 +74,12 @@ class VisitsCareController extends RestController
      */
     #[Route(path: '/ndr/visits-care/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, $id): EntityDir\Ndr\VisitsCare
+    public function getOneById(Request $request, $id): VisitsCare
     {
         $serialiseGroups = $request->query->has('groups') ? $request->query->all('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
         return $visitsCare;
@@ -87,7 +89,7 @@ class VisitsCareController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteVisitsCare($id): array
     {
-        $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Ndr\VisitsCare */
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare \App\Entity\Ndr\VisitsCare */
         $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
         $this->em->remove($visitsCare);
@@ -96,7 +98,7 @@ class VisitsCareController extends RestController
         return [];
     }
 
-    private function updateEntity(array $data, EntityDir\Ndr\VisitsCare $visitsCare): EntityDir\Ndr\VisitsCare
+    private function updateEntity(array $data, VisitsCare $visitsCare): VisitsCare
     {
         if (array_key_exists('plan_move_new_residence', $data)) {
             $visitsCare->setPlanMoveNewResidence($data['plan_move_new_residence']);
@@ -132,7 +134,7 @@ class VisitsCareController extends RestController
 
         if (array_key_exists('when_was_care_plan_last_reviewed', $data)) {
             if (!empty($data['when_was_care_plan_last_reviewed'])) {
-                $visitsCare->setWhenWasCarePlanLastReviewed(new \DateTime($data['when_was_care_plan_last_reviewed']));
+                $visitsCare->setWhenWasCarePlanLastReviewed(new DateTime($data['when_was_care_plan_last_reviewed']));
             } else {
                 $visitsCare->setWhenWasCarePlanLastReviewed(null);
             }

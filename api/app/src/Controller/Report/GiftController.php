@@ -3,7 +3,9 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Gift;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class GiftController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_GIFTS];
+    private array $sectionIds = [Report::SECTION_GIFTS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -21,12 +23,12 @@ class GiftController extends RestController
 
     #[Route(path: '/report/{reportId}/gift/{giftId}', requirements: ['reportId' => '\d+', 'giftId' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $reportId, int $giftId): EntityDir\Report\Gift
+    public function getOneById(Request $request, int $reportId, int $giftId): Gift
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
+        $gift = $this->findEntityBy(Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -42,13 +44,13 @@ class GiftController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $gift = new EntityDir\Report\Gift($report);
+        $gift = new Gift($report);
 
         $this->updateEntityWithData($report, $gift, $data);
         $report->setGiftsExist('yes');
@@ -68,10 +70,10 @@ class GiftController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
+        $gift = $this->findEntityBy(Gift::class, $giftId);
 
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
@@ -79,7 +81,7 @@ class GiftController extends RestController
 
         if (array_key_exists('bank_account_id', $data)) {
             if (is_numeric($data['bank_account_id'])) {
-                $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
+                $gift->setBankAccount($this->findEntityBy(BankAccount::class, $data['bank_account_id']));
             } else {
                 $gift->setBankAccount(null);
             }
@@ -96,10 +98,10 @@ class GiftController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $reportId, int $giftId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
+        $gift = $this->findEntityBy(Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
         $this->em->remove($gift);
         $this->em->flush();
@@ -110,7 +112,7 @@ class GiftController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Report $report, EntityDir\Report\Gift $gift, array $data): void
+    private function updateEntityWithData(Report $report, Gift $gift, array $data): void
     {
         // common props
         $this->hydrateEntityWithArrayData($gift, $data, [
@@ -122,14 +124,14 @@ class GiftController extends RestController
         $gift->setBankAccount(null);
         if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
             $bankAccount = $this->em->getRepository(
-                EntityDir\Report\BankAccount::class
+                BankAccount::class
             )->findOneBy(
                 [
                     'id' => $data['bank_account_id'],
                     'report' => $report->getId(),
                 ]
             );
-            if ($bankAccount instanceof EntityDir\Report\BankAccount) {
+            if ($bankAccount instanceof BankAccount) {
                 $gift->setBankAccount($bankAccount);
             }
         }

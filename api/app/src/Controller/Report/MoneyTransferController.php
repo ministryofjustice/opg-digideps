@@ -3,7 +3,9 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\MoneyTransfer;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MoneyTransferController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
+    private $sectionIds = [Report::SECTION_MONEY_TRANSFERS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -23,7 +25,7 @@ class MoneyTransferController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function addMoneyTransfer(Request $request, int $reportId): int
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -32,7 +34,7 @@ class MoneyTransferController extends RestController
            'amount' => 'mustExist',
         ]);
 
-        $transfer = new EntityDir\Report\MoneyTransfer();
+        $transfer = new MoneyTransfer();
         $transfer->setReport($report);
 
         if (array_key_exists('description', $data)) {
@@ -58,7 +60,7 @@ class MoneyTransferController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function editMoneyTransfer(Request $request, int $reportId, int $transferId): int
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -67,7 +69,7 @@ class MoneyTransferController extends RestController
            'amount' => 'mustExist',
         ]);
 
-        $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
+        $transfer = $this->findEntityBy(MoneyTransfer::class, $transferId);
 
         if (array_key_exists('description', $data)) {
             $transfer->setDescription($data['description']);
@@ -88,10 +90,10 @@ class MoneyTransferController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteMoneyTransfer(int $reportId, int $transferId): array
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
+        $transfer = $this->findEntityBy(MoneyTransfer::class, $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
         $this->em->remove($transfer);
@@ -102,13 +104,13 @@ class MoneyTransferController extends RestController
         return [];
     }
 
-    private function fillEntity(EntityDir\Report\MoneyTransfer $transfer, array $data): void
+    private function fillEntity(MoneyTransfer $transfer, array $data): void
     {
         $amountCleaned = preg_replace('/[^\d\.]+/', '', $data['amount']); // 123,123.34 -> 123123.34
 
         $transfer
-            ->setFrom($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['account_from_id']))
-            ->setTo($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['account_to_id']))
+            ->setFrom($this->findEntityBy(BankAccount::class, $data['account_from_id']))
+            ->setTo($this->findEntityBy(BankAccount::class, $data['account_to_id']))
             ->setAmount($amountCleaned);
     }
 }
