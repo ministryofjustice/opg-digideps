@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\DeputyManagement;
 
+use Exception;
 use App\Entity\User;
 use Behat\Mink\Session;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,7 +66,7 @@ trait DeputyManagementTrait
         $session = $this->getSession();
 
         if (Response::HTTP_OK === $session->getStatusCode()) {
-            throw new \Exception("The user '$userEmail' should have been deleted but they still exist");
+            throw new Exception("The user '$userEmail' should have been deleted but they still exist");
         }
 
         $this->assertResponseStatus(Response::HTTP_NOT_FOUND);

@@ -19,7 +19,7 @@ class FormFieldsExtension extends AbstractExtension
         $this->environment = $environment;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('form_input', [$this, 'renderFormInput']),
@@ -38,12 +38,8 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * @DEPRECATED
      * Renders form input field.
-     *
-     * @param mixed  $element
-     * @param string $elementName
-     * @param int    $transIndex
      */
-    public function renderFormInput($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormInput(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // generate input field html using variables supplied
         echo $this->environment->render(
@@ -57,12 +53,8 @@ class FormFieldsExtension extends AbstractExtension
 
     /**
      * Renders form checkbox field.
-     *
-     * @param mixed  $element
-     * @param string $elementName
-     * @param int    $transIndex
      */
-    public function renderCheckboxInput($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderCheckboxInput(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         echo $this->environment->render(
             '@App/Components/Form/_checkbox.html.twig',
@@ -78,7 +70,7 @@ class FormFieldsExtension extends AbstractExtension
      *
      * //TODO consider refactor using getFormComponentTwigVariables
      */
-    public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
+    public function renderCheckboxGroup(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
@@ -129,13 +121,14 @@ class FormFieldsExtension extends AbstractExtension
             'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
             'translationDomain' => $domain,
+            'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
         ]);
     }
 
     /**
      * @DEPRECATED
      */
-    public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
+    public function renderCheckboxGroupNew(FormView $element, string $elementName, array $vars = [], $transIndex = null): void
     {
         // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
@@ -183,12 +176,8 @@ class FormFieldsExtension extends AbstractExtension
 
     /**
      * Renders form select element.
-     *
-     * @param mixed  $element
-     * @param string $elementName
-     * @param int    $transIndex
      */
-    public function renderFormDropDown($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormDropDown(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null)
     {
         // generate input field html using variables supplied
         echo $this->environment->render(
@@ -197,7 +186,7 @@ class FormFieldsExtension extends AbstractExtension
         );
     }
 
-    public function renderFormKnownDate($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormKnownDate(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
@@ -251,7 +240,7 @@ class FormFieldsExtension extends AbstractExtension
         echo $html;
     }
 
-    public function renderFormSortCode($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormSortCode(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
@@ -280,15 +269,14 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed  $element
      * @param string $elementName used to pick the translation by appending ".label"
      * @param array  $vars        [buttonClass => additional class. "disabled" supported]
      */
     public function renderFormSubmit(
-        $element,
-        $elementName,
-        array $vars = []
-    ) {
+        FormView $element,
+        string $elementName,
+        array $vars = [],
+    ): void {
         $options = [
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
             'label' => $elementName.'.label',
@@ -309,7 +297,6 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed       $element
      * @param string      $elementName        used to pick the translation by appending ".label"
      * @param array       $vars               [buttonClass => additional class. "disabled" supported]
      * @param string|null $gaTrackingCategory (required) Use the format {Page Title}:{Sub Section i.e. in a form} (sub section optional)
@@ -320,13 +307,13 @@ class FormFieldsExtension extends AbstractExtension
      * See GOOGLE-ANALYTICS.md for usage
      */
     public function renderGATrackedFormSubmit(
-        $element,
-        $elementName,
+        FormView $element,
+        string $elementName,
         string $gaTrackingCategory,
         string $gaTrackingAction,
-        string $gaTrackingLabel = null,
+        ?string $gaTrackingLabel = null,
         ?int $gaTrackingValue = null,
-        array $vars = []
+        array $vars = [],
     ) {
         $vars['attr'] = $this->addGaAttrsToElementAttrs(
             $gaTrackingCategory,
@@ -336,19 +323,16 @@ class FormFieldsExtension extends AbstractExtension
             $vars['attr'] ?? []
         );
 
-        return $this->renderFormSubmit($element, $elementName, $vars);
+        $this->renderFormSubmit($element, $elementName, $vars);
     }
 
-    /**
-     * @return array
-     */
     private function addGaAttrsToElementAttrs(
         string $gaTrackingCategory,
         string $gaTrackingAction,
         string $gaTrackingLabel,
         ?int $gaTrackingValue,
-        ?array $attrs = []
-    ) {
+        ?array $attrs = [],
+    ): array {
         $attrs = is_null($attrs) ? [] : $attrs;
 
         $gaTrackingAttrs = [
@@ -365,10 +349,8 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * get individual field errors and render them inside the field
      * Usage: {{ form_errors(element) }}.
-     *
-     * @param $element
      */
-    public function renderFormErrors($element)
+    public function renderFormErrors(FormView $element): void
     {
         $html = $this->environment->render('@App/Components/Form/_errors.html.twig', [
             'element' => $element,
@@ -381,7 +363,7 @@ class FormFieldsExtension extends AbstractExtension
      * get form errors list and render them inside Components/Alerts/error_summary.html.twig
      * Usage: {{ form_errors_list(form) }}.
      */
-    public function renderFormErrorsList(FormView $form)
+    public function renderFormErrorsList(FormView $form): void
     {
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
 
@@ -393,10 +375,7 @@ class FormFieldsExtension extends AbstractExtension
         echo $html;
     }
 
-    /**
-     * @return array
-     */
-    private function getErrorsFromFormViewRecursive(FormView $elementsFormView)
+    private function getErrorsFromFormViewRecursive(FormView $elementsFormView): array
     {
         $ret = [];
         foreach ($elementsFormView as $elementFormView) {
@@ -414,13 +393,9 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * @param FormView    $element
-     * @param string      $elementName
-     * @param string|null $transIndex
-     *
      * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates @App:Components/Form:*
      */
-    private function getFormComponentTwigVariables($element, $elementName, array $vars, $transIndex)
+    private function getFormComponentTwigVariables(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): array
     {
         // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
@@ -491,7 +466,7 @@ class FormFieldsExtension extends AbstractExtension
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'form_input_extension';
     }

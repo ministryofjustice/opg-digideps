@@ -2,9 +2,9 @@
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\PreRegistration;
-use App\Entity\User;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
@@ -263,7 +263,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberButDetailsNotMatching()
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Ben', 'Murphy');
 
@@ -342,7 +342,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyFirstname()
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Stewart', 'Tolley');
 
@@ -421,7 +421,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyLastname()
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Zac', 'Murphy');
 
@@ -500,7 +500,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberClientLastnameAndDeputyFirstAndLastnameButInvalidPostcode()
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Zac', 'Murphy');
 
@@ -574,7 +574,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, ?\DateTime $createdAt = null): PreRegistration
+    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, ?DateTime $createdAt = null): PreRegistration
     {
         return new PreRegistration([
             'Case' => $caseNumber,

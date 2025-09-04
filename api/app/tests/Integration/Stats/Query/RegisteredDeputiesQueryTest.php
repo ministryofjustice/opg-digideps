@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use DateTime;
 use App\Entity\User;
 use App\Service\Stats\Query\RegisteredDeputiesQuery;
 use App\Service\Stats\StatsQueryParameters;
@@ -84,9 +85,9 @@ class RegisteredDeputiesQueryTest extends WebTestCase
     {
         $query = new RegisteredDeputiesQuery($this::$em);
 
-        $twoWeeksAgo = (new \DateTime('-14 days'))->format('Y-m-d');
-        $oneWeeksAgo = (new \DateTime('-7 days'))->format('Y-m-d');
-        $today = (new \DateTime())->format('Y-m-d');
+        $twoWeeksAgo = (new DateTime('-14 days'))->format('Y-m-d');
+        $oneWeeksAgo = (new DateTime('-7 days'))->format('Y-m-d');
+        $today = (new DateTime())->format('Y-m-d');
 
         $resultOutOfRange = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies',
@@ -113,7 +114,7 @@ class RegisteredDeputiesQueryTest extends WebTestCase
                 ->setFirstname('Test')
                 ->setLastname('User')
                 ->setEmail("test-user-$id@example.com")
-                ->setRegistrationDate(new \DateTime())
+                ->setRegistrationDate(new DateTime())
                 ->setRoleName($roleName);
 
             self::$em->persist($user);

@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Service\Stats\Metrics;
 
+use DateTime;
+use Exception;
 use App\Entity\User;
 use App\Service\Stats\Query\Query;
 use App\Service\Stats\StatsQueryParameters;
@@ -56,7 +58,7 @@ class QueryTest extends WebTestCase
         $user->setLastname('Lastname');
         $user->setEmail("metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
-        $user->setRegistrationDate(new \DateTime($date));
+        $user->setRegistrationDate(new DateTime($date));
         self::$em->persist($user);
         self::$em->flush();
 
@@ -68,7 +70,7 @@ class QueryTest extends WebTestCase
      */
     public function identifiesUnsupportedDimensions()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $query = new UsersQuery($this::$em);
 
         $query->execute(new StatsQueryParameters([

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use DateTime;
+use ReflectionClass;
+use ReflectionProperty;
 use App\Tests\Behat\BehatException;
 
 class UserDetails
@@ -14,16 +17,16 @@ class UserDetails
     private ?string $clientEmail = null;
     private ?string $clientFirstName = null;
     private ?array $clientFullAddressArray = null;
-    private ?\DateTime $clientArchivedAt = null;
+    private ?DateTime $clientArchivedAt = null;
     private ?int $clientId = null;
     private ?string $clientLastName = null;
     private ?string $courtDate = null;
     private ?int $currentReportBankAccountId = null;
-    private ?\DateTime $currentReportDueDate = null;
-    private ?\DateTime $currentReportEndDate = null;
+    private ?DateTime $currentReportDueDate = null;
+    private ?DateTime $currentReportEndDate = null;
     private ?int $currentReportId = null;
     private ?string $currentReportNdrOrReport = null;
-    private ?\DateTime $currentReportStartDate = null;
+    private ?DateTime $currentReportStartDate = null;
     private ?string $currentReportType = null;
     private ?string $deputyEmail = null;
     private ?string $deputyEmailAlt = null;
@@ -34,11 +37,11 @@ class UserDetails
     private ?string $organisationEmailIdentifier = null;
     private ?string $organisationName = null;
     private ?int $previousReportBankAccountId = null;
-    private ?\DateTime $previousReportDueDate = null;
-    private ?\DateTime $previousReportEndDate = null;
+    private ?DateTime $previousReportDueDate = null;
+    private ?DateTime $previousReportEndDate = null;
     private ?int $previousReportId = null;
     private ?string $previousReportNdrOrReport = null;
-    private ?\DateTime $previousReportStartDate = null;
+    private ?DateTime $previousReportStartDate = null;
     private ?string $previousReportType = null;
     private ?string $userEmail = null;
     private ?string $userFirstName = null;
@@ -128,8 +131,8 @@ class UserDetails
 
     private function getProperties(): array
     {
-        $reflect = new \ReflectionClass(self::class);
-        $props = $reflect->getProperties(\ReflectionProperty::IS_PRIVATE);
+        $reflect = new ReflectionClass(self::class);
+        $props = $reflect->getProperties(ReflectionProperty::IS_PRIVATE);
         $classProperties = [];
 
         foreach ($props as $prop) {
@@ -283,12 +286,12 @@ class UserDetails
         return $this;
     }
 
-    public function getClientArchivedAt(): ?\DateTime
+    public function getClientArchivedAt(): ?DateTime
     {
         return $this->clientArchivedAt;
     }
 
-    public function setClientArchivedAt(?\DateTime $clientArchivedAt): UserDetails
+    public function setClientArchivedAt(?DateTime $clientArchivedAt): UserDetails
     {
         $this->clientArchivedAt = $clientArchivedAt;
 
@@ -379,24 +382,24 @@ class UserDetails
         return $this;
     }
 
-    public function getCurrentReportDueDate(): ?\DateTime
+    public function getCurrentReportDueDate(): ?DateTime
     {
         return $this->currentReportDueDate;
     }
 
-    public function setCurrentReportDueDate(?\DateTime $currentReportDueDate): UserDetails
+    public function setCurrentReportDueDate(?DateTime $currentReportDueDate): UserDetails
     {
         $this->currentReportDueDate = $currentReportDueDate;
 
         return $this;
     }
 
-    public function getPreviousReportDueDate(): ?\DateTime
+    public function getPreviousReportDueDate(): ?DateTime
     {
         return $this->previousReportDueDate;
     }
 
-    public function setPreviousReportDueDate(?\DateTime $previousReportDueDate): UserDetails
+    public function setPreviousReportDueDate(?DateTime $previousReportDueDate): UserDetails
     {
         $this->previousReportDueDate = $previousReportDueDate;
 
@@ -523,48 +526,48 @@ class UserDetails
         return $this;
     }
 
-    public function getCurrentReportStartDate(): ?\DateTime
+    public function getCurrentReportStartDate(): ?DateTime
     {
         return $this->currentReportStartDate;
     }
 
-    public function setCurrentReportStartDate(?\DateTime $currentReportStartDate): UserDetails
+    public function setCurrentReportStartDate(?DateTime $currentReportStartDate): UserDetails
     {
         $this->currentReportStartDate = $currentReportStartDate;
 
         return $this;
     }
 
-    public function getCurrentReportEndDate(): ?\DateTime
+    public function getCurrentReportEndDate(): ?DateTime
     {
         return $this->currentReportEndDate;
     }
 
-    public function setCurrentReportEndDate(?\DateTime $currentReportEndDate): UserDetails
+    public function setCurrentReportEndDate(?DateTime $currentReportEndDate): UserDetails
     {
         $this->currentReportEndDate = $currentReportEndDate;
 
         return $this;
     }
 
-    public function getPreviousReportStartDate(): ?\DateTime
+    public function getPreviousReportStartDate(): ?DateTime
     {
         return $this->previousReportStartDate;
     }
 
-    public function setPreviousReportStartDate(?\DateTime $previousReportStartDate): UserDetails
+    public function setPreviousReportStartDate(?DateTime $previousReportStartDate): UserDetails
     {
         $this->previousReportStartDate = $previousReportStartDate;
 
         return $this;
     }
 
-    public function getPreviousReportEndDate(): ?\DateTime
+    public function getPreviousReportEndDate(): ?DateTime
     {
         return $this->previousReportEndDate;
     }
 
-    public function setPreviousReportEndDate(?\DateTime $previousReportEndDate): UserDetails
+    public function setPreviousReportEndDate(?DateTime $previousReportEndDate): UserDetails
     {
         $this->previousReportEndDate = $previousReportEndDate;
 

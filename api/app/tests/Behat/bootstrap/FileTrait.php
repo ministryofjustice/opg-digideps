@@ -2,6 +2,7 @@
 
 namespace App\Tests\Behat;
 
+use RuntimeException;
 use Behat\Gherkin\Node\TableNode;
 
 trait FileTrait
@@ -28,16 +29,16 @@ trait FileTrait
                     exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
                     if (empty($lines)) {
                         exec("unzip -l $tmpFile", $allFiles);
-                        throw new \RuntimeException("File matching $file not found in ZIP file. Files:".implode(', ', $allFiles));
+                        throw new RuntimeException("File matching $file not found in ZIP file. Files:".implode(', ', $allFiles));
                     }
                     $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
                     if ($sizeBytes < $sizeAtLeast) {
-                        throw new \RuntimeException("File matching $file is $sizeBytes bytes, at least $sizeAtLeast expected");
+                        throw new RuntimeException("File matching $file is $sizeBytes bytes, at least $sizeAtLeast expected");
                     }
                     break;
 
                 default:
-                    throw new \RuntimeException("$check check not implemented");
+                    throw new RuntimeException("$check check not implemented");
             }
         }
     }

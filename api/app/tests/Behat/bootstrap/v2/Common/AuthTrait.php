@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
@@ -188,7 +189,7 @@ trait AuthTrait
             throw new BehatException(sprintf('User with email %s not found', $email));
 
         if ('expired' === $token) {
-            $user->setTokenDate(new \DateTime('-2hours'));
+            $user->setTokenDate(new DateTime('-2hours'));
             $this->em->persist($user);
             $this->em->flush($user);
         }

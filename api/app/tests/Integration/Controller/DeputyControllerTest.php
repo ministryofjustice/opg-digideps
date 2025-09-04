@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\User;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
@@ -176,7 +177,7 @@ class DeputyControllerTest extends AbstractTestController
         self::$fixtures->flush();
 
         // generate and add a report to the court order
-        $startDate = new \DateTime();
+        $startDate = new DateTime();
         $report = ReportTestHelper::generateReport(self::$em, $client, startDate: $startDate);
         $courtOrder->addReport($report);
         self::$fixtures->persist($courtOrder);

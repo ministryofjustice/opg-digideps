@@ -2,7 +2,6 @@
 
 namespace App\Tests\Integration\Controller\Ndr;
 
-use App\Entity\Ndr\VisitsCare;
 use App\Tests\Integration\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
