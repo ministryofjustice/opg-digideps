@@ -3,8 +3,12 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Ndr\Asset;
+use App\Entity\Ndr\AssetOther;
+use App\Entity\Ndr\AssetProperty;
+use App\Entity\Ndr\Ndr;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,12 +23,12 @@ class AssetController extends RestController
 
     #[Route(path: '/ndr/{ndrId}/asset/{assetId}', requirements: ['ndrId' => '\d+', 'assetId' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(int $ndrId, int $assetId): EntityDir\Ndr\Asset
+    public function getOneById(int $ndrId, int $assetId): Asset
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
+        $asset = $this->findEntityBy(Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
         $this->formatter->setJmsSerialiserGroups(['ndr-asset']);
@@ -38,12 +42,12 @@ class AssetController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId); /* @var $ndr \App\Entity\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         $this->formatter->validateArray($data, [
             'type' => 'mustExist',
         ]);
-        $asset = EntityDir\Ndr\Asset::factory($data['type']);
+        $asset = Asset::factory($data['type']);
         $asset->setNdr($ndr);
 
         $this->updateEntityWithData($asset, $data);
@@ -61,10 +65,10 @@ class AssetController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
+        $asset = $this->findEntityBy(Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
         $this->updateEntityWithData($asset, $data);
@@ -78,10 +82,10 @@ class AssetController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $ndrId, int $assetId): array
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
+        $asset = $this->findEntityBy(Asset::class, $assetId);
         $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
         $this->em->remove($asset);
@@ -90,25 +94,25 @@ class AssetController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Ndr\Asset $asset, array $data): void
+    private function updateEntityWithData(Asset $asset, array $data): void
     {
         // common props
         $this->hydrateEntityWithArrayData($asset, $data, [
             'value' => 'setValue',
         ]);
 
-        if ($asset instanceof EntityDir\Ndr\AssetOther) {
+        if ($asset instanceof AssetOther) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'title' => 'setTitle',
                 'description' => 'setDescription',
             ]);
 
             if (isset($data['valuation_date'])) {
-                $asset->setValuationDate(new \DateTime($data['valuation_date']));
+                $asset->setValuationDate(new DateTime($data['valuation_date']));
             }
         }
 
-        if ($asset instanceof EntityDir\Ndr\AssetProperty) {
+        if ($asset instanceof AssetProperty) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'address' => 'setAddress',
                 'address2' => 'setAddress2',
@@ -128,7 +132,7 @@ class AssetController extends RestController
             if (isset($data['rent_agreement_end_date'])) {
                 $value = isset($data['rent_agreement_end_date']['date'])
                     ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
-                $asset->setRentAgreementEndDate(new \DateTime($value));
+                $asset->setRentAgreementEndDate(new DateTime($value));
             }
         }
     }

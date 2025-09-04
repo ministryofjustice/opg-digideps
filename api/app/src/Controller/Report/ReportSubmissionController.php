@@ -3,14 +3,18 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
 use App\Exception\UnauthorisedException;
 use App\Repository\ReportSubmissionRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -117,7 +121,7 @@ class ReportSubmissionController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        /* @var $reportSubmission EntityDir\Report\ReportSubmission */
+        /* @var $reportSubmission \App\Entity\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(ReportSubmission::class, $reportSubmissionId);
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -138,14 +142,14 @@ class ReportSubmissionController extends RestController
     #[Route(path: '/old', methods: ['GET'])]
     public function getOld(Request $request): array
     {
-        if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
+        if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
+            throw new RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
         /* @var $repo ReportSubmissionRepository */
         $repo = $this->em->getRepository(ReportSubmission::class);
 
-        $ret = $repo->findDownloadableOlderThan(new \DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
+        $ret = $repo->findDownloadableOlderThan(new DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
 
         $this->formatter->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
 
@@ -159,11 +163,11 @@ class ReportSubmissionController extends RestController
     #[Route(path: '/{id}/set-undownloadable', requirements: ['id' => '\d+'], methods: ['PUT'])]
     public function setUndownloadable(int $id, Request $request)
     {
-        if (!$this->authService->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
+        if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
+            throw new RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
         }
 
-        /* @var $reportSubmission EntityDir\Report\ReportSubmission */
+        /* @var $reportSubmission \App\Entity\Report\ReportSubmission */
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
         $reportSubmission->setDownloadable(false);
         foreach ($reportSubmission->getDocuments() as $document) {
@@ -186,7 +190,7 @@ class ReportSubmissionController extends RestController
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
 
         if ($reportSubmission->getArchived()) {
-            throw new \InvalidArgumentException('Cannot queue documents for an archived report submission');
+            throw new InvalidArgumentException('Cannot queue documents for an archived report submission');
         }
 
         foreach ($reportSubmission->getDocuments() as $document) {
@@ -203,17 +207,17 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/pre-registration-data', name: 'pre_registration_data', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function getPreRegistrationData(Request $request): array
     {
-        /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        /* @var $repo \App\Entity\Repository\ReportSubmissionRepository */
         $repo = $this->em->getRepository(ReportSubmission::class);
 
-        $fromDate = $request->get('fromDate') ? new \DateTime($request->get('fromDate')) : null;
-        $toDate = $request->get('toDate') ? new \DateTime($request->get('toDate')) : null;
+        $fromDate = $request->get('fromDate') ? new DateTime($request->get('fromDate')) : null;
+        $toDate = $request->get('toDate') ? new DateTime($request->get('toDate')) : null;
 
         $fromDateTime = $fromDate?->setTime(0, 0);
         $toDateTime = $toDate?->setTime(23, 59, 59);

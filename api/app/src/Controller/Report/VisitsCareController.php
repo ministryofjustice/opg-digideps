@@ -3,8 +3,10 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\Report;
+use App\Entity\Report\VisitsCare;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/report')]
 class VisitsCareController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
+    private array $sectionIds = [Report::SECTION_VISITS_CARE];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -24,10 +26,10 @@ class VisitsCareController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function add(Request $request): array
     {
-        $visitsCare = new EntityDir\Report\VisitsCare();
+        $visitsCare = new VisitsCare();
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $data['report_id']);
+        $report = $this->findEntityBy(Report::class, $data['report_id']);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $visitsCare->setReport($report);
@@ -46,7 +48,7 @@ class VisitsCareController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function update(Request $request, int $id): array
     {
-        $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id);
         $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
@@ -66,21 +68,21 @@ class VisitsCareController extends RestController
     {
         $this->formatter->setJmsSerialiserGroups(['visits-care']);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        return $this->em->getRepository(EntityDir\Report\VisitsCare::class)->findByReport($report);
+        return $this->em->getRepository(VisitsCare::class)->findByReport($report);
     }
 
     #[Route(path: '/visits-care/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $id): EntityDir\Report\VisitsCare
+    public function getOneById(Request $request, int $id): VisitsCare
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         return $visitsCare;
@@ -90,7 +92,7 @@ class VisitsCareController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteVisitsCare(int $id): array
     {
-        $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare not found');
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id, 'VisitsCare not found');
         $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
@@ -102,7 +104,7 @@ class VisitsCareController extends RestController
         return [];
     }
 
-    private function updateInfo(array $data, EntityDir\Report\VisitsCare $visitsCare): void
+    private function updateInfo(array $data, VisitsCare $visitsCare): void
     {
         if (array_key_exists('do_you_live_with_client', $data)) {
             $visitsCare->setDoYouLiveWithClient($data['do_you_live_with_client']);
@@ -130,7 +132,7 @@ class VisitsCareController extends RestController
 
         if (array_key_exists('when_was_care_plan_last_reviewed', $data)) {
             if (!empty($data['when_was_care_plan_last_reviewed'])) {
-                $visitsCare->setWhenWasCarePlanLastReviewed(new \DateTime($data['when_was_care_plan_last_reviewed']));
+                $visitsCare->setWhenWasCarePlanLastReviewed(new DateTime($data['when_was_care_plan_last_reviewed']));
             } else {
                 $visitsCare->setWhenWasCarePlanLastReviewed(null);
             }

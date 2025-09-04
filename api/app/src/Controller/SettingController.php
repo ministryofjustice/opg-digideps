@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity as EntityDir;
 use App\Entity\Setting;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +20,7 @@ class SettingController extends RestController
     #[Route(path: '/{id}', methods: ['GET'])]
     public function getSetting(string $id): array|Setting
     {
-        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id);
+        $setting = $this->em->getRepository(Setting::class)->find($id);
 
         $this->formatter->setJmsSerialiserGroups(['setting']);
 
@@ -37,12 +36,12 @@ class SettingController extends RestController
             'enabled' => 'mustExist',
         ]);
 
-        $setting = $this->em->getRepository(EntityDir\Setting::class)->find($id);
+        $setting = $this->em->getRepository(Setting::class)->find($id);
         if ($setting) { // update
             $setting->setContent($data['content']);
             $setting->setEnabled($data['enabled']);
         } else { // create new one
-            $setting = new EntityDir\Setting($id, $data['content'], $data['enabled']);
+            $setting = new Setting($id, $data['content'], $data['enabled']);
             $this->em->persist($setting);
         }
 

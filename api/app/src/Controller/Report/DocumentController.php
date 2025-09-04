@@ -3,11 +3,13 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
+use App\Entity\Report\Report;
 use App\Exception\UnauthorisedException;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +20,7 @@ class DocumentController extends RestController
 {
     public const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
     public const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
+    private array $sectionIds = [Report::SECTION_DOCUMENTS];
 
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -34,9 +36,9 @@ class DocumentController extends RestController
     public function add(Request $request, string $reportType, int $reportId): array
     {
         if ('report' === $reportType) {
-            $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+            $report = $this->findEntityBy(Report::class, $reportId);
         } else {
-            $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
+            $report = $this->findEntityBy(Ndr::class, $reportId);
         }
 
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -68,11 +70,11 @@ class DocumentController extends RestController
     public function overwriteReportPdf(Request $request, string $reportType, int $reportId): array
     {
         if ('report' === $reportType) {
-            /** @var EntityDir\Report\Report $report */
-            $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+            /** @var Report $report */
+            $report = $this->findEntityBy(Report::class, $reportId);
         } else {
-            /** @var EntityDir\Report\Report $report */
-            $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
+            /** @var Report $report */
+            $report = $this->findEntityBy(Ndr::class, $reportId);
         }
 
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -247,7 +249,7 @@ class DocumentController extends RestController
             }
 
             if (Document::SYNC_STATUS_SUCCESS === $data['syncStatus']) {
-                $document->setSynchronisationTime(new \DateTime());
+                $document->setSynchronisationTime(new DateTime());
             }
         }
 

@@ -3,8 +3,11 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\ProfServiceFee;
+use App\Entity\Report\ProfServiceFeeCurrent;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfServiceFeeController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES];
+    private array $sectionIds = [Report::SECTION_PROF_CURRENT_FEES];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -25,9 +28,9 @@ class ProfServiceFeeController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-        $profServiceFee = new EntityDir\Report\ProfServiceFeeCurrent($report);
+        $profServiceFee = new ProfServiceFeeCurrent($report);
         // TODO create a factory with ($data['fee_type_id'] value when/if needed
         $profServiceFee->setReport($report);
         $this->updateEntity($data, $profServiceFee);
@@ -46,7 +49,7 @@ class ProfServiceFeeController extends RestController
     #[IsGranted(attribute: 'ROLE_PROF')]
     public function update(Request $request, int $id): array
     {
-        $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id);
+        $profServiceFee = $this->findEntityBy(ProfServiceFee::class, $id);
         $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
@@ -62,13 +65,13 @@ class ProfServiceFeeController extends RestController
 
     #[Route(path: '/prof-service-fee/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_PROF')]
-    public function getOneById(Request $request, int $id): EntityDir\Report\ProfServiceFee
+    public function getOneById(Request $request, int $id): ProfServiceFee
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['prof_service_fee'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service Fee with id:'.$id.' not found');
+        $profServiceFee = $this->findEntityBy(ProfServiceFee::class, $id, 'Prof Service Fee with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
         return $profServiceFee;
@@ -78,7 +81,7 @@ class ProfServiceFeeController extends RestController
     #[IsGranted(attribute: 'ROLE_PROF')]
     public function deleteProfServiceFee(int $id): array
     {
-        $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service fee not found');
+        $profServiceFee = $this->findEntityBy(ProfServiceFee::class, $id, 'Prof Service fee not found');
         $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
@@ -91,7 +94,7 @@ class ProfServiceFeeController extends RestController
         return [];
     }
 
-    private function updateEntity(array $data, EntityDir\Report\ProfServiceFee $profServiceFee): void
+    private function updateEntity(array $data, ProfServiceFee $profServiceFee): void
     {
         if (array_key_exists('assessed_or_fixed', $data)) {
             $profServiceFee->setAssessedOrFixed($data['assessed_or_fixed']);
@@ -120,7 +123,7 @@ class ProfServiceFeeController extends RestController
                 }
 
                 if (array_key_exists('payment_received_date', $data)) {
-                    $profServiceFee->setPaymentReceivedDate(new \DateTime($data['payment_received_date']));
+                    $profServiceFee->setPaymentReceivedDate(new DateTime($data['payment_received_date']));
                 }
             }
         }

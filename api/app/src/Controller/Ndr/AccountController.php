@@ -3,7 +3,8 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Ndr\BankAccount;
+use App\Entity\Ndr\Ndr;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +22,13 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function addAccount(Request $request, int $ndrId): array
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $ndr = $this->findEntityBy(Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
         $data = $this->formatter->deserializeBodyContent($request, [
         ]);
 
-        $account = new EntityDir\Ndr\BankAccount();
+        $account = new BankAccount();
         $account->setNdr($ndr);
 
         $this->fillAccountData($account, $data);
@@ -40,13 +41,13 @@ class AccountController extends RestController
 
     #[Route(path: '/ndr/account/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $id): EntityDir\Ndr\BankAccount
+    public function getOneById(Request $request, int $id): BankAccount
     {
         if ($request->query->has('groups')) {
             $this->formatter->setJmsSerialiserGroups($request->query->all('groups'));
         }
 
-        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
         $this->formatter->setJmsSerialiserGroups(['ndr-account', 'bank-acccount-ndr', 'ndr_id']);
@@ -58,7 +59,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function editAccount(Request $request, int $id): int
     {
-        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -74,7 +75,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDelete($id): array
     {
-        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Ndr\BankAccount */
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
         $this->em->remove($account);
@@ -83,7 +84,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Ndr\BankAccount $account, array $data): void
+    private function fillAccountData(BankAccount $account, array $data): void
     {
         if (array_key_exists('account_type', $data)) {
             $account->setAccountType($data['account_type']);

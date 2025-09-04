@@ -10,10 +10,13 @@ use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
+use RuntimeException;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -203,16 +206,16 @@ class UserController extends RestController
             /** @var ?User $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
-                throw new \RuntimeException('User not found', 404);
+                throw new RuntimeException('User not found', 404);
             }
         } elseif ('case_number' == $what) {
             /** @var ?Client $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
-                throw new \RuntimeException('Client not found', 404);
+                throw new RuntimeException('Client not found', 404);
             }
             if (empty($client->getUsers())) {
-                throw new \RuntimeException('Client has not users', 404);
+                throw new RuntimeException('Client has not users', 404);
             }
             /** @var User $user */
             $user = $client->getUsers()[0];
@@ -220,10 +223,10 @@ class UserController extends RestController
             /** @var ?User $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
-                throw new \RuntimeException('User not found', 419);
+                throw new RuntimeException('User not found', 419);
             }
         } else {
-            throw new \RuntimeException('wrong query', 500);
+            throw new RuntimeException('wrong query', 500);
         }
 
         /** @var User $loggedInUser */
@@ -339,7 +342,7 @@ class UserController extends RestController
     public function recreateToken(Request $request, string $email): User
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /** @var User $user */
@@ -347,7 +350,7 @@ class UserController extends RestController
         $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
         if (!$hasAdminSecret && User::ROLE_ADMIN == $user->getRoleName()) {
-            throw new \RuntimeException('Admin emails not accepted.', 403);
+            throw new RuntimeException('Admin emails not accepted.', 403);
         }
 
         $user->recreateRegistrationToken();
@@ -363,14 +366,14 @@ class UserController extends RestController
     public function getByToken(Request $request, string $token): User
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
@@ -383,14 +386,14 @@ class UserController extends RestController
     public function agreeTermsUse(Request $request, string $token): int
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
@@ -405,14 +408,14 @@ class UserController extends RestController
     public function clearRegistrationToken(Request $request, string $token): int
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setRegistrationToken(null);
@@ -434,7 +437,7 @@ class UserController extends RestController
         $requestedUser = $this->userRepository->find($id);
 
         if (!$requestedUser) {
-            throw new \RuntimeException('User not found', 419);
+            throw new RuntimeException('User not found', 419);
         }
 
         /** @var ArrayCollection $requestedUserTeams */
@@ -457,7 +460,7 @@ class UserController extends RestController
     /**
      * Endpoint for getting a reg token for user.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-reg-token', methods: ['GET'])]
     public function getRegToken(): string
@@ -491,7 +494,7 @@ class UserController extends RestController
             }
         }
 
-        $requestedUser->setRegistrationDate(new \DateTime());
+        $requestedUser->setRegistrationDate(new DateTime());
 
         $this->em->flush();
 
@@ -527,7 +530,7 @@ class UserController extends RestController
      * Endpoint for getting the primary user account for user.
      * Returns null if the user has no or multiple primary account(s).
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-primary-email/{deputyUid}', methods: ['GET'])]
     public function getPrimaryEmail(int $deputyUid): ?string
@@ -545,7 +548,7 @@ class UserController extends RestController
     /**
      * Endpoint for getting the primary user account associated with a deputy uid.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-primary-user-account/{deputyUid}', methods: ['GET'])]
     public function getPrimaryUserAccount(int $deputyUid): ?User
