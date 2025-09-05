@@ -3,7 +3,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files # prevents giant files from being committed.
         args: ["--maxkb=20480"]
@@ -18,7 +18,7 @@ repos:
       - id: trailing-whitespace # trims trailing whitespace.
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.97.3
+    rev: v1.100.0
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
@@ -33,9 +33,8 @@ repos:
   - repo: https://github.com/digitalpulp/pre-commit-php.git
     rev: 1.4.0
     hooks:
-      - id: php-cs-fixer
+      - id: php-cbf
         files: \.(php)$
-        args: ["--rules=@PSR12,@Symfony"]
       - id: php-stan
         files: \.(php)$
 

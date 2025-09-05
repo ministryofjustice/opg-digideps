@@ -1,0 +1,14 @@
+{
+  "name": "digideps/tools",
+  "description": "Tools for local development",
+  "type": "metapackage",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.3"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1",
+    "squizlabs/php_codesniffer": "^3.13"
+  }
+}
