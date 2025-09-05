@@ -46,6 +46,7 @@ up-app-rebuild: build-js ##@application Brings up app with a basic rebuild
 	docker compose down
 	docker container prune --force
 	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up -d --remove-orphans --build load-balancer
+	$(MAKE) cache-clear
 
 up-app-xdebug: ##@application Brings the app up, rebuilds containers and enabled xdebug in api and client (see DEBUGGING.md for config and setup)
 	REQUIRE_XDEBUG_CLIENT=1 REQUIRE_XDEBUG_API=1 XDEBUG_IDEKEY_API=PHPSTORM-API XDEBUG_IDEKEY_CLIENT=PHPSTORM-CLIENT docker compose up -d --build --remove-orphans load-balancer
