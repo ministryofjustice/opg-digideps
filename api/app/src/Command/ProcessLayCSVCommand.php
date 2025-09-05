@@ -216,7 +216,7 @@ class ProcessLayCSVCommand extends Command
         try {
             $numReportsAdded = $this->layRegistrationService->addMissingReports();
             $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->verboseLogger->error('Error encountered while adding missing reports: '.$e->getMessage());
             $this->verboseLogger->error($e->getTraceAsString());
         }
@@ -226,7 +226,7 @@ class ProcessLayCSVCommand extends Command
         try {
             $numDeputyCaseAssociationsAdded = $this->deputyCaseService->addMissingDeputyCaseAssociations();
             $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
             $this->verboseLogger->error($e->getTraceAsString());
         }
