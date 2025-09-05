@@ -243,7 +243,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("App\Entity\Client")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="reports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="reports", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
