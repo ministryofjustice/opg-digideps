@@ -42,7 +42,7 @@ ADDITIONAL_CONFIG = -f docker-compose.override.yml
 up-app: ##@application Brings the app up and mounts local folders
 	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up -d --remove-orphans load-balancer
 
-up-app-rebuild: ##@application Brings up app with a basic rebuild
+up-app-rebuild: build-js ##@application Brings up app with a basic rebuild
 	docker compose down
 	docker container prune --force
 	COMPOSE_HTTP_TIMEOUT=90 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} up -d --remove-orphans --build load-balancer
