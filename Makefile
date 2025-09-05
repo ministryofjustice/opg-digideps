@@ -1,4 +1,5 @@
 include Makefile.checks.mk
+include Makefile.devsetup.mk
 #COLORS
 GREEN  := $(shell tput -Txterm setaf 2)
 WHITE  := $(shell tput -Txterm setaf 7)
