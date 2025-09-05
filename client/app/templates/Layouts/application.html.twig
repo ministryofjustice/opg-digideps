@@ -15,54 +15,49 @@
 
 {% block proposition_content %}
 
-    <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}"
-       class="govuk-header__link govuk-header__service-name">
-        {% block proposition_title %}Complete the deputy report{% endblock %}
-    </a>
-
-    <nav aria-label="Top Level Navigation" class="govuk-header__navigation behat-region-navbar">
+    <nav aria-label="Top Level Navigation" class="govuk-service-navigation__wrapper">
         {% if app.user %}
             <button type="button" role="button" class="govuk-header__menu-button govuk-js-header-toggle"
                     aria-controls="navigation" aria-label="Show or hide Top Level Navigation" hidden>
                 Menu
             </button>
-            <ul id="navigation" class="govuk-header__navigation-list">
+            <ul id="navigation" class="govuk-service-navigation__list">
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
                     {% if adLoggedAsDeputy %}
-                        <li class="govuk-header__navigation-item">
+                        <li class="govuk-service-navigation__item">
                             Logged as {{ adName }} (Assisted Digital)
                         </li>
                     {% endif %}
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('homepage') }}" class="govuk-header__link behat-link-reports">
+                    <li class="govuk-service-navigation__item">
+                        <a href="{{ path('homepage') }}" class="govuk-service-navigation__link">
                             {{ 'nav.reports' | trans }}
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('account_settings') }}" class="govuk-header__link behat-link-user-account">
+                    <li class="govuk-service-navigation__item">
+                        <a href="{{ path('account_settings') }}" class="govuk-service-navigation__link">
                             {{ 'nav.userAccount' | trans }}
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('deputyship_details_clients') }}" class="govuk-header__link behat-link-user-account">
+                    <li class="govuk-service-navigation__item">
+                        <a href="{{ path('deputyship_details_clients') }}" class="govuk-service-navigation__link">
                             {{ 'nav.clients' | trans }}
                         </a>
                     </li>
                 {% endif %}
                 {% if app.user.isDeputyOrg() %}
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('org_dashboard') }}" class="govuk-header__link behat-link-org-dashboard">
+                    <li class="govuk-service-navigation__item">
+                        <a href="{{ path('org_dashboard') }}" class="govuk-service-navigation__link">
                             Dashboard
                         </a>
                     </li>
-                    <li class="govuk-header__navigation-item">
-                        <a href="{{ path('org_settings') }}" class="govuk-header__link behat-link-org-settings">
+                    <li class="govuk-service-navigation__item">
+                        <a href="{{ path('org_settings') }}" class="govuk-service-navigation__link">
                             Settings
                         </a>
                     </li>
                 {% endif %}
-                <li class="govuk-header__navigation-item">
-                    <a href="{{ path('app_logout') }}" class="govuk-header__link behat-link-logout">
+                <li class="govuk-service-navigation__item">
+                    <a href="{{ path('app_logout') }}" class="govuk-service-navigation__link">
                         {{ 'signOut' | trans({}, 'common' ) }}
                     </a>
                 </li>
