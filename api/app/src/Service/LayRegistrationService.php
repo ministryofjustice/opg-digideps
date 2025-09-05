@@ -35,19 +35,18 @@ class LayRegistrationService
 
             foreach ($reportsToAdd as $reportToAdd) {
                 $this->entityManager->persist($reportToAdd);
+                $this->entityManager->persist($client);
 
                 ++$numReportsPersisted;
 
                 if (0 === $numReportsPersisted % $batchSize) {
-                    $this->entityManager->persist($client);
                     $this->entityManager->flush();
                 }
             }
-
-            $this->entityManager->persist($client);
-            $this->entityManager->flush();
-            $this->entityManager->clear();
         }
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
         return $numReportsPersisted;
     }
