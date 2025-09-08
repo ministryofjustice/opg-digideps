@@ -21,7 +21,7 @@ class ClientsResponseComparer extends ResponseComparer
         return '/client/{client_id}';
     }
 
-    public function compare(ResponseInterface $legacyResponse, ResponseInterface $newResponse): bool
+    public function compare(ResponseInterface $legacyResponse, ResponseInterface $newResponse): array
     {
         $legacyDecoded = json_decode($legacyResponse->getBody()->getContents(), true);
         $newDecoded = json_decode($newResponse->getBody()->getContents(), true);
@@ -43,6 +43,10 @@ class ClientsResponseComparer extends ResponseComparer
         $legacyId = $legacyDecoded['data']['id'];
         $newId = $newDecoded['data']['id'];
 
-        return $legacyId === $newId;
+        return [
+            'matching' => $legacyId === $newId,
+            'legacy' => $legacyId,
+            'new' => $newId,
+        ];
     }
 }

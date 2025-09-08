@@ -206,6 +206,11 @@ class ApiComparison extends Command
 
         $rows = $this->getIdsToUse($comparer->getSqlStatement());
 
+        $counts = [
+            'success' => 0,
+            'failure' => 0,
+        ];
+
         foreach ($rows as $row) {
             try {
                 $user_id = $row['user_id'];
@@ -216,11 +221,15 @@ class ApiComparison extends Command
                 $resultLegacy = $this->getApiResponse($authToken, $urls['legacyUrl']);
                 $resultNew = $this->getApiResponse($authToken, $urls['newUrl']);
 
-                $isEqual = $comparer->compare($resultLegacy, $resultNew);
+                $compareResult = $comparer->compare($resultLegacy, $resultNew);
 
-                if (!$isEqual) {
+                if (!$compareResult['matching']) {
+                    ++$counts['failure'];
                     $output->writeln('<comment>Differences detected for user_id: </comment>'.$user_id);
+                    $output->writeln('<comment>Legacy: </comment>'.$compareResult['legacy']);
+                    $output->writeln('<comment>New: </comment>'.$compareResult['new']);
                 } else {
+                    ++$counts['success'];
                     $output->writeln('<info>No differences found for user_id: </info>'.$user_id);
                 }
             } catch (\Exception $e) {
@@ -229,6 +238,8 @@ class ApiComparison extends Command
                 continue;
             }
         }
+
+        $output->writeln('<comment>Total success: </comment>'.$counts['success'].'<comment> Total failure: </comment>'.$counts['failure']);
 
         return $failed ? Command::FAILURE : Command::SUCCESS;
     }
