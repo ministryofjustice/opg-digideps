@@ -4,11 +4,22 @@
 
 This app is the [Complete the deputy report][service] service. It provides an online reporting service that has a publicly available frontend used by deputies to submit their reports, and a VPN restricted admin area for case managers to review submitted reports.
 
+## Quicker start
+
+If you have `make` and `brew` installed it is suggested that you run the following command;
+
+```shell
+make setup-mac-development-tools
+```
+
+Currently only the pre-commit setup steps are automated.
+Please add further automation to `Makefile.devsetup.mk` and update the documentation to reflect the changes.
+
 ## Requirements
 
-You must have Docker installed.
+### 1. Docker
 
-If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable experience.
+You must have Docker installed.
 
 > **N.B.** If you have an M1 macOS running Monterey 12.2 or higher, or you have an Intel based macOS running Monterey 12.3 or higher then there are some Docker setting you can enable which improves I/O performance for operations on volumes.
 
@@ -21,6 +32,10 @@ If developing the app then ensure you have [pre-commit](https://pre-commit.com/)
 Also in `Docker settings -> Resources`, make sure that you have at least 10gb of memory allocated or you may get performance issues.
 
 Once both boxes are checked click `Apply & Restart` then continue to follow the instructions below.
+
+### 2. Pre-commit hooks
+
+If developing the app then ensure you have [pre-commit](https://pre-commit.com/) installed to take advantage of the pre-commit [hooks](.pre-commit-config.yaml) we've added to the project to make PRs a more consistent and enjoyable experience.
 
 ## Installation
 
