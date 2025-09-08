@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
+use RuntimeException;
 use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Tests\Integration\Fixtures;
@@ -223,7 +225,7 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
         $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
-        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
+        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof DateTime);
         self::assertTrue($loggedInUser->getIsPrimary());
     }
 
@@ -259,7 +261,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         try {
             $this->assertNull($loggedInUser->getDeputyNo());
             $this->assertEquals(0, $loggedInUser->getDeputyUid());
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
             $this->assertEquals($expectedErrorMessage, $e->getMessage());
             $this->assertEquals(462, $e->getCode());

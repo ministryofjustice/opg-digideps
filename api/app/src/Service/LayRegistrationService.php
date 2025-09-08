@@ -27,7 +27,7 @@ class LayRegistrationService
         $clientsWithoutAReport = $this->clientRepository->findClientsWithoutAReport();
 
         // for each of those clients, decide which type of report to add and create it
-        $numItemsPersisted = 0;
+        $numReportsPersisted = 0;
         foreach ($clientsWithoutAReport as $client) {
             // work out which type(s) of report to create based on comparing/aggregating the pre-reg rows
             // for this client's case number
@@ -35,12 +35,12 @@ class LayRegistrationService
 
             foreach ($reportsToAdd as $reportToAdd) {
                 $this->entityManager->persist($reportToAdd);
+                $this->entityManager->persist($client);
 
-                ++$numItemsPersisted;
+                ++$numReportsPersisted;
 
-                if (0 === $numItemsPersisted % $batchSize) {
+                if (0 === $numReportsPersisted % $batchSize) {
                     $this->entityManager->flush();
-                    $this->entityManager->clear();
                 }
             }
         }
@@ -48,6 +48,6 @@ class LayRegistrationService
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        return $numItemsPersisted;
+        return $numReportsPersisted;
     }
 }

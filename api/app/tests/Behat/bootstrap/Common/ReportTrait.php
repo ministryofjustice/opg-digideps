@@ -2,6 +2,9 @@
 
 namespace App\Tests\Behat\Common;
 
+use RuntimeException;
+use Exception;
+use Throwable;
 use Behat\Gherkin\Node\TableNode;
 
 trait ReportTrait
@@ -52,7 +55,7 @@ trait ReportTrait
 
             $actual = $this->getSession()->getStatusCode();
             if (intval($expectedReturnCode) !== intval($actual)) {
-                throw new \RuntimeException("$fullUrl: Current response status code is $actual, but $expectedReturnCode expected.");
+                throw new RuntimeException("$fullUrl: Current response status code is $actual, but $expectedReturnCode expected.");
             }
         }
     }
@@ -72,7 +75,7 @@ trait ReportTrait
             // PA
             $this->assertSession()->elementNotExists('css', '#edit-report_submit');
         } else {
-            throw new \RuntimeException('usertype not specified. Usage: the PA|Lay report should not be submittable');
+            throw new RuntimeException('usertype not specified. Usage: the PA|Lay report should not be submittable');
         }
     }
 
@@ -91,7 +94,7 @@ trait ReportTrait
             // PA
             $this->assertSession()->elementExists('css', '#edit-report_submit');
         } else {
-            throw new \RuntimeException('usertype not specified. Usage: the PA|Lay report should be submittable');
+            throw new RuntimeException('usertype not specified. Usage: the PA|Lay report should be submittable');
         }
     }
 
@@ -231,7 +234,7 @@ trait ReportTrait
         $actualCode = $this->getSession()->getStatusCode();
 
         if (!in_array($actualCode, $codes)) {
-            throw new \RuntimeException("Invalid status code: $actualCode");
+            throw new RuntimeException("Invalid status code: $actualCode");
         }
     }
 
@@ -300,7 +303,7 @@ trait ReportTrait
 
         try {
             $this->clickLink('Preview and check report');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $link = 'ndr' === $reportType ? 'edit-report-review' : 'edit-report_submit';
             $this->clickOnBehatLink($link);
         }
@@ -331,7 +334,7 @@ trait ReportTrait
         } else {
             try {
                 $this->clickLink($client.'-Client, John');
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->fillField('search', $client);
                 $this->pressButton('search_submit');
                 $this->clickLink($client.'-Client, John');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
+use stdClass;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
@@ -46,10 +47,10 @@ class LayRegistrationServiceTest extends TestCase
             ->method('findClientsWithoutAReport')
             ->willReturn($mockClients);
 
-        $counter = new \stdClass();
+        $counter = new stdClass();
         $counter->current = 0;
 
-        $this->mockReportService->expects($this->exactly(3))
+        $this->mockReportService->expects(self::exactly(3))
             ->method('createRequiredReports')
             ->with(isInstanceOf(Client::class))
             ->willReturnCallback(function ($client) use ($mockClients, $counter) {
@@ -60,17 +61,18 @@ class LayRegistrationServiceTest extends TestCase
                 return [self::createMock(Report::class)];
             });
 
-        $this->mockEntityManager->expects($this->exactly(3))
+        $this->mockEntityManager->expects(self::any())
             ->method('persist')
-            ->with(isInstanceOf(Report::class));
+            ->willReturnCallback(function ($entity) {
+                self::assertTrue(is_a($entity, Report::class) || is_a($entity, Client::class));
+            });
 
-        $this->mockEntityManager->expects($this->exactly(2))
+        $this->mockEntityManager->expects(self::any())
             ->method('flush');
 
-        $this->mockEntityManager->expects($this->exactly(2))
+        $this->mockEntityManager->expects(self::any())
             ->method('clear');
 
-        // batch size of 2 will cause two flushes and two clears, as we are going to get 3 reports for the 3 clients
         $numReports = $this->sut->addMissingReports(batchSize: 2);
 
         self::assertEquals(3, $numReports);

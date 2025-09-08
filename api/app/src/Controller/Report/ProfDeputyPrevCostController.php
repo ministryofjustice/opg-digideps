@@ -3,16 +3,19 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\ProfDeputyPreviousCost;
+use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfDeputyPrevCostController extends RestController
 {
-    private array $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
+    private array $sectionIds = [Report::SECTION_PROF_DEPUTY_COSTS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {
@@ -25,12 +28,12 @@ class ProfDeputyPrevCostController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         if (!array_key_exists('amount', $data)) {
-            throw new \InvalidArgumentException('Missing amount');
+            throw new InvalidArgumentException('Missing amount');
         }
-        $cost = new EntityDir\Report\ProfDeputyPreviousCost($report, $data['amount']);
+        $cost = new ProfDeputyPreviousCost($report, $data['amount']);
         $this->updateEntity($data, $cost);
         $report->setProfDeputyCostsHasPrevious('yes');
 
@@ -47,7 +50,7 @@ class ProfDeputyPrevCostController extends RestController
     #[IsGranted(attribute: 'ROLE_PROF')]
     public function update(Request $request, int $id): array
     {
-        $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id);
+        $cost = $this->findEntityBy(ProfDeputyPreviousCost::class, $id);
         $report = $cost->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
@@ -63,13 +66,13 @@ class ProfDeputyPrevCostController extends RestController
 
     #[Route(path: '/prof-deputy-previous-cost/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_PROF')]
-    public function getOneById(Request $request, int $id): EntityDir\Report\ProfDeputyPreviousCost
+    public function getOneById(Request $request, int $id): ProfDeputyPreviousCost
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['prof-deputy-costs-prev'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id, 'Prof Service Fee with id:'.$id.' not found');
+        $cost = $this->findEntityBy(ProfDeputyPreviousCost::class, $id, 'Prof Service Fee with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
         return $cost;
@@ -79,8 +82,8 @@ class ProfDeputyPrevCostController extends RestController
     #[IsGranted(attribute: 'ROLE_PROF')]
     public function deleteProfDeputyPreviousCost(int $id): array
     {
-        $cost = $this->findEntityBy(EntityDir\Report\ProfDeputyPreviousCost::class, $id, 'Prof Service fee not found');
-        $report = $cost->getReport(); /* @var $report EntityDir\Report\Report */
+        $cost = $this->findEntityBy(ProfDeputyPreviousCost::class, $id, 'Prof Service fee not found');
+        $report = $cost->getReport(); /* @var $report \App\Entity\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
         $this->em->remove($cost);
@@ -98,14 +101,14 @@ class ProfDeputyPrevCostController extends RestController
         return [];
     }
 
-    private function updateEntity(array $data, EntityDir\Report\ProfDeputyPreviousCost $cost): EntityDir\Report\ProfDeputyPreviousCost
+    private function updateEntity(array $data, ProfDeputyPreviousCost $cost): ProfDeputyPreviousCost
     {
         if (array_key_exists('start_date', $data)) {
-            $cost->setStartDate(new \DateTime($data['start_date']));
+            $cost->setStartDate(new DateTime($data['start_date']));
         }
 
         if (array_key_exists('end_date', $data)) {
-            $cost->setEndDate(new \DateTime($data['end_date']));
+            $cost->setEndDate(new DateTime($data['end_date']));
         }
 
         if (array_key_exists('amount', $data)) {

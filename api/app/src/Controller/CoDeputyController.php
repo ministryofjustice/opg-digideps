@@ -7,6 +7,7 @@ use App\Service\CsvUploader;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -106,10 +107,10 @@ class CoDeputyController extends RestController
         $count = count($data);
 
         if (!$count) {
-            throw new \RuntimeException('No record received from the API');
+            throw new RuntimeException('No record received from the API');
         }
         if ($count > $maxRecords) {
-            throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
+            throw new RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
         $deputyNumbers = [];

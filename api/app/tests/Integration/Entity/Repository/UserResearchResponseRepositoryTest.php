@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Entity\Repository;
 
+use DateTime;
 use App\Entity\UserResearch\UserResearchResponse;
 use App\Repository\UserResearchResponseRepository;
 use App\Tests\Integration\ApiBaseTestCase;
@@ -37,6 +38,6 @@ class UserResearchResponseRepositoryTest extends ApiBaseTestCase
     public function canHandleLargeAmountsOfData()
     {
         $this->fixtures->createUserResearchResponse(2000);
-        $this->sut->getAllFilteredByDate(new \DateTime('-1 day'), new \DateTime());
+        $this->sut->getAllFilteredByDate(new DateTime('-1 day'), new DateTime());
     }
 }

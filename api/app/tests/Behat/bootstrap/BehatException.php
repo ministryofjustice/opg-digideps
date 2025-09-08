@@ -2,9 +2,12 @@
 
 namespace App\Tests\Behat;
 
-class BehatException extends \Exception
+use Exception;
+use Throwable;
+
+class BehatException extends Exception
 {
-    public function __construct($message = '', $code = 0, ?\Throwable $previous = null)
+    public function __construct($message = '', $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

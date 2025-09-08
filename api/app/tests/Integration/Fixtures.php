@@ -2,11 +2,15 @@
 
 namespace App\Tests\Integration;
 
+use DateTime;
+use InvalidArgumentException;
+use RuntimeException;
 use App\Entity as EntityDir;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
@@ -55,7 +59,7 @@ class Fixtures
     public function createUser(
         ?string $email = null,
         ?string $roleName = null,
-        ?\DateTime $registrationDate = null,
+        ?DateTime $registrationDate = null,
         ?string $phoneMain = null,
         ?int $deputyUid = null,
         ?bool $isPrimary = null,
@@ -66,12 +70,24 @@ class Fixtures
         $user->setFirstname('name'.time());
         $user->setLastname('surname'.time());
 
-        if ($email) { $user->setEmail($email); }
-        if ($roleName) { $user->setRoleName($roleName); }
-        if ($registrationDate) { $user->setRegistrationDate($registrationDate); }
-        if ($phoneMain) { $user->setPhoneMain($phoneMain); }
-        if ($deputyUid) { $user->setDeputyUid($deputyUid); }
-        if ($isPrimary) { $user->setIsPrimary($isPrimary); }
+        if ($email) {
+            $user->setEmail($email);
+        }
+        if ($roleName) {
+            $user->setRoleName($roleName);
+        }
+        if ($registrationDate) {
+            $user->setRegistrationDate($registrationDate);
+        }
+        if ($phoneMain) {
+            $user->setPhoneMain($phoneMain);
+        }
+        if ($deputyUid) {
+            $user->setDeputyUid($deputyUid);
+        }
+        if ($isPrimary) {
+            $user->setIsPrimary($isPrimary);
+        }
 
         $this->em->persist($user);
 
@@ -186,7 +202,7 @@ class Fixtures
         if (is_null($user)) {
             $user = $this->createUser(
                 roleName: User::ROLE_LAY_DEPUTY,
-                registrationDate: new \DateTime(),
+                registrationDate: new DateTime(),
                 phoneMain: '01211234567'
             );
         }
@@ -217,7 +233,7 @@ class Fixtures
         }
 
         $submission = new ReportSubmission($report, $user);
-        $report->setSubmitDate(new \DateTime('-2 days'));
+        $report->setSubmitDate(new DateTime('-2 days'));
 
         $this->em->persist($submission);
         $this->em->persist($report);
@@ -233,8 +249,8 @@ class Fixtures
         $report = new Report(
             $client,
             empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
-            empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
-            empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
+            empty($settersMap['setStartDate']) ? new DateTime('now') : $settersMap['setStartDate'],
+            empty($settersMap['setEndDate']) ? new DateTime('+12 months -1 day') : $settersMap['setEndDate']
         );
 
         foreach ($settersMap as $k => $v) {
@@ -492,7 +508,7 @@ class Fixtures
         /** @var Organisation $org */
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
 
-        $org->setDeletedAt(new \DateTime('now'));
+        $org->setDeletedAt(new DateTime('now'));
     }
 
     public function flush()
@@ -523,7 +539,7 @@ class Fixtures
     {
         $args = func_get_args();
         if (empty($args)) {
-            throw new \InvalidArgumentException('You must pass at least one object to persist');
+            throw new InvalidArgumentException('You must pass at least one object to persist');
         }
         foreach (func_get_args() as $e) {
             $this->em->persist($e);
@@ -600,7 +616,7 @@ class Fixtures
     public static function restoreDb()
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new \RuntimeException(self::PG_DUMP_PATH.' not found');
+            throw new RuntimeException(self::PG_DUMP_PATH.' not found');
         }
         self::pgCommand('psql < '.self::PG_DUMP_PATH);
     }
@@ -626,7 +642,7 @@ class Fixtures
             $researchType = new EntityDir\UserResearch\ResearchType(['surveys']);
 
             $userResearchResponse = (new EntityDir\UserResearch\UserResearchResponse())
-                ->setCreated(new \DateTime())
+                ->setCreated(new DateTime())
                 ->setDeputyshipLength('oneToFive')
                 ->setUser($rs->getCreatedBy())
                 ->setHasAccessToVideoCallDevice(true)
@@ -635,7 +651,7 @@ class Fixtures
             $satisfaction = (new EntityDir\Satisfaction())
                 ->setReport($rs->getReport())
                 ->setDeputyrole(User::ROLE_LAY_DEPUTY)
-                ->setCreated(new \DateTime())
+                ->setCreated(new DateTime())
                 ->setComments(' Some comments')
                 ->setScore(rand(1, 5))
                 ->setReporttype(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
@@ -657,7 +673,7 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(string $uid, string $type, string $status, \DateTime $madeDate = new \DateTime()): CourtOrder
+    public function createCourtOrder(string $uid, string $type, string $status, DateTime $madeDate = new DateTime()): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
@@ -671,5 +687,27 @@ class Fixtures
     public function deleteUser(int $id): void
     {
         $this->em->remove($this->getRepo(User::class)->find($id));
+    }
+
+    public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?string $deputyUid = null, ?\DateTime $madeDate = null): PreRegistration
+    {
+        if (is_null($madeDate)) {
+            $madeDate = new \DateTime();
+        }
+
+        $now = $madeDate->format('Y-m-d');
+
+        $data = [
+            'Case' => $caseNumber,
+            'ReportType' => $reportType,
+            'MadeDate' => $now,
+            'OrderType' => $orderType,
+        ];
+
+        if (!is_null($deputyUid)) {
+            $data['DeputyUid'] = $deputyUid;
+        }
+
+        return new PreRegistration($data);
     }
 }

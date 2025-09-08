@@ -3,12 +3,17 @@
 namespace App\Controller\Ndr;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Ndr\Debt;
+use App\Entity\Ndr\Ndr;
+use App\Entity\Ndr\OneOff;
+use App\Entity\Ndr\StateBenefit;
 use App\Entity\Report\Document;
 use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -21,12 +26,12 @@ class NdrController extends RestController
     }
 
     #[Route(path: '/ndr/{id}', methods: ['GET'])]
-    public function getById(Request $request, int $id): EntityDir\Ndr\Ndr
+    public function getById(Request $request, int $id): Ndr
     {
         $groups = $request->query->has('groups') ? $request->query->all('groups') : ['ndr'];
         $this->formatter->setJmsSerialiserGroups($groups);
 
-        $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
+        $report = $this->findEntityBy(Ndr::class, $id);
 
         if (!$this->isGranted(User::ROLE_ADMIN)) {
             $this->denyAccessUnlessGranted(User::ROLE_LAY_DEPUTY);
@@ -40,19 +45,19 @@ class NdrController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function submit(Request $request, $id, ReportService $reportService): array
     {
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
-        /* @var $ndr EntityDir\Ndr\Ndr */
+        $ndr = $this->findEntityBy(Ndr::class, $id, 'Ndr not found');
+        /* @var $ndr \App\Entity\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
         $data = $this->formatter->deserializeBodyContent($request);
 
         if (empty($data['agreed_behalf_deputy'])) {
-            throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
+            throw new InvalidArgumentException('Missing agreed_behalf_deputy');
         }
 
         $documentId = $request->get('documentId');
         if (empty($documentId)) {
-            throw new \InvalidArgumentException('documentId must be specified');
+            throw new InvalidArgumentException('documentId must be specified');
         }
 
         /** @var Document $reportPdf */
@@ -71,13 +76,13 @@ class NdrController extends RestController
         }
 
         $ndr->setSubmitted(true);
-        $ndr->setSubmitDate(new \DateTime($data['submit_date']));
+        $ndr->setSubmitDate(new DateTime($data['submit_date']));
 
         // submit and create new year's report
         /** @var User $user */
         $user = $this->getUser();
 
-        $nextYearReport = $reportService->submit($ndr, $user, new \DateTime($data['submit_date']), $documentId);
+        $nextYearReport = $reportService->submit($ndr, $user, new DateTime($data['submit_date']), $documentId);
 
         return ['id' => $nextYearReport?->getId()];
     }
@@ -85,8 +90,8 @@ class NdrController extends RestController
     #[Route(path: '/ndr/{id}', methods: ['PUT'])]
     public function update(Request $request, $id): array
     {
-        /* @var $ndr EntityDir\Ndr\Ndr */
-        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
+        /* @var $ndr \App\Entity\Ndr\Ndr */
+        $ndr = $this->findEntityBy(Ndr::class, $id, 'Ndr not found');
 
         if (!$this->isGranted(User::ROLE_ADMIN)) {
             $this->denyAccessUnlessGranted(User::ROLE_LAY_DEPUTY);
@@ -107,7 +112,7 @@ class NdrController extends RestController
             if ('yes' == $data['has_debts']) {
                 foreach ($data['debts'] as $row) {
                     $debt = $ndr->getDebtByTypeId($row['debt_type_id']);
-                    if (!$debt instanceof EntityDir\Ndr\Debt) {
+                    if (!$debt instanceof Debt) {
                         continue; // not clear when that might happen. kept similar to transaction below
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
@@ -124,7 +129,7 @@ class NdrController extends RestController
         if (array_key_exists('state_benefits', $data)) {
             foreach ($data['state_benefits'] as $row) {
                 $e = $ndr->getStateBenefitByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Ndr\StateBenefit) {
+                if ($e instanceof StateBenefit) {
                     $e
                         ->setPresent($row['present'])
                         ->setMoreDetails($row['present'] ? $row['more_details'] : null);
@@ -162,7 +167,7 @@ class NdrController extends RestController
         if (array_key_exists('one_off', $data)) {
             foreach ($data['one_off'] as $row) {
                 $e = $ndr->getOneOffByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Ndr\OneOff) {
+                if ($e instanceof OneOff) {
                     $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
                     $this->em->flush($e);
                 }
@@ -220,7 +225,7 @@ class NdrController extends RestController
         }
 
         if (array_key_exists('start_date', $data)) {
-            $ndr->setStartDate(new \DateTime($data['start_date']));
+            $ndr->setStartDate(new DateTime($data['start_date']));
         }
 
         $this->em->flush();

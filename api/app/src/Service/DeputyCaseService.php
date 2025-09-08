@@ -72,14 +72,13 @@ class DeputyCaseService
 
             // associate them
             $client->addUser($user);
-
+            $this->entityManager->persist($user);
             $this->entityManager->persist($client);
 
             ++$numAdded;
 
             if (0 === $numAdded % $batchSize) {
                 $this->entityManager->flush();
-                $this->entityManager->clear();
             }
         }
 

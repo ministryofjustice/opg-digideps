@@ -2,9 +2,8 @@
 
 namespace App\Tests\Integration\ControllerReport;
 
+use DateTime;
 use App\Entity\PreRegistration;
-use App\Entity\Report\Checklist;
-use App\Entity\Report\ChecklistInformation;
 use App\Entity\Report\Document;
 use App\Entity\Report\Fee;
 use App\Entity\Report\Report;
@@ -73,7 +72,7 @@ class ReportControllerTest extends AbstractTestController
             'DeputySurname' => self::$deputy1->getLastname(),
             'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
             'ReportType' => 'OPG102',
-            'MadeDate' => (new \DateTime('2016-01-01'))->format('Y-m-d'),
+            'MadeDate' => (new DateTime('2016-01-01'))->format('Y-m-d'),
             'OrderType' => 'pfa',
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
@@ -88,7 +87,7 @@ class ReportControllerTest extends AbstractTestController
             'DeputySurname' => self::$deputy1->getLastname(),
             'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
             'ReportType' => 'OPG102',
-            'MadeDate' => (new \DateTime('2017-01-01'))->format('Y-m-d'),
+            'MadeDate' => (new DateTime('2017-01-01'))->format('Y-m-d'),
             'OrderType' => 'pfa',
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
@@ -103,8 +102,8 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         self::$report1 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2014-01-01'),
-            'setEndDate' => new \DateTime('2014-12-31'),
+            'setStartDate' => new DateTime('2014-01-01'),
+            'setEndDate' => new DateTime('2014-12-31'),
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
             'setWishToProvideDocumentation' => true,
@@ -118,14 +117,14 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         self::$reportEdit = self::fixtures()->createReport(self::$clientEdit, [
-            'setStartDate' => new \DateTime('2014-01-01'),
-            'setEndDate' => new \DateTime('2014-12-31'),
+            'setStartDate' => new DateTime('2014-01-01'),
+            'setEndDate' => new DateTime('2014-12-31'),
             'setSubmitted' => false,
             'setSubmittedBy' => null,
         ]);
         self::$report103 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2015-01-01'),
-            'setEndDate' => new \DateTime('2015-12-31'),
+            'setStartDate' => new DateTime('2015-01-01'),
+            'setEndDate' => new DateTime('2015-12-31'),
             'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
             'setSubmitted' => true,
             'setSubmittedBy' => self::$deputy1,
@@ -471,7 +470,7 @@ class ReportControllerTest extends AbstractTestController
         $reportId = self::$report1->getId();
         $url = '/report/'.$reportId;
 
-        self::fixtures()->getReportById($reportId)->setDueDate(new \DateTime('2016-11-30'));
+        self::fixtures()->getReportById($reportId)->setDueDate(new DateTime('2016-11-30'));
         self::fixtures()->flush()->clear();
 
         // assert get

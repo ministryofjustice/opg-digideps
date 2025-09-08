@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
@@ -108,7 +109,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->assertEquals($data['id'], $document->getId());
         $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
-        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertInstanceof(DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isReportPdf());
@@ -139,7 +140,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->assertEquals($data['id'], $document->getId());
         $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
-        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertInstanceof(DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3NdrStorageKey', $document->getStorageReference());
         $this->assertEquals('ndr.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isReportPdf());
@@ -193,7 +194,7 @@ class DocumentControllerTest extends AbstractTestController
     {
         $url = sprintf('/document/%s', self::$document1->getId());
 
-        $syncTime = new \DateTime();
+        $syncTime = new DateTime();
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -203,7 +204,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new \DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
     }
 
     /**

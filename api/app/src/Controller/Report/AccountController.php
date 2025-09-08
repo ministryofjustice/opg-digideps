@@ -3,7 +3,7 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
+use App\Entity\Report\BankAccount;
 use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +31,7 @@ class AccountController extends RestController
            'opening_balance' => 'mustExist',
         ]);
 
-        $account = new EntityDir\Report\BankAccount();
+        $account = new BankAccount();
         $account->setReport($report);
 
         $this->fillAccountData($account, $data);
@@ -47,9 +47,9 @@ class AccountController extends RestController
 
     #[Route(path: '/report/account/{id}', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function getOneById(Request $request, int $id): EntityDir\Report\BankAccount
+    public function getOneById(Request $request, int $id): BankAccount
     {
-        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found');
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -61,9 +61,9 @@ class AccountController extends RestController
 
     #[Route(path: '/account/{id}', methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function editAccount(Request $request, int $id): EntityDir\Report\BankAccount
+    public function editAccount(Request $request, int $id): BankAccount
     {
-        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Report\BankAccount */
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
@@ -85,7 +85,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDependentRecords(int $id): array
     {
-        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $report = $account->getReport();
@@ -127,7 +127,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDelete(int $id): array
     {
-        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Report\BankAccount */
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->em->remove($account);
@@ -139,7 +139,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Report\BankAccount $account, array $data): void
+    private function fillAccountData(BankAccount $account, array $data): void
     {
         // basicdata
         if (array_key_exists('account_type', $data)) {

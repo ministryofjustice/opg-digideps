@@ -2,6 +2,7 @@
 
 namespace App\Tests\Behat\ReportManagement;
 
+use DateTime;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;
 
@@ -147,7 +148,7 @@ trait ReportManagementTrait
         $this->visitAdminPath("/admin/client/case-number/$client/details");
 
         $adjustment = intval($adjustment);
-        $expectedDueDate = (new \DateTime())->modify("+$adjustment weeks");
+        $expectedDueDate = (new DateTime())->modify("+$adjustment weeks");
         $this->iShouldSeeInTheRegion($expectedDueDate->format('j F Y'), "report-$startDate-to-$endDate-due-date");
     }
 
@@ -163,7 +164,7 @@ trait ReportManagementTrait
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/client/case-number/$client/details");
 
-        $expectedDueDate = new \DateTime($adjustment);
+        $expectedDueDate = new DateTime($adjustment);
         $this->iShouldSeeInTheRegion($expectedDueDate->format('j F Y'), "report-$startDate-to-$endDate-due-date");
     }
 

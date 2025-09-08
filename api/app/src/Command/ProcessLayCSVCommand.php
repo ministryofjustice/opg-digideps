@@ -12,7 +12,6 @@ use App\Service\LayRegistrationService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -177,53 +176,62 @@ class ProcessLayCSVCommand extends Command
         return [];
     }
 
+    // this returns true if processing succeeds, even if there were failures or exceptions;
+    // it only returns false if the data to be processed is not an array
     private function process(mixed $data, bool $multiclientApplyDbChanges = true): bool
     {
         $this->preReg->deleteAll();
 
-        if (is_array($data)) {
-            $chunks = array_chunk($data, self::CHUNK_SIZE);
-
-            // lay CSV baseline processing
-            foreach ($chunks as $index => $chunk) {
-                $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
-
-                $result = $this->csvProcessing->layProcessing($chunk, $index);
-                $this->storeOutput($result);
-            }
-
-            // additional multi-client processing
-            $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
-            $result = $this->csvProcessing->layProcessingHandleNewMultiClients($multiclientApplyDbChanges);
-
-            if (!$multiclientApplyDbChanges) {
-                $this->verboseLogger->notice(
-                    'MULTI-CLIENT CHANGES: '.json_encode($result)
-                );
-            }
-
-            if (0 == $result['new-clients-found']) {
-                $this->verboseLogger->notice('No new multiclients were found, so none were added');
-            }
-
-            // ensure that all active clients have at least one report associated with them,
-            // to fix issues caused by partially-registered users (see DDLS-911)
-            $numReportsAdded = $this->layRegistrationService->addMissingReports();
-            $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
-
-            // additional deputy_case association patching
-            $this->verboseLogger->notice('Fixing missing deputy_case associations');
-            try {
-                $numDeputyCaseAssociationsAdded = $this->deputyCaseService->addMissingDeputyCaseAssociations();
-                $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
-            } catch (Exception $e) {
-                $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
-            }
-
-            return true;
+        if (!is_array($data)) {
+            return false;
         }
 
-        return false;
+        $chunks = array_chunk($data, self::CHUNK_SIZE);
+
+        // lay CSV baseline processing
+        foreach ($chunks as $index => $chunk) {
+            $this->verboseLogger->notice(sprintf('Uploading chunk with Id: %s', $index));
+
+            $result = $this->csvProcessing->layProcessing($chunk, $index);
+            $this->storeOutput($result);
+        }
+
+        // additional multi-client processing
+        $this->verboseLogger->notice('Directly creating any new Lay clients for active deputies');
+        $result = $this->csvProcessing->layProcessingHandleNewMultiClients($multiclientApplyDbChanges);
+
+        if (!$multiclientApplyDbChanges) {
+            $this->verboseLogger->notice(
+                'MULTI-CLIENT CHANGES: '.json_encode($result)
+            );
+        }
+
+        if (0 == $result['new-clients-found']) {
+            $this->verboseLogger->notice('No new multiclients were found, so none were added');
+        }
+
+        // ensure that all active clients have at least one report associated with them,
+        // to fix issues caused by partially-registered users (see DDLS-911)
+        $this->verboseLogger->notice('Adding missing reports to clients');
+        try {
+            $numReportsAdded = $this->layRegistrationService->addMissingReports();
+            $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
+        } catch (\Throwable $e) {
+            $this->verboseLogger->error('Error encountered while adding missing reports: '.$e->getMessage());
+            $this->verboseLogger->error($e->getTraceAsString());
+        }
+
+        // additional deputy_case association patching (see DDLS-907)
+        $this->verboseLogger->notice('Fixing missing deputy_case associations');
+        try {
+            $numDeputyCaseAssociationsAdded = $this->deputyCaseService->addMissingDeputyCaseAssociations();
+            $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
+        } catch (\Throwable $e) {
+            $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
+            $this->verboseLogger->error($e->getTraceAsString());
+        }
+
+        return true;
     }
 
     private function storeOutput(array $processingOutput): void

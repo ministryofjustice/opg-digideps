@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Service;
 
+use DateTimeImmutable;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use DateTime;
 use App\Entity\User;
 use App\Service\JWT\JWTService;
 use App\Service\SecretManagerService;
 use App\Service\Time\DateTimeProvider;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -80,9 +82,9 @@ class JWTServiceTest extends TestCase
     /** @test */
     public function createNewJWT()
     {
-        $now = new \DateTimeImmutable();
-        $plus1Hour = new \DateTimeImmutable('+1 hour');
-        $sub10Seconds = new \DateTimeImmutable('-10 seconds');
+        $now = new DateTimeImmutable();
+        $plus1Hour = new DateTimeImmutable('+1 hour');
+        $sub10Seconds = new DateTimeImmutable('-10 seconds');
 
         $this->dateTimeProvider->getDateTimeImmutable('now')->willReturn($now);
         $this->dateTimeProvider->getDateTimeImmutable('+1 hour')->willReturn($plus1Hour);
@@ -95,7 +97,7 @@ class JWTServiceTest extends TestCase
         $actuaklJwt = $this->sut->createNewJWT($user);
 
         $config = Configuration::forAsymmetricSigner(
-            new Signer\Rsa\Sha256(),
+            new Sha256(),
             InMemory::plainText($this->privateKeyPem),
             InMemory::plainText($this->publicKeyPem),
         );
@@ -109,7 +111,7 @@ class JWTServiceTest extends TestCase
 
         self::assertTrue($token->isMinimumTimeBefore($sub10Seconds));
         self::assertTrue($token->hasBeenIssuedBefore($now));
-        self::assertFalse($token->isExpired(new \DateTime('+59 minutes')));
+        self::assertFalse($token->isExpired(new DateTime('+59 minutes')));
     }
 
     private function createSignedJWTString(
@@ -122,7 +124,7 @@ class JWTServiceTest extends TestCase
         $kid = openssl_digest($publicKey, 'sha256');
 
         $config = Configuration::forAsymmetricSigner(
-            new Signer\Rsa\Sha256(),
+            new Sha256(),
             InMemory::plainText($privateKey),
             InMemory::plainText($publicKey)
         );
@@ -131,9 +133,9 @@ class JWTServiceTest extends TestCase
             ->withHeader('jku', $jkuAddress)
             ->withHeader('kid', $kid)
             ->permittedFor($aud)
-            ->issuedAt(new \DateTimeImmutable())
-            ->expiresAt(new \DateTimeImmutable('+1 hour'))
-            ->canOnlyBeUsedAfter(new \DateTimeImmutable('-10 seconds'))
+            ->issuedAt(new DateTimeImmutable())
+            ->expiresAt(new DateTimeImmutable('+1 hour'))
+            ->canOnlyBeUsedAfter(new DateTimeImmutable('-10 seconds'))
             ->issuedBy($iss)
             ->relatedTo('user-id-1')
             ->withClaim('role', 'admin')
@@ -152,9 +154,9 @@ class JWTServiceTest extends TestCase
             ->withHeader('jku', $jkuAddress)
             ->withHeader('kid', $kid)
             ->permittedFor('urn:opg:registration_service')
-            ->issuedAt(new \DateTimeImmutable())
-            ->expiresAt(new \DateTimeImmutable('+1 hour'))
-            ->canOnlyBeUsedAfter(new \DateTimeImmutable('-10 seconds'))
+            ->issuedAt(new DateTimeImmutable())
+            ->expiresAt(new DateTimeImmutable('+1 hour'))
+            ->canOnlyBeUsedAfter(new DateTimeImmutable('-10 seconds'))
             ->issuedBy('urn:opg:digideps')
             ->relatedTo('user-id-1')
             ->withClaim('role', 'admin')

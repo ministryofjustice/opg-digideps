@@ -2,13 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity as EntityDir;
+use App\Entity\Client;
+use App\Entity\Deputy;
+use App\Entity\Ndr\Ndr;
+use App\Entity\User;
 use App\Event\ClientArchivedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\ClientRepository;
 use App\Service\Audit\AuditEvents;
 use App\Service\Formatter\RestFormatter;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +42,7 @@ class ClientController extends RestController
     public function upsert(Request $request): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
-        /** @var EntityDir\User|null $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         // truncate case number if length is 10 digits long before persisting
@@ -48,10 +53,10 @@ class ClientController extends RestController
         }
 
         if ($user && 'POST' == $request->getMethod()) {
-            $client = new EntityDir\Client();
+            $client = new Client();
             $client->addUser($user);
         } else {
-            $client = $this->findEntityBy(EntityDir\Client::class, $data['id'], 'Client not found');
+            $client = $this->findEntityBy(Client::class, $data['id'], 'Client not found');
             if (!$this->isGranted('edit', $client)) {
                 if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
                     throw $this->createAccessDeniedException('Client does not belong to user');
@@ -79,11 +84,11 @@ class ClientController extends RestController
             $ndrRequired = ((array_key_exists('ndr_enabled', $data) && $data['ndr_enabled']) || $user->getNdrEnabled());
 
             if ($ndrRequired && !$client->getNdr()) {
-                $ndr = new EntityDir\Ndr\Ndr($client);
+                $ndr = new Ndr($client);
                 $this->em->persist($ndr);
             }
 
-            $client->setCourtDate(new \DateTime($data['court_date']));
+            $client->setCourtDate(new DateTime($data['court_date']));
             $this->hydrateEntityWithArrayData($client, $data, [
                 'case_number' => 'setCaseNumber',
                 'deputy' => 'setDeputy',
@@ -91,7 +96,7 @@ class ClientController extends RestController
         }
 
         if (array_key_exists('date_of_birth', $data)) {
-            $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
+            $dob = $data['date_of_birth'] ? new DateTime($data['date_of_birth']) : null;
             $client->setDateOfBirth($dob);
         }
 
@@ -103,13 +108,13 @@ class ClientController extends RestController
 
     #[Route(path: '/{id}', name: 'client_find_by_id', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')"))]
-    public function findById(Request $request, int $id): EntityDir\Client
+    public function findById(Request $request, int $id): Client
     {
         $serialisedGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['client'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        $client = $this->findEntityBy(Client::class, $id);
         if ($client->getArchivedAt()) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
         }
@@ -125,7 +130,7 @@ class ClientController extends RestController
 
     #[Route(path: '/{id}/details', name: 'client_details', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function details(Request $request, int $id): EntityDir\Client
+    public function details(Request $request, int $id): Client
     {
         if ($request->query->has('groups')) {
             $serialisedGroups = $request->query->all('groups');
@@ -146,14 +151,14 @@ class ClientController extends RestController
 
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        return $this->findEntityBy(EntityDir\Client::class, $id);
+        return $this->findEntityBy(Client::class, $id);
     }
 
     #[Route(path: '/{id}/archive', name: 'client_archive', requirements: ['id' => '\d+'], methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_ORG')]
     public function archive(int $id): array
     {
-        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        $client = $this->findEntityBy(Client::class, $id);
 
         if (!$this->isGranted('edit', $client)) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
@@ -161,7 +166,7 @@ class ClientController extends RestController
             }
         }
 
-        $client->setArchivedAt(new \DateTime());
+        $client->setArchivedAt(new DateTime());
         $this->em->flush($client);
 
         $trigger = AuditEvents::TRIGGER_USER_ARCHIVED_CLIENT;
@@ -197,10 +202,10 @@ class ClientController extends RestController
     #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
     public function delete(int $id): array
     {
-        /* @var $client EntityDir\Client */
-        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        /* @var $client \App\Entity\Client */
+        $client = $this->findEntityBy(Client::class, $id);
 
-        $client->setDeletedAt(new \DateTime());
+        $client->setDeletedAt(new DateTime());
         $this->em->flush($client);
 
         return [];
@@ -210,7 +215,7 @@ class ClientController extends RestController
     #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
     public function unarchiveClient(int $id): array
     {
-        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        $client = $this->findEntityBy(Client::class, $id);
 
         $client->setArchivedAt();
         $this->em->flush($client);
@@ -224,8 +229,8 @@ class ClientController extends RestController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_DEPUTY') or is_granted('ROLE_ADMIN')"))]
     public function updateDeputy(int $id, int $deputyId): array
     {
-        $client = $this->findEntityBy(EntityDir\Client::class, $id);
-        $deputy = $this->findEntityBy(EntityDir\Deputy::class, $deputyId);
+        $client = $this->findEntityBy(Client::class, $id);
+        $deputy = $this->findEntityBy(Deputy::class, $deputyId);
 
         $client->setDeputy($deputy);
         $this->em->persist($client);
@@ -237,7 +242,7 @@ class ClientController extends RestController
     /**
      * Endpoint for getting the clients for a deputy uid.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-all-clients-by-deputy-uid/{deputyUid}', methods: ['GET'])]
     public function getAllClientsByDeputyUid(Request $request, int $deputyUid): mixed

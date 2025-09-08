@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Controller;
 
-use App\Entity\Client;
+use DateTime;
 use App\Entity\Ndr\Ndr;
 use Ramsey\Uuid\Uuid;
 
@@ -106,7 +106,7 @@ class ClientControllerTest extends AbstractTestController
         // multi-client deputy
         self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
         self::$primaryAccountClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'Multi-Client1', 'setCaseNumber' => '34566543']);
-        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new \DateTime()]);
+        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new DateTime()]);
 
         self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
         self::$nonPrimaryAccountClient = self::fixtures()->createClient(self::$nonPrimaryUserAccount, ['setFirstname' => 'Multi-Client2', 'setCaseNumber' => '78900987']);
@@ -316,7 +316,7 @@ class ClientControllerTest extends AbstractTestController
 
         $this->assertInstanceOf('App\Entity\Client', $client);
         $this->assertEquals(1, count($client->getUsers()));
-        $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
+        $this->assertInstanceOf(DateTime::class, $client->getArchivedAt());
     }
 
     public function testDetailsAction()
