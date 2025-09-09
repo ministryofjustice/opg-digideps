@@ -11,28 +11,27 @@
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
-
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block pageContent %}
 
-{% if documentsToBeReUploaded is not empty %}
-    <div class="govuk-!-width-two-thirds">
-        <div id="error-summary" class="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-heading">There's a problem with your documents
-            </h2>
-            <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                    <li>
-                        <a href="#">{{ (page ~ '.reUploadErrorMessage') | trans }}</a>
-                    </li>
-                </ul>
+    {% if documentsToBeReUploaded is not empty %}
+        <div class="govuk-!-width-two-thirds">
+            <div id="error-summary" class="govuk-error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-heading">There's a problem with your documents
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        <li>
+                            <a href="#">{{ (page ~ '.reUploadErrorMessage') | trans }}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
     <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
@@ -48,9 +47,9 @@
         </div>
     </div>
 
-    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
-    {{ form_input(form.files,'form.files', {
-        'labelText':  '' | trans ,
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
+    {{ form_input(form.files, 'form.files', {
+        'labelText': '' | trans,
         'labelClass': 'visually-hidden',
         'inputClass': 'no-border behat-link-choose-file' })
     }}
