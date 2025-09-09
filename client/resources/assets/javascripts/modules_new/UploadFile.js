@@ -33,10 +33,12 @@ const uploadFile = {
         }
       }
 
-      // show progress bar
-      form.querySelector("#file-chooser-form-progress")?.classList.remove('hidden')
+      // disable the file chooser
+      elt.disabled = "disabled"
 
-      // everything is OK
+      // show progress bar
+      form.querySelector("[data-role=file-chooser-form-progress]")?.classList.remove("hidden")
+
       form.submit()
 
       return true
