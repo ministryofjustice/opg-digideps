@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
+        {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
         {{ form_input(form.files,'form.files', {
             'labelText':  '' | trans ,
             'labelClass': 'visually-hidden',
@@ -53,7 +53,7 @@
             {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
         </div>
     {% else %}
-        {{ form_start(form, {'attr': {'id': 'upload_form_post_submission', 'class': 'push-double--bottom'}}) }}
+        {{ form_start(form, {'attr': {'id': 'upload_form_post_submission', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
         {{ form_input(form.files,'form.files', {
             'id': 'report_document_upload_files',
             'labelText':  '' | trans ,
@@ -79,7 +79,7 @@
         <p class="govuk-body">{{ (page ~ '.uploadHint') | trans }}</p>
     {% endset %}
     </div>
-    <div id="upload-progress" class="hidden">
+    <div id="upload-progress" class="hidden" data-role="file-chooser-form-progress">
         {{ macros.notification('loader', alertMessage) }}
     </div>
 
