@@ -1,0 +1,23 @@
+name: "[Style] PHP CS"
+
+on:
+  workflow_call:
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Install PHP_CodeSniffer
+        run: |
+          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+          php phpcs.phar --version
+
+      - uses: thenabeel/action-phpcs@23e2a47a8d16fd6ae7f000ac6d3ff97d02f0758d
+        with:
+          files: "**.php"
+          phpcs_path: php phpcs.phar
+          standard: phpcs.xml
