@@ -25,9 +25,6 @@ const uploadFile = {
         return true
       }
 
-      // don't allow file selector to be clicked again
-      elt.disabled = "disabled"
-
       // if any file is too large, redirect to error page
       const files = elt.files
       for (let i = 0; i < files.length; i++) {
@@ -41,6 +38,10 @@ const uploadFile = {
       form.querySelector("[data-role=file-chooser-form-progress]")?.classList.remove("hidden")
 
       form.submit()
+
+      // don't allow file selector to be clicked again;
+      // NB this has to happen *after* the submit otherwise no files are sent
+      elt.disabled = "disabled"
 
       return true
     })
