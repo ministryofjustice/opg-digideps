@@ -44,6 +44,7 @@ class BaseFeatureContext extends MinkContext
     use PageUrlsTrait;
     use ReportTrait;
     use UserExistsTrait;
+    use SpinTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
@@ -167,6 +168,85 @@ class BaseFeatureContext extends MinkContext
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
         $this->submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];
+    }
+
+    //    Overrides of common functions using spin trait
+    /**
+     * Retry until the expected text is found in the page.
+     */
+    public function assertPageContainsText($text)
+    {
+        $this->spin(function () use ($text) {
+            parent::assertPageContainsText($text);
+            return true;
+        }, 15);
+    }
+
+    /**
+     * Retry until the expected text is NOT found in the page.
+     */
+    public function assertPageNotContainsText($text)
+    {
+        $this->spin(function () use ($text) {
+            parent::assertPageNotContainsText($text);
+            return true;
+        }, 15);
+    }
+
+
+    /**
+     * Retry until the current page path matches.
+     */
+    public function assertElementContainsText($element, $text)
+    {
+        $this->spin(function () use ($element, $text) {
+            parent::assertElementContainsText($element, $text);
+            return true;
+        }, 15);
+    }
+
+    /**
+     * Retry until a given field is present and filled with the expected value.
+     */
+    public function assertFieldContains($field, $value)
+    {
+        $this->spin(function () use ($field, $value) {
+            parent::assertFieldContains($field, $value);
+            return true;
+        }, 15);
+    }
+
+    /**
+     * Retry until a given field is present and does NOT contain the value.
+     */
+    public function assertFieldNotContains($field, $value)
+    {
+        $this->spin(function () use ($field, $value) {
+            parent::assertFieldNotContains($field, $value);
+            return true;
+        }, 15);
+    }
+
+    /**
+     * Retry until a link can be clicked.
+     */
+    public function clickLink($link)
+    {
+        $this->spin(function () use ($link) {
+            parent::clickLink($link);
+            return true;
+        }, 15);
+    }
+
+    /**
+     * Retry until a button can be pressed.
+     */
+    public function pressButton($button)
+    {
+        $this->spin(function () use ($button) {
+            parent::pressButton($button);
+            return true;
+        }, 15);
     }
 
     /**
@@ -573,13 +653,13 @@ class BaseFeatureContext extends MinkContext
     public function visitFrontendPath(string $path)
     {
         $siteUrl = $this->getSiteUrl();
-        $this->visitPath($siteUrl.$path);
+        $this->visitPath($siteUrl . $path);
     }
 
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl.$path);
+        $this->visitPath($adminUrl . $path);
     }
 
     public function getPageContent(): string
@@ -600,7 +680,7 @@ class BaseFeatureContext extends MinkContext
     {
         $rndKey = mt_rand(0, 99999);
 
-        return $this->fixtureHelper->createDataForAnalytics('a_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
+        return $this->fixtureHelper->createDataForAnalytics('a_' . $rndKey . $runNumber, $timeAgo, $satisfactionScore);
     }
 
     public function createAdditionalDataForUserSearchTests()
@@ -630,11 +710,11 @@ class BaseFeatureContext extends MinkContext
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
 
         $nonPrimaryUserWithNoDeputyUidDetails = new UserDetails(
-            $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId.'-b', null, -1)
+            $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId . '-b', null, -1)
         );
 
         $deputyUid = 123452222001 + rand(1, 999);
-        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId.'999', null, $deputyUid));
+        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId . '999', null, $deputyUid));
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
