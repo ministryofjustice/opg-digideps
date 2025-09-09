@@ -60,7 +60,7 @@ class FixtureController extends AbstractController
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
-        $fromRequest = json_decode($request->getContent(), true);
+        $fromRequest = (array) json_decode($request->getContent(), true);
         $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
         $client = $this->generateClient($fromRequest);
         $user = new User();
@@ -88,15 +88,35 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
-    private function createSingleClientDeputy($fromRequest, $client): User
+    private function createSingleClientDeputy(mixed $fromRequest, Client $client): User
     {
-        if (null === $user = $this->userRepository->findOneBy(['email' => strtolower($fromRequest['deputyEmail'])])) {
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
+
+        // Validate 'deputyEmail'
+        if (!isset($fromRequest['deputyEmail']) || !is_string($fromRequest['deputyEmail'])) {
+            throw new \InvalidArgumentException('Missing or invalid "deputyEmail" field in request.');
+        }
+
+        $email = strtolower($fromRequest['deputyEmail']);
+
+        // Check if user already exists
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+
+        if (!$user instanceof User) {
             $user = $this->generateUser($fromRequest);
             $deputyPreRegistration = $this->generatePreRegistration($fromRequest, $client, $user);
             $this->em->persist($deputyPreRegistration);
         }
 
-        if ('ndr' === strtolower($fromRequest['reportType'])) {
+        if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
+            throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
+        }
+
+        $reportType = strtolower($fromRequest['reportType']);
+
+        if ('ndr' === $reportType) {
             $this->createNdr($fromRequest, $client);
             $user->setNdrEnabled(true);
         } else {
@@ -115,8 +135,11 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
-    private function createMultiClientDeputy($fromRequest, $client): array
+    private function createMultiClientDeputy(mixed $fromRequest, Client $client): array
     {
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
         // We create 1 deputy and 2 court orders each with a client attached to the court orders
 
         // Generate primary user - update email to clearly show it's a multi-client
@@ -148,7 +171,7 @@ class FixtureController extends AbstractController
         $fromRequest['deputyEmail'] = str_replace(['lay-multi-client-deputy-primary'], 'lay-multi-client-deputy-secondary', $fromRequest['deputyEmail']);
         $secondUser = $this->generateUser($fromRequest);
         // update case number for second client
-        $fromRequest['caseNumber'] = substr($fromRequest['caseNumber'], 0, -3).rand(100, 999);
+        $fromRequest['caseNumber'] = substr($fromRequest['caseNumber'], 0, -3) . rand(100, 999);
         $secondClient = $this->generateClient($fromRequest);
         $secondCourtOrder = $this->generateCourtOrder($secondClient);
         $secondDeputyPreRegistration = $this->generatePreRegistration($fromRequest, $secondClient, $secondUser);
@@ -174,8 +197,11 @@ class FixtureController extends AbstractController
         return ['deputyIds' => $deputyIds, 'multiClientCaseNumbers' => [$deputyPreRegistration->getCaseNumber(), $secondDeputyPreRegistration->getCaseNumber()]];
     }
 
-    private function generateClient($fromRequest): Client
+    private function generateClient(mixed $fromRequest): Client
     {
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
         $client = $this->clientFactory->create([
             'id' => $fromRequest['caseNumber'],
             'courtDate' => $fromRequest['courtDate'],
@@ -185,8 +211,11 @@ class FixtureController extends AbstractController
         return $client;
     }
 
-    private function generatePreRegistration($fromRequest, $client, $user): \App\Entity\PreRegistration
+    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): \App\Entity\PreRegistration
     {
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
         return $this->preRegistrationFactory->create(
             [
                 'caseNumber' => $client->getCaseNumber(),
@@ -200,20 +229,25 @@ class FixtureController extends AbstractController
         );
     }
 
-    private function generateDeputy($user): Deputy
+    private function generateDeputy(User $user): Deputy
     {
+        $uid = $user->getDeputyUid();
+        if ($uid === null) {
+            throw new \InvalidArgumentException('Deputy UID is missing for user ' . $user->getId());
+        }
+
         return (new Deputy())
-            ->setDeputyUid($user->getDeputyUid())
+            ->setDeputyUid((string) $uid)
             ->setEmail1($user->getEmail())
             ->setFirstname($user->getFirstname())
             ->setLastname($user->getLastname());
     }
 
-    private function generateCourtOrder($client): CourtOrder
+    private function generateCourtOrder(Client $client): CourtOrder
     {
         $courtOrder = new CourtOrder();
 
-        $courtOrder->setCourtOrderUid(rand(100000000000, 999999999999));
+        $courtOrder->setCourtOrderUid(strval(rand(100000000000, 999999999999)));
         $courtOrder->setOrderType('hw');
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
@@ -227,8 +261,11 @@ class FixtureController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function generateUser($fromRequest): User
+    private function generateUser(mixed $fromRequest): User
     {
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
         $user = $this->userFactory->create([
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
@@ -261,8 +298,11 @@ class FixtureController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function generateReport($fromRequest, Client $client): Report
+    private function generateReport(mixed $fromRequest, Client $client): Report
     {
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
         return $this->reportFactory->create([
             'deputyType' => $fromRequest['deputyType'],
             'reportType' => $fromRequest['reportType'],
@@ -331,7 +371,7 @@ class FixtureController extends AbstractController
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyUid('70'.str_pad($fromRequest['caseNumber'].mt_rand(1, 100), 10))
+            ->setDeputyUid('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain());
@@ -410,7 +450,7 @@ class FixtureController extends AbstractController
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
-        if (null !== $user) {
+        if (null !== $user && $user instanceof User) {
             return $this->buildSuccessResponse(['id' => $user->getId()], 'User found');
         } else {
             return $this->buildNotFoundResponse("Could not find user with email address '$email'");
@@ -429,6 +469,9 @@ class FixtureController extends AbstractController
         }
 
         $fromRequest = json_decode($request->getContent(), true);
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
 
         $deputy = $this->userFactory->create([
             'id' => $fromRequest['deputyEmail'],
@@ -513,6 +556,9 @@ class FixtureController extends AbstractController
         }
 
         $fromRequest = json_decode($request->getContent(), true);
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
 
         $client = $this->clientFactory->create([
             'firstName' => $fromRequest['firstName'],
@@ -548,7 +594,7 @@ class FixtureController extends AbstractController
         return $this->buildSuccessResponse($fromRequest, 'User created');
     }
 
-    private function createUserByExistingUser(string $userEmail)
+    private function createUserByExistingUser(string $userEmail): Deputy|null
     {
         $deputy = $this->deputyRepository->findOneBy(['email1' => $userEmail]);
 
@@ -566,7 +612,7 @@ class FixtureController extends AbstractController
 
                 return $deputy;
             } else {
-                return $this->buildNotFoundResponse(
+                throw new \RuntimeException(
                     sprintf(
                         "Could not find user or deputy with email identifier '%s'. Ensure one exists before using this function.",
                         $userEmail
@@ -574,6 +620,7 @@ class FixtureController extends AbstractController
                 );
             }
         }
+        return null;
     }
 
     #[Route(path: '/create-pre-registration', methods: ['POST'])]
@@ -585,6 +632,9 @@ class FixtureController extends AbstractController
         }
 
         $fromRequest = json_decode($request->getContent(), true);
+        if (!is_array($fromRequest)) {
+            throw new \InvalidArgumentException('Invalid request payload: expected array.');
+        }
 
         $preRegistration = $this->preRegistrationFactory->create($fromRequest);
 
@@ -613,8 +663,7 @@ class FixtureController extends AbstractController
                 'clientFirstName' => 'Joe',
                 'clientLastName' => 'Snow',
                 $fromRequest,
-            ]
-            );
+            ]);
             $this->em->persist($preRegistrationSecondaryClient);
 
             $data[] = [

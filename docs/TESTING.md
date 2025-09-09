@@ -309,3 +309,22 @@ Smoke tests run as part of our pipeline to check that their aren't any environme
 of the scope of our unit and integration tests in production.
 
 Please read this [confluence documentation](https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/3778215945/Smoke+Tests) for more information on this.
+
+## API comparison tests
+The ApiComparison command (digideps:api:api-comparison) is a Symfony console command used to compare responses from two API endpoints (a legacy route and a new route).
+
+It is designed to:
+- Query the database for relevant user IDs and related entity IDs.
+- Generate authentication tokens for API requests.
+- Call both the legacy and new API routes with the same parameters.
+- Compare the responses using a ResponseComparer.
+- Report whether the two APIs return equivalent results.
+
+This tool is primarily used for validating data parity during API migrations or refactorings.
+
+Command Signature
+php -d memory_limit=2G app/console digideps:api:api-comparison <legacyRoute> <newRoute>
+
+To set up a new comparer you must create a new specific comparer by extending the ResponseComparer class.
+The query must always use user id as the first field in the query. The remaining fields should be subsequent ids in your
+API request strings. The compare method will be whatever you want to compare from the two responses.
