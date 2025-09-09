@@ -18,11 +18,13 @@
 
 {% block pageContent %}
 
-    {% if successUploaded == "true" and report.isSubmitted == false %}
-        {{ macros.successBanner(page ~ '.successUploaded', translationDomain, page ~ '.successUploadedHeader') }}
+    {% if successUploaded == "true" %}
+        {% if report.isSubmitted == false %}
+            {{ macros.successBanner(page ~ '.successUploaded', translationDomain, page ~ '.successUploadedHeader') }}
+        {% else %}
+            {{ macros.successBanner(page ~ '.successUploadedSendDocuments', translationDomain, page ~ '.successUploadedExtraFiles') }}
+        {% endif %}
     {% endif %}
-
-    <h2 class="govuk-heading-m">{{ (page ~ '.selectHeading') | trans }}</h2>
 
     <p class="govuk-body">{{ (page ~ '.selectHelp') | trans }}</p>
 
@@ -38,25 +40,23 @@
         </div>
 
         {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
-        {{ form_input(form.files,'form.files', {
-            'labelText':  '' | trans ,
+        {{ form_input(form.files, 'form.files', {
+            'labelText': '' | trans,
             'labelClass': 'visually-hidden',
             'inputClass': 'no-border behat-link-choose-file' })
         }}
 
-        <h2 class="govuk-heading-m flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
-
         <div class="js-hidden">
             {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
         </div>
-        <div class="custom-submit">
+
+        <div class="custom-submit visually-hidden">
             {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
         </div>
     {% else %}
-        {{ form_start(form, {'attr': {'id': 'upload_form_post_submission', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
-        {{ form_input(form.files,'form.files', {
-            'id': 'report_document_upload_files',
-            'labelText':  '' | trans ,
+        {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
+        {{ form_input(form.files, 'form.files', {
+            'labelText': '' | trans,
             'labelClass': 'visually-hidden',
             'inputClass': 'no-border behat-link-choose-file' })
         }}
@@ -64,7 +64,7 @@
         <div class="js-hidden">
             {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
 
-            <button class="govuk-button behat-link-attach-file js-uploading">
+            <button class="govuk-button behat-link-attach-file js-uploading visually-hidden">
                 {{ 'form.submitButton' | trans}}
             </button>
         </div>
