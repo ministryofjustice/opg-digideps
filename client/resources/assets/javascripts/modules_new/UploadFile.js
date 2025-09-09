@@ -1,56 +1,45 @@
-const UPLOAD_LIMIT = 15
+const UPLOAD_LIMIT = 15 * 1024 * 1024
 const uploadFile = {
   init: function (document) {
-    document.addEventListener('click', function (event) {
-      if (event.target.getAttribute('id') === 'report_document_upload_files') {
-        const filename = event.target.value
-        if (filename) {
-          document.getElementById('upload-progress')?.classList.remove('hidden')
-        }
+    document.addEventListener("change", event => {
+      const elt = event.target
 
-        const fileElement = document.getElementById('report_document_upload_files')
-        const form = document.getElementById('upload_form_post_submission')
-
-        fileElement.addEventListener('change', function () {
-          if (event.target.getAttribute('id') === 'upload_form_post_submission') {
-            const actionUrl = event.target.getAttribute('action')
-            const fsize = fileElement.files[0].size
-
-            if (fsize > UPLOAD_LIMIT * 1024 * 1024) {
-              window.location = actionUrl + '?error=tooBig'
-            }
-          }
-
-          if (fileElement.files.length > 0) {
-            form.submit()
-          }
-        })
+      // if not a file element or no files selected, do nothing
+      if (
+        elt.nodeName !== "INPUT" ||
+        elt.type !== "file" ||
+        elt.getAttribute("id") !== "report_document_upload_files" ||
+        elt.files.length < 1
+      ) {
+        return true
       }
-    })
 
-    document.addEventListener('submit', function (event) {
-      if (event.target.getAttribute('id') === 'upload_form') {
-        event.preventDefault()
-        const fileElement = document.getElementById('report_document_upload_files')
-        const actionUrl = event.target.getAttribute('action')
+      const form = elt.form
 
-        // check whether browser fully supports all File API
-        // TODO refactor to not use redirect for error
-        if (
-          window.File &&
-                window.FileReader &&
-                window.FileList &&
-                window.Blob &&
-                fileElement.files.length > 0
-        ) {
-          const fsize = fileElement.files[0].size
-          if (fsize > UPLOAD_LIMIT * 1024 * 1024) {
-            window.location = actionUrl + '?error=tooBig'
-            return
-          }
-        }
-        event.target.submit()
+      // if not a file chooser form, do nothing
+      if (
+        form === "undefined" ||
+        form.nodeName !== "FORM" ||
+        form.getAttribute("data-role") !== "file-chooser-form"
+      ) {
+        return true
       }
+
+      // if any file is too large, redirect to error page
+      const files = elt.files
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].size > UPLOAD_LIMIT) {
+          window.location = form.action + "?error=tooBig"
+        }
+      }
+
+      // show progress bar
+      form.querySelector("#file-chooser-form-progress")?.classList.remove('hidden')
+
+      // everything is OK
+      form.submit()
+
+      return true
     })
   }
 
