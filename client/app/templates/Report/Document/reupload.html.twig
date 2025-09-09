@@ -69,7 +69,8 @@
             <p class="govuk-body">{{ (page ~ '.uploadHint') | trans }}</p>
         {% endset %}
     </div>
-    <div id="upload-progress" class="hidden">
+
+    <div id="upload-progress" class="hidden" data-role="file-chooser-form-progress">
         {{ macros.notification('loader', alertMessage) }}
     </div>
 
