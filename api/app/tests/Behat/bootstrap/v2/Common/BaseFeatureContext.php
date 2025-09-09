@@ -250,6 +250,24 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * Retry until a field is filled.
+     */
+    public function fillField($field, $value)
+    {
+        $this->spin(function () use ($field, $value) {
+            parent::fillField($field, $value);
+            return true;
+        }, 15);
+    }
+
+    public function findWithRetry(string $selector, string $locator, int $wait = 10)
+    {
+        return $this->spin(function () use ($selector, $locator) {
+            return $this->getSession()->getPage()->find($selector, $locator);
+        }, $wait);
+    }
+
+    /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
     public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)

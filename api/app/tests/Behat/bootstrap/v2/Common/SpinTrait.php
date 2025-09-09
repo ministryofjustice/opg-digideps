@@ -6,15 +6,25 @@ namespace App\Tests\Behat\v2\Common;
 
 trait SpinTrait
 {
-    public function spin(callable $lambda, int $wait = 10): void
+    /**
+     * Retry a callable until it succeeds or timeout.
+     *
+     * @template T
+     * @param callable():T $lambda
+     * @return T
+     * @throws \Exception
+     */
+    public function spin(callable $lambda, int $wait = 10)
     {
         for ($i = 0; $i < $wait; $i++) {
             try {
-                if ($lambda()) {
-                    return;
+                $result = $lambda();
+                if ($result) {
+                    return $result; // return whatever the lambda produced
                 }
             } catch (\Throwable $e) {
                 // ignore and retry
+                file_put_contents('php://stderr', print_r('DOING A SPIN!', true));
             }
             sleep(1);
         }
