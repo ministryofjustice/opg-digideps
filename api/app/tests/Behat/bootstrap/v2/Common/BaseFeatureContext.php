@@ -250,6 +250,17 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
+     * Retry until a field is filled.
+     */
+    public function fillField($field, $value)
+    {
+        $this->spin(function () use ($field, $value) {
+            parent::fillField($field, $value);
+            return true;
+        }, 15);
+    }
+
+    /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
     public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
