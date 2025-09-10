@@ -12,11 +12,10 @@ export APP_ENV=dev
 start=$(date +%s)
 
 echo "==== Starting test run ===="
-set -o pipefail
-./vendor/bin/behat --config=./tests/Behat/behat.yml --profile v2-tests-browserkit --list-scenarios $@ | ./vendor/liuggio/fastest/fastest -vv "./vendor/bin/behat --profile v2-tests-browserkit --tags @v2 --config=./tests/Behat/behat.yml {}" | tee /tmp/behat_failure_output.txt
+./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
 if [ $? -ne 0 ]; then
     echo "==== Rerunning failed tests once ===="
-    grep '^\[[0-9]\] /var/www/tests/Behat' /tmp/behat_failure_output.txt | awk -F' ' '{print $2}' | awk -F'@' '{print $1}' | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-browserkit --tags @v2 --config=./tests/Behat/behat.yml {}"
+    ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
     if [ $? -ne 0 ]; then
         echo "==== Reruns failed. Exiting with failure ===="
         exit 1
