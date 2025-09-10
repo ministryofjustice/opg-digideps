@@ -775,7 +775,7 @@ trait SelfRegistrationTrait
     /**
      * @Then the co-deputy details should be saved to the co-deputy's account
      */
-    public function CoDeputyDetailsShouldBeSavedToMyAccount()
+    public function coDeputyDetailsShouldBeSavedToMyAccount(): void
     {
         $this->em->flush();
         $this->em->clear();
