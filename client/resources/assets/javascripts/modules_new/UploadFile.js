@@ -1,6 +1,10 @@
 const UPLOAD_LIMIT = 15 * 1024 * 1024
 const uploadFile = {
-  handleChangeEvent: function (event) {
+  handleChangeEvent: function (event, windowLocal) {
+    if (windowLocal === 'undefined') {
+      windowLocal = window
+    }
+
     const elt = event.target
 
     // if not a file element or no files selected, do nothing
@@ -28,7 +32,7 @@ const uploadFile = {
     const files = elt.files
     for (let i = 0; i < files.length; i++) {
       if (files[i].size > UPLOAD_LIMIT) {
-        window.location = form.action + '?error=tooBig'
+        windowLocal.location = form.action + '?error=tooBig'
         return false
       }
     }
@@ -46,7 +50,9 @@ const uploadFile = {
   },
 
   init: function (document) {
-    document.addEventListener('change', this.handleChangeEvent)
+    document.addEventListener('change', event => {
+      this.handleChangeEvent(event, window)
+    })
   }
 }
 export default uploadFile
