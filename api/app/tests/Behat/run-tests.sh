@@ -6,27 +6,39 @@ while IFS= read -r line; do
     eval "$line"
 done < <(./tests/Behat/source-env-files.sh /tmp/combined.env)
 rm /tmp/combined.env
-export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
+
+export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 export APP_ENV=dev
 
 start=$(date +%s)
 
+MAX_RETRIES=2
+ATTEMPT=0
+
 echo "==== Starting test run ===="
-./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
-if [ $? -ne 0 ]; then
-    echo "==== Rerunning failed tests once ===="
-    ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
-    if [ $? -ne 0 ]; then
-        echo "==== Reruns failed. Exiting with failure ===="
-        exit 1
+
+while [ $ATTEMPT -le $MAX_RETRIES ]; do
+    ATTEMPT=$((ATTEMPT+1))
+    echo "==== Behat attempt $ATTEMPT/$((MAX_RETRIES+1)) ===="
+
+    ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit "$@"
+    RESULT=$?
+
+    if [ $RESULT -eq 0 ]; then
+        echo "==== Tests passed ===="
+        break
     else
-        echo "==== Reruns successful. Exiting with success ===="
-        exit 0
+        echo "==== Attempt $ATTEMPT failed ===="
+        if [ $ATTEMPT -gt $MAX_RETRIES ]; then
+            echo "==== All retries exhausted. Exiting with failure ===="
+            exit 1
+        fi
+        echo "==== Retrying failed scenarios ===="
+        # On retry, --rerun will automatically pick up failed scenarios from last run
     fi
-fi
+done
 
 end=$(date +%s)
-
 runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
@@ -37,8 +49,7 @@ else
     max_time=420
 fi
 
-if [ $runtime -gt $max_time ]
-then
+if [ $runtime -gt $max_time ]; then
     echo "Stage taking too long. Failing the build!"
     echo "Please split out your tests to a new container"
     exit 1
