@@ -6,12 +6,12 @@ COPY client/resources/webpack.config.js .
 COPY client/resources/assets assets
 
 # Install NPM dependencies
-RUN npm install
+RUN npm ci
 RUN npm audit --production
 
 FROM node-base AS testing
 # hadolint ignore=DL3016
-RUN npm install --include=dev
+RUN npm ci --include=dev
 
 FROM node-base AS build
 
