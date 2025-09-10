@@ -39,7 +39,7 @@ trait AppNotificationTrait
         $this->visitAdminPath('/logout');
         $this->iVisitAdminLoginPage();
 
-        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
+        $notification = $this->findWithRetry('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
         $this->assertStringEqualsString('Lorem ipsum', $notification, 'Service notification message');
     }
 
@@ -61,7 +61,7 @@ trait AppNotificationTrait
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $notification = $this->getSession()->getPage()->find('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
+        $notification = $this->findWithRetry('css', '.behat-region-service-notification > .opg-alert > .behat-region-alert-message > p')->getText();
         $this->assertStringEqualsString('Lorem ipsum', $notification, 'Service notification message');
     }
 
@@ -81,7 +81,7 @@ trait AppNotificationTrait
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
 
-        $el = $this->getSession()->getPage()->find('css', '.behat-region-service-notification');
+        $el = $this->findWithRetry('css', '.behat-region-service-notification');
         $this->assertIsNull($el, 'Service notification message does not exist');
     }
 
@@ -96,7 +96,7 @@ trait AppNotificationTrait
     private function getHostedEnvironment(): string
     {
         $this->iVisitTheFrontendAvailabilityPage();
-        $hostedEnvironmentListItem = $this->getSession()->getPage()->find('xpath', '//li[contains(.,"Hosted environment")]');
+        $hostedEnvironmentListItem = $this->findWithRetry('xpath', '//li[contains(.,"Hosted environment")]');
         $haystack = $hostedEnvironmentListItem->getHtml();
 
         return trim(substr(strrchr($haystack, ': '), 2));

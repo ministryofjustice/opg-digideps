@@ -202,7 +202,7 @@ trait DeputyExpensesSectionTrait
         } else {
             $rowSelector = sprintf('//tr[td[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         }
-        $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+        $descriptionTableRow = $this->findWithRetry('xpath', $rowSelector);
 
         $this->editFieldAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
     }
@@ -249,7 +249,7 @@ trait DeputyExpensesSectionTrait
             $this->sectionStartText
         );
 
-        $descriptionTableRow = $this->getSession()->getPage()->find('css', '.behat-region-paid-for-anything .behat-link-edit');
+        $descriptionTableRow = $this->findWithRetry('css', '.behat-region-paid-for-anything .behat-link-edit');
         $descriptionTableRow->click();
 
         $this->removeAllAnswers();

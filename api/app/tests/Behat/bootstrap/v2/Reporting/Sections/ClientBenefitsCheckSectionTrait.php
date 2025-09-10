@@ -162,7 +162,7 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $moneyTypesXpath = "//fieldset[contains(@class, 'add-another__item')]";
-        $moneyTypes = $this->getSession()->getPage()->findAll('xpath', $moneyTypesXpath);
+        $moneyTypes = $this->findWithRetryAll('xpath', $moneyTypesXpath);
 
         $emptyMoneyType = null;
 
@@ -260,7 +260,7 @@ trait ClientBenefitsCheckSectionTrait
         $moneyTypeDescription = $moneyTypeAnswers[array_key_first($moneyTypeAnswers)];
 
         $moneyTypeRowXpath = sprintf('//dd[contains(.,"%s")]/..', $moneyTypeDescription);
-        $moneyTypeRow = $this->getSession()->getPage()->find('xpath', $moneyTypeRowXpath);
+        $moneyTypeRow = $this->findWithRetry('xpath', $moneyTypeRowXpath);
 
         if ('edit' === strtolower($action)) {
             $this->editFieldAnswerInSection(
@@ -360,7 +360,7 @@ trait ClientBenefitsCheckSectionTrait
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $moneyTypeSectionXpath = "//div[contains(@id, 'money-received')]";
-        $moneyTypeDiv = $this->getSession()->getPage()->find('xpath', $moneyTypeSectionXpath);
+        $moneyTypeDiv = $this->findWithRetry('xpath', $moneyTypeSectionXpath);
 
         if (!is_null($moneyTypeDiv)) {
             throw new BehatException('The money types section appears on the page when it should not be visible');
@@ -471,7 +471,7 @@ trait ClientBenefitsCheckSectionTrait
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
         $questionText = sprintf('Did anyone receive any money from people or organisations on %s', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
-        $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
+        $questionRow = $this->findWithRetry('xpath', $questionRowXpath);
 
         if (is_null($questionRow)) {
             $message = sprintf('A row on the page with the question "%s" could not be found', $questionText);
@@ -501,7 +501,7 @@ trait ClientBenefitsCheckSectionTrait
         $clientFirstName = $this->loggedInUserDetails->getClientFirstName();
         $questionText = sprintf('Did you check that %s gets all the benefits they should have in the last reporting period', $clientFirstName);
         $questionRowXpath = sprintf("//dt[contains(., '%s')]/..", $questionText);
-        $questionRow = $this->getSession()->getPage()->find('xpath', $questionRowXpath);
+        $questionRow = $this->findWithRetry('xpath', $questionRowXpath);
 
         if (is_null($questionRow)) {
             $message = sprintf('A row on the page with the question "%s" could not be found', $questionText);

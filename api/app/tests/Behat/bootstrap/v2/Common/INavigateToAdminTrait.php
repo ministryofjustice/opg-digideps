@@ -28,7 +28,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminUserProfilePage()
     {
         $this->clickLink('Your details');
-        $mainElement = $this->getSession()->getPage()->find('xpath', '//main');
+        $mainElement = $this->findWithRetry('xpath', '//main');
         $mainElement->clickLink('Your details');
     }
 

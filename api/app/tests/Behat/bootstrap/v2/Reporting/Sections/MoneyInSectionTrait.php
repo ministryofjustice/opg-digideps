@@ -208,7 +208,7 @@ trait MoneyInSectionTrait
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
-        $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+        $transactionItemTableRows = $this->findWithRetry('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
             $this->assertIsNull($transactionItemTableRows, 'transaction item rows are not rendered');
@@ -220,7 +220,7 @@ trait MoneyInSectionTrait
             foreach ($this->moneyInTransaction as $transactionItems) {
                 foreach ($transactionItems as $moneyType => $value) {
                     $this->assertElementContainsText('main', $moneyType);
-                    $this->assertElementContainsText('main', '£'.number_format($value, 2));
+                    $this->assertElementContainsText('main', '£' . number_format($value, 2));
                 }
             }
             $this->expectedResultsDisplayedSimplified();
@@ -250,7 +250,7 @@ trait MoneyInSectionTrait
      */
     public function iShouldBeOnTheMoneyInSummaryPageAndSeeEntryDeleted()
     {
-        $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
+        $entryDeletedText = $this->findWithRetry('css', '.opg-alert__message > .govuk-body')->getText();
         assert('Entry deleted' == $entryDeletedText);
     }
 
@@ -260,7 +260,7 @@ trait MoneyInSectionTrait
     public function iEditTheMoneyInValue()
     {
         $xpath = sprintf('//tr[td[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn);
-        $moneyTypeRow = $this->getSession()->getPage()->find(
+        $moneyTypeRow = $this->findWithRetry(
             'xpath',
             $xpath
         );

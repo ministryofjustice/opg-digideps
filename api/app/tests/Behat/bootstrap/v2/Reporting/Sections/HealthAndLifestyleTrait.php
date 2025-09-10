@@ -69,7 +69,7 @@ trait HealthAndLifestyleTrait
             $this->loggedInUserDetails->getCurrentReportId()
         );
 
-        $careAppointmentsRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $careAppointmentsRow = $this->findWithRetry('xpath', $locator);
         $careAppointmentsRow->clickLink('Edit');
 
         $this->takesPartLeisureSocial('no');
@@ -90,7 +90,7 @@ trait HealthAndLifestyleTrait
             $this->loggedInUserDetails->getCurrentReportId()
         );
 
-        $leisureActivityRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $leisureActivityRow = $this->findWithRetry('xpath', $locator);
         $leisureActivityRow->clickLink('Edit');
 
         $this->takesPartLeisureSocial('no');

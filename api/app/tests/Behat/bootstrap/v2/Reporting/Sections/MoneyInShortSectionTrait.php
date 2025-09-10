@@ -196,7 +196,7 @@ trait MoneyInShortSectionTrait
         $this->removeSection('reasonForNoMoneyIn');
 
         foreach ($this->paymentNumber as $payment) {
-            $this->removeSection('moneyInDetails'.$payment);
+            $this->removeSection('moneyInDetails' . $payment);
         }
 
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/%s\?from\=summary$/', $this->reportUrlPrefix, $arg);
@@ -238,8 +238,8 @@ trait MoneyInShortSectionTrait
     {
         $this->iAmOnMoneyInShortAddPage();
 
-        $this->fillInField('money_short_transaction[description]', $description, 'moneyInDetails'.$paymentCount);
-        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyInDetails'.$paymentCount);
+        $this->fillInField('money_short_transaction[description]', $description, 'moneyInDetails' . $paymentCount);
+        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyInDetails' . $paymentCount);
 
         if (null !== $date) {
             $explodedDate = explode('/', $date);
@@ -249,7 +249,7 @@ trait MoneyInShortSectionTrait
                 intval($explodedDate[0]),
                 intval($explodedDate[1]),
                 intval($explodedDate[2]),
-                'moneyInDetails'.$paymentCount
+                'moneyInDetails' . $paymentCount
             );
         }
         $this->moneyInShortOneOff[] = [$description => $amount];
@@ -285,7 +285,7 @@ trait MoneyInShortSectionTrait
     {
         $this->iAmOnMoneyInShortSummaryPage();
 
-        $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+        $oneOffPaymentTableRows = $this->findWithRetry('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
             $this->assertPageNotContainsText('List of items of income over £1000');
@@ -298,7 +298,7 @@ trait MoneyInShortSectionTrait
             foreach ($this->moneyInShortOneOff as $transactionItems) {
                 foreach ($transactionItems as $description => $value) {
                     $this->assertElementContainsText('table', $description);
-                    $this->assertElementContainsText('table', '£'.number_format($value, 2));
+                    $this->assertElementContainsText('table', '£' . number_format($value, 2));
                 }
             }
             $this->expectedResultsDisplayedSimplified();
@@ -321,7 +321,7 @@ trait MoneyInShortSectionTrait
 
         $count = 0;
         foreach ($this->paymentNumber as $payment) {
-            $this->getSectionAnswers('moneyInDetails'.$payment) ? $count++ : $count;
+            $this->getSectionAnswers('moneyInDetails' . $payment) ? $count++ : $count;
         }
         if (0 == $count) {
             $this->removeSection('one-off-payments');

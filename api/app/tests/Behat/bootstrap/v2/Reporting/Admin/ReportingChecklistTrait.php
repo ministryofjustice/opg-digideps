@@ -144,7 +144,7 @@ trait ReportingChecklistTrait
     public function iShouldBeRedirectedToTheChecklistSubmittedPage()
     {
         $this->iAmOnAdminReportChecklistSubmittedPage();
-        $savedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > p')->getText();
+        $savedText = $this->findWithRetry('css', '.opg-alert__message > p')->getText();
 
         assert('Lodging checklist saved' == $savedText);
     }
@@ -164,7 +164,7 @@ trait ReportingChecklistTrait
             foreach ($this->xPathItems as $xPathitem) {
                 foreach ($hiddenItems as $hiddenItem) {
                     if ($hiddenItem === $xPathitem) {
-                        $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
+                        $link = $this->findWithRetry('xpath', $xPathitem);
                         assert(null === $link);
                     }
                 }
@@ -183,7 +183,7 @@ trait ReportingChecklistTrait
             foreach ($this->xPathItems as $xPathitem) {
                 foreach ($hiddenItems as $hiddenItem) {
                     if ($hiddenItem === $xPathitem) {
-                        $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
+                        $link = $this->findWithRetry('xpath', $xPathitem);
                         assert(null === $link);
                     }
                 }
@@ -197,7 +197,7 @@ trait ReportingChecklistTrait
             foreach ($this->xPathItems as $xPathitem) {
                 foreach ($hiddenItems as $hiddenItem) {
                     if ($hiddenItem === $xPathitem) {
-                        $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
+                        $link = $this->findWithRetry('xpath', $xPathitem);
                         assert(null === $link);
                     }
                 }
@@ -218,7 +218,7 @@ trait ReportingChecklistTrait
         };
 
         $xpath = sprintf('//p[contains(.,"%s")]', $expectedStatus);
-        $sideMenu = $this->getSession()->getPage()->find('xpath', $xpath);
+        $sideMenu = $this->findWithRetry('xpath', $xpath);
 
         if (is_null($sideMenu)) {
             throw new BehatException('The checklist sync status was not visible on the page');
@@ -245,7 +245,7 @@ trait ReportingChecklistTrait
         $this->iAmOnAdminReportChecklistPage();
 
         $xpath = sprintf('//p[contains(.,"%s")]', $expectedDetails);
-        $sideMenu = $this->getSession()->getPage()->find('xpath', $xpath);
+        $sideMenu = $this->findWithRetry('xpath', $xpath);
 
         if (is_null($sideMenu)) {
             throw new BehatException(sprintf('The checklist details were not visible on the page. Expected %s', $expectedDetails));

@@ -137,7 +137,7 @@ trait IncomeBenefitsSectionTrait
      */
     public function iEditPensionsAndOtherIncomeToSayYes()
     {
-        $this->getSession()->getPage()->find('css', '.behat-region-receive-state-pension')->clickLink('Edit');
+        $this->findWithRetry('css', '.behat-region-receive-state-pension')->clickLink('Edit');
 
         $this->iAmOnStatePensionPage();
         $this->chooseOption('income_benefits[receiveStatePension]', 'yes', 'Does John receive a state pension?');

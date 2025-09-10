@@ -126,7 +126,7 @@ trait MoneyTransferSectionTrait
     {
         $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers.*$/', $this->reportUrlPrefix));
 
-        $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
+        $entryDeletedText = $this->findWithRetry('css', '.opg-alert__message > .govuk-body')->getText();
         assert('Money transfer deleted' == $entryDeletedText);
     }
 }

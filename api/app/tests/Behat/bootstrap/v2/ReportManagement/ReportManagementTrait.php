@@ -61,7 +61,7 @@ trait ReportManagementTrait
             $reportId
         );
 
-        $reportLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
+        $reportLink = $this->findWithRetry('xpath', $xpathLocator);
         $reportLink->click();
     }
 
@@ -147,7 +147,7 @@ trait ReportManagementTrait
 
         $this->iAmOnAdminManageReportConfirmPage();
 
-        $confirmRadio = $this->getSession()->getPage()->find('xpath', '//input[@name="manage_report_confirm[confirm]"]');
+        $confirmRadio = $this->findWithRetry('xpath', '//input[@name="manage_report_confirm[confirm]"]');
 
         if (!is_null($confirmRadio)) {
             $this->selectOption('manage_report_confirm[confirm]', 'yes');
@@ -176,10 +176,10 @@ trait ReportManagementTrait
             $reportPeriod
         );
 
-        $reportRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $reportRow = $this->findWithRetry('xpath', $locator);
 
         if (is_null($reportRow)) {
-            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->findWithRetry('xpath', '//main')->getHtml()));
         }
 
         $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0] ?? null;
@@ -235,7 +235,8 @@ trait ReportManagementTrait
                 'incompleteSectionsForm',
                 $this->determineCheckboxName($value, $checkboxValuesAndTranslations),
                 'manage-report',
-                $translation)
+                $translation
+            )
             ;
         }
     }
@@ -308,10 +309,10 @@ trait ReportManagementTrait
 
         foreach ($sectionsMarkedIncomplete as $incompleteSectionName) {
             $locator = sprintf("//li//a[normalize-space()='%s']/../../..", $incompleteSectionName);
-            $sectionListItem = $this->getSession()->getPage()->find('xpath', $locator);
+            $sectionListItem = $this->findWithRetry('xpath', $locator);
 
             if (is_null($sectionListItem)) {
-                throw new BehatException(sprintf('Could not find a list item containing an anchor element with text "%s". HTML of page: %s', $incompleteSectionName, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+                throw new BehatException(sprintf('Could not find a list item containing an anchor element with text "%s". HTML of page: %s', $incompleteSectionName, $this->findWithRetry('xpath', '//main')->getHtml()));
             }
 
             $this->assertStringContainsString(
@@ -335,10 +336,10 @@ trait ReportManagementTrait
             $reportPeriod
         );
 
-        $reportRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $reportRow = $this->findWithRetry('xpath', $locator);
 
         if (is_null($reportRow)) {
-            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->findWithRetry('xpath', '//main')->getHtml()));
         }
 
         $reportRow->clickLink('Manage');
@@ -365,16 +366,16 @@ trait ReportManagementTrait
             $reportPeriod
         );
 
-        $reportRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $reportRow = $this->findWithRetry('xpath', $locator);
 
         if (is_null($reportRow)) {
-            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->findWithRetry('xpath', '//main')->getHtml()));
         }
 
         $submittedStatus = $reportRow->find('xpath', '//span[normalize-space()="submitted"]');
 
         if (is_null($submittedStatus)) {
-            throw new BehatException(sprintf('Could not find a span element with the text "submitted" in the report row for "%s". HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+            throw new BehatException(sprintf('Could not find a span element with the text "submitted" in the report row for "%s". HTML of page: %s', $reportPeriod, $this->findWithRetry('xpath', '//main')->getHtml()));
         }
     }
 
@@ -390,7 +391,7 @@ trait ReportManagementTrait
             $this->interactingWithUserDetails->getPreviousReportId()
         );
 
-        $reportPdfLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
+        $reportPdfLink = $this->findWithRetry('xpath', $xpathLocator);
 
         if (is_null($reportPdfLink)) {
             throw new BehatException('Could not find download link for the report');
@@ -409,7 +410,7 @@ trait ReportManagementTrait
             $this->interactingWithUserDetails->getPreviousReportId()
         );
 
-        $reportPdfLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
+        $reportPdfLink = $this->findWithRetry('xpath', $xpathLocator);
 
         if (!is_null($reportPdfLink)) {
             throw new BehatException('Download link for the report is visible when it should not be');
@@ -436,7 +437,7 @@ trait ReportManagementTrait
     {
         $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
 
-        $checkboxDiv = $this->getSession()->getPage()->find('xpath', $benefitsCheckXpath);
+        $checkboxDiv = $this->findWithRetry('xpath', $benefitsCheckXpath);
 
         $checkboxIsVisible = !is_null($checkboxDiv);
 
@@ -453,7 +454,7 @@ trait ReportManagementTrait
             if ($checkboxIsVisible) {
                 $message = sprintf(
                     'The checkbox for "Client benefits check" did not appear on the page when it should have: %s',
-                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
+                    $this->findWithRetry('xpath', '//main')->getHtml()
                 );
 
                 throw new BehatException($message);

@@ -14,7 +14,7 @@ trait ElementSelectionTrait
     // Bring back list of items based on css selector with error handling
     public function findAllCssElements($elementType)
     {
-        $listOfElements = $this->getSession()->getPage()->findAll('css', $elementType);
+        $listOfElements = $this->findWithRetryAll('css', $elementType);
 
         if (!$listOfElements) {
             throw new BehatException("A $elementType element was not found on the page");
@@ -26,7 +26,7 @@ trait ElementSelectionTrait
     // Bring back list of items based on xpath selector with error handling
     public function findAllXpathElements($xpath)
     {
-        $listOfElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+        $listOfElements = $this->findWithRetryAll('xpath', $xpath);
 
         if (!$listOfElements) {
             throw new BehatException("A '$xpath' element was not found on the page");
@@ -39,7 +39,7 @@ trait ElementSelectionTrait
     public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex)
     {
         $linksArray = [];
-        $links = $this->getSession()->getPage()->findAll('css', 'a');
+        $links = $this->findWithRetryAll('css', 'a');
 
         if (!$links) {
             throw new BehatException('A link element was not found on the page');
@@ -69,7 +69,7 @@ trait ElementSelectionTrait
     public function clickBasedOnText($text)
     {
         $xpath = sprintf('//a[text()[contains(., \'%s\')]]', $text);
-        $link = $this->getSession()->getPage()->find('xpath', $xpath);
+        $link = $this->findWithRetry('xpath', $xpath);
         $link->click();
     }
 
@@ -80,7 +80,7 @@ trait ElementSelectionTrait
     public function getLinkNodeBySectionAndLinkText(string $sectionText, string $linkText): NodeElement
     {
         $sectionLocator = sprintf("//*[text()[contains(., '%s')]]", $sectionText);
-        $foundElements = $this->getSession()->getPage()->findAll('xpath', $sectionLocator);
+        $foundElements = $this->findWithRetryAll('xpath', $sectionLocator);
 
         if (0 === count($foundElements)) {
             throw new BehatException(sprintf('No elements found on the page that contain the text "%s"', $sectionText));
@@ -112,7 +112,7 @@ trait ElementSelectionTrait
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
 
-        $element = $this->getSession()->getPage()->find(
+        $element = $this->findWithRetry(
             'xpath',
             $xpath
         );
@@ -220,7 +220,7 @@ trait ElementSelectionTrait
         $value = str_replace('\\"', '"', $value);
 
         if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
-            $field = '#'.$field;
+            $field = '#' . $field;
         }
 
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
@@ -270,7 +270,7 @@ EOT;
 
             $this->getSession()->executeScript($javascript);
         } else {
-            $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
+            $elementsFound = $this->findWithRetryAll('css', $field);
 
             if (empty($elementsFound)) {
                 throw new RuntimeException("Element $field not found");
@@ -284,23 +284,23 @@ EOT;
     public function scrollToElement($element)
     {
         if ('.' != substr($element, 0, 1) && '#' != substr($element, 0, 1)) {
-            $element = '#'.$element;
+            $element = '#' . $element;
         }
 
         $driver = $this->getSession()->getDriver();
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
             $javascript =
                 "var el = $('$element');"
-                .'var elOffset = el.offset().top;'
-                .'var elHeight = el.height();'
-                .'var windowHeight = $(window).height();'
-                .'var offset;'
-                .'if (elHeight < windowHeight) {'
-                .'  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
-                .'} else {'
-                .'  offset = elOffset;'
-                .'}'
-                .'window.scrollTo(0, offset);';
+                . 'var elOffset = el.offset().top;'
+                . 'var elHeight = el.height();'
+                . 'var windowHeight = $(window).height();'
+                . 'var offset;'
+                . 'if (elHeight < windowHeight) {'
+                . '  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
+                . '} else {'
+                . '  offset = elOffset;'
+                . '}'
+                . 'window.scrollTo(0, offset);';
 
             $this->getSession()->executeScript($javascript);
         }

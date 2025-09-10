@@ -320,7 +320,7 @@ trait FormFillingTrait
                 $normalizedAnswer,
             );
 
-            $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
+            $descriptionTableRow = $this->findWithRetry('xpath', $rowSelector);
 
             $descriptionTableRow->clickLink('Remove');
             $this->pressButton($removeButtonText);
@@ -437,7 +437,7 @@ trait FormFillingTrait
      */
     public function waitForAjaxAndRefresh()
     {
-        while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
+        while ($refresh = $this->findWithRetry('css', 'meta[http-equiv="refresh"]')) {
             $content = $refresh->getAttribute('content');
             $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
 

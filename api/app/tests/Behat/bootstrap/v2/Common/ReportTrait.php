@@ -523,7 +523,8 @@ trait ReportTrait
      */
     public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString, string $currentOrPrevious)
     {
-        if (empty($this->loggedInUserDetails)
+        if (
+            empty($this->loggedInUserDetails)
             || (empty($this->loggedInUserDetails->getCurrentReportId()) && empty($this->loggedInUserDetails->getPreviousReportId()))
         ) {
             throw new BehatException('The logged in user does not have a report. Ensure a user with a report has logged in before using this step.');
@@ -633,7 +634,7 @@ trait ReportTrait
      */
     public function iShouldSeeNumberOfReports(int $expectedNumberOfReports)
     {
-        $links = $this->getSession()->getPage()->findAll('css', 'a');
+        $links = $this->findWithRetryAll('css', 'a');
 
         $reportLinks = [];
 

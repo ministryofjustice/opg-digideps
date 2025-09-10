@@ -62,7 +62,7 @@ trait AssertTrait
         $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
             !str_contains($foundFormatted, $notExpectedFormatted),
-            $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
+            $this->getAssertMessage('\'' . $notExpectedFormatted . '\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
         );
     }
 
@@ -75,7 +75,7 @@ trait AssertTrait
         $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
             $foundFormatted != $notExpectedFormatted,
-            $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
+            $this->getAssertMessage('\'' . $notExpectedFormatted . '\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
         );
     }
 
@@ -142,7 +142,7 @@ MESSAGE;
 
     private function getValuesFromSelect(string $selectNameValue): array
     {
-        $selectElement = $this->getSession()->getPage()->find(
+        $selectElement = $this->findWithRetry(
             'xpath',
             "//select[@name='$selectNameValue']"
         );
@@ -190,7 +190,7 @@ MESSAGE;
 
     public function assertLinkWithTextIsOnPage(string $linkText)
     {
-        $linkElement = $this->getSession()->getPage()->find(
+        $linkElement = $this->findWithRetry(
             'xpath',
             "//a[normalize-space() = '$linkText']"
         );
@@ -210,7 +210,7 @@ MESSAGE;
 
     public function assertLinkWithTextIsNotOnPage(string $linkText)
     {
-        $linkElement = $this->getSession()->getPage()->find(
+        $linkElement = $this->findWithRetry(
             'xpath',
             "//a[text() = '$linkText']"
         );

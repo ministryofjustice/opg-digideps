@@ -52,8 +52,8 @@ trait GiftsSectionTrait
     {
         ++$this->giftId;
 
-        $this->fillInField('gifts_single[explanation]', 'random-gift-'.$this->giftId, 'gifts'.$this->giftId);
-        $this->fillInFieldTrackTotal('gifts_single[amount]', $this->giftId + 100, 'gifts'.$this->giftId);
+        $this->fillInField('gifts_single[explanation]', 'random-gift-' . $this->giftId, 'gifts' . $this->giftId);
+        $this->fillInFieldTrackTotal('gifts_single[amount]', $this->giftId + 100, 'gifts' . $this->giftId);
     }
 
     /**
@@ -62,7 +62,7 @@ trait GiftsSectionTrait
     public function iEditGiftDescriptionAndAmount()
     {
         $locator = "//td[normalize-space()='random-gift-1']/..";
-        $giftRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $giftRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSectionTrackTotal($giftRow, 'gifts_single[amount]', 'gifts1', false);
         $this->editFieldAnswerInSection($giftRow, 'gifts_single[explanation]', $this->faker->sentence(4), 'gifts1', false);

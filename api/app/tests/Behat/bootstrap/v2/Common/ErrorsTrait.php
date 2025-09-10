@@ -10,8 +10,8 @@ trait ErrorsTrait
 {
     public function assertOnErrorMessage(string $errorMessage)
     {
-        $errorDiv = $this->getSession()->getPage()->find('css', 'div#error-summary');
-        $flashDiv = $this->getSession()->getPage()->find('css', 'div.opg-alert--error');
+        $errorDiv = $this->findWithRetry('css', 'div#error-summary');
+        $flashDiv = $this->findWithRetry('css', 'div.opg-alert--error');
 
         if (is_null($errorDiv) && is_null($flashDiv)) {
             $missingDivMessage = <<<MESSAGE

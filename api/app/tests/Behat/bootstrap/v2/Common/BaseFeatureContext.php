@@ -179,7 +179,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($text) {
             parent::assertPageContainsText($text);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     /**
@@ -190,7 +190,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($text) {
             parent::assertPageNotContainsText($text);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
 
@@ -202,7 +202,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($element, $text) {
             parent::assertElementContainsText($element, $text);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     /**
@@ -213,7 +213,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($field, $value) {
             parent::assertFieldContains($field, $value);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     /**
@@ -224,7 +224,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($field, $value) {
             parent::assertFieldNotContains($field, $value);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     /**
@@ -235,7 +235,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($link) {
             parent::clickLink($link);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     /**
@@ -246,7 +246,7 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($button) {
             parent::pressButton($button);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     /**
@@ -257,14 +257,14 @@ class BaseFeatureContext extends MinkContext
         $this->spin(function () use ($field, $value) {
             parent::fillField($field, $value);
             return true;
-        }, 15);
+        }, __FUNCTION__, 15);
     }
 
     public function findWithRetry(string $selector, string $locator, int $wait = 10)
     {
         return $this->spin(function () use ($selector, $locator) {
-            return $this->getSession()->getPage()->find($selector, $locator);
-        }, $wait);
+            return $this->findWithRetry($selector, $locator);
+        }, __FUNCTION__, $wait);
     }
 
     /**

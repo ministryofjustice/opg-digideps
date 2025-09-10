@@ -135,7 +135,7 @@ trait MoneyOutShortSectionTrait
 
         $count = 0;
         foreach ($this->paymentNumber as $payment) {
-            $this->getSectionAnswers('moneyOutDetails'.$payment) ? $count++ : $count;
+            $this->getSectionAnswers('moneyOutDetails' . $payment) ? $count++ : $count;
         }
         if (0 == $count) {
             $this->removeSection('over1K');
@@ -157,7 +157,7 @@ trait MoneyOutShortSectionTrait
 
         $formattedAmount = $this->normalizeIntToCurrencyString($this->getSectionTotal('moneyOutDetails1'));
         $locator = sprintf("//td[normalize-space()='%s']/..", $formattedAmount);
-        $paymentRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $paymentRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSection($paymentRow, 'money_short_transaction[description]', $this->faker->sentence(mt_rand(2, 15)), 'moneyOutDetails1', false);
         $this->editFieldAnswerInSectionTrackTotal($paymentRow, 'money_short_transaction[amount]', 'moneyOutDetails1', false, 1001);
@@ -230,9 +230,9 @@ trait MoneyOutShortSectionTrait
     {
         $this->iAmOnMoneyOutShortAddPage();
 
-        $this->fillInField('money_short_transaction[description]', $description, 'moneyOutDetails'.$paymentCount);
-        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyOutDetails'.$paymentCount);
-        $this->fillInDateFields('money_short_transaction[date]', $day, $month, $year, 'moneyOutDetails'.$paymentCount);
+        $this->fillInField('money_short_transaction[description]', $description, 'moneyOutDetails' . $paymentCount);
+        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyOutDetails' . $paymentCount);
+        $this->fillInDateFields('money_short_transaction[date]', $day, $month, $year, 'moneyOutDetails' . $paymentCount);
 
         $this->moneyOutShortOneOff[] = [$description => $amount];
 
@@ -291,10 +291,10 @@ trait MoneyOutShortSectionTrait
         $this->removeSection('reasonForNoMoneyOut');
 
         foreach ($this->paymentNumber as $payment) {
-            $this->removeSection('moneyOutDetails'.$payment);
+            $this->removeSection('moneyOutDetails' . $payment);
         }
 
-        $urlRegex = sprintf('/%s\/.*\/money-out-short\/%s\?from\=summary$/', $this->reportUrlPrefix,$arg);
+        $urlRegex = sprintf('/%s\/.*\/money-out-short\/%s\?from\=summary$/', $this->reportUrlPrefix, $arg);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
@@ -305,7 +305,7 @@ trait MoneyOutShortSectionTrait
     {
         $this->iAmOnMoneyOutShortSummaryPage();
 
-        $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+        $oneOffPaymentTableRows = $this->findWithRetry('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
             $this->assertPageNotContainsText('List of expenses over £1000');
@@ -318,7 +318,7 @@ trait MoneyOutShortSectionTrait
             foreach ($this->moneyOutShortOneOff as $transactionItems) {
                 foreach ($transactionItems as $description => $value) {
                     $this->assertElementContainsText('table', $description);
-                    $this->assertElementContainsText('table', '£'.number_format($value, 2));
+                    $this->assertElementContainsText('table', '£' . number_format($value, 2));
                 }
             }
             $this->expectedResultsDisplayedSimplified();

@@ -193,7 +193,7 @@ trait DeputyCostsEstimateSectionTrait
         $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value);
 
         $locator = sprintf('//dt[contains(., "%s")]/..', 'How will you be charging for your services?');
-        $fixedCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $fixedCostsRow = $this->findWithRetry('xpath', $locator);
 
         $this->editSelectAnswerInSection($fixedCostsRow, $field, 'both', $formSectionName, 'both fixed and assessed costs');
         $this->iFillInEstimatedAssessedCostsCorrectly();
@@ -212,7 +212,7 @@ trait DeputyCostsEstimateSectionTrait
         $answer = $this->moneyFormat($this->getSectionAnswers($formSectionName)[0][$field]);
 
         $locator = sprintf('//dd[contains(., "%s")]/..', $answer);
-        $expectedCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $expectedCostsRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSection($expectedCostsRow, $field, 2789, $formSectionName);
     }
@@ -227,7 +227,7 @@ trait DeputyCostsEstimateSectionTrait
         $field = 'deputy_costs_estimate[profDeputyCostsEstimateMoreInfoDetails]';
 
         $locator = sprintf('//dd[contains(., "%s")]/..', $this->getSectionAnswers($formSectionName)[0][$field]);
-        $expectedCostsDescriptionRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $expectedCostsDescriptionRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSection($expectedCostsDescriptionRow, $field, 'edited details', $formSectionName);
     }
@@ -243,7 +243,7 @@ trait DeputyCostsEstimateSectionTrait
 
         $answer = $this->moneyFormat($this->getSectionAnswers($formSectionName)[0][$field]);
         $locator = sprintf('//dd[contains(., "%s")]/..', $answer);
-        $costBreakdownRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $costBreakdownRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSection($costBreakdownRow, $field, 222, $formSectionName, false);
     }

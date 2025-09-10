@@ -118,7 +118,7 @@ trait ActivateTrait
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2020');
 
-        if ($this->getSession()->getPage()->findById('client_caseNumber')) {
+        if ($this->findWithRetryById('client_caseNumber')) {
             $this->fillComplexField('client_firstname', $this->faker->firstName());
             $this->fillComplexField('client_lastname', $this->existingPreRegistration->getClientLastname());
             $this->fillComplexField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
@@ -136,7 +136,7 @@ trait ActivateTrait
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2020');
 
-        if ($this->getSession()->getPage()->findById('client_caseNumber')) {
+        if ($this->findWithRetryById('client_caseNumber')) {
             $this->fillInField('client_firstname', $this->faker->firstName());
             $this->fillInField('client_lastname', 'O’Shea');
             $this->fillInField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
@@ -186,7 +186,7 @@ trait ActivateTrait
     {
         $tableHeadsXpath = sprintf('//table/thead/tr/th[normalize-space()="%s"]/preceding-sibling::th', $header);
 
-        return count($this->getSession()->getPage()->findAll('xpath', $tableHeadsXpath)) + 1;
+        return count($this->findWithRetryAll('xpath', $tableHeadsXpath)) + 1;
     }
 
     private function getTableCellByUniqueRowValueAndHeader(string $header, string $uniqueValueThatAppearsInRow)
@@ -194,7 +194,7 @@ trait ActivateTrait
         $positionOfHeader = $this->getColumnPositionByHeader($header);
         $cellByHeaderXpath = sprintf('//td[normalize-space()="%s"]//parent::*/td[%s]', $uniqueValueThatAppearsInRow, $positionOfHeader);
 
-        return $this->getSession()->getPage()->find('xpath', $cellByHeaderXpath)->getHtml();
+        return $this->findWithRetry('xpath', $cellByHeaderXpath)->getHtml();
     }
 
     /**
@@ -293,7 +293,7 @@ trait ActivateTrait
         $value = $this->fixStepArgument($value);
 
         if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
-            $field = '#'.$field;
+            $field = '#' . $field;
         }
 
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
@@ -344,7 +344,7 @@ EOT;
 
             $this->getSession()->executeScript($javascript);
         } else {
-            $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
+            $elementsFound = $this->findWithRetryAll('css', $field);
 
             if (empty($elementsFound)) {
                 throw new RuntimeException("Element $field not found");

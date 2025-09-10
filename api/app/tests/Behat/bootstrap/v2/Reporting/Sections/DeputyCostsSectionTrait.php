@@ -400,7 +400,7 @@ trait DeputyCostsSectionTrait
     public function iEditTheDetailsOfPreviousPeriodCost()
     {
         $locator = '//dt[contains(., "Received for")]/..';
-        $previousPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $previousPeriodCostRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSectionTrackTotal(
             $previousPeriodCostRow,
@@ -417,7 +417,7 @@ trait DeputyCostsSectionTrait
     public function iEditTheDetailsOfCurrentPeriodCost()
     {
         $locator = '//dt[contains(., "Paid for this reporting period")]/..';
-        $currentPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $currentPeriodCostRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSectionTrackTotal(
             $currentPeriodCostRow,
@@ -434,7 +434,7 @@ trait DeputyCostsSectionTrait
     public function iEditTheDetailsOfAdditionalCostCurrentPeriod()
     {
         $locator = '//dt[contains(., "Appointment")]/..';
-        $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $additionalCostRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSectionTrackTotal(
             $additionalCostRow,
@@ -451,7 +451,7 @@ trait DeputyCostsSectionTrait
     public function iChangeTypeOfCostsIncurredToAssessed(string $typeOfCost)
     {
         $locator = '//dt[contains(., "How did you charge for the services")]/..';
-        $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $additionalCostRow = $this->findWithRetry('xpath', $locator);
 
         $this->editSelectAnswerInSection(
             $additionalCostRow,
@@ -470,7 +470,7 @@ trait DeputyCostsSectionTrait
     public function thereShouldBeTwoNewQuestionsToAnswer(int $numberOfQuestions)
     {
         $locator = '//dd[contains(., "Please answer this question")]/..';
-        $additionalCostRow = $this->getSession()->getPage()->findAll('xpath', $locator);
+        $additionalCostRow = $this->findWithRetryAll('xpath', $locator);
 
         $this->assertIntEqualsInt(
             $numberOfQuestions,
@@ -485,7 +485,7 @@ trait DeputyCostsSectionTrait
     public function iEditOne19BInterimCost()
     {
         $locator = '//dt[contains(., "Costs for interim 1")]/..';
-        $interim19BCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $interim19BCostsRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSectionTrackTotal(
             $interim19BCostsRow,
@@ -502,7 +502,7 @@ trait DeputyCostsSectionTrait
     public function iEditAmountBeingSubmittedToSCCO()
     {
         $locator = '//dt[contains(., "What amount is being submitted to SCCO")]/..';
-        $sccoEstimateRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $sccoEstimateRow = $this->findWithRetry('xpath', $locator);
 
         $this->editFieldAnswerInSection(
             $sccoEstimateRow,
@@ -520,7 +520,7 @@ trait DeputyCostsSectionTrait
     public function iChangeDirection19BInterimCostsToNo()
     {
         $locator = '//dt[contains(., "Practice Direction 19B")]/..';
-        $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $additionalCostRow = $this->findWithRetry('xpath', $locator);
 
         $this->editSelectAnswerInSection(
             $additionalCostRow,

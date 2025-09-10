@@ -146,14 +146,13 @@ trait DecisionSectionTrait
     {
         $reasonForNoDecisionPath = './/label[text()[contains(.,"Reason for no decisions")]]/..';
 
-        $reasonForNoDecisionDiv = $this->getSession()->getPage()->find('xpath', $reasonForNoDecisionPath);
+        $reasonForNoDecisionDiv = $this->findWithRetry('xpath', $reasonForNoDecisionPath);
 
         $reasonForNoDecisionIsNotVisible = is_null($reasonForNoDecisionDiv);
 
         if ($shouldNotBeVisible) {
             if (!$reasonForNoDecisionIsNotVisible) {
-                $message = sprintf('The reason for no decision box is visible on the summary page when it shouldn\'t be: %s', $reasonForNoDecisionDiv->getHtml()
-                );
+                $message = sprintf('The reason for no decision box is visible on the summary page when it shouldn\'t be: %s', $reasonForNoDecisionDiv->getHtml());
 
                 throw new BehatException($message);
             }

@@ -13,7 +13,7 @@ trait ReportSectionNavigationTrait
      */
     public function previousSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to previous part']);
+        $anchor = $this->findWithRetry('named', ['link', 'Navigate to previous part']);
 
         if (!$anchor) {
             throw new BehatException('Previous section link is not visible on the page (searched by title = "Navigate to previous part")');
@@ -31,7 +31,7 @@ trait ReportSectionNavigationTrait
      */
     public function nextSectionShouldBe(string $sectionName)
     {
-        $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to next part']);
+        $anchor = $this->findWithRetry('named', ['link', 'Navigate to next part']);
 
         if (!$anchor) {
             throw new BehatException('Next section link is not visible on the page (searched by title = "Navigate to next part")');

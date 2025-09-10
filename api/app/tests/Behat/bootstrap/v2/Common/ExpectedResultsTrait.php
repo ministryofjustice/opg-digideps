@@ -37,7 +37,7 @@ trait ExpectedResultsTrait
         $this->summarySectionItemsFound = [];
 
         $xpath = '//dl|//tbody';
-        $summarySectionElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+        $summarySectionElements = $this->findWithRetryAll('xpath', $xpath);
 
         foreach ($summarySectionElements as $summarySectionElement) {
             $this->tableHtml .= $summarySectionElement->getHtml();
@@ -83,7 +83,7 @@ trait ExpectedResultsTrait
 
     private function extractH3Contents()
     {
-        $h3s = $this->getSession()->getPage()->findAll('xpath', '//h3');
+        $h3s = $this->findWithRetryAll('xpath', '//h3');
 
         foreach ($h3s as $h3) {
             $this->summarySectionItemsFound[] = strtolower($h3->getText());
@@ -230,10 +230,10 @@ trait ExpectedResultsTrait
         $totalElements = [];
 
         $divXpath = '//div[text()[contains(.,"Total")] and text()[contains(.,"£")]]';
-        $totalElements = array_merge($totalElements, $this->getSession()->getPage()->findAll('xpath', $divXpath));
+        $totalElements = array_merge($totalElements, $this->findWithRetryAll('xpath', $divXpath));
 
         $tableRowXpath = '//tr/th[text()[contains(.,"Total")]]/parent::*';
-        $totalElements = array_merge($totalElements, $this->getSession()->getPage()->findAll('xpath', $tableRowXpath));
+        $totalElements = array_merge($totalElements, $this->findWithRetryAll('xpath', $tableRowXpath));
 
         if (!empty($totalElements)) {
             foreach ($totalElements as $element) {

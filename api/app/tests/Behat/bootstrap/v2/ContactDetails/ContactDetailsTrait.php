@@ -13,7 +13,7 @@ trait ContactDetailsTrait
      */
     public function supportFooterShouldShowEmail(string $text)
     {
-        $supportFooter = $this->getSession()->getPage()->find('xpath', '//main/../details');
+        $supportFooter = $this->findWithRetry('xpath', '//main/../details');
 
         if (is_null($supportFooter)) {
             throw new BehatException('A details element was not visible on the page');
@@ -31,7 +31,7 @@ trait ContactDetailsTrait
      */
     public function supportFooterShouldNotBeVisible()
     {
-        $supportFooter = $this->getSession()->getPage()->find('xpath', '//div/details');
+        $supportFooter = $this->findWithRetry('xpath', '//div/details');
 
         if (!is_null($supportFooter)) {
             throw new BehatException('A details element was found on the page when it should not be visible');

@@ -35,7 +35,7 @@ trait SelfRegistrationTrait
             return $this->cachedFixtures[$jsonFile];
         }
 
-        $file = file_get_contents(__DIR__.'/../../../fixtures/'.$jsonFile);
+        $file = file_get_contents(__DIR__ . '/../../../fixtures/' . $jsonFile);
 
         $out = json_decode($file, true);
         if (is_null($out)) {
@@ -243,7 +243,7 @@ trait SelfRegistrationTrait
      */
     public function iShouldSeeAnInvalidCaseNumberError()
     {
-        $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+        $actualErrorMessage = $this->findWithRetry('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
         $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
         $this->assertStringEqualsString($actualErrorMessageStripped, $this->invalidCaseNumberError, 'invalid case number error thrown');
@@ -289,7 +289,7 @@ trait SelfRegistrationTrait
         if ('not thrown' == $arg1) {
             $this->assertPageContainsText(sprintf("We've sent you a link to %s that you need to click to activate your deputy service account.", $this->userEmail));
         } else {
-            $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+            $actualErrorMessage = $this->findWithRetry('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
             $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
             $this->assertStringEqualsString($actualErrorMessageStripped, $this->incorrectCaseNumberLengthError, 'incorrect case number length error thrown');
@@ -392,7 +392,7 @@ trait SelfRegistrationTrait
         $this->userEmail = 'brian@mcduck.co.uk';
         $firstName = 'Brian';
         $lastName = 'McDuck';
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail, 'deputyName' => $firstName.$lastName]);
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail, 'deputyName' => $firstName . $lastName]);
         $this->deputyUid = '35672419';
 
         $this->visitFrontendPath('/register');
@@ -792,7 +792,7 @@ trait SelfRegistrationTrait
     public function theCoDeputyShouldAppearInTheSearchResults()
     {
         $xpath = '//table[@class="table-govuk-body-s"]/tbody';
-        $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
+        $userResultsTable = $this->findWithRetry('xpath', $xpath)->getHtml();
         $this->assertStringContainsString($this->coDeputyEmail, $userResultsTable, 'Results on page');
     }
 
@@ -864,7 +864,7 @@ trait SelfRegistrationTrait
 
         $client = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
 
-        $this->visitPath('/client/'.$client->getId());
+        $this->visitPath('/client/' . $client->getId());
     }
 
     /**

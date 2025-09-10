@@ -233,7 +233,7 @@ trait AdminManagementTrait
     public function myDetailsShouldBeUpdated()
     {
         $locator = "//th[text()='Full name']/parent::tr";
-        $fullnameTableRow = $this->getSession()->getPage()->find('xpath', $locator);
+        $fullnameTableRow = $this->findWithRetry('xpath', $locator);
         $foundName = $fullnameTableRow->find('xpath', '//td')->getHtml();
 
         $expectedName = sprintf(
