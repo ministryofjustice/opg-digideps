@@ -157,7 +157,7 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-        $this->findWithRetry('xpath', '//td[contains(., "Care fees")]/..')->clickLink('Edit');
+        $this->getSession()->getPage()->find('xpath', '//td[contains(., "Care fees")]/..')->clickLink('Edit');
 
         $this->fillInPaymentDetails('Care fees', $this->faker->sentence(rand(5, 50)), mt_rand(1, 999));
     }
@@ -303,7 +303,7 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-        $transactionItemTableRows = $this->findWithRetry('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+        $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
             $this->assertIsNull($transactionItemTableRows, 'Transaction items are not rendered');

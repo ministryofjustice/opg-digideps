@@ -243,7 +243,7 @@ trait SelfRegistrationTrait
      */
     public function iShouldSeeAnInvalidCaseNumberError()
     {
-        $actualErrorMessage = $this->findWithRetry('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+        $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
         $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
         $this->assertStringEqualsString($actualErrorMessageStripped, $this->invalidCaseNumberError, 'invalid case number error thrown');
@@ -289,7 +289,7 @@ trait SelfRegistrationTrait
         if ('not thrown' == $arg1) {
             $this->assertPageContainsText(sprintf("We've sent you a link to %s that you need to click to activate your deputy service account.", $this->userEmail));
         } else {
-            $actualErrorMessage = $this->findWithRetry('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+            $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
             $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
             $this->assertStringEqualsString($actualErrorMessageStripped, $this->incorrectCaseNumberLengthError, 'incorrect case number length error thrown');
@@ -792,7 +792,7 @@ trait SelfRegistrationTrait
     public function theCoDeputyShouldAppearInTheSearchResults()
     {
         $xpath = '//table[@class="table-govuk-body-s"]/tbody';
-        $userResultsTable = $this->findWithRetry('xpath', $xpath)->getHtml();
+        $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $this->assertStringContainsString($this->coDeputyEmail, $userResultsTable, 'Results on page');
     }
 

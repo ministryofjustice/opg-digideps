@@ -634,7 +634,7 @@ trait ReportTrait
      */
     public function iShouldSeeNumberOfReports(int $expectedNumberOfReports)
     {
-        $links = $this->findWithRetryAll('css', 'a');
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
 
         $reportLinks = [];
 

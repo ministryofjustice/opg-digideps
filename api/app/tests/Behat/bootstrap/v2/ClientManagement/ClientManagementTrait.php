@@ -159,7 +159,7 @@ trait ClientManagementTrait
 
     private function getSearchResultHtml()
     {
-        $searchResultsDiv = $this->findWithRetry('css', 'div.client-list');
+        $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.client-list');
 
         if (is_null($searchResultsDiv)) {
             $missingDivMessage = <<<MESSAGE
@@ -183,7 +183,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $pageContent = $this->findWithRetry('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $caseNumberPresent = str_contains($pageContent, $caseNumber);
 
@@ -199,7 +199,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $pageContent = $this->findWithRetry('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
         $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserFullname();
         $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserPhone();
@@ -232,7 +232,7 @@ MESSAGE;
      */
     public function iShouldSeePrimaryLayDeputyDetails()
     {
-        $pageContent = $this->findWithRetry('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
         $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserFullname();
         $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserPhone();
@@ -267,7 +267,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $pageContent = $this->findWithRetry('css', 'main#main-content')->getHtml();
+        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
         $currentReportDateString = $this->interactingWithUserDetails->getCurrentReportDueDate()->format('j F Y');
         $currentReportDueDateVisible = str_contains($pageContent, $currentReportDateString);
@@ -295,12 +295,12 @@ MESSAGE;
 
         $xpathSelector = sprintf("//a[text() = '%s']", $this->interactingWithUserDetails->getOrganisationName());
 
-        $linkHtml = $this->findWithRetry('xpath', $xpathSelector)->getHtml();
+        $linkHtml = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
 
         $orgNameLinkVisible = str_contains($linkHtml, $this->interactingWithUserDetails->getOrganisationName());
 
         if (!$orgNameLinkVisible) {
-            throw new BehatException(sprintf('Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s', $this->interactingWithUserDetails->getCurrentReportDueDate(), $this->findWithRetry('css', 'main#main-content')->getHtml()));
+            throw new BehatException(sprintf('Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s', $this->interactingWithUserDetails->getCurrentReportDueDate(), $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
         }
     }
 
@@ -315,17 +315,17 @@ MESSAGE;
         $deputyEmail = $this->interactingWithUserDetails->getDeputyEmail();
 
         $nameXpathSelector = "//dt[normalize-space() = 'Named deputy']/..";
-        $namedDeputyNameDivHtml = $this->findWithRetry('xpath', $nameXpathSelector)->getHtml();
+        $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $nameXpathSelector)->getHtml();
 
         $namedDeputyNameVisible = str_contains($namedDeputyNameDivHtml, $deputyName);
 
         $emailXpathSelector = "//h3[normalize-space() = 'Named deputy contact details']/..";
-        $namedDeputyNameDivHtml = $this->findWithRetry('xpath', $emailXpathSelector)->getHtml();
+        $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $emailXpathSelector)->getHtml();
 
         $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $deputyEmail);
 
         if (!$namedDeputyNameVisible || !$namedDeputyEmailVisible) {
-            throw new BehatException(sprintf('Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s', $deputyName, $deputyEmail, $this->findWithRetry('css', 'main#main-content')->getHtml()));
+            throw new BehatException(sprintf('Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s', $deputyName, $deputyEmail, $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
         }
     }
 
@@ -359,7 +359,7 @@ MESSAGE;
         }
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
-        $clientDt = $this->findWithRetry('xpath', $dischargedOnSelector);
+        $clientDt = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
 
         if (!$clientDt) {
             throw new BehatException('Could not find a dt element on the page with text "Discharged on".');
@@ -386,10 +386,10 @@ MESSAGE;
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
         $dischargedOnSelector = "//dt[normalize-space() = 'Discharged on']/..";
-        $dischargedOnVisible = $this->findWithRetry('xpath', $dischargedOnSelector);
+        $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
 
         if (!is_null($dischargedOnVisible)) {
-            $clientDtHtml = $this->findWithRetry('xpath', $dischargedOnSelector)->getHtml();
+            $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
 
             throw new BehatException(sprintf('The client appears to be discharged. Expected "Discharged on" not to appear, got (HTML of discharged dt): %s', $clientDtHtml));
         }
@@ -523,7 +523,7 @@ MESSAGE;
         $activeClients = $this->em->getRepository(Client::class)->findBy(['organisation' => $organisation->getId()]);
 
         $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
-        $listSummaryRowItems = $this->findWithRetryAll('xpath', $xpath);
+        $listSummaryRowItems = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $rows = [];
         foreach ($listSummaryRowItems as $row) {

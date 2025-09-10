@@ -118,7 +118,7 @@ trait ActivateTrait
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2020');
 
-        if ($this->findWithRetryById('client_caseNumber')) {
+        if ($this->getSession()->getPage()->findById('client_caseNumber')) {
             $this->fillComplexField('client_firstname', $this->faker->firstName());
             $this->fillComplexField('client_lastname', $this->existingPreRegistration->getClientLastname());
             $this->fillComplexField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
@@ -136,7 +136,7 @@ trait ActivateTrait
         $this->fillInField('client_courtDate_month', '01');
         $this->fillInField('client_courtDate_year', '2020');
 
-        if ($this->findWithRetryById('client_caseNumber')) {
+        if ($this->getSession()->getPage()->findById('client_caseNumber')) {
             $this->fillInField('client_firstname', $this->faker->firstName());
             $this->fillInField('client_lastname', 'O’Shea');
             $this->fillInField('client_caseNumber', $this->existingPreRegistration->getCaseNumber());
@@ -186,7 +186,7 @@ trait ActivateTrait
     {
         $tableHeadsXpath = sprintf('//table/thead/tr/th[normalize-space()="%s"]/preceding-sibling::th', $header);
 
-        return count($this->findWithRetryAll('xpath', $tableHeadsXpath)) + 1;
+        return count($this->getSession()->getPage()->findAll('xpath', $tableHeadsXpath)) + 1;
     }
 
     private function getTableCellByUniqueRowValueAndHeader(string $header, string $uniqueValueThatAppearsInRow)
@@ -194,7 +194,7 @@ trait ActivateTrait
         $positionOfHeader = $this->getColumnPositionByHeader($header);
         $cellByHeaderXpath = sprintf('//td[normalize-space()="%s"]//parent::*/td[%s]', $uniqueValueThatAppearsInRow, $positionOfHeader);
 
-        return $this->findWithRetry('xpath', $cellByHeaderXpath)->getHtml();
+        return $this->getSession()->getPage()->find('xpath', $cellByHeaderXpath)->getHtml();
     }
 
     /**
@@ -344,7 +344,7 @@ EOT;
 
             $this->getSession()->executeScript($javascript);
         } else {
-            $elementsFound = $this->findWithRetryAll('css', $field);
+            $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
 
             if (empty($elementsFound)) {
                 throw new RuntimeException("Element $field not found");

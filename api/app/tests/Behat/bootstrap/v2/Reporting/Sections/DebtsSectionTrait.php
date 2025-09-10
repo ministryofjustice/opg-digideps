@@ -84,7 +84,7 @@ trait DebtsSectionTrait
         $this->iAmOnDebtsSummaryPage();
 
         $locator = '//div[normalize-space()="List of debts"]/..';
-        $debtsListDiv = $this->findWithRetry('xpath', $locator);
+        $debtsListDiv = $this->getSession()->getPage()->find('xpath', $locator);
 
         $debtsListDiv->clickLink('Edit');
 

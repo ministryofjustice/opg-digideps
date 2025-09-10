@@ -14,7 +14,7 @@ trait ElementSelectionTrait
     // Bring back list of items based on css selector with error handling
     public function findAllCssElements($elementType)
     {
-        $listOfElements = $this->findWithRetryAll('css', $elementType);
+        $listOfElements = $this->getSession()->getPage()->findAll('css', $elementType);
 
         if (!$listOfElements) {
             throw new BehatException("A $elementType element was not found on the page");
@@ -26,7 +26,7 @@ trait ElementSelectionTrait
     // Bring back list of items based on xpath selector with error handling
     public function findAllXpathElements($xpath)
     {
-        $listOfElements = $this->findWithRetryAll('xpath', $xpath);
+        $listOfElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         if (!$listOfElements) {
             throw new BehatException("A '$xpath' element was not found on the page");
@@ -39,7 +39,7 @@ trait ElementSelectionTrait
     public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex)
     {
         $linksArray = [];
-        $links = $this->findWithRetryAll('css', 'a');
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
 
         if (!$links) {
             throw new BehatException('A link element was not found on the page');
@@ -69,7 +69,7 @@ trait ElementSelectionTrait
     public function clickBasedOnText($text)
     {
         $xpath = sprintf('//a[text()[contains(., \'%s\')]]', $text);
-        $link = $this->findWithRetry('xpath', $xpath);
+        $link = $this->getSession()->getPage()->find('xpath', $xpath);
         $link->click();
     }
 
@@ -80,7 +80,7 @@ trait ElementSelectionTrait
     public function getLinkNodeBySectionAndLinkText(string $sectionText, string $linkText): NodeElement
     {
         $sectionLocator = sprintf("//*[text()[contains(., '%s')]]", $sectionText);
-        $foundElements = $this->findWithRetryAll('xpath', $sectionLocator);
+        $foundElements = $this->getSession()->getPage()->findAll('xpath', $sectionLocator);
 
         if (0 === count($foundElements)) {
             throw new BehatException(sprintf('No elements found on the page that contain the text "%s"', $sectionText));
@@ -112,7 +112,7 @@ trait ElementSelectionTrait
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
 
-        $element = $this->findWithRetry(
+        $element = $this->getSession()->getPage()->find(
             'xpath',
             $xpath
         );
@@ -270,7 +270,7 @@ EOT;
 
             $this->getSession()->executeScript($javascript);
         } else {
-            $elementsFound = $this->findWithRetryAll('css', $field);
+            $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
 
             if (empty($elementsFound)) {
                 throw new RuntimeException("Element $field not found");

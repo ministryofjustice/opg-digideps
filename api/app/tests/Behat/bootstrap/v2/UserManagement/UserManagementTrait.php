@@ -56,18 +56,18 @@ trait UserManagementTrait
     public function iShouldSeeTheCorrectSearchResult()
     {
         $xpath = '//h2[@id="users-list-title"]/parent::div/p[@class="govuk-body"]';
-        $userText = $this->findWithRetry('xpath', $xpath)->getHtml();
+        $userText = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $pluralUsers = 1 === $this->userCount ? 'user' : 'users';
         $userMessage = sprintf('found %s %s', strval($this->userCount), $pluralUsers);
         $this->assertStringEqualsString($userMessage, $userText, 'Users Found');
         $xpath = '//table[@class="table-govuk-body-s"]/tbody/tr';
-        $userElements = $this->findWithRetryAll('xpath', $xpath);
+        $userElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
         $userRowCount = count($userElements);
         $this->assertIntEqualsInt($userRowCount, $this->userCount, 'User rows visible');
 
         foreach ($this->userEmails as $userEmail) {
             $xpath = '//table[@class="table-govuk-body-s"]/tbody';
-            $userResultsTable = $this->findWithRetry('xpath', $xpath)->getHtml();
+            $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
             $this->assertStringContainsString($userEmail, $userResultsTable, 'Results on page');
         }
     }
@@ -233,7 +233,7 @@ trait UserManagementTrait
     {
         $this->iAmOnAdminUsersSearchPage();
         $xpath = '//tbody/tr';
-        $firstRow = $this->findWithRetry('xpath', $xpath)->getHtml();
+        $firstRow = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $this->assertStringContainsString($this->expectedUsers[0]['firstName'], $firstRow, 'Add user check - first name');
         $this->assertStringContainsString($this->expectedUsers[0]['lastName'], $firstRow, 'Add user check - last name');
         $this->assertStringContainsString($this->expectedUsers[0]['email'], $firstRow, 'Add user check - email');
@@ -319,7 +319,7 @@ trait UserManagementTrait
 
     private function checkRolesExistToAdd($roles)
     {
-        $options = $this->findWithRetryAll('xpath', '//option');
+        $options = $this->getSession()->getPage()->findAll('xpath', '//option');
         $expectedOptions = [];
         foreach ($options as $option) {
             $expectedOptions[] = $option->getValue();
@@ -411,7 +411,7 @@ trait UserManagementTrait
     public function iSeeActivationLinkHasBeenSent()
     {
         $xpath = '//body/p';
-        $response = $this->findWithRetry('xpath', $xpath)->getHtml();
+        $response = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $this->assertStringContainsString('[Link sent]', $response, 'Add user check - link sent');
     }
 
@@ -473,7 +473,7 @@ trait UserManagementTrait
         $this->iAmOnAdminUsersSearchPage();
         $this->searchUserWithFilter('', 'edit-test-');
         $xpath = '//table[@class="table-govuk-body-s"]/tbody';
-        $resultsTable = $this->findWithRetry('xpath', $xpath)->getHtml();
+        $resultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         foreach ($this->expectedUsers as $addedUser) {
             $this->assertStringContainsString($addedUser['firstName'], $resultsTable, 'Edit user check - first name');
             $this->assertStringContainsString($addedUser['lastName'], $resultsTable, 'Edit user check - last name');
@@ -499,10 +499,10 @@ trait UserManagementTrait
     public function iSeeUserDetailsAreDisplayedCorrectly()
     {
         $layDeputy = $this->expectedUsers[0];
-        $firstName = $this->findWithRetry('xpath', '//input[@id="admin_firstname"]')->getValue();
-        $lastName = $this->findWithRetry('xpath', '//input[@id="admin_lastname"]')->getValue();
-        $email = $this->findWithRetry('xpath', '//input[@id="admin_email"]')->getValue();
-        $postcode = $this->findWithRetry('xpath', '//input[@id="admin_addressPostcode"]')->getValue();
+        $firstName = $this->getSession()->getPage()->find('xpath', '//input[@id="admin_firstname"]')->getValue();
+        $lastName = $this->getSession()->getPage()->find('xpath', '//input[@id="admin_lastname"]')->getValue();
+        $email = $this->getSession()->getPage()->find('xpath', '//input[@id="admin_email"]')->getValue();
+        $postcode = $this->getSession()->getPage()->find('xpath', '//input[@id="admin_addressPostcode"]')->getValue();
         $this->assertStringEqualsString($layDeputy['firstName'], $firstName, 'Edit user - first name check');
         $this->assertStringEqualsString($layDeputy['lastName'], $lastName, 'Edit user - last name check');
         $this->assertStringEqualsString($layDeputy['email'], $email, 'Edit user - email check');
@@ -549,7 +549,7 @@ trait UserManagementTrait
     {
         $this->iAmOnAdminViewUserPage();
         $xpath = "//a[text()[contains(., 'Edit user')]]";
-        $link = $this->findWithRetry('xpath', $xpath);
+        $link = $this->getSession()->getPage()->find('xpath', $xpath);
         $this->assertIsNull($link, 'Edit button present');
     }
 
@@ -613,7 +613,7 @@ trait UserManagementTrait
         $email = 'edit-test-' . $userType . '-' . $this->testRunId . '@t.uk';
         $this->searchUserWithFilter('', $email);
         $xpath = '//tbody';
-        $tbody = $this->findWithRetry('xpath', $xpath)->getHtml();
+        $tbody = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $this->assertStringDoesNotContainString($email, $tbody, 'Delete test - ' . $userType);
     }
 
@@ -681,7 +681,7 @@ trait UserManagementTrait
 
         $xpath = '//div[contains(@class, "govuk-summary-list__row")]';
 
-        $listSummaryRows = $this->findWithRetryAll('xpath', $xpath);
+        $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
 
@@ -750,7 +750,7 @@ trait UserManagementTrait
 
         $xpath = '//tr[contains(@class, "govuk-table__row behat")]';
 
-        $listSummaryRows = $this->findWithRetryAll('xpath', $xpath);
+        $listSummaryRows = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
 
@@ -789,7 +789,7 @@ trait UserManagementTrait
             $otherOrgUserDetails[0]
         );
 
-        !$this->findWithRetry('xpath', $xpathLocator);
+        !$this->getSession()->getPage()->find('xpath', $xpathLocator);
         $this->assertElementNotContainsText('table', '$arg1');
     }
 
@@ -815,7 +815,7 @@ trait UserManagementTrait
             $orgUserIdToBeEdited
         );
 
-        $this->findWithRetry('xpath', $xpathLocator)->click();
+        $this->getSession()->getPage()->find('xpath', $xpathLocator)->click();
     }
 
     private function getAllOrgUsers()
@@ -909,7 +909,7 @@ trait UserManagementTrait
     private function getSearchResults()
     {
         $xpath = '//td';
-        $tableDataElements = $this->findWithRetryAll('xpath', $xpath);
+        $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
 

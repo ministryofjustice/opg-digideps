@@ -397,7 +397,7 @@ trait AuthTrait
             );
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
-        $alertText = $this->findWithRetry('xpath', $xpath)->getText();
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 
         if (is_null($alertText)) {
             throw new BehatException('Could not find a div with class "govuk-notification-banner__content"');
@@ -420,7 +420,7 @@ trait AuthTrait
             'If you need assistance, contact your case manager';
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
-        $alertText = $this->findWithRetry('xpath', $xpath)->getText();
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 
         if (is_null($alertText)) {
             throw new BehatException('Could not find a div with class "govuk-notification-banner__content"');

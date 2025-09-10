@@ -142,7 +142,7 @@ MESSAGE;
 
     private function getValuesFromSelect(string $selectNameValue): array
     {
-        $selectElement = $this->findWithRetry(
+        $selectElement = $this->getSession()->getPage()->find(
             'xpath',
             "//select[@name='$selectNameValue']"
         );
@@ -190,7 +190,7 @@ MESSAGE;
 
     public function assertLinkWithTextIsOnPage(string $linkText)
     {
-        $linkElement = $this->findWithRetry(
+        $linkElement = $this->getSession()->getPage()->find(
             'xpath',
             "//a[normalize-space() = '$linkText']"
         );
@@ -210,7 +210,7 @@ MESSAGE;
 
     public function assertLinkWithTextIsNotOnPage(string $linkText)
     {
-        $linkElement = $this->findWithRetry(
+        $linkElement = $this->getSession()->getPage()->find(
             'xpath',
             "//a[text() = '$linkText']"
         );

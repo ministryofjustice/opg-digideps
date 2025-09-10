@@ -36,7 +36,7 @@ trait OrganisationManagementTrait
         $this->iAmOnAdminOrganisationSearchPage();
 
         $xpath = '//td';
-        $tableDataElements = $this->findWithRetryAll('xpath', $xpath);
+        $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
 
@@ -144,7 +144,7 @@ trait OrganisationManagementTrait
         }
 
         $xpath = "//div[contains(@class, 'govuk-summary-list__row')]";
-        $listSummaryRowItems = $this->findWithRetryAll('xpath', $xpath);
+        $listSummaryRowItems = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $tableValues = [];
         if (count($listSummaryRowItems) > 0) {
@@ -170,7 +170,7 @@ trait OrganisationManagementTrait
         $this->iAmOnAdminOrganisationSearchPage();
 
         $xpath = '//td';
-        $tableDataElements = $this->findWithRetryAll('xpath', $xpath);
+        $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];
 
@@ -201,7 +201,7 @@ trait OrganisationManagementTrait
         $orgId = end($this->organisations)['Id'];
         $deleteLink = sprintf('/admin/organisations/%s/delete', $orgId);
 
-        $links = $this->findWithRetryAll('css', 'a');
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
         $foundLink = false;
 
         foreach ($links as $link) {
@@ -226,7 +226,7 @@ trait OrganisationManagementTrait
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
-        $links = $this->findWithRetryAll('css', 'a');
+        $links = $this->getSession()->getPage()->findAll('css', 'a');
 
         foreach ($links as $link) {
             if (str_ends_with($link->getAttribute('href'), '/delete')) {

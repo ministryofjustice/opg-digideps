@@ -263,7 +263,7 @@ class BaseFeatureContext extends MinkContext
     public function findWithRetry(string $selector, string $locator, int $wait = 10)
     {
         return $this->spin(function () use ($selector, $locator) {
-            return $this->findWithRetry($selector, $locator);
+            return $this->getSession()->getPage()->find($selector, $locator);
         }, __FUNCTION__, $wait);
     }
 

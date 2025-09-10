@@ -71,7 +71,7 @@ trait DocumentsSectionTrait
      */
     public function theDocumentsSummaryPageShouldNotContainDocuments()
     {
-        $descriptionLists = $this->findWithRetryAll('css', 'dl');
+        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
         if (count($descriptionLists) > 1) {
             throw new BehatException('Multiple dl elements found on the page - this suggests documents have been uploaded');
@@ -220,7 +220,7 @@ trait DocumentsSectionTrait
         }
 
         $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $documentToPop);
-        $documentRowDiv = $this->findWithRetry('xpath', $parentOfDtWithTextSelector);
+        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
 
         if (is_null($documentRowDiv)) {
             throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $documentToPop));
@@ -351,7 +351,7 @@ trait DocumentsSectionTrait
         // remove expired document
         $formattedDocName = preg_replace('#[^A-Za-z0-9/.]#', '', $document);
         $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $formattedDocName);
-        $documentRowDiv = $this->findWithRetry('xpath', $parentOfDtWithTextSelector);
+        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
 
         if (is_null($documentRowDiv)) {
             throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $document));
@@ -386,7 +386,7 @@ trait DocumentsSectionTrait
         $alertMessage = 'Your uploaded files are now attached to this report.';
 
         $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
-        $alertText = $this->findWithRetry('xpath', $xpath)->getText();
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 
         if (is_null($alertText)) {
             throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
@@ -405,7 +405,7 @@ trait DocumentsSectionTrait
     public function iShouldSeeListedAsAPreviouslySubmittedDocument($submittedDoc)
     {
         $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDoc);
-        $fileNameItems = $this->findWithRetry('xpath', $xpathSelector)->getHtml();
+        $fileNameItems = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
 
         $this->assertPageContainsText('Previously submitted documents');
 
@@ -421,7 +421,7 @@ trait DocumentsSectionTrait
 
         foreach ($fileNames as $fileName) {
             $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $fileName);
-            $fileNameItem = $this->findWithRetry('xpath', $xpathSelector)->getHtml();
+            $fileNameItem = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
 
             $this->assertStringEqualsString($fileName, $fileNameItem, 'File found');
         }
@@ -435,7 +435,7 @@ trait DocumentsSectionTrait
         $alertMessage = sprintf('File named %s has been removed', $fileName);
 
         $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
-        $alertText = $this->findWithRetry('xpath', $xpath)->getText();
+        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 
         if (is_null($alertText)) {
             throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');

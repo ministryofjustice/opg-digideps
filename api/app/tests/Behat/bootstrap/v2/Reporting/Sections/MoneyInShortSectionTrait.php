@@ -285,7 +285,7 @@ trait MoneyInShortSectionTrait
     {
         $this->iAmOnMoneyInShortSummaryPage();
 
-        $oneOffPaymentTableRows = $this->findWithRetry('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
+        $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
         if ('no' == $arg1) {
             $this->assertPageNotContainsText('List of items of income over £1000');

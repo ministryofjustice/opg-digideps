@@ -11,7 +11,7 @@ trait AlertsTrait
     public function assertOnAlertMessage(string $alertMessage)
     {
         $xpath = '//div[contains(@class, "opg-alert__message")]|//div[contains(@class, "opg-alert--info")]|//div[contains(@class, "govuk-error-summary")]';
-        $alertDiv = $this->findWithRetry('xpath', $xpath);
+        $alertDiv = $this->getSession()->getPage()->find('xpath', $xpath);
 
         if (is_null($alertDiv)) {
             throw new BehatException('Could not find a div with class "opg-alert__message", "opg-alert--info" or "govuk-error-summary"');

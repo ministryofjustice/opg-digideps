@@ -146,7 +146,7 @@ trait DecisionSectionTrait
     {
         $reasonForNoDecisionPath = './/label[text()[contains(.,"Reason for no decisions")]]/..';
 
-        $reasonForNoDecisionDiv = $this->findWithRetry('xpath', $reasonForNoDecisionPath);
+        $reasonForNoDecisionDiv = $this->getSession()->getPage()->find('xpath', $reasonForNoDecisionPath);
 
         $reasonForNoDecisionIsNotVisible = is_null($reasonForNoDecisionDiv);
 

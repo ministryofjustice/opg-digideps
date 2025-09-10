@@ -23,7 +23,7 @@ trait ReportSubmissionTrait
 
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $locator = sprintf('//td[normalize-space()="%s"]/..', $caseNumber);
-        $submissionRow = $this->findWithRetry('xpath', $locator);
+        $submissionRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($submissionRow)) {
             throw new BehatException(sprintf('Could not find a submission row that contained case number "%s"', $caseNumber));
@@ -151,7 +151,7 @@ trait ReportSubmissionTrait
             $usersToSearchOn[1]->getClientCaseNumber(),
         );
 
-        $clientRows = $this->findWithRetryAll('xpath', $locator);
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
 
         $this->assertIntEqualsInt(
             2,
@@ -172,7 +172,7 @@ trait ReportSubmissionTrait
             $usersToSearchOn[1]->getClientCaseNumber(),
         );
 
-        $clientRows = $this->findWithRetryAll('xpath', $locator);
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
 
         $this->assertIntEqualsInt(
             0,
@@ -203,7 +203,7 @@ trait ReportSubmissionTrait
             $userToSearchOn->getClientCaseNumber()
         );
 
-        $clientRows = $this->findWithRetryAll('xpath', $locator);
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
 
         $expectedRows = 'one' === $numberRows ? 1 : 2;
         $this->assertIntEqualsInt(
@@ -225,7 +225,7 @@ trait ReportSubmissionTrait
             $userToSearchOn->getClientCaseNumber()
         );
 
-        $clientRows = $this->findWithRetryAll('xpath', $locator);
+        $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
 
         $this->assertIntEqualsInt(
             0,
@@ -244,7 +244,7 @@ trait ReportSubmissionTrait
             $this->oneReportsUserDetails->getClientCaseNumber()
         );
 
-        $clientRowCheckBox = $this->findWithRetry('xpath', $locator);
+        $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
         $clientRowCheckBox->check();
         $this->pressButton('archive' === $action ? 'Archive' : 'Synchronise');
     }
@@ -285,7 +285,7 @@ trait ReportSubmissionTrait
             $this->oneReportsUserDetails->getClientCaseNumber()
         );
 
-        $submissionRowTableBody = $this->findWithRetry('xpath', $locator);
+        $submissionRowTableBody = $this->getSession()->getPage()->find('xpath', $locator);
 
         foreach ($this->documentFileNames as $documentFileName) {
             $locator = sprintf(
@@ -328,7 +328,7 @@ trait ReportSubmissionTrait
     public function tabVisibilityCheck($tabName, $visibility)
     {
         $shouldBeVisible = 'is' === $visibility;
-        $newSubmissionTab = $this->findWithRetry('css', "a:contains('$tabName')");
+        $newSubmissionTab = $this->getSession()->getPage()->find('css', "a:contains('$tabName')");
 
         if ($shouldBeVisible && !$newSubmissionTab) {
             $errorMessage = "The 'New' tab is not visible when it should be";
@@ -358,7 +358,7 @@ trait ReportSubmissionTrait
     public function submissionBehaviourBasedOnStatus(string $status)
     {
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
-        $reportPdfRow = $this->findWithRetry('css', "table tr:contains('$caseNumber')");
+        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
 
         if ('New' === $status) {
             if (!is_null($reportPdfRow)) {
@@ -373,7 +373,7 @@ trait ReportSubmissionTrait
 
     private function assertRowWithStatusAppears(string $searchTerm, string $status)
     {
-        $reportPdfRow = $this->findWithRetry(
+        $reportPdfRow = $this->getSession()->getPage()->find(
             'css',
             sprintf('table tr:contains("%s")', $searchTerm)
         );

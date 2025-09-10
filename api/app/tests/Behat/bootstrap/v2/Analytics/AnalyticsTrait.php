@@ -93,7 +93,7 @@ trait AnalyticsTrait
     public function iShouldSeeTheCorrectMetricValuesDisplayed()
     {
         foreach ($this->metricXPaths as $metric => $xpath) {
-            $actualValue = str_replace('%', '', trim(strval($this->findWithRetry('xpath', $xpath)->getHtml())));
+            $actualValue = str_replace('%', '', trim(strval($this->getSession()->getPage()->find('xpath', $xpath)->getHtml())));
             $realActualValue = '-' == $actualValue ? 0 : intval($actualValue);
             $expectedValue = $this->expectedMetrics[$metric];
             $this->assertIntEqualsInt($expectedValue, $realActualValue, 'Analytics Values - ' . $metric);
@@ -142,7 +142,7 @@ trait AnalyticsTrait
         $this->fillField('admin[endDate][year]', $toDate[2]);
         $this->pressButton('Update date range');
 
-        $header = $this->findWithRetry('xpath', '//h2[contains(.,"Custom")]');
+        $header = $this->getSession()->getPage()->find('xpath', '//h2[contains(.,"Custom")]');
 
         if (is_null($header)) {
             throw new BehatException(sprintf('Missing correct text.'));
@@ -160,7 +160,7 @@ trait AnalyticsTrait
         ];
         foreach ($linkTextItems as $linkText) {
             $xpath = sprintf('//a[contains(.,"%s")]', $linkText);
-            $downloadLink = $this->findWithRetry('xpath', $xpath);
+            $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
             if (is_null($downloadLink)) {
                 throw new BehatException(sprintf('Missing the following text: %s', $linkText));
             }
@@ -173,14 +173,14 @@ trait AnalyticsTrait
     public function iShouldOnlySeeDownloadDATButton()
     {
         $xpath = '//div[@class="moj-page-header-actions"]//a';
-        $downloadLinks = $this->findWithRetryAll('xpath', $xpath);
+        $downloadLinks = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         if (1 != count($downloadLinks)) {
             throw new BehatException(sprintf('Number of download file option should be 1. Currently: %s', strval(count($downloadLinks))));
         }
 
         $xpath = '//a[contains(.,"Download DAT file")]';
-        $downloadLink = $this->findWithRetry('xpath', $xpath);
+        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
             throw new BehatException('Link to DAT file does not exist on page');
         }
@@ -225,7 +225,7 @@ trait AnalyticsTrait
         $this->currentLinkText = 'Download user research report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
-        $downloadLink = $this->findWithRetry('xpath', $xpath);
+        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
@@ -242,7 +242,7 @@ trait AnalyticsTrait
         $this->currentLinkText = 'Download active lays report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
-        $downloadLink = $this->findWithRetry('xpath', $xpath);
+        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
@@ -258,7 +258,7 @@ trait AnalyticsTrait
         $this->currentLinkText = 'Download DAT file';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
-        $downloadLink = $this->findWithRetry('xpath', $xpath);
+        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
@@ -277,7 +277,7 @@ trait AnalyticsTrait
         $this->currentLinkText = 'View reports';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
-        $link = $this->findWithRetry('xpath', $xpath);
+        $link = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($link)) {
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }

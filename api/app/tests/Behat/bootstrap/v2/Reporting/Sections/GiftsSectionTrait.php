@@ -62,7 +62,7 @@ trait GiftsSectionTrait
     public function iEditGiftDescriptionAndAmount()
     {
         $locator = "//td[normalize-space()='random-gift-1']/..";
-        $giftRow = $this->findWithRetry('xpath', $locator);
+        $giftRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         $this->editFieldAnswerInSectionTrackTotal($giftRow, 'gifts_single[amount]', 'gifts1', false);
         $this->editFieldAnswerInSection($giftRow, 'gifts_single[explanation]', $this->faker->sentence(4), 'gifts1', false);

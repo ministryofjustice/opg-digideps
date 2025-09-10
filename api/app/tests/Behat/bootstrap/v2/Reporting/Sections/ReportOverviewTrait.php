@@ -92,7 +92,7 @@ trait ReportOverviewTrait
         }
 
         $bannerXPath = "//div[contains(@class, 'moj-banner__message')]";
-        $banner = $this->findWithRetry('xpath', $bannerXPath);
+        $banner = $this->getSession()->getPage()->find('xpath', $bannerXPath);
 
         $this->assertStringContainsString(
             $email,
@@ -105,10 +105,10 @@ trait ReportOverviewTrait
     {
         // Finding all section headings (via buttons) and section contents
         $buttonsXPath = "//button[contains(@class, 'govuk-accordion__section-button')]";
-        $buttons = $this->findWithRetryAll('xpath', $buttonsXPath);
+        $buttons = $this->getSession()->getPage()->findAll('xpath', $buttonsXPath);
 
         $contentsXPath = "//div[contains(@class, 'govuk-accordion__section-content')]";
-        $contents = $this->findWithRetryAll('xpath', $contentsXPath);
+        $contents = $this->getSession()->getPage()->findAll('xpath', $contentsXPath);
 
         $headings = [];
 

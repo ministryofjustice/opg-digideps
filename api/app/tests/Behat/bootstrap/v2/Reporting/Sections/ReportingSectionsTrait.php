@@ -112,7 +112,7 @@ trait ReportingSectionsTrait
      */
     public function iSeeTextRequestingToAnswerQuestion()
     {
-        $table = $this->findWithRetry('css', 'dl');
+        $table = $this->getSession()->getPage()->find('css', 'dl');
 
         if (!$table) {
             throw new BehatException('A dl element was not found on the page');
