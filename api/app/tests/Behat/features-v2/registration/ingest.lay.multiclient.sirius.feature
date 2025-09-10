@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @ingest @multiclient
+@v2 @v2_sequential_4 @registration @ingest @multiclient
 Feature: Lay CSV data ingestion - sirius source data for multiclient deputy
 
     @multiclient-codeputies-multiple-clients-visible
