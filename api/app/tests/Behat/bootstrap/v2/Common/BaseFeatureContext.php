@@ -267,6 +267,30 @@ class BaseFeatureContext extends MinkContext
         }, __FUNCTION__, $wait);
     }
 
+    public function visitPath($path, $sessionName = null, int $retries = 3, int $delay = 2): void
+    {
+        $url = $this->locatePath($path);
+
+        for ($i = 0; $i < $retries; $i++) {
+            $this->getSession($sessionName)->visit($url);
+
+            try {
+                $statusCode = $this->getSession($sessionName)->getStatusCode();
+            } catch (\Exception $e) {
+                $statusCode = 500; // treat errors as failure
+            }
+
+            if ($statusCode < 500) {
+                return; // success
+            }
+
+            file_put_contents('php://stderr', "visitPath retry: got $statusCode for $url (attempt " . ($i + 1) . ")\n");
+            sleep($delay);
+        }
+
+        throw new \RuntimeException("visitPath failed for $url after {$retries} retries (last status: $statusCode)");
+    }
+
     /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
