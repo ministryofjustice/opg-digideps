@@ -2,6 +2,15 @@ import { describe, expect, it } from '@jest/globals'
 import UploadFile from '../../modules_new/UploadFile'
 
 describe('Upload file', () => {
+  it('should hide file chooser submit buttons', () => {
+    document.body.innerHTML = '<button data-role="file-chooser-form-submit">'
+
+    UploadFile.init(document)
+
+    const btn = document.querySelector('[data-role=file-chooser-form-submit]')
+    expect(btn.classList).toContain('visually-hidden')
+  })
+
   it('should ignore change events on non-file inputs', () => {
     document.body.innerHTML = '<input type="text">'
 
