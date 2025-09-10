@@ -238,6 +238,7 @@ class FixtureController extends AbstractController
 
         return (new Deputy())
             ->setDeputyUid((string) $uid)
+            ->setUser($user)
             ->setEmail1($user->getEmail())
             ->setFirstname($user->getFirstname())
             ->setLastname($user->getLastname());

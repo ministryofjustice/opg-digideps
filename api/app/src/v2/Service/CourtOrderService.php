@@ -46,10 +46,10 @@ class CourtOrderService
         $user = $this->userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
 
         /** @var ?Deputy $deputy */
-        $deputy = $user?->getDeputy();
+        $deputy = $user->getDeputy();
 
         if (is_null($deputy)) {
-            $this->logger->error("Access denied to court order {$uid} as deputy was not found for logged-in user");
+            $this->logger->error("Access denied to court order {$uid} as deputy was not found for logged-in user {$user->getEmail()}");
 
             return null;
         }
