@@ -44,7 +44,7 @@ class BaseFeatureContext extends MinkContext
     use PageUrlsTrait;
     use ReportTrait;
     use UserExistsTrait;
-    use SpinTrait;
+    use WaitOnItTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
@@ -176,7 +176,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function assertPageContainsText($text)
     {
-        $this->spin(function () use ($text) {
+        $this->waitOnIt(function () use ($text) {
             parent::assertPageContainsText($text);
             return true;
         }, __FUNCTION__, 15);
@@ -187,7 +187,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function assertPageNotContainsText($text)
     {
-        $this->spin(function () use ($text) {
+        $this->waitOnIt(function () use ($text) {
             parent::assertPageNotContainsText($text);
             return true;
         }, __FUNCTION__, 15);
@@ -199,7 +199,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function assertElementContainsText($element, $text)
     {
-        $this->spin(function () use ($element, $text) {
+        $this->waitOnIt(function () use ($element, $text) {
             parent::assertElementContainsText($element, $text);
             return true;
         }, __FUNCTION__, 15);
@@ -210,7 +210,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function assertFieldContains($field, $value)
     {
-        $this->spin(function () use ($field, $value) {
+        $this->waitOnIt(function () use ($field, $value) {
             parent::assertFieldContains($field, $value);
             return true;
         }, __FUNCTION__, 15);
@@ -221,7 +221,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function assertFieldNotContains($field, $value)
     {
-        $this->spin(function () use ($field, $value) {
+        $this->waitOnIt(function () use ($field, $value) {
             parent::assertFieldNotContains($field, $value);
             return true;
         }, __FUNCTION__, 15);
@@ -232,7 +232,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function clickLink($link)
     {
-        $this->spin(function () use ($link) {
+        $this->waitOnIt(function () use ($link) {
             parent::clickLink($link);
             return true;
         }, __FUNCTION__, 15);
@@ -243,7 +243,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function pressButton($button)
     {
-        $this->spin(function () use ($button) {
+        $this->waitOnIt(function () use ($button) {
             parent::pressButton($button);
             return true;
         }, __FUNCTION__, 15);
@@ -254,7 +254,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function fillField($field, $value)
     {
-        $this->spin(function () use ($field, $value) {
+        $this->waitOnIt(function () use ($field, $value) {
             parent::fillField($field, $value);
             return true;
         }, __FUNCTION__, 15);
@@ -262,7 +262,7 @@ class BaseFeatureContext extends MinkContext
 
     public function findWithRetry(string $selector, string $locator, int $wait = 10)
     {
-        return $this->spin(function () use ($selector, $locator) {
+        return $this->waitOnIt(function () use ($selector, $locator) {
             return $this->getSession()->getPage()->find($selector, $locator);
         }, __FUNCTION__, $wait);
     }
@@ -284,7 +284,6 @@ class BaseFeatureContext extends MinkContext
                 return; // success
             }
 
-            file_put_contents('php://stderr', "visitPath retry: got $statusCode for $url (attempt " . ($i + 1) . ")\n");
             sleep($delay);
         }
 
