@@ -6,39 +6,28 @@ while IFS= read -r line; do
     eval "$line"
 done < <(./tests/Behat/source-env-files.sh /tmp/combined.env)
 rm /tmp/combined.env
-
-export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
+export BEHAT_PARAMS="{\"extensions\": {\"Behat\\\\MinkExtension\": {\"base_url\": \"$NONADMIN_HOST\/\", \"browser_stack\": { \"username\": \"$BROWSERSTACK_USERNAME\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 export APP_ENV=dev
 
 start=$(date +%s)
 
-MAX_RETRIES=2
-ATTEMPT=0
-
 echo "==== Starting test run ===="
-
-while [ $ATTEMPT -le $MAX_RETRIES ]; do
-    ATTEMPT=$((ATTEMPT+1))
-    echo "==== Behat attempt $ATTEMPT/$((MAX_RETRIES+1)) ===="
-
-    ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit "$@"
-    RESULT=$?
-
-    if [ $RESULT -eq 0 ]; then
-        echo "==== Tests passed ===="
-        break
+set -o pipefail
+./vendor/bin/behat --config=./tests/Behat/behat.yml --profile v2-tests-browserkit --list-scenarios $@ | ./vendor/liuggio/fastest/fastest -vv "./vendor/bin/behat --profile v2-tests-browserkit --tags @v2 --config=./tests/Behat/behat.yml {}" | tee /tmp/behat_failure_output.txt
+if [ $? -ne 0 ]; then
+    echo "==== Rerunning failed tests once ===="
+    grep '^\[[0-9]\] /var/www/tests/Behat' /tmp/behat_failure_output.txt | awk -F' ' '{print $2}' | awk -F'@' '{print $1}' | ./vendor/liuggio/fastest/fastest "./vendor/bin/behat --profile v2-tests-browserkit --tags @v2 --config=./tests/Behat/behat.yml {}"
+    if [ $? -ne 0 ]; then
+        echo "==== Reruns failed. Exiting with failure ===="
+        exit 1
     else
-        echo "==== Attempt $ATTEMPT failed ===="
-        if [ $ATTEMPT -gt $MAX_RETRIES ]; then
-            echo "==== All retries exhausted. Exiting with failure ===="
-            exit 1
-        fi
-        echo "==== Retrying failed scenarios ===="
-        # On retry, --rerun will automatically pick up failed scenarios from last run
+        echo "==== Reruns successful. Exiting with success ===="
+        exit 0
     fi
-done
+fi
 
 end=$(date +%s)
+
 runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
@@ -49,7 +38,8 @@ else
     max_time=420
 fi
 
-if [ $runtime -gt $max_time ]; then
+if [ $runtime -gt $max_time ]
+then
     echo "Stage taking too long. Failing the build!"
     echo "Please split out your tests to a new container"
     exit 1
