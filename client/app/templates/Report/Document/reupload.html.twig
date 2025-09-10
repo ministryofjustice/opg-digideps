@@ -60,8 +60,11 @@
         {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
     </div>
     <div class="custom-submit">
-        {{ form_submit(form.save, '', {'buttonClass': 'govuk-button behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
+        <button class="govuk-button behat-link-attach-file js-uploading" data-role="file-chooser-form-submit">
+            {{ 'form.submitButton' | trans }}
+        </button>
     </div>
+
     <div>
         <br>
         {% set alertMessage %}
