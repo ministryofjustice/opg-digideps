@@ -223,6 +223,15 @@ class ProcessLayCSVCommand extends Command
             $this->verboseLogger->error($e->getTraceAsString());
         }
 
+        // create deputies where missing, and associate users with deputies where they don't have one
+        $this->verboseLogger->notice('Adding deputies to users where they are missing');
+        try {
+            $numUserDeputyAssociations = $this->userDeputyService->addMissingUserDeputies();
+            $this->verboseLogger->notice("Added $numUserDeputyAssociations user <-> deputy associations");
+        } catch (\Exception $e) {
+            $this->verboseLogger->error('Error encountered while adding user <-> deputy associations: '.$e->getMessage());
+        }
+
         // additional deputy_case association patching (see DDLS-907)
         $this->verboseLogger->notice('Fixing missing deputy_case associations');
         try {
@@ -231,15 +240,6 @@ class ProcessLayCSVCommand extends Command
         } catch (\Throwable $e) {
             $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
             $this->verboseLogger->error($e->getTraceAsString());
-        }
-
-        // create deputies where missing, and associate users with deputies where they don't have one
-        $this->verboseLogger->notice('Adding deputies to users where they are missing');
-        try {
-            $numUserDeputyAssociations = $this->userDeputyService->addMissingUserDeputies();
-            $this->verboseLogger->notice("Added $numUserDeputyAssociations user <-> deputy associations");
-        } catch (\Exception $e) {
-            $this->verboseLogger->error('Error encountered while adding user <-> deputy associations: '.$e->getMessage());
         }
 
         return true;
