@@ -13,18 +13,16 @@ class UploadType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (!$options['report_submitted']) {
-            $builder
-                ->add('files', FileType::class, [
-                    'required' => false,
-                    'multiple' => true,
-                ])
-                ->add('save', FormTypes\SubmitType::class);
-        }
-        $builder
-            ->add('files', FileType::class, [
+            $builder->add('files', FileType::class, [
                 'required' => false,
                 'multiple' => true,
             ]);
+        }
+
+        $builder->add('files', FileType::class, [
+            'required' => false,
+            'multiple' => true,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
