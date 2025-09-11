@@ -224,6 +224,7 @@ class ApiComparison extends Command
                 $compareResult = $comparer->compare(
                     $resultLegacy,
                     $resultNew,
+                    $this->baseurl,
                     fn(string $url) => $this->getApiResponse($authToken, $url)
                 );
 

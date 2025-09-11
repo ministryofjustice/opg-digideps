@@ -21,7 +21,7 @@ class ClientsResponseComparer extends ResponseComparer
         return '/client/{client_id}';
     }
 
-    public function compare(ResponseInterface $legacyResponse, ResponseInterface $newResponse, callable $getApiResponse): array
+    public function compare(ResponseInterface $legacyResponse, ResponseInterface $newResponse, string $baseUrl, callable $getApiResponse): array
     {
         $legacyDecoded = json_decode($legacyResponse->getBody()->getContents(), true);
         $newDecoded = json_decode($newResponse->getBody()->getContents(), true);

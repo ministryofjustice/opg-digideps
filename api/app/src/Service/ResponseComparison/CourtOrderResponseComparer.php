@@ -6,6 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class CourtOrderResponseComparer extends ResponseComparer
 {
+    const LEGACY_SECONDARY_URL = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
+    const NEW_SECONDARY_URL = "/v2/courtorder/%s";
     public function getSqlStatement(): string
     {
         return '
@@ -13,7 +15,7 @@ class CourtOrderResponseComparer extends ResponseComparer
             FROM dd_user d
             WHERE d.deputy_uid is not null
             AND d.deputy_uid != 0
-            AND odr_enabled != true;
+            AND odr_enabled != true
         ';
     }
 
@@ -22,7 +24,125 @@ class CourtOrderResponseComparer extends ResponseComparer
         return 'client/get-all-clients-by-deputy-uid/{deputy_uid}';
     }
 
-    public function compare(ResponseInterface $legacyResponse, ResponseInterface $newResponse, callable $getApiResponse): array
+    private function legacyResponseData(array $legacyDecoded)
+    {
+        $legacyNormalized = array_map(function ($row) {
+            return [
+                'idForNextApiCalls' => $row['id'] ?? null,
+                'caseNumber' => $row['case_number'] ?? null,
+                'firstName'  => $row['firstname'] ?? null,
+                'lastName'   => $row['lastname'] ?? null,
+            ];
+        }, $legacyDecoded['data']);
+
+        return $legacyNormalized;
+    }
+
+    private function newResponseData(array $newDecoded)
+    {
+        $newNormalized = array_map(function ($row) {
+            return [
+                'idForNextApiCalls' => $row['courtOrder']['courtOrderUid'] ?? null,
+                'caseNumber'    => $row['client']['caseNumber'] ?? null,
+                'firstName'     => $row['client']['firstName'] ?? null,
+                'lastName'      => $row['client']['lastName'] ?? null,
+            ];
+        }, $newDecoded['data']);
+
+        return $newNormalized;
+    }
+
+    private function getFormattedExtraData($extraLegacyContent, $extraNewContent): array
+    {
+        $legacyClientId = $extraLegacyContent['data']['id'];
+        $legacyReports = [];
+        foreach ($extraLegacyContent['data']['reports'] as $report) {
+            $legacyReports[] = [
+                'id' => $report['id'],
+                'start_date' => $report['start_date'],
+                'type' => $report['type']
+            ];
+        }
+
+        $legacyUsers = [];
+        foreach ($extraLegacyContent['data']['users'] as $user) {
+            $legacyUsers[] = [
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'deputy_uid' => $user['deputy_uid']
+            ];
+        }
+
+        $newClientId = $extraNewContent['data']['client']['id'];
+        $newReports = [];
+        foreach ($extraNewContent['data']['reports'] as $report) {
+            $newReports[] = [
+                'id' => $report['id'],
+                'start_date' => $report['start_date'],
+                'type' => $report['type']
+            ];
+        }
+
+        $newUsers = [];
+        foreach ($extraNewContent['data']['active_deputies'] as $user) {
+            $newUsers[] = [
+                'id' => $user['user']['id'],
+                'email' => $user['email1'],
+                'deputy_uid' => $user['deputy_uid']
+            ];
+        }
+
+        $extraResultsLegacy[] = [
+            'client_id' => $legacyClientId,
+            'reports'  => $legacyReports,
+            'users'     => $legacyUsers,
+        ];
+
+        $extraResultsNew[] = [
+            'client_id' => $newClientId,
+            'reports'  => $newReports,
+            'users'     => $newUsers,
+        ];
+
+        $extraResults['new'] = $extraResultsNew;
+        $extraResults['legacy'] = $extraResultsLegacy;
+
+        return $extraResults;
+    }
+
+    function sortByIdRecursive(array $data): array
+    {
+        foreach ($data as &$item) {
+            if (is_array($item)) {
+                $item = $this->sortByIdRecursive($item);
+            }
+        }
+        unset($item);
+
+        // If this array contains multiple associative sub-arrays with "id" or "client_id"
+        if (!empty($data) && is_array(reset($data))) {
+            if (array_key_exists('id', reset($data))) {
+                usort($data, fn($a, $b) => $a['id'] <=> $b['id']);
+            } elseif (array_key_exists('client_id', reset($data))) {
+                usort($data, fn($a, $b) => $a['client_id'] <=> $b['client_id']);
+            }
+        }
+
+        return $data;
+    }
+
+    function normalizeArrayForComparison(array $data): array
+    {
+        array_walk_recursive($data, function (&$value) {
+            if (is_numeric($value)) {
+                $value = (string) $value; // normalize numbers to string
+            }
+        });
+
+        return $data;
+    }
+
+    public function compare(ResponseInterface $legacyResponse, ResponseInterface $newResponse, string $baseUrl, callable $getApiResponse): array
     {
         $legacyDecoded = json_decode($legacyResponse->getBody()->getContents(), true);
         $newDecoded = json_decode($newResponse->getBody()->getContents(), true);
@@ -36,24 +156,10 @@ class CourtOrderResponseComparer extends ResponseComparer
         }
 
         // Normalize legacy
-        $legacyNormalized = array_map(function ($row) {
-            return [
-                'id'         => $row['id'] ?? null,
-                'caseNumber' => $row['case_number'] ?? null,
-                'firstName'  => $row['firstname'] ?? null,
-                'lastName'   => $row['lastname'] ?? null,
-            ];
-        }, $legacyDecoded['data']);
+        $legacyNormalized = $this->legacyResponseData($legacyDecoded);
 
         // Normalize new
-        $newNormalized = array_map(function ($row) {
-            return [
-                'courtOrderUid' => $row['courtOrder']['courtOrderUid'] ?? null,
-                'caseNumber'    => $row['client']['caseNumber'] ?? null,
-                'firstName'     => $row['client']['firstName'] ?? null,
-                'lastName'      => $row['client']['lastName'] ?? null,
-            ];
-        }, $newDecoded['data']);
+        $newNormalized = $this->newResponseData($newDecoded);
 
         // Sort arrays so order doesn’t matter
         $sortFn = function ($a, $b) {
@@ -65,13 +171,17 @@ class CourtOrderResponseComparer extends ResponseComparer
         usort($newNormalized, $sortFn);
 
         // === Extra fetch step ===
-        $legacyNextUrlTpl = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
-        $newNextUrlTpl = "/v2/courtorder/%s";
+
+        $legacyNextUriTpl = self::LEGACY_SECONDARY_URL;
+        $newNextUriTpl = self::NEW_SECONDARY_URL;
+
+        $legacyNextUrlTpl = rtrim($baseUrl, '/') . '/' . ltrim($legacyNextUriTpl, '/');
+        $newNextUrlTpl = rtrim($baseUrl, '/') . '/' . ltrim($newNextUriTpl, '/');
 
         $extraResults = [];
         foreach ($legacyNormalized as $idx => $legacyRow) {
-            $legacyId = $legacyRow['id'] ?? null;
-            $newUid   = $newNormalized[$idx]['courtOrderUid'] ?? null;
+            $legacyId = $legacyNormalized[$idx]['idForNextApiCalls'] ?? null;
+            $newUid   = $newNormalized[$idx]['idForNextApiCalls'] ?? null;
 
             if ($legacyId && $newUid) {
                 $legacyUrl = sprintf($legacyNextUrlTpl, $legacyId);
@@ -81,12 +191,10 @@ class CourtOrderResponseComparer extends ResponseComparer
                     $extraLegacy = $getApiResponse($legacyUrl);
                     $extraNew    = $getApiResponse($newUrl);
 
-                    $extraResults[] = [
-                        'legacyId'   => $legacyId,
-                        'courtOrder' => $newUid,
-                        'legacyApi'  => json_decode($extraLegacy->getBody()->getContents(), true),
-                        'newApi'     => json_decode($extraNew->getBody()->getContents(), true),
-                    ];
+                    $extraLegacyContent = json_decode($extraLegacy->getBody()->getContents(), true);
+                    $extraNewContent = json_decode($extraNew->getBody()->getContents(), true);
+
+                    $extraResults = $this->getFormattedExtraData($extraLegacyContent, $extraNewContent);
                 } catch (\Throwable $e) {
                     $extraResults[] = [
                         'legacyId'   => $legacyId,
@@ -95,13 +203,19 @@ class CourtOrderResponseComparer extends ResponseComparer
                     ];
                 }
             }
+            $legacyNormalized[$idx]['extra'][] = $extraResults['legacy'];
+            unset($legacyNormalized[$idx]['idForNextApiCalls']);
+            $newNormalized[$idx]['extra'][] = $extraResults['new'];
+            unset($newNormalized[$idx]['idForNextApiCalls']);
         }
 
+        $legacyNormalizedSorted = $this->sortByIdRecursive($this->normalizeArrayForComparison($legacyNormalized));
+        $newNormalizedSorted = $this->sortByIdRecursive($this->normalizeArrayForComparison($newNormalized));
+
         return [
-            'matching' => $legacyNormalized === $newNormalized,
-            'legacy'   => json_encode($legacyNormalized, JSON_PRETTY_PRINT),
-            'new'      => json_encode($newNormalized, JSON_PRETTY_PRINT),
-            'extra'    => json_encode($extraResults, JSON_PRETTY_PRINT),
+            'matching' => $legacyNormalizedSorted === $newNormalizedSorted,
+            'legacy'   => json_encode($legacyNormalizedSorted, JSON_PRETTY_PRINT),
+            'new'      => json_encode($newNormalizedSorted, JSON_PRETTY_PRINT),
         ];
     }
 }
