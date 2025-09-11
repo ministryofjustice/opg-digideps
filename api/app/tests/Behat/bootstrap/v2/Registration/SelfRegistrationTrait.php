@@ -427,6 +427,7 @@ trait SelfRegistrationTrait
         $this->userEmail = 'brian@mcduck.co.uk';
         $firstName = 'Brian';
         $lastName = 'McDuck';
+
         $this->interactingWithUserDetails = new UserDetails(
             ['userEmail' => $this->userEmail, 'deputyName' => $firstName . $lastName]
         );

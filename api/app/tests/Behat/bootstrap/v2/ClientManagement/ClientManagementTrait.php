@@ -481,7 +481,7 @@ MESSAGE;
     public function iSelectTheFirstClient()
     {
         $firstClientId = $this->loggedInUserDetails->getClientId();
-        $this->visitPath('/client/'.$firstClientId);
+        $this->visitPath('/client/' . $firstClientId);
     }
 
     /**

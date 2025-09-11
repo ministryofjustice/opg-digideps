@@ -222,7 +222,7 @@ trait MoneyOutSectionTrait
 
     private function addPayment(string $radioPaymentValue, string $translatedPaymentValue)
     {
-        $this->chooseOption('account[category]', $radioPaymentValue, 'addPayment-'.$translatedPaymentValue, $translatedPaymentValue);
+        $this->chooseOption('account[category]', $radioPaymentValue, 'addPayment-' . $translatedPaymentValue, $translatedPaymentValue);
         $this->pressButton('Save and continue');
 
         $paymentAmount = mt_rand(0, 999);
@@ -236,18 +236,18 @@ trait MoneyOutSectionTrait
         $this->iAmOnMoneyOutAddPaymentDetailsPage();
 
         if ($paymentDescription) {
-            $this->fillInField('account[description]', $paymentDescription, 'addPayment-'.$translatedPaymentValue);
+            $this->fillInField('account[description]', $paymentDescription, 'addPayment-' . $translatedPaymentValue);
         }
 
         if ($paymentAmount) {
-            $this->fillInFieldTrackTotal('account[amount]', $paymentAmount, 'addPayment-'.$translatedPaymentValue);
+            $this->fillInFieldTrackTotal('account[amount]', $paymentAmount, 'addPayment-' . $translatedPaymentValue);
         }
 
         if ('Care fees' === $translatedPaymentValue) {
             $this->chooseOption(
                 'account[bankAccountId]',
                 $this->loggedInUserDetails->getCurrentReportBankAccountId(),
-                'addPayment-'.$translatedPaymentValue,
+                'addPayment-' . $translatedPaymentValue,
                 '(****1234)'
             );
         }
@@ -315,7 +315,7 @@ trait MoneyOutSectionTrait
             foreach ($this->moneyOutTransaction as $transactionItems) {
                 foreach ($transactionItems as $moneyType => $value) {
                     $this->assertElementContainsText('main', $moneyType);
-                    $this->assertElementContainsText('main', '£'.number_format($value, 2));
+                    $this->assertElementContainsText('main', '£' . number_format($value, 2));
                 }
             }
             $this->expectedResultsDisplayedSimplified();
@@ -331,7 +331,7 @@ trait MoneyOutSectionTrait
 
         // clean data to correctly track expected results when user edits answers.
         $this->removeSection('moneyOutExists');
-        $this->removeSection('addPayment-'.$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant']);
+        $this->removeSection('addPayment-' . $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant']);
         $this->removeSection('reasonForNoMoneyOut');
 
         $urlRegex = sprintf('/%s\/.*\/money-out\/exist\?from\=summary$/', $this->reportUrlPrefix);
@@ -345,7 +345,7 @@ trait MoneyOutSectionTrait
     {
         $this->iAmOnMoneyOutSummaryPage();
 
-        $formSectionName = 'addPayment-'.$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'];
+        $formSectionName = 'addPayment-' . $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'];
 
         $this->removeAnswerFromSection(
             'account[category]',

@@ -328,6 +328,7 @@ v2-tests-browserkit:
                         http_client_parameters:
                             verify_peer: false
                             verify_host: false
+                            timeout: 60
         FriendsOfBehat\SymfonyExtension:
             kernel:
                 path: "%paths.base%/../../src/Kernel.php"
