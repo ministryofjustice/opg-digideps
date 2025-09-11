@@ -22,20 +22,19 @@ class ReportRepositoryTest extends ApiBaseTestCase
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
     public const QUERY_LIMIT = 2;
-    private ReportRepository $sut;
-    private Fixtures $fixtures;
+    private static ReportRepository $sut;
+    private static Fixtures $fixtures;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-        $this->purgeDatabase();
+        parent::setUpBeforeClass();
 
-        $this->fixtures = new Fixtures($this->entityManager);
+        self::$fixtures = new Fixtures(self::$staticEntityManager);
 
         /** @var ReportRepository $repo */
-        $repo = $this->entityManager->getRepository(Report::class);
+        $repo = self::$staticEntityManager->getRepository(Report::class);
 
-        $this->sut = $repo;
+        self::$sut = $repo;
     }
 
     /**
@@ -59,10 +58,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
 
     private function fetchChecklists(): ReportRepositoryTest
     {
-        $this->queryResult = $this->sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
-
-        // Add 0.5 second buffer time to all doctrine updates and stop test from intermittently failing
-        usleep(500000);
+        $this->queryResult = self::$sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
 
         return $this;
     }
@@ -132,31 +128,31 @@ class ReportRepositoryTest extends ApiBaseTestCase
     public function testReportsAreSortedByDueDate(): void
     {
         // create organisation
-        $org = $this->fixtures->createOrganisations(1);
+        $org = self::$fixtures->createOrganisations(1);
 
         // create clients and add to org
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PROF);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PROF);
 
-        $client1 = $this->fixtures->createClient($user);
-        $client2 = $this->fixtures->createClient($user);
-        $clientDual = $this->fixtures->createClient($user);
+        $client1 = self::$fixtures->createClient($user);
+        $client2 = self::$fixtures->createClient($user);
+        $clientDual = self::$fixtures->createClient($user);
 
         $this->entityManager->flush();
 
-        $this->fixtures->addClientToOrganisation($client1->getId(), $org[0]->getId());
-        $this->fixtures->addClientToOrganisation($client2->getId(), $org[0]->getId());
-        $this->fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($client1->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($client2->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
 
         // create reports for clients
-        $report1 = $this->fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
-        $report2 = $this->fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
+        $report1 = self::$fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
+        $report2 = self::$fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
 
-        $dualReport1 = $this->fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
-        $dualReport2 = $this->fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
+        $dualReport1 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
+        $dualReport2 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
 
         $this->entityManager->flush();
 
-        $reports = $this->sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
+        $reports = self::$sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
 
         self::assertCount(4, $reports);
         self::assertEquals($reports[0]['id'], $dualReport1->getId());
@@ -186,7 +182,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->entityManager->refresh($client);
         $this->entityManager->refresh($client->getUsers()[0]);
 
-        $result = $this->sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
+        $result = self::$sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
         self::assertEquals($existingReport, $result[0]);
     }
 }
