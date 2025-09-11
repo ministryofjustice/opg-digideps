@@ -249,7 +249,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function updatePersistsUuidWhenProvided()
     {
-        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission(self::fixtures()->getEntityManager());
+        $reportSubmission = (new ReportSubmissionHelper(self::fixtures()->getEntityManager()))->generateAndPersistReportSubmission();
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 
