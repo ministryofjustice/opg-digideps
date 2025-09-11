@@ -13,13 +13,13 @@ use App\Tests\Integration\ApiBaseTestCase;
 
 class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 {
-    private ReportSubmissionHelper $reportSubmissionHelper;
+    private static ReportSubmissionHelper $reportSubmissionHelper;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->reportSubmissionHelper = (new ReportSubmissionHelper());
+        self::$reportSubmissionHelper = new ReportSubmissionHelper(self::$staticEntityManager);
     }
 
     /**
@@ -27,7 +27,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
      */
     public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
     {
-        $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
+        $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
         $submission->setArchived($isArchived);
 
         $reportHelper = ReportTestHelper::create();
@@ -67,13 +67,13 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 
     public function testUpdateArchivedStatusManuallyArchived()
     {
-        $submission = $this->reportSubmissionHelper->generateAndPersistReportSubmission($this->entityManager);
+        $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
         $submission->setArchived(false);
 
         $reportHelper = ReportTestHelper::create();
 
         $statuses = [null, null];
-        $docs = array_map(function ($status) use ($reportHelper) {
+        $docs = array_map(function () use ($reportHelper) {
             $report = $reportHelper->generateReport($this->entityManager);
             $this->entityManager->persist($report);
             $this->entityManager->persist($report->getClient());
@@ -95,16 +95,15 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         self::assertEquals(false, $submission->getArchived());
     }
 
-    /** @test */
-    public function findAllReportSubmissions()
+    public function testFindAllReportSubmissions()
     {
         $today = new DateTime();
         $yesterday = new DateTime('-1 day');
 
         $createdReportSubmissions = [];
-        foreach (range(1, 3) as $index) {
-            $createdReportSubmissions[] = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $yesterday);
+        foreach (range(1, 3) as $ignored) {
+            $createdReportSubmissions[] = self::$reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($yesterday);
         }
 
         $reportSubmissions = $this->entityManager
@@ -114,8 +113,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $this->assertEqualsCanonicalizing($createdReportSubmissions, $reportSubmissions);
     }
 
-    /** @test */
-    public function findAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided()
+    public function testFindAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided()
     {
         $today = new DateTime();
         $todayOneHourAgo = new DateTime('-1 hour');
@@ -123,14 +121,14 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 
         $todaysReportSubmissions = [];
         foreach (range(1, 3) as $index) {
-            $todaysReportSubmissions[] = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $today);
+            $todaysReportSubmissions[] = self::$reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($today);
         }
 
         $yesterdaysReportSubmissions = [];
         foreach (range(1, 3) as $index) {
-            $yesterdaysReportSubmissions[] = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $yesterday);
+            $yesterdaysReportSubmissions[] = self::$reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($yesterday);
         }
 
         $reportSubmissions = $this->entityManager
@@ -146,8 +144,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         }
     }
 
-    /** @test */
-    public function findAllReportSubmissionsRawSqlWithPeriodProvided()
+    public function testFindAllReportSubmissionsRawSqlWithPeriodProvided()
     {
         $today = new DateTime();
         $yesterday = new DateTime('-1 day');
@@ -156,15 +153,15 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 
         $yesterdaysReportSubmissionsIds = [];
         foreach (range(1, 3) as $i) {
-            $reportSubmission = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $yesterday);
+            $reportSubmission = self::$reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($yesterday);
             $yesterdaysReportSubmissionsIds[] = $reportSubmission->getId();
         }
 
         $lastWeekReportSubmissionsIds = [];
         foreach (range(1, 3) as $i) {
-            $reportSubmission = $this->reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($this->entityManager, $lastWeek);
+            $reportSubmission = self::$reportSubmissionHelper
+                ->generateAndPersistSubmittedReportSubmission($lastWeek);
             $lastWeekReportSubmissionsIds[] = $reportSubmission->getId();
         }
 
