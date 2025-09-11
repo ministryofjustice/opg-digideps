@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Entity\StagingSelectedCandidate;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -13,18 +14,20 @@ use App\Entity\StagingDeputyship;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
 {
-    private CourtOrderReportCandidatesFactory $sut;
+    private static CourtOrderReportCandidatesFactory $sut;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         /** @var CourtOrderReportCandidatesFactory $sut */
-        $sut = $this->container->get(CourtOrderReportCandidatesFactory::class);
-        $this->sut = $sut;
+        $sut = self::$staticContainer->get(CourtOrderReportCandidatesFactory::class);
+
+        self::$sut = $sut;
     }
 
     // create a report which is not compatible with a deputyship (CSV row) due to type differences
@@ -153,13 +156,21 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $this->entityManager->flush();
 
         // create compatible report candidates
-        $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
 
         // assertions
         self::assertCount(1, $candidates);
         self::assertEquals(DeputyshipCandidateAction::InsertOrderReport, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($report1->getId(), $candidates[0]->reportId);
+
+        $this->entityManager->remove($report1);
+        $this->entityManager->remove($report2);
+        $this->entityManager->remove($report3);
+        $this->entityManager->remove($candidates[0]);
+        $this->entityManager->remove($client);
+        $this->entityManager->remove($deputyship);
+        $this->entityManager->flush();
     }
 
     public function testCreateCompatibleNdrCandidates(): void
@@ -195,7 +206,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $this->entityManager->flush();
 
         // create NDR candidates
-        $candidates = iterator_to_array($this->sut->createCompatibleNdrCandidates());
+        $candidates = iterator_to_array(self::$sut->createCompatibleNdrCandidates());
 
         // assertions
         self::assertCount(1, $candidates);
@@ -254,7 +265,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $this->entityManager->flush();
 
         // create report candidates
-        $candidates = iterator_to_array($this->sut->createCompatibleReportCandidates());
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
 
         // check that the existing order <-> report relationship is not one of the candidates
         self::assertCount(0, $candidates);
