@@ -5,6 +5,7 @@
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'showClient' %}
+{% set navSection = "deputyship-details-clients" %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans({'%client%': client.fullname}) }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.fullname}) }}{% endblock %}
