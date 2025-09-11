@@ -160,6 +160,7 @@ services:
     App\Factory\OrganisationFactory:
         class: App\Factory\OrganisationFactory
         arguments: ["%shared_email_domains%"]
+        public: true
 
     App\Service\RestHandler\OrganisationRestHandler:
         class: App\Service\RestHandler\OrganisationRestHandler
@@ -450,4 +451,10 @@ services:
         public: true
 
     App\Service\DeputyCaseService:
+        public: true
+
+    App\v2\Assembler\ClientAssembler:
+        public: true
+
+    App\v2\Assembler\DeputyAssembler:
         public: true
