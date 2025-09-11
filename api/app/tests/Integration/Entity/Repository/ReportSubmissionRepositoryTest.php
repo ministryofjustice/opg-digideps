@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use App\Entity\Client;
+use App\TestHelpers\UserTestHelper;
 use DateTime;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
@@ -37,22 +39,27 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
      */
     public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
     {
-        $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
-        $submission->setArchived($isArchived);
+        $client = new Client();
+        $this->entityManager->persist($client);
 
-        $reportHelper = ReportTestHelper::create();
+        $report = (ReportTestHelper::create())->generateReport($this->entityManager);
+        $this->entityManager->persist($report);
+
+        $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
+
+        $submission = new ReportSubmission($report, $user);
+        $submission->setArchived($isArchived);
+        $this->entityManager->persist($submission);
+        $this->entityManager->persist($report);
 
         foreach ($docStatuses as $docStatus) {
-            $report = $reportHelper->generateReport($this->entityManager);
-            $this->entityManager->persist($report);
-            $this->entityManager->persist($report->getClient());
-
             $doc = new Document($report);
             $doc->setSynchronisationStatus($docStatus);
             $doc->setFileName('a file.pdf');
             $this->entityManager->persist($doc);
 
             $submission->addDocument($doc);
+            $this->entityManager->flush();
         }
 
         $this->entityManager->persist($submission);
