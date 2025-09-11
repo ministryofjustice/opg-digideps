@@ -17,39 +17,36 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
 {
     use ProphecyTrait;
 
-    private OrganisationRepository $sut;
-    private Fixtures $fixtures;
+    private static OrganisationRepository $sut;
+    private static Fixtures $fixtures;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->fixtures = new Fixtures($this->entityManager);
-
-        $metaClass = self::prophesize(ClassMetadata::class);
-        $metaClass->name = Organisation::class;
+        self::$fixtures = new Fixtures(self::$staticEntityManager);
 
         /** @var OrganisationRepository $sut */
-        $sut = $this->entityManager->getRepository(Organisation::class);
-        $this->sut = $sut;
+        $sut = self::$staticEntityManager->getRepository(Organisation::class);
+        self::$sut = $sut;
     }
 
     public function testGetAllArray()
     {
-        $this->fixtures->createOrganisations(5);
+        self::$fixtures->createOrganisations(5);
         $this->entityManager->flush();
 
-        self::assertCount(5, $this->sut->getAllArray());
+        self::assertCount(5, self::$sut->getAllArray());
     }
 
     public function testGetNonDeletedArray()
     {
-        $orgs = $this->fixtures->createOrganisations(5);
+        $orgs = self::$fixtures->createOrganisations(5);
         $this->entityManager->flush();
 
         $orgIds = array_map(fn (Organisation $org) => $org->getId(), $orgs);
 
-        $nonDeletedOrgs = $this->sut->getNonDeletedArray();
+        $nonDeletedOrgs = self::$sut->getNonDeletedArray();
         $nonDeletedOrgIds = array_map(fn (array $org) => $org['id'], $nonDeletedOrgs);
 
         foreach ($orgIds as $orgId) {
@@ -57,12 +54,12 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
         }
 
         // check removing an org
-        $this->fixtures->deleteOrganisation($orgs[0]->getId());
+        self::$fixtures->deleteOrganisation($orgs[0]->getId());
         $this->entityManager->flush();
 
         $orgIdsExceptDeleted = array_diff($orgIds, [$orgs[0]->getId()]);
 
-        $nonDeletedOrgs = $this->sut->getNonDeletedArray();
+        $nonDeletedOrgs = self::$sut->getNonDeletedArray();
         $nonDeletedOrgIds = array_map(fn (array $org) => $org['id'], $nonDeletedOrgs);
 
         foreach ($orgIdsExceptDeleted as $orgId) {
@@ -72,102 +69,102 @@ class OrganisationRepositoryTest extends ApiBaseTestCase
 
     public function testHasActiveEntitiesNoEntitiesInOrgReturnsFalse()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
+        $orgs = self::$fixtures->createOrganisations(1);
         $this->entityManager->flush();
 
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
     }
 
     public function testHasActiveEntitiesSoftDeletedClientInOrgReturnsFalse()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $orgs = self::$fixtures->createOrganisations(1);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
         $clientDeleted->setOrganisation($orgs[0]);
         $this->entityManager->flush();
 
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
     }
 
     public function testHasActiveEntitiesArchivedClientInOrgReturnsFalse()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $orgs = self::$fixtures->createOrganisations(1);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $this->entityManager->flush();
 
-        $this->fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
+        self::$fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
         $this->entityManager->flush();
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
     }
 
     public function testHasActiveEntitiesArchivedAndSoftDeletedClientsInOrgReturnsFalse()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $orgs = self::$fixtures->createOrganisations(1);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $clientDeleted->setOrganisation($orgs[0]);
         $clientArchived->setOrganisation($orgs[0]);
         $this->entityManager->flush();
 
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertFalse($result);
     }
 
     public function testHasActiveEntitiesArchivedAndSoftDeletedAndActiveClientsInOrgReturnsTrue()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientActive = $this->fixtures->createClient($user);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $orgs = self::$fixtures->createOrganisations(1);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
+        $clientActive = self::$fixtures->createClient($user);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $clientActive->setOrganisation($orgs[0]);
         $clientArchived->setOrganisation($orgs[0]);
         $clientDeleted->setOrganisation($orgs[0]);
         $this->entityManager->flush();
 
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertTrue($result);
     }
 
     public function testHasActiveEntitiesArchivedAndSoftDeletedClientsAndUserInOrgReturnsTrue()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = $this->fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
-        $clientArchived = $this->fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $orgs = self::$fixtures->createOrganisations(1);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
         $orgs[0]->addUser($user);
         $clientDeleted->setOrganisation($orgs[0]);
         $clientArchived->setOrganisation($orgs[0]);
         $this->entityManager->flush();
 
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertTrue($result);
     }
 
     public function testHasActiveEntitiesActiveClientAndUserInOrgReturnsTrue()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PA);
-        $clientActive = $this->fixtures->createClient($user);
+        $orgs = self::$fixtures->createOrganisations(1);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
+        $clientActive = self::$fixtures->createClient($user);
         $orgs[0]->addUser($user);
         $clientActive->setOrganisation($orgs[0]);
         $this->entityManager->flush();
 
-        $result = $this->sut->hasActiveEntities($orgs[0]->getId());
+        $result = self::$sut->hasActiveEntities($orgs[0]->getId());
         self::assertTrue($result);
     }
 
     public function testFindByEmailIdentifier()
     {
-        $orgs = $this->fixtures->createOrganisations(1);
+        $orgs = self::$fixtures->createOrganisations(1);
         $this->entityManager->flush();
 
-        $result = $this->sut->findByEmailIdentifier($orgs[0]->getEmailIdentifier());
+        $result = self::$sut->findByEmailIdentifier($orgs[0]->getEmailIdentifier());
         self::assertEquals($orgs[0]->getId(), $result->getId());
     }
 }
