@@ -391,8 +391,10 @@ trait AuthTrait
     public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
     {
         $alertMessage =
-            sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s',
-                $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail());
+            sprintf(
+                'This account has been closed. You can now access all of your reports in the same place from your account under %s',
+                $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail()
+            );
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
@@ -413,8 +415,8 @@ trait AuthTrait
      */
     public function aFlashMessageShouldBeDisplayedUserShouldUsePrimaryAccount(): void
     {
-        $alertMessage = 'This account has been closed. '.
-            'You can now access all of your reports in the same place from your primary account. '.
+        $alertMessage = 'This account has been closed. ' .
+            'You can now access all of your reports in the same place from your primary account. ' .
             'If you need assistance, contact your case manager';
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';

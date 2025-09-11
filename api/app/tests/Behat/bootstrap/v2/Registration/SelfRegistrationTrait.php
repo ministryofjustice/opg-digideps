@@ -35,7 +35,7 @@ trait SelfRegistrationTrait
             return $this->cachedFixtures[$jsonFile];
         }
 
-        $file = file_get_contents(__DIR__.'/../../../fixtures/'.$jsonFile);
+        $file = file_get_contents(__DIR__ . '/../../../fixtures/' . $jsonFile);
 
         $out = json_decode($file, true);
         if (is_null($out)) {
@@ -392,7 +392,7 @@ trait SelfRegistrationTrait
         $this->userEmail = 'brian@mcduck.co.uk';
         $firstName = 'Brian';
         $lastName = 'McDuck';
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail, 'deputyName' => $firstName.$lastName]);
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail, 'deputyName' => $firstName . $lastName]);
         $this->deputyUid = '35672419';
 
         $this->visitFrontendPath('/register');
@@ -864,7 +864,7 @@ trait SelfRegistrationTrait
 
         $client = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
 
-        $this->visitPath('/client/'.$client->getId());
+        $this->visitPath('/client/' . $client->getId());
     }
 
     /**

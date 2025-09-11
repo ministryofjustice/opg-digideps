@@ -396,7 +396,8 @@ trait ReportSubmissionTrait
         $this->assertStringContainsString(
             'Money transfers',
             $this->getSession()->getPage()->getContent(),
-            'Comparing expected section against sections visible');
+            'Comparing expected section against sections visible'
+        );
     }
 
     /**

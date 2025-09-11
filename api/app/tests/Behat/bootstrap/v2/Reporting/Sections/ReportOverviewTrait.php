@@ -17,28 +17,31 @@ trait ReportOverviewTrait
 
         $deputy = $this->fixtureUsers[0];
 
-        $clientName = $deputy->getClientFirstName().' '.$deputy->getClientLastName();
+        $clientName = $deputy->getClientFirstName() . ' ' . $deputy->getClientLastName();
 
         $this->assertStringEqualsString(
             $clientName,
             $this->sectionList['Client details']['Name'],
-            'Asserting client name found on Overview page');
+            'Asserting client name found on Overview page'
+        );
 
         $this->assertStringEqualsString(
             $deputy->getClientEmail(),
             $this->sectionList['Client details']['Email'],
-            'Asserting client email found on Overview page');
+            'Asserting client email found on Overview page'
+        );
 
         // Format address into a single string
         $address = '';
         foreach ($deputy->getClientFullAddressArray() as $addressLine) {
-            $address = $address.preg_replace("/\r|\n/", ' ', $addressLine).' ';
+            $address = $address . preg_replace("/\r|\n/", ' ', $addressLine) . ' ';
         }
 
         $this->assertStringEqualsString(
             trim($address),
             $this->sectionList['Client details']['Address'],
-            'Asserting clients address found on Overview page');
+            'Asserting clients address found on Overview page'
+        );
     }
 
     /**
@@ -53,28 +56,32 @@ trait ReportOverviewTrait
         $this->assertStringEqualsString(
             $deputy->getDeputyName(),
             $this->sectionList['Deputy details']['Full Name'],
-            'Asserting deputy name found on Overview page');
+            'Asserting deputy name found on Overview page'
+        );
 
         // Format address into a single string
         $address = '';
         foreach ($deputy->getDeputyFullAddressArray() as $addressLine) {
-            $address = $address.preg_replace("/\r|\n/", ' ', $addressLine).' ';
+            $address = $address . preg_replace("/\r|\n/", ' ', $addressLine) . ' ';
         }
 
         $this->assertStringEqualsString(
             trim($address),
             $this->sectionList['Deputy details']['Address'],
-            'Asserting deputy address found on Overview page');
+            'Asserting deputy address found on Overview page'
+        );
 
         $this->assertStringEqualsString(
             $deputy->getDeputyPhone(),
             $this->sectionList['Deputy details']['Phone'],
-            'Asserting deputy phone found on Overview page');
+            'Asserting deputy phone found on Overview page'
+        );
 
         $this->assertStringEqualsString(
             $deputy->getDeputyEmail(),
             $this->sectionList['Deputy details']['Email address'],
-            'Asserting deputy email found on Overview page');
+            'Asserting deputy email found on Overview page'
+        );
 
         // Contact email depends on User role
         $role = $deputy->getUserRole();
@@ -90,7 +97,8 @@ trait ReportOverviewTrait
         $this->assertStringContainsString(
             $email,
             $banner->getText(),
-            'Asserting correct contact email found on Overview page');
+            'Asserting correct contact email found on Overview page'
+        );
     }
 
     private function extractSectionHeadersAndContents()

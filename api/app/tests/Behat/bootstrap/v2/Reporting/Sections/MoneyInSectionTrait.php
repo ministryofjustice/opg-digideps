@@ -220,7 +220,7 @@ trait MoneyInSectionTrait
             foreach ($this->moneyInTransaction as $transactionItems) {
                 foreach ($transactionItems as $moneyType => $value) {
                     $this->assertElementContainsText('main', $moneyType);
-                    $this->assertElementContainsText('main', '£'.number_format($value, 2));
+                    $this->assertElementContainsText('main', '£' . number_format($value, 2));
                 }
             }
             $this->expectedResultsDisplayedSimplified();

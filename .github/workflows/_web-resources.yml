@@ -39,7 +39,7 @@ jobs:
         if: steps.check-directory.outputs.directory_exists == 'false'
         run: |
           # Install NPM dependencies
-          npm install
+          npm ci
           npm run lint
           npm audit --production
           #Build assets

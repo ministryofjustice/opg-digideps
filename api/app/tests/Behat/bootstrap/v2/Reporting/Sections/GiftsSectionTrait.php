@@ -52,8 +52,8 @@ trait GiftsSectionTrait
     {
         ++$this->giftId;
 
-        $this->fillInField('gifts_single[explanation]', 'random-gift-'.$this->giftId, 'gifts'.$this->giftId);
-        $this->fillInFieldTrackTotal('gifts_single[amount]', $this->giftId + 100, 'gifts'.$this->giftId);
+        $this->fillInField('gifts_single[explanation]', 'random-gift-' . $this->giftId, 'gifts' . $this->giftId);
+        $this->fillInFieldTrackTotal('gifts_single[amount]', $this->giftId + 100, 'gifts' . $this->giftId);
     }
 
     /**
