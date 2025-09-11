@@ -39,9 +39,9 @@ class ApiBaseTestCase extends KernelTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
+        self::$staticEntityManager->flush();
         self::$staticEntityManager->clear();
-        unset($this->entityManager);
-        unset($this->container);
     }
 
     public static function tearDownAfterClass(): void
@@ -50,7 +50,6 @@ class ApiBaseTestCase extends KernelTestCase
 
         self::purgeDatabase();
 
-        self::$staticEntityManager->clear();
         self::$staticEntityManager->close();
         self::$staticEntityManager = null;
         self::$staticContainer = null;
