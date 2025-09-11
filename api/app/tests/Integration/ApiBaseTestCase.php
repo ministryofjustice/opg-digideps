@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -14,11 +15,17 @@ class ApiBaseTestCase extends KernelTestCase
     protected static ?EntityManagerInterface $staticEntityManager;
     protected static ?ContainerInterface $staticContainer;
     protected ContainerInterface $container;
-    protected EntityManagerInterface $entityManager;
+    protected EntityManager $entityManager;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        self::bootKernel(['environment' => 'test']);
+
+        self::$staticContainer = self::$kernel->getContainer();
+        self::$staticEntityManager = self::$staticContainer->get('doctrine')->getManager();
+
         $this->container = &self::$staticContainer;
         $this->entityManager = &self::$staticEntityManager;
     }
@@ -29,10 +36,7 @@ class ApiBaseTestCase extends KernelTestCase
 
         self::bootKernel(['environment' => 'test']);
 
-        // static::getContainer() is subtly different from $kernel->getContainer();
-        // the latter doesn't always work, depending on the test, but the former does
         self::$staticContainer = self::$kernel->getContainer();
-
         self::$staticEntityManager = self::$staticContainer->get('doctrine')->getManager();
     }
 

@@ -20,7 +20,7 @@ class CourtOrderServiceTest extends ApiBaseTestCase
     {
         parent::setUp();
 
-        $this->fixtures = new Fixtures($this->entityManager);
+        $this->fixtures = new Fixtures(self::$staticEntityManager);
 
         /** @var CourtOrderDeputyRepository $repo */
         $repo = $this->entityManager->getRepository(CourtOrderDeputy::class);
