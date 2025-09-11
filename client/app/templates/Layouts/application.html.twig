@@ -7,6 +7,26 @@
 
 {% trans_default_domain "layout" %}
 
+{% if navSection is not defined %}
+    {% set navSection = '' %}
+{% endif %}
+
+{% macro navLink(path, labelKey, isSelected) -%}
+    {% if isSelected %}
+        <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+            <a class="govuk-service-navigation__link" href="{{ path(path) }}" aria-current="true">
+                <strong class="govuk-service-navigation__active-fallback">{{- labelKey | trans -}}</strong>
+            </a>
+        </li>
+    {% else %}
+        <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="{{ path(path) }}">
+                {{- labelKey | trans -}}
+            </a>
+        </li>
+    {% endif %}
+{%- endmacro %}
+
 {% block head %}
     <meta name="format-detection" content="telephone=no">
 {% endblock %}
@@ -28,34 +48,39 @@
                             Logged as {{ adName }} (Assisted Digital)
                         </li>
                     {% endif %}
-                    <li class="govuk-service-navigation__item">
-                        <a href="{{ path('homepage') }}" class="govuk-service-navigation__link">
-                            {{ 'nav.reports' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-service-navigation__item">
-                        <a href="{{ path('account_settings') }}" class="govuk-service-navigation__link">
-                            {{ 'nav.userAccount' | trans }}
-                        </a>
-                    </li>
-                    <li class="govuk-service-navigation__item">
-                        <a href="{{ path('deputyship_details_clients') }}" class="govuk-service-navigation__link">
-                            {{ 'nav.clients' | trans }}
-                        </a>
-                    </li>
+                    {{ _self.navLink(
+                        'homepage',
+                        'nav.reports',
+                        navSection == 'homepage',
+                    ) }}
+
+                    {{ _self.navLink(
+                        'account_settings',
+                        'nav.userAccount',
+                        navSection == 'settings',
+                    ) }}
+
+                    {{ _self.navLink(
+                        'deputyship_details_clients',
+                        'nav.clients',
+                        navSection == 'deputyship-details-clients',
+                    ) }}
+
                 {% endif %}
                 {% if app.user.isDeputyOrg() %}
-                    <li class="govuk-service-navigation__item">
-                        <a href="{{ path('org_dashboard') }}" class="govuk-service-navigation__link">
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="govuk-service-navigation__item">
-                        <a href="{{ path('org_settings') }}" class="govuk-service-navigation__link">
-                            Settings
-                        </a>
-                    </li>
+                    {{ _self.navLink(
+                        'org_dashboard',
+                        'Dashboard',
+                        navSection == 'org-dashboard',
+                    ) }}
+
+                    {{ _self.navLink(
+                        'org_settings',
+                        'Settings',
+                        navSection == 'settings',
+                    ) }}
                 {% endif %}
+
                 <li class="govuk-service-navigation__item">
                     <a href="{{ path('app_logout') }}" class="govuk-service-navigation__link">
                         {{ 'signOut' | trans({}, 'common' ) }}
