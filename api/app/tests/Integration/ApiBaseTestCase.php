@@ -19,8 +19,8 @@ class ApiBaseTestCase extends KernelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->container = self::$staticContainer;
-        $this->entityManager = self::$staticEntityManager;
+        $this->container = &self::$staticContainer;
+        $this->entityManager = &self::$staticEntityManager;
     }
 
     public static function setUpBeforeClass(): void
