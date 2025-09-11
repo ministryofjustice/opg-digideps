@@ -14,7 +14,6 @@ use App\Entity\StagingDeputyship;
 use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
 {
@@ -28,6 +27,14 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $sut = self::$staticContainer->get(CourtOrderReportCandidatesFactory::class);
 
         self::$sut = $sut;
+    }
+
+    // necessary to remove all entities added by each test
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        self::purgeDatabase();
     }
 
     // create a report which is not compatible with a deputyship (CSV row) due to type differences
@@ -123,15 +130,15 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $deputyship->caseNumber = $caseNumber;
         $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
-        $this->entityManager->persist($deputyship);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($deputyship);
+        self::$staticEntityManager->flush();
 
         // add client
         $client = new Client();
         $client->setCaseNumber($caseNumber);
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($client);
+        self::$staticEntityManager->flush();
 
         // add compatible report
         $report1 = new Report(
@@ -142,8 +149,8 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
             dateChecks: false
         );
 
-        $this->entityManager->persist($report1);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($report1);
+        self::$staticEntityManager->flush();
 
         // add an incompatibly typed report (just to make sure we don't pick it up as compatible)
         $report2 = $this->createIncompatiblyTypedReport($client, $orderType);
@@ -151,9 +158,9 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         // add an incompatibly dated report (again, to make sure it's not picked up as a candidate)
         $report3 = $this->createIncompatiblyDatedReport($client, $orderType, $madeDate);
 
-        $this->entityManager->persist($report2);
-        $this->entityManager->persist($report3);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($report2);
+        self::$staticEntityManager->persist($report3);
+        self::$staticEntityManager->flush();
 
         // create compatible report candidates
         $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
@@ -163,14 +170,6 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         self::assertEquals(DeputyshipCandidateAction::InsertOrderReport, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($report1->getId(), $candidates[0]->reportId);
-
-        $this->entityManager->remove($report1);
-        $this->entityManager->remove($report2);
-        $this->entityManager->remove($report3);
-        $this->entityManager->remove($candidates[0]);
-        $this->entityManager->remove($client);
-        $this->entityManager->remove($deputyship);
-        $this->entityManager->flush();
     }
 
     public function testCreateCompatibleNdrCandidates(): void
@@ -188,22 +187,22 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $deputyship->caseNumber = $caseNumber;
         $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
 
-        $this->entityManager->persist($deputyship);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($deputyship);
+        self::$staticEntityManager->flush();
 
         // add client
         $client = new Client();
         $client->setCaseNumber($caseNumber);
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($client);
+        self::$staticEntityManager->flush();
 
         // add NDR to client
         $ndr = new Ndr($client);
         $ndr->setStartDate($madeDate);
 
-        $this->entityManager->persist($ndr);
-        $this->entityManager->flush();
+        self::$staticEntityManager->persist($ndr);
+        self::$staticEntityManager->flush();
 
         // create NDR candidates
         $candidates = iterator_to_array(self::$sut->createCompatibleNdrCandidates());
@@ -231,13 +230,13 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $deputyship->orderMadeDate = $orderMadeDate->format('Y-m-d');
         $deputyship->isHybrid = '0';
 
-        $this->entityManager->persist($deputyship);
+        self::$staticEntityManager->persist($deputyship);
 
         // add client
         $client = new Client();
         $client->setCaseNumber($deputyship->caseNumber);
 
-        $this->entityManager->persist($client);
+        self::$staticEntityManager->persist($client);
 
         // add compatible report
         $report = new Report(
@@ -248,7 +247,7 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
             dateChecks: false
         );
 
-        $this->entityManager->persist($report);
+        self::$staticEntityManager->persist($report);
 
         // create order and associate with report; this report is a potential candidate,
         // but should be ignored as a candidate because a relationship already exists
@@ -259,10 +258,10 @@ class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiBaseTestCase
         $courtOrder->setOrderMadeDate($orderMadeDate);
         $courtOrder->addReport($report);
 
-        $this->entityManager->persist($courtOrder);
+        self::$staticEntityManager->persist($courtOrder);
 
         // write everything to db
-        $this->entityManager->flush();
+        self::$staticEntityManager->flush();
 
         // create report candidates
         $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
