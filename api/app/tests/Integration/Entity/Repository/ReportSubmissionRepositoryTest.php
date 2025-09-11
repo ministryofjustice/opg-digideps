@@ -22,39 +22,6 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         self::$reportSubmissionHelper = new ReportSubmissionHelper(self::$staticEntityManager);
     }
 
-    /**
-     * @dataProvider updateArchivedStatusDataProvider
-     */
-    public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
-    {
-        $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
-        $submission->setArchived($isArchived);
-
-        $reportHelper = ReportTestHelper::create();
-
-        $docs = array_map(function ($status) use ($reportHelper) {
-            $report = $reportHelper->generateReport($this->entityManager);
-            $this->entityManager->persist($report);
-            $this->entityManager->persist($report->getClient());
-
-            return (new Document($report))
-                ->setSynchronisationStatus($status)
-                ->setFileName('a file.pdf');
-        }, $docStatuses);
-
-        foreach ($docs as $doc) {
-            $submission->addDocument($doc);
-            $this->entityManager->persist($doc);
-        }
-
-        $this->entityManager->flush();
-
-        $sut = $this->entityManager->getRepository(ReportSubmission::class);
-
-        $sut->updateArchivedStatus($submission);
-        self::assertEquals($shouldArchive, $submission->getArchived());
-    }
-
     public static function updateArchivedStatusDataProvider(): array
     {
         return [
@@ -65,6 +32,39 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         ];
     }
 
+    /**
+     * @dataProvider updateArchivedStatusDataProvider
+     */
+    public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
+    {
+        $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
+        $submission->setArchived($isArchived);
+
+        $reportHelper = ReportTestHelper::create();
+
+        foreach ($docStatuses as $docStatus) {
+            $report = $reportHelper->generateReport($this->entityManager);
+            $this->entityManager->persist($report);
+            $this->entityManager->persist($report->getClient());
+
+            $doc = new Document($report);
+            $doc->setSynchronisationStatus($docStatus);
+            $doc->setFileName('a file.pdf');
+            $this->entityManager->persist($doc);
+
+            $submission->addDocument($doc);
+        }
+
+        $this->entityManager->persist($submission);
+
+        $this->entityManager->flush();
+
+        $sut = $this->entityManager->getRepository(ReportSubmission::class);
+
+        $sut->updateArchivedStatus($submission);
+        self::assertEquals($shouldArchive, $submission->getArchived());
+    }
+
     public function testUpdateArchivedStatusManuallyArchived()
     {
         $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
@@ -72,21 +72,19 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 
         $reportHelper = ReportTestHelper::create();
 
-        $statuses = [null, null];
-        $docs = array_map(function () use ($reportHelper) {
+        for ($i = 0; $i < 2; $i++) {
             $report = $reportHelper->generateReport($this->entityManager);
             $this->entityManager->persist($report);
             $this->entityManager->persist($report->getClient());
 
-            return (new Document($report))
-                ->setFileName('a file.pdf');
-        }, $statuses);
-
-        foreach ($docs as $doc) {
-            $submission->addDocument($doc);
+            $doc = new Document($report);
+            $doc->setFileName('a file.pdf');
             $this->entityManager->persist($doc);
+
+            $submission->addDocument($doc);
         }
 
+        $this->entityManager->persist($submission);
         $this->entityManager->flush();
 
         $sut = $this->entityManager->getRepository(ReportSubmission::class);
@@ -101,7 +99,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $yesterday = new DateTime('-1 day');
 
         $createdReportSubmissions = [];
-        foreach (range(1, 3) as $ignored) {
+        for ($i = 1; $i <= 3; $i++) {
             $createdReportSubmissions[] = self::$reportSubmissionHelper
                 ->generateAndPersistSubmittedReportSubmission($yesterday);
         }
@@ -120,13 +118,13 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $yesterday = new DateTime('-1 day');
 
         $todaysReportSubmissions = [];
-        foreach (range(1, 3) as $index) {
+        for ($i = 0; $i < 3; $i++) {
             $todaysReportSubmissions[] = self::$reportSubmissionHelper
                 ->generateAndPersistSubmittedReportSubmission($today);
         }
 
         $yesterdaysReportSubmissions = [];
-        foreach (range(1, 3) as $index) {
+        for ($i = 0; $i < 3; $i++) {
             $yesterdaysReportSubmissions[] = self::$reportSubmissionHelper
                 ->generateAndPersistSubmittedReportSubmission($yesterday);
         }
@@ -152,14 +150,14 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $lastWeek = new DateTime('-7 days');
 
         $yesterdaysReportSubmissionsIds = [];
-        foreach (range(1, 3) as $i) {
+        for ($i = 0; $i < 3; $i++) {
             $reportSubmission = self::$reportSubmissionHelper
                 ->generateAndPersistSubmittedReportSubmission($yesterday);
             $yesterdaysReportSubmissionsIds[] = $reportSubmission->getId();
         }
 
         $lastWeekReportSubmissionsIds = [];
-        foreach (range(1, 3) as $i) {
+        for ($i = 0; $i < 3; $i++) {
             $reportSubmission = self::$reportSubmissionHelper
                 ->generateAndPersistSubmittedReportSubmission($lastWeek);
             $lastWeekReportSubmissionsIds[] = $reportSubmission->getId();
