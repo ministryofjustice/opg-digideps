@@ -20,7 +20,7 @@ trait CreationAudit
      *
      * @JMS\Groups({"notes", "documents", "report-submission", "checklist-information"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
