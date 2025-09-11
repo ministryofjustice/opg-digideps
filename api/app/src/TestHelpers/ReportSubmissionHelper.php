@@ -10,50 +10,55 @@ use Doctrine\ORM\EntityManager;
 
 class ReportSubmissionHelper
 {
+    public function __construct(
+        private readonly EntityManager $entityManager
+    ){
+    }
+
     /**
      * @return ReportSubmission
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function generateAndPersistReportSubmission(EntityManager $em)
+    public function generateAndPersistReportSubmission()
     {
         $client = new Client();
-        $report = (new ReportTestHelper())->generateReport($em, $client, null, new \DateTime());
+        $report = (new ReportTestHelper())->generateReport($this->entityManager, $client, null, new \DateTime());
         $client->addReport($report);
-        $user = (UserTestHelper::create())->createAndPersistUser($em, $client);
+        $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
         $reportSubmission = (new ReportSubmission($report, $user))->setCreatedOn(new \DateTime());
 
-        $em->persist($client);
-        $em->persist($report);
-        $em->persist($user);
-        $em->persist($reportSubmission);
-        $em->flush();
+        $this->entityManager->persist($client);
+        $this->entityManager->persist($report);
+        $this->entityManager->persist($user);
+        $this->entityManager->persist($reportSubmission);
+        $this->entityManager->flush();
 
         return $reportSubmission;
     }
 
-    public function generateAndPersistSubmittedReportSubmission(EntityManager $em, \DateTime $submitDate)
+    public function generateAndPersistSubmittedReportSubmission(\DateTime $submitDate)
     {
-        $rs = $this->generateAndPersistReportSubmission($em);
+        $rs = $this->generateAndPersistReportSubmission();
         $report = $rs->getReport()
             ->setSubmitDate($submitDate)
             ->setSubmitted(true);
         $rs->setCreatedOn($submitDate);
 
-        $em->persist($rs);
-        $em->persist($report);
-        $em->flush();
+        $this->entityManager->persist($rs);
+        $this->entityManager->persist($report);
+        $this->entityManager->flush();
 
         return $rs;
     }
 
-    public function submitAndPersistAdditionalSubmissions(EntityManager $em, ReportSubmission $lastSubmission)
+    public function submitAndPersistAdditionalSubmissions(ReportSubmission $lastSubmission)
     {
         $client = $lastSubmission->getReport()->getClient();
 
         $report = (new ReportTestHelper())->generateReport(
-            $em,
+            $this->entityManager,
             $client,
             $lastSubmission->getReport()->getType(),
             $lastSubmission->getReport()->getSubmitDate()->modify('+366 days')
@@ -69,10 +74,10 @@ class ReportSubmissionHelper
             ->setSubmitted(true)
             ->setClient($client);
 
-        $em->persist($client);
-        $em->persist($report);
-        $em->persist($reportSubmission);
+        $this->entityManager->persist($client);
+        $this->entityManager->persist($report);
+        $this->entityManager->persist($reportSubmission);
 
-        $em->flush();
+        $this->entityManager->flush();
     }
 }
