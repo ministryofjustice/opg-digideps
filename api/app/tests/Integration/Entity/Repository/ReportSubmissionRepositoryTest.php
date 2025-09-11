@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Repository;
 
 use App\Entity\Client;
+use App\Repository\ReportSubmissionRepository;
 use App\TestHelpers\UserTestHelper;
 use DateTime;
 use App\Entity\Report\Document;
@@ -16,12 +17,18 @@ use App\Tests\Integration\ApiBaseTestCase;
 class ReportSubmissionRepositoryTest extends ApiBaseTestCase
 {
     private static ReportSubmissionHelper $reportSubmissionHelper;
+    private static ReportSubmissionRepository $sut;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         self::$reportSubmissionHelper = new ReportSubmissionHelper(self::$staticEntityManager);
+
+        /** @var ReportSubmissionRepository $sut */
+        $sut = self::$staticEntityManager->getRepository(ReportSubmission::class);
+
+        self::$sut = $sut;
     }
 
     public static function updateArchivedStatusDataProvider(): array
@@ -40,35 +47,28 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
     public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
     {
         $client = new Client();
-        $this->entityManager->persist($client);
-
-        $report = (ReportTestHelper::create())->generateReport($this->entityManager);
-        $this->entityManager->persist($report);
-
-        $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
+        $report = (ReportTestHelper::create())->generateReport(self::$staticEntityManager);
+        $user = (UserTestHelper::create())->createAndPersistUser(self::$staticEntityManager, $client);
 
         $submission = new ReportSubmission($report, $user);
         $submission->setArchived($isArchived);
-        $this->entityManager->persist($submission);
-        $this->entityManager->persist($report);
+        self::$staticEntityManager->persist($submission);
 
         foreach ($docStatuses as $docStatus) {
             $doc = new Document($report);
             $doc->setSynchronisationStatus($docStatus);
             $doc->setFileName('a file.pdf');
-            $this->entityManager->persist($doc);
+            self::$staticEntityManager->persist($doc);
 
             $submission->addDocument($doc);
-            $this->entityManager->flush();
         }
 
-        $this->entityManager->persist($submission);
+        self::$staticEntityManager->persist($submission);
 
-        $this->entityManager->flush();
+        self::$staticEntityManager->flush();
 
-        $sut = $this->entityManager->getRepository(ReportSubmission::class);
+        self::$sut->updateArchivedStatus($submission);
 
-        $sut->updateArchivedStatus($submission);
         self::assertEquals($shouldArchive, $submission->getArchived());
     }
 
@@ -94,9 +94,8 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
         $this->entityManager->persist($submission);
         $this->entityManager->flush();
 
-        $sut = $this->entityManager->getRepository(ReportSubmission::class);
+        self::$sut->updateArchivedStatus($submission);
 
-        $sut->updateArchivedStatus($submission);
         self::assertEquals(false, $submission->getArchived());
     }
 
@@ -111,9 +110,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
                 ->generateAndPersistSubmittedReportSubmission($yesterday);
         }
 
-        $reportSubmissions = $this->entityManager
-            ->getRepository(ReportSubmission::class)
-            ->findAllReportSubmissions($yesterday, $today);
+        $reportSubmissions = self::$sut->findAllReportSubmissions($yesterday, $today);
 
         $this->assertEqualsCanonicalizing($createdReportSubmissions, $reportSubmissions);
     }
@@ -136,9 +133,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
                 ->generateAndPersistSubmittedReportSubmission($yesterday);
         }
 
-        $reportSubmissions = $this->entityManager
-            ->getRepository(ReportSubmission::class)
-            ->findAllReportSubmissions($yesterday, $todayOneHourAgo);
+        $reportSubmissions = self::$sut->findAllReportSubmissions($yesterday, $todayOneHourAgo);
 
         foreach ($yesterdaysReportSubmissions as $rs) {
             self::assertContains($rs, $reportSubmissions);
@@ -170,9 +165,7 @@ class ReportSubmissionRepositoryTest extends ApiBaseTestCase
             $lastWeekReportSubmissionsIds[] = $reportSubmission->getId();
         }
 
-        $reportSubmissions = $this->entityManager
-            ->getRepository(ReportSubmission::class)
-            ->findAllReportSubmissionsRawSql($threeDaysAgo, $today);
+        $reportSubmissions = self::$sut->findAllReportSubmissionsRawSql($threeDaysAgo, $today);
 
         $actualReportSubmissionIds = [];
         foreach ($reportSubmissions as $reportSubmission) {
