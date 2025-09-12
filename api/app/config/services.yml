@@ -461,3 +461,6 @@ services:
 
     App\v2\Service\CourtOrderService:
         public: true
+
+    App\Service\LayRegistrationService:
+        public: true
