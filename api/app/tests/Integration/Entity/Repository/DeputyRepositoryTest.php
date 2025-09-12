@@ -20,9 +20,9 @@ class DeputyRepositoryTest extends ApiTestCase
     private static Fixtures $fixtures;
     private static DeputyRepository $sut;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         self::$fixtures = new Fixtures(self::$entityManager);
 
@@ -86,6 +86,8 @@ class DeputyRepositoryTest extends ApiTestCase
         $client = ClientTestHelper::generateClient(em: self::$entityManager);
         $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
+
+        // closed court order saved to database
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
             em: self::$entityManager,
             client: $client,
@@ -98,7 +100,7 @@ class DeputyRepositoryTest extends ApiTestCase
         $deputy->setUser(user: $user);
         $client->setDeputy(deputy: $deputy);
 
-        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->persist($deputy, $client, $courtOrder);
         self::$fixtures->flush();
 
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);

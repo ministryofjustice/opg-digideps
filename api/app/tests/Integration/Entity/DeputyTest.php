@@ -2,35 +2,35 @@
 
 namespace App\Tests\Integration\Entity;
 
+use App\Tests\Integration\ApiTestCase;
 use DateTime;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Repository\DeputyRepository;
 use App\TestHelpers\DeputyTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
 use Faker\Factory;
 use Faker\Generator;
 
-class DeputyTest extends ApiBaseTestCase
+class DeputyTest extends ApiTestCase
 {
-    private Generator $faker;
-    private DeputyRepository $deputyRepository;
+    private static Generator $faker;
+    private static DeputyRepository $deputyRepository;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->faker = Factory::create();
+        self::$faker = Factory::create();
 
         /* @var DeputyRepository $deputyRepository */
-        $deputyRepository = $this->entityManager->getRepository(Deputy::class);
+        $deputyRepository = self::$entityManager->getRepository(Deputy::class);
 
-        $this->deputyRepository = $deputyRepository;
+        self::$deputyRepository = $deputyRepository;
     }
 
     public function testGetCourtOrdersWithStatus(): void
     {
-        $fakeUid = $this->faker->unique()->randomNumber(8);
+        $fakeUid = self::$faker->unique()->randomNumber(8);
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy();
@@ -45,12 +45,12 @@ class DeputyTest extends ApiBaseTestCase
 
         $deputy->associateWithCourtOrder($courtOrder);
 
-        $this->entityManager->persist($courtOrder);
-        $this->entityManager->persist($deputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($courtOrder);
+        self::$entityManager->persist($deputy);
+        self::$entityManager->flush();
 
         // retrieve the deputy from the db and check the association is populated correctly
-        $retrievedDeputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
+        $retrievedDeputy = self::$deputyRepository->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
         $actual = $retrievedDeputy->getCourtOrdersWithStatus();
         self::assertArrayHasKey('courtOrder', $actual[0]);
@@ -70,8 +70,8 @@ class DeputyTest extends ApiBaseTestCase
      */
     public function testCascadeDeleteCourtOrderDeputy(): void
     {
-        $fakeCourtOrderUid = $this->faker->unique()->randomNumber(8);
-        $fakeDeputyUid = $this->faker->unique()->randomNumber(8);
+        $fakeCourtOrderUid = self::$faker->unique()->randomNumber(8);
+        $fakeDeputyUid = self::$faker->unique()->randomNumber(8);
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy(deputyUid: $fakeDeputyUid);
@@ -86,19 +86,19 @@ class DeputyTest extends ApiBaseTestCase
 
         $deputy->associateWithCourtOrder($courtOrder);
 
-        $this->entityManager->persist($courtOrder);
-        $this->entityManager->persist($deputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($courtOrder);
+        self::$entityManager->persist($deputy);
+        self::$entityManager->flush();
 
         // check deputy persisted and court_order <-> deputy association exists
-        $retrievedDeputy = $this->deputyRepository->findOneBy(['deputyUid' => $fakeDeputyUid]);
+        $retrievedDeputy = self::$deputyRepository->findOneBy(['deputyUid' => $fakeDeputyUid]);
         self::assertNotNull($retrievedDeputy);
 
         $courtOrders = $retrievedDeputy->getCourtOrdersWithStatus();
         self::assertCount(1, $courtOrders);
 
         // delete the deputy and confirm that it and the court_order_deputy entry are gone
-        $this->entityManager->remove($deputy);
-        $this->entityManager->flush();
+        self::$entityManager->remove($deputy);
+        self::$entityManager->flush();
     }
 }

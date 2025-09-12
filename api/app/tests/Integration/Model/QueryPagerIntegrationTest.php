@@ -6,10 +6,10 @@ namespace app\tests\Integration\Model;
 
 use App\Entity\StagingSelectedCandidate;
 use App\Model\QueryPager;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiTestCase;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
-class QueryPagerIntegrationTest extends ApiBaseTestCase
+class QueryPagerIntegrationTest extends ApiTestCase
 {
     public function testGetRows(): void
     {
@@ -18,13 +18,13 @@ class QueryPagerIntegrationTest extends ApiBaseTestCase
 
         for ($i = 0; $i < $numRowsExpected; ++$i) {
             $candidate = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrder, $courtOrderUid);
-            $this->entityManager->persist($candidate);
+            self::$entityManager->persist($candidate);
         }
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
-        $countQuery = $this->entityManager->createQuery("SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc");
-        $pageQuery = $this->entityManager->createQuery("SELECT ssc FROM App\Entity\StagingSelectedCandidate ssc");
+        $countQuery = self::$entityManager->createQuery("SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc");
+        $pageQuery = self::$entityManager->createQuery("SELECT ssc FROM App\Entity\StagingSelectedCandidate ssc");
 
         $sut = new QueryPager($countQuery, $pageQuery);
 
