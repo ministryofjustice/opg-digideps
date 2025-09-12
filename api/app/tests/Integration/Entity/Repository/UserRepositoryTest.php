@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Entity\Repository;
 
+use App\Tests\Integration\ApiTestTrait;
 use DateTime;
 use App\Entity\PreRegistration;
 use App\Entity\User;
@@ -10,11 +11,13 @@ use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class UserRepositoryTest extends ApiBaseTestCase
+class UserRepositoryTest extends KernelTestCase
 {
+    use ApiTestTrait;
+
     private static Fixtures $fixtures;
     private static UserRepository $sut;
 
@@ -22,12 +25,12 @@ class UserRepositoryTest extends ApiBaseTestCase
     {
         parent::setUp();
 
-        self::setUpPerTestWorkAround();
+        self::configureTest();
 
-        self::$fixtures = new Fixtures(self::$staticEntityManager);
+        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var UserRepository $sut */
-        $sut = self::$staticEntityManager->getRepository(User::class);
+        $sut = self::$entityManager->getRepository(User::class);
 
         self::$sut = $sut;
     }
@@ -64,7 +67,7 @@ class UserRepositoryTest extends ApiBaseTestCase
         $recentUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
         self::$fixtures->createClient($recentUserWithNoClient);
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $inactiveUsers = self::$sut->findInactive();
 
@@ -77,35 +80,35 @@ class UserRepositoryTest extends ApiBaseTestCase
         $reportHelper = ReportTestHelper::create();
         $clientHelper = ClientTestHelper::create();
 
-        $clientOne = $clientHelper->generateClient(self::$staticEntityManager);
-        $activeUserOne = $userHelper->createAndPersistUser(self::$staticEntityManager, $clientOne);
-        $reportOne = $reportHelper->generateReport(self::$staticEntityManager, $clientOne)->setSubmitDate(new DateTime());
+        $clientOne = $clientHelper->generateClient(self::$entityManager);
+        $activeUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientOne);
+        $reportOne = $reportHelper->generateReport(self::$entityManager, $clientOne)->setSubmitDate(new DateTime());
 
-        $clientTwo = $clientHelper->generateClient(self::$staticEntityManager);
-        $activeUserTwo = $userHelper->createAndPersistUser(self::$staticEntityManager, $clientTwo);
-        $reportTwo = $reportHelper->generateReport(self::$staticEntityManager, $clientTwo)->setSubmitDate(new DateTime());
+        $clientTwo = $clientHelper->generateClient(self::$entityManager);
+        $activeUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientTwo);
+        $reportTwo = $reportHelper->generateReport(self::$entityManager, $clientTwo)->setSubmitDate(new DateTime());
 
-        $clientThree = $clientHelper->generateClient(self::$staticEntityManager);
-        $reportThree = $reportHelper->generateReport(self::$staticEntityManager, $clientThree)->setSubmitDate(new DateTime());
-        $inactiveUserOne = $userHelper->createAndPersistUser(self::$staticEntityManager, $clientThree);
+        $clientThree = $clientHelper->generateClient(self::$entityManager);
+        $reportThree = $reportHelper->generateReport(self::$entityManager, $clientThree)->setSubmitDate(new DateTime());
+        $inactiveUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientThree);
         $inactiveUserOne->setLastLoggedIn(new DateTime('-380 days'));
 
-        $clientFour = $clientHelper->generateClient(self::$staticEntityManager);
-        $reportFour = $reportHelper->generateReport(self::$staticEntityManager, $clientFour);
-        $inactiveUserTwo = $userHelper->createAndPersistUser(self::$staticEntityManager, $clientFour);
+        $clientFour = $clientHelper->generateClient(self::$entityManager);
+        $reportFour = $reportHelper->generateReport(self::$entityManager, $clientFour);
+        $inactiveUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientFour);
         $inactiveUserTwo->setLastLoggedIn(new DateTime());
 
-        self::$staticEntityManager->persist($inactiveUserOne);
-        self::$staticEntityManager->persist($inactiveUserTwo);
-        self::$staticEntityManager->persist($reportOne);
-        self::$staticEntityManager->persist($reportTwo);
-        self::$staticEntityManager->persist($reportThree);
-        self::$staticEntityManager->persist($reportFour);
-        self::$staticEntityManager->persist($clientOne);
-        self::$staticEntityManager->persist($clientTwo);
-        self::$staticEntityManager->persist($clientThree);
-        self::$staticEntityManager->persist($clientFour);
-        self::$staticEntityManager->flush();
+        self::$entityManager->persist($inactiveUserOne);
+        self::$entityManager->persist($inactiveUserTwo);
+        self::$entityManager->persist($reportOne);
+        self::$entityManager->persist($reportTwo);
+        self::$entityManager->persist($reportThree);
+        self::$entityManager->persist($reportFour);
+        self::$entityManager->persist($clientOne);
+        self::$entityManager->persist($clientTwo);
+        self::$entityManager->persist($clientThree);
+        self::$entityManager->persist($clientFour);
+        self::$entityManager->flush();
 
         $results = self::$sut->findActiveLaysInLastYear();
         $resultsUserIds = [];
@@ -132,10 +135,10 @@ class UserRepositoryTest extends ApiBaseTestCase
         $usersToAdd[] = $paDeputyUser = $userHelper->createUser(null, User::ROLE_PROF_ADMIN);
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $expectedAdminUsersReturned = [$adminUser, $adminManagerUser, $superAdminUser];
         $expectedDeputyUsersNotReturned = [$layDeputyUser, $profDeputyUser, $paDeputyUser];
@@ -173,10 +176,10 @@ class UserRepositoryTest extends ApiBaseTestCase
         $nonAdminUserLessThan60Days->setLastLoggedIn(null);
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $expectedAdminUsersReturned = [$adminUserMoreThan60Days, $superAdminUserMoreThan60Days, $adminManagerUserMoreThan60Days];
         $expectedAdminUsersNotReturned = [$adminUserLessThan60Days, $nonAdminUserLessThan60Days];
@@ -207,10 +210,10 @@ class UserRepositoryTest extends ApiBaseTestCase
         $activeDeputyUser->setLastLoggedIn(new DateTime());
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $expectedActiveAdminUsersReturned = [$activeAdminUser, $activeSuperAdminUser, $activeAdminManagerUser];
         $expectedAdminUsersNotReturned = [$inactiveAdminManagerUser, $activeDeputyUser];
@@ -243,10 +246,10 @@ class UserRepositoryTest extends ApiBaseTestCase
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-1 day'));
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $expectedLoggedInAdminUsers = [$loggedInAdminUser, $loggedInSuperAdminUser, $loggedInAdminManagerUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
@@ -277,10 +280,10 @@ class UserRepositoryTest extends ApiBaseTestCase
         $notRecentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-100 days'));
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $expectedLoggedInAdminUsers = [$loggedInAdminUser, $loggedInSuperAdminUser, $loggedInAdminManagerUser];
         $expectedLoggedOutUsersNotReturned = [$notRecentlyLoggedInAdminManagerUser, $notRecentlyLoggedInDeputyUser];
@@ -316,10 +319,10 @@ class UserRepositoryTest extends ApiBaseTestCase
         $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-10 days'));
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $expectedLoggedInAdminUsers = [$notRecentlyLoggedInAdminUser, $notRecentlyLoggedInSuperAdminManagerUser];
         $expectedRecentlyLoggedInUsersNotReturned = [$recentlyLoggedInAdminUser, $recentlyLoggedInAdminManagerUser, $recentlyLoggedInDeputyUser];
@@ -348,10 +351,10 @@ class UserRepositoryTest extends ApiBaseTestCase
             ->setLastLoggedIn(new DateTime('-26 months'));
 
         foreach ($usersToAdd as $user) {
-            self::$staticEntityManager->persist($user);
+            self::$entityManager->persist($user);
         }
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $adminUserIds = [];
         foreach ($usersToAdd as $user) {

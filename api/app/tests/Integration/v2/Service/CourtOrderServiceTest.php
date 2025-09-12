@@ -6,12 +6,15 @@ namespace App\Tests\Integration\v2\Service;
 
 use App\Entity\CourtOrderDeputy;
 use App\Repository\CourtOrderDeputyRepository;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiTestTrait;
 use App\Tests\Integration\Fixtures;
 use App\v2\Service\CourtOrderService;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class CourtOrderServiceTest extends ApiBaseTestCase
+class CourtOrderServiceTest extends KernelTestCase
 {
+    use ApiTestTrait;
+
     private Fixtures $fixtures;
     private CourtOrderDeputyRepository $courtOrderDeputyRepository;
     private CourtOrderService $sut;
@@ -20,15 +23,15 @@ class CourtOrderServiceTest extends ApiBaseTestCase
     {
         parent::setUp();
 
-        self::setUpPerTestWorkAround();
+        self::configureTest();
 
-        $this->fixtures = new Fixtures(self::$staticEntityManager);
+        $this->fixtures = new Fixtures(self::$entityManager);
 
         /** @var CourtOrderDeputyRepository $repo */
-        $repo = $this->entityManager->getRepository(CourtOrderDeputy::class);
+        $repo = self::$entityManager->getRepository(CourtOrderDeputy::class);
         $this->courtOrderDeputyRepository = $repo;
 
-        $this->sut = $this->getContainer()->get(CourtOrderService::class);
+        $this->sut = self::$container->get(CourtOrderService::class);
     }
 
     public function testAssociateDeputyWithCourtOrderDuplicate(): void
@@ -36,8 +39,8 @@ class CourtOrderServiceTest extends ApiBaseTestCase
         $deputy = $this->fixtures->createDeputy(['setDeputyUid' => '123456']);
         $courtOrder = $this->fixtures->createCourtOrder('123567', 'pfa', 'ACTIVE');
         $deputy->associateWithCourtOrder($courtOrder);
-        $this->entityManager->persist($deputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($deputy);
+        self::$entityManager->flush();
 
         $success = $this->sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
         $this->assertFalse($success);
@@ -47,8 +50,8 @@ class CourtOrderServiceTest extends ApiBaseTestCase
     {
         $deputy = $this->fixtures->createDeputy(['setDeputyUid' => 'x123456']);
         $courtOrder = $this->fixtures->createCourtOrder('x123567', 'pfa', 'ACTIVE');
-        $this->entityManager->persist($courtOrder);
-        $this->entityManager->flush();
+        self::$entityManager->persist($courtOrder);
+        self::$entityManager->flush();
 
         $success = $this->sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
         $this->assertTrue($success);

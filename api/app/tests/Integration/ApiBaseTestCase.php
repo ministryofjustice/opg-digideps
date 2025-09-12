@@ -25,23 +25,6 @@ class ApiBaseTestCase extends KernelTestCase
         $this->entityManager = &self::$staticEntityManager;
     }
 
-    /*
-     * This is a work-around for tests where the setUpBeforeClass() does not correctly associate
-     * static variables so they are accessible in the test; by booting the kernel per test,
-     * and resetting the static member variables, the associations are correct. I'm not sure why this is
-     * required when we already do the same in setUpBeforeClass().
-     *
-     * Note that because these statics are assigned by reference to $this->container and $this->entityManager, changing
-     * them here also updates those instance variable references.
-     */
-    protected static function setUpPerTestWorkAround(): void
-    {
-        self::bootKernel(['environment' => 'test']);
-
-        self::$staticContainer = self::$kernel->getContainer();
-        self::$staticEntityManager = self::$staticContainer->get('doctrine')->getManager();
-    }
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
