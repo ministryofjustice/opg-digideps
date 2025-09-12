@@ -8,9 +8,9 @@ use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiTestCase;
 
-class ClientRepositoryTest extends ApiBaseTestCase
+class ClientRepositoryTest extends ApiTestCase
 {
     private ClientRepository $sut;
 
@@ -19,7 +19,7 @@ class ClientRepositoryTest extends ApiBaseTestCase
         parent::setUp();
 
         /** @var ClientRepository $sut */
-        $sut = $this->entityManager->getRepository(Client::class);
+        $sut = self::$entityManager->getRepository(Client::class);
 
         $this->sut = $sut;
 
@@ -31,19 +31,19 @@ class ClientRepositoryTest extends ApiBaseTestCase
         $userHelper = UserTestHelper::create();
         $clientHelper = ClientTestHelper::create();
 
-        $clientOne = $clientHelper->generateClient($this->entityManager);
-        $activeUserOne = $userHelper->createAndPersistUser($this->entityManager, $clientOne);
+        $clientOne = $clientHelper->generateClient(self::$entityManager);
+        $activeUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientOne);
 
-        $clientTwo = $clientHelper->generateClient($this->entityManager);
-        $activeUserTwo = $userHelper->createAndPersistUser($this->entityManager, $clientTwo);
+        $clientTwo = $clientHelper->generateClient(self::$entityManager);
+        $activeUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientTwo);
 
-        $clientThree = $clientHelper->generateClient($this->entityManager, $activeUserTwo);
+        $clientThree = $clientHelper->generateClient(self::$entityManager, $activeUserTwo);
 
         $activeUserOne->setDeputyUid(12345678);
         $activeUserTwo->setDeputyUid($activeUserOne->getDeputyUid());
 
-        $this->entityManager->persist($clientThree);
-        $this->entityManager->flush();
+        self::$entityManager->persist($clientThree);
+        self::$entityManager->flush();
 
         $clients = $this->sut->getAllClientsAndReportsByDeputyUid($activeUserOne->getDeputyUid());
 
