@@ -170,18 +170,30 @@ trait SelfRegistrationTrait
             '31313131',
         );
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
-        $this->setPasswordAndTickTAndCs();
-        $this->pressButton('set_password_save');
+        $this->completeUserRegistration($this->userEmail);
+    }
 
-        $this->assertPageContainsText('Sign in to your new account');
-        $this->fillInField('login_email', $this->userEmail);
-        $this->fillInField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
+    /**
+     * @Given a Lay Deputy registers to deputise for this client with valid details
+     */
+    public function aLayDeputyRegistersToDeputiseForThisClientWithValidDetails()
+    {
+        $this->userEmail = 'julie2@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $this->deputyUid = '700762222001';
 
-        $this->fillUserDetailsAndSubmit();
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            'Jeanne',
+            "d'Arc",
+            $this->userEmail,
+            'B1',
+            'Sarah',
+            "O'Name",
+            '61616161',
+        );
 
-        $this->fillClientDetailsAndSubmit();
+        $this->completeUserRegistration($this->userEmail);
     }
 
     /**
@@ -243,10 +255,17 @@ trait SelfRegistrationTrait
      */
     public function iShouldSeeAnInvalidCaseNumberError()
     {
-        $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+        $actualErrorMessage = $this->getSession()->getPage()->find(
+            'css',
+            'ul.govuk-list.govuk-error-summary__list'
+        )->getHtml();
         $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
-        $this->assertStringEqualsString($actualErrorMessageStripped, $this->invalidCaseNumberError, 'invalid case number error thrown');
+        $this->assertStringEqualsString(
+            $actualErrorMessageStripped,
+            $this->invalidCaseNumberError,
+            'invalid case number error thrown'
+        );
     }
 
     /**
@@ -287,12 +306,24 @@ trait SelfRegistrationTrait
     public function anIncorrectCaseNumberLengthErrorIs($arg1)
     {
         if ('not thrown' == $arg1) {
-            $this->assertPageContainsText(sprintf("We've sent you a link to %s that you need to click to activate your deputy service account.", $this->userEmail));
+            $this->assertPageContainsText(
+                sprintf(
+                    "We've sent you a link to %s that you need to click to activate your deputy service account.",
+                    $this->userEmail
+                )
+            );
         } else {
-            $actualErrorMessage = $this->getSession()->getPage()->find('css', 'ul.govuk-list.govuk-error-summary__list')->getHtml();
+            $actualErrorMessage = $this->getSession()->getPage()->find(
+                'css',
+                'ul.govuk-list.govuk-error-summary__list'
+            )->getHtml();
             $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
-            $this->assertStringEqualsString($actualErrorMessageStripped, $this->incorrectCaseNumberLengthError, 'incorrect case number length error thrown');
+            $this->assertStringEqualsString(
+                $actualErrorMessageStripped,
+                $this->incorrectCaseNumberLengthError,
+                'incorrect case number length error thrown'
+            );
         }
     }
 
@@ -376,7 +407,11 @@ trait SelfRegistrationTrait
         $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
         $this->assertIntEqualsInt(intval($this->deputyUid), $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
-        $this->assertStringEqualsString('102 Petty France', $deputy->getAddress1(), 'Asserting Address Line 1 is the same');
+        $this->assertStringEqualsString(
+            '102 Petty France',
+            $deputy->getAddress1(),
+            'Asserting Address Line 1 is the same'
+        );
         $this->assertStringEqualsString('MOJ', $deputy->getAddress2(), 'Asserting Address Line 2 is the same');
         $this->assertStringEqualsString('London', $deputy->getAddress3(), 'Asserting Address Line 3 is the same');
         $this->assertStringEqualsString('GB', $deputy->getAddressCountry(), 'Asserting Address Country is the same');
@@ -392,7 +427,10 @@ trait SelfRegistrationTrait
         $this->userEmail = 'brian@mcduck.co.uk';
         $firstName = 'Brian';
         $lastName = 'McDuck';
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail, 'deputyName' => $firstName . $lastName]);
+
+        $this->interactingWithUserDetails = new UserDetails(
+            ['userEmail' => $this->userEmail, 'deputyName' => $firstName . $lastName]
+        );
         $this->deputyUid = '35672419';
 
         $this->visitFrontendPath('/register');
@@ -406,18 +444,7 @@ trait SelfRegistrationTrait
             '1717171T',
         );
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
-        $this->setPasswordAndTickTAndCs();
-        $this->pressButton('set_password_save');
-
-        $this->assertPageContainsText('Sign in to your new account');
-        $this->fillInField('login_email', $this->userEmail);
-        $this->fillInField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
-
-        $this->fillUserDetailsAndSubmit();
-
-        $this->fillClientDetailsAndSubmit();
+        $this->completeUserRegistration($this->userEmail);
     }
 
     /**
@@ -497,19 +524,7 @@ trait SelfRegistrationTrait
             'O’Name',
             '51515151',
         );
-
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
-        $this->setPasswordAndTickTAndCs();
-        $this->pressButton('set_password_save');
-
-        $this->assertPageContainsText('Sign in to your new account');
-        $this->fillInField('login_email', $this->userEmail);
-        $this->fillInField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
-
-        $this->fillUserDetailsAndSubmit();
-
-        $this->fillClientDetailsAndSubmit();
+        $this->completeUserRegistration($this->userEmail);
     }
 
     private function setPasswordAndTickTAndCs(): void
@@ -519,7 +534,9 @@ trait SelfRegistrationTrait
             $this->fillInField('set_password_password_second', 'DigidepsPass1234');
             $this->checkOption('set_password_showTermsAndConditions');
         } catch (Exception $e) {
-            throw new BehatException(sprintf('Failed to find password fields, currently on page: %s', $this->getCurrentUrl()));
+            throw new BehatException(
+                sprintf('Failed to find password fields, currently on page: %s', $this->getCurrentUrl())
+            );
         }
     }
 
@@ -706,10 +723,12 @@ trait SelfRegistrationTrait
     {
         $matches = [];
         preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
-        $clientId = (int) $matches[0];
+        $clientId = (int)$matches[0];
 
         if (!is_int($clientId) || $clientId <= 0) {
-            throw new BehatException(sprintf('Client ID %s is not a valid integer, pulled from URL %s', $clientId, $this->getCurrentUrl()));
+            throw new BehatException(
+                sprintf('Client ID %s is not a valid integer, pulled from URL %s', $clientId, $this->getCurrentUrl())
+            );
         }
 
         $this->getCurrentUrl();
@@ -757,7 +776,7 @@ trait SelfRegistrationTrait
     /**
      * @Then the co-deputy details should be saved to the co-deputy's account
      */
-    public function CoDeputyDetailsShouldBeSavedToMyAccount()
+    public function coDeputyDetailsShouldBeSavedToMyAccount(): void
     {
         $this->em->flush();
         $this->em->clear();
@@ -767,9 +786,17 @@ trait SelfRegistrationTrait
             ['email' => strtolower($this->coDeputyEmail)]
         );
 
-        $this->assertStringEqualsString($this->coDeputyUid, $coDeputy->getDeputyNo(), 'Asserting CoDeputyUid is the same');
+        $this->assertStringEqualsString(
+            $this->coDeputyUid,
+            $coDeputy->getDeputyNo(),
+            'Asserting CoDeputyUid is the same'
+        );
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
-        $this->assertIntEqualsInt((int) $this->coDeputyUid, $coDeputy->getDeputyUid(), 'Asserting CoDeputyUid is the same');
+        $this->assertIntEqualsInt(
+            (int)$this->coDeputyUid,
+            $coDeputy->getDeputyUid(),
+            'Asserting CoDeputyUid is the same'
+        );
         $this->assertStringEqualsString('Fieldag', $coDeputy->getAddress1(), 'Asserting Address Line 1 is the same');
         $this->assertStringEqualsString('Y73', $coDeputy->getAddressPostcode(), 'Asserting Postcode is the same');
         $this->assertStringEqualsString('GB', $coDeputy->getAddressCountry(), 'Asserting Address Country is the same');
@@ -816,18 +843,7 @@ trait SelfRegistrationTrait
             '4444444T',
         );
 
-        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->userEmail, 'active');
-        $this->setPasswordAndTickTAndCs();
-        $this->pressButton('set_password_save');
-
-        $this->assertPageContainsText('Sign in to your new account');
-        $this->fillInField('login_email', $this->userEmail);
-        $this->fillInField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
-
-        $this->fillUserDetailsAndSubmit();
-
-        $this->fillClientDetailsAndSubmit();
+        $this->completeUserRegistration($this->userEmail);
     }
 
     /**
@@ -848,7 +864,9 @@ trait SelfRegistrationTrait
         $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails;
         $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails->setIsPrimary(true);
 
-        $existingDeputyAccount = $this->em->getRepository(User::class)->findOneBy(['email' => $this->interactingWithUserDetails->getUserEmail()]);
+        $existingDeputyAccount = $this->em->getRepository(User::class)->findOneBy(
+            ['email' => $this->interactingWithUserDetails->getUserEmail()]
+        );
         $existingDeputyAccount->setDeputyUid(35672419);
 
         $this->em->persist($existingDeputyAccount);
@@ -894,5 +912,21 @@ trait SelfRegistrationTrait
     public function reportStatusShouldBe(string $status): void
     {
         $this->assertPageContainsText($status);
+    }
+
+    private function completeUserRegistration(string $userEmail): void
+    {
+        $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $userEmail, 'active');
+        $this->setPasswordAndTickTAndCs();
+        $this->pressButton('set_password_save');
+
+        $this->assertPageContainsText('Sign in to your new account');
+        $this->fillInField('login_email', $userEmail);
+        $this->fillInField('login_password', 'DigidepsPass1234');
+        $this->pressButton('login_login');
+
+        $this->fillUserDetailsAndSubmit();
+
+        $this->fillClientDetailsAndSubmit();
     }
 }

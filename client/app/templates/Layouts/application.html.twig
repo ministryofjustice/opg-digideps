@@ -11,16 +11,16 @@
     {% set navSection = '' %}
 {% endif %}
 
-{% macro navLink(path, labelKey, isSelected) -%}
+{% macro navLink(path, labelKey, isSelected, linkClass) -%}
     {% if isSelected %}
         <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-            <a class="govuk-service-navigation__link" href="{{ path(path) }}" aria-current="true">
+            <a class="govuk-service-navigation__link {{ linkClass }}" href="{{ path(path) }}" aria-current="true">
                 <strong class="govuk-service-navigation__active-fallback">{{- labelKey | trans -}}</strong>
             </a>
         </li>
     {% else %}
         <li class="govuk-service-navigation__item">
-            <a class="govuk-service-navigation__link" href="{{ path(path) }}">
+            <a class="govuk-service-navigation__link {{ linkClass }}" href="{{ path(path) }}">
                 {{- labelKey | trans -}}
             </a>
         </li>
@@ -52,18 +52,21 @@
                         'homepage',
                         'nav.reports',
                         navSection == 'homepage',
+                        'behat-link-reports',
                     ) }}
 
                     {{ _self.navLink(
                         'account_settings',
                         'nav.userAccount',
                         navSection == 'settings',
+                        'behat-link-user-account',
                     ) }}
 
                     {{ _self.navLink(
                         'deputyship_details_clients',
                         'nav.clients',
                         navSection == 'deputyship-details-clients',
+                        'behat-link-clients',
                     ) }}
 
                 {% endif %}
@@ -72,17 +75,19 @@
                         'org_dashboard',
                         'Dashboard',
                         navSection == 'org-dashboard',
+                        'behat-link-org-dashboard',
                     ) }}
 
                     {{ _self.navLink(
                         'org_settings',
                         'Settings',
                         navSection == 'settings',
+                        'behat-link-org-settings',
                     ) }}
                 {% endif %}
 
                 <li class="govuk-service-navigation__item">
-                    <a href="{{ path('app_logout') }}" class="govuk-service-navigation__link">
+                    <a href="{{ path('app_logout') }}" class="govuk-service-navigation__link behat-link-logout">
                         {{ 'signOut' | trans({}, 'common' ) }}
                     </a>
                 </li>
