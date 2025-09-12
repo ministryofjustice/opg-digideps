@@ -2,28 +2,20 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use App\Tests\Integration\ApiTestCase;
 use DateTime;
-use Exception;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
 use App\Service\Stats\Query\ReportsSubmittedQuery;
 use App\Service\Stats\StatsQueryParameters;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ReportsSubmittedQueryTest extends WebTestCase
+class ReportsSubmittedQueryTest extends ApiTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
-
     public static function setUpBeforeClass(): void
     {
-        $kernel = self::bootKernel(['environment' => 'test', 'debug' => false]);
-
-        self::$em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        parent::setUpBeforeClass();
 
         static::givenXreportSubmissionsOfTypeBelongToDeputy('4', '102', 'LAY');
         static::givenXreportSubmissionsOfTypeBelongToDeputy('2', '102', 'LAY');
@@ -33,12 +25,51 @@ class ReportsSubmittedQueryTest extends WebTestCase
         static::givenXreportSubmissionsOfTypeBelongToDeputy('4', '102-5', 'PROF');
         static::givenXreportSubmissionsOfTypeBelongToDeputy('3', '103-5', 'PROF');
 
-        self::$em->flush();
+        self::$entityManager->flush();
     }
 
-    public function testReturnsTotalReportsSubmittedByDeputyType()
+    private static function addSubmittedReportOfTypeToUser(string $type, User $user): void
     {
-        $query = new ReportsSubmittedQuery($this::$em);
+        $client = new Client();
+
+        $report = new Report(
+            $client,
+            $type,
+            new DateTime('2019-08-01'),
+            new DateTime('2020-08-01')
+        );
+
+        $submission = new ReportSubmission($report, $user);
+
+        self::$entityManager->persist($client);
+        self::$entityManager->persist($report);
+        self::$entityManager->persist($submission);
+    }
+
+    private static function givenXreportSubmissionsOfTypeBelongToDeputy($numReports, $reportType, $deputyType)
+    {
+        for ($i = 0; $i < $numReports; ++$i) {
+            static::addSubmittedReportOfTypeToUser($reportType, static::createUserOfType($deputyType));
+        }
+    }
+
+    private static function createUserOfType(string $type): User
+    {
+        $id = mt_rand();
+        $user = (new User())
+            ->setFirstname('Lay')
+            ->setLastname('User')
+            ->setEmail("metric-test-$id@publicguardian.gov.uk")
+            ->setRoleName('ROLE_'.$type.'_DEPUTY');
+
+        self::$entityManager->persist($user);
+
+        return $user;
+    }
+
+    public function testReturnsTotalReportsSubmittedByDeputyType(): void
+    {
+        $query = new ReportsSubmittedQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'reportsSubmitted',
@@ -64,9 +95,9 @@ class ReportsSubmittedQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsTotalReportsSubmittedByReportType()
+    public function testReturnsTotalReportsSubmittedByReportType(): void
     {
-        $query = new ReportsSubmittedQuery($this::$em);
+        $query = new ReportsSubmittedQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'reportsSubmitted',
@@ -83,69 +114,18 @@ class ReportsSubmittedQueryTest extends WebTestCase
                     $this->assertEquals(6, $metric['amount']);
                     break;
                 case '103':
+                case '103-6':
                     $this->assertEquals(2, $metric['amount']);
                     break;
                 case '102-6':
                     $this->assertEquals(1, $metric['amount']);
-                    break;
-                case '103-6':
-                    $this->assertEquals(2, $metric['amount']);
                     break;
                 case '102-5':
                     $this->assertEquals(4, $metric['amount']);
                     break;
                 case '103-5':
                     $this->assertEquals(3, $metric['amount']);
-                    break;
             }
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    private static function givenXreportSubmissionsOfTypeBelongToDeputy($numReports, $reportType, $deputyType)
-    {
-        for ($i = 0; $i < $numReports; ++$i) {
-            static::addSubmittedReportOfTypeToUser($reportType, static::createUserOfType($deputyType));
-        }
-    }
-
-    /**
-     * @return User
-     */
-    private static function createUserOfType($type)
-    {
-        $id = mt_rand();
-        $user = (new User())
-            ->setFirstname('Lay')
-            ->setLastname('User')
-            ->setEmail("metric-test-$id@publicguardian.gov.uk")
-            ->setRoleName('ROLE_'.$type.'_DEPUTY');
-
-        self::$em->persist($user);
-
-        return $user;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private static function addSubmittedReportOfTypeToUser($type, User $user)
-    {
-        $client = new Client();
-
-        $report = new Report(
-            $client,
-            $type,
-            new DateTime('2019-08-01'),
-            new DateTime('2020-08-01')
-        );
-
-        $submission = new ReportSubmission($report, $user);
-
-        self::$em->persist($client);
-        self::$em->persist($report);
-        self::$em->persist($submission);
     }
 }
