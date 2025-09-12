@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use App\Tests\Integration\ApiTestTrait;
 use DateTime;
 use DateInterval;
 use DateTimeZone;
@@ -15,32 +16,246 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\DocumentRepository;
-use App\Tests\Integration\ApiBaseTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DocumentRepositoryTest extends ApiBaseTestCase
+class DocumentRepositoryTest extends KernelTestCase
 {
-    /** @var DocumentRepository */
-    private $documentRepository;
+    use ApiTestTrait;
 
-    /** @var DateTime */
-    private $firstJulyAm;
-    private $firstJulyPm;
-    private $secondJulyAm;
-    private $secondJulyPm;
-    private $thirdJulyAm;
-    private $thirdJulyPm;
+    private DocumentRepository $documentRepository;
 
-    /**
-     * @test
-     */
-    public function getQueuedDocumentsAndSetToInProgress()
+    private DateTime $firstJulyAm;
+    private DateTime $firstJulyPm;
+    private DateTime $secondJulyAm;
+    private DateTime $secondJulyPm;
+    private DateTime $thirdJulyAm;
+    private DateTime $thirdJulyPm;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::configureTest();
+
+        self::purgeDatabase();
+
+        /** @var DocumentRepository $repo */
+        $repo = self::$entityManager->getRepository(Document::class);
+        $this->documentRepository = $repo;
+
+        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
+        $this->firstJulyPm = clone $this->firstJulyAm->add(new DateInterval('PT20H'));
+        $this->secondJulyAm = DateTime::createFromFormat('d/m/Y', '02/07/2020', new DateTimeZone('UTC'));
+        $this->secondJulyPm = clone $this->secondJulyAm->add(new DateInterval('PT20H'));
+        $this->thirdJulyAm = DateTime::createFromFormat('d/m/Y', '03/07/2020', new DateTimeZone('UTC'));
+        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new DateInterval('PT20H'));
+    }
+
+    private function createAndSubmitReportWithSupportingDoc(DateTime $submittedOn): array
+    {
+        $client = $this->generateAndPersistClient('abc-123');
+        $report = $this->generateAndPersistReport($client, false);
+        $reportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->firstJulyPm, false);
+        $supportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->firstJulyAm, false);
+
+        $reportSubmission = $this->submitReport($report, $submittedOn, $reportPdfDoc, $supportingDoc);
+
+        self::$entityManager->flush();
+
+        return [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission];
+    }
+
+    private function generateAndPersistClient(string $caseNumber): Client
+    {
+        $client = (new Client())->setCaseNumber($caseNumber);
+
+        self::$entityManager->persist($client);
+
+        return $client;
+    }
+
+    private function generateAndPersistReport(Client $client, bool $isNdr): Report|Ndr
+    {
+        if ($isNdr) {
+            $report = (new Ndr($client))->setStartDate($this->firstJulyAm);
+        } else {
+            $report = (new Report(
+                $client,
+                Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
+                $this->firstJulyAm,
+                $this->firstJulyAm->add(new DateInterval('P364D'))
+            )
+            );
+        }
+
+        self::$entityManager->persist($report);
+
+        return $report;
+    }
+
+    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission): Document
+    {
+        $fileName = $isReportPdf ? 'report' : 'supporting-document';
+        $storageRef = $isReportPdf ? 'storage-ref-report' : 'storage-ref-supporting-document';
+
+        $fileName .= $isResubmission ? '-resubmission.pdf' : '.pdf';
+        $storageRef .= $isResubmission ? '-resubmission.pdf' : '.pdf';
+
+        $doc = (new Document($report))
+            ->setFileName($fileName)
+            ->setStorageReference($storageRef)
+            ->setIsReportPdf($isReportPdf)
+            ->setSynchronisationStatus($syncStatus)
+            ->setCreatedOn($createdOn);
+
+        self::$entityManager->persist($doc);
+
+        return $doc;
+    }
+
+    private function submitReport(ReportInterface $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument): ReportSubmission
+    {
+        $report->setSubmitDate($submittedOn);
+        $reportSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
+        $reportSubmission->addDocument($reportPdf);
+
+        $reportPdf->setReportSubmission($reportSubmission);
+
+        if ($supportingDocument) {
+            $reportSubmission->addDocument($supportingDocument);
+            $supportingDocument->setReportSubmission($reportSubmission);
+
+            self::$entityManager->persist($supportingDocument);
+        }
+
+        self::$entityManager->persist($reportPdf);
+        self::$entityManager->persist($reportSubmission);
+
+        return $reportSubmission;
+    }
+
+    private function generateAndPersistReportSubmission(ReportInterface $report, DateTime $createdOn): ReportSubmission
+    {
+        $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
+
+        self::$entityManager->persist($submission);
+
+        return $submission;
+    }
+
+    private function generateAndPersistUser(): User
+    {
+        $user = (new User())
+            ->setFirstname('Test')
+            ->setLastname('User')
+            ->setPassword('password123');
+
+        $datePostFix = (string) (new DateTime())->getTimestamp();
+        $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
+
+        self::$entityManager->persist($user);
+
+        return $user;
+    }
+
+    private function assertDataMatchesEntity(
+        array $documents,
+        Document $document,
+        Client $client,
+        ReportSubmission $submission,
+        Report|Ndr $report,
+    ): void {
+        $docId = $document->getId();
+
+        self::assertEquals($document->getId(), $documents[$docId]['document_id']);
+        self::assertEquals($submission->getId(), $documents[$docId]['report_submission_id']);
+        self::assertEquals($client->getCaseNumber(), $documents[$docId]['case_number']);
+        self::assertEquals($document->isReportPdf(), $documents[$docId]['is_report_pdf']);
+        self::assertEquals($document->getStorageReference(), $documents[$docId]['storage_reference']);
+        self::assertEquals($report->getStartDate()->format('Y-m-d'), $documents[$docId]['report_start_date']);
+        self::assertEquals($report->getSubmitDate()->format('Y-m-d H:i:s'), $documents[$docId]['report_submit_date']);
+        self::assertEquals($submission->getUuid(), $documents[$docId]['report_submission_uuid']);
+
+        if ($report instanceof Report) {
+            self::assertEquals($report->getEndDate()->format('Y-m-d'), $documents[$docId]['report_end_date']);
+            self::assertEquals($report->getType(), $documents[$docId]['report_type']);
+        }
+    }
+
+    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived): void
+    {
+        $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
+        $report = $this->generateAndPersistReport($client, false);
+        $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
+        $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
+        $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
+        $reportSubmission->setCreatedOn($createdOn);
+        $reportSubmission->setArchived($archived);
+        self::$entityManager->persist($reportSubmission);
+        self::$entityManager->flush();
+    }
+
+    private function syncDocuments(array $documents, ?ReportSubmission $submission, ?string $uuid): void
+    {
+        if ($submission) {
+            self::$entityManager->persist($submission->setUuid($uuid));
+        }
+
+        foreach ($documents as $document) {
+            $document->setSynchronisationStatus('SUCCESS');
+            self::$entityManager->persist($document);
+        }
+
+        self::$entityManager->flush();
+    }
+
+    private function createAndSubmitNdr(): array
+    {
+        $client = $this->generateAndPersistClient('abc-123');
+        $ndr = $this->generateAndPersistReport($client, true);
+        $reportPdfDoc = $this->generateAndPersistDocument($ndr, true, 'QUEUED', $this->firstJulyAm, false);
+
+        $reportSubmission = $this->submitReport($ndr, $this->secondJulyPm, $reportPdfDoc, null);
+
+        self::$entityManager->flush();
+
+        return [$client, $ndr, $reportPdfDoc, $reportSubmission];
+    }
+
+    private function createAndSubmitAdditionalDocuments(ReportInterface $report, DateTime $submittedOn)
+    {
+        $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
+        $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
+
+        $additionalSubmission->addDocument($additionalSupportingDoc);
+        $additionalSupportingDoc->setReportSubmission($additionalSubmission);
+
+        self::$entityManager->persist($additionalSupportingDoc);
+        self::$entityManager->persist($additionalSubmission);
+
+        return [$additionalSubmission, $additionalSupportingDoc];
+    }
+
+    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, DateTime $submittedOn): array
+    {
+        $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);
+        $resubmissionSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->secondJulyAm, true);
+
+        $reportResubmission = $this->submitReport($report, $submittedOn, $resubmissionReportPdfDoc, $resubmissionSupportingDoc);
+
+        self::$entityManager->flush();
+
+        return [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission];
+    }
+
+    public function testGetQueuedDocumentsAndSetToInProgress(): void
     {
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
 
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
 
-        $this->entityManager->refresh($reportPdfDoc);
-        $this->entityManager->refresh($supportingDoc);
+        self::$entityManager->refresh($reportPdfDoc);
+        self::$entityManager->refresh($supportingDoc);
 
         $this->assertDataMatchesEntity($documents, $reportPdfDoc, $client, $reportSubmission, $report);
         $this->assertDataMatchesEntity($documents, $supportingDoc, $client, $reportSubmission, $report);
@@ -49,10 +264,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDoc->getSynchronisationStatus());
     }
 
-    /**
-     * @test
-     */
-    public function getResubmittableErrorDocumentsAndSetToQueued()
+    public function testGetResubmittableErrorDocumentsAndSetToQueued(): void
     {
         [$_, $_, $reportPdfDocValid, $supportingDocValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         [$_, $_, $reportPdfDocNotValid, $supportingDocNotValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
@@ -78,17 +290,17 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         $lastYearDateTime = new DateTime('now -1 year');
         $reportSubmissionOld->setCreatedOn($lastYearDateTime);
 
-        $this->entityManager->persist($reportPdfDocValid);
-        $this->entityManager->persist($supportingDocValid);
-        $this->entityManager->persist($reportPdfDocNotValid);
-        $this->entityManager->persist($supportingDocNotValid);
-        $this->entityManager->persist($reportPdfDocInProgressNow);
-        $this->entityManager->persist($supportingDocInProgressNow);
-        $this->entityManager->persist($reportPdfDocInProgressOld);
-        $this->entityManager->persist($supportingDocInProgressOld);
-        $this->entityManager->persist($reportSubmissionNow);
-        $this->entityManager->persist($reportSubmissionOld);
-        $this->entityManager->flush();
+        self::$entityManager->persist($reportPdfDocValid);
+        self::$entityManager->persist($supportingDocValid);
+        self::$entityManager->persist($reportPdfDocNotValid);
+        self::$entityManager->persist($supportingDocNotValid);
+        self::$entityManager->persist($reportPdfDocInProgressNow);
+        self::$entityManager->persist($supportingDocInProgressNow);
+        self::$entityManager->persist($reportPdfDocInProgressOld);
+        self::$entityManager->persist($supportingDocInProgressOld);
+        self::$entityManager->persist($reportSubmissionNow);
+        self::$entityManager->persist($reportSubmissionOld);
+        self::$entityManager->flush();
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $reportPdfDocValid->getSynchronisationStatus());
         self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocValid->getSynchronisationStatus());
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
@@ -97,12 +309,12 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressOld->getSynchronisationStatus());
 
         $documents = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');
-        $this->entityManager->refresh($reportPdfDocValid);
-        $this->entityManager->refresh($supportingDocValid);
-        $this->entityManager->refresh($reportPdfDocNotValid);
-        $this->entityManager->refresh($supportingDocNotValid);
-        $this->entityManager->refresh($supportingDocInProgressNow);
-        $this->entityManager->refresh($supportingDocInProgressOld);
+        self::$entityManager->refresh($reportPdfDocValid);
+        self::$entityManager->refresh($supportingDocValid);
+        self::$entityManager->refresh($reportPdfDocNotValid);
+        self::$entityManager->refresh($supportingDocNotValid);
+        self::$entityManager->refresh($supportingDocInProgressNow);
+        self::$entityManager->refresh($supportingDocInProgressOld);
 
         // 2 permanent error docs and 2 of the in progress docs
         self::assertEquals(4, count($documents));
@@ -114,23 +326,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressNow->getSynchronisationStatus());
     }
 
-    private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived)
-    {
-        $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
-        $report = $this->generateAndPersistReport($client, false);
-        $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
-        $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
-        $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
-        $reportSubmission->setCreatedOn($createdOn);
-        $reportSubmission->setArchived($archived);
-        $this->entityManager->persist($reportSubmission);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @test
-     */
-    public function logFailedDocuments()
+    public function testLogFailedDocuments(): void
     {
         $currentDateTime = new DateTime(); // Current date and time
         $tomorrow = $currentDateTime->modify('+1 day');
@@ -163,146 +359,9 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         ], $result);
     }
 
-    private function createAndSubmitReportWithSupportingDoc(DateTime $submittedOn)
+    public function testGetQueuedDocumentsAndSetToInProgressSupportingDocumentUsesSubmissionUuid(): void
     {
-        $client = $this->generateAndPersistClient('abc-123');
-        $report = $this->generateAndPersistReport($client, false);
-        $reportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->firstJulyPm, false);
-        $supportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->firstJulyAm, false);
-
-        $reportSubmission = $this->submitReport($report, $submittedOn, $reportPdfDoc, $supportingDoc);
-
-        $this->entityManager->flush();
-
-        return [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission];
-    }
-
-    private function generateAndPersistClient(string $caseNumber)
-    {
-        $client = (new Client())->setCaseNumber($caseNumber);
-
-        $this->entityManager->persist($client);
-
-        return $client;
-    }
-
-    private function generateAndPersistReport(Client $client, bool $isNdr)
-    {
-        if ($isNdr) {
-            $report = (new Ndr($client))->setStartDate($this->firstJulyAm);
-        } else {
-            $report = (new Report(
-                $client,
-                Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
-                $this->firstJulyAm,
-                $this->firstJulyAm->add(new DateInterval('P364D'))
-            )
-            );
-        }
-
-        $this->entityManager->persist($report);
-
-        return $report;
-    }
-
-    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission)
-    {
-        $fileName = $isReportPdf ? 'report' : 'supporting-document';
-        $storageRef = $isReportPdf ? 'storage-ref-report' : 'storage-ref-supporting-document';
-
-        $fileName .= $isResubmission ? '-resubmission.pdf' : '.pdf';
-        $storageRef .= $isResubmission ? '-resubmission.pdf' : '.pdf';
-
-        $doc = (new Document($report))
-            ->setFileName($fileName)
-            ->setStorageReference($storageRef)
-            ->setIsReportPdf($isReportPdf)
-            ->setSynchronisationStatus($syncStatus)
-            ->setCreatedOn($createdOn);
-
-        $this->entityManager->persist($doc);
-
-        return $doc;
-    }
-
-    private function submitReport(ReportInterface $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument)
-    {
-        $report->setSubmitDate($submittedOn);
-        $reportSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
-        $reportSubmission->addDocument($reportPdf);
-
-        $reportPdf->setReportSubmission($reportSubmission);
-
-        if ($supportingDocument) {
-            $reportSubmission->addDocument($supportingDocument);
-            $supportingDocument->setReportSubmission($reportSubmission);
-
-            $this->entityManager->persist($supportingDocument);
-        }
-
-        $this->entityManager->persist($reportPdf);
-        $this->entityManager->persist($reportSubmission);
-
-        return $reportSubmission;
-    }
-
-    private function generateAndPersistReportSubmission(ReportInterface $report, DateTime $createdOn)
-    {
-        $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
-
-        $this->entityManager->persist($submission);
-
-        return $submission;
-    }
-
-    private function generateAndPersistUser()
-    {
-        $user = (new User())
-            ->setFirstname('Test')
-            ->setLastname('User')
-            ->setPassword('password123');
-
-        $datePostFix = (string) (new DateTime())->getTimestamp();
-        $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
-
-        $this->entityManager->persist($user);
-
-        return $user;
-    }
-
-    /**
-     * @param Report|Ndr $report
-     */
-    private function assertDataMatchesEntity(
-        array $documents,
-        Document $document,
-        Client $client,
-        ReportSubmission $submission,
-        $report,
-    ) {
-        $docId = $document->getId();
-
-        self::assertEquals($document->getId(), $documents[$docId]['document_id']);
-        self::assertEquals($submission->getId(), $documents[$docId]['report_submission_id']);
-        self::assertEquals($client->getCaseNumber(), $documents[$docId]['case_number']);
-        self::assertEquals($document->isReportPdf(), $documents[$docId]['is_report_pdf']);
-        self::assertEquals($document->getStorageReference(), $documents[$docId]['storage_reference']);
-        self::assertEquals($report->getStartDate()->format('Y-m-d'), $documents[$docId]['report_start_date']);
-        self::assertEquals($report->getSubmitDate()->format('Y-m-d H:i:s'), $documents[$docId]['report_submit_date']);
-        self::assertEquals($submission->getUuid(), $documents[$docId]['report_submission_uuid']);
-
-        if ($report instanceof Report) {
-            self::assertEquals($report->getEndDate()->format('Y-m-d'), $documents[$docId]['report_end_date']);
-            self::assertEquals($report->getType(), $documents[$docId]['report_type']);
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function getQueuedDocumentsAndSetToInProgressSupportingDocumentUsesSubmissionUuid()
-    {
-        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $_, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc], $reportSubmission, 'abc-123-abc-123');
 
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
@@ -310,24 +369,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals('abc-123-abc-123', $documents[$supportingDoc->getId()]['report_submission_uuid']);
     }
 
-    private function syncDocuments(array $documents, ?ReportSubmission $submission, ?string $uuid)
-    {
-        if ($submission) {
-            $this->entityManager->persist($submission->setUuid($uuid));
-        }
-
-        foreach ($documents as $document) {
-            $document->setSynchronisationStatus('SUCCESS');
-            $this->entityManager->persist($document);
-        }
-
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @test
-     */
-    public function getQueuedDocumentsAndSetToInProgressSupportsNdrs()
+    public function testGetQueuedDocumentsAndSetToInProgressSupportsNdrs()
     {
         [$client, $ndr, $reportPdfDoc, $reportSubmission] = $this->createAndSubmitNdr();
 
@@ -335,71 +377,38 @@ class DocumentRepositoryTest extends ApiBaseTestCase
 
         $this->assertDataMatchesEntity($documents, $reportPdfDoc, $client, $reportSubmission, $ndr);
 
-        $this->entityManager->refresh($reportPdfDoc);
+        self::$entityManager->refresh($reportPdfDoc);
 
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $reportPdfDoc->getSynchronisationStatus());
     }
 
-    private function createAndSubmitNdr()
+    public function testAdditionalDocumentsSubmissionsUseOriginalSubmissionUUID(): void
     {
-        $client = $this->generateAndPersistClient('abc-123');
-        $ndr = $this->generateAndPersistReport($client, true);
-        $reportPdfDoc = $this->generateAndPersistDocument($ndr, true, 'QUEUED', $this->firstJulyAm, false);
-
-        $reportSubmission = $this->submitReport($ndr, $this->secondJulyPm, $reportPdfDoc, null);
-
-        $this->entityManager->flush();
-
-        return [$client, $ndr, $reportPdfDoc, $reportSubmission];
-    }
-
-    /**
-     * @test
-     */
-    public function additionalDocumentsSubmissionsUseOriginalSubmissionUUID()
-    {
-        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, null);
         [$additionalSubmission, $additionalSupportingDoc] = $this->createAndSubmitAdditionalDocuments($report, $this->thirdJulyAm);
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
 
-        $this->entityManager->refresh($additionalSupportingDoc);
+        self::$entityManager->refresh($additionalSupportingDoc);
 
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $additionalSupportingDoc->getSynchronisationStatus());
         self::assertEquals($reportSubmission->getUuid(), $documents[$additionalSupportingDoc->getId()]['report_submission_uuid']);
         self::assertEquals($additionalSubmission->getId(), $documents[$additionalSupportingDoc->getId()]['report_submission_id']);
     }
 
-    private function createAndSubmitAdditionalDocuments(ReportInterface $report, DateTime $submittedOn)
+    public function testResubmissionsDoNotHaveOriginalSubmissionUUIDOnSubmission(): void
     {
-        $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
-        $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
-
-        $additionalSubmission->addDocument($additionalSupportingDoc);
-        $additionalSupportingDoc->setReportSubmission($additionalSubmission);
-
-        $this->entityManager->persist($additionalSupportingDoc);
-        $this->entityManager->persist($additionalSubmission);
-
-        return [$additionalSubmission, $additionalSupportingDoc];
-    }
-
-    /**
-     * @test
-     */
-    public function resubmissionsDoNotHaveOriginalSubmissionUUIDOnSubmission()
-    {
-        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, 'abc-123-abc-123');
         [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission] = $this->createAndSubmitResubmissionWithSupportingDoc($report, $this->secondJulyAm);
 
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
 
-        $this->entityManager->refresh($resubmissionReportPdfDoc);
-        $this->entityManager->refresh($resubmissionSupportingDoc);
+        self::$entityManager->refresh($resubmissionReportPdfDoc);
+        self::$entityManager->refresh($resubmissionSupportingDoc);
 
         self::assertEquals(null, $documents[$resubmissionReportPdfDoc->getId()]['report_submission_uuid']);
         self::assertEquals($reportResubmission->getId(), $documents[$resubmissionReportPdfDoc->getId()]['report_submission_id']);
@@ -407,24 +416,9 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals($reportResubmission->getId(), $documents[$resubmissionSupportingDoc->getId()]['report_submission_id']);
     }
 
-    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, DateTime $submittedOn)
+    public function testAdditionalDocsOnResubmissionsUseResubmissionUUID(): void
     {
-        $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);
-        $resubmissionSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->secondJulyAm, true);
-
-        $reportResubmission = $this->submitReport($report, $submittedOn, $resubmissionReportPdfDoc, $resubmissionSupportingDoc);
-
-        $this->entityManager->flush();
-
-        return [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission];
-    }
-
-    /**
-     * @test
-     */
-    public function additionalDocsOnResubmissionsUseResubmissionUUID()
-    {
-        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
+        [$_, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, 'abc-123-abc-123');
 
         [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission] = $this->createAndSubmitResubmissionWithSupportingDoc($report, $this->thirdJulyAm);
@@ -432,23 +426,22 @@ class DocumentRepositoryTest extends ApiBaseTestCase
 
         [$additionalSubmission, $additionalSupportingDoc] = $this->createAndSubmitAdditionalDocuments($report, $this->thirdJulyPm);
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
         $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->syncDocuments([$additionalSupportingDoc], $additionalSubmission, 'def-456-def-456');
 
-        $this->entityManager->refresh($additionalSubmission);
-        $this->entityManager->refresh($additionalSupportingDoc);
+        self::$entityManager->refresh($additionalSubmission);
+        self::$entityManager->refresh($additionalSupportingDoc);
 
         self::assertEquals($additionalSubmission->getUuid(), $documents[$additionalSupportingDoc->getId()]['report_submission_uuid']);
     }
 
-    /** @test */
-    public function updateSupportingDocumentStatusByReportSubmissionIds()
+    public function testUpdateSupportingDocumentStatusByReportSubmissionIds(): void
     {
-        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
-        [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
+        [$_, $_, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
+        [$_, $_, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
 
         $updatedDocumentsCount = $this->documentRepository
             ->updateSupportingDocumentStatusByReportSubmissionIds(
@@ -456,10 +449,10 @@ class DocumentRepositoryTest extends ApiBaseTestCase
                 'An error message'
             );
 
-        $this->entityManager->refresh($supportingDoc);
-        $this->entityManager->refresh($supportingDoc2);
-        $this->entityManager->refresh($reportPdfDoc);
-        $this->entityManager->refresh($reportPdfDoc2);
+        self::$entityManager->refresh($supportingDoc);
+        self::$entityManager->refresh($supportingDoc2);
+        self::$entityManager->refresh($reportPdfDoc);
+        self::$entityManager->refresh($reportPdfDoc2);
 
         $this->assertEquals(2, $updatedDocumentsCount);
 
@@ -474,8 +467,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         }
     }
 
-    /** @test */
-    public function supportsWhenDocumentsForMoreThanOneReportAreQueued()
+    public function testSupportsWhenDocumentsForMoreThanOneReportAreQueued(): void
     {
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
         [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyPm);
@@ -483,10 +475,10 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         $documents = $this->documentRepository
             ->getQueuedDocumentsAndSetToInProgress('100');
 
-        $this->entityManager->refresh($reportPdfDoc);
-        $this->entityManager->refresh($supportingDoc);
-        $this->entityManager->refresh($reportPdfDoc2);
-        $this->entityManager->refresh($supportingDoc2);
+        self::$entityManager->refresh($reportPdfDoc);
+        self::$entityManager->refresh($supportingDoc);
+        self::$entityManager->refresh($reportPdfDoc2);
+        self::$entityManager->refresh($supportingDoc2);
 
         $this->assertDataMatchesEntity($documents, $reportPdfDoc, $client, $reportSubmission, $report);
         $this->assertDataMatchesEntity($documents, $supportingDoc, $client, $reportSubmission, $report);
@@ -498,8 +490,7 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         }
     }
 
-    /** @test */
-    public function documentLimitsAreRespected()
+    public function testDocumentLimitsAreRespected(): void
     {
         $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->createAndSubmitReportWithSupportingDoc($this->firstJulyPm);
@@ -510,21 +501,19 @@ class DocumentRepositoryTest extends ApiBaseTestCase
         self::assertEquals(2, count($documents));
     }
 
-    /** @test */
-    public function documentsAreOrderedByIsReportPdf()
+    public function testDocumentsAreOrderedByIsReportPdf(): void
     {
-        [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+        [$_, $report, $reportPdfDoc, $_, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
 
         foreach (range(1, 5) as $index) {
             $this->createAndSubmitAdditionalDocuments($report, $this->firstJulyPm);
         }
 
-        [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
+        [$_, $_, $reportPdfDoc2, $_, $_] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
 
         $this->createAndSubmitAdditionalDocuments($report, $this->secondJulyPm);
 
-        $documents = $this->documentRepository
-            ->getQueuedDocumentsAndSetToInProgress('5');
+        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('5');
 
         $reportPdf1Returned = false;
         $reportPdf2Returned = false;
@@ -541,26 +530,5 @@ class DocumentRepositoryTest extends ApiBaseTestCase
 
         self::assertTrue($reportPdf1Returned, '$reportPdf1Returned was not returned');
         self::assertTrue($reportPdf2Returned, '$reportPdf2Returned was not returned');
-    }
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        $this->documentRepository = $this->entityManager
-            ->getRepository(Document::class);
-
-        $this->purgeDatabase();
-
-        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
-        $this->firstJulyPm = clone $this->firstJulyAm->add(new DateInterval('PT20H'));
-        $this->secondJulyAm = DateTime::createFromFormat('d/m/Y', '02/07/2020', new DateTimeZone('UTC'));
-        $this->secondJulyPm = clone $this->secondJulyAm->add(new DateInterval('PT20H'));
-        $this->thirdJulyAm = DateTime::createFromFormat('d/m/Y', '03/07/2020', new DateTimeZone('UTC'));
-        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new DateInterval('PT20H'));
     }
 }
