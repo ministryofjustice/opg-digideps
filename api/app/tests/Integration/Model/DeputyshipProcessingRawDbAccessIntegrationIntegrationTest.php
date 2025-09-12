@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace app\tests\Integration\Model;
 
 use App\Model\DeputyshipProcessingRawDbAccess;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
 
-class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiTestCase
+class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
     private static DeputyshipProcessingRawDbAccess $sut;

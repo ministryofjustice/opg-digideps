@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
  * This can be used with test classes which need the entity manager to be reset per test.
  *
  * If you have a test case where the entity manager only needs to be created once for all tests in the class,
- * the ApiTestCase is a convenience class you can extend from. This is more efficient. Calling configureTest()
+ * the ApiIntegrationTestCase is a convenience class you can extend from. This is more efficient. Calling configureTest()
  * in setUp() should only be done where there are issues with entity managers interfering with each other or
  * overlapping between tests.
  */

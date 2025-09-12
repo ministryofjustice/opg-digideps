@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
@@ -11,7 +11,7 @@ use App\Entity\User;
 use App\Service\Stats\Query\ReportsSubmittedQuery;
 use App\Service\Stats\StatsQueryParameters;
 
-class ReportsSubmittedQueryTest extends ApiTestCase
+class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
 {
     public static function setUpBeforeClass(): void
     {

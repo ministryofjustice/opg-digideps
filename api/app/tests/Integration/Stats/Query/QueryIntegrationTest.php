@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Service\Stats\Metrics;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\TestHelpers\UsersQuery;
 use DateTime;
 use App\Entity\User;
 use App\Service\Stats\StatsQueryParameters;
 
-class QueryTest extends ApiTestCase
+class QueryIntegrationTest extends ApiIntegrationTestCase
 {
     private function addUserWithRegistrationDate(string $date): User
     {

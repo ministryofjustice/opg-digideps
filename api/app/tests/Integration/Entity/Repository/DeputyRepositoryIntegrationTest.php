@@ -11,11 +11,10 @@ use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 
-class DeputyRepositoryTest extends ApiTestCase
+class DeputyRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
     private static DeputyRepository $sut;

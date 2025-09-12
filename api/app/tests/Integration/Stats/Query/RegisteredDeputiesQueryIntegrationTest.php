@@ -2,13 +2,13 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\User;
 use App\Service\Stats\Query\RegisteredDeputiesQuery;
 use App\Service\Stats\StatsQueryParameters;
 
-class RegisteredDeputiesQueryTest extends ApiTestCase
+class RegisteredDeputiesQueryIntegrationTest extends ApiIntegrationTestCase
 {
     public function setUp(): void
     {
