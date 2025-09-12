@@ -184,7 +184,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived): void
     {
-        $client = $this->generateAndPersistClient('abc-123-'.$caseNumber);
+        $client = $this->generateAndPersistClient('abc-123-' . $caseNumber);
         $report = $this->generateAndPersistReport($client, false);
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
