@@ -6,12 +6,12 @@ namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Service\DeputyshipCandidatesConverter;
 
-class DeputyshipCandidateConverterIntegrationTest extends ApiTestCase
+class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     private static DeputyshipCandidatesConverter $sut;
 

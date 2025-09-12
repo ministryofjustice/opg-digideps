@@ -2,14 +2,14 @@
 
 namespace App\Tests\Integration\Entity;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\TestHelpers\ReportSubmissionHelper;
 
 /**
  * User Entity test.
  */
-class UserTest extends ApiTestCase
+class UserIntegrationTest extends ApiIntegrationTestCase
 {
     public function testGetNumberOfSubmittedReports()
     {

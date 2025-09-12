@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Organisation;
 use App\Entity\User;
@@ -12,7 +12,7 @@ use App\Repository\OrganisationRepository;
 use App\Tests\Integration\Fixtures;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class OrganisationRepositoryTest extends ApiTestCase
+class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     use ProphecyTrait;
 

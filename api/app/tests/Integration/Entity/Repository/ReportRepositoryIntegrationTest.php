@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Repository;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use DateTimeZone;
 use DateInterval;
@@ -17,7 +17,7 @@ use App\Repository\ReportRepository;
 use App\Tests\Integration\Fixtures;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class ReportRepositoryTest extends ApiTestCase
+class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
@@ -40,7 +40,7 @@ class ReportRepositoryTest extends ApiTestCase
     /**
      * @throws Exception
      */
-    private function ensureChecklistsExistInDatabase(): ReportRepositoryTest
+    private function ensureChecklistsExistInDatabase(): ReportRepositoryIntegrationTest
     {
         $client = (new Client())->setCaseNumber('49329657');
         self::$entityManager->persist($client);
@@ -56,14 +56,14 @@ class ReportRepositoryTest extends ApiTestCase
         return $this;
     }
 
-    private function fetchChecklists(): ReportRepositoryTest
+    private function fetchChecklists(): ReportRepositoryIntegrationTest
     {
         $this->queryResult = self::$sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
 
         return $this;
     }
 
-    private function assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned(): ReportRepositoryTest
+    private function assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned(): ReportRepositoryIntegrationTest
     {
         $this->assertCount(self::QUERY_LIMIT, $this->queryResult);
 

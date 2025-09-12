@@ -8,9 +8,9 @@ use App\Entity\Client;
 use App\Repository\ClientRepository;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 
-class ClientRepositoryTest extends ApiTestCase
+class ClientRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static ClientRepository $sut;
 

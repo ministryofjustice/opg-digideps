@@ -6,11 +6,11 @@ namespace App\Tests\Integration\v2\Service;
 
 use App\Entity\CourtOrderDeputy;
 use App\Repository\CourtOrderDeputyRepository;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 use App\v2\Service\CourtOrderService;
 
-class CourtOrderServiceTest extends ApiTestCase
+class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
     private static CourtOrderDeputyRepository $courtOrderDeputyRepository;

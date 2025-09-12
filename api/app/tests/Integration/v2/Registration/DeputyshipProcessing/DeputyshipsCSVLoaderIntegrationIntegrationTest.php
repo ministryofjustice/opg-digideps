@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\StagingDeputyship;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\v2\CSV\CSVChunkerFactory;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use League\Csv\Reader;
 use Psr\Log\LoggerInterface;
 
-class DeputyshipsCSVLoaderIntegrationTest extends ApiTestCase
+class DeputyshipsCSVLoaderIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     private static CSVChunkerFactory $chunkerFactory;
     private static LoggerInterface $logger;
