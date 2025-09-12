@@ -23,19 +23,18 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
      * For some reason, this test class does not behave when the container created by ApiBaseTestCase::setUpBeforeClass
      * is used to fetch the objects used by the test. That's why this property is overridden in this method.
      *
-     * To see why, try commenting out the line which sets self::$staticContainer and run the integration tests. They
-     * fail with some frankly inexplicable errors.
+     * To see why, try commenting out the line which sets self::$staticContainer inside setUp()
+     * and run the integration tests, which will fail.
      *
-     * I think it's likely to do with having two different entity managers, one for reads and the other for writes.
+     * I think it's likely to do with having two different entity managers, one for reads and the other for writes,
+     * though I've been unable to confirm this as the entity managers used by the SUT and those fetched for the
+     * test appear to be equal.
      */
     protected function setUp(): void
     {
         self::purgeDatabase();
 
-        self::bootKernel(['environment' => 'test']);
-
-        self::$staticContainer = self::$kernel->getContainer();
-        self::$staticEntityManager = self::$staticContainer->get('doctrine')->getManager();
+        self::setUpPerTestWorkAround();
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
 

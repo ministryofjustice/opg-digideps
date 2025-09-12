@@ -35,6 +35,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     {
         parent::setUp();
 
+        self::setUpPerTestWorkAround();
+
         /** @var DeputyRepository $deputyRepository */
         $deputyRepository = $this->entityManager->getRepository(Deputy::class);
         $this->deputyRepository = $deputyRepository;
