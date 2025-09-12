@@ -22,14 +22,14 @@ class DocumentRepositoryTest extends KernelTestCase
 {
     use ApiTestTrait;
 
-    private DocumentRepository $documentRepository;
-
     private DateTime $firstJulyAm;
     private DateTime $firstJulyPm;
     private DateTime $secondJulyAm;
     private DateTime $secondJulyPm;
     private DateTime $thirdJulyAm;
     private DateTime $thirdJulyPm;
+
+    private static DocumentRepository $sut;
 
     protected function setUp(): void
     {
@@ -41,7 +41,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         /** @var DocumentRepository $repo */
         $repo = self::$entityManager->getRepository(Document::class);
-        $this->documentRepository = $repo;
+        self::$sut = $repo;
 
         $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
         $this->firstJulyPm = clone $this->firstJulyAm->add(new DateInterval('PT20H'));
@@ -252,7 +252,7 @@ class DocumentRepositoryTest extends KernelTestCase
     {
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
 
         self::$entityManager->refresh($reportPdfDoc);
         self::$entityManager->refresh($supportingDoc);
@@ -308,7 +308,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressNow->getSynchronisationStatus());
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressOld->getSynchronisationStatus());
 
-        $documents = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');
+        $documents = self::$sut->getResubmittableErrorDocumentsAndSetToQueued('100');
         self::$entityManager->refresh($reportPdfDocValid);
         self::$entityManager->refresh($supportingDocValid);
         self::$entityManager->refresh($reportPdfDocNotValid);
@@ -348,7 +348,7 @@ class DocumentRepositoryTest extends KernelTestCase
             $this->createFailedDocumentSubmission($status, $date, $id, $archived);
         }
 
-        $result = $this->documentRepository->logFailedDocuments();
+        $result = self::$sut->logFailedDocuments();
 
         // 1 pdf and 1 supporting per submission.
         $this->assertEquals([
@@ -364,7 +364,7 @@ class DocumentRepositoryTest extends KernelTestCase
         [$_, $_, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc], $reportSubmission, 'abc-123-abc-123');
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
 
         self::assertEquals('abc-123-abc-123', $documents[$supportingDoc->getId()]['report_submission_uuid']);
     }
@@ -373,7 +373,7 @@ class DocumentRepositoryTest extends KernelTestCase
     {
         [$client, $ndr, $reportPdfDoc, $reportSubmission] = $this->createAndSubmitNdr();
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->assertDataMatchesEntity($documents, $reportPdfDoc, $client, $reportSubmission, $ndr);
 
@@ -390,7 +390,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         self::$entityManager->flush();
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
 
         self::$entityManager->refresh($additionalSupportingDoc);
 
@@ -405,7 +405,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, 'abc-123-abc-123');
         [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission] = $this->createAndSubmitResubmissionWithSupportingDoc($report, $this->secondJulyAm);
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
 
         self::$entityManager->refresh($resubmissionReportPdfDoc);
         self::$entityManager->refresh($resubmissionSupportingDoc);
@@ -428,7 +428,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         self::$entityManager->flush();
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
 
         $this->syncDocuments([$additionalSupportingDoc], $additionalSubmission, 'def-456-def-456');
 
@@ -443,7 +443,7 @@ class DocumentRepositoryTest extends KernelTestCase
         [$_, $_, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
         [$_, $_, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
 
-        $updatedDocumentsCount = $this->documentRepository
+        $updatedDocumentsCount = self::$sut
             ->updateSupportingDocumentStatusByReportSubmissionIds(
                 [$reportSubmission->getId(), $reportSubmission2->getId()],
                 'An error message'
@@ -472,7 +472,7 @@ class DocumentRepositoryTest extends KernelTestCase
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyAm);
         [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyPm);
 
-        $documents = $this->documentRepository
+        $documents = self::$sut
             ->getQueuedDocumentsAndSetToInProgress('100');
 
         self::$entityManager->refresh($reportPdfDoc);
@@ -495,7 +495,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->createAndSubmitReportWithSupportingDoc($this->firstJulyPm);
 
-        $documents = $this->documentRepository
+        $documents = self::$sut
             ->getQueuedDocumentsAndSetToInProgress('2');
 
         self::assertEquals(2, count($documents));
@@ -513,7 +513,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->createAndSubmitAdditionalDocuments($report, $this->secondJulyPm);
 
-        $documents = $this->documentRepository->getQueuedDocumentsAndSetToInProgress('5');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('5');
 
         $reportPdf1Returned = false;
         $reportPdf2Returned = false;

@@ -17,8 +17,8 @@ use App\Tests\Integration\Fixtures;
 
 class DeputyRepositoryTest extends ApiTestCase
 {
-    private static DeputyRepository $sut;
     private static Fixtures $fixtures;
+    private static DeputyRepository $sut;
 
     public function setUp(): void
     {
