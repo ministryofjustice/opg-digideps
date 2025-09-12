@@ -4,26 +4,29 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Tests\Integration\ApiTestTrait;
 use DateTime;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\StagingDeputyship;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
+class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 {
+    use ApiTestTrait;
+
     private DeputyshipsCandidatesSelector $sut;
 
     /*
      * For some reason, this test class does not behave when the container created by ApiBaseTestCase::setUpBeforeClass
      * is used to fetch the objects used by the test. That's why this property is overridden in this method.
      *
-     * To see why, try commenting out the line which sets self::$staticContainer inside setUp()
+     * To see why, try commenting out the line which sets self::$container inside setUp()
      * and run the integration tests, which will fail.
      *
      * I think it's likely to do with having two different entity managers, one for reads and the other for writes,
@@ -32,17 +35,19 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
      */
     protected function setUp(): void
     {
-        self::purgeDatabase();
+        parent::setUp();
 
-        self::setUpPerTestWorkAround();
+        self::configureTest();
+
+        self::purgeDatabase();
 
         $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
 
-        $csvLoader = self::$staticContainer->get(DeputyshipsCSVLoader::class);
+        $csvLoader = self::$container->get(DeputyshipsCSVLoader::class);
         $csvLoader->load($fileLocation);
 
         /** @var ?DeputyshipsCandidatesSelector $sut */
-        $sut = self::$staticContainer->get(DeputyshipsCandidatesSelector::class);
+        $sut = self::$container->get(DeputyshipsCandidatesSelector::class);
         $this->sut = $sut;
     }
 
@@ -56,8 +61,8 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $courtOrder->setStatus('OPEN');
         $courtOrder->setOrderMadeDate(new DateTime('2018-01-21'));
 
-        self::$staticEntityManager->persist($courtOrder);
-        self::$staticEntityManager->flush();
+        self::$entityManager->persist($courtOrder);
+        self::$entityManager->flush();
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
@@ -74,7 +79,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
 
-        self::$staticEntityManager->persist($courtOrder);
+        self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
         $deputy->setFirstname('John');
@@ -82,12 +87,12 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $deputy->setEmail1('john.snow@test.co.uk');
         $deputy->setDeputyUid('700761111002');
 
-        self::$staticEntityManager->persist($deputy);
+        self::$entityManager->persist($deputy);
 
         $deputy->associateWithCourtOrder($courtOrder);
 
-        self::$staticEntityManager->persist($deputy);
-        self::$staticEntityManager->flush();
+        self::$entityManager->persist($deputy);
+        self::$entityManager->flush();
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
@@ -104,16 +109,16 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
         $courtOrder->setOrderType('hw');
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
-        self::$staticEntityManager->persist($courtOrder);
+        self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
         $deputy->setFirstname('John');
         $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
         $deputy->setDeputyUid('700761111003');
-        self::$staticEntityManager->persist($deputy);
+        self::$entityManager->persist($deputy);
 
-        self::$staticEntityManager->flush();
+        self::$entityManager->flush();
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
@@ -124,24 +129,24 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends ApiBaseTestCase
 
     public function testAddingNewSingleCourtOrder(): void
     {
-        $stagingDeputyshipObject = self::$staticEntityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
+        $stagingDeputyshipObject = self::$entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
 
         $deputy = new Deputy();
         $deputy->setFirstname('Stuart');
         $deputy->setLastname('One');
         $deputy->setEmail1('stuart.one@test.co.uk');
         $deputy->setDeputyUid('700761111004');
-        self::$staticEntityManager->persist($deputy);
+        self::$entityManager->persist($deputy);
 
-        $client = ClientTestHelper::create()->generateClient(self::$staticEntityManager, null, null, '61111002');
-        $report = ReportTestHelper::create()->generateReport(self::$staticEntityManager, $client, '104', new DateTime('2019-01-21'), new DateTime('2020-01-21'));
+        $client = ClientTestHelper::create()->generateClient(self::$entityManager, null, null, '61111002');
+        $report = ReportTestHelper::create()->generateReport(self::$entityManager, $client, '104', new DateTime('2019-01-21'), new DateTime('2020-01-21'));
 
         $client->addReport($report);
         $report->setClient($client);
 
-        self::$staticEntityManager->persist($client);
-        self::$staticEntityManager->persist($report);
-        self::$staticEntityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->persist($report);
+        self::$entityManager->flush();
 
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 

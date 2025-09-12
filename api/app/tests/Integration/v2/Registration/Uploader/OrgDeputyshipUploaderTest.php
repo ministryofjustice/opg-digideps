@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\Uploader;
 
+use App\Tests\Integration\ApiTestTrait;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
@@ -14,17 +15,18 @@ use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
-use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class OrgDeputyshipUploaderTest extends ApiBaseTestCase
+class OrgDeputyshipUploaderTest extends KernelTestCase
 {
+    use ApiTestTrait;
+
     private DeputyRepository $deputyRepository;
     private OrganisationRepository $orgRepository;
     private ClientRepository $clientRepository;
@@ -35,31 +37,31 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     {
         parent::setUp();
 
-        self::setUpPerTestWorkAround();
+        self::configureTest();
 
         /** @var DeputyRepository $deputyRepository */
-        $deputyRepository = $this->entityManager->getRepository(Deputy::class);
+        $deputyRepository = self::$entityManager->getRepository(Deputy::class);
         $this->deputyRepository = $deputyRepository;
 
         /** @var OrganisationRepository $orgRepository */
-        $orgRepository = $this->entityManager->getRepository(Organisation::class);
+        $orgRepository = self::$entityManager->getRepository(Organisation::class);
         $this->orgRepository = $orgRepository;
 
         /** @var ClientRepository $clientRepository */
-        $clientRepository = $this->entityManager->getRepository(Client::class);
+        $clientRepository = self::$entityManager->getRepository(Client::class);
         $this->clientRepository = $clientRepository;
 
         /** @var ReportRepository $reportRepository */
-        $reportRepository = $this->entityManager->getRepository(Report::class);
+        $reportRepository = self::$entityManager->getRepository(Report::class);
         $this->reportRepository = $reportRepository;
 
         $logger = $this->createMock(LoggerInterface::class);
 
-        $orgFactory = self::$staticContainer->get(OrganisationFactory::class);
-        $clientAssembler = self::$staticContainer->get(ClientAssembler::class);
-        $deputyAssembler = self::$staticContainer->get(DeputyAssembler::class);
+        $orgFactory = self::$container->get(OrganisationFactory::class);
+        $clientAssembler = self::$container->get(ClientAssembler::class);
+        $deputyAssembler = self::$container->get(DeputyAssembler::class);
 
-        $this->sut = new OrgDeputyshipUploader($this->entityManager, $orgFactory, $clientAssembler, $deputyAssembler, $logger);
+        $this->sut = new OrgDeputyshipUploader(self::$entityManager, $orgFactory, $clientAssembler, $deputyAssembler, $logger);
 
         $this->purgeDatabase();
     }
@@ -79,7 +81,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadExistingDeputiesAreNotProcessed()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -91,11 +93,11 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadDeputyWithSameDetailsButNewDeputyUidCreatesNewDeputy()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $deputy->setDeputyUid('12345678');
 
-        $this->entityManager->persist($deputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($deputy);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -107,11 +109,11 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadExistingDeputiesWithNewAddressDetailsAreUpdated()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $deputy->setAddress1('10 New Road');
 
-        $this->entityManager->persist($deputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($deputy);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -139,7 +141,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
-        OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->entityManager);
+        OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, self::$entityManager);
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -188,19 +190,19 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalOrgIdentifier = 'differentorg.co.uk';
 
-        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $originalDeputy->setEmail1(sprintf('different.deputy@%s', $originalOrgIdentifier));
         $originalDeputy->setDeputyUid('ABCD1234');
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->entityManager);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, self::$entityManager);
         $organisation->setEmailIdentifier($originalOrgIdentifier);
 
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $client->setDeputy($originalDeputy)->setOrganisation($organisation);
         $client->setCourtDate(new DateTime());
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -221,8 +223,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertCount(0, $actualUploadResults['updated']['clients']);
 
         /** @var Client $updatedClient */
-        $updatedClient = $this->entityManager->getRepository(Client::class)->find($client);
-        $this->entityManager->refresh($updatedClient);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->find($client);
+        self::$entityManager->refresh($updatedClient);
 
         self::assertEquals($originalDeputy->getDeputyUid(), $updatedClient->getDeputy()->getDeputyUid());
     }
@@ -233,16 +235,16 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalOrgIdentifier = 'differentorg.co.uk';
 
-        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->entityManager);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, self::$entityManager);
         $organisation->setEmailIdentifier($originalOrgIdentifier);
 
-        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
 
-        $this->entityManager->persist($originalClient);
-        $this->entityManager->flush();
+        self::$entityManager->persist($originalClient);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -263,8 +265,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertCount(1, $actualUploadResults['updated']['clients']);
 
         /** @var Client $updatedClient */
-        $updatedClient = $this->entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
-        $this->entityManager->refresh($updatedClient);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        self::$entityManager->refresh($updatedClient);
 
         self::assertEquals($originalClient->getId(), $updatedClient->getId());
         self::assertEquals($originalDeputy->getDeputyUid(), $updatedClient->getDeputy()->getDeputyUid());
@@ -279,17 +281,17 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $originalOrgIdentifier = 'differentorg.co.uk';
 
-        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, $this->entityManager);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($originalOrgIdentifier, self::$entityManager);
         $organisation->setEmailIdentifier($originalOrgIdentifier);
 
-        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
         $originalClient->setCourtDate(new DateTime());
 
-        $this->entityManager->persist($originalClient);
-        $this->entityManager->flush();
+        self::$entityManager->persist($originalClient);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -310,8 +312,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertCount(0, $actualUploadResults['updated']['clients'], 'Unexpected clients have been updated within the Database');
 
         /** @var Client $updatedClient */
-        $updatedClient = $this->entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
-        $this->entityManager->refresh($updatedClient);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        self::$entityManager->refresh($updatedClient);
 
         self::assertEquals($originalClient->getId(), $updatedClient->getId());
         self::assertEquals($originalDeputy->getDeputyUid(), $updatedClient->getDeputy()->getDeputyUid());
@@ -325,19 +327,19 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
 
-        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $originalDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
         $originalDeputy->setDeputyUid('ABCD1234');
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->entityManager);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, self::$entityManager);
         $organisation->setEmailIdentifier($orgIdentifier);
 
-        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
         $originalClient->setCourtDate(new DateTime());
 
-        $this->entityManager->persist($originalClient);
-        $this->entityManager->flush();
+        self::$entityManager->persist($originalClient);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -358,8 +360,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertCount(1, $actualUploadResults['updated']['clients']);
 
         /** @var Client $updatedClient */
-        $updatedClient = $this->entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
-        $this->entityManager->refresh($updatedClient);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        self::$entityManager->refresh($updatedClient);
 
         self::assertEquals($originalClient->getId(), $updatedClient->getId());
         self::assertEquals($deputyships[0]->getDeputyUid(), $updatedClient->getDeputy()->getDeputyUid());
@@ -373,18 +375,18 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $orgIdentifier = explode('@', $deputyships[0]->getDeputyEmail())[1];
 
-        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $originalDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $originalDeputy->setEmail1(sprintf('different.deputy@%s', $orgIdentifier));
         $originalDeputy->setDeputyUid('ABCD1234');
 
-        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, $this->entityManager);
+        $organisation = OrgDeputyshipDTOTestHelper::ensureOrgInUploadExists($orgIdentifier, self::$entityManager);
         $organisation->setEmailIdentifier($orgIdentifier);
 
-        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
 
-        $this->entityManager->persist($originalClient);
-        $this->entityManager->flush();
+        self::$entityManager->persist($originalClient);
+        self::$entityManager->flush();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -405,8 +407,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         self::assertCount(1, $actualUploadResults['updated']['clients']);
 
         /** @var Client $updatedClient */
-        $updatedClient = $this->entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
-        $this->entityManager->refresh($updatedClient);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->findOneBy(['caseNumber' => $deputyships[0]->getCaseNumber()]);
+        self::$entityManager->refresh($updatedClient);
 
         self::assertEquals($originalClient->getId(), $updatedClient->getId());
         self::assertEquals($deputyships[0]->getDeputyUid(), $updatedClient->getDeputy()->getDeputyUid());
@@ -435,8 +437,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $changedReportType = '102-5';
         $deputyships[0]->setReportType($changedReportType);
 
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
-        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->entityManager)->getType();
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
+        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, self::$entityManager)->getType();
 
         $this->sut->upload($deputyships);
 
@@ -461,10 +463,10 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $deputyships[0]->setHybrid(OrgDeputyshipDto::DUAL_TYPE);
         $deputyships[0]->setDeputyUid('12345678');
 
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
-        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
+        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $client->setDeputy($deputy);
-        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->entityManager)->getType();
+        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, self::$entityManager)->getType();
 
         $this->sut->upload($deputyships);
 
@@ -489,12 +491,12 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         $deputyships[0]->setHybrid(OrgDeputyshipDto::DUAL_TYPE);
         $deputyships[0]->setDeputyUid('87654321');
 
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
-        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
+        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
         $deputy->setDeputyUid('12345678');
         $client->setDeputy($deputy);
 
-        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, $this->entityManager)->getType();
+        $oldReportType = OrgDeputyshipDTOTestHelper::ensureAReportExistsAndIsAssociatedWithClient($client, self::$entityManager)->getType();
 
         $this->sut->upload($deputyships);
 
@@ -547,7 +549,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadExistingClientsWithLayDeputiesThrowsAnError()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        OrgDeputyshipDTOTestHelper::ensureClientInUploadExistsAndHasALayDeputy($deputyships[0], $this->entityManager);
+        OrgDeputyshipDTOTestHelper::ensureClientInUploadExistsAndHasALayDeputy($deputyships[0], self::$entityManager);
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -587,11 +589,11 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadExistingClientsWithMissingCourtDateHaveCourtDateAdded()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $client->setCourtDate(null);
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -601,7 +603,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
             sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
         );
 
-        $updatedClient = $this->entityManager->getRepository(Client::class)->find($client);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->find($client);
 
         self::assertEquals(
             $deputyships[0]->getCourtDate(),
@@ -613,14 +615,14 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
 
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
-        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
+        $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
         $client->setDeputy($deputy);
         $client->setArchivedAt(new DateTime());
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
 
         $deputyships[0]->setDeputyAddress1('New Address');
         $uploadResults = $this->sut->upload($deputyships);
@@ -643,7 +645,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
             sprintf('Expecting 1, got %d', $uploadResults['skipped'])
         );
 
-        $updatedClient = $this->entityManager->getRepository(Client::class)->find($client);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->find($client);
 
         self::assertNotEquals(
             $deputyships[0]->getDeputyAddress1(),
@@ -654,13 +656,13 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadCaseNumberSearchIsNotCaseSensitive()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $client->setCourtDate(null);
         $client->setCaseNumber('1234567t');
         $deputyships[0]->setCaseNumber('1234567T');
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -670,7 +672,7 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
             sprintf('Expecting 1, got %d', count($uploadResults['updated']['clients']))
         );
 
-        $updatedClient = $this->entityManager->getRepository(Client::class)->find($client);
+        $updatedClient = self::$entityManager->getRepository(Client::class)->find($client);
 
         self::assertEquals(
             $deputyships[0]->getCourtDate(),
@@ -681,8 +683,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadOnlyUpdateDeputyNameAndAddressIfDTODeputyUidMatchesExistingDeputyUid()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
-        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
+        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
         $deputyships[0]->setDeputyUid('abc123');
         $deputyships[0]->setDeputyFirstname('Bob');
@@ -696,9 +698,9 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $client->setDeputy($existingDeputy);
 
-        $this->entityManager->persist($client);
-        $this->entityManager->persist($existingDeputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->persist($existingDeputy);
+        self::$entityManager->flush();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -709,8 +711,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
 
         /** @var Deputy $updatedDeputy */
-        $updatedDeputy = $this->entityManager->getRepository(Deputy::class)->find($existingDeputy);
-        $this->entityManager->refresh($updatedDeputy);
+        $updatedDeputy = self::$entityManager->getRepository(Deputy::class)->find($existingDeputy);
+        self::$entityManager->refresh($updatedDeputy);
 
         self::assertEquals('Joe', $updatedDeputy->getFirstName());
         self::assertEquals('Joson', $updatedDeputy->getLastname());
@@ -720,8 +722,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
     public function testUploadOnlyUpdateDeputyEmailIfDTODeputyUidMatchesExistingDeputyUid()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], $this->entityManager);
-        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], $this->entityManager);
+        $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
+        $existingDeputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
         $deputyships[0]->setDeputyUid('abc123');
         $deputyships[0]->setDeputyEmail('william@somecompany.com');
@@ -731,9 +733,9 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
 
         $client->setDeputy($existingDeputy);
 
-        $this->entityManager->persist($client);
-        $this->entityManager->persist($existingDeputy);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->persist($existingDeputy);
+        self::$entityManager->flush();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -744,8 +746,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
 
         /** @var Deputy $updatedDeputy */
-        $updatedDeputy = $this->entityManager->getRepository(Deputy::class)->find($existingDeputy);
-        $this->entityManager->refresh($updatedDeputy);
+        $updatedDeputy = self::$entityManager->getRepository(Deputy::class)->find($existingDeputy);
+        self::$entityManager->refresh($updatedDeputy);
 
         self::assertEquals('william@differentcompany.com', $updatedDeputy->getEmail1());
 
@@ -760,8 +762,8 @@ class OrgDeputyshipUploaderTest extends ApiBaseTestCase
         );
 
         /** @var Deputy $updatedDeputy */
-        $updatedDeputy = $this->entityManager->getRepository(Deputy::class)->find($existingDeputy);
-        $this->entityManager->refresh($updatedDeputy);
+        $updatedDeputy = self::$entityManager->getRepository(Deputy::class)->find($existingDeputy);
+        self::$entityManager->refresh($updatedDeputy);
 
         self::assertEquals('william@somecompany.com', $updatedDeputy->getEmail1());
     }
