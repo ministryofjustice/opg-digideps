@@ -7,14 +7,14 @@ namespace App\Tests\Integration\Repository;
 use App\Entity\Client;
 use App\Repository\ReportSubmissionRepository;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\TestHelpers\ReportSubmissionHelper;
 use App\TestHelpers\ReportTestHelper;
 
-class ReportSubmissionRepositoryTest extends ApiTestCase
+class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static ReportSubmissionHelper $reportSubmissionHelper;
     private static ReportSubmissionRepository $sut;

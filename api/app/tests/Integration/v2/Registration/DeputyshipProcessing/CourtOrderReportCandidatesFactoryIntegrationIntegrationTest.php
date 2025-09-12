@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -14,7 +14,7 @@ use App\Entity\StagingDeputyship;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
-class CourtOrderReportCandidatesFactoryIntegrationTest extends ApiTestCase
+class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     private static CourtOrderReportCandidatesFactory $sut;
 

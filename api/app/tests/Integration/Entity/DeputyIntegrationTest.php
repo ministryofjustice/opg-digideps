@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Entity;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -11,7 +11,7 @@ use App\TestHelpers\DeputyTestHelper;
 use Faker\Factory;
 use Faker\Generator;
 
-class DeputyTest extends ApiTestCase
+class DeputyIntegrationTest extends ApiIntegrationTestCase
 {
     private static Generator $faker;
     private static DeputyRepository $deputyRepository;

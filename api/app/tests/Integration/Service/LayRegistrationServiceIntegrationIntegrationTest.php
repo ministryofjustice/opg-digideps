@@ -8,10 +8,10 @@ use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Repository\ClientRepository;
 use App\Service\LayRegistrationService;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 
-class LayRegistrationServiceIntegrationTest extends ApiTestCase
+class LayRegistrationServiceIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
     private static ClientRepository $clientRepo;

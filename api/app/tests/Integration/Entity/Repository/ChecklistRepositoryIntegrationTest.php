@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use DateTimeZone;
 use DateInterval;
@@ -15,7 +15,7 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
 use App\Repository\ChecklistRepository;
 
-class ChecklistRepositoryTest extends ApiTestCase
+class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static ChecklistRepository $sut;
 

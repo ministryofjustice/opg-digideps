@@ -10,10 +10,10 @@ use App\Entity\User;
 use App\Service\DeputyCaseService;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 
-class DeputyCaseServiceIntegrationTest extends ApiTestCase
+class DeputyCaseServiceIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
     private static DeputyCaseService $sut;

@@ -6,10 +6,10 @@ namespace app\tests\Integration\Model;
 
 use App\Entity\StagingSelectedCandidate;
 use App\Model\QueryPager;
-use App\Tests\Integration\ApiTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
-class QueryPagerIntegrationTest extends ApiTestCase
+class QueryPagerIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
     public function testGetRows(): void
     {
