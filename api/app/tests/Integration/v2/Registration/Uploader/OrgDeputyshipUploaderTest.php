@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\Uploader;
 
-use App\Tests\Integration\ApiTestTrait;
-use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -15,11 +13,13 @@ use App\Repository\ClientRepository;
 use App\Repository\DeputyRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
-use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\Tests\Integration\ApiTestTrait;
+use App\Tests\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use App\v2\Registration\Uploader\OrgDeputyshipUploader;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

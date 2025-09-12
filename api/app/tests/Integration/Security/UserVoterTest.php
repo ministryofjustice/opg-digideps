@@ -13,6 +13,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserVoterTest extends KernelTestCase
 {
+    private static UserVoter $sut;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
