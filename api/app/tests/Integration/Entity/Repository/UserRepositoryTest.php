@@ -18,9 +18,11 @@ class UserRepositoryTest extends ApiBaseTestCase
     private static Fixtures $fixtures;
     private static UserRepository $sut;
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+
+        self::setUpPerTestWorkAround();
 
         self::$fixtures = new Fixtures(self::$staticEntityManager);
 
