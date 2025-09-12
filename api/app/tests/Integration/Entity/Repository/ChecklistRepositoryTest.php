@@ -17,7 +17,7 @@ use App\Repository\ChecklistRepository;
 
 class ChecklistRepositoryTest extends ApiTestCase
 {
-    private ChecklistRepository $checklistRepository;
+    private static ChecklistRepository $sut;
 
     protected function setUp(): void
     {
@@ -25,7 +25,7 @@ class ChecklistRepositoryTest extends ApiTestCase
 
         /** @var ChecklistRepository $repo */
         $repo = self::$entityManager->getRepository(Checklist::class);
-        $this->checklistRepository = $repo;
+        self::$sut = $repo;
     }
 
     private function createAndSubmitReportWithChecklist($status, $error): Checklist
@@ -89,7 +89,7 @@ class ChecklistRepositoryTest extends ApiTestCase
         $checklistSuccess = $this->createAndSubmitReportWithChecklist(Checklist::SYNC_STATUS_SUCCESS, $correctError);
         $checklistPermanentWrongError = $this->createAndSubmitReportWithChecklist(Checklist::SYNC_STATUS_PERMANENT_ERROR, $incorrectError);
 
-        $checklists = $this->checklistRepository->getResubmittableErrorChecklistsAndSetToQueued('100');
+        $checklists = self::$sut->getResubmittableErrorChecklistsAndSetToQueued('100');
 
         self::$entityManager->refresh($checklistPermanent);
         self::$entityManager->refresh($checklistSuccess);
