@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Deputy;
 use App\Entity\PreRegistration;
 use App\v2\DTO\InviteeDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

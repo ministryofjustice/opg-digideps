@@ -9,6 +9,7 @@ use App\Service\DataImporter\CsvToArray;
 use App\Service\DeputyCaseService;
 use App\Service\File\Storage\S3Storage;
 use App\Service\LayRegistrationService;
+use App\Service\UserDeputyService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
@@ -74,6 +75,7 @@ class ProcessLayCSVCommand extends Command
         private readonly PreRegistrationRepository $preReg,
         private readonly LayRegistrationService $layRegistrationService,
         private readonly DeputyCaseService $deputyCaseService,
+        private readonly UserDeputyService $userDeputyService,
     ) {
         parent::__construct();
     }
@@ -219,6 +221,15 @@ class ProcessLayCSVCommand extends Command
         } catch (\Throwable $e) {
             $this->verboseLogger->error('Error encountered while adding missing reports: '.$e->getMessage());
             $this->verboseLogger->error($e->getTraceAsString());
+        }
+
+        // create deputies where missing, and associate users with deputies where they don't have one
+        $this->verboseLogger->notice('Adding deputies to users where they are missing');
+        try {
+            $numUserDeputyAssociations = $this->userDeputyService->addMissingUserDeputies();
+            $this->verboseLogger->notice("Added $numUserDeputyAssociations user <-> deputy associations");
+        } catch (\Exception $e) {
+            $this->verboseLogger->error('Error encountered while adding user <-> deputy associations: '.$e->getMessage());
         }
 
         // additional deputy_case association patching (see DDLS-907)

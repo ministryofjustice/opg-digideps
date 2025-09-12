@@ -114,4 +114,10 @@ class DeputyRepository extends ServiceEntityRepository
 
         return 0 === count($result) ? null : $data;
     }
+
+    public function save(Deputy $deputy): void
+    {
+        $this->_em->persist($deputy);
+        $this->_em->flush();
+    }
 }
