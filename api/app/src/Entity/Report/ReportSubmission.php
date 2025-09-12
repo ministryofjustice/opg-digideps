@@ -50,7 +50,7 @@ class ReportSubmission
      *
      * @JMS\Groups({"report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="reportSubmissions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="reportSubmissions", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -76,7 +76,7 @@ class ReportSubmission
      *
      * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission")
+     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
      *

@@ -19,7 +19,7 @@ trait IncomeBenefitTrait
      *
      * @JMS\Groups({"state-benefits"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\StateBenefit", mappedBy="ndr")
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\StateBenefit", mappedBy="ndr", cascade={"persist"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -85,7 +85,7 @@ trait IncomeBenefitTrait
      *
      * @JMS\Groups({"one-off"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\OneOff", mappedBy="ndr")
+     * @ORM\OneToMany(targetEntity="App\Entity\Ndr\OneOff", mappedBy="ndr", cascade={"persist"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */

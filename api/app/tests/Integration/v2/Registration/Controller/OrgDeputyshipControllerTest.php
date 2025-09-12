@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\Controller;
 
 use App\Tests\Integration\Controller\AbstractTestController;
-use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\Tests\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrgDeputyshipControllerTest extends AbstractTestController

@@ -59,7 +59,7 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$ndr1->getSubmitted());
 
         $ndrId = self::$ndr1->getId();
-        $url = '/ndr/'.$ndrId.'/submit?documentId='.self::$document1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -84,7 +84,7 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$ndr1->getSubmitted());
 
         $ndrId = self::$ndr1->getId();
-        $url = '/ndr/'.$ndrId.'/submit?documentId='.self::$document1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
 
         $ret = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

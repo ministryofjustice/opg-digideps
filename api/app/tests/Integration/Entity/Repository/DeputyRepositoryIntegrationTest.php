@@ -11,22 +11,22 @@ use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 
-class DeputyRepositoryTest extends ApiBaseTestCase
+class DeputyRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
-    private static DeputyRepository $sut;
     private static Fixtures $fixtures;
+    private static DeputyRepository $sut;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        self::$fixtures = new Fixtures(em: $this->entityManager);
+        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var DeputyRepository $sut */
-        $sut = $this->entityManager->getRepository(Deputy::class);
+        $sut = self::$entityManager->getRepository(Deputy::class);
         self::$sut = $sut;
     }
 
@@ -36,11 +36,11 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         $courtOrderUid = '7100000080';
 
         $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid");
-        $client = ClientTestHelper::generateClient(em: $this->entityManager);
-        $user = UserTestHelper::createAndPersistUser(em: $this->entityManager, client: $client, deputyUid: $deputyUid);
-        $report = ReportTestHelper::generateReport(em: $this->entityManager, client: $client);
+        $client = ClientTestHelper::generateClient(em: self::$entityManager);
+        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
+        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
-            em: $this->entityManager,
+            em: self::$entityManager,
             client: $client,
             courtOrderUid: $courtOrderUid,
             report: $report,
@@ -82,11 +82,13 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         $courtOrderUid = '7100000081';
 
         $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid");
-        $client = ClientTestHelper::generateClient(em: $this->entityManager);
-        $user = UserTestHelper::createAndPersistUser(em: $this->entityManager, client: $client, deputyUid: $deputyUid);
-        $report = ReportTestHelper::generateReport(em: $this->entityManager, client: $client);
+        $client = ClientTestHelper::generateClient(em: self::$entityManager);
+        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
+        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
+
+        // closed court order saved to database
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
-            em: $this->entityManager,
+            em: self::$entityManager,
             client: $client,
             courtOrderUid: $courtOrderUid,
             status: 'CLOSED',
@@ -97,7 +99,7 @@ class DeputyRepositoryTest extends ApiBaseTestCase
         $deputy->setUser(user: $user);
         $client->setDeputy(deputy: $deputy);
 
-        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->persist($deputy, $client, $courtOrder);
         self::$fixtures->flush();
 
         $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);

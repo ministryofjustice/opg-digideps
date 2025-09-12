@@ -5,30 +5,30 @@ declare(strict_types=1);
 namespace app\tests\Integration\Model;
 
 use App\Model\DeputyshipProcessingRawDbAccess;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
 
-class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
+class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
-    private Fixtures $fixtures;
-    private DeputyshipProcessingRawDbAccess $sut;
+    private static Fixtures $fixtures;
+    private static DeputyshipProcessingRawDbAccess $sut;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->fixtures = new Fixtures($this->entityManager);
+        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var DeputyshipProcessingRawDbAccess $sut */
-        $sut = $this->container->get(DeputyshipProcessingRawDbAccess::class);
-        $this->sut = $sut;
+        $sut = self::$container->get(DeputyshipProcessingRawDbAccess::class);
+        self::$sut = $sut;
     }
 
     private function getQueryBuilder(): QueryBuilder
     {
-        return $this->entityManager->getConnection()->createQueryBuilder();
+        return self::$entityManager->getConnection()->createQueryBuilder();
     }
 
     /**
@@ -39,9 +39,9 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
         $uid = substr(uniqid(), 0, 10);
 
         // add the client which will be referenced in the candidate
-        $client = $this->fixtures->createClient();
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        $client = self::$fixtures->createClient();
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
 
         $candidate = [
             'orderUid' => $uid,
@@ -52,12 +52,12 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
         ];
 
         // use SUT to insert the order
-        $this->sut->beginTransaction();
-        $this->sut->insertOrder($candidate);
-        $this->sut->endTransaction();
+        self::$sut->beginTransaction();
+        self::$sut->insertOrder($candidate);
+        self::$sut->endTransaction();
 
         // use SUT to find the ID of the order just inserted
-        $orderId = $this->sut->findOrderId($uid)->data;
+        $orderId = self::$sut->findOrderId($uid)->data;
 
         // get the order from the db and check it looks right
         $order = $this->getQueryBuilder()
@@ -79,20 +79,20 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
     public function testInsertOrderDeputy(): void
     {
         // insert deputy and court order
-        $deputy = $this->fixtures->createDeputy();
+        $deputy = self::$fixtures->createDeputy();
 
         $courtOrderUid = uniqid();
-        $courtOrder = $this->fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
 
-        $this->fixtures->persist($deputy, $courtOrder)->flush();
+        self::$fixtures->persist($deputy, $courtOrder)->flush();
 
         // use SUT to add association
         /** @var int $courtOrderId */
-        $courtOrderId = $this->sut->findOrderId($courtOrderUid)->data;
+        $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
 
-        $this->sut->beginTransaction();
-        $result = $this->sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
-        $this->sut->endTransaction();
+        self::$sut->beginTransaction();
+        $result = self::$sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
+        self::$sut->endTransaction();
 
         self::assertTrue($result->success);
 
@@ -113,21 +113,21 @@ class DeputyshipProcessingRawDbAccessIntegrationTest extends ApiBaseTestCase
     public function testInsertOrderReport(): void
     {
         // insert report and court order (client is needed by the report)
-        $client = $this->fixtures->createClient();
-        $report = $this->fixtures->createReport($client);
+        $client = self::$fixtures->createClient();
+        $report = self::$fixtures->createReport($client);
 
         $courtOrderUid = uniqid();
-        $courtOrder = $this->fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
 
-        $this->fixtures->persist($client, $report, $courtOrder)->flush();
+        self::$fixtures->persist($client, $report, $courtOrder)->flush();
 
         // use SUT to add association
         /** @var int $courtOrderId */
-        $courtOrderId = $this->sut->findOrderId($courtOrderUid)->data;
+        $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
 
-        $this->sut->beginTransaction();
-        $result = $this->sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
-        $this->sut->endTransaction();
+        self::$sut->beginTransaction();
+        $result = self::$sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
+        self::$sut->endTransaction();
 
         self::assertTrue($result->success);
 

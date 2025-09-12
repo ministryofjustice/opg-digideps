@@ -70,7 +70,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testaddAccount()
     {
-        $url = '/report/'.self::$report1->getId().'/account';
+        $url = '/report/' . self::$report1->getId() . '/account';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
@@ -96,7 +96,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertNull($account->getIsJointAccount());
 
         // assert cannot create account for a report not belonging to logged user
-        $url2 = '/report/'.self::$report2->getId().'/account';
+        $url2 = '/report/' . self::$report2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
@@ -123,7 +123,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testgetOneById()
     {
-        $url = '/report/account/'.self::$account1->getId();
+        $url = '/report/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
 
@@ -137,7 +137,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('1234', $data['account_number']);
 
         // asser  user2 cannot read the account
-        $url2 = '/report/account/'.self::$account2->getId();
+        $url2 = '/report/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
@@ -146,7 +146,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testEdit()
     {
-        $url = '/account/'.self::$account1->getId();
+        $url = '/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
@@ -168,7 +168,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('yes', $account->getIsJointAccount());
 
         // assert user cannot modify another users' account
-        $url2 = '/account/'.self::$account2->getId();
+        $url2 = '/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
         $this->assertEquals('incomplete', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS)['state']);
@@ -183,9 +183,9 @@ class AccountControllerTest extends AbstractTestController
         $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId()); /* @var $account BankAccount */
         $report = $account->getReport();
         $report->setSectionStatusesCached([]);
-        $url = '/account/'.$account1Id;
-        $url2 = '/account/'.self::$account2->getId();
-        $url3 = '/account/'.self::$account3->getId();
+        $url = '/account/' . $account1Id;
+        $url2 = '/account/' . self::$account2->getId();
+        $url3 = '/account/' . self::$account3->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);

@@ -59,7 +59,7 @@ class JsonHttpTestClient
         $response = $this->client->getResponse();
         assertEquals(
             $response->headers->contains('Content-Type', 'application/json'),
-            'wrong content type. Headers: '.$headers['CONTENT_TYPE']
+            'wrong content type. Headers: ' . $headers['CONTENT_TYPE']
         );
 
         /** @var string $content */
@@ -69,22 +69,22 @@ class JsonHttpTestClient
         assertNotEmpty($return, 'Response not json');
 
         if (!empty($options['mustSucceed'])) {
-            assert($return['success'], "Endpoint didn't succeed as expected. Response: ".print_r($return, true));
+            assert($return['success'], "Endpoint didn't succeed as expected. Response: " . print_r($return, true));
             if (!empty($options['assertId'])) {
                 assert($return['data']['id'] > 0);
             }
         }
 
         if (!empty($options['mustFail'])) {
-            assertFalse($return['success'], "Endpoint didn't fail as expected. Response: ".print_r($return, true));
+            assertFalse($return['success'], "Endpoint didn't fail as expected. Response: " . print_r($return, true));
         }
 
         if (!empty($options['assertCode'])) {
-            assertEquals($options['assertResponseCode'], $return['code'] ?? null, 'Response: '.print_r($return, true));
+            assertEquals($options['assertResponseCode'], $return['code'] ?? null, 'Response: ' . print_r($return, true));
         }
 
         if (!empty($options['assertResponseCode'])) {
-            assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: '.$response->getStatusCode().print_r($return, true));
+            assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: ' . $response->getStatusCode() . print_r($return, true));
         }
 
         return $return;
@@ -102,7 +102,7 @@ class JsonHttpTestClient
         $this->client->request('GET', '/'); // warm up to get container
 
         // reset brute-force counters
-        $key = 'email'.$email;
+        $key = 'email' . $email;
 
         /** @var Container $container */
         $container = $this->client->getContainer();

@@ -13,18 +13,13 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserVoterTest extends KernelTestCase
 {
-    /**
-     * @dataProvider deleteUserProvider
-     *
-     * @test
-     */
-    public function determineDeletePermission(User $deletor, User $deletee, int $expectedPermission)
+    private static UserVoter $sut;
+
+    public static function setUpBeforeClass(): void
     {
-        $sut = new UserVoter();
+        parent::setUpBeforeClass();
 
-        $token = new UsernamePasswordToken($deletor, 'private-firewall');
-
-        self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
+        self::$sut = new UserVoter();
     }
 
     public static function deleteUserProvider(): array
@@ -36,9 +31,9 @@ class UserVoterTest extends KernelTestCase
         self::bootKernel();
         $em = static::getContainer()->get('em');
 
-        $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
+        $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em);
 
-        $layNoReportsOneClient = $userTestHelper->createAndPersistUser($em, $clientTestHelp->generateClient($em), User::ROLE_LAY_DEPUTY);
+        $layNoReportsOneClient = $userTestHelper->createAndPersistUser($em, $clientTestHelp->generateClient($em));
 
         $client = $clientTestHelp->generateClient($em);
         $report = $reportTestHelper->generateReport($em, $client);
@@ -46,7 +41,7 @@ class UserVoterTest extends KernelTestCase
         $em->persist($report);
         $em->flush();
 
-        $layReportOneClient = $userTestHelper->createAndPersistUser($em, $client, User::ROLE_LAY_DEPUTY);
+        $layReportOneClient = $userTestHelper->createAndPersistUser($em, $client);
 
         $admin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
         $admin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
@@ -251,19 +246,12 @@ class UserVoterTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider addEditUserProvider
-     *
-     * @test
+     * @dataProvider deleteUserProvider
      */
-    public function determineAddEditPermission(User $editor, User $editee, int $expectedPermission)
+    public function testDetermineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
-        /** @var UserVoter $sut */
-        $sut = new UserVoter();
-
-        $token = new UsernamePasswordToken($editor, 'private-firewall');
-
-        self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::EDIT_USER]));
-        self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::ADD_USER]));
+        $token = new UsernamePasswordToken($deletor, 'private-firewall');
+        self::assertEquals($expectedPermission, self::$sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
 
     public static function addEditUserProvider(): array
@@ -280,8 +268,8 @@ class UserVoterTest extends KernelTestCase
         $adminManager = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
         $adminManager2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN_MANAGER);
 
-        $lay = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
-        $lay2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_LAY_DEPUTY);
+        $lay = $userTestHelper->createAndPersistUser($em);
+        $lay2 = $userTestHelper->createAndPersistUser($em);
 
         $pa = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA);
         $pa2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_PA);
@@ -470,5 +458,18 @@ class UserVoterTest extends KernelTestCase
             'Prof Team Member adds/edits Admin Manager user' => [$profTeamMember, $adminManager, -1],
             'Prof Team Member adds/edits self' => [$profTeamMember, $profTeamMember, 1],
         ];
+    }
+
+    /**
+     * @dataProvider addEditUserProvider
+     */
+    public function testDetermineAddEditPermission(User $editor, User $editee, int $expectedPermission): void
+    {
+        $sut = new UserVoter();
+
+        $token = new UsernamePasswordToken($editor, 'private-firewall');
+
+        self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::EDIT_USER]));
+        self::assertEquals($expectedPermission, $sut->vote($token, $editee, [UserVoter::ADD_USER]));
     }
 }

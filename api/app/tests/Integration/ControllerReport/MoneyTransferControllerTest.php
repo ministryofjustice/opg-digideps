@@ -73,8 +73,8 @@ class MoneyTransferControllerTest extends AbstractTestController
 
     public function testGetTransfers()
     {
-        $url = '/report/'.self::$report1->getId()
-            .'?'.http_build_query(['groups' => ['money-transfer', 'account']]);
+        $url = '/report/' . self::$report1->getId()
+            . '?' . http_build_query(['groups' => ['money-transfer', 'account']]);
 
         // assert data is retrieved
         $data = $this->assertJsonRequest('GET', $url, [
@@ -93,8 +93,8 @@ class MoneyTransferControllerTest extends AbstractTestController
 
     public function testAddTransfer()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transfers';
-        $url2 = '/report/'.self::$report2->getId().'/money-transfers';
+        $url = '/report/' . self::$report1->getId() . '/money-transfers';
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers';
 
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -127,8 +127,8 @@ class MoneyTransferControllerTest extends AbstractTestController
 
     public function testEditTransfer()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transfers/'.self::$transfer1->getId();
-        $url2 = '/report/'.self::$report2->getId().'/money-transfers/'.self::$transfer1->getId();
+        $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers/' . self::$transfer1->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
@@ -163,8 +163,8 @@ class MoneyTransferControllerTest extends AbstractTestController
      */
     public function testdeleteTransfer()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transfers/'.self::$transfer1->getId();
-        $url2 = '/report/'.self::$report2->getId().'/money-transfers/99';
+        $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers/99';
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -193,7 +193,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertTrue(count($report->getMoneyTransfers()) > 0);
         self::fixtures()->clear();
 
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

@@ -2,34 +2,27 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Service\Stats\Query\SatisfactionQuery;
 use App\Service\Stats\StatsQueryParameters;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class SatisfactionQueryTest extends WebTestCase
+class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
-
     public static function setUpBeforeClass(): void
     {
-        $kernel = self::bootKernel(['environment' => 'test', 'debug' => false]);
-
-        self::$em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        parent::setUpBeforeClass();
 
         // Clear up old data
-        $scores = self::$em
+        $scores = self::$entityManager
             ->getRepository(Satisfaction::class)
             ->findAll();
 
         foreach ($scores as $score) {
-            self::$em->remove($score);
+            self::$entityManager->remove($score);
         }
 
         // Add test data
@@ -50,12 +43,43 @@ class SatisfactionQueryTest extends WebTestCase
         static::givenSatisfactionScoreForReportOfTypeAndRole(1);
         static::givenSatisfactionScoreForReportOfTypeAndRole(3);
 
-        self::$em->flush();
+        self::$entityManager->flush();
     }
 
-    public function testReturnsOverallSatisfaction()
+    private static function givenSatisfactionScoreForReportOfTypeAndRole(
+        int $score,
+        string $reportType = null,
+        string $deputyType = null
+    ): void {
+        $satisfaction = (new Satisfaction())
+            ->setScore($score);
+
+        if (isset($reportType)) {
+            $client = new Client();
+
+            $report = new Report(
+                $client,
+                $reportType,
+                new DateTime('2019-08-01'),
+                new DateTime('2020-08-01')
+            );
+            self::$entityManager->persist($client);
+            self::$entityManager->persist($report);
+
+            $satisfaction->setReportType($reportType);
+            $satisfaction->setReport($report);
+        }
+
+        if (isset($deputyType)) {
+            $satisfaction->setDeputyRole('ROLE_' . $deputyType . '_DEPUTY');
+        }
+
+        self::$entityManager->persist($satisfaction);
+    }
+
+    public function testReturnsOverallSatisfaction(): void
     {
-        $query = new SatisfactionQuery($this::$em);
+        $query = new SatisfactionQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -65,9 +89,9 @@ class SatisfactionQueryTest extends WebTestCase
         $this->assertEquals(63, $result[0]['amount']);
     }
 
-    public function testReturnsSatisfactionAverageByDeputyType()
+    public function testReturnsSatisfactionAverageByDeputyType(): void
     {
-        $query = new SatisfactionQuery($this::$em);
+        $query = new SatisfactionQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -93,9 +117,9 @@ class SatisfactionQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsSatisfactionAverageByReportType()
+    public function testReturnsSatisfactionAverageByReportType(): void
     {
-        $query = new SatisfactionQuery($this::$em);
+        $query = new SatisfactionQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -118,8 +142,6 @@ class SatisfactionQueryTest extends WebTestCase
                     $this->assertEquals(25, $metric['amount']);
                     break;
                 case '103-6':
-                    $this->assertEquals(75, $metric['amount']);
-                    break;
                 case '102-5':
                     $this->assertEquals(75, $metric['amount']);
                     break;
@@ -128,33 +150,5 @@ class SatisfactionQueryTest extends WebTestCase
                     break;
             }
         }
-    }
-
-    private static function givenSatisfactionScoreForReportOfTypeAndRole($score, $reportType = null, $deputyType = null)
-    {
-        $satisfaction = (new Satisfaction())
-            ->setScore($score);
-
-        if (isset($reportType)) {
-            $client = new Client();
-
-            $report = new Report(
-                $client,
-                $reportType,
-                new DateTime('2019-08-01'),
-                new DateTime('2020-08-01')
-            );
-            self::$em->persist($client);
-            self::$em->persist($report);
-
-            $satisfaction->setReportType($reportType);
-            $satisfaction->setReport($report);
-        }
-
-        if (isset($deputyType)) {
-            $satisfaction->setDeputyRole('ROLE_'.$deputyType.'_DEPUTY');
-        }
-
-        self::$em->persist($satisfaction);
     }
 }

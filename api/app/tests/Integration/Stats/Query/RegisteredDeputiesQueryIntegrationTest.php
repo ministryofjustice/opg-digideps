@@ -2,45 +2,46 @@
 
 namespace App\Tests\Integration\Service\Stats\Query;
 
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\User;
 use App\Service\Stats\Query\RegisteredDeputiesQuery;
 use App\Service\Stats\StatsQueryParameters;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RegisteredDeputiesQueryTest extends WebTestCase
+class RegisteredDeputiesQueryIntegrationTest extends ApiIntegrationTestCase
 {
-    /** @var EntityManager */
-    protected static $em;
-
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        $kernel = self::bootKernel(['environment' => 'test', 'debug' => false]);
+        parent::setUp();
 
-        self::$em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        // Remove existing test data
-        $deputies = self::$em
-            ->getRepository(User::class)
-            ->findAll();
-
-        foreach ($deputies as $deputy) {
-            self::$em->remove($deputy);
-        }
+        self::purgeDatabase([]);
 
         // Add test data
         static::givenUsersExistWithRole(4, 'ROLE_PA_TEST');
         static::givenUsersExistWithRole(2, 'ROLE_PROF_TEST');
         static::givenUsersExistWithRole(7, 'ROLE_LAY_DEPUTY');
 
-        self::$em->flush();
+        self::$entityManager->flush();
     }
 
-    public function testReturnsDeputiesByType()
+    private static function givenUsersExistWithRole($count, $roleName): void
     {
-        $query = new RegisteredDeputiesQuery($this::$em);
+        for ($i = 0; $i < $count; ++$i) {
+            $id = md5(microtime());
+            $user = (new User())
+                ->setFirstname('Test')
+                ->setLastname('User')
+                ->setEmail("test-user-$id@example.com")
+                ->setRegistrationDate(new DateTime())
+                ->setRoleName($roleName);
+
+            self::$entityManager->persist($user);
+        }
+    }
+
+    public function testReturnsDeputiesByType(): void
+    {
+        $query = new RegisteredDeputiesQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies',
@@ -66,9 +67,9 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         }
     }
 
-    public function testReturnsDeputiesCollated()
+    public function testReturnsDeputiesCollated(): void
     {
-        $query = new RegisteredDeputiesQuery($this::$em);
+        $query = new RegisteredDeputiesQuery(self::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies',
@@ -81,9 +82,9 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         $this->assertEquals(13, $result[0]['amount']);
     }
 
-    public function testAdheresToDates()
+    public function testAdheresToDates(): void
     {
-        $query = new RegisteredDeputiesQuery($this::$em);
+        $query = new RegisteredDeputiesQuery(self::$entityManager);
 
         $twoWeeksAgo = (new DateTime('-14 days'))->format('Y-m-d');
         $oneWeeksAgo = (new DateTime('-7 days'))->format('Y-m-d');
@@ -104,20 +105,5 @@ class RegisteredDeputiesQueryTest extends WebTestCase
         ]));
 
         $this->assertEquals(13, $resultInRange[0]['amount']);
-    }
-
-    private static function givenUsersExistWithRole($count, $roleName)
-    {
-        for ($i = 0; $i < $count; ++$i) {
-            $id = md5(microtime());
-            $user = (new User())
-                ->setFirstname('Test')
-                ->setLastname('User')
-                ->setEmail("test-user-$id@example.com")
-                ->setRegistrationDate(new DateTime())
-                ->setRoleName($roleName);
-
-            self::$em->persist($user);
-        }
     }
 }

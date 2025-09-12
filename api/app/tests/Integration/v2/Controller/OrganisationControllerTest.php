@@ -103,7 +103,7 @@ class OrganisationControllerTest extends AbstractTestController
     public function getByIdActionReturnsOrganisationsIfFound()
     {
         $org = self::$orgs[0];
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/'.$org->getId(), [], [], $this->headers);
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/' . $org->getId(), [], [], $this->headers);
 
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
@@ -137,7 +137,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function getByIdActionReturnsForbiddenForDeputiesNotInOrganisation()
     {
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/'.self::$orgs[0]->getId(), [], [], $this->headersDeputy);
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/' . self::$orgs[0]->getId(), [], [], $this->headersDeputy);
 
         $response = self::$frameworkBundleClient->getResponse();
 
@@ -149,7 +149,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function getByIdActionAllowsDeputiesFetchTheirOwnOrganisation()
     {
-        self::$frameworkBundleClient->request('GET', '/v2/organisation/'.end(self::$orgs)->getId(), [], [], $this->headersDeputy);
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/' . end(self::$orgs)->getId(), [], [], $this->headersDeputy);
 
         $response = self::$frameworkBundleClient->getResponse();
 
@@ -242,7 +242,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId,
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers,
@@ -272,7 +272,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = self::$orgs[1]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId,
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers,
@@ -311,7 +311,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId,
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers,
@@ -330,7 +330,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = self::$orgs[2]->getId();
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/'.$orgId,
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headersSuperAdmin
@@ -361,7 +361,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/'.$orgId,
+            '/v2/organisation/' . $orgId,
             [],
             [],
             $this->headers
@@ -382,7 +382,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId.'/user/'.$newUser->getId(),
+            '/v2/organisation/' . $orgId . '/user/' . $newUser->getId(),
             [],
             [],
             $this->headers
@@ -430,7 +430,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId.'/user/9003',
+            '/v2/organisation/' . $orgId . '/user/9003',
             [],
             [],
             $this->headers
@@ -453,7 +453,7 @@ class OrganisationControllerTest extends AbstractTestController
         $orgId = self::$orgs[0]->getId();
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId.'/user/'.self::$profUser->getId(),
+            '/v2/organisation/' . $orgId . '/user/' . self::$profUser->getId(),
             [],
             [],
             $this->headersDeputy
@@ -472,7 +472,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'PUT',
-            '/v2/organisation/'.$orgId.'/user/'.self::$profUser->getId(),
+            '/v2/organisation/' . $orgId . '/user/' . self::$profUser->getId(),
             [],
             [],
             $this->headersDeputy
@@ -495,7 +495,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/'.$orgId.'/user/'.$newUser->getId(),
+            '/v2/organisation/' . $orgId . '/user/' . $newUser->getId(),
             [],
             [],
             $this->headers
@@ -525,7 +525,7 @@ class OrganisationControllerTest extends AbstractTestController
         $user = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/9001/user/'.$user->getId(),
+            '/v2/organisation/9001/user/' . $user->getId(),
             [],
             [],
             $this->headers
@@ -548,7 +548,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/'.$orgId.'/user/9003',
+            '/v2/organisation/' . $orgId . '/user/9003',
             [],
             [],
             $this->headers
@@ -573,7 +573,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/'.$orgId.'/user/'.$user->getId(),
+            '/v2/organisation/' . $orgId . '/user/' . $user->getId(),
             [],
             [],
             $this->headersDeputy
@@ -600,7 +600,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'DELETE',
-            '/v2/organisation/'.$orgId.'/user/'.$newUser->getId(),
+            '/v2/organisation/' . $orgId . '/user/' . $newUser->getId(),
             [],
             [],
             $this->headersDeputy
@@ -628,7 +628,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'GET',
-            '/v2/organisation/'.$orgId.'/users',
+            '/v2/organisation/' . $orgId . '/users',
             [],
             [],
             $this->headersDeputy
@@ -642,7 +642,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'GET',
-            '/v2/organisation/'.$orgId.'/users',
+            '/v2/organisation/' . $orgId . '/users',
             ['offset' => 0, 'limit' => 7],
             [],
             $this->headersDeputy
@@ -656,7 +656,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'GET',
-            '/v2/organisation/'.$orgId.'/users',
+            '/v2/organisation/' . $orgId . '/users',
             ['offset' => 7, 'limit' => 7],
             [],
             $this->headersDeputy
@@ -686,7 +686,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'GET',
-            '/v2/organisation/'.$orgId.'/clients',
+            '/v2/organisation/' . $orgId . '/clients',
             [],
             [],
             $this->headersDeputy
@@ -700,7 +700,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'GET',
-            '/v2/organisation/'.$orgId.'/clients',
+            '/v2/organisation/' . $orgId . '/clients',
             ['offset' => 0, 'limit' => 7],
             [],
             $this->headersDeputy
@@ -714,7 +714,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$frameworkBundleClient->request(
             'GET',
-            '/v2/organisation/'.$orgId.'/clients',
+            '/v2/organisation/' . $orgId . '/clients',
             ['offset' => 7, 'limit' => 7],
             [],
             $this->headersDeputy

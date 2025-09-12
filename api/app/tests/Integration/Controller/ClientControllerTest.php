@@ -116,7 +116,7 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
 
-        $org = self::fixtures()->createOrganisation('Example', ''.Uuid::uuid4().'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
@@ -236,13 +236,13 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdAuth()
     {
-        $url = '/client/'.self::$client1->getId();
+        $url = '/client/' . self::$client1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
     public function testfindByIdAclNotAllowed()
     {
-        $url = '/client/'.self::$primaryAccountClient->getId();
+        $url = '/client/' . self::$primaryAccountClient->getId();
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenCoDeputy);
@@ -252,16 +252,16 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdDischargedClientNotFound()
     {
-        $url = '/client/'.self::$primaryAccountDischargedClient->getId();
+        $url = '/client/' . self::$primaryAccountDischargedClient->getId();
 
         $this->assertEndpointNotFoundFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
     }
 
     public function testfindByIdAclAllowed()
     {
-        $url = '/client/'.self::$primaryAccountClient->getId();
-        $url2 = '/client/'.self::$nonPrimaryAccountClient->getId();
-        $url3 = '/client/'.self::$pa1Client1->getId();
+        $url = '/client/' . self::$primaryAccountClient->getId();
+        $url2 = '/client/' . self::$nonPrimaryAccountClient->getId();
+        $url3 = '/client/' . self::$pa1Client1->getId();
 
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
         $this->assertEndpointAllowedFor('GET', $url2, self::$tokenMultiClientPrimaryDeputy);
@@ -275,7 +275,7 @@ class ClientControllerTest extends AbstractTestController
     public function testfindById()
     {
         // Lay
-        $url = '/client/'.self::$client1->getId();
+        $url = '/client/' . self::$client1->getId();
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -284,7 +284,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('deputy1Client1', $data['firstname']);
 
         // PA
-        $url = '/client/'.self::$pa1Client1->getId().'?'.http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
+        $url = '/client/' . self::$pa1Client1->getId() . '?' . http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
@@ -296,7 +296,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testArchiveClientAuth()
     {
-        $url = '/client/'.self::$pa1Client1->getId().'/archive';
+        $url = '/client/' . self::$pa1Client1->getId() . '/archive';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
@@ -305,7 +305,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testArchiveClient()
     {
-        $url = '/client/'.self::$pa1Client1->getId().'/archive';
+        $url = '/client/' . self::$pa1Client1->getId() . '/archive';
         $this->assertEquals(1, count(self::$pa1Client1->getUsers()));
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -321,7 +321,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testDetailsAction()
     {
-        $url = '/client/'.self::$client1->getId().'/details';
+        $url = '/client/' . self::$client1->getId() . '/details';
 
         $this->assertJsonRequest('GET', $url, [
             'mustFail' => true,
@@ -367,7 +367,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testUpdateDeputy()
     {
-        $url = '/client/'.self::$client2->getId().'/update-deputy/'.self::$deputy3->getId();
+        $url = '/client/' . self::$client2->getId() . '/update-deputy/' . self::$deputy3->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

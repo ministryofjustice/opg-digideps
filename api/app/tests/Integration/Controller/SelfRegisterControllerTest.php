@@ -787,7 +787,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($coDeputy);
         $this->fixtures()->flush();
 
-        $responseArray = $this->assertJsonRequest('PUT', '/selfregister/updatecodeputy/'.$coDeputy->getId(), [
+        $responseArray = $this->assertJsonRequest('PUT', '/selfregister/updatecodeputy/' . $coDeputy->getId(), [
             'mustSucceed' => true,
             'AuthToken' => $token,
             'data' => [
@@ -811,7 +811,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
     private function generateDeputyAndCoDeputyPreRegistration($deputyPrimaryUid)
     {
-        $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+        $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
         $deputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', $deputyUid, 'Zac', 'Tolley');
         $deputyPreRegistration->setIsCoDeputy(true);
@@ -819,7 +819,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         if ($deputyPrimaryUid) {
             $coDeputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', $deputyPrimaryUid, 'Sue', 'Jones');
         } else {
-            $coDeputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+            $coDeputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
             $coDeputyPreRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', $coDeputyUid, 'Sue', 'Jones');
         }
         $coDeputyPreRegistration->setIsCoDeputy(true);
