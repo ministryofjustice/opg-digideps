@@ -3,6 +3,7 @@
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "settings" %}
+{% set navSection = "settings" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ (app.user.isDeputyOrg() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}

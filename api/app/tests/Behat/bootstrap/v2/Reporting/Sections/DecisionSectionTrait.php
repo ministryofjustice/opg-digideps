@@ -152,8 +152,7 @@ trait DecisionSectionTrait
 
         if ($shouldNotBeVisible) {
             if (!$reasonForNoDecisionIsNotVisible) {
-                $message = sprintf('The reason for no decision box is visible on the summary page when it shouldn\'t be: %s', $reasonForNoDecisionDiv->getHtml()
-                );
+                $message = sprintf('The reason for no decision box is visible on the summary page when it shouldn\'t be: %s', $reasonForNoDecisionDiv->getHtml());
 
                 throw new BehatException($message);
             }

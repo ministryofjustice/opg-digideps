@@ -293,7 +293,7 @@ trait ActivateTrait
         $value = $this->fixStepArgument($value);
 
         if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
-            $field = '#'.$field;
+            $field = '#' . $field;
         }
 
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {

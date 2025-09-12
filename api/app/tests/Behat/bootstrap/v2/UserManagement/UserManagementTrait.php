@@ -44,10 +44,10 @@ trait UserManagementTrait
     public function iSearchForOneOfTestUsersUsingFullName()
     {
         $this->iAmOnAdminUsersSearchPage();
-        $this->fillField('admin_q', 'search-test-pa-n-'.$this->testRunId.'@t.uk');
+        $this->fillField('admin_q', 'search-test-pa-n-' . $this->testRunId . '@t.uk');
         $this->pressButton('Search');
         $this->userCount = 1;
-        $this->userEmails = ['search-test-pa-n-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-pa-n-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -79,7 +79,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_LAY_DEPUTY', 'search-test-');
         $this->userCount = 2;
-        $this->userEmails = ['search-test-lay-'.$this->testRunId.'@t.uk', 'search-test-ndr-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-lay-' . $this->testRunId . '@t.uk', 'search-test-ndr-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -89,7 +89,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_PROF%', 'search-test-');
         $this->userCount = 2;
-        $this->userEmails = ['search-test-prof-'.$this->testRunId.'@t.uk', 'search-test-prof-n-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-prof-' . $this->testRunId . '@t.uk', 'search-test-prof-n-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -99,7 +99,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_PROF_NAMED', 'search-test-');
         $this->userCount = 1;
-        $this->userEmails = ['search-test-prof-n-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-prof-n-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -109,7 +109,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_PA%', 'search-test-');
         $this->userCount = 2;
-        $this->userEmails = ['search-test-pa-'.$this->testRunId.'@t.uk', 'search-test-pa-n-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-pa-' . $this->testRunId . '@t.uk', 'search-test-pa-n-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -119,7 +119,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_PA_NAMED', 'search-test-');
         $this->userCount = 1;
-        $this->userEmails = ['search-test-pa-n-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-pa-n-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -129,7 +129,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_ADMIN', 'search-test-');
         $this->userCount = 1;
-        $this->userEmails = ['search-test-admin-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-admin-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -139,7 +139,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_SUPER_ADMIN', 'search-test-');
         $this->userCount = 1;
-        $this->userEmails = ['search-test-super-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-super-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -162,23 +162,23 @@ trait UserManagementTrait
         $this->checkOption('admin[ndr_enabled]');
         $this->pressButton('Search');
         $this->userCount = 1;
-        $this->userEmails = ['search-test-ndr-'.$this->testRunId.'@t.uk'];
+        $this->userEmails = ['search-test-ndr-' . $this->testRunId . '@t.uk'];
     }
 
     private function setFixtureUserEmailsAndCount()
     {
         $this->userCount = 10;
         $this->userEmails = [
-            'search-test-lay-'.$this->testRunId.'@t.uk',
-            'search-test-pa-n-'.$this->testRunId.'@t.uk',
-            'search-test-pa-'.$this->testRunId.'@t.uk',
-            'search-test-prof-n-'.$this->testRunId.'@t.uk',
-            'search-test-prof-'.$this->testRunId.'@t.uk',
-            'search-test-admin-'.$this->testRunId.'@t.uk',
-            'search-test-manager-'.$this->testRunId.'@t.uk',
-            'search-test-super-'.$this->testRunId.'@t.uk',
-            'search-test-ad-'.$this->testRunId.'@t.uk',
-            'search-test-ndr-'.$this->testRunId.'@t.uk',
+            'search-test-lay-' . $this->testRunId . '@t.uk',
+            'search-test-pa-n-' . $this->testRunId . '@t.uk',
+            'search-test-pa-' . $this->testRunId . '@t.uk',
+            'search-test-prof-n-' . $this->testRunId . '@t.uk',
+            'search-test-prof-' . $this->testRunId . '@t.uk',
+            'search-test-admin-' . $this->testRunId . '@t.uk',
+            'search-test-manager-' . $this->testRunId . '@t.uk',
+            'search-test-super-' . $this->testRunId . '@t.uk',
+            'search-test-ad-' . $this->testRunId . '@t.uk',
+            'search-test-ndr-' . $this->testRunId . '@t.uk',
         ];
     }
 
@@ -200,7 +200,7 @@ trait UserManagementTrait
         $this->pressButton('Add new user');
         $this->expectedUsers = [
             [
-                'email' => 'add-user-1-'.$this->testRunId.'@t.com',
+                'email' => 'add-user-1-' . $this->testRunId . '@t.com',
                 'firstName' => 'added',
                 'lastName' => 'user1',
                 'postcode' => 'B99 5ZZ',
@@ -243,12 +243,12 @@ trait UserManagementTrait
     private function createArrayOfAddUsersFromArray($rolesArray)
     {
         foreach ($rolesArray as $key => $role) {
-            $email = 'add-user-'.$this->userRole.'-'.$role['roleName'].'-'.$this->testRunId.'@t.uk';
+            $email = 'add-user-' . $this->userRole . '-' . $role['roleName'] . '-' . $this->testRunId . '@t.uk';
             $this->expectedUsers[] = [
                 'email' => $email,
                 'firstName' => 'added',
-                'lastName' => 'user'.$role['roleName'].$this->userRole,
-                'postcode' => 'B'.strval($key).' 1ZZ',
+                'lastName' => 'user' . $role['roleName'] . $this->userRole,
+                'postcode' => 'B' . strval($key) . ' 1ZZ',
                 'roleType' => $role['roleType'],
                 'role' => $role['role'],
             ];
@@ -259,12 +259,12 @@ trait UserManagementTrait
     private function createArrayOfEditUsersFromArray($rolesArray)
     {
         foreach ($rolesArray as $key => $role) {
-            $email = 'edit-test-'.$role['roleName'].'-'.$this->testRunId.'@t.uk';
+            $email = 'edit-test-' . $role['roleName'] . '-' . $this->testRunId . '@t.uk';
             $this->expectedUsers[] = [
                 'email' => $email,
-                'firstName' => 'first'.str_replace('_', '', strtolower($role['role'])),
-                'lastName' => 'last'.str_replace('_', '', strtolower($role['role'])),
-                'postcode' => 'B'.strval($key).' 1YY',
+                'firstName' => 'first' . str_replace('_', '', strtolower($role['role'])),
+                'lastName' => 'last' . str_replace('_', '', strtolower($role['role'])),
+                'postcode' => 'B' . strval($key) . ' 1YY',
                 'roleType' => $role['roleType'],
                 'role' => $role['role'],
             ];
@@ -326,7 +326,7 @@ trait UserManagementTrait
         }
         foreach ($roles as $role) {
             $exists = in_array($role['role'], $expectedOptions);
-            $this->assertBoolIsTrue($exists, 'Role: '.$role['role'].' in list');
+            $this->assertBoolIsTrue($exists, 'Role: ' . $role['role'] . ' in list');
         }
     }
 
@@ -392,7 +392,7 @@ trait UserManagementTrait
      */
     public function iSeeEachCreatedUsersInSearchWindow()
     {
-        $this->searchUserWithFilter('', 'add-user-'.$this->userRole.'-');
+        $this->searchUserWithFilter('', 'add-user-' . $this->userRole . '-');
         $this->iShouldSeeTheCorrectSearchResult();
     }
 
@@ -456,7 +456,7 @@ trait UserManagementTrait
             $this->iAmOnAdminUsersSearchPage();
             $this->searchUserWithFilter('', $addedUser['email']);
             // update the email now we have searched for it...
-            $this->expectedUsers[$key]['email'] = $addedUser['email'].'.edit';
+            $this->expectedUsers[$key]['email'] = $addedUser['email'] . '.edit';
             // click on the first result (should only be one)
             $this->iClickOnFirstUserReturnedBySearch();
             $this->iNavigateToEditUser();
@@ -515,7 +515,7 @@ trait UserManagementTrait
     public function iViewSuperAdminUser()
     {
         $this->iAmOnAdminUsersSearchPage();
-        $this->searchUserWithFilter('', 'edit-test-super-'.$this->testRunId.'@t.uk');
+        $this->searchUserWithFilter('', 'edit-test-super-' . $this->testRunId . '@t.uk');
         $this->iClickOnFirstUserReturnedBySearch();
     }
 
@@ -526,7 +526,7 @@ trait UserManagementTrait
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
-        $this->searchUserWithFilter('', 'edit-test-manager-'.$this->testRunId.'@t.uk');
+        $this->searchUserWithFilter('', 'edit-test-manager-' . $this->testRunId . '@t.uk');
         $this->iClickOnFirstUserReturnedBySearch();
         $this->iAmOnAdminViewUserPage();
     }
@@ -538,7 +538,7 @@ trait UserManagementTrait
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
-        $this->searchUserWithFilter('', 'edit-test-admin-'.$this->testRunId.'@t.uk');
+        $this->searchUserWithFilter('', 'edit-test-admin-' . $this->testRunId . '@t.uk');
         $this->iClickOnFirstUserReturnedBySearch();
     }
 
@@ -610,18 +610,18 @@ trait UserManagementTrait
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
-        $email = 'edit-test-'.$userType.'-'.$this->testRunId.'@t.uk';
+        $email = 'edit-test-' . $userType . '-' . $this->testRunId . '@t.uk';
         $this->searchUserWithFilter('', $email);
         $xpath = '//tbody';
         $tbody = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
-        $this->assertStringDoesNotContainString($email, $tbody, 'Delete test - '.$userType);
+        $this->assertStringDoesNotContainString($email, $tbody, 'Delete test - ' . $userType);
     }
 
     private function deleteAdmin($userType)
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
-        $this->searchUserWithFilter('', 'edit-test-'.$userType.'-'.$this->testRunId.'@t.uk');
+        $this->searchUserWithFilter('', 'edit-test-' . $userType . '-' . $this->testRunId . '@t.uk');
         $this->iClickOnFirstUserReturnedBySearch();
         $this->clickBasedOnText('Edit user');
         $this->iAmOnAdminEditUserPage();
@@ -715,7 +715,7 @@ trait UserManagementTrait
 
         $this->iAmOnOrgSettingsPage();
 
-        $this->assertElementContainsText('table', $newUser['firstName'].' '.$newUser['lastName']);
+        $this->assertElementContainsText('table', $newUser['firstName'] . ' ' . $newUser['lastName']);
         $this->assertElementContainsText('table', $newUser['email']);
     }
 

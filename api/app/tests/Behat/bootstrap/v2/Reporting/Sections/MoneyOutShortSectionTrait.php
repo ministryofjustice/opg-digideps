@@ -135,7 +135,7 @@ trait MoneyOutShortSectionTrait
 
         $count = 0;
         foreach ($this->paymentNumber as $payment) {
-            $this->getSectionAnswers('moneyOutDetails'.$payment) ? $count++ : $count;
+            $this->getSectionAnswers('moneyOutDetails' . $payment) ? $count++ : $count;
         }
         if (0 == $count) {
             $this->removeSection('over1K');
@@ -230,9 +230,9 @@ trait MoneyOutShortSectionTrait
     {
         $this->iAmOnMoneyOutShortAddPage();
 
-        $this->fillInField('money_short_transaction[description]', $description, 'moneyOutDetails'.$paymentCount);
-        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyOutDetails'.$paymentCount);
-        $this->fillInDateFields('money_short_transaction[date]', $day, $month, $year, 'moneyOutDetails'.$paymentCount);
+        $this->fillInField('money_short_transaction[description]', $description, 'moneyOutDetails' . $paymentCount);
+        $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyOutDetails' . $paymentCount);
+        $this->fillInDateFields('money_short_transaction[date]', $day, $month, $year, 'moneyOutDetails' . $paymentCount);
 
         $this->moneyOutShortOneOff[] = [$description => $amount];
 
@@ -291,10 +291,10 @@ trait MoneyOutShortSectionTrait
         $this->removeSection('reasonForNoMoneyOut');
 
         foreach ($this->paymentNumber as $payment) {
-            $this->removeSection('moneyOutDetails'.$payment);
+            $this->removeSection('moneyOutDetails' . $payment);
         }
 
-        $urlRegex = sprintf('/%s\/.*\/money-out-short\/%s\?from\=summary$/', $this->reportUrlPrefix,$arg);
+        $urlRegex = sprintf('/%s\/.*\/money-out-short\/%s\?from\=summary$/', $this->reportUrlPrefix, $arg);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
@@ -318,7 +318,7 @@ trait MoneyOutShortSectionTrait
             foreach ($this->moneyOutShortOneOff as $transactionItems) {
                 foreach ($transactionItems as $description => $value) {
                     $this->assertElementContainsText('table', $description);
-                    $this->assertElementContainsText('table', '£'.number_format($value, 2));
+                    $this->assertElementContainsText('table', '£' . number_format($value, 2));
                 }
             }
             $this->expectedResultsDisplayedSimplified();
