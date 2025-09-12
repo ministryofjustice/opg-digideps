@@ -6,57 +6,52 @@ namespace App\Tests\Integration\v2\Service;
 
 use App\Entity\CourtOrderDeputy;
 use App\Repository\CourtOrderDeputyRepository;
-use App\Tests\Integration\ApiTestTrait;
+use App\Tests\Integration\ApiTestCase;
 use App\Tests\Integration\Fixtures;
 use App\v2\Service\CourtOrderService;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class CourtOrderServiceTest extends KernelTestCase
+class CourtOrderServiceTest extends ApiTestCase
 {
-    use ApiTestTrait;
+    private static Fixtures $fixtures;
+    private static CourtOrderDeputyRepository $courtOrderDeputyRepository;
+    private static CourtOrderService $sut;
 
-    private Fixtures $fixtures;
-    private CourtOrderDeputyRepository $courtOrderDeputyRepository;
-    private CourtOrderService $sut;
-
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        self::configureTest();
-
-        $this->fixtures = new Fixtures(self::$entityManager);
+        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var CourtOrderDeputyRepository $repo */
         $repo = self::$entityManager->getRepository(CourtOrderDeputy::class);
-        $this->courtOrderDeputyRepository = $repo;
+        self::$courtOrderDeputyRepository = $repo;
 
-        $this->sut = self::$container->get(CourtOrderService::class);
+        self::$sut = self::$container->get(CourtOrderService::class);
     }
 
     public function testAssociateDeputyWithCourtOrderDuplicate(): void
     {
-        $deputy = $this->fixtures->createDeputy(['setDeputyUid' => '123456']);
-        $courtOrder = $this->fixtures->createCourtOrder('123567', 'pfa', 'ACTIVE');
+        $deputy = self::$fixtures->createDeputy(['setDeputyUid' => '123456']);
+        $courtOrder = self::$fixtures->createCourtOrder('123567', 'pfa', 'ACTIVE');
         $deputy->associateWithCourtOrder($courtOrder);
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
 
-        $success = $this->sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
+        $success = self::$sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
         $this->assertFalse($success);
     }
 
     public function testAssociateDeputyWithCourtOrderSuccess(): void
     {
-        $deputy = $this->fixtures->createDeputy(['setDeputyUid' => 'x123456']);
-        $courtOrder = $this->fixtures->createCourtOrder('x123567', 'pfa', 'ACTIVE');
+        $deputy = self::$fixtures->createDeputy(['setDeputyUid' => 'x123456']);
+        $courtOrder = self::$fixtures->createCourtOrder('x123567', 'pfa', 'ACTIVE');
         self::$entityManager->persist($courtOrder);
         self::$entityManager->flush();
 
-        $success = $this->sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
+        $success = self::$sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
         $this->assertTrue($success);
 
-        $rel = $this->courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
+        $rel = self::$courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
         $this->assertNotNull($rel);
         $this->assertTrue($rel->isActive());
     }
