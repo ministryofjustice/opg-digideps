@@ -458,3 +458,6 @@ services:
 
     App\v2\Assembler\DeputyAssembler:
         public: true
+
+    App\v2\Service\CourtOrderService:
+        public: true
