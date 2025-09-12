@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingSelectedCandidate;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
