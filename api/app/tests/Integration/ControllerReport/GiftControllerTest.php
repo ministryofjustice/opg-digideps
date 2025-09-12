@@ -61,7 +61,7 @@ class GiftControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/gift/'.self::$gift1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -69,13 +69,13 @@ class GiftControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/'.self::$report1->getId().'/gift/'.self::$gift2->getId();
+        $url2 = '/report/' . self::$report1->getId() . '/gift/' . self::$gift2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/report/'.self::$report1->getId().'/gift/'.self::$gift1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -90,31 +90,31 @@ class GiftControllerTest extends AbstractTestController
 
     public function testPostPutAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/gift';
+        $url = '/report/' . self::$report1->getId() . '/gift';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
-        $url = '/report/'.self::$report1->getId().'/gift/'.self::$gift1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testPostPutAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/gift';
+        $url2 = '/report/' . self::$report2->getId() . '/gift';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
-        $url2 = '/report/'.self::$report2->getId().'/gift/'.self::$gift1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift1->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
-        $url3 = '/report/'.self::$report2->getId().'/gift/'.self::$gift2->getId();
+        $url3 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url3, self::$tokenDeputy);
     }
 
     public function testPostPutGetAll()
     {
         // POST
-        $url = '/report/'.self::$report1->getId().'/gift';
+        $url = '/report/' . self::$report1->getId() . '/gift';
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -136,7 +136,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEquals('e3', $gift->getExplanation());
 
         // UPDATE
-        $url = '/report/'.self::$report1->getId().'/gift/'.$giftId;
+        $url = '/report/' . self::$report1->getId() . '/gift/' . $giftId;
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -153,10 +153,10 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEquals('e3.1', $gift->getExplanation());
 
         // GET ALL
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
         $q = http_build_query(['groups' => ['gifts']]);
         // assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -172,7 +172,7 @@ class GiftControllerTest extends AbstractTestController
 
     public function testDeleteAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/gift/'.self::$gift1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -180,8 +180,8 @@ class GiftControllerTest extends AbstractTestController
 
     public function testDeleteAcl()
     {
-        $url2 = '/report/'.self::$report1->getId().'/gift/'.self::$gift2->getId();
-        $url3 = '/report/'.self::$report2->getId().'/gift/'.self::$gift2->getId();
+        $url2 = '/report/' . self::$report1->getId() . '/gift/' . self::$gift2->getId();
+        $url3 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
@@ -192,7 +192,7 @@ class GiftControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        $url = '/report/'.self::$report1->getId().'/gift/'.self::$gift1->getId();
+        $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -215,7 +215,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertCount(1, $report->getGifts());
         $this->assertEquals('yes', $report->getGiftsExist());
 
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

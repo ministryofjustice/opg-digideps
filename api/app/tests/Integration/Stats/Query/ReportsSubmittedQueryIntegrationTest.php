@@ -60,7 +60,7 @@ class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
             ->setFirstname('Lay')
             ->setLastname('User')
             ->setEmail("metric-test-$id@publicguardian.gov.uk")
-            ->setRoleName('ROLE_'.$type.'_DEPUTY');
+            ->setRoleName('ROLE_' . $type . '_DEPUTY');
 
         self::$entityManager->persist($user);
 

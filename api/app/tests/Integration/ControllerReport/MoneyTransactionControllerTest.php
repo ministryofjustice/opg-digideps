@@ -64,8 +64,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
     public function testGetTransactions()
     {
-        $url = '/report/'.self::$report1->getId()
-            .'?'.http_build_query(['groups' => ['transactionsIn', 'transactionsOut']]);
+        $url = '/report/' . self::$report1->getId()
+            . '?' . http_build_query(['groups' => ['transactionsIn', 'transactionsOut']]);
 
         // assert data is retrieved
         $data = $this->assertJsonRequest('GET', $url, [
@@ -90,8 +90,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
     public function testAddEditTransaction()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transaction';
-        $url2 = '/report/'.self::$report2->getId().'/money-transaction';
+        $url = '/report/' . self::$report1->getId() . '/money-transaction';
+        $url2 = '/report/' . self::$report2->getId() . '/money-transaction';
 
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -119,8 +119,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
     public function testEditTransaction()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transaction/'.self::$t1->getId();
-        $url2 = '/report/'.self::$report2->getId().'/money-transaction/'.self::$t2->getId();
+        $url = '/report/' . self::$report1->getId() . '/money-transaction/' . self::$t1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transaction/' . self::$t2->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
