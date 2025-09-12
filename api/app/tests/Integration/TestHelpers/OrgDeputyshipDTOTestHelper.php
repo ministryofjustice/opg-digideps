@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\TestHelpers;
+namespace App\Tests\Integration\TestHelpers;
 
-use DateTimeImmutable;
-use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -18,6 +16,8 @@ use App\Repository\ReportRepository;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
