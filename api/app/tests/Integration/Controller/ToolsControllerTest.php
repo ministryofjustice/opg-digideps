@@ -114,7 +114,9 @@ class ToolsControllerTest extends AbstractTestController
         $previousReports = $previousClient->getReports();
 
         $this->assertEquals(2, sizeof($previousReports));
-        $reportIds = array_map(function ($r) { return $r->getId(); }, $previousReports->toArray());
+        $reportIds = array_map(function ($r) {
+            return $r->getId();
+        }, $previousReports->toArray());
         $this->assertContains(self::$previousReport1->getId(), $reportIds);
         $this->assertContains(self::$previousReport2->getId(), $reportIds);
 
@@ -155,7 +157,9 @@ class ToolsControllerTest extends AbstractTestController
         $reassignedReports = $newClient->getReports();
 
         $this->assertEquals(2, sizeof($reassignedReports));
-        $reportIds = array_map(function ($r) { return $r->getId(); }, $reassignedReports->toArray());
+        $reportIds = array_map(function ($r) {
+            return $r->getId();
+        }, $reassignedReports->toArray());
         $this->assertContains(self::$previousReport1->getId(), $reportIds);
         $this->assertContains(self::$previousReport2->getId(), $reportIds);
     }

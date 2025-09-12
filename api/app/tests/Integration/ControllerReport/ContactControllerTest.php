@@ -65,7 +65,7 @@ class ContactControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/report/contact/'.self::$contact1->getId();
+        $url = '/report/contact/' . self::$contact1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -73,13 +73,13 @@ class ContactControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/contact/'.self::$contact2->getId();
+        $url2 = '/report/contact/' . self::$contact2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/report/contact/'.self::$contact1->getId();
+        $url = '/report/contact/' . self::$contact1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -93,7 +93,7 @@ class ContactControllerTest extends AbstractTestController
 
     public function testgetContactsAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/contacts';
+        $url = '/report/' . self::$report1->getId() . '/contacts';
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -101,14 +101,14 @@ class ContactControllerTest extends AbstractTestController
 
     public function testgetContactsAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/contacts';
+        $url2 = '/report/' . self::$report2->getId() . '/contacts';
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetContacts()
     {
-        $url = '/report/'.self::$report1->getId().'/contacts';
+        $url = '/report/' . self::$report1->getId() . '/contacts';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -210,7 +210,7 @@ class ContactControllerTest extends AbstractTestController
 
     public function testDeleteContactAuth()
     {
-        $url = '/report/contact/'.self::$contact1->getId();
+        $url = '/report/contact/' . self::$contact1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -218,7 +218,7 @@ class ContactControllerTest extends AbstractTestController
 
     public function testDeleteContactAcl()
     {
-        $url2 = '/report/contact/'.self::$contact2->getId();
+        $url2 = '/report/contact/' . self::$contact2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
@@ -230,7 +230,7 @@ class ContactControllerTest extends AbstractTestController
      */
     public function testDeleteContact()
     {
-        $url = '/report/contact/'.self::$contact1->getId();
+        $url = '/report/contact/' . self::$contact1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

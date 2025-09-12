@@ -41,7 +41,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         self::purgeDatabase();
 
-        $fileLocation = dirname(__FILE__).'/../../../../csv/deputyshipsReport2.csv';
+        $fileLocation = dirname(__FILE__) . '/../../../../csv/deputyshipsReport2.csv';
 
         $csvLoader = self::$container->get(DeputyshipsCSVLoader::class);
         $csvLoader->load($fileLocation);

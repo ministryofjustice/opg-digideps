@@ -47,7 +47,9 @@ class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
     }
 
     private static function givenSatisfactionScoreForReportOfTypeAndRole(
-        int $score, string $reportType = null, string $deputyType = null
+        int $score,
+        string $reportType = null,
+        string $deputyType = null
     ): void {
         $satisfaction = (new Satisfaction())
             ->setScore($score);
@@ -69,7 +71,7 @@ class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
         }
 
         if (isset($deputyType)) {
-            $satisfaction->setDeputyRole('ROLE_'.$deputyType.'_DEPUTY');
+            $satisfaction->setDeputyRole('ROLE_' . $deputyType . '_DEPUTY');
         }
 
         self::$entityManager->persist($satisfaction);
