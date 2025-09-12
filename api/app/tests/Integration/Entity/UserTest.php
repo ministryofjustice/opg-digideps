@@ -2,20 +2,20 @@
 
 namespace App\Tests\Integration\Entity;
 
+use App\Tests\Integration\ApiTestCase;
 use DateTime;
 use App\TestHelpers\ReportSubmissionHelper;
-use App\Tests\Integration\ApiBaseTestCase;
 
 /**
  * User Entity test.
  */
-class UserTest extends ApiBaseTestCase
+class UserTest extends ApiTestCase
 {
     public function testGetNumberOfSubmittedReports()
     {
         $this->purgeDatabase();
 
-        $submissionHelper = new ReportSubmissionHelper($this->entityManager);
+        $submissionHelper = new ReportSubmissionHelper(self::$entityManager);
         $submittedSubmissions = [];
 
         foreach (range(1, 2) as $ignored) {
