@@ -12,7 +12,7 @@ use App\Tests\Integration\ApiTestCase;
 
 class ClientRepositoryTest extends ApiTestCase
 {
-    private ClientRepository $sut;
+    private static ClientRepository $sut;
 
     protected function setUp(): void
     {
@@ -21,7 +21,7 @@ class ClientRepositoryTest extends ApiTestCase
         /** @var ClientRepository $sut */
         $sut = self::$entityManager->getRepository(Client::class);
 
-        $this->sut = $sut;
+        self::$sut = $sut;
 
         $this->purgeDatabase();
     }
@@ -45,7 +45,7 @@ class ClientRepositoryTest extends ApiTestCase
         self::$entityManager->persist($clientThree);
         self::$entityManager->flush();
 
-        $clients = $this->sut->getAllClientsAndReportsByDeputyUid($activeUserOne->getDeputyUid());
+        $clients = self::$sut->getAllClientsAndReportsByDeputyUid($activeUserOne->getDeputyUid());
 
         self::assertCount(3, $clients);
         self::assertContains($clientOne, $clients);
