@@ -43,7 +43,7 @@ class CourtOrderResponseComparer extends ResponseComparer
     {
         $newNormalized = array_map(function ($row) {
             return [
-                'idForNextApiCalls' => $row['courtOrder']['courtOrderUid'] ?? null,
+                'idForNextApiCalls' => $row['courtOrder']['courtOrderLink'] ?? null,
                 'caseNumber'    => $row['client']['caseNumber'] ?? null,
                 'firstName'     => $row['client']['firstName'] ?? null,
                 'lastName'      => $row['client']['lastName'] ?? null,
