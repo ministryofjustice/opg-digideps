@@ -6,8 +6,9 @@ use Psr\Http\Message\ResponseInterface;
 
 class CourtOrderResponseComparer extends ResponseComparer
 {
-    const LEGACY_SECONDARY_URL = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
-    const NEW_SECONDARY_URL = "/v2/courtorder/%s";
+    private const LEGACY_SECONDARY_URL = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
+    private const NEW_SECONDARY_URL = "/v2/courtorder/%s";
+
     public function getSqlStatement(): string
     {
         return '
@@ -67,8 +68,6 @@ class CourtOrderResponseComparer extends ResponseComparer
         $legacyUsers = [];
         foreach ($extraLegacyContent['data']['users'] as $user) {
             $legacyUsers[] = [
-                'id' => $user['id'],
-                'email' => $user['email'],
                 'deputy_uid' => $user['deputy_uid']
             ];
         }
@@ -86,8 +85,6 @@ class CourtOrderResponseComparer extends ResponseComparer
         $newUsers = [];
         foreach ($extraNewContent['data']['active_deputies'] as $user) {
             $newUsers[] = [
-                'id' => $user['user']['id'],
-                'email' => $user['email1'],
                 'deputy_uid' => $user['deputy_uid']
             ];
         }
@@ -110,7 +107,7 @@ class CourtOrderResponseComparer extends ResponseComparer
         return $extraResults;
     }
 
-    function sortByIdRecursive(array $data): array
+    private function sortByIdRecursive(array $data): array
     {
         foreach ($data as &$item) {
             if (is_array($item)) {
@@ -131,7 +128,7 @@ class CourtOrderResponseComparer extends ResponseComparer
         return $data;
     }
 
-    function normalizeArrayForComparison(array $data): array
+    private function normalizeArrayForComparison(array $data): array
     {
         array_walk_recursive($data, function (&$value) {
             if (is_numeric($value)) {
@@ -196,8 +193,11 @@ class CourtOrderResponseComparer extends ResponseComparer
 
                     $extraResults = $this->getFormattedExtraData($extraLegacyContent, $extraNewContent);
                 } catch (\Throwable $e) {
-                    $extraResults[] = [
-                        'legacyId'   => $legacyId,
+                    $extraResults['legacy'] = [
+                        'deputyId'   => $legacyId,
+                        'error'      => $e->getMessage(),
+                    ];
+                    $extraResults['new'] = [
                         'courtOrder' => $newUid,
                         'error'      => $e->getMessage(),
                     ];
