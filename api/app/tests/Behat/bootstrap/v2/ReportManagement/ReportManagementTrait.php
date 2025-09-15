@@ -235,7 +235,8 @@ trait ReportManagementTrait
                 'incompleteSectionsForm',
                 $this->determineCheckboxName($value, $checkboxValuesAndTranslations),
                 'manage-report',
-                $translation)
+                $translation
+            )
             ;
         }
     }

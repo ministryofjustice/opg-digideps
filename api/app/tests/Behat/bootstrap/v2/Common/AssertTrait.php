@@ -62,7 +62,7 @@ trait AssertTrait
         $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
             !str_contains($foundFormatted, $notExpectedFormatted),
-            $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
+            $this->getAssertMessage('\'' . $notExpectedFormatted . '\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
         );
     }
 
@@ -75,7 +75,7 @@ trait AssertTrait
         $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
             $foundFormatted != $notExpectedFormatted,
-            $this->getAssertMessage('\''.$notExpectedFormatted.'\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
+            $this->getAssertMessage('\'' . $notExpectedFormatted . '\' should not exist in searched element!', $foundFormatted, $comparisonSubject)
         );
     }
 

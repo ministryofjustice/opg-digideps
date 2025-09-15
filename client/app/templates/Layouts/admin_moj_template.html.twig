@@ -13,6 +13,10 @@
     </a>
 {%- endmacro %}
 
+{% block link %}
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="{{ asset('images/favicon.ico') }}" type="image/x-icon"/>
+{% endblock %}
+
 {% block header %}
     <header class="moj-header" role="banner">
         <div class="moj-header__container opg-width-container--wider">

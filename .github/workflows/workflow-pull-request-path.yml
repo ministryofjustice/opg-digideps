@@ -114,6 +114,10 @@ jobs:
       - workflow_variables
       - trivy_secret_scanning
 
+  php_style:
+    name: PHP Style check
+    uses: ./.github/workflows/_phpcs.yml
+
   docker_build_scan_push:
     name: build, scan and push
     uses: ./.github/workflows/_build-and-push.yml
@@ -121,6 +125,7 @@ jobs:
       - workflow_variables
       - build_web_resources
       - trivy_secret_scanning
+      - php_style
     with:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -408,6 +413,24 @@ jobs:
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
 
+  end_to_end_tests_sequential_4:
+    name: end to end tests sequential 4
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - end_to_end_tests_sequential_1
+      - end_to_end_tests_sequential_2
+      - end_to_end_tests_sequential_3
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: 248804316466
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_4,--profile,v2-tests-browserkit"
+
   scale_services_down:
     if: always()
     name: scale down services
@@ -417,6 +440,7 @@ jobs:
       - end_to_end_tests_sequential_1
       - end_to_end_tests_sequential_2
       - end_to_end_tests_sequential_3
+      - end_to_end_tests_sequential_4
       - end_to_end_tests_admin
       - end_to_end_tests_1
       - end_to_end_tests_2
