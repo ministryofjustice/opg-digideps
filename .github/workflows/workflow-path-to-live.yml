@@ -323,6 +323,9 @@ jobs:
       - end_to_end_tests_sequential_1
       - end_to_end_tests_sequential_2
       - end_to_end_tests_sequential_3
+      - end_to_end_tests_admin
+      - end_to_end_tests_1
+      - end_to_end_tests_2
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
