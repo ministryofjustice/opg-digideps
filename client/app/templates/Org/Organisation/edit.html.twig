@@ -29,6 +29,9 @@
     {{ form_input(form.lastname,'form.lastname') }}
     {{ form_input(form.jobTitle, 'form.jobTitle') }}
     {{ form_input(form.phoneMain,'form.phoneMain') }}
+    {% if form.email is defined %}
+        {{ form_input(form.email,'form.email') }}
+    {% endif %}
     {{ form_checkbox_group(form.roleName, 'form.roleName', {}) }}
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
