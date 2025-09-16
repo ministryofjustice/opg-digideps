@@ -67,6 +67,7 @@ trait IngestTrait
      */
     public function aCsvHasBeenUploadedTheSiriusBucketWithTheFile(string $fileName)
     {
+        error_log("++++++++++++++++++++++ CHECK WE ARE RUNNING THIS TEST CORRECTLY");
         $this->visitFrontendPath($this->getClientLoginPageUrl());
 
         $this->csvFileName = $fileName;
