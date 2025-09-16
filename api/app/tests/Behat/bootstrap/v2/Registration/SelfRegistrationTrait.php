@@ -178,22 +178,22 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForThisClientWithValidDetails()
     {
-        $this->userEmail = 'julie2@duck.co.uk';
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+        $userEmail = 'julie2'.rand(0,9999999).'@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $userEmail]);
         $this->deputyUid = '700762222001';
 
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
             'Jeanne',
             "d'Arc",
-            $this->userEmail,
+            $userEmail,
             'B1',
             'Sarah',
             "O'Name",
             '61616161',
         );
 
-        $this->completeUserRegistration($this->userEmail);
+        $this->completeUserRegistration($userEmail);
     }
 
     /**
