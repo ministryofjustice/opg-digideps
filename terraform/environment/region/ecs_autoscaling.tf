@@ -1,4 +1,5 @@
 module "front_ecs_autoscaling" {
+  count                            = var.account.ecs_scale_max == 0 ? 0 : 1
   source                           = "./modules/ecs_autoscaling"
   environment                      = local.environment
   aws_ecs_cluster_name             = aws_ecs_cluster.main.name
@@ -9,6 +10,7 @@ module "front_ecs_autoscaling" {
 }
 
 module "api_ecs_autoscaling" {
+  count                            = var.account.ecs_scale_max == 0 ? 0 : 1
   source                           = "./modules/ecs_autoscaling"
   environment                      = local.environment
   aws_ecs_cluster_name             = aws_ecs_cluster.main.name
