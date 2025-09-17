@@ -29,7 +29,7 @@ Feature: Synchronising Documents with Sirius
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
 
-    @super-admin @prof-admin-health-welfare-submitted
+    @super-admin @prof-admin-health-welfare-submitted @this-one
     Scenario: Submitting supporting documents after a report submission sets the synchronisation status to queued
         Given a Professional Deputy has submitted a Health and Welfare report
         And I attach a supporting document "testimage2.png" to the submitted report

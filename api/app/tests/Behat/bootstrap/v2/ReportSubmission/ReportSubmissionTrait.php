@@ -108,9 +108,9 @@ trait ReportSubmissionTrait
      */
     public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
-        error_log("++++++++++++++++++++++ DEFINITELY USING LATEST VERSION OF CODE ++++++++++++++++++++++");
         $this->iVisitTheDocumentsStep2Page();
         $this->attachDocument($imageName);
+        $this->clickLink('Send documents');
     }
 
     /**
