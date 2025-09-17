@@ -4,9 +4,11 @@ namespace App\Tests\Integration\Entity\Repository;
 
 use App\Tests\Integration\ApiTestTrait;
 use DateTime;
+use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\TestHelpers\ClientTestHelper;
+use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\Fixtures;
@@ -369,5 +371,44 @@ class UserRepositoryTest extends KernelTestCase
 
         $usersNotDeleted = self::$sut->findBy(['id' => $usersNotDeleted]);
         $this->assertCount(2, $usersNotDeleted);
+    }
+
+    public function testFindUsersWithoutDeputies(): void
+    {
+        $userHelper = UserTestHelper::create();
+
+        // two users without deputies
+        $user1 = $userHelper->createUser();
+        $this->entityManager->persist($user1);
+
+        $user2 = $userHelper->createUser();
+        $this->entityManager->persist($user2);
+
+        // one user with a deputy - should not be returned
+        $user3 = $userHelper->createUser();
+        $this->entityManager->persist($user3);
+
+        $deputy = DeputyTestHelper::generateDeputy(user: $user3);
+        $this->entityManager->persist($deputy);
+
+        // corresponding pre_registration entries for the users
+        $preReg1 = new PreRegistration(['DeputyUid' => "{$user1->getDeputyUid()}"]);
+        $this->entityManager->persist($preReg1);
+
+        $preReg2 = new PreRegistration(['DeputyUid' => "{$user2->getDeputyUid()}"]);
+        $this->entityManager->persist($preReg2);
+
+        $preReg3 = new PreRegistration(['DeputyUid' => "{$user3->getDeputyUid()}"]);
+        $this->entityManager->persist($preReg3);
+
+        $this->entityManager->flush();
+
+        // test
+        $foundUsers = iterator_to_array($this->sut->findUsersWithoutDeputies());
+
+        self::assertCount(2, $foundUsers);
+        self::assertContains($user1, $foundUsers);
+        self::assertContains($user2, $foundUsers);
+        self::assertNotContains($user3, $foundUsers);
     }
 }
