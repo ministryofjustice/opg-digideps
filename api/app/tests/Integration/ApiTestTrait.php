@@ -53,7 +53,7 @@ trait ApiTestTrait
     /**
      * @param string[] $excludeTables Tables to exclude from purge
      */
-    protected static function purgeDatabase(array $excludeTables = ['dd_user']): void
+    protected static function purgeDatabase(array $excludeTables = []): void
     {
         $purger = new ORMPurger(self::$entityManager, $excludeTables);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);

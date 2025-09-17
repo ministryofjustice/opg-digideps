@@ -34,16 +34,7 @@ class UserRepositoryTest extends KernelTestCase
 
         self::$sut = $sut;
 
-        // clear all tables, including dd_user
-        self::purgeDatabase([]);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        // clear all tables, including dd_user
-        self::purgeDatabase([]);
+        self::purgeDatabase();
     }
 
     public function testCountsInactiveUsers()
