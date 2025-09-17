@@ -3,9 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\Deputy;
+use App\Entity\PreRegistration;
 use App\Entity\User;
+use App\Model\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -443,5 +447,37 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $result = $qb->getQuery()->getArrayResult();
 
         return $result;
+    }
+
+    /**
+     * Find lay deputy users whose deputy UID is in the pre_registration table but who are not associated with a deputy.
+     *
+     * @return \Traversable<User>
+     */
+    public function findUsersWithoutDeputies(): \Traversable
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
+            ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
+            ->where('u.active = true')
+            ->andWhere('d.id IS NULL');
+
+        $pageQuery = $qb->getQuery();
+
+        $qb = $qb->select('COUNT(1)');
+        $countQuery = $qb->getQuery();
+
+        $pager = new QueryPager($countQuery, $pageQuery);
+
+        /** @var \Traversable<User> $result */
+        $result = $pager->getRows(pageSize: 100, asArray: false);
+
+        return $result;
+    }
+
+    public function save(User $user): void
+    {
+        $this->_em->persist($user);
+        $this->_em->flush();
     }
 }
