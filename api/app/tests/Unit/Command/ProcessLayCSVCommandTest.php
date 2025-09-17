@@ -9,6 +9,7 @@ use App\Repository\PreRegistrationRepository;
 use App\Service\DataImporter\CsvToArray;
 use App\Service\DeputyCaseService;
 use App\Service\LayRegistrationService;
+use App\Service\UserDeputyService;
 use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
@@ -35,7 +36,8 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
     private ObjectProphecy|CSVDeputyshipProcessing $csvProcessing;
     private ObjectProphecy|PreRegistrationRepository $preReg;
     private ObjectProphecy|LayRegistrationService $layRegistrationService;
-    private ObjectProphecy|LayRegistrationService $deputyCaseService;
+    private ObjectProphecy|DeputyCaseService $deputyCaseService;
+    private ObjectProphecy|UserDeputyService $userDeputyService;
     private MockInterface&CsvToArray $csvArray;
     private CommandTester $commandTester;
 
@@ -60,6 +62,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
         $this->layRegistrationService = self::prophesize(LayRegistrationService::class);
         $this->deputyCaseService = self::prophesize(DeputyCaseService::class);
+        $this->userDeputyService = self::prophesize(UserDeputyService::class);
 
         $this->csvArray = Mock::mock(CsvToArray::class);
 
@@ -71,6 +74,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             $this->preReg->reveal(),
             $this->layRegistrationService->reveal(),
             $this->deputyCaseService->reveal(),
+            $this->userDeputyService->reveal(),
         );
 
         $app->add($setUp);
@@ -109,6 +113,10 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             ->willReturn(0);
 
         $this->deputyCaseService->addMissingDeputyCaseAssociations()
+            ->shouldBeCalled()
+            ->willReturn(0);
+
+        $this->userDeputyService->addMissingUserDeputies()
             ->shouldBeCalled()
             ->willReturn(0);
 
