@@ -2,37 +2,35 @@
 
 namespace App\Tests\Integration\Entity;
 
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\TestHelpers\ReportSubmissionHelper;
-use App\Tests\Integration\ApiBaseTestCase;
 
 /**
  * User Entity test.
  */
-class UserTest extends ApiBaseTestCase
+class UserIntegrationTest extends ApiIntegrationTestCase
 {
     public function testGetNumberOfSubmittedReports()
     {
         $this->purgeDatabase();
 
-        $submissionHelper = new ReportSubmissionHelper();
+        $submissionHelper = new ReportSubmissionHelper(self::$entityManager);
         $submittedSubmissions = [];
 
         foreach (range(1, 2) as $ignored) {
             $submittedSubmissions[] = $submissionHelper->generateAndPersistSubmittedReportSubmission(
-                $this->entityManager,
                 new DateTime()
             );
         }
 
         // Submit an extra report for first user
         $submissionHelper->submitAndPersistAdditionalSubmissions(
-            $this->entityManager,
             $submittedSubmissions[0]
         );
 
         // Create a report submission but dont submit it
-        $notSubmittedSubmission = $submissionHelper->generateAndPersistReportSubmission($this->entityManager);
+        $notSubmittedSubmission = $submissionHelper->generateAndPersistReportSubmission();
 
         self::assertEquals(
             2,

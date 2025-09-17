@@ -65,10 +65,10 @@ class Fixtures
         ?bool $isPrimary = null,
     ): User {
         $user = new User();
-        $user->setEmail('temp'.microtime(true).rand(100, 99999).'@temp.com');
+        $user->setEmail('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
         $user->setPassword('temp@temp.com');
-        $user->setFirstname('name'.time());
-        $user->setLastname('surname'.time());
+        $user->setFirstname('name' . time());
+        $user->setLastname('surname' . time());
 
         if ($email) {
             $user->setEmail($email);
@@ -117,10 +117,10 @@ class Fixtures
     public function createDeputy(array $settersMap = [])
     {
         $deputy = new Deputy();
-        $deputy->setDeputyUid('UID'.rand(1, 999999));
-        $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
-        $deputy->setFirstname('name'.time());
-        $deputy->setLastname('surname'.time());
+        $deputy->setDeputyUid('UID' . rand(1, 999999));
+        $deputy->setEmail1('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
+        $deputy->setFirstname('name' . time());
+        $deputy->setLastname('surname' . time());
 
         foreach ($settersMap as $k => $v) {
             $deputy->$k($v);
@@ -309,7 +309,7 @@ class Fixtures
     {
         $contact = new EntityDir\Report\Contact();
         $contact->setReport($report);
-        $contact->setAddress('address'.time());
+        $contact->setAddress('address' . time());
 
         foreach ($settersMap as $k => $v) {
             $contact->$k($v);
@@ -421,7 +421,7 @@ class Fixtures
         $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
         $decision->setClientInvolvedBoolean(true);
-        $decision->setDescription('description'.time());
+        $decision->setDescription('description' . time());
 
         foreach ($settersMap as $k => $v) {
             $decision->$k($v);
@@ -451,7 +451,7 @@ class Fixtures
     {
         $orgs = [];
         for ($i = 1; $i <= $amount; ++$i) {
-            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999).'org_email_%d', $i), true);
+            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999) . 'org_email_%d', $i), true);
         }
 
         return $orgs;
@@ -601,7 +601,7 @@ class Fixtures
 
     private static function pgCommand($cmd)
     {
-        exec(self::getPGExportCommand().$cmd);
+        exec(self::getPGExportCommand() . $cmd);
     }
 
     public static function initDb()
@@ -610,21 +610,21 @@ class Fixtures
 
     public static function backupDb()
     {
-        self::pgCommand('pg_dump --clean > '.self::PG_DUMP_PATH);
+        self::pgCommand('pg_dump --clean > ' . self::PG_DUMP_PATH);
     }
 
     public static function restoreDb()
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new RuntimeException(self::PG_DUMP_PATH.' not found');
+            throw new RuntimeException(self::PG_DUMP_PATH . ' not found');
         }
-        self::pgCommand('psql < '.self::PG_DUMP_PATH);
+        self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
 
     public static function deleteReportsData($additionalTables = [])
     {
         $tables = array_merge(['document', 'pre_registration', 'deputy_case', 'report_submission', 'report', 'odr', 'satisfaction'], $additionalTables);
-        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table '.implode(',', $tables).'  RESTART IDENTITY cascade";');
+        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 
     public function refresh($entity)
