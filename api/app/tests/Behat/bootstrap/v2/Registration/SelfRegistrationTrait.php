@@ -178,7 +178,7 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForThisClientWithValidDetails()
     {
-        $userEmail = 'julie2'.rand(0,9999999).'@duck.co.uk';
+        $userEmail = 'julie2' . rand(0, 9999999) . '@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $userEmail]);
         $this->deputyUid = '700762222001';
 
