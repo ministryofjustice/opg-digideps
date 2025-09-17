@@ -1,56 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Integration\Service\Stats\Metrics;
 
+use App\Tests\Integration\ApiIntegrationTestCase;
+use App\Tests\Integration\TestHelpers\UsersQuery;
 use DateTime;
-use Exception;
 use App\Entity\User;
-use App\Service\Stats\Query\Query;
 use App\Service\Stats\StatsQueryParameters;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UsersQuery extends Query
+class QueryIntegrationTest extends ApiIntegrationTestCase
 {
-    protected function getAggregation(): string
-    {
-        return 'COUNT(1)';
-    }
-
-    protected function getSupportedDimensions(): array
-    {
-        return ['roleName', 'ndrEnabled'];
-    }
-
-    public function getSubquery(): string
-    {
-        return '
-            SELECT
-                id,
-                registration_date date,
-                role_name roleName,
-                odr_enabled ndrEnabled
-            FROM dd_user
-        ';
-    }
-}
-
-class QueryTest extends WebTestCase
-{
-    /**
-     * @var EntityManager
-     */
-    protected static $em;
-
-    public static function setUpBeforeClass(): void
-    {
-        $kernel = self::bootKernel(['environment' => 'test', 'debug' => false]);
-
-        self::$em = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
-
-    public function addUserWithRegistrationDate($date)
+    private function addUserWithRegistrationDate(string $date): User
     {
         $id = mt_rand();
         $user = new User();
@@ -59,47 +21,16 @@ class QueryTest extends WebTestCase
         $user->setEmail("metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
         $user->setRegistrationDate(new DateTime($date));
-        self::$em->persist($user);
-        self::$em->flush();
+
+        self::$entityManager->persist($user);
+        self::$entityManager->flush();
 
         return $user;
     }
 
-    /**
-     * @test
-     */
-    public function identifiesUnsupportedDimensions()
+    public function testReturnsArrayOfDimensions(): void
     {
-        $this->expectException(Exception::class);
-        $query = new UsersQuery($this::$em);
-
-        $query->execute(new StatsQueryParameters([
-            'metric' => 'users',
-            'dimension' => ['badDimension'],
-        ]));
-    }
-
-    /**
-     * @test
-     *
-     * @doesNotPerformAssertions
-     */
-    public function identifiesSupportedDimensions()
-    {
-        $query = new UsersQuery($this::$em);
-
-        $query->execute(new StatsQueryParameters([
-            'metric' => 'users',
-            'dimension' => ['roleName', 'ndrEnabled'],
-        ]));
-    }
-
-    /**
-     * @test
-     */
-    public function returnsArrayOfDimensions()
-    {
-        $query = new UsersQuery($this::$em);
+        $query = new UsersQuery($this::$entityManager);
 
         $this->addUserWithRegistrationDate('2020-01-01');
 
@@ -116,12 +47,9 @@ class QueryTest extends WebTestCase
         $this->assertArrayHasKey('ndrEnabled', $result[0]);
     }
 
-    /**
-     * @test
-     */
-    public function returnsValueIfNoDimension()
+    public function testReturnsValueIfNoDimension(): void
     {
-        $query = new UsersQuery($this::$em);
+        $query = new UsersQuery($this::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
@@ -132,12 +60,9 @@ class QueryTest extends WebTestCase
         $this->assertArrayHasKey('amount', $result[0]);
     }
 
-    /**
-     * @test
-     */
-    public function adheresToDateRange()
+    public function testAdheresToDateRange(): void
     {
-        $query = new UsersQuery($this::$em);
+        $query = new UsersQuery($this::$entityManager);
 
         $this->addUserWithRegistrationDate('2016-05-04');
         $this->addUserWithRegistrationDate('2016-11-27');
@@ -151,12 +76,9 @@ class QueryTest extends WebTestCase
         $this->assertEquals(1, $result[0]['amount']);
     }
 
-    /**
-     * @test
-     */
-    public function includesDataFromBothEndDays()
+    public function testIncludesDataFromBothEndDays(): void
     {
-        $query = new UsersQuery($this::$em);
+        $query = new UsersQuery($this::$entityManager);
 
         $result1 = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -175,12 +97,9 @@ class QueryTest extends WebTestCase
         $this->assertEquals(1, $result2[0]['amount']);
     }
 
-    /**
-     * @test
-     */
-    public function ignoresDateRangeIfMetricNotConstrainedByDate()
+    public function ignoresDateRangeIfMetricNotConstrainedByDate(): void
     {
-        $query = new UsersQuery($this::$em);
+        $query = new UsersQuery($this::$entityManager);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'not-constrained',

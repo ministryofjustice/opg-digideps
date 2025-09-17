@@ -30,7 +30,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         $app = new Application($kernel);
 
         $this->csvFilename = 'deputyshipsReport.csv';
-        copy(dirname(dirname(__DIR__)).'/csv/'.$this->csvFilename, '/tmp/'.$this->csvFilename);
+        copy(dirname(dirname(__DIR__)) . '/csv/' . $this->csvFilename, '/tmp/' . $this->csvFilename);
 
         $this->s3 = $this->getMockBuilder(S3Client::class)
             ->disableOriginalConstructor()
@@ -81,7 +81,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
         $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
-            ->with('/tmp/'.$this->csvFilename)
+            ->with('/tmp/' . $this->csvFilename)
             ->willReturn(new DeputyshipsCSVIngestResult(false, 'unable to parse file'));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
@@ -101,7 +101,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
         $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
-            ->with('/tmp/'.$this->csvFilename)
+            ->with('/tmp/' . $this->csvFilename)
             ->willReturn(new DeputyshipsCSVIngestResult(true, "CSV {$this->csvFilename} processed"));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
