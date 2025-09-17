@@ -33,6 +33,17 @@ class UserRepositoryTest extends KernelTestCase
         $sut = self::$entityManager->getRepository(User::class);
 
         self::$sut = $sut;
+
+        // clear all tables, including dd_user
+        self::purgeDatabase([]);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        // clear all tables, including dd_user
+        self::purgeDatabase([]);
     }
 
     public function testCountsInactiveUsers()
@@ -379,32 +390,32 @@ class UserRepositoryTest extends KernelTestCase
 
         // two users without deputies
         $user1 = $userHelper->createUser();
-        $this->entityManager->persist($user1);
+        self::$entityManager->persist($user1);
 
         $user2 = $userHelper->createUser();
-        $this->entityManager->persist($user2);
+        self::$entityManager->persist($user2);
 
         // one user with a deputy - should not be returned
         $user3 = $userHelper->createUser();
-        $this->entityManager->persist($user3);
+        self::$entityManager->persist($user3);
 
         $deputy = DeputyTestHelper::generateDeputy(user: $user3);
-        $this->entityManager->persist($deputy);
+        self::$entityManager->persist($deputy);
 
         // corresponding pre_registration entries for the users
         $preReg1 = new PreRegistration(['DeputyUid' => "{$user1->getDeputyUid()}"]);
-        $this->entityManager->persist($preReg1);
+        self::$entityManager->persist($preReg1);
 
         $preReg2 = new PreRegistration(['DeputyUid' => "{$user2->getDeputyUid()}"]);
-        $this->entityManager->persist($preReg2);
+        self::$entityManager->persist($preReg2);
 
         $preReg3 = new PreRegistration(['DeputyUid' => "{$user3->getDeputyUid()}"]);
-        $this->entityManager->persist($preReg3);
+        self::$entityManager->persist($preReg3);
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
         // test
-        $foundUsers = iterator_to_array($this->sut->findUsersWithoutDeputies());
+        $foundUsers = iterator_to_array(self::$sut->findUsersWithoutDeputies());
 
         self::assertCount(2, $foundUsers);
         self::assertContains($user1, $foundUsers);
