@@ -13,11 +13,11 @@ use JMS\Serializer\Annotation as JMS;
 class MoneyShortCategory
 {
     /**
-     * @param $type in|out
+     * @param string $type "in" or "out"
      *
      * @return array [ in =>  [typeId=>...], out=> [typeId=>...] ]
      */
-    public static function getCategories($type)
+    public static function getCategories(string $type)
     {
         return [
             'in' => [

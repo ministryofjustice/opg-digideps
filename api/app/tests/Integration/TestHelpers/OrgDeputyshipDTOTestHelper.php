@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\TestHelpers;
+namespace App\Tests\Integration\TestHelpers;
 
-use DateTimeImmutable;
-use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -18,6 +16,8 @@ use App\Repository\ReportRepository;
 use App\Service\ReportUtils;
 use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
@@ -57,8 +57,8 @@ class OrgDeputyshipDTOTestHelper
             'ClientForename' => $faker->firstName(),
             'ClientSurname' => $faker->lastName(),
             'ClientDateOfBirth' => $faker->dateTime()->format('Y-m-d'),
-            'ClientAddress1' => $faker->buildingNumber().' '.$faker->streetName(),
-            'ClientAddress2' => Address::cityPrefix().' '.$faker->city(),
+            'ClientAddress1' => $faker->buildingNumber() . ' ' . $faker->streetName(),
+            'ClientAddress2' => Address::cityPrefix() . ' ' . $faker->city(),
             'ClientAddress3' => Address::county(),
             'ClientAddress4' => null,
             'ClientAddress5' => null,
@@ -70,7 +70,7 @@ class OrgDeputyshipDTOTestHelper
             'DeputyForename' => $faker->firstName(),
             'DeputySurname' => $faker->lastName(),
             'DeputyAddress1' => $faker->streetName(),
-            'DeputyAddress2' => Address::cityPrefix().' '.$faker->city(),
+            'DeputyAddress2' => Address::cityPrefix() . ' ' . $faker->city(),
             'DeputyAddress3' => $faker->city(),
             'DeputyAddress4' => Address::county(),
             'DeputyAddress5' => 'UK',

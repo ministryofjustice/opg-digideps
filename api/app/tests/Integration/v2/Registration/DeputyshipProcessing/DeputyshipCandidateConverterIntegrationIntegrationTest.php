@@ -6,22 +6,22 @@ namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Service\DeputyshipCandidatesConverter;
 
-class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
+class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
-    private DeputyshipCandidatesConverter $sut;
+    private static DeputyshipCandidatesConverter $sut;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         /** @var DeputyshipCandidatesConverter $sut */
-        $sut = $this->container->get(DeputyshipCandidatesConverter::class);
-        $this->sut = $sut;
+        $sut = self::$container->get(DeputyshipCandidatesConverter::class);
+        self::$sut = $sut;
     }
 
     protected static function dryRunTestCases(): array
@@ -45,12 +45,12 @@ class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
         // add client and associated NDR to db
         $client = new Client();
         $client->setCaseNumber($caseNumber);
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
 
         $ndr = new Ndr($client);
-        $this->entityManager->persist($ndr);
-        $this->entityManager->flush();
+        self::$entityManager->persist($ndr);
+        self::$entityManager->flush();
 
         // candidate group 1: court order for case number
         // candidates: add court order A, add court order ndr for A
@@ -98,15 +98,15 @@ class DeputyshipCandidateConverterIntegrationTest extends ApiBaseTestCase
             'clientId' => $client->getId(),
         ];
 
-        $result = $this->sut->convert($candidatesGroup1, dryRun: $dryRun);
+        $result = self::$sut->convert($candidatesGroup1, dryRun: $dryRun);
         self::assertEquals(2, $result->getNumCandidatesApplied(), 'two group 1 candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'group 1 should have no errors');
 
-        $result = $this->sut->convert($candidatesGroup2, dryRun: $dryRun);
+        $result = self::$sut->convert($candidatesGroup2, dryRun: $dryRun);
         self::assertEquals(2, $result->getNumCandidatesApplied(), 'two group 2 candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'group 2 should have no errors');
 
-        $result = $this->sut->convert($candidatesGroup3, dryRun: $dryRun);
+        $result = self::$sut->convert($candidatesGroup3, dryRun: $dryRun);
         self::assertEquals(1, $result->getNumCandidatesApplied(), 'one group 3 candidate should be applied');
         self::assertCount(0, $result->getErrors(), 'group 3 should have no errors');
     }
