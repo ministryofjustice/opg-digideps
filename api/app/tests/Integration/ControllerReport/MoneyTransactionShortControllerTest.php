@@ -67,8 +67,8 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
     public function testGetTransactions()
     {
-        $url = '/report/'.self::$report1->getId()
-            .'?'.http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
+        $url = '/report/' . self::$report1->getId()
+            . '?' . http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
 
         // assert data is retrieved
         $data = $this->assertJsonRequest('GET', $url, [
@@ -91,8 +91,8 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
     public function testAddEditTransaction()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transaction-short';
-        $url2 = '/report/'.self::$report2->getId().'/money-transaction-short';
+        $url = '/report/' . self::$report1->getId() . '/money-transaction-short';
+        $url2 = '/report/' . self::$report2->getId() . '/money-transaction-short';
 
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -121,8 +121,8 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
     public function testEditTransaction()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transaction-short/'.self::$transaction1->getId();
-        $url2 = '/report/'.self::$report2->getId().'/money-transaction-short/'.self::$transaction2->getId();
+        $url = '/report/' . self::$report1->getId() . '/money-transaction-short/' . self::$transaction1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transaction-short/' . self::$transaction2->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
@@ -148,8 +148,8 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
     public function testDelete()
     {
-        $url = '/report/'.self::$report1->getId().'/money-transaction-short/'.self::$transaction3->getId();
-        $url2 = '/report/'.self::$report2->getId().'/money-transfers/99';
+        $url = '/report/' . self::$report1->getId() . '/money-transaction-short/' . self::$transaction3->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers/99';
 
         $this->assertEquals('yes', self::$report1->getMoneyTransactionsShortOutExist());
 
@@ -177,7 +177,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $this->assertTrue(count($report->getMoneyTransactionsShortIn()) > 0);
         $this->assertEquals('yes', $report->getMoneyTransactionsShortInExist());
 
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

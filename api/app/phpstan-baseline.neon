@@ -3441,11 +3441,6 @@ parameters:
 			path: src/Entity/Report/MentalCapacity.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyShortCategory\\:\\:getCategories\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyShortCategory\\:\\:getPresent\\(\\) should return string but returns bool\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyShortCategory.php
