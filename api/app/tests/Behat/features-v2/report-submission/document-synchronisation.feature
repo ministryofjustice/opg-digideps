@@ -29,20 +29,20 @@ Feature: Synchronising Documents with Sirius
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
 
-    @super-admin @prof-admin-health-welfare-submitted
+    @super-admin @prof-admin-health-welfare-submitted @this-one
     Scenario: Submitting supporting documents after a report submission sets the synchronisation status to queued
         Given a Professional Deputy has submitted a Health and Welfare report
-        And I attach a supporting document "test-image.png" to the submitted report
+        And I attach a supporting document "testimage2.png" to the submitted report
         And a super admin user accesses the admin app
         And I visit the admin submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
         Then I should see the case number of the user I'm interacting with
-        And the document "testimage.png" should be queued
+        And the document "testimage2.png" should be queued
 
     @super-admin @prof-admin-health-welfare-submitted
     Scenario: Running the document-sync command syncs queued documents with Sirius
         Given a Professional Deputy has submitted a Health and Welfare report
-        And I attach a supporting document "test-image.png" to the submitted report
+        And I attach a supporting document "testimage3.png" to the submitted report
         When a super admin user accesses the admin app
         And I run the document-sync command
         And I visit the admin submissions page
@@ -50,11 +50,11 @@ Feature: Synchronising Documents with Sirius
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be synced
 #       Supporting documents can only sync after report PDF has synced
-        And the document "testimage.png" should be queued
+        And the document "testimage3.png" should be queued
         And I run the document-sync command
         And I visit the admin submissions page
         And I search for submissions using the court order number of the client I am interacting with and check the 'Synchronised' column
-        And the document "testimage.png" should be synced
+        And the document "testimage3.png" should be synced
 
 #    Need to convert supported documents at submission time rather than sync time due to OOM errors. Keeping
 #    test steps here to be used on a future ticket.
